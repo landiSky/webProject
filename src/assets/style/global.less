@@ -1,0 +1,112 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  color: #1d2129;
+  font-size: 14px;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.tele-table-cell {
+  .circle {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-radius: 50%;
+
+    &.gray {
+      background-color: rgb(#86909c); // #86909c
+    }
+
+    &.green {
+      background-color: rgb(#00aa2a); // #00aa2a
+    }
+
+    &.orange {
+      background-color: rgb(#fa9600); // #fa9600
+    }
+
+    &.danger {
+      background-color: rgb(#e63f3f); // #e63f3f
+    }
+  }
+}
+
+.tele-page-header {
+  .tele-page-header-main {
+    min-width: 0; // 避免内容太多，撑开父级元素
+  }
+
+  .tele-page-header-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &.tele-page-header-flex {
+    // 为了让内容高度根据内容撑开，全局滚动
+    min-height: auto;
+  }
+}
+
+// text类型的按钮在禁用状态下的颜色
+.tele-btn-text[type='button'] {
+  &:hover {
+    background-color: transparent;
+  }
+
+  &.tele-btn-disabled {
+    color: #c9cdd4;
+  }
+}
+
+// text hover 出现下划线
+.hover-text-decoration-underline {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.tele-modal-body {
+  // dialog里面的表格empty的icon大小设置为100*100
+  .tele-table-empty .tele-empty-image {
+    font-size: 100px;
+  }
+
+  // 表格分页距离表格marginTop改成12px
+  .tele-table-pagination {
+    margin-top: 12px;
+  }
+}
+
+// =====modal全局样式 end=====
+
+// 左侧导航，第一条不要显示border-bottom
+.tele-menu-dot .tele-menu-inner > .tele-menu-item:first-child {
+  font-size: 13px;
+  border-bottom: none;
+}
+

@@ -1,0 +1,14 @@
+#!/bin/sh
+result=`git branch | grep "*"` # 获取分支名
+curBranch=${result:2} # 去除多余的*
+
+echo "当前分支：${curBranch}"
+
+# 这一行是提交前进行ts校验的，不校验构建时经常会因为tsc异常构建失败，
+# 但添加上之后，不会进行增量校验，导致commit变慢，先加上看看效果，太慢就去掉
+if [ ${curBranch} = 'develop' ] 
+then
+    echo "执行tsc检测"
+     npm run tsc 
+fi 
+

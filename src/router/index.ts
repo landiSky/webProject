@@ -1,0 +1,100 @@
+import type { App } from 'vue';
+import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router';
+import NProgress from 'nprogress'; // progress bar
+import 'nprogress/nprogress.css';
+import { RouteAuthEnum } from '@/enums/authEnum';
+import DynamicRoutes from './routes';
+
+NProgress.configure({ showSpinner: false }); // NProgress Configuration
+
+// 配置项目中没有涉及权限的公共路由
+const constantRoutes = [
+  {
+    path: '/',
+    name: 'root',
+    redirect: '/login',
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+  },
+];
+
+const errorRoutes: RouteRecordRaw[] = [
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/components/error-page/404.vue'),
+  },
+  {
+    path: '/500',
+    name: '500',
+    component: () => import('@/components/error-page/500.vue'),
+  },
+  {
+    path: '/403',
+    name: '403',
+    component: () => import('@/components/error-page/403.vue'),
+  },
+];
+
+const routesList = [...constantRoutes, ...errorRoutes];
+
+// 不需要做登陆鉴权的路由放白名单里
+export const whiteList = routesList.map((item) => {
+  return item.path;
+});
+
+const router = createRouter({
+  history: createWebHashHistory(), // createWebHistory(),
+  routes: [...routesList, ...DynamicRoutes],
+  scrollBehavior() {
+    return { top: 0 };
+  },
+});
+
+export function setupRouter(app: App<Element>) {
+  app.use(router);
+}
+
+export function JumpToLogin() {
+  router.push({ path: '/login' });
+}
+
+// 全部左侧menu，在store中根据permission动态生成左侧菜单
+export const appMenus = (authsList: Array<string> = []) => {
+  // TODO 优化迭代逻辑
+  const iterMenu = (list: Array<any>): any => {
+    const menuList: Array<{
+      name: string;
+      path: string;
+      children: Array<any>;
+    }> = [];
+    const len = list.length;
+
+    for (let i = 0; i < len; i += 1) {
+      const { path, children = [], meta = {} } = list[i];
+
+      // TODO mock环境先去掉路由权限显示 && authsList.includes(RouteAuthEnum[path])
+      if (!meta.hideInMenu && authsList.includes(RouteAuthEnum[path])) {
+        const menuItem = {
+          name: meta.name,
+          path,
+          parentPath: meta.parentPath,
+          children: [],
+        };
+        if (children.length) {
+          menuItem.children = iterMenu(children);
+        }
+        menuList.push(menuItem);
+      }
+    }
+
+    return menuList;
+  };
+
+  return iterMenu(DynamicRoutes);
+};
+
+export default router;
