@@ -11,13 +11,11 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
-
 const router = useRouter();
 
 const userInfo = ref<{ [name: string]: any }>({
-  nickName: '张三'
+  nickName: '张三',
 });
-
 
 const breadcrumbList = reactive([
   {
@@ -41,9 +39,6 @@ const breadcrumbList = reactive([
 const goback = () => {
   router.go(-1);
 };
-
-
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

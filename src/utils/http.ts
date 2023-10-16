@@ -6,6 +6,7 @@ import axios, {
 } from 'axios';
 import { Message } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+import { log } from 'console';
 
 const $http: AxiosInstance = axios.create({
   timeout: 60 * 1000,
@@ -89,6 +90,7 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         // ==============预处理start response========
       })
       .catch((e: any) => {
+        console.log('http.ts:92', e);
         //  status != 2xx 范围内的状态码都会触发该函数。
         reject(e);
       });

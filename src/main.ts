@@ -7,13 +7,13 @@ import { setupGlobalDirective } from '@/directives/index';
 import { setupArco } from '@/utils/tele-design';
 
 import '@/assets/style/global.less';
-import { ButtonAuthEnum } from '@/enums/authEnum';
+// import { ButtonAuthEnum } from '@/enums/authEnum';
 import App from './App.vue';
 
 (async () => {
   const app = createApp(App);
 
-  app.config.globalProperties.$authCode = ButtonAuthEnum;
+  app.config.globalProperties.$authCode = [];
 
   // Arco初始化
   setupArco(app);

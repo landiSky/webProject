@@ -15,6 +15,7 @@ export const useMenuStore = defineStore({
     genLeftMenu(auths: string[], path: string) {
       try {
         this.leftMenu = appMenus(auths);
+
         if (!this.leftMenu?.length) {
           return '/403';
         }
@@ -33,4 +34,3 @@ export const useMenuStore = defineStore({
     },
   },
 });
-

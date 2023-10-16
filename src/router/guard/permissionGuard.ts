@@ -2,7 +2,7 @@ import type { Router } from 'vue-router';
 import { whiteList } from '@/router';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
-import {useMenuStore} from '@/store/modules/menu';
+import { useMenuStore } from '@/store/modules/menu';
 
 /**
  * 创建路由守卫
@@ -22,12 +22,12 @@ export function createPermissionGuard(router: Router) {
       ---不需要登录直接跳转
       ---需要跳转登录
     */
+
     const userStore = useUserStore();
     const menuStore = useMenuStore();
     if (getToken()) {
-      console.log('permissionGuard.ts:27', getToken());
       if (to.path === '/login') {
-        next('/home');
+        next('/buyer');
       } else if (!userStore.userInfo) {
         const userInfo: Record<string, any> = await userStore.initProject();
         if (userInfo?.userId) {

@@ -146,7 +146,11 @@ import type { TableColumnData } from '@tele-design/web-vue/es/table/interface';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 
-import { apiRolePage, apiRoleChangeState, apiRoleDelete } from '@/api/role-manage';
+import {
+  apiRolePage,
+  apiRoleChangeState,
+  apiRoleDelete,
+} from '@/api/role-manage';
 import useLoading from '@/hooks/loading';
 import { UserStatusEnum, AuthStatusEnum } from './constant';
 import AddRoleModal from './addRole.vue';
