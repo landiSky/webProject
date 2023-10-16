@@ -21,6 +21,26 @@ const routes = [
       hideInMenu: false,
     },
   },
+  // {
+  //   path: '/buyer',
+  //   component: PAGE_LAYOUT,
+  //   redirect: '/buyer/overview/index',
+  //   children: [
+  //     {
+  //       path: '/buyer/overview/index',
+  //       name: 'buyer',
+  //       component: () => import('@/views/buyer/overview/index.vue'),
+  //       meta: {
+  //         name: 'index',
+  //         hideInMenu: false,
+  //       },
+  //     },
+  //   ],
+  //   meta: {
+  //     name: '买家中心',
+  //     hideInMenu: false,
+  //   },
+  // },
   {
     path: '/organization',
     component: PAGE_LAYOUT,

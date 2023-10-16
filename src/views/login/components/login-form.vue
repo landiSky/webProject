@@ -18,6 +18,8 @@ const refLoginUsername = ref();
 
 // 登录成功
 function handleLoginSuccess() {
+  console.log('登录成功');
+
   router.push('/home');
 }
 </script>

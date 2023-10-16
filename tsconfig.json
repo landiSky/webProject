@@ -16,6 +16,7 @@
     "types": ["vite/client", "node"],
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "src/**/*.vue", "src/**/*.jpg", "src/**/*.png"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "src/**/*.vue", "src/**/*.jpg", "src/**/*.png","src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", ],
+  "exclude": ["node_modules"],
+  // "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 }

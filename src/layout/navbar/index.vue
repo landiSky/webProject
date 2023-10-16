@@ -7,7 +7,8 @@
           size="24px"
           color="white"
         ></iconpark-icon>
-        <span class="title"> 元数据管理平台 </span>
+        <!-- <span class="title"> 元数据管理平台 </span> -->
+        <span class="title"> 分布式工业互联网平台 </span>
       </t-space>
     </div>
     <div class="right-side">
