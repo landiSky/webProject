@@ -185,6 +185,7 @@
         </div>
       </div>
     </div>
+    <div class="views"> 订单概览 </div>
   </div>
 </template>
 
@@ -197,6 +198,7 @@ import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
 import frame from './image/frame.png';
+// import btn from './image/btn.png';
 
 // 认证状态
 const stateles = ref(0);
@@ -607,6 +609,14 @@ const authDialogVisible = reactive([
         }
       }
     }
+  }
+
+  .views {
+    width: 100%;
+    margin: 0 2% 30px 2%;
+    padding: 7px 20px 20px 20px;
+    background-image: url('./image/btn.png');
+    border: 1px solid #e5e8ef;
   }
 }
 </style>
