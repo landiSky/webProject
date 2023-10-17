@@ -19,6 +19,35 @@
                 />
               </t-form-item>
             </t-col>
+            <t-col flex="152px">
+              <t-form-item field="username" hide-label>
+                <t-input
+                  v-model="state.formModel.username"
+                  placeholder="请输入用户账号"
+                  allow-clear
+                />
+              </t-form-item>
+            </t-col>
+            <t-col flex="152px">
+              <t-select
+                v-model="state.formModel.state"
+                :options="state.statusOptions"
+                placeholder="全部"
+                allow-clear
+              >
+                <template #prefix> 状态: </template>
+              </t-select>
+            </t-col>
+            <t-col flex="276px">
+              <t-form-item hide-label>
+                <t-range-picker
+                  v-model="state.rangeTimeList"
+                  :placeholder="['创建开始时间', '创建结束时间']"
+                  :disabled-date="(current: any) => dayjs(current).isAfter(dayjs())"
+                  @change="onRangeChange"
+                />
+              </t-form-item>
+            </t-col>
             <t-col flex="70px">
               <t-button type="primary" @click="clickSearchBtn"> 查询 </t-button>
             </t-col>
@@ -55,11 +84,8 @@
         {{ record.enabled === UserStatusEnum.UNUSED ? '停用' : '正常' }}
       </template>
       <template #operations="{ record }">
-        <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-        <t-link @click="onEditTreeConfirmsldrole(record)"> 权限管理 </t-link>
-        <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
-        <t-link @click="clickEditBtn(record)">编辑</t-link>
-        <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
+        <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
+        <t-link @click="clickDelBtn(record)">modal删除</t-link>
 
         <t-popconfirm
           content="确定删除该角色吗？"
@@ -68,11 +94,43 @@
           :ok-button-props="{
             status: 'danger',
           }"
-          cancel-text-=""
           :on-before-ok="onBeforeDelOk"
         >
-          <t-link> 删除 </t-link>
+          <t-link> popover删除 </t-link>
         </t-popconfirm>
+
+        <t-dropdown position="br">
+          <t-link>
+            <icon-more />
+          </t-link>
+          <template #content>
+            <t-doption
+              v-has="$authCode.BTN_USER_DEL"
+              @click="clickDelBtn(record)"
+              ><icon-delete />
+              <span>删除</span>
+            </t-doption>
+            <t-doption @click="clickStatusChange(record)">
+              <template #icon>
+                <icon-check v-if="record.enabled === UserStatusEnum.UNUSED" />
+                <icon-stop v-else />
+              </template>
+              {{ record.enabled === UserStatusEnum.UNUSED ? '启用' : '停用' }}
+            </t-doption>
+            <t-doption @click="clickEditBtn(record)">
+              <template #icon>
+                <icon-edit />
+              </template>
+              编辑
+            </t-doption>
+            <t-doption @click="handleEditFullscreen(record)">
+              <template #icon>
+                <icon-edit />
+              </template>
+              全屏展示编辑
+            </t-doption>
+          </template>
+        </t-dropdown>
       </template>
     </t-table>
   </t-page-header>
@@ -89,27 +147,12 @@
     @confirm="onEditModalConfirm"
     @cancel="editModalVisible = false"
   ></EditModal>
-  <!-- 角色权限 -->
-  <TreeModal
-    v-if="flagModal"
-    :data="state.editData"
-    @confirm="onEditTreeConfirm"
-    @cancel="onEditTreeCancel"
-  ></TreeModal>
-  <!-- 角色权限 -->
-  <TreeModals
-    v-if="flagModalTree"
-    :data="state.editData"
-    @confirm="onEditTreeConfirmsld"
-    @cancel="onEditTreeCancelsld"
-  >
-  </TreeModals>
 
-  <!-- <EditModalFullscreen
+  <EditModalFullscreen
     v-if="editFullModalVisible"
     @confirm="onFullModalConfirm"
     @cancel="editFullModalVisible = false"
-  ></EditModalFullscreen> -->
+  ></EditModalFullscreen>
 </template>
 
 <script setup lang="ts">
@@ -118,9 +161,8 @@ import dayjs from 'dayjs';
 import { Modal, Message } from '@tele-design/web-vue';
 import DetailDrawer from './components/detail-drawer.vue';
 import EditModal from './components/edit-modal.vue';
+
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
-import TreeModal from './components/tree-modal.vue';
-import TreeModals from './components/tree-modals.vue';
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -163,41 +205,41 @@ const columns = [
     dataIndex: 'roleName',
     ellipsis: true,
     tooltip: true,
-    width: '20%',
+    width: 100,
   },
   {
-    title: '角色描述',
+    title: '角色编码',
     dataIndex: 'roleCode',
     slotName: 'roleCode',
-    width: '20%',
+    width: 140,
   },
-  {
-    title: '角色ID',
-    dataIndex: 'userCount',
-    width: '20%',
-  },
-
-  // {
-  //   title: '角色状态',
-  //   dataIndex: 'enabled',
-  //   slotName: 'enabled',
-  //   width: 120,
-  // },
   {
     title: '成员数量',
-    dataIndex: 'createdBy',
-    width: '10%',
+    dataIndex: 'userCount',
+    width: 140,
   },
-  // {
-  //   title: '创建时间',
-  //   dataIndex: 'createdTime',
-  //   width: 160,
-  // },
+
+  {
+    title: '角色状态',
+    dataIndex: 'enabled',
+    slotName: 'enabled',
+    width: 120,
+  },
+  {
+    title: '创建人',
+    dataIndex: 'createdBy',
+    width: 140,
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createdTime',
+    width: 160,
+  },
   {
     title: '操作',
     dataIndex: 'operations',
     slotName: 'operations',
-    width: '30%',
+    width: 290,
   },
 ];
 
@@ -234,11 +276,6 @@ const detailDrawerVisible = ref(false); // 详情抽屉
 const editModalVisible = ref(false);
 
 const editFullModalVisible = ref(false); // 编辑全屏展示弹窗
-// 角色弹窗
-const flagModal = ref(false);
-// 角色弹窗
-const flagModalTree = ref(false);
-// const aaa = ref({});
 
 function fetchData() {
   const { current, pageSize } = pagination;
@@ -365,13 +402,10 @@ const clickAddBtn = () => {
   state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
   editModalVisible.value = true;
 };
+
 // 新增编辑弹窗确定后的回调
-const onEditModalConfirm = (data: any) => {
-  console.log(data.roleName, 'e');
-  state.editData = data;
-  // aaa.value = data;
+const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  flagModal.value = true;
   fetchData();
 };
 
@@ -426,29 +460,29 @@ const clickDelBtn = (row: Record<string, any>) => {
   // // 前端判断无法删除时的弹窗情况
   // if (row?.binded === BindHdlStatusEnum.YES) {
   //   // 以前端请求数据为准，可能存在数据与实际不一致请求
-  Modal.warning({
-    title: '该用户已绑定标识身份，暂无法删除。',
-    content: '如需删除，请先将该系统用户与标识身份解绑。',
-    titleAlign: 'start',
-    okText: '好的',
-    hideCancel: true,
-  });
+  //   Modal.warning({
+  //     title: '该用户已绑定标识身份，暂无法删除。',
+  //     content: '如需删除，请先将该系统用户与标识身份解绑。',
+  //     titleAlign: 'start',
+  //     okText: '好的',
+  //     hideCancel: true,
+  //   });
   //   return;
   // }
 
-  // Modal.warning({
-  //   title: '确定删除该用户吗?',
-  //   content: '',
-  //   titleAlign: 'start',
-  //   okText: '删除',
-  //   hideCancel: false,
-  //   okButtonProps: {
-  //     status: 'danger',
-  //   },
-  //   onOk: () => {
-  //     // deleteUsers(params);
-  //   },
-  // });
+  Modal.warning({
+    title: '确定删除该用户吗?',
+    content: '',
+    titleAlign: 'start',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      // deleteUsers(params);
+    },
+  });
 };
 
 // popover类的删除操作
@@ -468,46 +502,18 @@ const onBeforeDelOk = (done: any) => {
   Message.success('删除成功!');
   fetchData();
 };
-// 角色
-const onEditTreeConfirm = () => {
-  state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
-  // console.log(editFullModalVisible2.aaaa);
-  flagModal.value = false;
-};
-// 取消
-const onEditTreeCancel = () => {
-  // state.editData = data;
-  // console.log(aaa.value, 'aaa.value;');
 
-  flagModal.value = false;
-  editModalVisible.value = true;
-  // state.editData = aaa.value;
-};
-// 权限管理
-const onEditTreeConfirmsldrole = () => {
-  flagModalTree.value = true;
-};
-// 完成
-const onEditTreeConfirmsld = () => {
-  flagModalTree.value = false;
-};
-// 取消
-const onEditTreeCancelsld = () => {
-  flagModalTree.value = false;
-};
-// // 编辑全屏展示
-// function handleEditFullscreen(data: any) {
-//   console.log('编辑全屏展示');
+// 编辑全屏展示
+function handleEditFullscreen(data: any) {
+  state.editData = data;
+  editFullModalVisible.value = true;
+}
 
-//   state.editData = data;
-//   editFullModalVisible.value = true;
-// }
-
-// // 编辑全屏展示成功
-// const onFullModalConfirm = () => {
-//   editFullModalVisible.value = false;
-//   fetchData();
-// };
+// 编辑全屏展示成功
+const onFullModalConfirm = () => {
+  editFullModalVisible.value = false;
+  fetchData();
+};
 
 onMounted(() => {
   fetchData();
