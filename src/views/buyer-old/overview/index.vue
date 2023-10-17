@@ -99,9 +99,9 @@
     <div class="content">
       <h3>热门应用服务</h3>
       <div class="catimg">
+        <!-- :indicator-type="indicatorType"
+          :indicator-position="indicatorPosition" -->
         <t-carousel
-          :indicator-type="indicatorType"
-          :indicator-position="indicatorPosition"
           show-arrow="never"
           :style="{
             width: '100%',
