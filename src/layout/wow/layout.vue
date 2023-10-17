@@ -1,27 +1,7 @@
 <template>
   <t-layout class="layout">
-    <div class="layout-navbar">
-      <nav-bar />
-    </div>
+    <nav-bar />
     <t-layout>
-      <t-layout-sider
-        class="layout-sider"
-        :breakpoint="'xl'"
-        :collapsed="menuCollapse"
-        :collapsible="true"
-        :width="192"
-        :collapsed-width="48"
-      >
-        <template #trigger>
-          <div class="collapse-btn">
-            <IconMenuUnfold v-if="menuCollapse" />
-            <IconMenuFold v-else />
-          </div>
-        </template>
-        <div class="menu-wrapper">
-          <PageMenu />
-        </div>
-      </t-layout-sider>
       <t-layout class="layout-content">
         <PageMain />
       </t-layout>
@@ -32,11 +12,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import NavBar from './navbar/index.vue';
-import PageMenu from './menu/index.vue';
 import PageMain from './main/index.vue';
-
-const menuCollapse = ref(false);
-const navbarHeight = '48px';
 </script>
 
 <style scoped lang="less">
@@ -47,11 +23,6 @@ const navbarHeight = '48px';
 
 .tele-layout {
   min-height: 0;
-}
-
-.layout-navbar {
-  width: 100%;
-  height: v-bind('navbarHeight');
 }
 
 .layout-sider {
@@ -69,7 +40,7 @@ const navbarHeight = '48px';
 .layout-content {
   height: calc(100vh - 48px);
   overflow-y: hidden;
-  background-color: white;
+  background-color: #f2f3f8; // TODO 调整背景色，目前只做测试使用
 }
 
 .collapse-btn {
@@ -91,12 +62,12 @@ const navbarHeight = '48px';
 
   &.tele-layout-sider-collapsed {
     .tele-layout-sider-trigger {
+      position: absolute;
+      top: 45%;
+      justify-content: center;
       width: 40px !important;
       height: 40px;
       padding-right: 0;
-      position: absolute;
-      justify-content: center;
-      top: 45%;
       box-shadow: 0 2px 8px #0000001a;
     }
   }

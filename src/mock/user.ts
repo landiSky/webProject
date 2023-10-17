@@ -81,217 +81,22 @@ export default [
         nickName: '超级管理员',
         authorities: [
           {
-            authority: 'BTN_DEPT_ADD',
+            authority: 'ROUTE_BUYER_INDEX',
           },
           {
-            authority: 'BTN_DEPT_BAN',
+            authority: 'ROUTE_BUYER_ORDER',
           },
           {
-            authority: 'BTN_DEPT_DEL',
+            authority: 'ROUTE_SELLER_GOODS',
           },
           {
-            authority: 'BTN_DEPT_DTL',
+            authority: 'ROUTE_SELLER_ORDER',
           },
           {
-            authority: 'BTN_DEPT_EDT',
+            authority: 'ROUTE_SYSTEM_USERS',
           },
           {
-            authority: 'BTN_DEPT_ENB',
-          },
-          {
-            authority: 'BTN_HANDLE_DEL',
-          },
-          {
-            authority: 'BTN_HANDLE_UNBIND',
-          },
-          {
-            authority: 'BTN_META_ADD',
-          },
-          {
-            authority: 'BTN_META_BAT_DEL',
-          },
-          {
-            authority: 'BTN_META_BAT_MOV',
-          },
-          {
-            authority: 'BTN_META_BAT_PUB',
-          },
-          {
-            authority: 'BTN_META_DEL',
-          },
-          {
-            authority: 'BTN_META_MANAGE',
-          },
-          {
-            authority: 'BTN_META_PUB',
-          },
-          {
-            authority: 'BTN_META_TYPE_ADD',
-          },
-          {
-            authority: 'BTN_META_TYPE_DELETE',
-          },
-          {
-            authority: 'BTN_META_TYPE_EDIT',
-          },
-          {
-            authority: 'BTN_META_UNPUB',
-          },
-          {
-            authority: 'BTN_ROLE_ADD',
-          },
-          {
-            authority: 'BTN_ROLE_AUTH',
-          },
-          {
-            authority: 'BTN_ROLE_DEL',
-          },
-          {
-            authority: 'BTN_ROLE_DISABLE',
-          },
-          {
-            authority: 'BTN_ROLE_EDIT',
-          },
-          {
-            authority: 'BTN_ROLE_ENABLE',
-          },
-          {
-            authority: 'BTN_ROLE_MEMBER',
-          },
-          {
-            authority: 'BTN_USER_ADD',
-          },
-          {
-            authority: 'BTN_USER_BAT_DEL',
-          },
-          {
-            authority: 'BTN_USER_BAT_DISABLE',
-          },
-          {
-            authority: 'BTN_USER_BAT_ENABLE',
-          },
-          {
-            authority: 'BTN_USER_CHANGE_DEPT',
-          },
-          {
-            authority: 'BTN_USER_DEL',
-          },
-          {
-            authority: 'BTN_USER_DETAIL',
-          },
-          {
-            authority: 'BTN_USER_DISABLE',
-          },
-          {
-            authority: 'BTN_USER_EDIT',
-          },
-          {
-            authority: 'BTN_USER_ENABLE',
-          },
-          {
-            authority: 'ID_DATA_ADD',
-          },
-          {
-            authority: 'ID_DATA_DELETE',
-          },
-          {
-            authority: 'ID_DATA_DELETE_MULTI',
-          },
-          {
-            authority: 'ID_DATA_DETAIL',
-          },
-          {
-            authority: 'ID_DATA_EDIT',
-          },
-          {
-            authority: 'ID_DATA_RESET',
-          },
-          {
-            authority: 'ID_DATA_SEARCH',
-          },
-          {
-            authority: 'ID_DATA_TREE_CANCEL',
-          },
-          {
-            authority: 'ID_META_TREE_ADD',
-          },
-          {
-            authority: 'ID_META_TREE_DELETE',
-          },
-          {
-            authority: 'ID_META_TREE_EDIT',
-          },
-          {
-            authority: 'META_RESOURCE_CHOOSE',
-          },
-          {
-            authority: 'META_RESOURCE_RESET',
-          },
-          {
-            authority: 'META_RESOURCE_SEARCH',
-          },
-          {
-            authority: 'MY_HDL',
-          },
-          {
-            authority: 'PERSONAL_CENTER',
-          },
-          {
-            authority: 'ROUTE_AUTH',
-          },
-          {
-            authority: 'ROUTE_AUTH_API',
-          },
-          {
-            authority: 'ROUTE_AUTH_AUTH',
-          },
-          {
-            authority: 'ROUTE_AUTH_MENU',
-          },
-          {
-            authority: 'ROUTE_DATA',
-          },
-          {
-            authority: 'ROUTE_HOME',
-          },
-          {
-            authority: 'ROUTE_IDENTIFY_MANAGE',
-          },
-          {
-            authority: 'ROUTE_META',
-          },
-          {
-            authority: 'ROUTE_META_MANAGE',
-          },
-          {
-            authority: 'ROUTE_META_REGISTER',
-          },
-          {
-            authority: 'ROUTE_META_RESOURCE',
-          },
-          {
-            authority: 'ROUTE_ORG',
-          },
-          {
-            authority: 'ROUTE_ORG_ID',
-          },
-          {
-            authority: 'ROUTE_ORG_ROLE',
-          },
-          {
-            authority: 'ROUTE_ORG_USER_DEPT',
-          },
-          {
-            authority: 'ROUTE_SYSTEM_DATA',
-          },
-          {
-            authority: 'ROUTE_SYSTEM_DATA_API',
-          },
-          {
-            authority: 'TAB_ORG_DEPT',
-          },
-          {
-            authority: 'TAB_ORG_USER',
+            authority: 'ROUTE_SYSTEM_ROLES',
           },
         ],
         accountNonExpired: true,
@@ -310,77 +115,15 @@ export default [
           },
         ],
         auths: [
-          'TAB_ORG_DEPT',
-          'TAB_ORG_USER',
-          'ROUTE_AUTH_AUTH',
-          'ROUTE_ORG',
-          'BTN_META_BAT_PUB',
-          'ID_DATA_DETAIL',
-          'ROUTE_ORG_USER_DEPT',
-          'ROUTE_DATA',
-          'ROUTE_META_RESOURCE',
-          'ID_META_TREE_EDIT',
-          'ID_DATA_EDIT',
-          'BTN_META_TYPE_DELETE',
-          'ROUTE_ORG_ROLE',
-          'ROUTE_SYSTEM_DATA_API',
-          'BTN_META_ADD',
-          'BTN_USER_BAT_DEL',
-          'ID_DATA_RESET',
-          'META_RESOURCE_SEARCH',
-          'ID_META_TREE_DELETE',
-          'BTN_DEPT_ENB',
-          'BTN_HANDLE_DEL',
-          'BTN_META_DEL',
-          'ROUTE_META_REGISTER',
-          'BTN_USER_EDIT',
-          'BTN_ROLE_ADD',
-          'META_RESOURCE_CHOOSE',
-          'BTN_META_TYPE_ADD',
-          'ROUTE_ORG_ID',
-          'BTN_USER_DETAIL',
-          'BTN_ROLE_EDIT',
-          'BTN_USER_BAT_ENABLE',
-          'BTN_DEPT_DTL',
-          'BTN_META_MANAGE',
-          'ID_DATA_TREE_CANCEL',
-          'BTN_ROLE_DEL',
-          'BTN_META_UNPUB',
-          'BTN_META_PUB',
-          'BTN_META_TYPE_EDIT',
-          'ROUTE_HOME',
-          'ID_DATA_SEARCH',
-          'ROUTE_META_MANAGE',
-          'BTN_USER_ADD',
-          'BTN_USER_BAT_DISABLE',
-          'MY_HDL',
-          'ROUTE_META',
-          'ID_META_TREE_ADD',
-          'BTN_DEPT_BAN',
-          'ID_DATA_DELETE',
-          'BTN_ROLE_AUTH',
-          'ROUTE_AUTH_MENU',
-          'BTN_HANDLE_UNBIND',
-          'BTN_ROLE_ENABLE',
-          'BTN_ROLE_DISABLE',
-          'ROUTE_IDENTIFY_MANAGE',
-          'BTN_DEPT_DEL',
-          'BTN_DEPT_ADD',
-          'BTN_ROLE_MEMBER',
-          'BTN_USER_DISABLE',
-          'BTN_META_BAT_MOV',
-          'ID_DATA_ADD',
-          'BTN_USER_ENABLE',
-          'BTN_USER_CHANGE_DEPT',
-          'BTN_USER_DEL',
-          'META_RESOURCE_RESET',
-          'BTN_META_BAT_DEL',
-          'ROUTE_AUTH_API',
-          'ID_DATA_DELETE_MULTI',
-          'BTN_DEPT_EDT',
-          'ROUTE_AUTH',
-          'PERSONAL_CENTER',
-          'ROUTE_SYSTEM_DATA',
+          'ROUTE_BUYER',
+          'ROUTE_BUYER_INDEX',
+          'ROUTE_BUYER_ORDER',
+          'ROUTE_SELLER',
+          'ROUTE_SELLER_GOODS',
+          'ROUTE_SELLER_ORDER',
+          'ROUTE_SYSTEM',
+          'ROUTE_SYSTEM_USERS',
+          'ROUTE_SYSTEM_ROLES',
         ],
       });
     },

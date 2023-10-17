@@ -42,18 +42,16 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import {useMenuStore} from '@/store/modules/menu';
-
+import { useMenuStore } from '@/store/modules/menu';
 
 const router = useRouter();
 const route = useRoute();
 const collapsed = ref(false);
 
-const menuStore = useMenuStore()
+const menuStore = useMenuStore();
 
 const selectedKey = ref<string[]>([]);
 const openedKey = ref<string[]>([]);
-
 
 watch(
   route,
@@ -81,7 +79,6 @@ watch(
   }
 );
 
-
 /**
  * 路由跳转至该路径
  * @param key 被点击的三级菜单的key
@@ -92,22 +89,22 @@ const clickMenuItem = (key: string) => {
   } else {
     router.push({ path: key });
   }
-}
+};
 /**
  * 如果已展开的二级菜单被点击则收起该菜单，
  * 如点击别的二级菜单则展开多个菜单
  * @param key 被点击二级菜单的key
  */
- const clickMenuSub = (key: string) => {
+const clickMenuSub = (key: string) => {
   if (openedKey.value.includes(key)) {
     openedKey.value.splice(openedKey.value.indexOf(key), 1);
   } else {
     openedKey.value.push(key);
   }
-}
+};
 const isOpen = (path: string) => {
   return path === selectedKey.value[0];
-}
+};
 </script>
 
 <style lang="less" scoped>

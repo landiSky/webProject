@@ -1,90 +1,44 @@
 <template>
-  <div id="navbar_dropdown" class="navbar">
+  <div class="navbar">
     <div class="left-side">
-      <t-space>
-        <iconpark-icon
-          name="logo-white"
-          size="24px"
-          color="white"
-        ></iconpark-icon>
-        <!-- <span class="title"> 元数据管理平台 </span> -->
-        <span class="title"> 分布式工业互联网平台 </span>
-      </t-space>
+      <div class="left">
+        <t-space :size="[0]">
+          <iconpark-icon name="logo-gray" size="28px"></iconpark-icon>
+          <span class="title"> 分布式工业互联网平台 </span>
+        </t-space>
+      </div>
+      <div class="right">
+        <t-space>
+          <t-link href="link" class="active">平台管理</t-link>
+          <t-link href="link">标识管理</t-link>
+        </t-space>
+      </div>
     </div>
     <div class="right-side">
       <t-dropdown trigger="click" :popup-container="'.navbar'">
         <div class="click-item">
-          <t-avatar :size="16" class="right-side-avatar">
-            <iconpark-icon name="icon-account" size="16px"></iconpark-icon>
-          </t-avatar>
-
-          <span class="username">{{ userInfo?.username || '未知用户' }}</span>
+          <icon-down style="margin-right: 8px" />
+          <span>北京泰尔英福公司</span>
         </div>
 
         <template #content>
-          <t-doption class="doption-user-info" disabled>
-            <t-space>
-              <div class="dropdown-item">
-                <iconpark-icon name="icon-account" size="24px"></iconpark-icon>
-                <div class="item-info">
-                  <span class="item">
-                    {{ userInfo?.username || '未知用户' }}
-                  </span>
-                  <span v-if="userInfo?.binded === 0" class="item">
-                    <span>未绑定标识身份</span>
-                    <a
-                      class="hover-text-decoration-underline"
-                      @click="clickBind"
-                      >立即绑定</a
-                    >
-                  </span>
-                  <span v-if="userInfo?.binded === 1">
-                    <span v-if="userInfo?.handleInfo" class="item">
-                      <a
-                        class="ellipsis hover-text-decoration-underline"
-                        @click="hdlDetailVisible = true"
-                        >{{ userInfo?.handleInfo?.handleAdmin }}</a
-                      >
-                    </span>
-                    <span v-else class="item">
-                      <span>未使用标识身份登录</span>
-                      <a @click="clickHdlLogin">立即登录</a>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </t-space>
-          </t-doption>
           <t-doption @click="userInfoDialogVisible = true">
             <t-space fill>
               <iconpark-icon name="info-user" size="12px"></iconpark-icon>
-              <span> 个人信息 </span>
+              <span> 个人身份 </span>
             </t-space>
           </t-doption>
           <t-doption @click="resetPswDialogVisible = true">
             <t-space fill>
               <iconpark-icon name="user-lock" size="12px"></iconpark-icon>
-              <span> 修改密码 </span>
-            </t-space>
-          </t-doption>
-          <t-doption @click="clickLogout">
-            <t-space fill>
-              <iconpark-icon name="info-logout" size="12px"></iconpark-icon>
-              <span> 退出登录 </span>
+              <span> 北京泰尔英福公司 </span>
             </t-space>
           </t-doption>
         </template>
       </t-dropdown>
+
+      <iconpark-icon name="user" size="28px"></iconpark-icon>
     </div>
-    <UserInfoDialog
-      v-if="userInfoDialogVisible"
-      @close="userInfoDialogVisible = false"
-    />
-    <ResetPasswordDialog
-      v-if="resetPswDialogVisible"
-      @cancel="resetPswDialogVisible = false"
-      @confirm="onResetPwdConfirm"
-    />
   </div>
 </template>
 
@@ -94,8 +48,6 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
-import UserInfoDialog from './user-info/user-info-dialog.vue';
-import ResetPasswordDialog from './user-info/reset-password-dialog.vue';
 
 const store = useUserStore();
 const router = useRouter();
@@ -134,16 +86,6 @@ const clickLogout = () => {
     },
   });
 };
-
-// 要使用标识身份登录
-const clickHdlLogin = () => {
-  handleLogout(2);
-};
-
-// 重置密码后，要退出重新登陆
-const onResetPwdConfirm = () => {
-  handleLogout();
-};
 </script>
 
 <style lang="less" scoped>
@@ -151,7 +93,8 @@ const onResetPwdConfirm = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
+  height: 64px;
+  padding-right: 24px;
   background-color: #1d2129;
 
   :deep(.tele-trigger-popup) {
@@ -159,8 +102,38 @@ const onResetPwdConfirm = () => {
   }
 
   .left-side {
+    display: flex;
     flex: 1;
+    align-items: center;
+    height: 100%;
     padding-left: 24px;
+
+    .left {
+      margin-right: 110px;
+    }
+
+    .right {
+      height: 100%;
+
+      :deep(.tele-space) {
+        height: 100%;
+
+        .tele-space-item {
+          height: 100%;
+        }
+      }
+
+      :deep(.tele-link) {
+        padding: 0 16px;
+        color: #fff;
+        font-size: 14px;
+        line-height: 64px;
+
+        &.active {
+          background-color: #1664ff;
+        }
+      }
+    }
 
     .title {
       color: #fff;
@@ -175,8 +148,10 @@ const onResetPwdConfirm = () => {
     align-items: center;
     justify-content: center;
     height: 100%;
-    // padding-right: 24px;
-    // padding-left: 24px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 12px;
+
     .resolve-link {
       margin-right: 12px;
       color: white;
@@ -187,7 +162,8 @@ const onResetPwdConfirm = () => {
     }
 
     .click-item {
-      padding: 12px 24px;
+      margin-right: 8px;
+      padding: 10px 24px 10px 10px;
 
       &:hover {
         background-color: #272e3b;
@@ -244,17 +220,19 @@ const onResetPwdConfirm = () => {
 }
 
 :deep(.tele-dropdown) {
+  width: 198px;
   color: #fff;
-  background-color: #101319;
-  border-color: #101319;
+  font-weight: 500;
+  line-height: 12px;
+  background-color: #1d2129;
+  border: 1px solid #1d2129;
   border-radius: 0 0 2px 2px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 :deep(.tele-dropdown-option) {
-  width: 240px;
-  min-height: 44px;
-  padding: 0 16px;
+  min-height: 36px;
+  padding: 0 12px;
   color: #fff;
   font-size: 12px;
 

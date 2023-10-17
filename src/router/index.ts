@@ -3,7 +3,9 @@ import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';
 import { RouteAuthEnum } from '@/enums/authEnum';
-import DynamicRoutes from './routes';
+// import DynamicRoutes from './routes';
+import homeRoutesList from './routes/home';
+import wowRoutesList from './routes/wow';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -42,13 +44,20 @@ const errorRoutes: RouteRecordRaw[] = [
 const routesList = [...constantRoutes, ...errorRoutes];
 
 // 不需要做登陆鉴权的路由放白名单里
-export const whiteList = routesList.map((item) => {
-  return item.path;
-});
+export const whiteList = [
+  '/login',
+  '/404',
+  '/500',
+  '/403',
+  '/wow/index',
+  '/wow/freeApp',
+  '/wow/mall',
+  '/wow/platProducts',
+];
 
 const router = createRouter({
   history: createWebHashHistory(), // createWebHistory(),
-  routes: [...routesList, ...DynamicRoutes],
+  routes: [...routesList, ...homeRoutesList, ...wowRoutesList],
   scrollBehavior() {
     return { top: 0 };
   },
@@ -76,6 +85,7 @@ export const appMenus = (authsList: Array<string> = []) => {
     for (let i = 0; i < len; i += 1) {
       const { path, children = [], meta = {} } = list[i];
 
+      console.log('index.ts:87=====', path, RouteAuthEnum[path]);
       // TODO mock环境先去掉路由权限显示 && authsList.includes(RouteAuthEnum[path])
       if (!meta.hideInMenu && authsList.includes(RouteAuthEnum[path])) {
         const menuItem = {
@@ -94,7 +104,7 @@ export const appMenus = (authsList: Array<string> = []) => {
     return menuList;
   };
 
-  return iterMenu(DynamicRoutes);
+  return iterMenu(homeRoutesList);
 };
 
 export default router;

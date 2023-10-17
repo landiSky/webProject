@@ -1,0 +1,33 @@
+export const PAGE_LAYOUT = () => import('@/layout/wow/layout.vue');
+
+const wowRoutesList = [
+  {
+    path: '/wow',
+    component: PAGE_LAYOUT,
+    redirect: '/wow/index',
+    children: [
+      {
+        path: '/wow/index',
+        name: 'wowIndex',
+        component: () => import('@/views/wow/index/index.vue'),
+      },
+      {
+        path: '/wow/freeApp',
+        name: 'wowFreeApp',
+        component: () => import('@/views/wow/freeApp/index.vue'),
+      },
+      {
+        path: '/wow/platProducts',
+        name: 'wowPlatProducts',
+        component: () => import('@/views/wow/platProducts/index.vue'),
+      },
+      {
+        path: '/wow/mall',
+        name: 'wowMall',
+        component: () => import('@/views/wow/mall/index.vue'),
+      },
+    ],
+  },
+];
+
+export default wowRoutesList;
