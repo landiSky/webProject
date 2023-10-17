@@ -103,6 +103,7 @@
           :indicator-position="indicatorPosition" -->
         <t-carousel
           show-arrow="never"
+          :indicator-class="['wekjfbks']"
           :style="{
             width: '100%',
             height: '240px',
@@ -185,7 +186,29 @@
         </div>
       </div>
     </div>
-    <div class="views"> 订单概览 </div>
+    <div class="views">
+      <div class="tooplist">
+        <h3>订单概览</h3>
+        <p>更多</p>
+      </div>
+      <div class="overlist">
+        <div v-for="(item, index) in 6" :key="index" class="overlistdata">
+          <div>
+            <span
+              style="
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+                color: #86909c;
+                font-size: 14px;
+              "
+              >全部订单</span
+            >
+            <span style="font-size: 30px">1000000</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -511,7 +534,7 @@ const authDialogVisible = reactive([
   }
 
   .content {
-    height: 300px;
+    height: 320px;
     margin: 0 2% 30px 2%;
     padding: 7px 0 0 20px;
     background-image: url('./image/contimg.png');
@@ -520,6 +543,18 @@ const authDialogVisible = reactive([
     .catimg {
       width: 99%;
       height: 100%;
+
+      .wekjfbks {
+        background-color: red;
+        // .span {
+        //
+        // }
+      }
+
+      ::v-deep .tele-carousel-indicator-wrapper-bottom {
+        bottom: -20px;
+        background: transparent;
+      }
 
       .catimglist {
         display: flex;
@@ -572,7 +607,7 @@ const authDialogVisible = reactive([
   }
 
   .purchased {
-    width: 100%;
+    width: 96%;
     margin: 0 2% 30px 2%;
     padding: 7px 20px 20px 20px;
     border: 1px solid #e5e8ef;
@@ -612,11 +647,29 @@ const authDialogVisible = reactive([
   }
 
   .views {
-    width: 100%;
+    width: 96%;
     margin: 0 2% 30px 2%;
     padding: 7px 20px 20px 20px;
     background-image: url('./image/btn.png');
     border: 1px solid #e5e8ef;
+
+    .tooplist {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .overlist {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+
+      .overlistdata {
+        width: 15%;
+        height: 100px;
+        padding: 20px;
+        background-color: #fff;
+      }
+    }
   }
 }
 </style>

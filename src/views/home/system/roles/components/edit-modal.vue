@@ -94,7 +94,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
   // emit('onEditModalConfirm');
   // emit('confirm');
   formRef.value.validate((errors: any) => {
-    if (props.data === undefined) {
+    if (!isEdit.value) {
       if (!errors) {
         // 新增
         emit('confirm', state.formModel);

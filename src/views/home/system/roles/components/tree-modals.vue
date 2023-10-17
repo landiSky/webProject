@@ -1,15 +1,24 @@
 <template>
+  <!-- :height="678" -->
   <t-modal
     v-model:visible="visible"
     :width="642"
-    :height="678"
     :on-before-ok="onConfirm"
     ok-text="完成"
     @cancel="emit('cancel')"
   >
-    <template #title> x角色授权 </template>
-    <p>请选择授权范围</p>
-    <t-tree-select
+    <template #title> 角色授权 </template>
+    <h2>请选择授权范围</h2>
+    <t-tree
+      v-model="selected"
+      :checkable="true"
+      :check-strictly="false"
+      :data="treeData"
+      @select="setSelecteds"
+      @check="checkds"
+      @expand="expands"
+    />
+    <!-- <t-tree-select
       v-model="selected"
       :allow-search="true"
       :allow-clear="true"
@@ -18,7 +27,7 @@
       :data="treeData"
       placeholder="Please select ..."
       style="width: 300px"
-    ></t-tree-select>
+    ></t-tree-select> -->
     <!-- <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item field="roleName" label="角色名称">
         <t-input
@@ -85,6 +94,18 @@ const state = reactive({
     roleDesc: undefined,
   },
 });
+// 点击树节点时触发
+const setSelecteds = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '点击树节点时触发');
+};
+// 点击树节点复选框时触发
+const checkds = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '点击树节点复选框时触发');
+};
+// 展开/关闭
+const expands = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '展开/关闭');
+};
 
 const formRules = {
   roleName: [
@@ -168,7 +189,7 @@ const treeData = [
         title: 'Branch 0-1-1',
         value: 'Branch 0-1-1',
         key: '0-1-1',
-        checkable: false,
+        // checkable: false,
         children: [
           {
             title: 'Leaf 0-1-1-1',
@@ -179,7 +200,7 @@ const treeData = [
             title: 'Leaf 0-1-1-2',
             value: 'Leaf 0-1-1-2',
             key: '0-1-1-2',
-            disabled: true,
+            // disabled: true,
           },
         ],
       },

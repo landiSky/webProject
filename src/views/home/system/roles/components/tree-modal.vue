@@ -1,15 +1,24 @@
 <template>
+  <!-- :height="678" -->
   <t-modal
     v-model:visible="visible"
     :width="642"
-    :height="378"
     :on-before-ok="onConfirm"
     ok-text="完成"
     cancel-text="上一步:基本信息"
     @cancel="emit('cancel')"
   >
     <template #title> {{ isEdit ? '新建' : '新建' }}角色:角色授权 </template>
-    请选择授权范围
+    <h2>请选择授权范围</h2>
+    <t-tree
+      v-model="selected"
+      :checkable="true"
+      :check-strictly="false"
+      :data="treeData"
+      @select="setSelecteds"
+      @check="checkds"
+      @expand="expands"
+    />
     <!-- <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item field="roleName" label="角色名称">
         <t-input
@@ -72,7 +81,7 @@ const emit = defineEmits(['confirm', 'cancel']);
 
 const formRef = ref();
 const visible = ref(true);
-
+const selected = ref([]);
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
@@ -80,6 +89,18 @@ const state = reactive({
     roleDesc: undefined,
   },
 });
+// 点击树节点时触发
+const setSelecteds = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '点击树节点时触发');
+};
+// 点击树节点复选框时触发
+const checkds = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '点击树节点复选框时触发');
+};
+// 展开/关闭
+const expands = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd, '展开/关闭');
+};
 
 const formRules = {
   roleName: [
@@ -117,6 +138,63 @@ const onConfirm = (done: (closed: boolean) => void) => {
 //     })
 //     .catch(() => {});
 // };
+const treeData = [
+  {
+    title: 'Trunk 0-0',
+    value: 'Trunk 0-0',
+    key: '0-0',
+    children: [
+      {
+        title: 'Leaf 0-0-1',
+        value: 'Leaf 0-0-1',
+        key: '0-0-1',
+      },
+      {
+        title: 'Branch 0-0-2',
+        value: 'Branch 0-0-2',
+        key: '0-0-2',
+        children: [
+          {
+            title: 'Leaf 0-0-2-1',
+            value: 'Leaf 0-0-2-1',
+            key: '0-0-2-1',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Trunk 0-1',
+    value: 'Trunk 0-1',
+    key: '0-1',
+    children: [
+      {
+        title: 'Branch 0-1-1',
+        value: 'Branch 0-1-1',
+        key: '0-1-1',
+        // checkable: false,
+        children: [
+          {
+            title: 'Leaf 0-1-1-1',
+            value: 'Leaf 0-1-1-1',
+            key: '0-1-1-1',
+          },
+          {
+            title: 'Leaf 0-1-1-2',
+            value: 'Leaf 0-1-1-2',
+            key: '0-1-1-2',
+            // disabled: true,
+          },
+        ],
+      },
+      {
+        title: 'Leaf 0-1-2',
+        value: 'Leaf 0-1-2',
+        key: '0-1-2',
+      },
+    ],
+  },
+];
 
 onMounted(() => {
   if (isEdit.value) {

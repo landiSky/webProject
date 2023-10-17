@@ -56,7 +56,7 @@
       </template>
       <template #operations="{ record }">
         <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-        <t-link @click="onEditTreeConfirmsldrole(record)"> 权限管理 </t-link>
+        <t-link @click="onEditTreeConfirmsldrole()"> 权限管理 </t-link>
         <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
         <t-link @click="clickEditBtn(record)">编辑</t-link>
         <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
@@ -330,6 +330,7 @@ const onPageChange = (current: number) => {
 };
 
 const clickSearchBtn = () => {
+  console.log(state.formModel.name, ' state.formModel.name');
   onPageChange(1);
 };
 
