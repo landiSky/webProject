@@ -36,7 +36,7 @@ export const useUserStore = defineStore({
     async initProject() {
       try {
         const userInfo = await apiUsersInfo();
-        this.userInfo = userInfo;
+        this.userInfo = userInfo as any;
 
         return userInfo;
       } catch (error: any) {
@@ -53,7 +53,7 @@ export const useUserStore = defineStore({
      */
     async setUserInfo() {
       const userInfo = await apiUsersInfo();
-      this.userInfo = userInfo;
+      this.userInfo = userInfo as any;
     },
 
     /**
