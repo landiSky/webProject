@@ -102,8 +102,6 @@
         <!-- :indicator-type="indicatorType"
           :indicator-position="indicatorPosition" -->
         <t-carousel
-          show-arrow="never"
-          :indicator-class="['wekjfbks']"
           :style="{
             width: '100%',
             height: '240px',
@@ -534,7 +532,7 @@ const authDialogVisible = reactive([
   }
 
   .content {
-    height: 320px;
+    height: 340px;
     margin: 0 2% 30px 2%;
     padding: 7px 0 0 20px;
     background-image: url('./image/contimg.png');
@@ -544,16 +542,57 @@ const authDialogVisible = reactive([
       width: 99%;
       height: 100%;
 
-      .wekjfbks {
-        background-color: red;
-        // .span {
-        //
-        // }
+      ::v-deep .tele-carousel-arrow-left {
+        top: 106%;
+        left: 44%;
+        background: transparent;
+      }
+
+      ::v-deep .tele-carousel-arrow-right {
+        top: 106%;
+        right: 45%;
+        background: transparent;
+      }
+
+      ::v-deep .tele-carousel-arrow-left > svg {
+        color: #56555f;
+        font-weight: 600;
+        font-size: 20px;
+      }
+
+      ::v-deep .tele-carousel-arrow-right > svg {
+        color: #56555f;
+        font-weight: 600;
+        font-size: 20px;
       }
 
       ::v-deep .tele-carousel-indicator-wrapper-bottom {
-        bottom: -20px;
+        bottom: -35px;
         background: transparent;
+      }
+
+      ::v-deep .tele-carousel-indicator {
+        display: flex;
+        align-items: center;
+      }
+
+      ::v-deep .tele-carousel-indicator-item {
+        width: 8px;
+        height: 8px;
+        margin-right: 16px;
+        background-color: #84adff;
+        border-radius: 0;
+        transform: rotate(45deg);
+        transform-origin: center center;
+      }
+
+      ::v-deep .tele-carousel-indicator-item-active {
+        width: 16px;
+        height: 16px;
+        background-color: #1664ff;
+        border-radius: 0;
+        transform: rotate(45deg);
+        transform-origin: center center;
       }
 
       .catimglist {

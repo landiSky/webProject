@@ -114,11 +114,14 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
-import dayjs from 'dayjs';
-import { Modal, Message } from '@tele-design/web-vue';
+// import dayjs from 'dayjs';
+import {
+  // Modal,
+  Message,
+} from '@tele-design/web-vue';
 import DetailDrawer from './components/detail-drawer.vue';
 import EditModal from './components/edit-modal.vue';
-import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
+// import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import TreeModal from './components/tree-modal.vue';
 import TreeModals from './components/tree-modals.vue';
 
@@ -212,20 +215,20 @@ const pagination = reactive<{
 });
 
 // 时间框选择格式是：年月日，接口入参需要加上时分秒
-const onRangeChange = (
-  value: (Date | string | number | undefined)[] | undefined
-) => {
-  if (value) {
-    const [startDate, endDate] = value || [];
-    [state.formModel.startTime, state.formModel.endTime] = [
-      `${startDate} 00:00:00`,
-      `${endDate} 23:59:59`,
-    ];
-  } else {
-    state.formModel.startTime = undefined;
-    state.formModel.endTime = undefined;
-  }
-};
+// const onRangeChange = (
+//   value: (Date | string | number | undefined)[] | undefined
+// ) => {
+//   if (value) {
+//     const [startDate, endDate] = value || [];
+//     [state.formModel.startTime, state.formModel.endTime] = [
+//       `${startDate} 00:00:00`,
+//       `${endDate} 23:59:59`,
+//     ];
+//   } else {
+//     state.formModel.startTime = undefined;
+//     state.formModel.endTime = undefined;
+//   }
+// };
 
 // 分页，总页数不到10页，不显示分页器
 const hideOnSinglePage = computed(() => pagination.total <= 10);
@@ -233,7 +236,7 @@ const hideOnSinglePage = computed(() => pagination.total <= 10);
 const detailDrawerVisible = ref(false); // 详情抽屉
 const editModalVisible = ref(false);
 
-const editFullModalVisible = ref(false); // 编辑全屏展示弹窗
+// const editFullModalVisible = ref(false); // 编辑全屏展示弹窗
 // 角色弹窗
 const flagModal = ref(false);
 // 角色弹窗
@@ -241,12 +244,15 @@ const flagModalTree = ref(false);
 // const aaa = ref({});
 
 function fetchData() {
+  // @ts-ignore
   const { current, pageSize } = pagination;
-  const params = {
-    page: current - 1, // 从0开始
-    size: pageSize,
-    ...state.formModel,
-  };
+  console.log(current, pageSize);
+
+  // const params = {
+  //   page: current - 1, // 从0开始
+  //   size: pageSize,
+  //   ...state.formModel,
+  // };
 
   // 接口请求
   // state.tableLoading = true;
@@ -343,10 +349,10 @@ const handleReset = () => {
 };
 
 // 查看详情抽屉按钮
-const clickDetailBtn = (record: Record<string, any>) => {
-  detailDrawerVisible.value = true;
-  state.detailData = record;
-};
+// const clickDetailBtn = (record: Record<string, any>) => {
+//   detailDrawerVisible.value = true;
+//   state.detailData = record;
+// };
 
 // 详情抽屉-点击编辑按钮的回调
 const onDetailEdit = (editData: Record<string, any>) => {
@@ -391,26 +397,26 @@ const onEditModalConfirm = (data: any) => {
 //     .catch(() => {});
 // };
 
-const clickStatusChange = ({ id, enabled }: any) => {
-  // 直接启用，停用需要二次弹窗
-  if (enabled === UserStatusEnum.UNUSED) {
-    // modifyUserStatus([id], UserStatusEnum.USED);
-  } else {
-    Modal.warning({
-      title: '确定停用该用户吗？停用后该用户将无法登录。',
-      titleAlign: 'start',
-      content: '',
-      okText: '停用',
-      hideCancel: false,
-      okButtonProps: {
-        status: 'danger',
-      },
-      onOk: () => {
-        // modifyUserStatus([id], UserStatusEnum.UNUSED);
-      },
-    });
-  }
-};
+// const clickStatusChange = ({ id, enabled }: any) => {
+//   // 直接启用，停用需要二次弹窗
+//   if (enabled === UserStatusEnum.UNUSED) {
+//     // modifyUserStatus([id], UserStatusEnum.USED);
+//   } else {
+//     Modal.warning({
+//       title: '确定停用该用户吗？停用后该用户将无法登录。',
+//       titleAlign: 'start',
+//       content: '',
+//       okText: '停用',
+//       hideCancel: false,
+//       okButtonProps: {
+//         status: 'danger',
+//       },
+//       onOk: () => {
+//         // modifyUserStatus([id], UserStatusEnum.UNUSED);
+//       },
+//     });
+//   }
+// };
 
 // // 删除接口
 // const deleteUsers = () => {
@@ -422,38 +428,45 @@ const clickStatusChange = ({ id, enabled }: any) => {
 //     .catch(() => {});
 // };
 
-// modal类删除
-const clickDelBtn = (row: Record<string, any>) => {
-  // // 前端判断无法删除时的弹窗情况
-  // if (row?.binded === BindHdlStatusEnum.YES) {
-  //   // 以前端请求数据为准，可能存在数据与实际不一致请求
-  Modal.warning({
-    title: '该用户已绑定标识身份，暂无法删除。',
-    content: '如需删除，请先将该系统用户与标识身份解绑。',
-    titleAlign: 'start',
-    okText: '好的',
-    hideCancel: true,
-  });
-  //   return;
-  // }
+// // modal类删除
+// const clickDelBtn = (row: Record<string, any>) => {
+//   // // 前端判断无法删除时的弹窗情况
+//   // if (row?.binded === BindHdlStatusEnum.YES) {
+//   //   // 以前端请求数据为准，可能存在数据与实际不一致请求
+//   Modal.warning({
+//     title: '该用户已绑定标识身份，暂无法删除。',
+//     content: '如需删除，请先将该系统用户与标识身份解绑。',
+//     titleAlign: 'start',
+//     okText: '好的',
+//     hideCancel: true,
+//   });
+//   return;
+// }
 
-  // Modal.warning({
-  //   title: '确定删除该用户吗?',
-  //   content: '',
-  //   titleAlign: 'start',
-  //   okText: '删除',
-  //   hideCancel: false,
-  //   okButtonProps: {
-  //     status: 'danger',
-  //   },
-  //   onOk: () => {
-  //     // deleteUsers(params);
-  //   },
-  // });
-};
+// Modal.warning({
+//   title: '确定删除该用户吗?',
+//   content: '',
+//   titleAlign: 'start',
+//   okText: '删除',
+//   hideCancel: false,
+//   okButtonProps: {
+//     status: 'danger',
+//   },
+//   onOk: () => {
+//     // deleteUsers(params);
+//   },
+// });
+// };
 
 // popover类的删除操作
 const onBeforeDelOk = (done: any) => {
+  //  Modal.warning({
+  //   title: '该用户已绑定标识身份，暂无法删除。',
+  //   content: '如需删除，请先将该系统用户与标识身份解绑。',
+  //   titleAlign: 'start',
+  //   okText: '好的',
+  //   hideCancel: true,
+  // });
   // 调后端接口
   // deleteIdentify(deleteId.value)
   //   .then(() => {
