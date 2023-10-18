@@ -162,7 +162,7 @@ const verificationds = () => {
       // this.counts === 100
     }
 
-    counts.value - 1;
+    counts.value -= 1;
   }, 1000);
 };
 // const getDetail = () => {
