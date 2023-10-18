@@ -13,7 +13,7 @@
             height: '100%',
             width: '100%',
           }"
-          alt
+          alt="加载异常..."
           @click="clickCarousel(item.link)"
         />
       </t-carousel-item>
