@@ -1,6 +1,6 @@
 <template>
   <div class="cverbox">
-    <!-- 买家中心概览 -->
+    <!-- 买家中心概览 头部 -->
     <div class="headers">
       <div style="margin: 0 2% 0 2%">
         <!-- 用户信息 -->
@@ -29,7 +29,23 @@
                   <span style="float: left; margin-top: 3px">完成企业认证</span>
                   <div class="btns">
                     <p> 确认企业身份</p>
-                    <t-button type="text">去认证</t-button>
+                    <t-button type="text" @click="authentication"
+                      >去认证</t-button
+                    >
+                    <div class="states">
+                      <p
+                        style="width: 50px; text-align: center"
+                        :class="[
+                          stateles === 0 ? 'authenticated' : 'notcertified',
+                        ]"
+                        >已认证</p
+                      >
+                      <span style="font-size: 12px"
+                        ><t-button type="text" @click="viewdetails"
+                          >查看详情</t-button
+                        ></span
+                      >
+                    </div>
                   </div>
                 </div>
                 <div>
@@ -39,7 +55,9 @@
                   <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
                     <p> 管理企业组织架构&成员权限</p>
-                    <t-button type="text"> 邀请成员/分配权限</t-button>
+                    <t-button type="text" @click="distributionrole">
+                      邀请成员/分配权限</t-button
+                    >
                     <!-- <p></p> -->
                   </div></div
                 >
@@ -50,7 +68,7 @@
                   <span style="float: left; margin-top: 3px">浏览开通应用</span>
                   <div class="btns">
                     <p> 搜索购买开通应用</p>
-                    <t-button type="text">去应用商城 </t-button>
+                    <t-button type="text" @click="tomall">去应用商城 </t-button>
                     <!-- <p> 去应用商城</p> -->
                   </div>
                 </div>
@@ -86,7 +104,10 @@
                 </li>
               </ul>
               <div>
-                <t-button type="primary" style="display: block; margin: 0 auto"
+                <t-button
+                  type="primary"
+                  style="display: block; margin: 0 auto"
+                  @click="authentication"
                   >去认证</t-button
                 ></div
               >
@@ -122,14 +143,17 @@
                 <div class="leftcont">
                   <div class="tophead"
                     ><p>企业统计台账</p
-                    ><p style="color: #1664ff"> 前往 》</p></div
+                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
                   >
                   <div style="height: 55%"
                     >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
                   </div>
                   <div class="tophead"
-                    ><p style="color: #1664ff">配置应用</p
-                    ><p style="color: #86909c"> 使用说明</p></div
+                    ><p style="color: #1664ff" @click="configurationapp"
+                      >配置应用</p
+                    ><p style="color: #86909c" @click="instructionsuse">
+                      使用说明</p
+                    ></div
                   >
                 </div>
               </div>
@@ -140,14 +164,17 @@
                 <div class="leftcont">
                   <div class="tophead"
                     ><p>企业统计台账</p
-                    ><p style="color: #1664ff"> 前往 》</p></div
+                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
                   >
                   <div style="height: 55%"
                     >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
                   </div>
                   <div class="tophead"
-                    ><p style="color: #1664ff">配置应用</p
-                    ><p style="color: #86909c"> 使用说明</p></div
+                    ><p style="color: #1664ff" @click="configurationapp"
+                      >配置应用</p
+                    ><p style="color: #86909c" @click="instructionsuse">
+                      使用说明</p
+                    ></div
                   >
                 </div>
               </div>
@@ -171,23 +198,26 @@
           <div class="leftcont">
             <div class="tophead"
               ><p>{{ item.name }}</p
-              ><p style="color: #1664ff"> 前往 》</p></div
+              ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
             >
             <div style="height: 35%"
               >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
             </div>
             <div class="tophead"
-              ><p style="color: #1664ff">配置应用</p
-              ><p style="color: #86909c"> 使用说明</p></div
+              ><p style="color: #1664ff" @click="configurationapp">配置应用</p
+              ><p style="color: #86909c" @click="instructionsuse">
+                使用说明</p
+              ></div
             >
           </div>
         </div>
       </div>
     </div>
+    <!-- 订单概览 -->
     <div class="views">
       <div class="tooplist">
         <h3>订单概览</h3>
-        <p>更多</p>
+        <p @click="multiples">更多</p>
       </div>
       <div class="overlist">
         <div v-for="(item, index) in 6" :key="index" class="overlistdata">
@@ -207,6 +237,14 @@
         </div>
       </div>
     </div>
+    <!-- :data="{ starlist }" -->
+    <EditModalAlter
+      v-if="editModalVisiblealter"
+      :data="starlist"
+      @confirm="onEditModalConfirmAlter"
+      @cancel="editModalVisiblealter = false"
+    >
+    </EditModalAlter>
   </div>
 </template>
 
@@ -219,10 +257,13 @@ import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
 import frame from './image/frame.png';
-// import btn from './image/btn.png';
+import EditModalAlter from './components/edit-modal-alter.vue';
 
+const starlist = reactive(['张三', '李四']);
 // 认证状态
 const stateles = ref(0);
+// 配置应用 弹窗
+const editModalVisiblealter = ref(false);
 // 轮播图数据
 const images = reactive([
   'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
@@ -254,6 +295,31 @@ const authDialogVisible = reactive([
     name: '章三7',
   },
 ]);
+// 去认证
+const authentication = () => {};
+// 查看详情
+const viewdetails = () => {};
+// 邀请成员/分配权限
+const distributionrole = () => {};
+// 去商城
+const tomall = () => {};
+// 前往
+const togo = () => {};
+// 配置应用
+const configurationapp = () => {
+  editModalVisiblealter.value = true;
+};
+// 配置应用 确定
+const onEditModalConfirmAlter = () => {
+  editModalVisiblealter.value = false;
+};
+// 使用说明
+const instructionsuse = () => {
+  // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
+  // window.open(url, '_blank');
+};
+// 更多
+const multiples = () => {};
 </script>
 
 <style scoped lang="less">
@@ -387,8 +453,30 @@ const authDialogVisible = reactive([
                   color: #9098a9;
                 }
 
-                p:nth-child(2) {
-                  color: #1664ff;
+                // p:nth-child(2) {
+                //   color: #1664ff;
+                // }
+                .states {
+                  // 已认证
+                  .authenticated {
+                    color: #009a29;
+                    background-color: #e8ffea;
+                  }
+                  // 未认证
+                  .notcertified {
+                    color: #fa9600;
+                    background-color: #fffae8;
+                  }
+                  // 待审核
+                  .tobereviewed {
+                    color: #1664ff;
+                    background-color: #e8f4ff;
+                  }
+                  //以驳回
+                  .override {
+                    color: #e63f3f;
+                    background-color: #ffece8;
+                  }
                 }
               }
             }
