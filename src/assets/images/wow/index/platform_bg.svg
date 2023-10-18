@@ -1,0 +1,40 @@
+<svg width="1920" height="570" viewBox="0 0 1920 570" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_254_5106" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="570">
+<rect width="1920" height="570" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_254_5106)">
+<rect width="1920" height="570" fill="url(#paint0_linear_254_5106)" fill-opacity="0.4"/>
+<path opacity="0.5" d="M276 -158L1020 586L-468 586L276 -158Z" fill="white"/>
+<g opacity="0.66">
+<path opacity="0.02" d="M1063.5 188.5L1002 250L1002 127L1063.5 188.5Z" fill="#1664FF"/>
+<path opacity="0.08" d="M1238.5 -6.00001L1177 55.5L1177 -67.5L1238.5 -6.00001Z" fill="#1664FF"/>
+<path opacity="0.03" d="M941 65.5L1002.5 4L1002.5 127L941 65.5Z" fill="#1664FF"/>
+<path opacity="0.03" d="M1400.5 -57.5L1462 -119L1462 3.99999L1400.5 -57.5Z" fill="#1664FF"/>
+<path opacity="0.05" d="M1260.5 55.5L1322 -6L1322 117L1260.5 55.5Z" fill="#1664FF"/>
+<path opacity="0.01" d="M1681 351L1620 412L1620 290L1681 351Z" fill="#1664FF"/>
+<path opacity="0.1" d="M1681 229L1620 290L1620 168L1681 229Z" fill="#1664FF"/>
+<path opacity="0.04" d="M1620 168L1681 107L1681 229L1620 168Z" fill="#1664FF"/>
+<path opacity="0.04" d="M1560 110L1620 50L1620 170L1560 110Z" fill="#1664FF"/>
+<path opacity="0.04" d="M1620 412L1681 351L1681 473L1620 412Z" fill="#1664FF"/>
+<path opacity="0.07" d="M1559 351L1620 290L1620 412L1559 351Z" fill="#1664FF"/>
+<path opacity="0.07" d="M1559 229L1498 290L1498 168L1559 229Z" fill="#1664FF"/>
+<path opacity="0.05" d="M1620 290L1681 229L1681 351L1620 290Z" fill="#1664FF"/>
+<path opacity="0.02" d="M239 50L299 -10L299 110L239 50Z" fill="#1664FF"/>
+<path opacity="0.1" d="M239 170L299 110L299 230L239 170Z" fill="#1664FF"/>
+<path opacity="0.06" d="M617 400L677 340L677 460L617 400Z" fill="#1664FF"/>
+<path opacity="0.04" d="M359 290L299 350L299 230L359 290Z" fill="#1664FF"/>
+<path opacity="0.05" d="M299 110L239 170L239 50L299 110Z" fill="#1664FF"/>
+<path opacity="0.02" d="M677 340L617 400L617 280L677 340Z" fill="#1664FF"/>
+<path opacity="0.03" d="M600 100L540 160L540 40L600 100Z" fill="#1664FF"/>
+<path opacity="0.04" d="M359 170L299 230L299 110L359 170Z" fill="#1664FF"/>
+<path opacity="0.06" d="M419 230L359 290L359 170L419 230Z" fill="#1664FF"/>
+<path opacity="0.03" d="M797 460L737 520L737 400L797 460Z" fill="#1664FF"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_254_5106" x1="0" y1="0" x2="2001.32" y2="786.774" gradientUnits="userSpaceOnUse">
+<stop stop-color="#D8EAFF"/>
+<stop offset="1" stop-color="#A2C1FF"/>
+</linearGradient>
+</defs>
+</svg>
