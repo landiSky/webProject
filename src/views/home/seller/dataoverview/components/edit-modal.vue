@@ -5,7 +5,7 @@
     :height="642"
     :on-before-ok="onConfirm"
     body-class="modals"
-    :closable="false"
+    :closable="true"
     :footer="false"
     @cancel="emit('cancel')"
   >

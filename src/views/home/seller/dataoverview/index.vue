@@ -11,12 +11,9 @@
         </div>
       </div>
     </div>
-    <EditModal
-      v-if="editModalVisible"
-      :data="state.editData"
-      @confirm="onEditModalConfirm"
-      @cancel="editModalVisible = false"
-    ></EditModal>
+    <!-- @confirm="onEditModalConfirm"
+      @cancel="editModalVisible = false" -->
+    <EditModal v-if="editModalVisible" :data="state.editData"></EditModal>
   </div>
 </template>
 
