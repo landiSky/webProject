@@ -13,7 +13,7 @@ import App from './App.vue';
 (async () => {
   const app = createApp(App);
 
-  // app.config.globalProperties.$authCode = [];
+  app.config.globalProperties.$authCode = [];
 
   // Arco初始化
   setupArco(app);
