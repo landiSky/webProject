@@ -152,7 +152,7 @@
                     ><p style="color: #1664ff" @click="configurationapp"
                       >配置应用</p
                     ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明</p
+                      使用说明下载</p
                     ></div
                   >
                 </div>
@@ -173,7 +173,7 @@
                     ><p style="color: #1664ff" @click="configurationapp"
                       >配置应用</p
                     ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明</p
+                      使用说明下载</p
                     ></div
                   >
                 </div>
@@ -196,17 +196,26 @@
             <img :src="frame" alt="" style="width: 100%; height: 100%" />
           </div>
           <div class="leftcont">
-            <div class="tophead"
-              ><p>{{ item.name }}</p
-              ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
+            <div class="tophead" style="margin-bottom: 20px"
+              ><span>{{ item.name }}</span
+              ><span style="color: #1664ff" @click="togo"> 前往 》</span></div
             >
-            <div style="height: 35%"
+            <div
+              style="
+                height: 50px;
+                margin-bottom: 20px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+              "
+              title="asdasdasd"
               >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
             </div>
             <div class="tophead"
-              ><p style="color: #1664ff" @click="configurationapp">配置应用</p
-              ><p style="color: #86909c" @click="instructionsuse">
-                使用说明</p
+              ><span style="color: #1664ff" @click="configurationapp"
+                >配置应用</span
+              ><span style="color: #86909c" @click="instructionsuse">
+                使用说明下载</span
               ></div
             >
           </div>
@@ -217,7 +226,7 @@
     <div class="views">
       <div class="tooplist">
         <h3>订单概览</h3>
-        <p @click="multiples">更多</p>
+        <p style="color: #1664ff" @click="multiples">更多</p>
       </div>
       <div class="overlist">
         <div v-for="(item, index) in 6" :key="index" class="overlistdata">
@@ -245,10 +254,72 @@
       @cancel="editModalVisiblealter = false"
     >
     </EditModalAlter>
+    <!-- \v-show="false" -->
+    <div v-show="false" id="page" class="zhengshu-container-box">
+      <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
+      <div class="zhengshu-container-box-bid">
+        存证BID：{detail?.bid || '--'}
+      </div>
+      <div class="zhengshu-container-box-center">
+        <div>
+          <span>存证所有人</span>
+          <span>{detail?.belonger || '--'}</span>
+        </div>
+        <div>
+          <span>存证创建者</span>
+          <span>{detail?.creator || '--'}</span>
+        </div>
+        <div>
+          <span>存证类型</span>
+          <span>{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span>
+        </div>
+        <div>
+          <span>存证时间</span>
+          <span>{detail?.ctime || '--'}</span>
+        </div>
+        <div>
+          <span>存证平台</span>
+          <span>可信存证服务平台</span>
+        </div>
+        <div>
+          <span>所属链 </span>
+          <span> {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''} </span>
+        </div>
+        <div>
+          <span>交易hash</span>
+          <span>{detail?.chainInfo?.blockHash || '--'}</span>
+        </div>
+        <div>
+          <span>上链时间</span>
+          <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
+        </div>
+      </div>
+      <div class="zhengshu-container-box-shuoming">
+        <div class="zhengshu-container-box-shuoming-box">
+          <div class="zhengshu-container-box-shuoming-box-title">
+            证书说明
+          </div>
+          <div class="zhengshu-container-box-shuoming-box-center">
+            1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
+          </div>
+          <div class="zhengshu-container-box-shuoming-box-center">
+            2、本证书可作为电子数据备案凭证。
+          </div>
+          <div class="zhengshu-container-box-shuoming-box-center">
+            3、如需验证电子数据的一致性和保全时间，可在
+            <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
+            查询。
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import JsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 import { ref, reactive } from 'vue';
 // 头像
 import avatar from './image/avatar.png';
@@ -317,6 +388,16 @@ const onEditModalConfirmAlter = () => {
 const instructionsuse = () => {
   // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
   // window.open(url, '_blank');
+  const input: any = document.getElementById('page');
+
+  html2canvas(input).then((canvas: any) => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new JsPDF('p', 'pt', 'a4');
+    const width = pdf.internal.pageSize.getWidth();
+    const height = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+    pdf.save('kexincunzheng.pdf');
+  });
 };
 // 更多
 const multiples = () => {};
@@ -697,10 +778,13 @@ const multiples = () => {};
           background-color: #fff;
 
           .leftcont {
-            display: flex;
-            flex-direction: column;
+            // display: flex;
+            // flex-direction: column;
             width: 67%;
+            height: 100%;
+            // justify-content: space-between;
             // align-items: flex-end;
+            // align-content: space-between;
             .tophead {
               display: flex;
               justify-content: space-between;
@@ -795,6 +879,101 @@ const multiples = () => {};
         height: 100px;
         padding: 20px;
         background-color: #fff;
+      }
+    }
+  }
+  // pdf导出
+  .zhengshu-container-box {
+    box-sizing: border-box;
+    // position: fixed;
+    // // top: 100000px;
+    width: 664px;
+    height: 856px;
+    margin: 10px auto 0;
+    padding: 24px;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 #ccc;
+
+    .zhengshu-container-box-title {
+      margin-top: 24px;
+      color: #1d2129;
+      font-weight: 400;
+      font-size: 32px;
+      font-family: 'PingFang SC';
+      font-style: normal;
+      text-align: center;
+    }
+
+    .zhengshu-container-box-bid {
+      color: #1d2129;
+      font-weight: 400;
+      font-size: 14px;
+      font-family: 'PingFang SC';
+      font-style: normal;
+      text-align: center;
+    }
+
+    .zhengshu-container-box-center {
+      width: 100%;
+      margin-top: 58px;
+      padding-left: 17px;
+
+      div {
+        display: flex;
+        align-items: center;
+        margin-top: 18px;
+
+        span:nth-child(1) {
+          min-width: 85px;
+          color: #86909c;
+          font-weight: 400;
+          font-size: 13px;
+          font-family: 'PingFang SC';
+          font-style: normal;
+        }
+
+        span:nth-child(2) {
+          color: #1d2129;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: 'PingFang SC';
+          font-style: normal;
+        }
+      }
+    }
+
+    .zhengshu-container-box-shuoming {
+      box-sizing: border-box;
+      width: 100%;
+      // position: absolute;
+      // bottom: 24px;
+      // left: 0;
+      min-height: 145px;
+      padding: 0 24px;
+
+      .zhengshu-container-box-shuoming-box {
+        box-sizing: border-box;
+        // border-top: 1px solid #e8e9ea;
+        width: 100%;
+        height: 100%;
+        padding-top: 20px;
+
+        .zhengshu-container-box-shuoming-box-title {
+          color: #1d2129;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: 'PingFang SC';
+          font-style: normal;
+        }
+
+        .zhengshu-container-box-shuoming-box-center {
+          margin-top: 10px;
+          color: #86909c;
+          font-weight: 400;
+          font-size: 12px;
+          font-family: 'PingFang SC';
+          font-style: normal;
+        }
       }
     }
   }

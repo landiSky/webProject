@@ -52,6 +52,14 @@ const homeRoutesList = [
     component: PAGE_LAYOUT,
     children: [
       {
+        path: '/seller/dataoverview',
+        name: 'sellerDataoverview',
+        component: () => import('@/views/home/seller/dataoverview/index.vue'),
+        meta: {
+          name: '数据概览',
+        },
+      },
+      {
         path: '/seller/goods',
         name: 'sellerGoods',
         component: () => import('@/views/home/seller/goods/index.vue'),

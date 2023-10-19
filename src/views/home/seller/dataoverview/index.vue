@@ -1,5 +1,5 @@
 <template>
-  <div>订单管理</div>
+  <div>数据概览</div>
 </template>
 
 <script lang="ts" setup></script>
