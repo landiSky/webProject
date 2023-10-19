@@ -98,6 +98,9 @@ export default [
           {
             authority: 'ROUTE_SYSTEM_ROLES',
           },
+          {
+            authority: 'ROUTE_SYSTEM_DATAOVERVIEW',
+          },
         ],
         accountNonExpired: true,
         accountNonLocked: true,
@@ -124,6 +127,7 @@ export default [
           'ROUTE_SYSTEM',
           'ROUTE_SYSTEM_USERS',
           'ROUTE_SYSTEM_ROLES',
+          'ROUTE_SYSTEM_DATAOVERVIEW',
         ],
       });
     },

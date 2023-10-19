@@ -59,6 +59,7 @@ const homeRoutesList = [
           name: '数据概览',
         },
       },
+
       {
         path: '/seller/goods',
         name: 'sellerGoods',
