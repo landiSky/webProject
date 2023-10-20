@@ -13,7 +13,19 @@
     </div>
     <!-- @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false" -->
-    <EditModal v-if="editModalVisible" :data="state.editData"></EditModal>
+    <EditModal
+      v-if="editModalVisible"
+      :data="state.editData"
+      @confirm="onEditModalConfirm"
+      @cancel="editModalVisible = false"
+    ></EditModal>
+    <EditModalFullscreen
+      v-if="gotoverifys"
+      :data="state.editData"
+      @confirm="onEditModalConfirmcode"
+      @cancel="gotoverifys = false"
+    >
+    </EditModalFullscreen>
   </div>
 </template>
 
@@ -21,15 +33,30 @@
 import { ref, reactive } from 'vue';
 import empty from '@/assets/images/home/empty.png';
 import EditModal from './components/edit-modal.vue';
+import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 
 const state = reactive({
   editData: {},
 });
-
+// 立即认证弹窗
 const editModalVisible = ref(true);
+// 去认证弹窗
+const gotoverifys = ref(false);
 // 立即认证
 const authentications = () => {
+  console.log(editModalVisible.value);
+
   editModalVisible.value = true;
+};
+// 认证弹窗去认证事件
+const onEditModalConfirm = () => {
+  console.log('企业认证');
+  editModalVisible.value = false;
+  gotoverifys.value = true;
+};
+// 认证填写完成
+const onEditModalConfirmcode = () => {
+  gotoverifys.value = false;
 };
 </script>
 

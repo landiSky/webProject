@@ -9,10 +9,8 @@
             <img :src="avatar" alt="" />
           </div>
           <div class="rights">
-            <p style="float: left; width: 300px; margin-top: 16px" class="name"
-              >张伟</p
-            >
-            <div class="inofs" style="float: left; margin-top: 25px">
+            <p class="name">张伟</p>
+            <div class="inofs">
               <p>北京泰尔英福有限公司</p><p>|</p><p>主账号</p><p>|</p
               ><p :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
                 >已认证</p
@@ -24,13 +22,13 @@
         <div class="direction">
           <div class="dirleft">
             <div class="titleleft">
-              <h3 style="margin: 20px 0 24px 0">使用指导 </h3>
+              <h3 style="margin-bottom: 24px">使用指导 </h3>
               <div class="dirlist">
                 <div>
                   <img :src="group1" alt="" />
                   <span style="float: left; margin-top: 3px">完成企业认证</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 确认企业身份</p>
+                    <p> 确认企业身份</p>
                     <t-button type="text" @click="authentication"
                       >去认证</t-button
                     >
@@ -56,7 +54,7 @@
                   <img :src="group2" alt="" />
                   <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 管理企业组织架构&成员权限</p>
+                    <p> 管理企业组织架构&成员权限</p>
                     <t-button type="text" @click="distributionrole">
                       邀请成员/分配权限</t-button
                     >
@@ -69,7 +67,7 @@
                   <img :src="group3" alt="" />
                   <span style="float: left; margin-top: 3px">浏览开通应用</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 搜索购买开通应用</p>
+                    <p> 搜索购买开通应用</p>
                     <t-button type="text" @click="tomall">去应用商城 </t-button>
                     <!-- <p> 去应用商城</p> -->
                   </div>
@@ -78,9 +76,9 @@
                   <p class="ition"></p>
 
                   <img :src="group4" alt="" />
-                  <span style="float: left">企业成员管理</span>
+                  <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 应用配置，使用应用</p>
+                    <p> 应用配置，使用应用</p>
                   </div>
                 </div>
               </div>
@@ -88,42 +86,27 @@
           </div>
           <div class="firmright">
             <div class="firm">
-              <div
-                style="
-                  float: left;
-                  margin-right: 6px;
-                  color: #4e5969;
-                  font-weight: 500;
-                  font-size: 20px;
-                "
-                >企业节点认证</div
+              <div style="float: left; margin-right: 6px">企业节点认证</div
               ><span
                 :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
                 >已认证</span
               >
             </div>
-            <div
-              class="fimelist"
-              style="float: left; width: 90%; font-size: 12px"
-            >
-              <p style="margin: 15px 0 5px 0">开通权益:</p>
-              <ul style="margin-left: 10px">
-                <li style="display: inline-block; width: 100%">
-                  <span></span><span style="float: left">免费使用热门应用</span>
-                </li>
-                <li style="width: 100%">
-                  <span></span><span>自动完成企业认证</span>
-                </li>
+            <div style="float: left; width: 80%; font-size: 12px">
+              <p>开通权益</p>
+              <ul style="line-height: 15px">
+                <li> <span></span><span>免费使用热门应用</span> </li>
+                <li> <span></span><span>自动完成企业认证</span> </li>
                 <li> <span></span><span>使用标识服务</span> </li>
-                <li> <span></span><span>使用标识解析类应用需先完成</span> </li>
                 <li>
-                  <span style="opacity: 0"></span><span>企业节点认证</span>
+                  <span></span
+                  ><span>使用标识解析类应用需先完成企业节点认证</span>
                 </li>
               </ul>
               <div>
                 <t-button
                   type="primary"
-                  style="display: block; margin: 15px auto; padding: 5px 10px"
+                  style="display: block; margin: 0 auto"
                   @click="authentication"
                   >去认证</t-button
                 ></div
@@ -135,7 +118,7 @@
     </div>
     <!-- 热门应用服务 -->
     <div class="content">
-      <h3 style="margin: 20px 0">热门应用服务</h3>
+      <h3>热门应用服务</h3>
       <div class="catimg">
         <!-- :indicator-type="indicatorType"
           :indicator-position="indicatorPosition" -->
@@ -145,7 +128,7 @@
             height: '240px',
           }"
         >
-          <t-carousel-item v-for="(item, index) in images" :key="index">
+          <t-carousel-item v-for="image in images" :key="image">
             <!-- <img
               :src="image"
               :style="{
@@ -153,34 +136,7 @@
               }"
             /> -->
             <div class="catimglist">
-              <div
-                v-for="(it, index) in item"
-                :key="index"
-                class="catimglistleft"
-              >
-                <div style="width: 30%">
-                  <img :src="it" alt="" style="width: 100%; height: 100%" />
-                </div>
-                <div class="leftcont">
-                  <div class="tophead"
-                    ><p>企业统计台账</p
-                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
-                  >
-                  <div style="float: left; height: 70%; margin-top: 20px"
-                    ><p
-                      >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。</p
-                    >
-                  </div>
-                  <div class="tophead"
-                    ><p style="color: #1664ff" @click="configurationapp"
-                      >配置应用</p
-                    ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明下载</p
-                    ></div
-                  >
-                </div>
-              </div>
-              <!-- <div class="catimglistleft">
+              <div class="catimglistleft">
                 <div style="width: 30%">
                   <img :src="frame" alt="" style="width: 100%; height: 100%" />
                 </div>
@@ -189,30 +145,7 @@
                     ><p>企业统计台账</p
                     ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
                   >
-                  <div style="height: 70%; margin-top: 20px; float: left"
-                    ><p
-                      >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。</p
-                    >
-                  </div>
-                  <div class="tophead"
-                    ><p style="color: #1664ff" @click="configurationapp"
-                      >配置应用</p
-                    ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明下载</p
-                    ></div
-                  >
-                </div>
-              </div> -->
-              <!-- <div class="catimglistright">
-                <div style="width: 30%">
-                  <img :src="frame" alt="" style="width: 100%; height: 100%" />
-                </div>
-                <div class="leftcont">
-                  <div class="tophead"
-                    ><p>企业统计台账</p
-                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
-                  >
-                  <div style="height: 70%; margin-top: 20px; float: left"
+                  <div style="height: 55%"
                     >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
                   </div>
                   <div class="tophead"
@@ -223,7 +156,28 @@
                     ></div
                   >
                 </div>
-              </div> -->
+              </div>
+              <div class="catimglistright">
+                <div style="width: 30%">
+                  <img :src="frame" alt="" style="width: 100%; height: 100%" />
+                </div>
+                <div class="leftcont">
+                  <div class="tophead"
+                    ><p>企业统计台账</p
+                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
+                  >
+                  <div style="height: 55%"
+                    >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
+                  </div>
+                  <div class="tophead"
+                    ><p style="color: #1664ff" @click="configurationapp"
+                      >配置应用</p
+                    ><p style="color: #86909c" @click="instructionsuse">
+                      使用说明下载</p
+                    ></div
+                  >
+                </div>
+              </div>
             </div>
           </t-carousel-item>
         </t-carousel>
@@ -368,13 +322,13 @@ import html2canvas from 'html2canvas';
 
 import { ref, reactive } from 'vue';
 // 头像
-import avatar from './image/avatar.png';
-import group1 from './image/group1.png';
-import group2 from './image/group2.png';
-import group3 from './image/group3.png';
-import group4 from './image/group4.png';
-import frame from './image/frame.png';
-import EditModalAlter from './components/edit-modal-alter.vue';
+// import avatar from './image/avatar.png';
+// import group1 from './image/group1.png';
+// import group2 from './image/group2.png';
+// import group3 from './image/group3.png';
+// import group4 from './image/group4.png';
+// import frame from './image/frame.png';
+// import EditModalAlter from './components/edit-modal-alter.vue';
 
 const starlist = reactive(['张三', '李四']);
 // 认证状态
@@ -383,18 +337,9 @@ const stateles = ref(0);
 const editModalVisiblealter = ref(false);
 // 轮播图数据
 const images = reactive([
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
+  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
+  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
+  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
 ]);
 
 // //已购应用
@@ -459,11 +404,6 @@ const multiples = () => {};
 </script>
 
 <style scoped lang="less">
-// * {
-//   padding: 0;
-//   margin: 0;
-//   list-style: none;
-// }
 .cverbox {
   width: 100%;
 
@@ -490,7 +430,6 @@ const multiples = () => {};
 
       .rights {
         float: left;
-        width: 300px;
         height: 44px;
         margin: 5px 0 0 10px;
 
@@ -558,7 +497,7 @@ const multiples = () => {};
       height: 220px;
 
       .dirleft {
-        width: 78%;
+        width: 80%;
         height: 100%;
         background-color: #fff;
         border: 1px solid #e5e8ef;
@@ -725,7 +664,7 @@ const multiples = () => {};
       }
 
       .firmright {
-        width: 20%;
+        width: 17%;
         height: 100%;
         padding: 15px 0 0 30px;
         background-color: #fff;
@@ -755,23 +694,6 @@ const multiples = () => {};
           .override {
             color: #e63f3f;
             background-color: #ffece8;
-          }
-        }
-
-        .fimelist {
-          ul {
-            li {
-              margin-top: 5px;
-
-              span:nth-child(1) {
-                float: left;
-                width: 6px;
-                height: 6px;
-                margin: 5px 8px 0 0;
-                background-color: #4e5969;
-                border-radius: 6px;
-              }
-            }
           }
         }
       }
@@ -945,12 +867,11 @@ const multiples = () => {};
     .tooplist {
       display: flex;
       justify-content: space-between;
-      margin: 10px 0;
     }
 
     .overlist {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       width: 100%;
 
       .overlistdata {
