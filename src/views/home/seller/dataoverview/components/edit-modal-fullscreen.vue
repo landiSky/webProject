@@ -47,7 +47,7 @@
         >
         <t-form-item label="企业名称" field="enterprisename">
           <t-input
-            v-model="formModel.nickName"
+            v-model="formModel.enterprisename"
             :max-length="{
               length: 50,
               errorOnly: true,
@@ -60,7 +60,7 @@
         </t-form-item>
         <t-form-item label="统一社会信用代码" field="creditcode">
           <t-input
-            v-model="formModel.nickName"
+            v-model="formModel.creditcode"
             :max-length="{
               length: 20,
               errorOnly: true,
@@ -73,7 +73,7 @@
         </t-form-item>
         <t-form-item label="法人姓名" field="corporatename">
           <t-input
-            v-model="formModel.nickName"
+            v-model="formModel.corporatename"
             :max-length="{
               length: 10,
               errorOnly: true,
@@ -138,7 +138,7 @@
         >
         <t-form-item label="联系人姓名" field="contactname">
           <t-input
-            v-model="formModel.username"
+            v-model="formModel.contactname"
             :max-length="{
               length: 10,
               errorOnly: true,
@@ -152,7 +152,7 @@
         </t-form-item>
         <t-form-item label="联系人身份证号" field="contactidnumber">
           <t-input
-            v-model="formModel.username"
+            v-model="formModel.contactidnumber"
             :max-length="{
               length: 18,
               errorOnly: true,
