@@ -88,22 +88,22 @@
               <p style="color: #86909c; font-size: 14px; line-height: 32px"
                 >您的认证申请正在审核中</p
               >
+              <!-- <p>
+                <t-button
+                  type="primary"
+                  style="margin-left: 20px; padding: 7px 15px"
+                  @click="firmgotoverify"
+                  >查看详情</t-button
+                ></p
+              > -->
               <p>
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
                   @click="viewdetails"
-                  >查看详情</t-button
-                ></p
-              >
-              <!-- <p>
-                <t-button
-                  @click="firmgotoverify"
-                  type="primary"
-                  style="padding: 7px 15px"
                   >去认证</t-button
                 ></p
-              > -->
+              >
             </div>
           </div>
         </div>
@@ -247,7 +247,7 @@ const props = defineProps({
     default: () => {},
   },
 });
-const emit = defineEmits(['confirm', 'cancel']);
+const emit = defineEmits(['confirm', 'cancel', 'hasdflag']);
 // 认证状态
 const stateles = ref(0);
 // 弹窗状态
@@ -260,14 +260,18 @@ const state = reactive({
     phone: undefined,
   },
 });
-// 企业认证  查看详情
+// 企业认证   去认证
 const viewdetails = () => {
   emit('confirm');
 };
-// 企业认证  去认证
+// 企业认证 查看详情
 const firmgotoverify = () => {};
 // 企业节点认证 查看详情
-const viewdetailsnode = () => {};
+const viewdetailsnode = () => {
+  // console.log('aaa');
+
+  emit('hasdflag');
+};
 // 企业节点认证  去认证
 const nodegotoverify = () => {};
 onMounted(() => {
@@ -284,12 +288,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-* {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
+// * {
+//   margin: 0;
+//   padding: 0;
+//   list-style: none;
+// }
 .modals {
   width: 100%;
   // height: 100px;

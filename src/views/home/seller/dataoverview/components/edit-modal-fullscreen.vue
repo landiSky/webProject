@@ -5,16 +5,19 @@
     title-align="start"
     :closable="false"
     class="fullscreen-modal"
+    @back="goback"
   >
     <!-- :on-before-ok="onConfirm"
     @cancel="emit('cancel')" -->
     <template #title>
-      <span class="title-left" @click="goback">
-        <!-- <icon-left /> -->
-        <!-- <span>返回</span> -->
-      </span>
+      <!-- <span class="title-left"> -->
+      <!-- <div style="z-index: 10000">
+          <icon-left style="margin-left: -11px" />
+          <span @click="goback" style="margin-left: 7px">返回</span>
+        </div>
+      </span> -->
       <span style="margin-left: 42%">
-        {{ data.id ? '编辑企业认证' : '企业认证' }}
+        {{ data.id ? '企业认证' : '企业认证' }}
       </span>
     </template>
     <div class="modal-body">
@@ -84,6 +87,7 @@
           >
           </t-input>
         </t-form-item>
+        <!-- @before-upload="beforeUpload" -->
         <t-form-item label="营业执照" field="businesslicense">
           <t-upload
             list-type="picture-card"
@@ -111,7 +115,8 @@
           </t-upload>
         </t-form-item>
         <p style="margin: -10px 0 20px 20%; color: #86909c">
-          支持jpg、png、bmp、tif、gif文件格式,文件大小限制5M以内。
+          支持jpg、png文件格式,文件大小限制5M以内。
+          <!-- 支持png和jpg,要求5M以内 -->
         </p>
 
         <div style="width: 100%; height: 1px; background-color: #e5e8ef"></div>
@@ -164,96 +169,73 @@
           >
           </t-input>
         </t-form-item>
+        <!-- <div style="display: flex"> -->
         <t-form-item label="联系人身份证" field="contactidcard">
-          <t-upload
-            list-type="picture-card"
-            action="/"
-            :limit="1"
-            image-preview
+          <t-form-item
+            :hide-label="true"
+            style="width: 200px"
+            field="contactidcardz"
           >
-            <template #upload-button>
-              <div
-                style="
-                  width: 150px;
-                  height: 100px;
-                  color: var(--color-text-1);
-                  text-align: center;
-                  background-color: var(--color-fill-2);
-                  border: 1px dashed var(--color-fill-4);
-                "
-              >
-                <div style="margin-top: 30px">
-                  <div> <IconPlus /></div>
-                  <div style="">点击上传「人像面」</div>
+            <!-- @before-upload="beforeUpload" -->
+            <t-upload
+              list-type="picture-card"
+              action="/"
+              :limit="1"
+              image-preview
+              style="width: 100px"
+            >
+              <template #upload-button>
+                <div
+                  style="
+                    width: 150px;
+                    height: 100px;
+                    color: var(--color-text-1);
+                    text-align: center;
+                    background-color: var(--color-fill-2);
+                    border: 1px dashed var(--color-fill-4);
+                  "
+                >
+                  <div style="margin-top: 30px">
+                    <div> <IconPlus /></div>
+                    <div style="">点击上传「人像面」</div>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </t-upload>
-          <t-upload
-            style="margin-left: -180px"
-            list-type="picture-card"
-            action="/"
-            :limit="1"
-            image-preview
-          >
-            <template #upload-button>
-              <div
-                style="
-                  width: 150px;
-                  height: 100px;
-                  color: var(--color-text-1);
-                  text-align: center;
-                  background-color: var(--color-fill-2);
-                  border: 1px dashed var(--color-fill-4);
-                "
-              >
-                <div style="margin-top: 30px">
-                  <div> <IconPlus /></div>
-                  <div style="">点击上传「国徽面」</div>
+              </template>
+            </t-upload>
+          </t-form-item>
+          <t-form-item label="" :hide-label="true" field="contactidcardf">
+            <!-- @before-upload="beforeUpload" -->
+            <t-upload
+              list-type="picture-card"
+              action="/"
+              :limit="1"
+              image-preview
+              style="margin-top: -20px"
+            >
+              <template #upload-button>
+                <div
+                  style="
+                    width: 150px;
+                    height: 100px;
+                    color: var(--color-text-1);
+                    text-align: center;
+                    background-color: var(--color-fill-2);
+                    border: 1px dashed var(--color-fill-4);
+                  "
+                >
+                  <div style="margin-top: 30px">
+                    <div> <IconPlus /></div>
+                    <div style="">点击上传「国徽面」</div>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </t-upload>
+              </template>
+            </t-upload>
+          </t-form-item>
         </t-form-item>
-        <p style="margin: -10px 0 20px 20%; color: #86909c">
-          支持jpg、png、bmp、tif、gif文件格式,文件大小限制5M以内。
+        <!-- </div> -->
+        <p style="margin: -30px 0 20px 20%; color: #86909c">
+          支持jpg、png文件格式,文件大小限制5M以内。
         </p>
-
-        <!-- <t-form-item label="性别" name="sex">
-          <t-radio-group v-model="formModel.sex">
-            <t-radio :value="1">男</t-radio>
-            <t-radio :value="0">女</t-radio>
-          </t-radio-group>
-        </t-form-item> -->
-        <!-- <t-form-item label="手机号" field="phone">
-          <t-input
-            v-model="formModel.phone"
-            allow-clear
-            placeholder="请输入11位手机号"
-          >
-          </t-input>
-        </t-form-item> -->
-        <!-- <t-form-item label="邮箱" field="email">
-          <t-input
-            v-model="formModel.email"
-            allow-clear
-            placeholder="请输入邮箱"
-          >
-          </t-input>
-        </t-form-item> -->
-
-        <!-- <t-form-item label="备注" field="comments">
-          <t-textarea
-            v-model="formModel.comments"
-            placeholder="请输入备注"
-            :max-length="{
-              length: 200,
-              errorOnly: true,
-            }"
-            show-word-limit
-            allow-clear
-          />
-        </t-form-item> -->
       </t-form>
     </div>
     <template #footer>
@@ -270,7 +252,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 // import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 
 const props = defineProps({
   data: {
@@ -305,7 +287,7 @@ const formModel = ref({
 //     url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
 //   },
 // ];
-const formRules = {
+const formRules: any = {
   enterprisename: [
     { required: true, message: '请输入企业名称' },
     { maxLength: 50, message: '长度不超过50个字符' },
@@ -333,11 +315,13 @@ const formRules = {
     },
   ],
 
+  // contactidcard: [{ required: true, message: '请上传身份证' }],
   contactidcard: [{ required: true, message: '请上传身份证' }],
 };
 
 const goback = () => {
   // showModal.value = false;
+  console.log('cancel');
   emit('cancel');
 };
 
@@ -356,12 +340,39 @@ const getUserDetail = () => {
   //     loading.value = false;
   //   });
 };
+// const beforeUpload = (file: any) => {
+//   console.log(file, 'file');
+
+//   const isLt5M = file.size / 1024 / 1024 < 5;
+//   if (!isLt5M) {
+//     Message.warning('上传图片大小必须限制在5MB以内');
+//     return false;
+//   }
+// };
 
 onMounted(() => {
   if (props.data?.id) {
     getUserDetail();
   }
 });
+// const qqq = () => {
+//   Modal.warning({
+//     title: '企业认证重复',
+//     content:
+//       '该企业已完成「企业认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
+//     titleAlign: 'start',
+//     okText: '好的',
+//     hideCancel: true,
+//   });
+//   Modal.warning({
+//     title: '企业节点认证重复',
+//     content:
+//       '该企业已完成「企业节点认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
+//     titleAlign: 'start',
+//     okText: '好的',
+//     hideCancel: true,
+//   });
+// };
 // 完成
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
@@ -389,7 +400,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 // 取消
 const canceldes = () => {
-  // console.log('cancel');
+  console.log('cancel');
 
   emit('cancel');
 };
@@ -409,6 +420,10 @@ const canceldes = () => {
   ::v-deep .tele-modal-fullscreen .tele-modal-footer {
     text-align: left;
   }
+}
+
+::v-deep.tele-modal-body .tele-form-item:last-child {
+  margin-bottom: 10px;
 }
 
 .modal-body {
