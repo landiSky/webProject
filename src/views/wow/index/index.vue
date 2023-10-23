@@ -46,11 +46,11 @@
           :title="item.title"
         >
           <div class="tabDesc">
-            <span>
-              <iconpark-icon name="logo" size="20px"></iconpark-icon>
+            <span class="contentTitle">
+              <iconpark-icon name="digitalbase" size="20px"></iconpark-icon>
               <span>{{ item.title }}</span>
             </span>
-            <span>{{ item.desc }}</span>
+            <span class="contentDesc">{{ item.desc }}</span>
           </div>
           <div class="cardList">
             <div
@@ -63,24 +63,90 @@
                 )`,
               }"
             >
-              <span>{{ card.name }}</span>
-              <span>{{ card.desc }}</span>
+              <!-- <span>{{ card.name }}</span>
+              <span>{{ card.desc }}</span> -->
             </div>
           </div>
         </t-tab-pane>
-        <t-tab-pane key="2" title="工业互联网技术服务">
-          Content of Tab Panel 2
-        </t-tab-pane>
-        <t-tab-pane key="3" title="区块链技术服务"> </t-tab-pane>
-        <t-tab-pane key="3" title="创新服务"> </t-tab-pane>
       </t-tabs>
     </div>
   </div>
   <div class="policy"></div>
-  <div class="idService"></div>
+  <div class="idService">
+    <div class="title">标识服务</div>
+    <div class="content">
+      <div class="left">
+        <span class="subTitle">当前活跃企业节点</span>
+        <t-table
+          :columns="columns"
+          :data="tableData"
+          :bordered="false"
+          :pagination="false"
+          class="table"
+        />
+      </div>
+      <div class="right">
+        <span class="subTitle">开通企业节点，获取以下资源及服务</span>
+        <div class="overview">
+          <div class="item">
+            <span class="label">互通企业数</span>
+            <span>
+              <span class="value">250,000</span>
+              <span>家</span>
+            </span>
+          </div>
+          <div class="item">
+            <span class="label">接入应用/服务</span>
+            <span>
+              <span class="value">73</span>
+              <span>个</span>
+            </span>
+          </div>
+          <div class="item">
+            <span class="label">使用公开数据标准</span>
+            <span>
+              <span class="value">23</span>
+              <span>套</span>
+            </span>
+          </div>
+        </div>
+        <t-button type="primary">申请开通企业节点</t-button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="header"></div>
+    <div class="content">
+      <div class="navigator">
+        <div class="item">
+          <span class="title">联系我们</span>
+          <span class="subitem">商务合作：23456789q0wewretrytuyiuo</span>
+          <span class="subitem">商务服务：23456789q0wewretrytuyiuo</span>
+        </div>
+        <div class="item">
+          <span class="title">新手上路</span>
+          <span class="subitem">新手指南</span>
+        </div>
+        <div class="item">
+          <span class="title">我是买家</span>
+          <span class="subitem">使用服务</span>
+        </div>
+        <div class="item">
+          <span class="title">我是商家</span>
+          <span class="subitem">入驻指南</span>
+          <span class="subitem">管理指南</span>
+        </div>
+      </div>
+      <div class="copyright">
+        <span>Copyright © 2016-2020 北京泰尔英福科技有限公司</span>
+        <span>京ICP备12003601号-6</span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -147,7 +213,8 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -168,7 +235,8 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -189,7 +257,8 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -210,7 +279,8 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -230,6 +300,34 @@ const platProductsList = [
     ],
   },
 ];
+
+const columns = [
+  {
+    title: ' 企业前缀',
+    dataIndex: 'entPrefix',
+  },
+  {
+    title: '企业名称',
+    dataIndex: 'entName',
+  },
+  {
+    title: '注册量',
+    dataIndex: 'regisNum',
+  },
+  {
+    title: '解析量',
+    dataIndex: 'resolveNum',
+  },
+];
+
+const tableData = reactive([
+  {
+    entPrefix: '88.111.22',
+    entName: '北京泰尔英福科技有限公司',
+    regisNum: 10000,
+    resolveNum: 500,
+  },
+]);
 </script>
 
 <style lang="less" scoped>
@@ -294,6 +392,7 @@ const platProductsList = [
 }
 
 .platform {
+  padding-bottom: 55px;
   text-align: center;
   background-image: url('@/assets/images/wow/index/platform_bg.svg');
 
@@ -309,6 +408,8 @@ const platProductsList = [
   }
 
   :deep(.tele-tabs-nav) {
+    background: rgba(255, 255, 255, 0.5);
+
     &::before {
       display: none;
     }
@@ -336,21 +437,197 @@ const platProductsList = [
     }
   }
 
+  :deep(.tele-tabs-content) {
+    padding-top: 87px;
+  }
+
   :deep(.tele-tabs-pane) {
     display: flex;
+    align-items: center;
   }
 
   .tabDesc {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
     width: 368px;
+    margin-right: 86px;
+    margin-left: 100px;
+
+    .contentTitle {
+      display: flex;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+
+      span {
+        margin-left: 12px;
+      }
+    }
+
+    .contentDesc {
+      margin-top: 12px;
+      padding-top: 12px;
+      color: #4e5969;
+      font-size: 14px;
+      line-height: 22px;
+      text-align: left;
+      border-top: 1px solid #c9cdd4;
+    }
   }
 
-  .cardlist {
+  .cardList {
     display: flex;
     flex: 1;
 
     .card {
       display: flex;
       flex-direction: column;
+      width: 210px;
+      height: 284px;
+      margin-right: 46px;
+    }
+  }
+}
+
+.idService {
+  padding-bottom: 42px;
+  background-color: #f2f3f8;
+
+  .title {
+    padding-top: 40px;
+    padding-bottom: 20px;
+    color: #1d2129;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+    text-align: center;
+    // background: rgba(255, 255, 255, 0.5);
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+
+    .left,
+    .right {
+      width: 580px;
+      height: 414px;
+      padding: 24px;
+      background: #fff;
+      border: 1px solid #ebecf0;
+      border-radius: 4px;
+    }
+
+    .left {
+      margin-right: 16px;
+
+      :deep(.tele-table-th) {
+        background-color: transparent;
+      }
+
+      :deep(.tele-table-td) {
+        border-bottom: none;
+      }
+
+      .table {
+        margin-top: -12px;
+        margin-left: -16px;
+      }
+    }
+
+    .right {
+      .overview {
+        display: flex;
+        justify-content: space-between;
+        width: 530px;
+        height: 164px;
+        margin-top: 32px;
+        margin-bottom: 48px;
+        padding: 40px 14px;
+        background-image: url('@/assets/images/wow/index/idservice_right_bg.svg');
+
+        .item {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          .label {
+            margin-bottom: 24px;
+            color: #000;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 22px;
+          }
+
+          .value {
+            color: #1664ff;
+            font-weight: 600;
+            font-size: 32px;
+            line-height: 38px;
+          }
+        }
+      }
+    }
+
+    .subTitle {
+      display: block;
+      margin-bottom: 16px;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 28px;
+    }
+  }
+}
+
+.footer {
+  .header {
+    height: 92px;
+    background-image: url('@/assets/images/wow/index/footer_header_bg.svg');
+    background-position: center center;
+    background-size: cover;
+  }
+
+  .content {
+    padding: 57px 133px 0 133px;
+    background-image: url('@/assets/images/wow/index/footer_content_bg.svg');
+
+    .navigator {
+      display: flex;
+      margin-bottom: 80px;
+
+      .item {
+        display: flex;
+        flex-direction: column;
+        margin-right: 130px;
+
+        .title {
+          margin-bottom: 24px;
+          color: #1d2129;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 28px;
+        }
+
+        .subitem {
+          margin-bottom: 20px;
+          color: #4e5969;
+          font-size: 14px;
+          line-height: 22px;
+        }
+      }
+    }
+
+    .copyright {
+      display: flex;
+      justify-content: space-between;
+      padding: 23px 0 19px 0;
+      color: #1d2129;
+      font-size: 12px;
+      line-height: 18px;
+      border-top: 1px solid #c1c1c1;
     }
   }
 }
