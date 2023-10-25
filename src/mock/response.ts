@@ -1,7 +1,7 @@
 export const successResponseWrap = (data: unknown) => {
   return {
     data,
-    code: 10000,
+    code: 200,
     message: '成功',
   };
 };
