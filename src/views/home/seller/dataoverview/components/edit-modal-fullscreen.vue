@@ -94,6 +94,9 @@
             action="/"
             :limit="1"
             image-preview
+            style="width: 150px; height: 100px"
+            accept="image/png,image/jpg"
+            @before-upload="beforeUpload"
           >
             <template #upload-button>
               <div
@@ -182,7 +185,8 @@
               action="/"
               :limit="1"
               image-preview
-              style="width: 100px"
+              accept="image/png,image/jpg"
+              @before-upload="beforeUpload"
             >
               <template #upload-button>
                 <div
@@ -211,6 +215,8 @@
               :limit="1"
               image-preview
               style="margin-top: -20px"
+              accept="image/png,image/jpg"
+              @before-upload="beforeUpload"
             >
               <template #upload-button>
                 <div
@@ -272,8 +278,8 @@ const formModel = ref({
   corporatename: null,
   businesslicense: null,
   contactname: null,
-  contactidnumber: [],
-  contactidcard: null,
+  contactidnumber: null,
+  contactidcard: [],
 });
 // const fileList = [
 //   {
@@ -340,15 +346,15 @@ const getUserDetail = () => {
   //     loading.value = false;
   //   });
 };
-// const beforeUpload = (file: any) => {
-//   console.log(file, 'file');
+const beforeUpload = (file: File) => {
+  console.log(file, 'file');
 
-//   const isLt5M = file.size / 1024 / 1024 < 5;
-//   if (!isLt5M) {
-//     Message.warning('上传图片大小必须限制在5MB以内');
-//     return false;
-//   }
-// };
+  const isLt5M = file.size / 1024 / 1024 < 5;
+  if (!isLt5M) {
+    Message.warning('上传图片大小必须限制在5MB以内');
+    // return false;
+  }
+};
 
 onMounted(() => {
   if (props.data?.id) {
@@ -436,6 +442,11 @@ const canceldes = () => {
 
   .tele-form {
     max-width: 652px;
+  }
+
+  ::v-deep .tele-upload-list-picture {
+    width: 150px;
+    height: 100px;
   }
 }
 </style>

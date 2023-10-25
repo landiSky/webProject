@@ -51,7 +51,7 @@ const state = reactive({
   editData: {},
 });
 // 立即认证弹窗
-const editModalVisible = ref(true);
+const editModalVisible = ref(false);
 // 去认证弹窗
 const gotoverifys = ref(false);
 // 详情弹窗

@@ -2,7 +2,7 @@
   <t-modal
     v-model:visible="visible"
     :width="742"
-    :height="500"
+    :height="520"
     :on-before-ok="onConfirm"
     body-class="modals"
     :closable="true"
