@@ -76,7 +76,7 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         const { code, message } = data;
 
         //  TODO2: 这里逻辑可以根据项目进行修改code: 10000表示成功, 根据项目调整
-        if (code === 10000) {
+        if (code === 200) {
           return resolve(data.data);
         }
 

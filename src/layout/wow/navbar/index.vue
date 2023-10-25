@@ -14,7 +14,7 @@
           <t-link href="link">标识服务</t-link>
           <t-link href="link">平台产品</t-link>
           <t-link href="link">平台服务</t-link>
-          <t-link href="link">商城</t-link>
+          <t-link @click="gotoMall">商城</t-link>
           <t-link href="link">前沿政策</t-link>
         </t-space>
       </div>
@@ -128,6 +128,10 @@ const handleLogout = async (type?: number) => {
     params.query = { type };
   }
   router.push(params);
+};
+
+const gotoMall = () => {
+  router.push({ path: '/wow/mall' });
 };
 
 const clickLogout = () => {
