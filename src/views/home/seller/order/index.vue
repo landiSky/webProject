@@ -88,6 +88,7 @@
                   <!-- HH:mm:ss -->
                   <t-range-picker
                     v-model="formInline.time"
+                    :placeholder="['下单开始时间', '下单结束时间']"
                     format="YYYY-MM-DD"
                     style="width: 100%"
                     @change="onRangeChange"
@@ -288,7 +289,11 @@
                   <t-button type="text" style="width: 100%" @click="delivery"
                     >交付应用</t-button
                   >
-                  <span>订单详情</span>
+                  <span
+                    v-if="item.orderStatus === '1'"
+                    @click="clickDetail('qwsdad')"
+                    >订单详情</span
+                  >
                 </div>
               </t-col>
             </t-row>
@@ -330,7 +335,8 @@
             show-jumper
             show-page-size
             :page-size-options="[10, 15, 20, 25]"
-            :change="getTableDataOne"
+            @change="getTableDataOne"
+            @page-size-change="pagesizechange"
           />
         </div>
       </div>
@@ -338,7 +344,7 @@
     <!-- 修改金额 -->
     <EditModal
       v-if="editModalVisible"
-      :data="state.editData"
+      :data="state.updataamount"
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
     ></EditModal>
@@ -356,6 +362,13 @@
       @confirm="turndownModalConfirm"
       @cancel="turndownVisible = false"
     ></EditModalTurndown>
+    <!-- 全屏弹窗 -->
+    <DetailsModalFullscreen
+      v-if="FullscreenDetailsModal"
+      :data="state.editData"
+      @cancel="FullscreenDetailsModal = false"
+    >
+    </DetailsModalFullscreen>
   </div>
 </template>
 
@@ -371,6 +384,7 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalDelivery from './components/edit-modal-delivery.vue';
 import EditModalTurndown from './components/edit-modal-turndown.vue';
+import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const formInline = reactive({
   commodityName: '',
@@ -383,11 +397,20 @@ const formInline = reactive({
   pageSize: 10,
   total: 100,
 });
-const state = reactive({ editData: {} });
+const state = reactive({
+  editData: {
+    id: '',
+  },
+  updataamount: {
+    id: '',
+    currentamount: '',
+    amount: '',
+  },
+});
 const tableData = ref([
   {
     // 订单id
-    id: '',
+    id: '524613674127',
     orderNum: '2376547265462354', // 订单号
     productName: '', // 商品名称
     customerName: '天津市雅诺达信息科技有限公司', // 买家名称
@@ -398,7 +421,7 @@ const tableData = ref([
     merchantName: '', // 卖家名称
     deliveryTypeName: '', // 交付类型名称
     deliveryType: '独立部署', // 交付类型
-    productPrice: '¥10000.00', // 商品金额
+    productPrice: '10000.00', // 商品金额
     accountCount: '5', // 账号数量
     buyDuration: '10', // 购买时长
     realityPrice: '¥10000.00', // 实付金额
@@ -553,6 +576,8 @@ const editModalVisible = ref(false);
 const deliveryVisible = ref(false);
 // 驳回弹窗 开关
 const turndownVisible = ref(false);
+// 全屏弹窗 开关
+const FullscreenDetailsModal = ref(false);
 onMounted(() => {
   console.log('执行了');
 });
@@ -580,15 +605,26 @@ const clearSearch = () => {};
 // 凭证审核
 // const clickUpload = (e: Object) => {};
 // 订单详情
-// const clickDetail = (e: Object) => {};
+const clickDetail = (id: string) => {
+  FullscreenDetailsModal.value = true;
+};
 // 清空查询项
 const clearSearchles = () => {};
-// 分页
-const getTableDataOne = (a: number) => {
-  console.log(a, 'a');
+// 分页 页码发生改变
+const getTableDataOne = (current: number) => {
+  formInline.pageNum = current;
+};
+// 分页 每页条数
+const pagesizechange = (pageSize: number) => {
+  console.log(pageSize, 'a');
+  formInline.pageSize = pageSize;
 };
 // 修改金额 弹窗
 const modificationamount = () => {
+  console.log(tableData.value[0].id, 'tableData.value[0].id');
+
+  state.updataamount.id = tableData.value[0].id;
+  state.updataamount.currentamount = tableData.value[0].productPrice;
   editModalVisible.value = true;
 };
 // 修改金额 完成
@@ -599,7 +635,26 @@ const onEditModalConfirm = () => {
 
 // 交付应用
 const delivery = () => {
+  state.editData.id = tableData.value[0].id;
   deliveryVisible.value = true;
+  // Modal.warning({
+  //   title: '我已完成账号重置，确定交付该应用',
+  //   content: '交付订单流转到买家确定状态。',
+  //   titleAlign: 'start',
+  //   okText: ' 确定',
+  //   hideCancel: false,
+  //   // okButtonProps: {
+  //   //   status: 'danger',
+  //   // },
+  //   onOk: () => {
+  //     // deleteUsers(params);
+
+  //     Message.success('交付成功');
+  //   },
+  //   onCancel: () => {
+  //     Message.success('取消交付成功');
+  //   },
+  // });
 };
 // 交付应用 完成
 const ondeliveryModalConfirm = () => {
@@ -607,6 +662,7 @@ const ondeliveryModalConfirm = () => {
 };
 // 驳回
 const bohui = () => {
+  state.editData.id = tableData.value[0].id;
   turndownVisible.value = true;
 };
 // 驳回 完成
@@ -774,11 +830,12 @@ const turndownModalConfirm = () => {
       .row-titlelrd {
         width: 100%;
         margin-bottom: 6px;
+        padding-top: 10px !important;
         border-radius: 2px;
 
         .grid-content {
           height: 20px;
-          padding: 13px 0 0 10px;
+          // padding: 13px 0 0 10px;
           color: #1d2129;
           font-weight: 400;
           font-size: 12px;

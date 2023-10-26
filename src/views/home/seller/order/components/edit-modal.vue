@@ -8,7 +8,7 @@
     <template #title> 修改订单价格 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item label="订单号">
-        <span>202210191918239103</span>
+        <span>{{ state.formModel.id }}</span>
         <!-- <t-input
           v-model="state.formModel.roleName"
           placeholder="请输入"
@@ -22,7 +22,9 @@
       </t-form-item>
 
       <t-form-item label="当前价格">
-        <span>￥10000.00</span>
+        <p style="font-weight: 500; font-size: 14px"
+          >￥{{ state.formModel.currentamount }}</p
+        >
         <!-- <t-select
           v-model="state.formModel.roleDesc"
           placeholder="请选择"
@@ -63,36 +65,15 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['confirm', 'cancel']);
-const roleSelect = [
-  {
-    name: '超级管理员',
-    key: 1,
-  },
-  {
-    name: '角色A',
-    key: 2,
-  },
-  {
-    name: '角色B',
-    key: 3,
-  },
-  {
-    name: '角色C',
-    key: 4,
-  },
-  {
-    name: '角色D',
-    key: 5,
-  },
-];
+
 const formRef = ref();
 const visible = ref(true);
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
-    roleName: undefined,
-    roleDesc: undefined,
-    amount: undefined,
+    id: '',
+    currentamount: '',
+    amount: '',
   },
 });
 
@@ -122,25 +103,21 @@ const onConfirm = (done: (closed: boolean) => void) => {
   });
 };
 
-// const getDetail = () => {
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
-// };
-
 onMounted(() => {
-  if (isEdit.value) {
-    // 这里分两种情况
-    // 一是编辑信息从列表传入
-    const { roleName, roleDesc, amount } = props.data;
-    state.formModel = { roleName, roleDesc, amount };
+  // if (isEdit.value) {
+  // 这里分两种情况
+  // 一是编辑信息从列表传入
+  // const { roleName, roleDesc, amount } = props.data;
+  // { roleName, roleDesc, amount };
+  console.log(props.data, 'props.data');
+  const { currentamount, id, amount } = props.data;
+  console.log(currentamount, id);
 
-    // 二是从接口获取
-    // getDetail();
-  }
+  state.formModel = { id, currentamount, amount };
+
+  // 二是从接口获取
+  // getDetail();
+  // }
 });
 </script>
 

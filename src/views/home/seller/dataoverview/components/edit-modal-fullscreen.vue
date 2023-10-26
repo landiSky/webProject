@@ -346,8 +346,8 @@ const getUserDetail = () => {
   //     loading.value = false;
   //   });
 };
-const beforeUpload = (file: File) => {
-  console.log(file, 'file');
+const beforeUpload = (file: File): boolean | undefined | any => {
+  // console.log(file, 'file');
 
   const isLt5M = file.size / 1024 / 1024 < 5;
   if (!isLt5M) {
