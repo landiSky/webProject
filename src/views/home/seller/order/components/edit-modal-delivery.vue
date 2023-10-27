@@ -96,7 +96,7 @@ const formRules = {
     { required: true, message: '请输入' },
     {
       match: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
-      message: '请输入正确的密码',
+      message: '密码要有大小写不低于6位不大于16位',
     },
   ],
   remarks: [{ required: true, message: '请输入' }],

@@ -76,6 +76,7 @@
                     type="primary"
                     status="danger"
                     style="margin-right: 10px"
+                    @click="turndownsyhn"
                     >驳回</t-button
                   >
                   <t-button type="primary" @click="passok(dataList.id)"
@@ -106,7 +107,7 @@
                 <span><img :src="tobereviewed" alt="" /></span
                 >&nbsp;&nbsp;待交付：已确认收款，请完成订单交付。<span></span>
                 <p style="margin-top: 10px">
-                  <t-button type="primary">立即交付</t-button>
+                  <t-button type="primary" @click="delivery">立即交付</t-button>
                 </p>
               </div>
               <div v-if="dataList.orderStatus === 2">
@@ -262,10 +263,10 @@
                 <t-col :span="2">
                   <div class="grid-content">购买时长</div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">实付金额</div>
                 </t-col>
-                <t-col :span="3">
+                <t-col v-if="dataList.orderStatus === 0" :span="3">
                   <div class="grid-content">操作</div>
                 </t-col>
               </t-row>
@@ -318,7 +319,7 @@
                 <t-col :span="2">
                   <div class="grid-content"> {{ dataList.buyDuration }}</div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">
                     ¥{{ dataList.realityPrice }}
                     <p style="color: #86909c"
@@ -326,10 +327,12 @@
                     ></div
                   >
                 </t-col>
-                <t-col :span="3">
+                <t-col v-if="dataList.orderStatus === 0" :span="3">
                   <div class="grid-content">
-                    <!-- @click="modificationamount" -->
-                    <t-button type="text" style="width: 100%"
+                    <t-button
+                      type="text"
+                      style="width: 100%"
+                      @click="modificationamount"
                       >修改金额</t-button
                     >
                   </div>
@@ -340,14 +343,36 @@
         </div>
       </div>
     </t-modal>
+    <!-- 修改金额 -->
+    <EditModal
+      v-if="editModalVisible"
+      :data="state.updataamount"
+      @confirm="onEditModalConfirm"
+      @cancel="editModalVisible = false"
+    ></EditModal>
+    <!-- 驳回弹窗 -->
+    <EditModalTurndown
+      v-if="turndownVisible"
+      :data="state.editData"
+      @confirm="turndownModalConfirm"
+      @cancel="turndownVisible = false"
+    ></EditModalTurndown>
+    <!-- 订单交付 -->
+    <EditModalDelivery
+      v-if="deliveryVisible"
+      :data="state.editData"
+      @confirm="ondeliveryModalConfirm"
+      @cancel="deliveryVisible = false"
+    ></EditModalDelivery>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 import { utilsCopy } from '@/utils/tools';
 // import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
 import { Message, Modal } from '@tele-design/web-vue';
+
 // import Warn from '@/assets/images/home/warn.png';
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 import tobepaid from '../images/tobepaid.png';
@@ -355,6 +380,9 @@ import tobereviewed from '../images/tobereviewed.png';
 import error from '../images/error.png';
 import success from '../images/success.png';
 import Copy from '../images/copy.png';
+import EditModal from './edit-modal.vue';
+import EditModalTurndown from './edit-modal-turndown.vue';
+import EditModalDelivery from './edit-modal-delivery.vue';
 
 const props = defineProps({
   data: {
@@ -364,8 +392,17 @@ const props = defineProps({
     },
   },
 });
-
-const emit = defineEmits(['confirm', 'cancel']);
+const state = reactive({
+  editData: {
+    id: '',
+  },
+  updataamount: {
+    id: '',
+    currentamount: 0,
+    amount: '',
+  },
+});
+const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
 const dataList = ref({
   id: '1', // 订单id
@@ -376,12 +413,12 @@ const dataList = ref({
     'https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
   deliveryTypeName: 'SAAS', // 交付类型名称
-  deliveryType: 0, // 交付类型
+  deliveryType: 1, // 交付类型
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量
   buyDuration: '5个月', // 购买时长
   realityPrice: 10000, // 实付金额
-  orderStatus: 1, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+  orderStatus: 5, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
   orderStatusName: '已完成', // 状态名称
   orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
   orderSteps: 6, // 订单步骤
@@ -402,7 +439,12 @@ const dataList = ref({
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   attachmentAddressArr: ['http://gjkhjkdg/1.png', 'http://gjkhjkdg/2.png'], // 支付凭证
 });
-
+// 修改金额 弹窗 开关
+const editModalVisible = ref(false);
+// 驳回弹窗 开关
+const turndownVisible = ref(false);
+// 交付应用 弹窗 开关
+const deliveryVisible = ref(false);
 const goback = () => {
   emit('cancel');
 };
@@ -427,31 +469,97 @@ const getUserDetail = () => {
 const clickCopy = (Num: string) => {
   utilsCopy(Num);
 };
-// 通过
-const passok = (id: string) => {
-  Modal.warning({
-    title: '我已完成账号重置，确定交付该应用',
-    content: '交付订单流转到买家确定状态。',
-    titleAlign: 'start',
-    okText: ' 确定',
-    hideCancel: false,
-    // okButtonProps: {
-    //   status: 'danger',
-    // },
-    onOk: () => {
-      // deleteUsers(params);
-      Message.success('交付成功');
-    },
-    onCancel: () => {
-      Message.success('取消交付成功');
-    },
-  });
+
+// 修改金额 弹窗
+const modificationamount = () => {
+  state.updataamount.id = dataList.value.id;
+  state.updataamount.currentamount = dataList.value.productPrice;
+  editModalVisible.value = true;
+};
+// 修改金额 完成
+const onEditModalConfirm = () => {
+  editModalVisible.value = false;
+  Message.success('金额修改成功');
+};
+// 驳回
+const turndownsyhn = () => {
+  // console.log('驳回');
+  state.editData.id = dataList.value.id;
+  turndownVisible.value = true;
+};
+// 驳回 完成
+const turndownModalConfirm = () => {
+  turndownVisible.value = false;
 };
 onMounted(() => {
   if (props.data?.id) {
     getUserDetail();
   }
 });
+// 通过
+
+const passok = (id: string) => {
+  function onBeforeOk(done: (closed: boolean) => void) {
+    setTimeout(() => {
+      done(true);
+      Message.success('审核成功');
+    }, 2 * 1000);
+  }
+  Modal.warning({
+    title: '我已收到交易款项，同意通过该凭证。',
+    content: '审核通过后，订单将交易完成。',
+    titleAlign: 'start',
+    okText: ' 确定',
+    hideCancel: false,
+    onBeforeOk,
+    // okButtonProps: {
+    //   status: 'danger',
+    // },
+    onOk: () => {
+      // deleteUsers(params);
+      // onBeforeOk;
+    },
+    onCancel: () => {
+      // Message.success('取消交付成功');
+    },
+  });
+};
+// 交付应用
+const delivery = () => {
+  function onBeforeOk(done: (closed: boolean) => void) {
+    setTimeout(() => {
+      done(true);
+      Message.success('交付成功');
+    }, 2 * 1000);
+  }
+  if (dataList.value.deliveryType === 0) {
+    Modal.warning({
+      title: '我已完成账号重置，确定交付该应用',
+      content: '交付订单流转到买家确定状态。',
+      titleAlign: 'start',
+      okText: ' 确定',
+      hideCancel: false,
+      onBeforeOk,
+      // okButtonProps: {
+      //   status: 'danger',
+      // },
+      onOk: () => {
+        // deleteUsers(params);
+        Message.success('交付成功');
+      },
+      onCancel: () => {
+        // Message.success('取消交付成功');
+      },
+    });
+  } else if (dataList.value.deliveryType === 1) {
+    state.editData.id = dataList.value.id;
+    deliveryVisible.value = true;
+  }
+};
+// 交付应用 完成
+const ondeliveryModalConfirm = () => {
+  deliveryVisible.value = false;
+};
 // 完成
 // const onConfirm = (done: (closed: boolean) => void) => {
 //   formRef.value.validate((errors: any) => {
