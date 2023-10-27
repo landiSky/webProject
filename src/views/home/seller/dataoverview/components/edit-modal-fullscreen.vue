@@ -348,11 +348,15 @@ const getUserDetail = () => {
 };
 const beforeUpload = (file: File) => {
   // console.log(file, 'file');
-  const isLt5M = file.size / 1024 / 1024 < 5;
-  if (!isLt5M) {
-    Message.warning('上传图片大小必须限制在5MB以内');
-    // return false;
-  }
+  return new Promise<void>((resolve, reject) => {
+    const isLt5M: boolean = file.size / 1024 / 1024 < 5;
+    if (!isLt5M) {
+      Message.warning('上传图片大小必须限制在5MB以内');
+      // return false;
+      reject();
+    }
+    resolve();
+  });
 };
 
 onMounted(() => {
