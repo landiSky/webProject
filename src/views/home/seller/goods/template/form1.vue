@@ -52,9 +52,9 @@
         :field="`blockList.${index}.desc`"
         label="区块简介"
         :rules="[
-          { required: true, message: '请输入区块简介' },
           {
-            validator: (value: any, cb: any) =>
+            required: true,
+            validator: (value: string, cb: any) =>
               itemValid(40, '请输入区块简介', value, cb),
           },
         ]"
@@ -72,9 +72,9 @@
         :field="`blockList.${index}.picUrl`"
         label="配图"
         :rules="[
-          { required: true, message: '请上传配图' },
           {
-            validator: (value: any, cb: any) => itemValid(0, '请上传配图', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, defineProps, inject, onMounted } from 'vue';
+import { ref, defineProps, inject } from 'vue';
 import type { Ref } from 'vue';
 
 const formRef = ref();

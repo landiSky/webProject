@@ -44,9 +44,9 @@
         :field="`blockList.${index}.name1`"
         label="标题一"
         :rules="[
-          { required: true, message: '请输入标题一' },
           {
-            validator: (value, cb) => itemValid(15, '请输入标题一', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(15, '请输入标题一', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -63,9 +63,9 @@
         :field="`blockList.${index}.desc1`"
         label="简介一"
         :rules="[
-          { required: true, message: '请输入简介一' },
           {
-            validator: (value, cb) => itemValid(40, '请输入简介一', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(40, '请输入简介一', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -82,9 +82,9 @@
         :field="`blockList.${index}.name2`"
         label="标题二"
         :rules="[
-          { required: true, message: '请输入标题二' },
           {
-            validator: (value, cb) => itemValid(15, '请输入标题二', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(15, '请输入标题二', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -101,9 +101,9 @@
         :field="`blockList.${index}.desc2`"
         label="简介二"
         :rules="[
-          { required: true, message: '请输入简介二' },
           {
-            validator: (value, cb) => itemValid(40, '请输入简介二', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(40, '请输入简介二', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -120,9 +120,9 @@
         :field="`blockList.${index}.name3`"
         label="标题三"
         :rules="[
-          { required: true, message: '请输入标题三' },
           {
-            validator: (value, cb) => itemValid(15, '请输入标题三', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(15, '请输入标题三', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -139,9 +139,9 @@
         :field="`blockList.${index}.desc3`"
         label="简介三"
         :rules="[
-          { required: true, message: '请输入简介三' },
           {
-            validator: (value, cb) => itemValid(40, '请输入简介三', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(40, '请输入简介三', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"

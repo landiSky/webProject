@@ -43,9 +43,9 @@
         :field="`blockList.${index}`"
         label="配图"
         :rules="[
-          { required: true, message: '请上传配图' },
           {
-            validator: (value, cb) => itemValid(index, '请上传配图', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(index, '请上传配图', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -60,7 +60,7 @@
             :auto-upload="false"
             tip="点击上传"
             image-preview
-            @change="(_, currentFile) => onUploadChange(_, currentFile, index)"
+            @change="(_: any, currentFile: any) => onUploadChange(_, currentFile, index)"
           >
           </t-upload>
           <span class="uploadTips">

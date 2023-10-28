@@ -28,9 +28,9 @@
       field="picUrl"
       label="配图"
       :rules="[
-        { required: true, message: '请上传配图' },
         {
-          validator: (value, cb) => itemValid(0, '请上传配图', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -44,7 +44,7 @@
           :limit="1"
           :auto-upload="false"
           tip="点击上传"
-          @change="(_, currentFile) => onUploadChange(_, currentFile)"
+          @change="(_:any, currentFile: any) => onUploadChange(_, currentFile)"
         >
         </t-upload>
         <span class="uploadTips">
@@ -59,9 +59,9 @@
       field="blockList.0.name"
       label="区块标题"
       :rules="[
-        { required: true, message: '请输入区块标题' },
         {
-          validator: (value, cb) => itemValid(20, '请输入区块标题', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(20, '请输入区块标题', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -78,9 +78,9 @@
       field="blockList.0.desc"
       label="区块简介"
       :rules="[
-        { required: true, message: '请输入区块简介' },
         {
-          validator: (value, cb) => itemValid(64, '请输入区块简介', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(64, '请输入区块简介', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -99,9 +99,9 @@
       field="blockList.1.name"
       label="区块标题"
       :rules="[
-        { required: true, message: '请输入区块标题' },
         {
-          validator: (value, cb) => itemValid(20, '请输入区块标题', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(20, '请输入区块标题', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -118,9 +118,9 @@
       field="blockList.1.desc1"
       label="简介1"
       :rules="[
-        { required: true, message: '请输入简介1' },
         {
-          validator: (value, cb) => itemValid(50, '请输入简介1', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(50, '请输入简介1', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -137,9 +137,9 @@
       field="blockList.1.desc2"
       label="简介2"
       :rules="[
-        { required: true, message: '请输入简介2' },
         {
-          validator: (value, cb) => itemValid(50, '请输入简介2', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(50, '请输入简介2', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -156,9 +156,9 @@
       field="blockList.1.desc3"
       label="简介3"
       :rules="[
-        { required: true, message: '请输入简介3' },
         {
-          validator: (value, cb) => itemValid(50, '请输入简介3', value, cb),
+          required: true,
+          validator: (value: string, cb: any) => itemValid(50, '请输入简介3', value, cb),
         },
       ]"
       :validate-trigger="['change', 'input']"
@@ -175,7 +175,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, defineProps, inject } from 'vue';
+import { ref, defineProps, inject } from 'vue';
 import type { Ref } from 'vue';
 
 const formRef = ref();
