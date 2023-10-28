@@ -33,10 +33,9 @@
         :field="`blockList.${index}.name`"
         label="区块标题"
         :rules="[
-          { required: true, message: '请输入区块标题' },
           {
-            validator: (value, cb) =>
-              itemValid(12, '请输入区块标题', value, cb),
+            required: true,
+            validator: ( value: string, cb: any ) => itemValid(12, '请输入区块标题', value, cb)
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -55,7 +54,7 @@
         :rules="[
           { required: true, message: '请输入区块简介' },
           {
-            validator: (value, cb) =>
+            validator: (value: any, cb: any) =>
               itemValid(40, '请输入区块简介', value, cb),
           },
         ]"
@@ -75,7 +74,7 @@
         :rules="[
           { required: true, message: '请上传配图' },
           {
-            validator: (value, cb) => itemValid(0, '请上传配图', value, cb),
+            validator: (value: any, cb: any) => itemValid(0, '请上传配图', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -89,7 +88,7 @@
             :limit="1"
             :auto-upload="false"
             tip="点击上传"
-            @change="(_, currentFile) => onUploadChange(_, currentFile, index)"
+            @change="(_: any, currentFile: any) => onUploadChange(_, currentFile, index)"
           >
           </t-upload>
           <span class="uploadTips">
