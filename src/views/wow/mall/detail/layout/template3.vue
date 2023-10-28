@@ -2,7 +2,7 @@
   <div class="container">
     <div class="title">{{ props.templateData.moduleName }}</div>
     <div class="list">
-      <img :src="props.templateData.picUrl" alt />
+      <img :src="props.templateData.picUrl" alt="" />
       <span class="wrap">
         <span class="subtitle">{{ block1.name }}</span>
         <span class="desc">{{ block1.desc }}</span>

@@ -11,10 +11,10 @@
             <span class="subtitle">{{ item.name }}</span>
             <span class="desc">{{ item.desc }}</span>
           </span>
-          <img :src="item.picUrl" alt />
+          <img :src="item.picUrl" alt="" />
         </span>
         <span v-else class="item">
-          <img :src="item.picUrl" alt />
+          <img :src="item.picUrl" alt="" />
           <span class="rightWrap">
             <span class="subtitle">{{ item.name }}</span>
             <span class="desc">{{ item.desc }}</span>

@@ -7,7 +7,7 @@
         :key="index"
         class="item"
       >
-        <img :src="item.picUrl" alt />
+        <img :src="item.picUrl" alt="" />
         <span class="subtitle">{{ item.name }}</span>
         <span class="desc">{{ item.desc }}</span>
       </span>
