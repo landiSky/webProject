@@ -105,14 +105,62 @@
           >
         </div>
       </div>
-      <div class="intro"></div>
+      <div class="intro">
+        <div class="template">
+          <component
+            :is="forCompList[item.type - 1]"
+            v-for="(item, index) in templateList"
+            :key="index"
+            :template-data="item"
+          ></component>
+        </div>
+        <div class="consult">
+          <span class="title">服务商资质</span>
+          <span class="header">服务商名称：北京泰尔英福科技有限公司</span>
+          <t-button type="primary" size="large">购买咨询</t-button>
+        </div>
+      </div>
     </div>
   </div>
   <WowFooter></WowFooter>
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
+import Template1 from './layout/template1.vue';
+import Template2 from './layout/template2.vue';
+import Template3 from './layout/template3.vue';
+import Template4 from './layout/template4.vue';
+import Template5 from './layout/template5.vue';
+import Template6 from './layout/template6.vue';
+
+// // 模块一二三
+// const testData =
+//   '[{"type":1,"moduleName":"模板一","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"区块二简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"区块三简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":2,"moduleName":"模板二","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块一11","desc":"区块一11简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":3,"moduleName":"模板三","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp","blockList":[{"name":"区块一","desc":"图片紫葡萄"},{"name":"区块二","desc1":"简介 1：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc2":"简介 2：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc3":"简介 3：把尔粉色发非法人非法是的色粉舒服分手的方式实习"}]}]';
+
+// // 模块四
+// const testData =
+//   '[{"type":4,"moduleName":"模块四","blockList":[{"name":"区块一","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块四","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
+
+// // 模块五
+// const testData =
+//   '[{"type":5,"moduleName":"模块五","blockList":[{"name1":"标题一","desc1":"简介一","name2":"标题二","desc2":"简介二","name3":"标题三","desc3":"简介三"},{"name":"","desc":"","picUrl":"","name1":"标题一一","name2":"标题二二","name3":"标题三三","desc1":"简介二","desc2":"简介二","desc3":"简介二"}]}]';
+
+// 模块六
+const testData =
+  '[{"type":6,"moduleName":"模块六","blockList":[{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
+
+const forCompList = [
+  Template1,
+  Template2,
+  Template3,
+  Template4,
+  Template5,
+  Template6,
+];
+
+const templateList = JSON.parse(testData);
 </script>
 
 <style lang="less" scoped>
@@ -209,6 +257,42 @@ import WowFooter from '@/views/wow/components/wowFooter/index.vue';
             width: 60px;
             margin-right: 16px;
           }
+        }
+      }
+    }
+
+    .intro {
+      display: flex;
+      justify-content: start;
+
+      .template {
+        flex: 1;
+        margin-right: 16px;
+      }
+
+      .consult {
+        width: 260px;
+        height: 178px;
+        padding: 24px;
+        color: #000;
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px; /* 157.143% */
+        background-color: #fff;
+        border-radius: 4px;
+
+        .title {
+          margin-bottom: 12px;
+          font-weight: 500;
+        }
+
+        .header {
+          margin-bottom: 12px;
+        }
+
+        button {
+          width: 208px;
         }
       }
     }

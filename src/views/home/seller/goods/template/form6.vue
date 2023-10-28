@@ -56,7 +56,7 @@
             :file-list="item ? item : []"
             action="https://arco.design/"
             accept=".jpg,.png,.bmp,.tif,.gif"
-            :limit="2"
+            :limit="5"
             :auto-upload="false"
             tip="点击上传"
             image-preview
@@ -103,7 +103,7 @@ const props = defineProps({
 });
 
 const initForm = {
-  type: 1,
+  type: 6,
   moduleName: '',
   blockList: [[]],
 };
