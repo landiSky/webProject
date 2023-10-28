@@ -57,14 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  ref,
-  computed,
-  defineProps,
-  defineEmits,
-  inject,
-  onMounted,
-} from 'vue';
+import { ref, computed, defineProps, defineEmits, inject } from 'vue';
 import type { Ref } from 'vue';
 import Form1 from './template/form1.vue';
 import Form2 from './template/form2.vue';
@@ -77,7 +70,10 @@ import { TemplateEnum } from './constant';
 
 const emit = defineEmits(['save', 'close']);
 const props = defineProps({
-  currentIndex: Number,
+  currentIndex: {
+    type: Number,
+    default: -1,
+  },
 });
 
 const templateList: Ref<Record<string, any>[]> = inject(
@@ -123,10 +119,6 @@ const saveTemplate = () => {
     }
   });
 };
-
-onMounted(() => {
-  console.log('template.vue:117', props.currentIndex, selectIndex.value);
-});
 </script>
 
 <style lang="less" scoped>
