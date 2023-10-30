@@ -90,6 +90,7 @@
         <!-- @before-upload="beforeUpload" -->
         <t-form-item label="营业执照" field="businesslicense">
           <t-upload
+            v-model="formModel.businesslicense"
             list-type="picture-card"
             action="/"
             :limit="1"
@@ -151,7 +152,6 @@
               length: 10,
               errorOnly: true,
             }"
-            :disabled="props.data?.id"
             allow-clear
             show-word-limit
             placeholder="请输入"
@@ -165,7 +165,6 @@
               length: 18,
               errorOnly: true,
             }"
-            :disabled="props.data?.id"
             allow-clear
             show-word-limit
             placeholder="请输入"
@@ -175,12 +174,13 @@
         <!-- <div style="display: flex"> -->
         <t-form-item label="联系人身份证" field="contactidcard">
           <t-form-item
+            field="contactidcardz"
             :hide-label="true"
             style="width: 200px"
-            field="contactidcardz"
           >
             <!-- @before-upload="beforeUpload" -->
             <t-upload
+              v-model="formModel.contactidcard.contactidcardz"
               list-type="picture-card"
               action="/"
               :limit="1"
@@ -210,6 +210,7 @@
           <t-form-item label="" :hide-label="true" field="contactidcardf">
             <!-- @before-upload="beforeUpload" -->
             <t-upload
+              v-model="formModel.contactidcard.contactidcardf"
               list-type="picture-card"
               action="/"
               :limit="1"
@@ -256,7 +257,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, defineEmits, ref, onMounted, reactive } from 'vue';
 // import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -272,15 +273,48 @@ const props = defineProps({
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();
-const formModel = ref({
-  enterprisename: null,
-  creditcode: undefined,
-  corporatename: null,
-  businesslicense: null,
-  contactname: null,
-  contactidnumber: null,
-  contactidcard: [],
+const detaillist = reactive({
+  id: '企业id',
+  userId: '用户id',
+  companyName: '企业名称',
+  creditCode: '统一社会信用代码',
+  contactName: '联系人名称',
+  contactIdCard: '15282219900812003X',
+  idCardf:
+    'https://img2.baidu.com/it/u=1628788978,405686623&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+  idCardz:
+    'https://img0.baidu.com/it/u=1356935808,1870677175&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500',
+  legalPersonName: '法人姓名',
+  type: 1,
+  businessLicenseId:
+    'https://img0.baidu.com/it/u=1783176477,761999961&fm=253&fmt=auto&app=120&f=JPEG?w=605&h=500',
+  certificateStatus: 0,
+  remark: '驳理由',
 });
+const formModel = ref({
+  // 企业名称
+  enterprisename: detaillist?.companyName ? detaillist.companyName : null,
+  // 统一社会信用代码
+  creditcode: detaillist?.creditCode ? detaillist.creditCode : null,
+  // 法人姓名
+  corporatename: detaillist?.legalPersonName
+    ? detaillist.legalPersonName
+    : null,
+  // 营业执照
+  businesslicense: detaillist?.businessLicenseId
+    ? detaillist.businessLicenseId
+    : null,
+  // 联系人姓名
+  contactname: detaillist?.contactName ? detaillist.contactName : null,
+  // 联系人身份证号
+  contactidnumber: detaillist?.contactIdCard ? detaillist.contactIdCard : null,
+  // 联系人身份证
+  contactidcard: {
+    contactidcardz: detaillist?.idCardz ? detaillist.idCardz : null,
+    contactidcardf: detaillist?.idCardf ? detaillist.idCardf : null,
+  },
+});
+
 // const fileList = [
 //   {
 //     uid: '-2',
@@ -360,7 +394,9 @@ const beforeUpload = (file: File) => {
 };
 
 onMounted(() => {
-  if (props.data?.id) {
+  console.log(props.data?.statusled);
+  // 0是提交认证 1是修改认证
+  if (props.data?.statusled === 1) {
     getUserDetail();
   }
 });
@@ -387,6 +423,19 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       emit('confirm');
+      const a = {
+        id: '企业id',
+        userId: '用户id',
+        companyName: '企业名称',
+        creditCode: '统一社会信用代码',
+        contactName: '联系人名称',
+        contactIdCard: '联系人身份证号',
+        idCardf: '身份证反面ID',
+        idCardz: '身份证正面ID',
+        legalPersonName: '法人姓名',
+        type: props.data.statusled, // 0：提交认证 1:重新认证
+        businessLicenseId: '营业执照ID',
+      };
       // 调后端接口
       // const api = props.data.id ? usersUpdate : usersAdd;
       // api(formModel.value)
@@ -400,7 +449,8 @@ const onConfirm = (done: (closed: boolean) => void) => {
       //   });
 
       // mock数据
-      Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
+      // Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
+      Message.success('认证已提交');
       done(true);
     } else {
       done(false);

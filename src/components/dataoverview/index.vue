@@ -26,7 +26,7 @@
       v-if="gotoverifys"
       :data="state.editData"
       @confirm="onEditModalConfirmcode"
-      @cancel="gotoverifys = false"
+      @cancel="cancelgotoverifys"
     >
     </EditModalFullscreen>
     <!-- 详情弹窗 -->
@@ -48,7 +48,11 @@ import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const state = reactive({
-  editData: {},
+  editData: {
+    id: '1111',
+    // 0是提交认证 1是修改认证
+    statusled: 0,
+  },
 });
 // 立即认证弹窗
 const editModalVisible = ref(false);
@@ -69,17 +73,23 @@ const onEditModalConfirm = () => {
 };
 const hasdflags = () => {
   editModalVisible.value = false;
-
   detailflag.value = true;
   console.log(detailflag.value);
 };
 // 认证填写完成
 const onEditModalConfirmcode = () => {
+  state.editData.statusled = 0;
   gotoverifys.value = false;
 };
+const cancelgotoverifys = () => {
+  gotoverifys.value = false;
+  state.editData.statusled = 0;
+};
+
 //  修改认证信息
 const onEditModalConfirmflag = () => {
   detailflag.value = false;
+  state.editData.statusled = 1;
   gotoverifys.value = true;
 };
 </script>

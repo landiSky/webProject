@@ -14,8 +14,17 @@
             >
             <div class="inofs" style="float: left; margin-top: 25px">
               <p>北京泰尔英福有限公司</p><p>|</p><p>主账号</p><p>|</p
-              ><p :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
-                >已认证</p
+              ><p
+                :class="[
+                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                    ? 'authenticated'
+                    : 'notcertified',
+                ]"
+                >{{
+                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                    ? '已认证'
+                    : '未认证'
+                }}</p
               >
             </div>
           </div>
@@ -31,18 +40,40 @@
                   <span style="float: left; margin-top: 3px">完成企业认证</span>
                   <div class="btns">
                     <p style="margin: 10px 0"> 确认企业身份</p>
-                    <t-button type="text" @click="authentication"
+                    <t-button
+                      v-if="stateles.companyStatus === 3"
+                      type="text"
+                      @click="authentication"
                       >去认证</t-button
                     >
-                    <div class="states">
+                    <div v-if="stateles.companyStatus !== 3" class="states">
                       <p
                         style="width: 50px; text-align: center"
                         :class="[
-                          stateles === 0 ? 'authenticated' : 'notcertified',
+                          stateles.companyStatus === 0
+                            ? 'tobereviewed'
+                            : stateles.companyStatus === 1
+                            ? 'authenticated'
+                            : stateles.companyStatus === 2
+                            ? 'override'
+                            : 'notcertified',
                         ]"
-                        >已认证</p
+                        >{{
+                          stateles.companyStatus === 0
+                            ? '待审核'
+                            : stateles.companyStatus === 1
+                            ? '已认证'
+                            : stateles.companyStatus === 2
+                            ? '已驳回'
+                            : '未认证'
+                        }}</p
                       >
-                      <span style="font-size: 12px"
+                      <span
+                        v-if="
+                          stateles.companyStatus === 0 ||
+                          stateles.companyStatus === 2
+                        "
+                        style="font-size: 12px"
                         ><t-button type="text" @click="viewdetails"
                           >查看详情</t-button
                         ></span
@@ -98,8 +129,24 @@
                 "
                 >企业节点认证</div
               ><span
-                :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
-                >已认证</span
+                :class="[
+                  stateles.nodeStatus === 0
+                    ? 'tobereviewed'
+                    : stateles.nodeStatus === 1
+                    ? 'authenticated'
+                    : stateles.nodeStatus === 2
+                    ? 'override'
+                    : 'notcertified',
+                ]"
+                >{{
+                  stateles.nodeStatus === 0
+                    ? '待审核'
+                    : stateles.nodeStatus === 1
+                    ? '已认证'
+                    : stateles.nodeStatus === 2
+                    ? '已驳回'
+                    : '未认证'
+                }}</span
               >
             </div>
             <div
@@ -120,14 +167,58 @@
                   <span style="opacity: 0"></span><span>企业节点认证</span>
                 </li>
               </ul>
-              <div>
+              <div class="fimelistdata">
                 <t-button
+                  v-if="stateles.nodeStatus === 3"
                   type="primary"
-                  style="display: block; margin: 15px auto; padding: 5px 10px"
-                  @click="authentication"
+                  style="display: block; margin: 15px auto 0; padding: 5px 10px"
+                  @click="authenticationredf"
                   >去认证</t-button
-                ></div
-              >
+                >
+                <div v-if="stateles.nodeStatus !== 3" class="states">
+                  <p
+                    style="
+                      width: 50px;
+                      margin: 10px auto 0;
+                      padding: 5px;
+                      text-align: center;
+                    "
+                    :class="[
+                      stateles.nodeStatus === 0
+                        ? 'tobereviewed'
+                        : stateles.nodeStatus === 1
+                        ? 'authenticated'
+                        : stateles.nodeStatus === 2
+                        ? 'override'
+                        : 'notcertified',
+                    ]"
+                    >{{
+                      stateles.nodeStatus === 0
+                        ? '待审核'
+                        : stateles.nodeStatus === 1
+                        ? '已认证'
+                        : stateles.nodeStatus === 2
+                        ? '已驳回'
+                        : '未认证'
+                    }}</p
+                  >
+                  <p
+                    v-if="
+                      stateles.nodeStatus === 0 || stateles.nodeStatus === 2
+                    "
+                    style="
+                      width: 80px;
+                      margin: 0 auto;
+                      font-size: 12px;
+
+                      /* padding: 5px; */
+                    "
+                    ><t-button type="text" @click="viewdetailsredf"
+                      >查看详情</t-button
+                    ></p
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -275,7 +366,17 @@
         <p style="color: #1664ff" @click="multiples">更多</p>
       </div>
       <div class="overlist">
-        <div v-for="(item, index) in 6" :key="index" class="overlistdata">
+        <div
+          v-for="(item, index) in [
+            '全部订单',
+            '待支付',
+            '待审核',
+            '待交付',
+            '已完成',
+          ]"
+          :key="index"
+          class="overlistdata"
+        >
           <div>
             <span
               style="
@@ -285,14 +386,28 @@
                 color: #86909c;
                 font-size: 14px;
               "
-              >全部订单</span
+              >{{ item }}</span
             >
-            <span style="font-size: 30px">1000000</span>
+            <span style="font-size: 30px">{{
+              (item === '全部订单'
+                ? oederlist.count
+                : item === '待支付'
+                ? oederlist.payCount
+                : item === '待审核'
+                ? oederlist.auditCount
+                : item === '待交付'
+                ? oederlist.deliverCount
+                : item === '已完成'
+                ? oederlist.completeCount
+                : ''
+              ).toLocaleString()
+            }}</span>
           </div>
         </div>
       </div>
     </div>
     <!-- :data="{ starlist }" -->
+    <!-- 配置应用 -->
     <EditModalAlter
       v-if="editModalVisiblealter"
       :data="starlist"
@@ -300,6 +415,30 @@
       @cancel="editModalVisiblealter = false"
     >
     </EditModalAlter>
+    <!-- 认证指南 -->
+    <EditModal
+      v-if="editModalVisible"
+      :data="state.editData"
+      @confirm="onEditModalConfirm"
+      @cancel="editModalVisible = false"
+      @hasdflag="hasdflags"
+    ></EditModal>
+    <!-- 企业认证 填写信息弹窗 -->
+    <EditModalFullscreen
+      v-if="gotoverifys"
+      :data="state.editData"
+      @confirm="onEditModalConfirmcode"
+      @cancel="cancelgotoverifys"
+    >
+    </EditModalFullscreen>
+    <!-- 详情弹窗 -->
+    <DetailsModalFullscreen
+      v-if="detailflag"
+      :data="state.editData"
+      @confirm="onEditModalConfirmflag"
+      @cancel="detailflag = false"
+    >
+    </DetailsModalFullscreen>
     <!-- \v-show="false" -->
     <div v-show="false" id="page" class="zhengshu-container-box">
       <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
@@ -375,10 +514,29 @@ import group3 from './image/group3.png';
 import group4 from './image/group4.png';
 import frame from './image/frame.png';
 import EditModalAlter from './components/edit-modal-alter.vue';
+import EditModal from './components/edit-modal.vue';
+import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
+import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const starlist = reactive(['张三', '李四']);
 // 认证状态
-const stateles = ref(0);
+const stateles = ref({
+  companyStatus: 2, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+});
+const state = reactive({
+  editData: {
+    id: '1111',
+    // 0是提交认证 1是修改认证
+    statusled: 0,
+  },
+});
+// 立即认证弹窗
+const editModalVisible = ref(false);
+// 去认证弹窗
+const gotoverifys = ref(false);
+// 详情弹窗
+const detailflag = ref(false);
 // 配置应用 弹窗
 const editModalVisiblealter = ref(false);
 // 轮播图数据
@@ -421,10 +579,57 @@ const authDialogVisible = reactive([
     name: '章三7',
   },
 ]);
+// 订单概览
+const oederlist = reactive({
+  count: 4, // 全部订单数量
+  payCount: 2, // 待支付页数量
+  auditCount: 1, // 待审核页数量
+  deliverCount: 0, // 待交付数量
+  rejectCount: 0, // 已驳回数量
+  servicesDeliverCount: 0, // 服务商交付数量
+  completeCount: 1, // 已完成数量
+});
 // 去认证
-const authentication = () => {};
+const authentication = () => {
+  console.log(editModalVisible.value);
+  editModalVisible.value = true;
+};
+// 认证弹窗去认证事件
+const onEditModalConfirm = () => {
+  // console.log(gotoverifys.value);
+  gotoverifys.value = true;
+  editModalVisible.value = false;
+};
 // 查看详情
-const viewdetails = () => {};
+const hasdflags = () => {
+  editModalVisible.value = false;
+  detailflag.value = true;
+  console.log(detailflag.value);
+};
+// 查看详情
+const viewdetails = () => {
+  detailflag.value = true;
+};
+// 认证填写完成
+const onEditModalConfirmcode = () => {
+  state.editData.statusled = 0;
+  gotoverifys.value = false;
+};
+// 认证填写 取消
+const cancelgotoverifys = () => {
+  gotoverifys.value = false;
+  state.editData.statusled = 0;
+};
+//  修改认证信息
+const onEditModalConfirmflag = () => {
+  detailflag.value = false;
+  state.editData.statusled = 1;
+  gotoverifys.value = true;
+};
+// 企业节点去认证
+const authenticationredf = () => {};
+// 企业节点查看详情
+const viewdetailsredf = () => [];
 // 邀请成员/分配权限
 const distributionrole = () => {};
 // 去商城
@@ -770,6 +975,32 @@ const multiples = () => {};
                 margin: 5px 8px 0 0;
                 background-color: #4e5969;
                 border-radius: 6px;
+              }
+            }
+          }
+
+          .fimelistdata {
+            .states {
+              margin: 0 auto;
+              // 已认证
+              .authenticated {
+                color: #009a29;
+                background-color: #e8ffea;
+              }
+              // 未认证
+              .notcertified {
+                color: #fa9600;
+                background-color: #fffae8;
+              }
+              // 待审核
+              .tobereviewed {
+                color: #1664ff;
+                background-color: #e8f4ff;
+              }
+              //以驳回
+              .override {
+                color: #e63f3f;
+                background-color: #ffece8;
               }
             }
           }

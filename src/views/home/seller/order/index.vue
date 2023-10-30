@@ -7,8 +7,9 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import Dataoverview from '@/components/dataoverview/index.vue';
+
 import Orderindex from './orderindex.vue';
-import Dataoverview from '../dataoverview/index.vue';
 
 const orderstatus = ref(0);
 </script>

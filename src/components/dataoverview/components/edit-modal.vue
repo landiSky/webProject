@@ -29,8 +29,24 @@
                 <p>企业认证</p>
                 <p
                   style="width: 50px; margin-top: 10px"
-                  :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
-                  >已认证</p
+                  :class="[
+                    stateles.companyStatus === 0
+                      ? 'tobereviewed'
+                      : stateles.companyStatus === 1
+                      ? 'authenticated'
+                      : stateles.companyStatus === 2
+                      ? 'override'
+                      : 'notcertified',
+                  ]"
+                  >{{
+                    stateles.companyStatus === 0
+                      ? '待审核'
+                      : stateles.companyStatus === 1
+                      ? '已认证'
+                      : stateles.companyStatus === 2
+                      ? '已驳回'
+                      : '未认证'
+                  }}</p
                 >
               </div>
             </div>
@@ -85,18 +101,28 @@
               </div>
             </div>
             <div class="desdetails">
-              <p style="color: #86909c; font-size: 14px; line-height: 32px"
-                >您的认证申请正在审核中</p
+              <p style="color: #86909c; font-size: 14px; line-height: 32px">{{
+                stateles.companyStatus === 0
+                  ? '您的认证申请正在审核中'
+                  : stateles.companyStatus === 2
+                  ? '您的认证申请被驳回'
+                  : stateles.companyStatus === 1
+                  ? '恭喜您已通过企业认证'
+                  : ''
+              }}</p>
+              <p
+                v-if="
+                  stateles.companyStatus === 0 || stateles.companyStatus === 2
+                "
               >
-              <!-- <p>
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
                   @click="firmgotoverify"
                   >查看详情</t-button
                 ></p
-              > -->
-              <p>
+              >
+              <p v-if="stateles.companyStatus === 3">
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
@@ -126,8 +152,24 @@
                 <p>企业节点认证</p>
                 <p
                   style="width: 50px; margin-top: 10px"
-                  :class="[stateles === 0 ? 'authenticated' : 'notcertified']"
-                  >已认证</p
+                  :class="[
+                    stateles.nodeStatus === 0
+                      ? 'tobereviewed'
+                      : stateles.nodeStatus === 1
+                      ? 'authenticated'
+                      : stateles.nodeStatus === 2
+                      ? 'override'
+                      : 'notcertified',
+                  ]"
+                  >{{
+                    stateles.nodeStatus === 0
+                      ? '待审核'
+                      : stateles.nodeStatus === 1
+                      ? '已认证'
+                      : stateles.nodeStatus === 2
+                      ? '已驳回'
+                      : '未认证'
+                  }}</p
                 >
               </div>
             </div>
@@ -195,10 +237,16 @@
             </div>
 
             <div class="desdetails">
-              <p style="color: #86909c; font-size: 14px; line-height: 32px"
-                >您的认证申请正在审核中</p
-              >
-              <p>
+              <p style="color: #86909c; font-size: 14px; line-height: 32px">{{
+                stateles.nodeStatus === 0
+                  ? '您的认证申请正在审核中'
+                  : stateles.nodeStatus === 2
+                  ? '您的认证申请被驳回'
+                  : stateles.nodeStatus === 1
+                  ? '恭喜您已通过企业认证'
+                  : ''
+              }}</p>
+              <p v-if="stateles.nodeStatus === 0 || stateles.nodeStatus === 2">
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
@@ -206,14 +254,14 @@
                   >查看详情</t-button
                 ></p
               >
-              <!-- <p>
+              <p v-if="stateles.nodeStatus === 3">
                 <t-button
-                  @click="nodegotoverify"
                   type="primary"
                   style="padding: 7px 15px"
+                  @click="nodegotoverify"
                   >去认证</t-button
                 ></p
-              > -->
+              >
             </div>
           </div>
         </div></div
@@ -249,7 +297,10 @@ const props = defineProps({
 });
 const emit = defineEmits(['confirm', 'cancel', 'hasdflag']);
 // 认证状态
-const stateles = ref(0);
+const stateles = ref({
+  companyStatus: 0, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+});
 // 弹窗状态
 const visible = ref(true);
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
@@ -265,12 +316,12 @@ const viewdetails = () => {
   emit('confirm');
 };
 // 企业认证 查看详情
-const firmgotoverify = () => {};
+const firmgotoverify = () => {
+  emit('hasdflag');
+};
 // 企业节点认证 查看详情
 const viewdetailsnode = () => {
   // console.log('aaa');
-
-  emit('hasdflag');
 };
 // 企业节点认证  去认证
 const nodegotoverify = () => {};

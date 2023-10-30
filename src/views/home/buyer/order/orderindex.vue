@@ -271,7 +271,7 @@
                     style="display: flex; justify-content: center"
                   >
                     <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobepaid" alt=""
+                      <img :src="tobereviewed" alt=""
                     /></span>
 
                     <span style="float: left">待确认交付</span>
@@ -297,23 +297,17 @@
                     v-if="item.orderStatus === 0"
                     type="text"
                     style="width: 100%"
-                    @click="modificationamount(item.id, item.productPrice)"
-                    >修改金额</t-button
+                    @click="modificationamount(item.id)"
+                    >上传支付凭证</t-button
                   >
-                  <t-button
-                    v-if="item.orderStatus === 1"
-                    type="text"
-                    style="width: 100%"
-                    @click="clickDetail(item.id)"
-                    >凭证审核</t-button
-                  >
+
                   <!-- v-if="item.orderStatus === 5" -->
                   <t-button
                     v-if="item.orderStatus === 5"
                     type="text"
                     style="width: 100%"
-                    @click="delivery(item.deliveryType, item.id)"
-                    >交付应用</t-button
+                    @click="delivery(item.id)"
+                    >确认已交付</t-button
                   >
                   <span style="cursor: pointer" @click="clickDetail(item.id)"
                     >订单详情</span
@@ -365,7 +359,7 @@
         </div>
       </div>
     </div>
-    <!-- 修改金额 -->
+    <!-- 上传支付凭证 -->
     <EditModal
       v-if="editModalVisible"
       :data="state.updataamount"
@@ -373,12 +367,12 @@
       @cancel="editModalVisible = false"
     ></EditModal>
     <!-- 订单交付 -->
-    <EditModalDelivery
+    <!-- <EditModalDelivery
       v-if="deliveryVisible"
       :data="state.editData"
       @confirm="ondeliveryModalConfirm"
       @cancel="deliveryVisible = false"
-    ></EditModalDelivery>
+    ></EditModalDelivery> -->
 
     <!-- 全屏弹窗 -->
     <DetailsModalFullscreen
@@ -400,8 +394,7 @@ import tobereviewed from './images/tobereviewed.png';
 import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
-import EditModalDelivery from './components/edit-modal-delivery.vue';
-
+// import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const formInline = reactive({
@@ -432,10 +425,10 @@ const tableData = ref([
     productName: '凉皮', // 商品名称
     customerName: '硕', // 买家名称
     productLogo:
-      'https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500', // 商品logo
+      'https://img2.baidu.com/it/u=249186010,878219406&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500', // 商品logo
     merchantName: '商品所属商家名称', // 卖家名称
     deliveryTypeName: 'SAAS', // 交付类型名称
-    deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
+    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
     productPrice: 10000, // 商品价格
     accountCount: '10个账号', // 账号数量
     buyDuration: '5个月', // 购买时长
@@ -451,7 +444,7 @@ const tableData = ref([
     couponMoney: 600, // 优惠金额
     userMobile: null, // 联系方式
     orderSource: 0, // 订单来源：0-本平台，1-跨平台
-    effectTime: '2023-10-24 11:11:19', // 成交时间
+    effectTime: null, // 成交时间
     createTime: '2023-10-23 16:24:32', // 创建时间
     dueDate: null, // 到期日期
     voucherRejectTime: '2023-10-24 11:05:38', // 驳回时间
@@ -467,7 +460,7 @@ const tableData = ref([
     productName: '双皮奶', // 商品名称
     customerName: '硕', // 买家名称
     productLogo:
-      'https://img2.baidu.com/it/u=2055503821,2811341464&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=543', // 商品logo
+      'https://img2.baidu.com/it/u=249186010,878219406&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500', // 商品logo
     merchantName: '商品所属商家名称', // 卖家名称
     deliveryTypeName: 'SAAS', // 交付类型名称
     deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
@@ -475,7 +468,7 @@ const tableData = ref([
     accountCount: '10个账号', // 账号数量
     buyDuration: '5个月', // 购买时长
     realityPrice: 10000, // 实付金额
-    orderStatus: 3, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: 5, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
     orderStatusName: '已完成', // 状态名称
     orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
     orderSteps: 6, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
@@ -630,10 +623,10 @@ const clickNav = (value: string | null, ins: number) => {
     orderStatusSelect.value = [];
   }
 };
-// 修改金额 弹窗 开关
+// 上传支付凭证 弹窗 开关
 const editModalVisible = ref(false);
 // 交付应用 弹窗 开关
-const deliveryVisible = ref(false);
+// const deliveryVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
@@ -678,53 +671,19 @@ const clickDetail = (id: string) => {
   state.editData.id = id;
   FullscreenDetailsModal.value = true;
 };
-// 修改金额 弹窗
-const modificationamount = (id: string, productPrice: number) => {
+// 上传支付凭证 弹窗
+const modificationamount = (id: string) => {
   state.updataamount.id = id;
-  state.updataamount.currentamount = productPrice;
+
   editModalVisible.value = true;
 };
-// 修改金额 完成
+// 上传支付凭证 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  Message.success('金额修改成功');
+  Message.success('上传支付凭证成功');
 };
-// 交付应用
-const delivery = (deliveryType: number, id: string) => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('交付成功');
-    }, 2 * 1000);
-  }
-  if (deliveryType === 0) {
-    Modal.warning({
-      title: '我已完成账号重置，确定交付该应用',
-      content: '交付订单流转到买家确定状态。',
-      titleAlign: 'start',
-      okText: ' 确定',
-      hideCancel: false,
-      onBeforeOk,
-      // okButtonProps: {
-      //   status: 'danger',
-      // },
-      onOk: () => {
-        // deleteUsers(params);
-        Message.success('交付成功');
-      },
-      onCancel: () => {
-        // Message.success('取消交付成功');
-      },
-    });
-  } else if (deliveryType === 1) {
-    state.editData.id = id;
-    deliveryVisible.value = true;
-  }
-};
-// 交付应用 完成
-const ondeliveryModalConfirm = () => {
-  deliveryVisible.value = false;
-};
+// 买家确认交付
+const delivery = (id: string) => {};
 </script>
 
 <style lang="less" scoped>

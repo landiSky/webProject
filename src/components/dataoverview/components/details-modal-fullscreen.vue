@@ -21,7 +21,7 @@
     </template>
 
     <div class="modal-body">
-      <div class="toperror" style="">
+      <div v-if="detaillist.remark !== ''" class="toperror" style="">
         <div style="width: 40%" class="topcenters">
           <div class="topleft"
             ><p style="width: 100%"
@@ -34,7 +34,7 @@
               ></p
             >
             <p style="float: left; margin-top: 5px"
-              >驳回原因：身份证号与姓名不符；身份证号码错误。</p
+              >驳回原因：{{ detaillist.remark }}</p
             >
           </div>
           <div class="topright" style="display: flex; align-items: center">
@@ -44,21 +44,21 @@
           </div>
         </div>
       </div>
-      <!-- <div class="topwarn">
+      <div v-if="detaillist.remark === ''" class="topwarn">
         <div style="width: 40%" class="topcenterswarn">
           <div class="topleft"
             ><p style="width: 100%"
               ><img
                 :src="Warn"
                 alt=""
-                style="float: left; margin: 1px 5px 0px 0px"
+                style="float: left; margin: 1px 5px 0 0"
               /><span style="float: left; font-size: 14px"
                 >企业认证正在审核中，请耐心等待。</span
               ></p
             >
           </div>
         </div>
-      </div> -->
+      </div>
 
       <div class="centers">
         <div class="asjhdg" style="margin-top: 15px">
@@ -86,21 +86,21 @@
           <div class="information">
             <div class="informationlist">
               <p style="float: left; width: 20%">企业名称</p>
-              <p style="float: left">北京XX科技有限公司</p>
+              <p style="float: left">{{ detaillist.companyName }}</p>
             </div>
             <div class="informationlist">
               <p style="float: left; width: 20%">统一社会信用代码</p>
-              <p style="float: left">北京XX科技有限公司</p>
+              <p style="float: left">{{ detaillist.creditCode }}</p>
             </div>
             <div class="informationlist">
               <p style="float: left; width: 20%">法人姓名</p>
-              <p style="float: left">北京XX科技有限公司</p>
+              <p style="float: left">{{ detaillist.legalPersonName }}</p>
             </div>
             <div class="informationlist">
               <p style="float: left; width: 20%">营业执照</p>
               <img
                 style="width: 170px; height: 100px"
-                src="https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
+                src="https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500"
                 alt=""
               />
             </div>
@@ -130,17 +130,17 @@
           <div class="information">
             <div class="informationlist">
               <p style="float: left; width: 20%">联系人姓名</p>
-              <p style="float: left">北京XX科技有限公司</p>
+              <p style="float: left">{{ detaillist.contactName }}</p>
             </div>
             <div class="informationlist">
               <p style="float: left; width: 20%">联系人身份证号</p>
-              <p style="float: left">北京XX科技有限公司</p>
+              <p style="float: left">{{ detaillist.contactIdCard }}</p>
             </div>
             <div class="informationlist">
               <p style="float: left; width: 20%">联系人身份证</p>
               <img
                 style="width: 170px; height: 100px; margin-right: 10px"
-                src="https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
+                src="https://img0.baidu.com/it/u=356669940,3715317246&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333"
                 alt=""
               />
               <img
@@ -170,7 +170,7 @@ import { defineProps, defineEmits, ref, onMounted } from 'vue';
 
 // import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
 import { Message } from '@tele-design/web-vue';
-// import Warn from '@/assets/images/home/warn.png';
+import Warn from '@/assets/images/home/warn.png';
 
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 
@@ -182,7 +182,24 @@ const props = defineProps({
     },
   },
 });
-
+const detaillist = {
+  id: '企业id',
+  userId: '用户id',
+  companyName: '企业名称',
+  creditCode: '统一社会信用代码',
+  contactName: '联系人名称',
+  contactIdCard: '联系人身份证号',
+  idCardf:
+    'https://img2.baidu.com/it/u=1628788978,405686623&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+  idCardz:
+    'https://img0.baidu.com/it/u=1356935808,1870677175&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500',
+  legalPersonName: '法人姓名',
+  type: 1,
+  businessLicenseId:
+    'https://img0.baidu.com/it/u=1783176477,761999961&fm=253&fmt=auto&app=120&f=JPEG?w=605&h=500',
+  certificateStatus: 0,
+  remark: '驳理由',
+};
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();

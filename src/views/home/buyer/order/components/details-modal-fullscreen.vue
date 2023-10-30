@@ -63,15 +63,38 @@
             >
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <span><img :src="tobepaid" alt="" /></span
-                >&nbsp;&nbsp;待支付：商品已下单，待买家上传支付凭证并提交审核。<span
-                ></span>
+                <div>
+                  <span
+                    ><img
+                      :src="tobereviewed"
+                      alt=""
+                      style="float: left; margin: 2px 5px 0 0"
+                  /></span>
+                  <span>
+                    待支付：商品已下单，请买家上传支付凭证并提交服务商审核。</span
+                  >
+                </div>
+
+                <p style="margin-top: 6px">
+                  <t-button
+                    type="primary"
+                    @click="modificationamount(dataList.id)"
+                    >上传凭证</t-button
+                  >
+                </p>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <span><img :src="tobereviewed" alt="" /></span
-                >&nbsp;&nbsp;待审核：买家已提交支付凭证，请进行审核。<span
-                ></span>
-                <p style="margin-top: 10px">
+                <div>
+                  <span
+                    ><img
+                      style="float: left; margin: 2px 5px 0 0"
+                      :src="tobepaid"
+                      alt=""
+                  /></span>
+                  <span> 待审核：支付凭证已提交，待服务商进行审核。</span>
+                </div>
+
+                <!-- <p style="margin-top: 10px">
                   <t-button
                     type="primary"
                     status="danger"
@@ -82,46 +105,17 @@
                   <t-button type="primary" @click="passok(dataList.id)"
                     >通过</t-button
                   >
-                </p>
-              </div>
-              <div v-if="dataList.orderStatus === 4">
-                <div>
-                  <span style="float: left; margin: 3px 3px 0 0"
-                    ><img :src="error" alt="" /></span
-                  >&nbsp;&nbsp;<span
-                    style="float: left; font-weight: 500; font-size: 14px"
-                    >已驳回：支付凭证已驳回，待买家重新上传</span
-                  >
-                </div>
-
-                <div>
-                  <p style="margin: 7px 0 7px 0"
-                    >驳回原因&nbsp;&nbsp;<span>{{
-                      dataList.rejectReasonDetail
-                    }}</span></p
-                  >
-                  <p
-                    >驳回时间&nbsp;&nbsp;<span>{{
-                      dataList.voucherRejectTime
-                    }}</span></p
-                  >
-                </div>
-              </div>
-              <div v-if="dataList.orderStatus === 5">
-                <div>
-                  <span style="float: left; margin: 2px 5px 0 0"
-                    ><img :src="tobereviewed" alt="" /></span
-                  ><span>待交付：已确认收款，请完成订单交付。</span>
-                </div>
-
-                <p style="margin-top: 10px">
-                  <t-button type="primary" @click="delivery">立即交付</t-button>
-                </p>
+                </p> -->
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <span><img :src="tobepaid" alt="" /></span
-                >&nbsp;&nbsp;待确认交付：已完成交付，待买家确认交付信息。<span
-                ></span>
+                <div>
+                  <span
+                    ><img
+                      style="float: left; margin: 3px 5px 0 0"
+                      :src="tobepaid"
+                      alt="" /></span
+                  ><span>待交付：服务商已确认收款，待完成交付。</span>
+                </div>
               </div>
               <div v-if="dataList.orderStatus === 3">
                 <div>
@@ -140,11 +134,43 @@
                     }}</span></p
                   >
                   <p
-                    >服务到期时间&nbsp;&nbsp;<span>{{
-                      dataList.dueDate
-                    }}</span></p
+                    >服务到期时间&nbsp;&nbsp;<span>{{ dataList.dueDate }}</span>
+                  </p>
+                </div>
+              </div>
+              <div v-if="dataList.orderStatus === 4">
+                <div>
+                  <span style="float: left; margin: 3px 5px 0 0"
+                    ><img :src="error" alt="" /></span
+                  >&nbsp;&nbsp;<span
+                    style="float: left; font-weight: 500; font-size: 14px"
+                    >已驳回：支付凭证已被服务商驳回，请买家重新上传支付凭证。</span
                   >
                 </div>
+
+                <div>
+                  <p style="margin: 7px 0 7px 0"
+                    >驳回原因&nbsp;&nbsp;<span>
+                      {{ dataList.rejectReasonDetail }}</span
+                    >
+                  </p>
+                  <p style="margin: 7px 0 7px 0"
+                    >驳回时间&nbsp;&nbsp;<span>{{
+                      dataList.voucherRejectTime
+                    }}</span></p
+                  >
+                  <t-button type="primary">重新上传凭证</t-button>
+                </div>
+              </div>
+              <div v-if="dataList.orderStatus === 5">
+                <span><img :src="tobereviewed" alt="" /></span
+                >&nbsp;&nbsp;待确认交付：服务商已完成交付，请买家确认交付信息。<span
+                ></span>
+                <p style="margin-top: 10px">
+                  <t-button type="primary" @click="delivery(dataList.id)"
+                    >确认已交付</t-button
+                  >
+                </p>
               </div>
             </div>
 
@@ -224,10 +250,7 @@
                   style="float: left"
                 >
                   <img
-                    v-for="(item, index) in [
-                      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-                      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-                    ]"
+                    v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
                     :src="item"
@@ -275,12 +298,12 @@
                 <t-col :span="2">
                   <div class="grid-content">购买时长</div>
                 </t-col>
-                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
+                <t-col :span="5">
                   <div class="grid-content">实付金额</div>
                 </t-col>
-                <t-col v-if="dataList.orderStatus === 0" :span="3">
+                <!-- <t-col v-if="dataList.orderStatus === 0" :span="3">
                   <div class="grid-content">操作</div>
-                </t-col>
+                </t-col> -->
               </t-row>
               <!-- justify="end" -->
               <t-row type="flex" class="row-titlelrd aligntextback">
@@ -331,7 +354,7 @@
                 <t-col :span="2">
                   <div class="grid-content"> {{ dataList.buyDuration }}</div>
                 </t-col>
-                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
+                <t-col :span="5">
                   <div class="grid-content">
                     ¥{{ dataList.realityPrice }}
                     <p style="color: #86909c"
@@ -339,7 +362,7 @@
                     ></div
                   >
                 </t-col>
-                <t-col v-if="dataList.orderStatus === 0" :span="3">
+                <!-- <t-col v-if="dataList.orderStatus === 0" :span="3">
                   <div class="grid-content">
                     <t-button
                       type="text"
@@ -348,34 +371,20 @@
                       >修改金额</t-button
                     >
                   </div>
-                </t-col>
+                </t-col> -->
               </t-row>
             </div>
           </div>
         </div>
       </div>
     </t-modal>
-    <!-- 修改金额 -->
+    <!-- 上传支付凭证 -->
     <EditModal
       v-if="editModalVisible"
       :data="state.updataamount"
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
     ></EditModal>
-    <!-- 驳回弹窗 -->
-    <EditModalTurndown
-      v-if="turndownVisible"
-      :data="state.editData"
-      @confirm="turndownModalConfirm"
-      @cancel="turndownVisible = false"
-    ></EditModalTurndown>
-    <!-- 订单交付 -->
-    <EditModalDelivery
-      v-if="deliveryVisible"
-      :data="state.editData"
-      @confirm="ondeliveryModalConfirm"
-      @cancel="deliveryVisible = false"
-    ></EditModalDelivery>
   </div>
 </template>
 
@@ -393,8 +402,6 @@ import error from '../images/error.png';
 import success from '../images/success.png';
 import Copy from '../images/copy.png';
 import EditModal from './edit-modal.vue';
-import EditModalTurndown from './edit-modal-turndown.vue';
-import EditModalDelivery from './edit-modal-delivery.vue';
 
 const props = defineProps({
   data: {
@@ -410,7 +417,7 @@ const state = reactive({
   },
   updataamount: {
     id: '',
-    currentamount: 0,
+    currentamount: [],
     amount: '',
   },
 });
@@ -433,15 +440,15 @@ const dataList = ref({
   orderStatus: 5, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
   orderStatusName: '已完成', // 状态名称
   orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
-  orderSteps: 6, // 订单步骤
+  orderSteps: 5, // 订单步骤
   rejectType: null, // 拒绝类型
   rejectReasonDetail: '未收到支付款；支付金额有误', // 支付凭证审核失败，展示驳回原因
-  deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
+  deploymentStatusName: '已部署', // 交付类型为「部署类」部署完成显示该状态
   deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
   couponMoney: null, // 优惠金额
   userMobile: '15663872182', // 联系方式
   orderSource: 0, // 订单来源：0-本平台，1-跨平台
-  effectTime: '2023-10-23 16:24:32', // 成交时间
+  effectTime: null, // 成交时间
   createTime: '2023-10-23 16:24:32', // 创建时间
   dueDate: '2023-10-23 18:20:00', // 到期日期
   voucherRejectTime: '2023-10-23 18:24:34', // 驳回时间
@@ -449,14 +456,14 @@ const dataList = ref({
   voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
-  attachmentAddressArr: ['http://gjkhjkdg/1.png', 'http://gjkhjkdg/2.png'], // 支付凭证
+  attachmentAddressArr: [
+    'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+    'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+  ], // 支付凭证
 });
 // 修改金额 弹窗 开关
 const editModalVisible = ref(false);
-// 驳回弹窗 开关
-const turndownVisible = ref(false);
-// 交付应用 弹窗 开关
-const deliveryVisible = ref(false);
+
 const goback = () => {
   emit('cancel');
 };
@@ -482,96 +489,27 @@ const clickCopy = (Num: string) => {
   utilsCopy(Num);
 };
 
-// 修改金额 弹窗
-const modificationamount = () => {
+// 上传支付凭证 弹窗
+const modificationamount = (id: string) => {
   state.updataamount.id = dataList.value.id;
-  state.updataamount.currentamount = dataList.value.productPrice;
+  state.updataamount.currentamount = dataList.value.attachmentAddressArr;
   editModalVisible.value = true;
 };
-// 修改金额 完成
+// 上传支付凭证 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  Message.success('金额修改成功');
+  Message.success('上传成功');
 };
-// 驳回
-const turndownsyhn = () => {
-  // console.log('驳回');
-  state.editData.id = dataList.value.id;
-  turndownVisible.value = true;
-};
-// 驳回 完成
-const turndownModalConfirm = () => {
-  turndownVisible.value = false;
+// 确认已交付
+const delivery = (id: string) => {
+  console.log(id);
 };
 onMounted(() => {
   if (props.data?.id) {
     getUserDetail();
   }
 });
-// 通过
 
-const passok = (id: string) => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('审核成功');
-    }, 2 * 1000);
-  }
-  Modal.warning({
-    title: '我已收到交易款项，同意通过该凭证。',
-    content: '审核通过后，订单将交易完成。',
-    titleAlign: 'start',
-    okText: ' 确定',
-    hideCancel: false,
-    onBeforeOk,
-    // okButtonProps: {
-    //   status: 'danger',
-    // },
-    onOk: () => {
-      // deleteUsers(params);
-      // onBeforeOk;
-    },
-    onCancel: () => {
-      // Message.success('取消交付成功');
-    },
-  });
-};
-// 交付应用
-const delivery = () => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('交付成功');
-    }, 2 * 1000);
-  }
-  if (dataList.value.deliveryType === 0) {
-    Modal.warning({
-      title: '我已完成账号重置，确定交付该应用',
-      content: '交付订单流转到买家确定状态。',
-      titleAlign: 'start',
-      okText: ' 确定',
-      hideCancel: false,
-      onBeforeOk,
-      // okButtonProps: {
-      //   status: 'danger',
-      // },
-      onOk: () => {
-        // deleteUsers(params);
-        Message.success('交付成功');
-      },
-      onCancel: () => {
-        // Message.success('取消交付成功');
-      },
-    });
-  } else if (dataList.value.deliveryType === 1) {
-    state.editData.id = dataList.value.id;
-    deliveryVisible.value = true;
-  }
-};
-// 交付应用 完成
-const ondeliveryModalConfirm = () => {
-  deliveryVisible.value = false;
-};
 // 完成
 // const onConfirm = (done: (closed: boolean) => void) => {
 //   formRef.value.validate((errors: any) => {
