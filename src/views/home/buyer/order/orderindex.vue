@@ -11,7 +11,7 @@
               <a class="status_counts">
                 {{
                   item.label === '待支付'
-                    ? '(' + statusNum.payCount + statusNum.rejectCount + ')'
+                    ? '(' + (statusNum.payCount + statusNum.rejectCount) + ')'
                     : ''
                 }}
               </a>
@@ -26,8 +26,8 @@
                 {{
                   item.label === '待交付'
                     ? '(' +
-                      statusNum.deliverCount +
-                      statusNum.servicesDeliverCount +
+                      (statusNum.deliverCount +
+                        statusNum.servicesDeliverCount) +
                       ')'
                     : ''
                 }}
