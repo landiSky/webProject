@@ -17,6 +17,11 @@ const constantRoutes = [
     redirect: '/login',
   },
   {
+    path: '/agreement',
+    name: 'agreement',
+    component: () => import('@/views/agreement/userProtocol.vue'),
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('@/views/login/index.vue'),
@@ -49,6 +54,7 @@ export const whiteList = [
   '/404',
   '/500',
   '/403',
+  '/agreement',
   '/wow/index',
   '/wow/freeApp',
   '/wow/mall',
