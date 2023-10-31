@@ -1,6 +1,6 @@
 <template>
   <t-slider-captcha
-    v-model:visible="captchaVisible"
+    :visible="props.visible"
     :get-picture-config="pictureConfig"
     :check-picture-config="checkPictureConfig"
     @success="onSuccess"
@@ -8,8 +8,14 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
+const props = defineProps({
+  visible: {
+    type: Boolean,
+    default: false,
+  },
+});
 const emit = defineEmits(['success']);
 const pictureConfig = {
   url: '/api/v1/captcha/get',
