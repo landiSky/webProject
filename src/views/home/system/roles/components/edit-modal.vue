@@ -5,7 +5,7 @@
     :height="378"
     :on-before-ok="onConfirm"
     :ok-text="isEdit ? '完成' : '下一步:角色授权'"
-    @cancel="emit('cancel')"
+    @cancel="onConfirmflag"
   >
     <!-- "下一步:角色授权" -->
     <template #title>
@@ -27,9 +27,9 @@
         />
       </t-form-item>
 
-      <t-form-item field="roleDesc" label="角色描述">
+      <t-form-item field="remark" label="角色描述">
         <t-textarea
-          v-model="state.formModel.roleDesc"
+          v-model="state.formModel.remark"
           placeholder="请输入"
           :max-length="{
             length: 100,
@@ -45,7 +45,6 @@
       </t-form-item>
     </t-form>
   </t-modal>
-  <div> </div>
 </template>
 
 <script lang="ts" setup>
@@ -79,7 +78,8 @@ const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id�
 const state = reactive({
   formModel: {
     roleName: undefined,
-    roleDesc: undefined,
+    remark: undefined,
+    id: undefined,
   },
 });
 
@@ -91,8 +91,6 @@ const formRules = {
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
-  // emit('onEditModalConfirm');
-  // emit('confirm');
   formRef.value.validate((errors: any) => {
     if (!isEdit.value) {
       if (!errors) {
@@ -114,11 +112,20 @@ const onConfirm = (done: (closed: boolean) => void) => {
       }
     } else {
       // 编辑
+      console.log(state.formModel);
+
       emit('cancel');
     }
   });
 };
-
+const onConfirmflag = () => {
+  emit('cancel');
+  state.formModel = {
+    roleName: undefined,
+    remark: undefined,
+    id: undefined,
+  };
+};
 // const getDetail = () => {
 //   usersDetail({ id: props.data?.id })
 //     .then((res: Record<string, any>) => {
@@ -129,16 +136,17 @@ const onConfirm = (done: (closed: boolean) => void) => {
 // };
 
 onMounted(() => {
-  // if (isEdit.value) {
-  // 这里分两种情况
-  // 一是编辑信息从列表传入
-  const { roleName, roleDesc } = props?.data
-    ? props.data
-    : { roleName: '', roleDesc: '' };
-  state.formModel = { roleName, roleDesc };
-  // 二是从接口获取
-  // getDetail();
-  // }
+  if (isEdit.value) {
+    // 这里分两种情况
+    // 一是编辑信息从列表传入
+    console.log(props.data);
+    const { roleName, remark, id } = props?.data
+      ? props.data
+      : { roleName: '', remark: '', id: '' };
+    state.formModel = { roleName, remark, id };
+    // 二是从接口获取
+    // getDetail();
+  }
 });
 </script>
 

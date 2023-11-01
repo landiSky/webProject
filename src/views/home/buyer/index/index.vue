@@ -129,6 +129,7 @@
                 "
                 >企业节点认证</div
               ><span
+                style="padding: 3px 10px"
                 :class="[
                   stateles.nodeStatus === 0
                     ? 'tobereviewed'
@@ -506,6 +507,8 @@ import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 import { ref, reactive } from 'vue';
+
+import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // 头像
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
@@ -513,7 +516,7 @@ import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
 import frame from './image/frame.png';
-import EditModalAlter from './components/edit-modal-alter.vue';
+
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
@@ -649,7 +652,6 @@ const instructionsuse = () => {
   // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
   // window.open(url, '_blank');
   const input: any = document.getElementById('page');
-
   html2canvas(input).then((canvas: any) => {
     const imgData = canvas.toDataURL('image/png');
     const pdf = new JsPDF('p', 'pt', 'a4');

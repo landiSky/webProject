@@ -1,129 +1,119 @@
 <template>
-  <t-page-header flex title="角色管理" :show-back="false">
-    <template #breadcrumb>
-      <Breadcrumb :items="['组织架构', '角色管理']" />
-    </template>
-    <t-row :wrap="false">
-      <t-col flex="auto">
-        <t-button type="primary" @click="clickAddBtn"> 新建角色 </t-button>
-      </t-col>
-      <t-col flex="auto">
-        <t-form :model="state.formModel">
-          <t-row :gutter="12" justify="end">
-            <t-col flex="192px">
-              <t-form-item field="name" hide-label>
-                <t-input
-                  v-model="state.formModel.name"
-                  placeholder="请输入角色名称"
-                  allow-clear
-                />
-              </t-form-item>
-            </t-col>
-            <t-col flex="70px">
-              <t-button type="primary" @click="clickSearchBtn"> 查询 </t-button>
-            </t-col>
-            <t-col flex="68px">
-              <t-button @click="handleReset"> 重置 </t-button>
-            </t-col>
-          </t-row>
-        </t-form>
-      </t-col>
-    </t-row>
-
-    <t-table
-      row-key="id"
-      :loading="state.tableLoading"
-      :columns="columns"
-      :data="state.tableData"
-      :pagination="{
-        'show-total': true,
-        'show-jumper': true,
-        'show-page-size': true,
-        'hide-on-single-page': hideOnSinglePage,
-        ...pagination,
-      }"
-      bordered
-      @page-change="onPageChange"
-      @page-size-change="onPageSizeChange"
-    >
-      <template #enabled="{ record }">
-        <span
-          v-if="record.enabled === UserStatusEnum.UNUSED"
-          class="circle danger"
-        ></span>
-        <span v-else class="circle green"></span>
-        {{ record.enabled === UserStatusEnum.UNUSED ? '停用' : '正常' }}
+  <div>
+    <t-page-header flex title="角色管理" :show-back="false">
+      <template #breadcrumb>
+        <Breadcrumb :items="['组织架构', '角色管理']" />
       </template>
-      <template #operations="{ record }">
-        <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-        <t-link @click="onEditTreeConfirmsldrole()"> 权限管理 </t-link>
-        <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
-        <t-link @click="clickEditBtn(record)">编辑</t-link>
-        <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
+      <t-row :wrap="false">
+        <t-col flex="auto">
+          <t-button type="primary" @click="clickAddBtn"> 新建角色 </t-button>
+        </t-col>
+        <t-col flex="auto">
+          <t-form :model="state.formModel">
+            <t-row :gutter="12" justify="end">
+              <t-col flex="192px">
+                <t-form-item field="name" hide-label>
+                  <t-input
+                    v-model="state.formModel.name"
+                    placeholder="请输入角色名称"
+                    allow-clear
+                  />
+                </t-form-item>
+              </t-col>
+              <t-col flex="70px">
+                <t-button type="primary" @click="clickSearchBtn">
+                  查询
+                </t-button>
+              </t-col>
+              <t-col flex="68px">
+                <t-button @click="handleReset"> 重置 </t-button>
+              </t-col>
+            </t-row>
+          </t-form>
+        </t-col>
+      </t-row>
 
-        <t-popconfirm
-          content="确定删除该角色吗？"
-          type="warning"
-          position="br"
-          :ok-button-props="{
-            status: 'danger',
-          }"
-          cancel-text-=""
-          :on-before-ok="onBeforeDelOk"
-        >
-          <t-link> 删除 </t-link>
-        </t-popconfirm>
-      </template>
-    </t-table>
-  </t-page-header>
-  <DetailDrawer
+      <t-table
+        row-key="id"
+        :loading="state.tableLoading"
+        :columns="columns"
+        :data="state.tableData"
+        :pagination="{
+          'show-total': true,
+          'show-jumper': true,
+          'show-page-size': true,
+          'hide-on-single-page': hideOnSinglePage,
+          ...pagination,
+        }"
+        bordered
+        @page-change="onPageChange"
+        @page-size-change="onPageSizeChange"
+      >
+        <template #enabled="{ record }">
+          <span
+            v-if="record.enabled === UserStatusEnum.UNUSED"
+            class="circle danger"
+          ></span>
+          <span v-else class="circle green"></span>
+          {{ record.enabled === UserStatusEnum.UNUSED ? '停用' : '正常' }}
+        </template>
+        <template #operations="{ record }">
+          <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
+          <t-link @click="onEditTreeConfirmsldrole(record)"> 权限管理 </t-link>
+          <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
+          <t-link @click="clickEditBtn(record)">编辑</t-link>
+          <t-link @click="delectlist(record.id)">删除</t-link>
+
+          <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
+        </template>
+      </t-table>
+    </t-page-header>
+    <!-- <DetailDrawer
     v-if="detailDrawerVisible"
     :data="state.detailData"
     @cancel="detailDrawerVisible = false"
     @edit="onDetailEdit"
-  ></DetailDrawer>
+  ></DetailDrawer> -->
 
-  <EditModal
-    v-if="editModalVisible"
-    :data="state.editData"
-    @confirm="onEditModalConfirm"
-    @cancel="editModalVisible = false"
-  ></EditModal>
-  <!-- 角色权限 -->
-  <TreeModal
-    v-if="flagModal"
-    :data="state.editData"
-    @confirm="onEditTreeConfirm"
-    @cancel="onEditTreeCancel"
-  ></TreeModal>
-  <!-- 角色权限 -->
-  <TreeModals
-    v-if="flagModalTree"
-    :data="state.editData"
-    @confirm="onEditTreeConfirmsld"
-    @cancel="onEditTreeCancelsld"
-  >
-  </TreeModals>
+    <EditModal
+      v-if="editModalVisible"
+      :data="state.editData"
+      @confirm="onEditModalConfirm"
+      @cancel="editModalVisible = false"
+    ></EditModal>
+    <!-- 角色权限 -->
+    <TreeModal
+      v-if="flagModal"
+      :data="state.editData"
+      @confirm="onEditTreeConfirm"
+      @cancel="onEditTreeCancel"
+    ></TreeModal>
+    <!-- 角色权限 -->
+    <TreeModalsles
+      v-if="flagModalTree"
+      :data="state.editData"
+      @confirm="onEditTreeConfirmsld"
+      @cancel="onEditTreeCancelsld"
+    >
+    </TreeModalsles>
 
-  <!-- <EditModalFullscreen
+    <!-- <EditModalFullscreen
     v-if="editFullModalVisible"
     @confirm="onFullModalConfirm"
     @cancel="editFullModalVisible = false"
   ></EditModalFullscreen> -->
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 // import dayjs from 'dayjs';
-import {
-  // Modal,
-  Message,
-} from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 import DetailDrawer from './components/detail-drawer.vue';
 import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import TreeModal from './components/tree-modal.vue';
-import TreeModals from './components/tree-modals.vue';
+import TreeModalsles from './components/tree-modals.vue';
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -170,32 +160,22 @@ const columns = [
   },
   {
     title: '角色描述',
-    dataIndex: 'roleCode',
-    slotName: 'roleCode',
+    dataIndex: 'remark',
+    slotName: 'remark',
     width: '20%',
   },
   {
     title: '角色ID',
-    dataIndex: 'userCount',
+    dataIndex: 'id',
     width: '20%',
   },
 
-  // {
-  //   title: '角色状态',
-  //   dataIndex: 'enabled',
-  //   slotName: 'enabled',
-  //   width: 120,
-  // },
   {
     title: '成员数量',
-    dataIndex: 'createdBy',
+    dataIndex: 'memberCount',
     width: '10%',
   },
-  // {
-  //   title: '创建时间',
-  //   dataIndex: 'createdTime',
-  //   width: 160,
-  // },
+
   {
     title: '操作',
     dataIndex: 'operations',
@@ -233,10 +213,8 @@ const pagination = reactive<{
 // 分页，总页数不到10页，不显示分页器
 const hideOnSinglePage = computed(() => pagination.total <= 10);
 
-const detailDrawerVisible = ref(false); // 详情抽屉
 const editModalVisible = ref(false);
 
-// const editFullModalVisible = ref(false); // 编辑全屏展示弹窗
 // 角色弹窗
 const flagModal = ref(false);
 // 角色弹窗
@@ -248,70 +226,30 @@ function fetchData() {
   const { current, pageSize } = pagination;
   console.log(current, pageSize);
 
-  // const params = {
-  //   page: current - 1, // 从0开始
-  //   size: pageSize,
-  //   ...state.formModel,
-  // };
-
-  // 接口请求
-  // state.tableLoading = true;
-  // roleList(params)
-  //   .then((data: any) => {
-  //     state.tableData = data.content;
-  //     pagination.page = data.pageNumber;
-  //     pagination.total = data.totalCount;
-  //   })
-  //   .finally(() => {
-  //     state.tableLoading = false;
-  //   });
   // mock数据
   state.tableLoading = false;
   const data = {
     content: [
       {
-        id: 26,
-        roleName: '测试角QAA色',
-        roleCode: 'ROLE_BIBUCCAZCX',
-        roleDesc: '测试角色',
-        enabled: 0,
-        authority: 1,
-        userCount: 12,
-        createdBy: 'super',
-        createdTime: '2022-12-07 20:29:06',
+        id: 1391112170700800, // 角色id
+        roleName: '普通用户', // 角色名称
+        remark: '描述', // 描述
+        menuList: null,
+        memberCount: 0, // 成员数量
       },
       {
-        id: 25,
-        roleName: '谢珍测试角色编辑',
-        roleCode: 'ROLE_CNYAEDBPZU',
-        roleDesc: '描述',
-        enabled: 0,
-        authority: 1,
-        userCount: 0,
-        createdBy: 'super',
-        createdTime: '2022-12-07 18:28:17',
+        id: 1391112170700801, // 角色id
+        roleName: '普通用户', // 角色名称
+        remark: '描述', // 描述
+        menuList: null,
+        memberCount: 0, // 成员数量
       },
       {
-        id: 22,
-        roleName: 'xdffef',
-        roleCode: 'ROLE_TXOKINNOHD',
-        roleDesc: '修改一次',
-        enabled: 0,
-        authority: 0,
-        userCount: 6,
-        createdBy: 'super',
-        createdTime: '2022-12-07 16:07:13',
-      },
-      {
-        id: 21,
-        roleName: '12222',
-        roleCode: 'ROLE_WZEZUFYCNG',
-        roleDesc: null,
-        enabled: 1,
-        authority: 1,
-        userCount: 2,
-        createdBy: 'super',
-        createdTime: '2022-12-07 14:58:14',
+        id: 1391112170700802, // 角色id
+        roleName: '普通用户', // 角色名称
+        remark: '描述', // 描述
+        menuList: null,
+        memberCount: 0, // 成员数量
       },
     ],
     pageNumber: 1,
@@ -348,25 +286,12 @@ const handleReset = () => {
   clickSearchBtn();
 };
 
-// 查看详情抽屉按钮
-// const clickDetailBtn = (record: Record<string, any>) => {
-//   detailDrawerVisible.value = true;
-//   state.detailData = record;
-// };
-
-// 详情抽屉-点击编辑按钮的回调
-const onDetailEdit = (editData: Record<string, any>) => {
-  detailDrawerVisible.value = false;
-  state.editData = editData; // 回显到编辑弹窗中
-  editModalVisible.value = true;
-};
-
 // 点击编辑按钮
 const clickEditBtn = (data: any) => {
-  editModalVisible.value = true;
+  console.log(data);
   state.editData = data;
+  editModalVisible.value = true;
 };
-
 // 点击新增按钮
 const clickAddBtn = () => {
   state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
@@ -374,118 +299,52 @@ const clickAddBtn = () => {
 };
 // 新增编辑弹窗确定后的回调
 const onEditModalConfirm = (data: any) => {
-  console.log(data.roleName, 'e');
+  console.log(data, 'e');
   state.editData = data;
   // aaa.value = data;
   editModalVisible.value = false;
   flagModal.value = true;
   fetchData();
 };
+const delectlist = (id: number) => {
+  console.log(id, 'd');
 
-// // 修改状态的接口
-// const modifyUserStatus = (ids: Array<number>, enabled: 0 | 1) => {
-//   changeUserStatus({
-//     ids,
-//     enabled, // : UserStatusEnum.USED : UserStatusEnum.UNUSED
-//   })
-//     .then(() => {
-//       Message.success(
-//         `${enabled === UserStatusEnum.USED ? '启用' : '停用'}成功!`
-//       );
-//       fetchData();
-//     })
-//     .catch(() => {});
-// };
+  // Modal.warning({
+  //   title: '确定删除该角色吗？',
+  //   titleAlign: 'start',
+  //   content: '',
+  //   okText: '删除',
+  //   hideCancel: false,
+  //   okButtonProps: {
+  //     status: 'danger',
+  //   },
+  //   onOk: () => {
+  //     // modifyUserStatus([id], UserStatusEnum.UNUSED);
+  //   },
+  // });
 
-// const clickStatusChange = ({ id, enabled }: any) => {
-//   // 直接启用，停用需要二次弹窗
-//   if (enabled === UserStatusEnum.UNUSED) {
-//     // modifyUserStatus([id], UserStatusEnum.USED);
-//   } else {
-//     Modal.warning({
-//       title: '确定停用该用户吗？停用后该用户将无法登录。',
-//       titleAlign: 'start',
-//       content: '',
-//       okText: '停用',
-//       hideCancel: false,
-//       okButtonProps: {
-//         status: 'danger',
-//       },
-//       onOk: () => {
-//         // modifyUserStatus([id], UserStatusEnum.UNUSED);
-//       },
-//     });
-//   }
-// };
-
-// // 删除接口
-// const deleteUsers = () => {
-//   deleteIdentify(deleteId.value)
-//     .then(() => {
-//       Message.success('删除成功');
-//       fetchData();
-//     })
-//     .catch(() => {});
-// };
-
-// // modal类删除
-// const clickDelBtn = (row: Record<string, any>) => {
-//   // // 前端判断无法删除时的弹窗情况
-//   // if (row?.binded === BindHdlStatusEnum.YES) {
-//   //   // 以前端请求数据为准，可能存在数据与实际不一致请求
-//   Modal.warning({
-//     title: '该用户已绑定标识身份，暂无法删除。',
-//     content: '如需删除，请先将该系统用户与标识身份解绑。',
-//     titleAlign: 'start',
-//     okText: '好的',
-//     hideCancel: true,
-//   });
-//   return;
-// }
-
-// Modal.warning({
-//   title: '确定删除该用户吗?',
-//   content: '',
-//   titleAlign: 'start',
-//   okText: '删除',
-//   hideCancel: false,
-//   okButtonProps: {
-//     status: 'danger',
-//   },
-//   onOk: () => {
-//     // deleteUsers(params);
-//   },
-// });
-// };
+  Modal.warning({
+    title: '该角色下已有成员，暂无法删除。',
+    titleAlign: 'start',
+    content: '',
+    okText: '好的',
+    hideCancel: true,
+    onOk: () => {
+      // modifyUserStatus([id], UserStatusEnum.UNUSED);
+    },
+  });
+};
 
 // popover类的删除操作
-const onBeforeDelOk = (done: any) => {
-  //  Modal.warning({
-  //   title: '该用户已绑定标识身份，暂无法删除。',
-  //   content: '如需删除，请先将该系统用户与标识身份解绑。',
-  //   titleAlign: 'start',
-  //   okText: '好的',
-  //   hideCancel: true,
-  // });
-  // 调后端接口
-  // deleteIdentify(deleteId.value)
-  //   .then(() => {
-  //     done(true);
-  //     Message.success('删除成功!');
-  //     refresh();
-  //   })
-  //   .catch(() => {
-  //     done(false);
-  //   });
-  // mock数据
-  done(true);
-  Message.success('删除成功!');
-  fetchData();
-};
+// const onBeforeDelOk = (done: any) => {
+//   // mock数据
+//   done(true);
+//   Message.success('删除成功!');
+//   fetchData();
+// };
 // 角色
 const onEditTreeConfirm = () => {
   state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
-  // console.log(editFullModalVisible2.aaaa);
   flagModal.value = false;
 };
 // 取消
@@ -498,7 +357,8 @@ const onEditTreeCancel = () => {
   // state.editData = aaa.value;
 };
 // 权限管理
-const onEditTreeConfirmsldrole = () => {
+const onEditTreeConfirmsldrole = (data: any) => {
+  state.editData = data;
   flagModalTree.value = true;
 };
 // 完成
@@ -509,19 +369,6 @@ const onEditTreeConfirmsld = () => {
 const onEditTreeCancelsld = () => {
   flagModalTree.value = false;
 };
-// // 编辑全屏展示
-// function handleEditFullscreen(data: any) {
-//   console.log('编辑全屏展示');
-
-//   state.editData = data;
-//   editFullModalVisible.value = true;
-// }
-
-// // 编辑全屏展示成功
-// const onFullModalConfirm = () => {
-//   editFullModalVisible.value = false;
-//   fetchData();
-// };
 
 onMounted(() => {
   fetchData();

@@ -6,25 +6,25 @@
       :on-before-ok="onConfirm"
       @cancel="emit('cancel')"
     >
-      <template #title> {{ isEdit ? '变更' : '变更' }}管理员 </template>
+      <template #title> 变更管理员 </template>
       <t-form ref="formRef" :model="state.formModel" :rules="formRules">
         <t-form-item field="roleName" label="管理员账号">
-          <!-- <span>章三</span> -->
-          <t-input
+          <span>{{ state.formModel.roleName }}</span>
+          <!-- <t-input
             v-model="state.formModel.roleName"
             disabled
             placeholder="请输入管理员账号"
             style="font-size: 50px; background-color: transparent; border: none"
-          />
+          /> -->
         </t-form-item>
         <t-form-item field="phone" label="管理员手机号">
-          <!-- <span>13230087819</span> -->
-          <t-input
+          <span>{{ state.formModel.phone }}</span>
+          <!-- <t-input
             v-model="state.formModel.phone"
             disabled
             placeholder="请输入"
             style="background-color: transparent; border: none"
-          />
+          /> -->
         </t-form-item>
         <t-form-item field="verification" label="手机验证码">
           <!-- v-model="state.formModel.verification" -->
@@ -82,15 +82,12 @@
                 >暂未找到该成员</span
               >
             </template>
-            <t-option v-for="(item, index) in inputSelect" :key="index">{{
-              item
-            }}</t-option>
-            <!-- <t-option>Shanghai</t-option>
-          <t-option>Guangzhou</t-option>
-          <t-option>Disabled</t-option>
-          <t-option>Shenzhen</t-option>
-          <t-option>Chengdu</t-option>
-          <t-option>Wuhan</t-option> -->
+            <t-option
+              v-for="(item, index) in inputSelect"
+              :key="index"
+              :value="item.memberId"
+              >{{ item.userName }}</t-option
+            >
           </t-select>
         </t-form-item>
       </t-form>
@@ -124,24 +121,16 @@ const flagText = ref(true);
 const counts = ref(60);
 const times = ref();
 
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
+// const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
-    roleName: '张三',
-    phone: '13230087819',
+    roleName: '',
+    phone: '',
     verification: undefined,
     roleDesc: undefined,
   },
 });
-const inputSelect = reactive([
-  'Beijing',
-  'Shanghai',
-  'Guangzhou',
-  'Disabled',
-  'Shenzhen',
-  'Chengdu',
-  'Wuhan',
-]);
+const inputSelect = ref();
 
 const formRules = {
   roleName: [
@@ -189,10 +178,9 @@ const verificationds = () => {
   times.value = setInterval(() => {
     if (counts.value < 1) {
       clearInterval(times.value);
-      // flagNum.value = false;
+
       flagText.value = true;
       counts.value = 60;
-      // this.counts === 100
     }
 
     counts.value -= 1;
@@ -206,28 +194,47 @@ const verificationds = () => {
 //     })
 //     .catch(() => {});
 // };
-
+// 查找管理员信息;
+const administratorled = () => {
+  // const a={
+  //   userName: "pf",
+  //   phone: "18839014162",
+  //   memberId: 1717067979902607400
+  // },
+  state.formModel.roleName = '章三';
+  state.formModel.phone = '18839014162';
+};
+// 变更管理员- 查找企业下普通用户成员
+const userNamelist = () => {
+  inputSelect.value = [
+    {
+      userName: 'kw', // 用户名
+      phone: '18839014161', // 手机号
+      memberId: 1, // 成员id
+    },
+    {
+      userName: 'zh', // 用户名
+      phone: '18839014163', // 手机号
+      memberId: 1717072245149118500, // 成员id
+    },
+  ];
+};
 onMounted(() => {
-  // if (isEdit.value) {
-  //   // 这里分两种情况
-  //   // 一是编辑信息从列表传入
-  //   console.log(props.data);
-  //   const { roleName } = props.data;
-  //   state.formModel = { roleName };
-  //   // 二是从接口获取
-  //   // getDetail();
-  // }
+  administratorled();
+  userNamelist();
+  console.log(props.data);
+  const {
+    id,
+    userId,
+    userName,
+    phone,
+    companyId,
+    memberId,
+    status,
+    roleList,
+    roleName,
+  } = props.data;
 });
 </script>
 
-<style scoped lang="less">
-// .boxModal {
-//   ::v-deep .tele-empty {
-//     padding: 10px 20px;
-//     text-align: right;
-//   }
-//   ::v-deep .tele-empty-image {
-//     display: none;
-//   }
-// }
-</style>
+<style scoped lang="less"></style>
