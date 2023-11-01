@@ -1,12 +1,12 @@
 <template>
-  <div id="modalWrapId" class="modalWrap">
+  <div id="modalWrapIds" class="modalWraps">
     <t-modal
       v-model:visible="showModal"
       fullscreen
       title-align="start"
       :closable="false"
       :footer="null"
-      popup-container="#modalWrapId"
+      popup-container="#modalWrapIds"
       @back="goback"
     >
       <template #title>
@@ -615,7 +615,7 @@ const ondeliveryModalConfirm = () => {
   }
 }
 
-.modalWrap {
+.modalWraps {
   :deep(.tele-modal-body) {
     margin: 0 0 !important;
     padding: 0 0;
@@ -627,6 +627,10 @@ const ondeliveryModalConfirm = () => {
 
   :deep(.tele-steps-item-finish .tele-steps-icon) {
     background-color: #ffff;
+  }
+
+  :deep(.tele-steps-item-finish .tele-steps-item-description) {
+    margin-left: -36px;
   }
 }
 

@@ -226,7 +226,7 @@
       </div>
     </div>
     <!-- 热门应用服务 -->
-    <div class="content">
+    <div v-if="false" class="content">
       <h3 style="margin: 20px 0">热门应用服务</h3>
       <div class="catimg">
         <!-- :indicator-type="indicatorType"
@@ -364,7 +364,7 @@
     <div class="views">
       <div class="tooplist">
         <h3>订单概览</h3>
-        <p style="color: #1664ff" @click="multiples">更多</p>
+        <p style="color: #1664ff; cursor: pointer" @click="multiples">更多</p>
       </div>
       <div class="overlist">
         <div
@@ -507,7 +507,7 @@ import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 import { ref, reactive } from 'vue';
-
+import { useRouter } from 'vue-router';
 import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // 头像
 import avatar from './image/avatar.png';
@@ -520,6 +520,8 @@ import frame from './image/frame.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+
+const router = useRouter();
 
 const starlist = reactive(['张三', '李四']);
 // 认证状态
@@ -662,7 +664,9 @@ const instructionsuse = () => {
   });
 };
 // 更多
-const multiples = () => {};
+const multiples = () => {
+  router.push('/buyer/order');
+};
 </script>
 
 <style scoped lang="less">

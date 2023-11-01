@@ -159,7 +159,9 @@
                       dataList.voucherRejectTime
                     }}</span></p
                   >
-                  <t-button type="primary">重新上传凭证</t-button>
+                  <t-button type="primary" anew @click="anewupload"
+                    >重新上传凭证</t-button
+                  >
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
@@ -253,7 +255,7 @@
                     v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="item"
+                    :src="item.url"
                     alt=""
                   />
                 </div>
@@ -417,8 +419,8 @@ const state = reactive({
   },
   updataamount: {
     id: '',
-    currentamount: [''],
-    amount: '',
+    currentamount: [{}],
+    // amount: '',
   },
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
@@ -437,7 +439,7 @@ const dataList = ref({
   accountCount: '10个账号', // 账号数量
   buyDuration: '5个月', // 购买时长
   realityPrice: 10000, // 实付金额
-  orderStatus: 5, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+  orderStatus: 4, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
   orderStatusName: '已完成', // 状态名称
   orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
   orderSteps: 5, // 订单步骤
@@ -457,11 +459,15 @@ const dataList = ref({
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   attachmentAddressArr: [
-    'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-    'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+    {
+      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+    },
+    {
+      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+    },
   ], // 支付凭证
 });
-// 修改金额 弹窗 开关
+// 上传凭证 弹窗 开关
 const editModalVisible = ref(false);
 
 const goback = () => {
@@ -492,13 +498,19 @@ const clickCopy = (Num: string) => {
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {
   state.updataamount.id = dataList.value.id;
-  state.updataamount.currentamount = dataList.value.attachmentAddressArr;
+  // state.updataamount.currentamount = dataList.value.attachmentAddressArr;
   editModalVisible.value = true;
 };
 // 上传支付凭证 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
   Message.success('上传成功');
+};
+// 重新上传
+const anewupload = () => {
+  state.updataamount.id = dataList.value.id;
+  state.updataamount.currentamount = dataList.value.attachmentAddressArr;
+  editModalVisible.value = true;
 };
 // 确认已交付
 const delivery = (id: string) => {
@@ -565,6 +577,10 @@ onMounted(() => {
 
   :deep(.tele-steps-item-finish .tele-steps-icon) {
     background-color: #ffff;
+  }
+
+  :deep(.tele-steps-item-finish .tele-steps-item-description) {
+    margin-left: -36px;
   }
 }
 

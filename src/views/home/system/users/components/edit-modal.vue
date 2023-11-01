@@ -179,6 +179,20 @@ const formRules = {
   phone: [
     { required: true, message: '请输入手机号' },
     { match: /^1[3,4,5,6,7,8,9][0-9]{9}$/, message: '请输入正确手机号' },
+    {
+      validator: (value: any, cb: any) => {
+        return new Promise((resolve: any) => {
+          if (value.length === 11) {
+            console.log('name must be admin');
+            cb('name must be admin');
+          }
+          resolve();
+          // window.setTimeout(() => {
+
+          // }, 2000);
+        });
+      },
+    },
   ],
 };
 
@@ -218,6 +232,9 @@ const getName = () => {};
 const roleName = () => {};
 // 查找手机号是否注册
 const resPhone = () => {};
+const applist = (a: any) => {
+  console.log(a, 'a, b, c');
+};
 onMounted(() => {
   if (isEdit.value) {
     console.log(props.data, '编辑');
