@@ -350,7 +350,7 @@
               >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
             </div>
             <div class="tophead"
-              ><span style="color: #1664ff" @click="configurationapp"
+              ><span style="color: #1664ff" @click="configurationapp(item)"
                 >配置应用</span
               ><span style="color: #86909c" @click="instructionsuse">
                 使用说明下载</span
@@ -409,13 +409,13 @@
     </div>
     <!-- :data="{ starlist }" -->
     <!-- 配置应用 -->
-    <EditModalAlter
+    <AuthMemberModal
       v-if="editModalVisiblealter"
-      :data="starlist"
+      :product-id="selectProductId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
     >
-    </EditModalAlter>
+    </AuthMemberModal>
     <!-- 认证指南 -->
     <EditModal
       v-if="editModalVisible"
@@ -508,8 +508,9 @@ import html2canvas from 'html2canvas';
 
 import { ref, reactive } from 'vue';
 
-import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // 头像
+import AuthMemberModal from '@/components/auth-member/index.vue';
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
@@ -521,7 +522,7 @@ import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
-const starlist = reactive(['张三', '李四']);
+const selectProductId = ref();
 // 认证状态
 const stateles = ref({
   companyStatus: 2, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
@@ -640,7 +641,8 @@ const tomall = () => {};
 // 前往
 const togo = () => {};
 // 配置应用
-const configurationapp = () => {
+const configurationapp = (item: Record<string, any>) => {
+  selectProductId.value = item.id; // 配置的应用 id
   editModalVisiblealter.value = true;
 };
 // 配置应用 确定
