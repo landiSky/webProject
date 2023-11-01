@@ -275,7 +275,7 @@ const goMallDetail = (productId: string) => {
 
 const getProductType = () => {
   apiProductType() // TODO 添加查询参数
-    .then((data) => {
+    .then((data: any) => {
       productTypeList.value = data || [];
     })
     .catch(() => {});
