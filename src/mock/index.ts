@@ -1,3 +1,4 @@
 import user from './user';
+import login from './login';
 
-export default [...user];
+export default [...user, ...login];
