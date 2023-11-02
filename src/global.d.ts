@@ -18,4 +18,6 @@ declare module 'axios' {
   }
 }
 
+declare module 'sm-crypto';
+
 export {};
