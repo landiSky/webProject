@@ -94,7 +94,7 @@
       </t-form>
     </div>
     <SliderCaptcha
-      :visible="captchaVisible"
+      v-if="captchaVisible"
       @success="captchaSuccess"
     ></SliderCaptcha>
   </div>
@@ -105,13 +105,16 @@ import { ref, reactive, defineEmits, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
 
 import { setToken } from '@/utils/auth';
-import { apiLoginName } from '@/api/login';
+import { apiLogin, apiLoginName } from '@/api/login';
+import { sm2 } from '@/utils/encrypt';
 import SliderCaptcha from './captcha.vue';
 
 const emit = defineEmits(['register']);
 
+const userStore = useUserStore();
 const router = useRouter();
 
 const captchaVisible = ref(false);
@@ -195,11 +198,22 @@ const goRegister = () => {
 };
 
 const clickLoginBtn = () => {
-  formRef.value.validate((errors: any) => {
-    if (!errors) {
-      captchaVisible.value = true;
-    }
+  console.log('login.vue:200', userStore.configInfo);
+  const wrapParams = new FormData();
+  wrapParams.append('username', '15112343001');
+  wrapParams.append(
+    'password',
+    sm2('123456', userStore.configInfo?.publicKey)
+    // '4ddf8e1da471700a546e7eb0e7b3d1af305daff484490241ce4fd135ad9f47830910c19a6f48a847174c070ab4388a11a474bf7610392353cb1c5577c0c54074d5ab898d005ff74d76a497a7c7bd98432a9abdcae32ddce96e5955b7ac778eb349f74bcfa865'
+  );
+  apiLogin(wrapParams).then((data) => {
+    console.log('login.vue:202====login', data);
   });
+  // formRef.value.validate((errors: any) => {
+  //   if (!errors) {
+  //     captchaVisible.value = true;
+  //   }
+  // });
 };
 const realLoginRequest = () => {
   const params = {

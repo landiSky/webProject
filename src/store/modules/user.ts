@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { apiUsersInfo } from '@/api/user';
-import { apiLogout } from '@/api/login';
+import { apiLogout, apiConfigInfo } from '@/api/login';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 
@@ -8,6 +8,7 @@ interface UserState {
   userInfo: Record<string, any> | null; // UserInfo | null;
   counter: number;
   token?: string | null;
+  configInfo: Record<string, any> | null;
 }
 
 export const useUserStore = defineStore({
@@ -16,6 +17,7 @@ export const useUserStore = defineStore({
     userInfo: null,
     counter: 0,
     token: null,
+    configInfo: {},
   }),
   getters: {
     // 获取用户信息
@@ -48,6 +50,15 @@ export const useUserStore = defineStore({
       }
     },
 
+    // 返回登录需要的 clientid/secret/publickey
+    async getConfigInfo() {
+      try {
+        const configInfo = await apiConfigInfo();
+        this.configInfo = configInfo;
+      } catch (error: any) {
+        console.log('user.ts:58==获取配置信息异常', error);
+      }
+    },
     /**
      * 获取用户信息
      */

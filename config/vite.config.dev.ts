@@ -29,9 +29,20 @@ export default defineConfig(({ command, mode }) => {
       fs: {
         strict: true,
       },
+      host: '0.0.0.0',
       proxy: {
+        '/web': {
+          target: `http://10.14.150.253:9190/server/`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+        },
         '/api': {
-          target: `http://id-meta-manage-server.dev.idx.space`,
+          target: `http://10.14.150.253:9190/server/`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+        },
+        '/sso': {
+          target: `http://10.14.150.253:8081`,
           changeOrigin: true,
           agent: new https.Agent(),
         },

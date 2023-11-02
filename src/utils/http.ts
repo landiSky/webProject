@@ -64,7 +64,6 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
           return resolve(data);
         }
 
-        console.log('index.ts:55', typeof data);
         // s2: 不是对象结构的也直接返回，调用方自行处理
         if (data.constructor !== Object) {
           return resolve(data);
@@ -85,7 +84,7 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
 
         Message.error(errorMsg);
 
-        return resolve(data);
+        return reject(data);
 
         // ==============预处理start response========
       })

@@ -159,7 +159,7 @@ const onResetPwdConfirm = () => {
 const goLogin = (type: 'register' | 'login') => {
   router.push({
     path: '/login',
-    query: {
+    params: {
       type,
     },
   });
