@@ -21,18 +21,15 @@
     </div>
 
     <div class="right-side">
-      <t-space>
-        <t-input-search
-          :style="{ width: '232px' }"
-          placeholder="请输入商品名称"
-          @search="onSearch"
-        />
-      </t-space>
       <t-space :size="[0]">
         <template #split>
           <t-divider direction="vertical" />
         </template>
-        <t-input-search class="inputSearch" placeholder="请输入商品名称" />
+        <t-input-search
+          class="inputSearch"
+          placeholder="请输入商品名称"
+          @search="onSearch"
+        />
         <t-link @click="goLogin('register')">注册</t-link>
         <t-link @click="goLogin('login')">登录</t-link>
       </t-space>
