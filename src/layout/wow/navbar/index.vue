@@ -21,6 +21,13 @@
     </div>
 
     <div class="right-side">
+      <t-space>
+        <t-input-search
+          :style="{ width: '232px' }"
+          placeholder="请输入商品名称"
+          @search="onSearch"
+        />
+      </t-space>
       <t-space :size="[0]">
         <template #split>
           <t-divider direction="vertical" />
@@ -161,6 +168,15 @@ const goLogin = (type: 'register' | 'login') => {
     path: '/login',
     params: {
       type,
+    },
+  });
+};
+
+const onSearch = (value: string) => {
+  router.push({
+    name: 'wowMall',
+    params: {
+      goodsName: value,
     },
   });
 };
