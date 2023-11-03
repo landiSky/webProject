@@ -338,7 +338,10 @@
                     <icon-question-circle style="color: #86909c" size="12" />
                   </t-tooltip>
                 </t-radio>
-                <t-radio v-if="deliveryType == 1" :value="priceTypeList[2]">
+                <t-radio
+                  v-if="formModel2.deliveryType == 1"
+                  :value="priceTypeList[2]"
+                >
                   {{ priceTypeList[2] }}
                 </t-radio>
               </t-radio-group>
