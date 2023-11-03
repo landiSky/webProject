@@ -647,9 +647,13 @@ const authenticationredf = () => {};
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
-const distributionrole = () => {};
+const distributionrole = () => {
+  router.push('/system/users');
+};
 // 去商城
-const tomall = () => {};
+const tomall = () => {
+  router.push('/wow/mall');
+};
 // 前往
 const togo = () => {};
 // 配置应用

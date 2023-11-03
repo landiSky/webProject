@@ -78,7 +78,7 @@
     </span>
   </div>
   <SliderCaptcha
-    :visible="captchaVisible"
+    v-if="captchaVisible"
     @success="captchaSuccess"
   ></SliderCaptcha>
 </template>
@@ -102,7 +102,7 @@ const captchaVisible = ref(false);
 
 const formRef = ref();
 const form = ref({
-  phone: '',
+  phone: '15210602855',
   code: '',
   password: '',
   confirmPassword: '',

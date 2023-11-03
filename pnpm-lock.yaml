@@ -34,6 +34,9 @@ dependencies:
   pinia:
     specifier: ^2.0.9
     version: 2.0.9(typescript@4.4.4)(vue@3.2.16)
+  sm-crypto:
+    specifier: ^0.3.13
+    version: 0.3.13
   vue:
     specifier: ^3.2.16
     version: 3.2.16
@@ -63,6 +66,9 @@ devDependencies:
   '@types/nprogress':
     specifier: ^0.2.0
     version: 0.2.0
+  '@types/sm-crypto':
+    specifier: ^0.3.3
+    version: 0.3.3
   '@typescript-eslint/eslint-plugin':
     specifier: ^5.3.0
     version: 5.3.0(@typescript-eslint/parser@4.12.0)(eslint@7.28.0)(typescript@4.4.4)
@@ -821,7 +827,7 @@ packages:
       b-tween: 0.3.3
       b-validate: 1.5.3
       compute-scroll-into-view: 1.0.20
-      crypto-js: 4.1.1
+      crypto-js: 4.2.0
       dayjs: 1.10.7
       number-precision: 1.6.0
       resize-observer-polyfill: 1.5.1
@@ -833,6 +839,10 @@ packages:
   /@trysound/sax@0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@types/bigi@1.4.4:
+    resolution: {integrity: sha512-rAKW9bS/pg34u6G6RWax94MV2uyDxX4Ta5sPyzcZkwAPri9iZL74UVyLudg8hGngx4euvmPYIYXyKvh8J+2qkw==}
     dev: true
 
   /@types/estree@0.0.39:
@@ -901,6 +911,12 @@ packages:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
       '@types/node': 18.11.10
+    dev: true
+
+  /@types/sm-crypto@0.3.3:
+    resolution: {integrity: sha512-Xst7YHhHzuMiqpM2/LSOAVt07vLFYO+mol9TZQ7ABVV4/lEHeJ+GvKK8ze5fm1gzWL8SREjU3OHTRGtNtaMA+w==}
+    dependencies:
+      '@types/bigi': 1.4.4
     dev: true
 
   /@types/svgo@2.6.4:
@@ -2195,8 +2211,8 @@ packages:
       which: 2.0.2
     dev: true
 
-  /crypto-js@4.1.1:
-    resolution: {integrity: sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw==}
+  /crypto-js@4.2.0:
+    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     dev: false
 
   /css-line-break@2.1.0:
@@ -4223,6 +4239,10 @@ packages:
       esprima: 4.0.1
     dev: true
 
+  /jsbn@1.1.0:
+    resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
+    dev: false
+
   /jsesc@2.5.2:
     resolution: {integrity: sha512-OYu7XEzjkCQ3C5Ps3QIZsQfNpqoJyZZA99wd9aWd05NCtC5pWOkShK2mkL6HXQR6/Cy2lbNdPlZBpuQHXE63gA==}
     engines: {node: '>=4'}
@@ -6110,6 +6130,12 @@ packages:
       astral-regex: 2.0.0
       is-fullwidth-code-point: 3.0.0
     dev: true
+
+  /sm-crypto@0.3.13:
+    resolution: {integrity: sha512-ztNF+pZq6viCPMA1A6KKu3bgpkmYti5avykRHbcFIdSipFdkVmfUw2CnpM2kBJyppIalqvczLNM3wR8OQ0pT5w==}
+    dependencies:
+      jsbn: 1.1.0
+    dev: false
 
   /snapdragon-node@2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}

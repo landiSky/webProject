@@ -63,20 +63,26 @@
         </div>
         <div class="right">
           <div class="header">
-            <span class="productName">名称</span>
+            <span class="productName">{{ prodDetail.name }}</span>
             <!-- <span class="tag">标签一</span> -->
           </div>
-          <div class="description">描述</div>
+          <div class="description">{{ prodDetail.introduction }}</div>
           <div class="price">
             <span>产品价格:</span>
             <span>￥2222</span>
           </div>
+
           <div class="custom">
+            <!-- <template v-for="version in deliveryList"> -->
             <span class="label">版本:</span>
             <span>
-              <t-radio-group type="button">
-                <t-radio value="Beijing">标准版</t-radio>
-                <t-radio value="Shanghai">企业版</t-radio>
+              <t-radio-group type="button" @change="onVersionChange">
+                <t-radio
+                  v-for="(version, index) in deliveryList"
+                  :key="version.id"
+                  :value="index"
+                  >{{ version.name }}
+                </t-radio>
               </t-radio-group>
             </span>
           </div>
@@ -100,7 +106,12 @@
               </t-radio-group>
             </span>
           </div>
-          <t-button type="primary" size="large" style="width: 296px"
+
+          <t-button
+            type="primary"
+            size="large"
+            style="width: 296px"
+            @click="clickAddCart"
             >立即购买</t-button
           >
         </div>
@@ -122,11 +133,19 @@
       </div>
     </div>
   </div>
+  <AuthMemberModal
+    v-if="authModalVisible"
+    :product-id="prodDetail.id"
+    @cancel="onAuthCancel"
+    @confirm="onAuthConfirm"
+  ></AuthMemberModal>
   <WowFooter></WowFooter>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { apiProductDetail } from '@/api/wow/mall';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
@@ -134,6 +153,11 @@ import Template3 from './layout/template3.vue';
 import Template4 from './layout/template4.vue';
 import Template5 from './layout/template5.vue';
 import Template6 from './layout/template6.vue';
+
+import AuthMemberModal from './authMember.vue';
+
+const route = useRoute();
+const authModalVisible = ref(false);
 
 // // 模块一二三
 // const testData =
@@ -160,7 +184,36 @@ const forCompList = [
   Template6,
 ];
 
+const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const deliveryList = ref<Record<string, any>[]>([]);
+const selectVersion = ref({});
+
+const onAuthCancel = () => {
+  authModalVisible.value = false;
+};
+
+const onAuthConfirm = () => {
+  authModalVisible.value = false;
+};
+
+const clickAddCart = () => {
+  authModalVisible.value = true;
+};
+
 const templateList = JSON.parse(testData);
+
+const onVersionChange = (index: number) => {
+  selectVersion.value = deliveryList.value[index];
+};
+onMounted(() => {
+  apiProductDetail({ id: route.params.id })
+    .then((data) => {
+      prodDetail.value = data;
+      deliveryList.value = data.productDeliverySetList;
+      console.log('index.vue:209', data);
+    })
+    .catch(() => {});
+});
 </script>
 
 <style lang="less" scoped>

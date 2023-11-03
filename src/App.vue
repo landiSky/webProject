@@ -5,8 +5,11 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
 
+const userStore = useUserStore();
 onMounted(() => {
+  userStore.getConfigInfo();
   // 统一添加网络异常提示
   window.addEventListener('offline', () => {
     Message.error('网络有异常，请检查网络后再试。');
