@@ -9,7 +9,7 @@
     <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item field="userName" label="成员姓名">
-        <!-- <t-input
+        <t-input
           v-model="state.formModel.userName"
           placeholder="请输入"
           :max-length="{
@@ -18,12 +18,11 @@
           }"
           allow-clear
           show-word-limit
-        /> -->
-        <t-select
+        />
+        <!-- <t-select
           v-model="state.formModel.userName"
           placeholder="请输入新管理员账号"
           allow-search
-          :disabled="isEdit"
           :max-length="{
             length: 50,
             errorOnly: true,
@@ -40,7 +39,7 @@
             :value="item.id"
             >{{ item.username }}</t-option
           >
-        </t-select>
+        </t-select> -->
       </t-form-item>
 
       <t-form-item field="roleList" label="成员角色">

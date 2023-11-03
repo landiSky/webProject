@@ -5,7 +5,7 @@ import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 
 interface UserState {
-  userInfo: UserInfo | null;
+  userInfo: Record<string, any> | null; // UserInfo | null;
   counter: number;
   token?: string | null;
 }
