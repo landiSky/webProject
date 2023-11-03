@@ -26,8 +26,8 @@
           <t-divider direction="vertical" />
         </template>
         <t-input-search class="inputSearch" placeholder="请输入商品名称" />
-        <t-link>注册</t-link>
-        <t-link>登录</t-link>
+        <t-link @click="goLogin('register')">注册</t-link>
+        <t-link @click="goLogin('login')">登录</t-link>
       </t-space>
 
       <!-- <t-dropdown trigger="click" :popup-container="'.navbar'">
@@ -154,6 +154,15 @@ const clickHdlLogin = () => {
 // 重置密码后，要退出重新登陆
 const onResetPwdConfirm = () => {
   handleLogout();
+};
+
+const goLogin = (type: 'register' | 'login') => {
+  router.push({
+    path: '/login',
+    params: {
+      type,
+    },
+  });
 };
 </script>
 

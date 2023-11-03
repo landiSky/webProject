@@ -1,25 +1,47 @@
 <template>
   <div class="container">
-    <div class="header-cls">
-      <t-space>
-        <iconpark-icon
-          name="logo-white"
-          size="24px"
-          color="white"
-        ></iconpark-icon>
-        <span class="title"> 元数据管理平台 </span>
-      </t-space>
-    </div>
-    <div class="content">
-      <div class="content-inner">
-        <LoginForm />
-      </div>
-    </div>
+    <Login v-if="optType === 'login'" @register="loginToRegister" />
+    <Register v-else @login="regisToLogin" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import LoginForm from './components/login-form.vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { apiConfigInfo } from '@/api/login';
+import Login from './components/login.vue';
+import Register from './components/register.vue';
+
+const route = useRoute();
+const optType = ref(route.params.type || 'login');
+const configInfo = ref<Record<string, any>>({});
+
+const regisToLogin = () => {
+  optType.value = 'login';
+};
+
+const loginToRegister = () => {
+  optType.value = 'register';
+};
+
+onMounted(() => {
+  apiConfigInfo().then((data) => {
+    // const tt = {
+    //   client_id: 'sso_platform',
+    //   client_secret: '8b9cd74e5a8c5c297c3851bb9bccbf5b',
+    //   redirect_uri: 'http://10.14.148.246:3000/#/login',
+    //   login_url: '',
+    // };
+    configInfo.value = data;
+
+    // if ('code' in window.location.href) {
+
+    // }
+    // window.location.replace(configInfo.value.login_url);
+
+    // console.log('index.vue:37', window.location);
+  });
+});
 </script>
 
 <style lang="less" scoped>
@@ -27,33 +49,21 @@ import LoginForm from './components/login-form.vue';
   position: relative;
   height: 100%;
   overflow: auto;
-  background: url('@/assets/images/login-bg.jpg') no-repeat center center;
-  background-size: 100% 100%;
+  background: url('@/assets/images/login-bg.svg') no-repeat center center;
+  background-size: 100%;
 
   .container-title {
     padding-bottom: 18px;
     font-size: 48px;
   }
 
-  .header-cls {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 48px;
-    padding: 11px 0 10px 20px;
-    color: #fff;
-    vertical-align: middle;
-    background: #1d2129;
-  }
-
-  .content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: 200px;
-  }
+  // .content {
+  //   position: relative;
+  //   display: flex;
+  //   flex-direction: column;
+  //   align-items: center;
+  //   justify-content: center;
+  //   padding-top: 200px;
+  // }
 }
 </style>

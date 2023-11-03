@@ -3,11 +3,12 @@
     <t-modal
       v-model:visible="visible"
       :width="642"
+      :height="400"
       :on-before-ok="onConfirm"
       @cancel="emit('cancel')"
     >
       <template #title> 应用授权 </template>
-      <p>邀请企业成员使用</p>
+      <p style="margin-bottom: 20px">邀请企业成员使用</p>
       <t-form ref="formRef" :model="state.formModel" :rules="formRules">
         <t-form-item field="roleDesc" :hide-label="true">
           <t-select

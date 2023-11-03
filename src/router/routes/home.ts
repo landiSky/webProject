@@ -51,19 +51,19 @@ const homeRoutesList = [
     path: '/seller',
     component: PAGE_LAYOUT,
     children: [
-      {
-        path: '/seller/dataoverview',
-        name: 'sellerDataoverview',
-        component: () => import('@/views/home/seller/dataoverview/index.vue'),
-        meta: {
-          name: '数据概览',
-        },
-      },
+      // {
+      //   path: '/seller/dataoverview',
+      //   name: 'sellerDataoverview',
+      //   component: () => import('@/views/home/seller/dataoverview/index.vue'),
+      //   meta: {
+      //     name: '数据概览',
+      //   },
+      // },
 
       {
         path: '/seller/goods',
         name: 'sellerGoods',
-        component: () => import('@/views/home/seller/goods/index.vue'),
+        component: () => import('@/views/home/seller/goods/index.xz.vue'),
         meta: {
           name: '商品管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用

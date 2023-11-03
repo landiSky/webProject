@@ -63,20 +63,26 @@
         </div>
         <div class="right">
           <div class="header">
-            <span class="productName">名称</span>
+            <span class="productName">{{ prodDetail.name }}</span>
             <!-- <span class="tag">标签一</span> -->
           </div>
-          <div class="description">描述</div>
+          <div class="description">{{ prodDetail.introduction }}</div>
           <div class="price">
             <span>产品价格:</span>
             <span>￥2222</span>
           </div>
+
           <div class="custom">
+            <!-- <template v-for="version in deliveryList"> -->
             <span class="label">版本:</span>
             <span>
-              <t-radio-group type="button">
-                <t-radio value="Beijing">标准版</t-radio>
-                <t-radio value="Shanghai">企业版</t-radio>
+              <t-radio-group type="button" @change="onVersionChange">
+                <t-radio
+                  v-for="(version, index) in deliveryList"
+                  :key="version.id"
+                  :value="index"
+                  >{{ version.name }}
+                </t-radio>
               </t-radio-group>
             </span>
           </div>
@@ -100,19 +106,114 @@
               </t-radio-group>
             </span>
           </div>
-          <t-button type="primary" size="large" style="width: 296px"
+
+          <t-button
+            type="primary"
+            size="large"
+            style="width: 296px"
+            @click="clickAddCart"
             >立即购买</t-button
           >
         </div>
       </div>
-      <div class="intro"></div>
+      <div class="intro">
+        <div class="template">
+          <component
+            :is="forCompList[item.type - 1]"
+            v-for="(item, index) in templateList"
+            :key="index"
+            :template-data="item"
+          ></component>
+        </div>
+        <div class="consult">
+          <span class="title">服务商资质</span>
+          <span class="header">服务商名称：北京泰尔英福科技有限公司</span>
+          <t-button type="primary" size="large">购买咨询</t-button>
+        </div>
+      </div>
     </div>
   </div>
+  <AuthMemberModal
+    v-if="authModalVisible"
+    :product-id="prodDetail.id"
+    @cancel="onAuthCancel"
+    @confirm="onAuthConfirm"
+  ></AuthMemberModal>
   <WowFooter></WowFooter>
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { apiProductDetail } from '@/api/wow/mall';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
+import Template1 from './layout/template1.vue';
+import Template2 from './layout/template2.vue';
+import Template3 from './layout/template3.vue';
+import Template4 from './layout/template4.vue';
+import Template5 from './layout/template5.vue';
+import Template6 from './layout/template6.vue';
+
+import AuthMemberModal from './authMember.vue';
+
+const route = useRoute();
+const authModalVisible = ref(false);
+
+// // 模块一二三
+// const testData =
+//   '[{"type":1,"moduleName":"模板一","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"区块二简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"区块三简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":2,"moduleName":"模板二","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块一11","desc":"区块一11简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":3,"moduleName":"模板三","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp","blockList":[{"name":"区块一","desc":"图片紫葡萄"},{"name":"区块二","desc1":"简介 1：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc2":"简介 2：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc3":"简介 3：把尔粉色发非法人非法是的色粉舒服分手的方式实习"}]}]';
+
+// // 模块四
+// const testData =
+//   '[{"type":4,"moduleName":"模块四","blockList":[{"name":"区块一","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块四","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
+
+// // 模块五
+// const testData =
+//   '[{"type":5,"moduleName":"模块五","blockList":[{"name1":"标题一","desc1":"简介一","name2":"标题二","desc2":"简介二","name3":"标题三","desc3":"简介三"},{"name":"","desc":"","picUrl":"","name1":"标题一一","name2":"标题二二","name3":"标题三三","desc1":"简介二","desc2":"简介二","desc3":"简介二"}]}]';
+
+// 模块六
+const testData =
+  '[{"type":6,"moduleName":"模块六","blockList":[{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
+
+const forCompList = [
+  Template1,
+  Template2,
+  Template3,
+  Template4,
+  Template5,
+  Template6,
+];
+
+const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const deliveryList = ref<Record<string, any>[]>([]);
+const selectVersion = ref({});
+
+const onAuthCancel = () => {
+  authModalVisible.value = false;
+};
+
+const onAuthConfirm = () => {
+  authModalVisible.value = false;
+};
+
+const clickAddCart = () => {
+  authModalVisible.value = true;
+};
+
+const templateList = JSON.parse(testData);
+
+const onVersionChange = (index: number) => {
+  selectVersion.value = deliveryList.value[index];
+};
+onMounted(() => {
+  apiProductDetail({ id: route.params.id })
+    .then((data) => {
+      prodDetail.value = data;
+      deliveryList.value = data.productDeliverySetList;
+      console.log('index.vue:209', data);
+    })
+    .catch(() => {});
+});
 </script>
 
 <style lang="less" scoped>
@@ -209,6 +310,42 @@ import WowFooter from '@/views/wow/components/wowFooter/index.vue';
             width: 60px;
             margin-right: 16px;
           }
+        }
+      }
+    }
+
+    .intro {
+      display: flex;
+      justify-content: start;
+
+      .template {
+        flex: 1;
+        margin-right: 16px;
+      }
+
+      .consult {
+        width: 260px;
+        height: 178px;
+        padding: 24px;
+        color: #000;
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px; /* 157.143% */
+        background-color: #fff;
+        border-radius: 4px;
+
+        .title {
+          margin-bottom: 12px;
+          font-weight: 500;
+        }
+
+        .header {
+          margin-bottom: 12px;
+        }
+
+        button {
+          width: 208px;
         }
       }
     }

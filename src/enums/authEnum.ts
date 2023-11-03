@@ -9,7 +9,7 @@ const BaseRouteAuth: { [name: string]: any } = {
   '/system': 'ROUTE_SYSTEM',
   '/system/users': 'ROUTE_SYSTEM_USERS', // 企业管理-用户
   '/system/roles': 'ROUTE_SYSTEM_ROLES', // 企业管理-角色
-  '/seller/dataoverview': 'ROUTE_SYSTEM_DATAOVERVIEW', // 企业管理-角色
+  // '/seller/dataoverview': 'ROUTE_SYSTEM_DATAOVERVIEW', // 企业管理-角色
 };
 
 export const RouteAuthEnum = { ...BaseRouteAuth };

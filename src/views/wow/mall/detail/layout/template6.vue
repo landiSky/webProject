@@ -1,0 +1,64 @@
+<template>
+  <div class="container">
+    <div class="title">{{ props.templateData.moduleName }}</div>
+    <div class="list">
+      <span
+        v-for="(item, index) in props.templateData.blockList"
+        :key="index"
+        class="item"
+      >
+        <img :src="item.url" alt="" />
+      </span>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  templateData: {
+    type: Object,
+    default: () => {},
+  },
+});
+</script>
+
+<style lang="less" scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  font-family: PingFang SC;
+  background-color: #fff;
+
+  .title {
+    margin-bottom: 8px;
+    padding: 12px 0;
+    color: #1d2129;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px; /* 140% */
+  }
+
+  .list {
+    display: flex;
+    justify-content: start;
+    padding: 0 24px;
+
+    .item {
+      display: flex;
+      align-items: start;
+      margin-right: 12px;
+      padding: 20px;
+
+      img {
+        width: 60px;
+        height: 60px;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+</style>
