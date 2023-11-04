@@ -1,4 +1,6 @@
 export const PAGE_LAYOUT = () => import('@/layout/home/layout.vue');
+export const PAGE_LAYOUT_NOMENU = () =>
+  import('@/layout/home/layoutNoMenu.vue'); // 不需要左侧 menu 的页面布局
 
 const homeRoutesList = [
   //   {
@@ -106,6 +108,21 @@ const homeRoutesList = [
     ],
     meta: {
       name: '企业管理',
+    },
+  },
+  {
+    path: '/order',
+    component: PAGE_LAYOUT_NOMENU,
+    children: [
+      {
+        path: '/order/confirm',
+        name: 'orderConfirm',
+        component: () => import('@/views/home/seller/confirmOrder/index.vue'),
+        meta: {},
+      },
+    ],
+    meta: {
+      name: '订单确认页',
     },
   },
 ];
