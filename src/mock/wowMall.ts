@@ -15,7 +15,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 2,
@@ -24,7 +25,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 0,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 3,
@@ -33,7 +35,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 4,
@@ -42,7 +45,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 0,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 5,
@@ -51,7 +55,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
         ],
       });
@@ -84,7 +89,8 @@ export default [
         companyName: '企业名称（商家名称）',
         name: '商品名称修改',
         logo: '商品logo',
-        detailImg: '商品详情页大图',
+        detailImg:
+          'https://img13.360buyimg.com/n1/s450x450_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg.avif,//img13.360buyimg.com/n5/s54x54_jfs/t1/163744/5/40242/82186/64db82a5Ffa15c5cc/2befcc69725a22dd.jpg.avif,//img13.360buyimg.com/n5/s54x54_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg.avif,//img13.360buyimg.com/n5/s54x54_jfs/t1/102528/34/36773/44185/64db377cF64ce8f22/8e0604d47fafa774.jpg.avif,//img13.360buyimg.com/n5/s54x54_jfs/t1/128950/17/38984/28802/64db376fF8047295f/2ff219061faf6d35.jpg.avif,//img13.360buyimg.com/n5/s54x54_jfs/t1/84805/5/37021/24570/64db376fF79637b28/f5edd3e107e27915.jpg.avif',
         productTypeId: 1,
         type: 1,
         introduction:
@@ -94,7 +100,7 @@ export default [
         status: 1,
         deliveryType: 1,
         url: 'test_d897ee7cb32d',
-        saleType: 1,
+        saleType: 0,
         rejectReason: null,
         upShelfTime: null,
         tag: null,
@@ -107,7 +113,7 @@ export default [
           {
             id: 1390951226138622,
             productId: 1390951137157120,
-            name: '交付版本2',
+            name: '交付版本1',
             appSecret: 'test_f5c35488ad4e',
             accountNum: 40,
             price: 70.46,
@@ -118,6 +124,40 @@ export default [
             updateUser: 'SYSTEM',
             updateTime: '2023-10-22 22:56:32',
             isDeleted: 0,
+            accountNumList: [
+              {
+                id: 11,
+                productDeliverySetId: 1390951226138622,
+                accountNum: 10,
+              },
+              {
+                id: 22,
+                productDeliverySetId: 1390951226138622,
+                accountNum: 50,
+              },
+              {
+                id: 33,
+                productDeliverySetId: 1390951226138622,
+                accountNum: 100,
+              },
+            ],
+            durationList: [
+              {
+                id: 11,
+                productDeliverySetId: 1390951226138622,
+                duration: 1,
+              },
+              {
+                id: 12,
+                productDeliverySetId: 1390951226138622,
+                duration: 6,
+              },
+              {
+                id: 13,
+                productDeliverySetId: 1390951226138622,
+                duration: 12,
+              },
+            ],
           },
           {
             id: 1390951226138624,
@@ -133,9 +173,41 @@ export default [
             updateUser: 'SYSTEM',
             updateTime: '2023-10-22 19:02:26',
             isDeleted: 0,
+            accountNumList: [
+              {
+                id: 22,
+                productDeliverySetId: 1390951226138624,
+                accountNum: 50,
+              },
+              {
+                id: 33,
+                productDeliverySetId: 1390951226138624,
+                accountNum: 100,
+              },
+            ],
+            durationList: [
+              {
+                id: 11,
+                productDeliverySetId: 1390951226138624,
+                duration: 6,
+              },
+              {
+                id: 13,
+                productDeliverySetId: 1390951226138624,
+                duration: 12,
+              },
+            ],
           },
         ],
       });
+    },
+  },
+
+  {
+    url: '/web/reception/computePrice',
+    method: 'get',
+    response: () => {
+      return successResponseWrap(8000);
     },
   },
 ];

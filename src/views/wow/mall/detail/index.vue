@@ -4,61 +4,17 @@
       <div class="baseInfo">
         <div class="left">
           <div class="bigImg">
-            <img
-              src="https://img13.360buyimg.com/n1/s450x450_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg.avif"
-            />
+            <img :src="bigImgPath" />
           </div>
 
           <ul class="imgList">
             <li
-              ><img
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/115168/22/40004/81804/6536985aFad2f6759/146058ce4b8221d6.jpg.avif"
-                width="54"
-                height="54"
-            /></li>
-            <li
-              ><img
-                alt="OPPO 一加 Ace 2 Pro 16GB+512GB 钛空灰 高通第二代骁龙 8 旗舰芯片 长寿版 150W 超级闪充 5G游戏性能手机"
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/163744/5/40242/82186/64db82a5Ffa15c5cc/2befcc69725a22dd.jpg.avif"
-                data-url="jfs/t1/163744/5/40242/82186/64db82a5Ffa15c5cc/2befcc69725a22dd.jpg.avif"
-                data-img="1"
-                width="54"
-                height="54"
-            /></li>
-            <li class="img-hover"
-              ><img
-                alt="OPPO 一加 Ace 2 Pro 16GB+512GB 钛空灰 高通第二代骁龙 8 旗舰芯片 长寿版 150W 超级闪充 5G游戏性能手机"
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg.avif"
-                data-url="jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg.avif"
-                data-img="1"
-                width="54"
-                height="54"
-            /></li>
-            <li class=""
-              ><img
-                alt="OPPO 一加 Ace 2 Pro 16GB+512GB 钛空灰 高通第二代骁龙 8 旗舰芯片 长寿版 150W 超级闪充 5G游戏性能手机"
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/102528/34/36773/44185/64db377cF64ce8f22/8e0604d47fafa774.jpg.avif"
-                data-url="jfs/t1/102528/34/36773/44185/64db377cF64ce8f22/8e0604d47fafa774.jpg.avif"
-                data-img="1"
-                width="54"
-                height="54"
-            /></li>
-            <li class=""
-              ><img
-                alt="OPPO 一加 Ace 2 Pro 16GB+512GB 钛空灰 高通第二代骁龙 8 旗舰芯片 长寿版 150W 超级闪充 5G游戏性能手机"
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/128950/17/38984/28802/64db376fF8047295f/2ff219061faf6d35.jpg.avif"
-                data-url="jfs/t1/128950/17/38984/28802/64db376fF8047295f/2ff219061faf6d35.jpg.avif"
-                data-img="1"
-                width="54"
-                height="54"
-            /></li>
-
-            <li
-              ><img
-                src="//img13.360buyimg.com/n5/s54x54_jfs/t1/84805/5/37021/24570/64db376fF79637b28/f5edd3e107e27915.jpg.avif"
-                width="54"
-                height="54"
-            /></li>
+              v-for="(imgPath, index) in previewImgList"
+              :key="index"
+              @mouseenter="bigImgPath = imgPath"
+            >
+              <img :src="imgPath" alt="" />
+            </li>
           </ul>
         </div>
         <div class="right">
@@ -69,42 +25,73 @@
           <div class="description">{{ prodDetail.introduction }}</div>
           <div class="price">
             <span>产品价格:</span>
-            <span>￥2222</span>
+            <span v-if="computing">计算中...</span>
+            <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
+              价格面议
+            </span>
+            <span v-else>555555</span>
           </div>
 
           <div class="custom">
-            <!-- <template v-for="version in deliveryList"> -->
             <span class="label">版本:</span>
             <span>
-              <t-radio-group type="button" @change="onVersionChange">
+              <t-radio-group
+                v-model="priceParams.deliveryVersionId"
+                type="button"
+                @change="onVersionChange"
+              >
                 <t-radio
-                  v-for="(version, index) in deliveryList"
+                  v-for="version in deliveryList"
                   :key="version.id"
-                  :value="index"
+                  :value="version.id"
                   >{{ version.name }}
                 </t-radio>
               </t-radio-group>
             </span>
           </div>
-          <div class="custom">
+          <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">
             <span class="label">账号数:</span>
-            <span>
-              <t-radio-group type="button">
-                <t-radio value="Beijing">1个账号</t-radio>
+            <span v-if="prodDetail.saleType === SaleType.PACKAGE">
+              <t-radio-group
+                v-model="priceParams.accountId"
+                type="button"
+                @change="onRadioChange"
+              >
+                <t-radio
+                  v-for="account in selectVersion.accountNumList"
+                  :key="account.id"
+                  :value="account.id"
+                >
+                  {{ account.accountNum }}个账号
+                </t-radio>
+                <!-- <t-radio value="Beijing">1个账号</t-radio>
                 <t-radio value="Shanghai">20个账号</t-radio>
-                <t-radio value="Shanghai">50个账号</t-radio>
+                <t-radio value="Shanghai">50个账号</t-radio> -->
               </t-radio-group>
             </span>
+            <span v-else>不限</span>
           </div>
-          <div class="custom">
+          <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">
             <span class="label">选择时长:</span>
-            <span>
-              <t-radio-group type="button">
-                <t-radio value="Beijing">6个月</t-radio>
+            <span v-if="prodDetail.saleType === SaleType.PACKAGE">
+              <t-radio-group
+                v-model="priceParams.durationId"
+                type="button"
+                @change="onRadioChange"
+              >
+                <t-radio
+                  v-for="durationItem in selectVersion.durationList"
+                  :key="durationItem.id"
+                  :value="durationItem.id"
+                >
+                  {{ durationItem.duration }}个账号
+                </t-radio>
+                <!-- <t-radio value="Beijing">6个月</t-radio>
                 <t-radio value="Shanghai">12个月</t-radio>
-                <t-radio value="Shanghai">不限</t-radio>
+                <t-radio value="Shanghai">不限</t-radio> -->
               </t-radio-group>
             </span>
+            <span v-else>不限</span>
           </div>
 
           <t-button
@@ -145,7 +132,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { apiProductDetail } from '@/api/wow/mall';
+import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
+import { SaleType } from '@/enums/common';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
@@ -159,6 +147,15 @@ import AuthMemberModal from './authMember.vue';
 const router = useRouter();
 const route = useRoute();
 const authModalVisible = ref(false);
+const priceParams = ref<Record<string, any>>({
+  deliveryVersionId: null,
+  accountId: null,
+  durationId: null,
+});
+const previewImgList = ref<string[]>([]);
+const bigImgPath = ref();
+const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
+const computing = ref(false);
 
 // // 模块一二三
 // const testData =
@@ -187,7 +184,7 @@ const forCompList = [
 
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const deliveryList = ref<Record<string, any>[]>([]);
-const selectVersion = ref({});
+const selectVersion = ref<Record<string, any>>({});
 
 const onAuthCancel = () => {
   authModalVisible.value = false;
@@ -206,14 +203,60 @@ const clickAddCart = () => {
 
 const templateList = JSON.parse(testData);
 
-const onVersionChange = (index: number) => {
-  selectVersion.value = deliveryList.value[index];
+const getPrice = () => {
+  computing.value = true;
+  apiComputePrice(priceParams.value)
+    .then(() => {})
+    .catch(() => {})
+    .finally(() => {
+      computing.value = false;
+    });
 };
+
+const onVersionChange = (versionId: string) => {
+  selectVersion.value = versionObj[versionId];
+  const { id, accountNumList, durationList } = selectVersion.value;
+
+  priceParams.value.deliveryVersionId = id;
+  priceParams.value.accountId = accountNumList?.[0].id;
+  priceParams.value.durationId = durationList?.[0].id;
+  getPrice();
+};
+const onRadioChange = () => {
+  getPrice();
+};
+
 onMounted(() => {
   apiProductDetail({ id: route.params.id })
     .then((data) => {
       prodDetail.value = data;
-      deliveryList.value = data.productDeliverySetList;
+      deliveryList.value = data.productDeliverySetList || [];
+      previewImgList.value = data.detailImg.split(',');
+      bigImgPath.value = previewImgList.value?.[0];
+
+      const { saleType } = data;
+
+      if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
+        if (saleType === SaleType.ONEOFF) {
+          // 一口价
+          priceParams.value.deliveryVersionId = deliveryList.value;
+          getPrice();
+        } else if (saleType === SaleType.PACKAGE) {
+          deliveryList.value.forEach((item: Record<string, any>) => {
+            versionObj[item.id] = item;
+          });
+
+          //  套餐，初始化去计算
+          selectVersion.value = deliveryList.value?.[0];
+          const { id, accountNumList, durationList } = selectVersion.value;
+
+          priceParams.value.deliveryVersionId = id;
+          priceParams.value.accountId = accountNumList?.[0].id;
+          priceParams.value.durationId = durationList?.[0].id;
+          getPrice();
+        }
+      }
+
       console.log('index.vue:209', data);
     })
     .catch(() => {});
@@ -244,8 +287,10 @@ onMounted(() => {
         margin-right: 32px;
 
         .bigImg {
-          width: 450px;
-          height: 450px;
+          img {
+            width: 450px;
+            height: 450px;
+          }
         }
 
         .imgList {
