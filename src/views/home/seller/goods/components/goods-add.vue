@@ -320,54 +320,55 @@
                 type="button"
               >
               </t-radio-group>
-              <t-link>《SAAS类应用对接指南》</t-link>
+              <t-link v-if="formModel2.deliveryType === 0"
+                >《SAAS类应用对接指南》</t-link
+              >
             </t-form-item>
             <t-form-item label="商品定价方式">
-              <t-radio-group v-model="priceType">
-                <t-radio :value="priceTypeList[0]">
-                  {{ priceTypeList[0] }}
+              <t-radio-group v-model="formModel2.saleType">
+                <t-radio :value="priceTypeList[0].value">
+                  {{ priceTypeList[0].label }}
                   <t-tooltip
                     content="可使用账号数量及使用时间均根据套餐设限，套餐价格=账号单价*套餐账号数*时长"
                   >
                     <icon-question-circle style="color: #86909c" size="12" />
                   </t-tooltip>
                 </t-radio>
-                <t-radio :value="priceTypeList[1]">
-                  {{ priceTypeList[1] }}
+                <t-radio :value="priceTypeList[1].value">
+                  {{ priceTypeList[1].label }}
                   <t-tooltip content="可使用账号数量及可使用时间均不受限">
                     <icon-question-circle style="color: #86909c" size="12" />
                   </t-tooltip>
                 </t-radio>
                 <t-radio
                   v-if="formModel2.deliveryType == 1"
-                  :value="priceTypeList[2]"
+                  :value="priceTypeList[2].value"
                 >
-                  {{ priceTypeList[2] }}
+                  {{ priceTypeList[2].label }}
                 </t-radio>
               </t-radio-group>
             </t-form-item>
           </t-form>
         </div>
         <t-divider></t-divider>
-        <div v-if="priceType == priceTypeList[0]">
-          <div
-            v-for="(c, index) of saleCopyList1"
-            :key="index"
-            class="sale-copy"
-          >
+        <div v-if="formModel2.saleType == priceTypeList[0].value">
+          <div v-for="(c, index) of copyModal" :key="index" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
                 <div class="body-title-icon" />
                 <div>交付版本{{ index + 1 }}</div>
               </div>
-              <div class="body-title-right" @click="deleteSaleCopy(c)"
+              <div
+                v-if="copyModal.length > 1"
+                class="body-title-right"
+                @click="deleteSaleCopy(index)"
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="formModel" :rules="formRules">
-              <t-form-item label="交付版本名称" class="sale-item">
+            <t-form ref="formRef" :model="copyModal[index]" :rules="copyRules">
+              <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="formModel.name"
+                  v-model="copyModal[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -380,9 +381,10 @@
               <t-form-item
                 v-if="formModel2.deliveryType == 0"
                 label="应用服务地址"
+                field="url"
               >
-                <t-textarea
-                  v-model="formModel2.url"
+                <t-input
+                  v-model="copyModal[index].url"
                   placeholder="请输入应用服务地址"
                   :max-length="{
                     length: 50,
@@ -396,31 +398,44 @@
                   }"
                 />
               </t-form-item>
-              <t-form-item label="套餐定价设置">
+              <t-form-item
+                label="套餐定价设置"
+                field="productDeliverySetInfoList"
+              >
                 <div class="price-list">
                   <div
-                    v-for="(p, index) of c.priceList"
-                    :key="index"
+                    v-for="(p, cIndex) of c.productDeliverySetInfoList"
+                    :key="cIndex"
                     class="price-item"
                   >
-                    <div class="price-name">套餐{{ index + 1 }}：</div>
+                    <div class="price-name">套餐{{ cIndex + 1 }}：</div>
                     <div class="price-count"
                       ><t-input
+                        v-model="
+                          copyModal[index].productDeliverySetInfoList[cIndex]
+                            .accountNum
+                        "
                         ><template #prefix>账号数：</template
                         ><template #suffix>个</template></t-input
                       ></div
                     >
                     <div class="price-value"
                       ><t-input
+                        v-model="
+                          copyModal[index].productDeliverySetInfoList[cIndex]
+                            .price
+                        "
                         ><template #prefix>账号单价：</template
                         ><template #suffix>元</template></t-input
                       ></div
                     >
-                    <div class="price-icon"
+                    <div
+                      class="price-icon"
+                      @click="deletePrice(copyModal[index], cIndex)"
                       ><icon-delete size="16"></icon-delete
                     ></div>
                   </div>
-                  <div class="add-price" @click="addPrice"
+                  <div class="add-price" @click="addPrice(c)"
                     ><icon-plus
                       stroke-width="6"
                       :style="{
@@ -433,9 +448,9 @@
                   >
                 </div>
               </t-form-item>
-              <t-form-item label="可选购买时长"
+              <t-form-item label="可选购买时长" field="month"
                 ><t-select
-                  :default-value="[]"
+                  :modal="copyModal[index].durationList"
                   :style="{ width: '100%' }"
                   placeholder="请选择"
                   multiple
@@ -453,19 +468,22 @@
             </t-form>
           </div>
         </div>
-        <div v-if="priceType == priceTypeList[1]">
-          <div v-for="(c, index) of saleCopyList2" :key="c" class="sale-copy">
+        <div v-if="formModel2.saleType == priceTypeList[1].value">
+          <div v-for="(c, index) of copyModal2" :key="c" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
                 <div class="body-title-icon" />
                 <div>交付版本{{ index + 1 }}</div>
               </div>
-              <div class="body-title-right" @click="deleteSaleCopy(c)"
+              <div
+                v-if="copyModal2.length > 1"
+                class="body-title-right"
+                @click="deleteSaleCopy(index)"
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="formModel" :rules="formRules">
-              <t-form-item label="交付版本名称" class="sale-item">
+            <t-form ref="formRef" :model="copyModal2[index]" :rules="copyRules">
+              <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model="formModel.name"
                   allow-clear
@@ -477,29 +495,59 @@
                 >
                 </t-input>
               </t-form-item>
-              <t-form-item label="一口价金额">
-                <t-input v-model="formModel.name" allow-clear
+              <t-form-item
+                v-if="formModel2.deliveryType == 0"
+                label="应用服务地址"
+                field="url"
+              >
+                <t-input
+                  v-model="copyModal2[index].url"
+                  placeholder="请输入应用服务地址"
+                  :max-length="{
+                    length: 50,
+                    errorOnly: true,
+                  }"
+                  allow-clear
+                  show-word-limit
+                  :auto-size="{
+                    minRows: 2,
+                    maxRows: 5,
+                  }"
+                />
+              </t-form-item>
+              <t-form-item
+                label="一口价金额"
+                field="productDeliverySetInfoList"
+              >
+                <t-input
+                  v-model="
+                    copyModal2[index].productDeliverySetInfoList[0].price
+                  "
+                  allow-clear
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
             </t-form>
           </div>
         </div>
-        <div v-if="priceType == priceTypeList[2]">
-          <div v-for="(c, index) of saleCopyList3" :key="c" class="sale-copy">
+        <div v-if="formModel2.saleType == priceTypeList[2].value">
+          <div v-for="(c, index) of copyModal3" :key="c" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
                 <div class="body-title-icon" />
                 <div>交付版本{{ index + 1 }}</div>
               </div>
-              <div class="body-title-right" @click="deleteSaleCopy(c)"
+              <div
+                v-if="copyModal3.length > 1"
+                class="body-title-right"
+                @click="deleteSaleCopy(index)"
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="formModel" :rules="formRules">
-              <t-form-item label="交付版本名称" class="sale-item">
+            <t-form ref="formRef" :model="copyModal3[index]" :rules="copyRules">
+              <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="formModel.name"
+                  v-model="copyModal3[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -527,44 +575,7 @@ import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import { Message, Modal, FileItem } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
 
-const step = ref(1);
-
-const saleCopyList1 = ref([
-  {
-    priceList: [
-      { count: 1, price: 200 },
-      { count: 2, price: 200 },
-      { count: 3, price: 200 },
-    ],
-  },
-  {
-    priceList: [
-      { count: 1, price: 200 },
-      { count: 2, price: 200 },
-      { count: 3, price: 200 },
-    ],
-  },
-  {
-    priceList: [
-      { count: 1, price: 200 },
-      { count: 2, price: 200 },
-      { count: 3, price: 200 },
-    ],
-  },
-]);
-const addPrice = () => {};
-const saleCopyList2 = ref([1, 2, 3]);
-const saleCopyList3 = ref([1, 2, 3]);
-const addCopy = () => {};
-const deleteSaleCopy = (copy: any) => {};
-const deliveryType = ref('SAAS类');
-const deliveryTypeList = ref([
-  { label: 'SAAS类', value: 0 },
-  { label: '独立部署类', value: 1 },
-]);
-
-const priceType = ref('套餐定价(账号+时长)');
-const priceTypeList = ref(['套餐定价(账号+时长)', '一口价定价', '价格面议']);
+const step = ref(2);
 
 const modalList = ref(['模块一：产品简介', '模块二：产品特色']);
 
@@ -634,12 +645,22 @@ const formModel = ref({
   logo: '',
   detailImg: '',
 });
+
+const deliveryTypeList = ref([
+  { label: 'SAAS类', value: 0 },
+  { label: '独立部署类', value: 1 },
+]);
+const priceType = ref('套餐定价(账号+时长)');
+const priceTypeList = ref([
+  { label: '套餐定价(账号+时长)', value: 0 },
+  { label: '一口价定价', value: 1 },
+  { label: '价格面议', value: 2 },
+]);
+
 const formModel2 = ref({
   deliveryType: 0,
-  url: 0,
-  productTypeId: null,
-  logo: '',
-  detailImg: '',
+  saleType: 0,
+  productDeliveryList: [],
 });
 const formRules = {
   name: [{ required: true, message: '请输入商品名称' }],
@@ -651,6 +672,79 @@ const formRules = {
   useExplain: [{ required: true, message: '请上传产品使用说明' }],
   modal: [{ required: true, message: '请添加详情模块' }],
   deliveryType: [{ required: true }],
+  saleType: [{ required: true }],
+};
+
+const copyModal = ref<any[]>([
+  {
+    name: '',
+    url: '',
+    productDeliverySetInfoList: [],
+    durationList: [],
+  },
+]);
+const copyModal2 = ref<any[]>([
+  {
+    name: '',
+    url: '',
+    productDeliverySetInfoList: [{ price: null }],
+  },
+]);
+const copyModal3 = ref<any[]>([
+  {
+    name: '',
+  },
+]);
+
+const addPrice = (c: any) => {
+  c.productDeliverySetInfoList.push({
+    accountNum: null,
+    price: null,
+  });
+};
+const deletePrice = (c: any, cIndex: number) => {
+  console.log(cIndex);
+  console.log(c.productDeliverySetInfoList);
+  c.productDeliverySetInfoList.splice(cIndex, 1);
+  console.log(c.productDeliverySetInfoList);
+};
+const addCopy = () => {
+  if (formModel2.value.saleType === 0) {
+    copyModal.value.push({
+      name: '',
+      url: '',
+      productDeliverySetInfoList: [],
+      durationList: [],
+    });
+  } else if (formModel2.value.saleType === 1) {
+    copyModal2.value.push({
+      name: '',
+      url: '',
+      productDeliverySetInfoList: [{ price: null }],
+    });
+  } else {
+    copyModal3.value.push({
+      name: '',
+    });
+  }
+};
+const deleteSaleCopy = (index: number) => {
+  if (formModel2.value.saleType === 0) {
+    copyModal.value.splice(index, 1);
+  } else if (formModel2.value.saleType === 1) {
+    copyModal2.value.splice(index, 1);
+  } else {
+    copyModal3.value.splice(index, 1);
+  }
+};
+
+const copyRules = {
+  name: [{ required: true, message: '交付版本名称' }],
+  url: [{ required: true, message: '请输入' }],
+  productDeliverySetInfoList: [{ required: true, message: '请设置套餐定价' }],
+  price: [{ required: true, message: '请输入' }],
+  count: [{ required: true, message: '请输入' }],
+  month: [{ required: true, message: '请选择' }],
 };
 
 const emit = defineEmits(['confirm', 'cancel']);
@@ -946,6 +1040,8 @@ const clickUp = () => {};
   }
 
   .sale-copy {
+    margin-bottom: 24px;
+
     .price-list {
       display: flex;
       flex-direction: column;

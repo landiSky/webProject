@@ -63,7 +63,7 @@ const homeRoutesList = [
       {
         path: '/seller/goods',
         name: 'sellerGoods',
-        component: () => import('@/views/home/seller/goods/index.xz.vue'),
+        component: () => import('@/views/home/seller/goods/index.vue'),
         meta: {
           name: '商品管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
