@@ -414,7 +414,7 @@ const state = reactive({
   },
   updataamount: {
     id: '',
-    currentamount: 0,
+    currentamount: [],
     amount: '',
   },
 });

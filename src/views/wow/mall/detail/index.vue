@@ -144,7 +144,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { apiProductDetail } from '@/api/wow/mall';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
@@ -156,6 +156,7 @@ import Template6 from './layout/template6.vue';
 
 import AuthMemberModal from './authMember.vue';
 
+const router = useRouter();
 const route = useRoute();
 const authModalVisible = ref(false);
 
@@ -194,6 +195,9 @@ const onAuthCancel = () => {
 
 const onAuthConfirm = () => {
   authModalVisible.value = false;
+  router.push({
+    path: '/order/confirm',
+  });
 };
 
 const clickAddCart = () => {

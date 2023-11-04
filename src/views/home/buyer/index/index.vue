@@ -226,7 +226,7 @@
       </div>
     </div>
     <!-- 热门应用服务 -->
-    <div class="content">
+    <div v-if="false" class="content">
       <h3 style="margin: 20px 0">热门应用服务</h3>
       <div class="catimg">
         <!-- :indicator-type="indicatorType"
@@ -352,8 +352,11 @@
             <div class="tophead"
               ><span style="color: #1664ff" @click="configurationapp(item)"
                 >配置应用</span
-              ><span style="color: #86909c" @click="instructionsuse">
-                使用说明下载</span
+              ><span
+                style="color: #86909c; cursor: pointer"
+                @click="instructionsuse"
+              >
+                使用说明</span
               ></div
             >
           </div>
@@ -364,7 +367,7 @@
     <div class="views">
       <div class="tooplist">
         <h3>订单概览</h3>
-        <p style="color: #1664ff" @click="multiples">更多</p>
+        <p style="color: #1664ff; cursor: pointer" @click="multiples">更多</p>
       </div>
       <div class="overlist">
         <div
@@ -508,7 +511,11 @@ import html2canvas from 'html2canvas';
 
 import { ref, reactive } from 'vue';
 
+import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
 import avatar from './image/avatar.png';
@@ -522,7 +529,12 @@ import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
+const router = useRouter();
+
+const starlist = reactive(['张三', '李四']);
+
 const selectProductId = ref();
+
 // 认证状态
 const stateles = ref({
   companyStatus: 2, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
@@ -635,9 +647,13 @@ const authenticationredf = () => {};
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
-const distributionrole = () => {};
+const distributionrole = () => {
+  router.push('/system/users');
+};
 // 去商城
-const tomall = () => {};
+const tomall = () => {
+  router.push('/wow/mall');
+};
 // 前往
 const togo = () => {};
 // 配置应用
@@ -664,7 +680,9 @@ const instructionsuse = () => {
   });
 };
 // 更多
-const multiples = () => {};
+const multiples = () => {
+  router.push('/buyer/order');
+};
 </script>
 
 <style scoped lang="less">
@@ -937,7 +955,9 @@ const multiples = () => {};
         width: 20%;
         height: 100%;
         padding: 15px 0 0 30px;
-        background-color: #fff;
+        background-image: url('./image/backgroup.png');
+        // background-color: #fff;
+        background-size: cover;
 
         .firm {
           width: 100%;

@@ -26,7 +26,16 @@
       class="headerWrap"
       @click="item.action"
     >
-      <div class="headerItem">
+      <t-tooltip v-if="item.disable" content="敬请期待">
+        <div class="headerItem">
+          <span>
+            <iconpark-icon :name="item.icon" size="60px"></iconpark-icon>
+          </span>
+          <span class="title">{{ item.title }}</span>
+          <span class="desc">{{ item.desc }}</span>
+        </div>
+      </t-tooltip>
+      <div v-else class="headerItem">
         <span>
           <iconpark-icon :name="item.icon" size="60px"></iconpark-icon>
         </span>
@@ -154,6 +163,7 @@ const allCategList = [
     icon: 'freeTry',
     title: '免费试用',
     desc: '尝试限免应用，开启企业数字化时代',
+    disable: true,
     action: () => {},
   },
   {
@@ -161,13 +171,14 @@ const allCategList = [
     title: '标识服务',
     desc: '快速开通标识服务，享受跨区域服务',
     action: () => {
-      window.open('www.baidu.com'); // TODO 2 这里替换为该平台对应的二级服务地址
+      window.open('http://www.baidu.com', '_blank'); // TODO 2 这里替换为该平台对应的二级服务地址
     },
   },
   {
     icon: 'policyNotice',
     title: '前沿政策',
     desc: '了解区域政策，政府助力企业信息化转型',
+    disable: true,
     action: () => {},
   },
   {
