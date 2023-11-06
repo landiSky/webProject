@@ -37,7 +37,25 @@ export const useUserStore = defineStore({
      */
     async initProject() {
       try {
-        const userInfo = await apiUsersInfo();
+        // const userInfo = await apiUsersInfo();
+        const userInfo = {
+          userId: 1,
+          username: 'super',
+          nickName: '超级管理员',
+
+          auths: [
+            'ROUTE_BUYER',
+            'ROUTE_BUYER_INDEX',
+            'ROUTE_BUYER_ORDER',
+            'ROUTE_SELLER',
+            'ROUTE_SELLER_GOODS',
+            'ROUTE_SELLER_ORDER',
+            'ROUTE_SYSTEM',
+            'ROUTE_SYSTEM_USERS',
+            'ROUTE_SYSTEM_ROLES',
+            // 'ROUTE_SYSTEM_DATAOVERVIEW',
+          ],
+        };
         this.userInfo = userInfo as any;
 
         return userInfo;

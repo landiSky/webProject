@@ -134,6 +134,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
 import { SaleType } from '@/enums/common';
+// import useOrderStore from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
@@ -146,6 +147,7 @@ import AuthMemberModal from './authMember.vue';
 
 const router = useRouter();
 const route = useRoute();
+// const orderState = useOrderStore();
 const authModalVisible = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
@@ -192,6 +194,8 @@ const onAuthCancel = () => {
 
 const onAuthConfirm = () => {
   authModalVisible.value = false;
+  const { companyName, name, deliveryType } = prodDetail.value;
+  // orderState.createOrderInfo = {}; // TODO  缓存要下单的订单信息
   router.push({
     path: '/order/confirm',
   });
