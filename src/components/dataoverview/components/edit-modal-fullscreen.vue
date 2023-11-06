@@ -89,13 +89,17 @@
         <!-- @before-upload="beforeUpload" -->
         <t-form-item label="营业执照" field="businessLicenseId">
           <t-upload
-            v-model="formModel.businessLicenseId"
+            :file-list="
+              formModel.businessLicenseId
+                ? [{ url: formModel.businessLicenseId }]
+                : []
+            "
             list-type="picture-card"
-            action="/"
+            action="https://arco.design/"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
-            accept="image/png,image/jpg"
+            accept=".jpg,.png,.bmp,.tif,.gif"
             @before-upload="beforeUpload"
           >
             <template #upload-button>
