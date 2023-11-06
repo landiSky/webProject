@@ -42,7 +42,7 @@
                 class="btn"
                 type="primary"
                 html-type="submit"
-                :loading="loading"
+                :loading="loginLoading"
                 size="large"
                 long
                 :disabled="btnDisabled"
@@ -93,10 +93,10 @@
         </t-form-item>
       </t-form>
     </div>
-    <SliderCaptcha
+    <!-- <SliderCaptcha
       v-if="captchaVisible"
       @success="captchaSuccess"
-    ></SliderCaptcha>
+    ></SliderCaptcha> -->
   </div>
 </template>
 
@@ -107,6 +107,7 @@ import { useRouter } from 'vue-router';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 
+import $http from '@/utils/http';
 import { setToken } from '@/utils/auth';
 import { apiLogin, apiLoginName } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
@@ -120,6 +121,7 @@ const router = useRouter();
 const captchaVisible = ref(false);
 const loading = ref(false);
 const currentStep = ref(1);
+const loginLoading = ref(false);
 
 const formRef = ref();
 const form = ref({
@@ -199,16 +201,18 @@ const goRegister = () => {
 
 const clickLoginBtn = () => {
   console.log('login.vue:200', userStore.configInfo);
-  const wrapParams = new FormData();
-  wrapParams.append('username', '15112343001');
-  wrapParams.append(
-    'password',
-    sm2('123456', userStore.configInfo?.publicKey)
-    // '4ddf8e1da471700a546e7eb0e7b3d1af305daff484490241ce4fd135ad9f47830910c19a6f48a847174c070ab4388a11a474bf7610392353cb1c5577c0c54074d5ab898d005ff74d76a497a7c7bd98432a9abdcae32ddce96e5955b7ac778eb349f74bcfa865'
-  );
-  apiLogin(wrapParams).then((data) => {
+
+  loginLoading.value = true;
+  apiLogin({
+    username: '15112343001',
+    password: sm2('123456', userStore.configInfo?.public_key),
+  }).then((data) => {
     console.log('login.vue:202====login', data);
+    // $http.post(userStore.configInfo?.login_url).then((res) => {
+    //   console.log('login.vue:209', res);
+    // });
   });
+
   // formRef.value.validate((errors: any) => {
   //   if (!errors) {
   //     captchaVisible.value = true;
@@ -306,8 +310,12 @@ const captchaSuccess = () => {
     padding: 9px 16px;
     font-size: 14px;
     line-height: 22px;
-    background-color: #c2c3cc;
+    // background-color: #c2c3cc;
     border-radius: 2px;
+
+    &:disabled {
+      background-color: #c2c3cc;
+    }
   }
 
   .bottomOpt {

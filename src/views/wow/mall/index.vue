@@ -182,7 +182,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { apiProductList } from '@/api/wow/mall';
 import { apiProductType } from '@/api/common';
 import { DeliverType, DeliverTypeDesc } from '@/enums/common';
@@ -190,6 +190,7 @@ import { PriceEnum } from './constant';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
+const route = useRoute();
 
 const pagination = reactive({
   page: 1,
@@ -211,11 +212,12 @@ const btnLoading = ref(false);
 const selectPriceInterval = ref<number[] | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
 const customPriceStart = ref(); // 自定义价格区间起止
 const customPriceEnd = ref();
-const apiParams = ref<Record<string, number | null>>({
+const apiParams = ref<Record<string, any>>({
   productTypeId: null,
   deliveryType: null,
   priceSort: null,
   upShelfTimeSort: null,
+  name: route.params.goodsName || null,
 });
 
 const onCustomPriceBlur = () => {

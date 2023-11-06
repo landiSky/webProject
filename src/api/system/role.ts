@@ -2,7 +2,7 @@ import $http from '@/utils/http';
 
 // 角色
 export function rolelist(params: Record<string, any>) {
-  return $http.get('/web/role/list');
+  return $http.get('/web/role/list', { params });
 }
 
 //  获取企业下成员列表

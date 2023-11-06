@@ -26,8 +26,6 @@ export function createPermissionGuard(router: Router) {
     const userStore = useUserStore();
     const menuStore = useMenuStore();
 
-    console.log('permissionGuard.ts:28', from.fullPath, to.fullPath);
-
     if (getToken()) {
       if (to.path === '/login') {
         next('/buyer');

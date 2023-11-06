@@ -108,8 +108,12 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 // import dayjs from 'dayjs';
-import { Modal, Message } from '@tele-design/web-vue';
-import DetailDrawer from './components/detail-drawer.vue';
+import {
+  Modal,
+  // Message
+} from '@tele-design/web-vue';
+import { rolelist } from '@/api/system/role';
+// import DetailDrawer from './components/detail-drawer.vue';
 import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import TreeModal from './components/tree-modal.vue';
@@ -258,6 +262,15 @@ function fetchData() {
 
   state.tableData = data.content || [];
   pagination.total = data.totalCount;
+  // await rolelist({
+  //   pageSize: 2,
+  //   pageNum: 1,
+  //   roleName: '用户',
+  // })
+  //   .then((res: any) => {
+  //     console.log(res);
+  //   })
+  //   .catch(() => {});
 }
 
 // 每页显示条数发生变化

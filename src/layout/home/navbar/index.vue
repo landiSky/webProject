@@ -2,10 +2,12 @@
   <div class="navbar">
     <div class="left-side">
       <div class="left">
-        <t-space :size="[0]">
+        <!-- <t-space :size="[0]"> -->
+        <t-link class="link" @click="goWow">
           <iconpark-icon name="logo-gray" size="28px"></iconpark-icon>
           <span class="title"> 分布式工业互联网平台 </span>
-        </t-space>
+        </t-link>
+        <!-- </t-space> -->
       </div>
       <div class="right">
         <t-space>
@@ -15,29 +17,34 @@
       </div>
     </div>
     <div class="right-side">
-      <t-dropdown trigger="click" :popup-container="'.navbar'">
+      <t-dropdown trigger="click" :popup-container="'.navbar'" class="company">
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
           <span>北京泰尔英福公司</span>
         </div>
 
         <template #content>
-          <t-doption @click="userInfoDialogVisible = true">
+          <t-doption @click="onChangeCompany">
             <t-space fill>
-              <iconpark-icon name="info-user" size="12px"></iconpark-icon>
-              <span> 个人身份 </span>
-            </t-space>
-          </t-doption>
-          <t-doption @click="resetPswDialogVisible = true">
-            <t-space fill>
-              <iconpark-icon name="user-lock" size="12px"></iconpark-icon>
               <span> 北京泰尔英福公司 </span>
             </t-space>
           </t-doption>
         </template>
       </t-dropdown>
 
-      <iconpark-icon name="user" size="28px"></iconpark-icon>
+      <t-dropdown trigger="click" :popup-container="'.navbar'" class="logout">
+        <div class="click-item">
+          <iconpark-icon name="user" size="28px"></iconpark-icon>
+        </div>
+
+        <template #content>
+          <t-doption @click="clickLogout">
+            <t-space fill>
+              <span> 退出登录 </span>
+            </t-space>
+          </t-doption>
+        </template>
+      </t-dropdown>
     </div>
   </div>
 </template>
@@ -54,25 +61,10 @@ const router = useRouter();
 
 const { userInfo } = storeToRefs(store);
 
-const userInfoDialogVisible = ref(false);
-const resetPswDialogVisible = ref(false);
-const hdlDetailVisible = ref(false);
-
-// 打开绑定弹窗
-const clickBind = () => {
-  Message.success('点击了立即绑定');
-};
-
-const handleLogout = async (type?: number) => {
+const handleLogout = async () => {
   await store.logout();
-  const params: { path: string; query?: { type: number } } = {
-    path: '/login',
-  };
-  if (type && [1, 2].includes(type)) {
-    // 如果要替换标识身份登录，退出到登录页默认选中 标识身份登录tab
-    params.query = { type };
-  }
-  router.push(params);
+
+  router.push({ path: '/wow' });
 };
 
 const clickLogout = () => {
@@ -85,6 +77,17 @@ const clickLogout = () => {
       handleLogout();
     },
   });
+};
+
+const goWow = () => {
+  router.push({
+    path: '/wow',
+  });
+};
+
+const onChangeCompany = () => {
+  console.log('===切换了企业，发送消息，刷新到买家概览页');
+  // 要在 app.vue 中监听 userstore.的变化
 };
 </script>
 
@@ -110,6 +113,15 @@ const clickLogout = () => {
 
     .left {
       margin-right: 110px;
+
+      .link {
+        display: flex;
+        align-items: center;
+
+        &:hover {
+          background: none;
+        }
+      }
     }
 
     .right {
@@ -219,8 +231,7 @@ const clickLogout = () => {
   }
 }
 
-:deep(.tele-dropdown) {
-  width: 198px;
+&:deep(.tele-dropdown) {
   color: #fff;
   font-weight: 500;
   line-height: 12px;
@@ -228,6 +239,14 @@ const clickLogout = () => {
   border: 1px solid #1d2129;
   border-radius: 0 0 2px 2px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.company {
+  width: 198px;
+}
+
+.logout {
+  width: 90px;
 }
 
 :deep(.tele-dropdown-option) {

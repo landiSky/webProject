@@ -1,4 +1,6 @@
 export const PAGE_LAYOUT = () => import('@/layout/home/layout.vue');
+export const PAGE_LAYOUT_NOMENU = () =>
+  import('@/layout/home/layoutNoMenu.vue'); // 不需要左侧 menu 的页面布局
 
 const homeRoutesList = [
   //   {
@@ -63,7 +65,7 @@ const homeRoutesList = [
       {
         path: '/seller/goods',
         name: 'sellerGoods',
-        component: () => import('@/views/home/seller/goods/index.xz.vue'),
+        component: () => import('@/views/home/seller/goods/index.vue'),
         meta: {
           name: '商品管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
@@ -106,6 +108,21 @@ const homeRoutesList = [
     ],
     meta: {
       name: '企业管理',
+    },
+  },
+  {
+    path: '/order',
+    component: PAGE_LAYOUT_NOMENU,
+    children: [
+      {
+        path: '/order/confirm',
+        name: 'orderConfirm',
+        component: () => import('@/views/home/seller/confirmOrder/index.vue'),
+        meta: {},
+      },
+    ],
+    meta: {
+      name: '订单确认页',
     },
   },
 ];
