@@ -15,6 +15,7 @@
                   v-model="state.formModel.name"
                   placeholder="搜索商品名称"
                   allow-clear
+                  @change="clickSearchBtn"
                 />
               </t-form-item>
             </t-col>
@@ -41,14 +42,6 @@
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
     >
-      <template #platform="{ record }">
-        <span
-          v-if="record.platform === PlatformEnum.SELF"
-          class="circle blue"
-        ></span>
-        <span v-else class="circle light-blue"></span>
-        {{ PlatformEnum[record.platform] }}
-      </template>
       <template #type="{ record }">
         {{ TypeEnum[record.type] }}
       </template>
@@ -123,7 +116,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
+import { goodsList, upGoods, downGoods, deleteGoods } from '@/api/goods-manage';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
 
@@ -155,29 +149,6 @@ const filterChange = (dataIndex: string, filteredValues: string[]) => {
   }
 };
 
-// 平台
-const PlatformEnum: { [name: string]: any } = {
-  SELF: 1, // 本平台
-  OTHER: 2, // 跨平台
-  1: '本平台',
-  2: '跨平台',
-};
-
-const PlatformList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: '本平台',
-    value: 1,
-  },
-  {
-    text: '跨平台',
-    value: 2,
-  },
-];
-
 // 分类
 const TypeEnum: { [name: string]: any } = {
   RJPT: 1,
@@ -203,10 +174,10 @@ const TypeList = [
 
 // 应用分类
 const AppTypeEnum: { [name: string]: any } = {
-  PT: 1,
-  BS: 2,
-  1: '普通应用',
-  2: '标识应用',
+  PT: 0,
+  BS: 1,
+  0: '普通应用',
+  1: '标识应用',
 };
 
 const AppTypeList = [
@@ -216,20 +187,20 @@ const AppTypeList = [
   },
   {
     text: '普通应用',
-    value: 1,
+    value: 0,
   },
   {
     text: '标识应用',
-    value: 2,
+    value: 1,
   },
 ];
 
 // 交付方式
 const SaleTypeEnum: { [name: string]: any } = {
-  SAAS: 1,
-  DLBS: 2,
-  1: 'SAAS',
-  2: '独立部署',
+  SAAS: 0,
+  DLBS: 1,
+  0: 'SAAS',
+  1: '独立部署',
 };
 
 const SaleTypeList = [
@@ -239,24 +210,24 @@ const SaleTypeList = [
   },
   {
     text: 'SAAS',
-    value: 1,
+    value: 0,
   },
   {
     text: '独立部署',
-    value: 2,
+    value: 1,
   },
 ];
 
 // 状态
 const StatusEnum: { [name: string]: any } = {
-  WSJ: 0,
-  DSH: 1,
+  WSJ: 3,
+  DSH: 0,
   YBH: 2,
-  YSJ: 3,
-  0: '未上架',
-  1: '待审核',
+  YSJ: 1,
+  3: '未上架',
+  0: '审核中',
   2: '已驳回',
-  3: '已上架',
+  1: '已上架',
 };
 
 const StatusList = [
@@ -266,11 +237,11 @@ const StatusList = [
   },
   {
     text: '未上架',
-    value: 0,
+    value: 3,
   },
   {
-    text: '待审核',
-    value: 1,
+    text: '审核中',
+    value: 0,
   },
   {
     text: '已驳回',
@@ -278,9 +249,10 @@ const StatusList = [
   },
   {
     text: '已上架',
-    value: 3,
+    value: 1,
   },
 ];
+
 const columns = [
   {
     title: '商品名称',
@@ -348,7 +320,7 @@ const pagination = reactive<{
   pageSize: number;
   total: number;
 }>({
-  current: 0,
+  current: 1,
   pageSize: 10,
   total: 0,
 });
@@ -361,81 +333,80 @@ const modalVisible = ref(false); // 编辑全屏展示弹窗
 function fetchData() {
   const { current, pageSize } = pagination;
   const params = {
-    page: current - 1, // 从0开始
-    size: pageSize,
+    pageNum: current, // 从0开始
+    pageSize,
     ...state.formModel,
   };
 
   state.tableLoading = true;
   // TODO 接口请求
-  // roleList(params)
-  //   .then((data: any) => {
-  //     state.tableData = data.content;
-  //     pagination.page = data.pageNumber;
-  //     pagination.total = data.totalCount;
-  //   })
-  //   .finally(() => {
-  //     state.tableLoading = false;
-  //   });
+  goodsList(params)
+    .then((res: any) => {
+      state.tableData = res.records;
+      pagination.total = res.total;
+    })
+    .finally(() => {
+      state.tableLoading = false;
+    });
   // mock数据
-  const data = {
-    content: [
-      {
-        id: 1,
-        goodsId: 1,
-        goodsName: '商品1',
-        saler: '商家1',
-        platform: 1,
-        type: 1,
-        appType: 1,
-        saleType: 1,
-        status: 0,
-        createdTime: '2022-12-07 20:29',
-      },
-      {
-        id: 2,
-        goodsId: 2,
-        goodsName: '商品2',
-        saler: '商家2',
-        platform: 1,
-        type: 1,
-        appType: 1,
-        saleType: 1,
-        status: 1,
-        createdTime: '2022-12-07 20:29',
-      },
-      {
-        id: 3,
-        goodsId: 3,
-        goodsName: '商品3',
-        saler: '商家3',
-        platform: 2,
-        type: 2,
-        appType: 2,
-        saleType: 2,
-        status: 2,
-        createdTime: '2022-12-07 20:29',
-      },
-      {
-        id: 4,
-        goodsId: 4,
-        goodsName: '商品4',
-        saler: '商家4',
-        platform: 2,
-        type: 2,
-        appType: 2,
-        saleType: 2,
-        status: 3,
-        createdTime: '2022-12-07 20:29',
-      },
-    ],
-    pageNumber: 1,
-    totalCount: 11,
-  };
+  // const data = {
+  //   content: [
+  //     {
+  //       id: 1,
+  //       goodsId: 1,
+  //       goodsName: '商品1',
+  //       saler: '商家1',
+  //       platform: 1,
+  //       type: 1,
+  //       appType: 1,
+  //       saleType: 1,
+  //       status: 0,
+  //       createdTime: '2022-12-07 20:29',
+  //     },
+  //     {
+  //       id: 2,
+  //       goodsId: 2,
+  //       goodsName: '商品2',
+  //       saler: '商家2',
+  //       platform: 1,
+  //       type: 1,
+  //       appType: 1,
+  //       saleType: 1,
+  //       status: 1,
+  //       createdTime: '2022-12-07 20:29',
+  //     },
+  //     {
+  //       id: 3,
+  //       goodsId: 3,
+  //       goodsName: '商品3',
+  //       saler: '商家3',
+  //       platform: 2,
+  //       type: 2,
+  //       appType: 2,
+  //       saleType: 2,
+  //       status: 2,
+  //       createdTime: '2022-12-07 20:29',
+  //     },
+  //     {
+  //       id: 4,
+  //       goodsId: 4,
+  //       goodsName: '商品4',
+  //       saler: '商家4',
+  //       platform: 2,
+  //       type: 2,
+  //       appType: 2,
+  //       saleType: 2,
+  //       status: 3,
+  //       createdTime: '2022-12-07 20:29',
+  //     },
+  //   ],
+  //   pageNumber: 1,
+  //   totalCount: 11,
+  // };
 
-  state.tableData = data.content || [];
-  pagination.total = data.totalCount;
-  state.tableLoading = false;
+  // state.tableData = data.content || [];
+  // pagination.total = data.totalCount;
+  // state.tableLoading = false;
 }
 
 // 每页显示条数发生变化
@@ -456,11 +427,11 @@ const clickSearchBtn = () => {
 };
 
 // 重置后，触发一次查询
-const handleReset = () => {
-  // 如果都没有默认项，可以使用state.formModel.resetFields()函数
-  state.formModel = { ...defaultFormModel };
-  clickSearchBtn();
-};
+// const handleReset = () => {
+//   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
+//   state.formModel = { ...defaultFormModel };
+//   clickSearchBtn();
+// };
 
 // 详情/审核
 const clickDetailBtn = (record: Record<string, any>) => {
@@ -475,48 +446,117 @@ const onModalConfirm = () => {
 };
 
 // 下架
-const clickDownBtn = (record: any) => {};
+const doDown = (id: any) => {
+  downGoods(id).then((res) => {
+    console.log(res);
+    if (res.code === 200) {
+      Message.success('商品已下架');
+      fetchData();
+    }
+  });
+};
 
 // 下架
-const doDown = (id: any) => {
-  // TODO 调后端接口
-  // deleteIdentify(deleteId.value)
-  //   .then(() => {
-  //     done(true);
-  //     Message.success('删除成功!');
-  //     refresh();
-  //   })
-  //   .catch(() => {
-  //     done(false);
-  //   });
-  // mock数据
-  Message.success('商品已下架');
-  fetchData();
+const clickDownBtn = (record: any) => {
+  Modal.warning({
+    title: '确定下架该商品吗？',
+    titleAlign: 'start',
+    content: '下架后本商品将同步从标识网络其他平台下架。',
+    okText: '下架商品',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      doDown(record.id);
+    },
+  });
 };
 
+const doUp = (id: any) => {
+  upGoods(id).then((res) => {
+    if (res.code === 200) {
+      Message.success('上架成功');
+      fetchData();
+    }
+  });
+};
 // 上架
-const clickUpBtn = (record: Record<string, any>) => {
+const clickUpBtn = (record: any) => {
   // TODO API
+  doUp(record.id);
 };
 
-const clickEditBtn = (record: any) => {};
-const clickDelBtn = (record: any) => {};
+const clickEditBtn = (record: any) => {
+  if (record.status === StatusEnum.YSJ) {
+    Modal.warning({
+      title: '该商品已上架，暂无法编辑。',
+      titleAlign: 'start',
+      content: '',
+      okText: '好的',
+      hideCancel: true,
+    });
+    return;
+  }
+  if (record.status === StatusEnum.DSH) {
+    Modal.warning({
+      title: '该商品正在审核中，暂无法编辑。',
+      titleAlign: 'start',
+      content: '',
+      okText: '好的',
+      hideCancel: true,
+    });
+    return;
+  }
+  // TODO REUSE ADD MODAL
+  console.log('编辑');
+};
 
 // 删除操作
 const doDelete = (id: any) => {
-  // TODO 调后端接口
-  // deleteIdentify(deleteId.value)
-  //   .then(() => {
-  //     done(true);
-  //     Message.success('删除成功!');
-  //     refresh();
-  //   })
-  //   .catch(() => {
-  //     done(false);
-  //   });
+  deleteGoods(id).then((res) => {
+    if (res.code === 200) {
+      Message.success('删除成功');
+      fetchData();
+    }
+  });
   // mock数据
-  Message.success('商品已删除');
-  fetchData();
+};
+const clickDelBtn = (record: any) => {
+  if (record.status === StatusEnum.YSJ) {
+    Modal.warning({
+      title: '该商品已上架，暂无法删除。',
+      titleAlign: 'start',
+      content: '',
+      okText: '好的',
+      hideCancel: true,
+    });
+    return;
+  }
+  if (record.status === StatusEnum.DSH) {
+    Modal.warning({
+      title: '该商品正在审核中，暂无法删除。',
+      titleAlign: 'start',
+      content: '',
+      okText: '好的',
+      hideCancel: true,
+    });
+    return;
+  }
+
+  Modal.warning({
+    title: '确定删除该商品吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '删除商品',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      doDelete(record.id);
+    },
+  });
 };
 
 onMounted(() => {

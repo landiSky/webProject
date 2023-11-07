@@ -31,7 +31,7 @@ export default defineConfig(({ command, mode }) => {
       },
       proxy: {
         '/web': {
-          target: `http://10.14.150.253:9190/server`,
+          target: `http://10.14.150.182:9190/server`,
           changeOrigin: true,
           agent: new https.Agent(),
         },
