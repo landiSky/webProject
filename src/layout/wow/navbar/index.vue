@@ -256,11 +256,10 @@ onMounted(() => {
     }
 
     .username {
-      display: inline-block;
-      margin-left: 8px;
-      color: #fff;
+      color: #4e5969;
+      font-weight: 400;
       font-size: 12px;
-      line-height: 20px;
+      line-height: 12px; /* 100% */
     }
   }
 

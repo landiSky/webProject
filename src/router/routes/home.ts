@@ -33,6 +33,7 @@ const homeRoutesList = [
         component: () => import('@/views/home/buyer/index/index.vue'),
         meta: {
           name: '概览',
+          noAuth: true,
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
         },
       },
@@ -47,6 +48,7 @@ const homeRoutesList = [
     ],
     meta: {
       name: '买家中心',
+      noAuth: true,
     },
   },
   {

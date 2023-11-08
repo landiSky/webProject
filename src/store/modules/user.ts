@@ -23,7 +23,7 @@ export const useUserStore = defineStore({
   state: (): UserState => ({
     userInfo: null,
     userInfoByCompany: null, // 存储选择的对应公司下的用户信息
-    selectCompany: null, // 对象，存储选择的公司信息，{companyId, memeberId}
+    selectCompany: {}, // 对象，存储选择的公司信息，{companyId, memeberId}
     counter: 0,
     token: null,
     configInfo: {},
@@ -62,6 +62,7 @@ export const useUserStore = defineStore({
     async getUserBasicInfo() {
       try {
         // const userInfo = await apiUsersInfo();
+
         const userInfo = {
           userId: 1,
           username: 'super',
@@ -99,6 +100,8 @@ export const useUserStore = defineStore({
           );
 
           this.changeSelectCompany(adminCompany || companyList[0]);
+        } else {
+          useMenuStore().genLeftMenu([]);
         }
 
         return userInfo;

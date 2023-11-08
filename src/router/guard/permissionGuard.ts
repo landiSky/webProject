@@ -89,7 +89,7 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:61', data.accessToken);
         })
         .finally(() => {
-          window.location.href = `${window.location.host}/#/buyer`;
+          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
           // next({
           //   path: '/buyer/index',
           //   query: {},

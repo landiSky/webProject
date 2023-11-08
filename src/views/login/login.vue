@@ -1,6 +1,4 @@
-<template>
-  <div>hhhh</div>
-</template>
+<!-- <template> </template> -->
 
 <script lang="ts" setup>
 import { useUserStore } from '@/store/modules/user';
