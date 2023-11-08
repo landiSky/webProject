@@ -18,3 +18,33 @@ export const AccountType = {
   MEMBER: 0,
   ADMIN: 1,
 };
+
+// 企业认证状态
+export const CompanyAuthStatus = {
+  TO_CHECK: 0,
+  AUTHED: 1,
+  REJECT: 2,
+  UNAUTH: 3,
+};
+
+export const CompanyAuthStatusDESC = {
+  [CompanyAuthStatus.TO_CHECK]: '待审核',
+  [CompanyAuthStatus.AUTHED]: '已认证',
+  [CompanyAuthStatus.REJECT]: '已驳回',
+  [CompanyAuthStatus.UNAUTH]: '未认证',
+};
+
+// 企业节点认证状态
+export const NodeAuthStatus = {
+  TO_CHECK: 0,
+  AUTHED: 1,
+  REJECT: 2,
+  UNAUTH: 3,
+};
+
+export const NodeAuthStatusDESC = {
+  [NodeAuthStatus.TO_CHECK]: '待审核',
+  [NodeAuthStatus.AUTHED]: '已认证',
+  [NodeAuthStatus.REJECT]: '已驳回',
+  [NodeAuthStatus.UNAUTH]: '未认证',
+};

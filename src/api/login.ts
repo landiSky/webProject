@@ -59,5 +59,5 @@ export function apiLoginToken(data: Record<string, any>) {
 
 // 退出登录
 export function apiLogout() {
-  return $http.post('/sso/web/logout');
+  return $http.get('/sso/web/logout');
 }

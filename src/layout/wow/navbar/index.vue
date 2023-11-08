@@ -152,10 +152,20 @@ const onSearch = (value: string) => {
 const clickIdService = () => {
   console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
   if (!userInfo.value?.userId) {
+    Message.warning('请先去登录');
     router.push({
       path: '/login',
     });
   } else {
+    const { certificateStatus } = userInfoByCompany || {};
+    // if (userInfoByCompany?.companyId) {
+    //   Modal.info({
+    //     title: 'Info Notification',
+    //     content: 'This is an info description which directly indicates a neutral informative change or action.'
+    //   });
+    // } else {
+
+    // }
     console.log('index.vue:139===打开二级');
     window.open('http://id-pointer.test.idx.space/snms/ui/index', '_blank');
   }

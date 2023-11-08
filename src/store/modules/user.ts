@@ -61,27 +61,27 @@ export const useUserStore = defineStore({
      */
     async getUserBasicInfo() {
       try {
-        // const userInfo = await apiUsersInfo();
+        const userInfo = await apiUsersInfo();
 
-        const userInfo = {
-          userId: 1,
-          username: 'super',
-          nickName: '超级管理员',
+        // const userInfo = {
+        //   userId: 1,
+        //   username: 'super',
+        //   nickName: '超级管理员',
 
-          auths: [
-            'ROUTE_BUYER',
-            'ROUTE_BUYER_INDEX',
-            'ROUTE_BUYER_ORDER',
-            'ROUTE_SELLER',
-            'ROUTE_SELLER_GOODS',
-            'ROUTE_SELLER_ORDER',
-            'ROUTE_SYSTEM',
-            'ROUTE_SYSTEM_USERS',
-            'ROUTE_SYSTEM_ROLES',
-            // 'ROUTE_SYSTEM_DATAOVERVIEW',
-          ],
-          companyList: [],
-        };
+        //   auths: [
+        //     'ROUTE_BUYER',
+        //     'ROUTE_BUYER_INDEX',
+        //     'ROUTE_BUYER_ORDER',
+        //     'ROUTE_SELLER',
+        //     'ROUTE_SELLER_GOODS',
+        //     'ROUTE_SELLER_ORDER',
+        //     'ROUTE_SYSTEM',
+        //     'ROUTE_SYSTEM_USERS',
+        //     'ROUTE_SYSTEM_ROLES',
+        //     // 'ROUTE_SYSTEM_DATAOVERVIEW',
+        //   ],
+        //   companyList: [],
+        // };
 
         this.userInfo = userInfo as any;
 
@@ -175,7 +175,7 @@ export const useUserStore = defineStore({
       window.location.href = `${
         import.meta.env.VITE_APP_LOGIN
         // eslint-disable-next-line camelcase
-      }?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}` as string;
+      }?response_type=code&scope=all&client_id=${client_id}&redirect_uri=${redirect_uri}` as string;
     },
   },
 });
