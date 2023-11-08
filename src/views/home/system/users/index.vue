@@ -59,23 +59,23 @@
         </template>
         <template #operations="{ record }">
           <t-link
-            v-if="record.roleName === '超级管理员' && record.status === 0"
+            v-if="record.memberType === 1 && record.status === 0"
             @click="clickDetailBtn(record)"
           >
             变更管理员
           </t-link>
           <t-link
-            v-if="record.status === 0 && record.roleName !== '超级管理员'"
+            v-if="record.status === 0 && record.memberType !== 1"
             @click="clickEditBtn(record)"
           >
             编辑
           </t-link>
           <t-link
-            v-if="record.status === 0 && record.roleName !== '超级管理员'"
+            v-if="record.status === 0 && record.memberType !== 1"
             @click="clickDelBtn(record)"
             >离职</t-link
           >
-          <t-link v-if="record.status === 1">--</t-link>
+          <span v-if="record.status === 1">--</span>
         </template>
       </t-table>
     </t-page-header>
@@ -105,10 +105,13 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
 // import dayjs from 'dayjs';
+
 import {
   Modal,
   // Message
 } from '@tele-design/web-vue';
+
+import { memberList, menberResign } from '@/api/system/member';
 import EditModal from './components/edit-modal.vue';
 import EditModalAlter from './components/edit-modal-alter.vue';
 
@@ -130,7 +133,7 @@ const state = reactive<{
     roleList: number[];
     status: number | undefined;
     roleName: string;
-    userName: string;
+    username: string;
   };
   tableData: Record<string, any>;
   formModel: {
@@ -147,7 +150,7 @@ const state = reactive<{
     roleList: [],
     status: undefined,
     roleName: '', // 角色名称
-    userName: '',
+    username: '',
   },
   tableData: [],
   formModel: {
@@ -186,29 +189,27 @@ const state = reactive<{
 const columns = [
   //  tooltip: true,
   {
-    ellipsis: true,
     title: '成员ID',
-    dataIndex: 'id',
-
-    width: 100,
+    dataIndex: 'memberId',
+    width: 160,
   },
   {
     title: '成员姓名',
-    dataIndex: 'userName',
+    dataIndex: 'username',
 
     width: 140,
   },
   {
     title: '成员角色',
     dataIndex: 'roleName',
-    width: 140,
+    width: 170,
   },
 
   {
     title: '角色状态',
     dataIndex: 'enabled',
     slotName: 'enabled',
-    width: 120,
+    width: 170,
   },
   {
     title: '绑定手机号',
@@ -220,7 +221,7 @@ const columns = [
     title: '操作',
     dataIndex: 'operations',
     slotName: 'operations',
-    width: 290,
+    width: 190,
   },
 ];
 
@@ -229,7 +230,7 @@ const pagination = reactive<{
   pageSize: number;
   total: number;
 }>({
-  current: 0,
+  current: 1,
   pageSize: 10,
   total: 0,
 });
@@ -261,63 +262,20 @@ const editModalVisiblealter = ref(false);
 
 function fetchData() {
   const { current, pageSize } = pagination;
+  memberList({
+    pageSize: pagination.pageSize,
+    pageNum: pagination.current,
+    username: state.formModel.name,
+    companyId: 1,
+  }).then((res) => {
+    console.log(res);
+    state.tableData = res.records || [];
+    pagination.total = res.total;
+  });
 }
 
-// 接口请求
-// state.tableLoading = true;
-// roleList(params)
-//   .then((data: any) => {
-//     state.tableData = data.content;
-//     pagination.page = data.pageNumber;
-//     pagination.total = data.totalCount;
-//   })
-//   .finally(() => {
-//     state.tableLoading = false;
-//   });
-// mock数据
-
-const data = {
-  content: [
-    {
-      id: 1,
-      userId: 1, // 用户id
-      userName: 'kw1', // 用户名称
-      phone: '18839014161', // 手机号
-      companyId: null,
-      memberId: 1, // 成员id
-      status: 0, // 0:在职 1:离职
-      roleList: null,
-      roleName: '普通用户', // 角色名称
-    },
-    {
-      id: 2,
-      userId: 1, // 用户id
-      userName: 'kw2', // 用户名称
-      phone: '18839014161', // 手机号
-      companyId: null,
-      memberId: 1, // 成员id
-      status: 1, // 0:在职 1:离职
-      roleList: null,
-      roleName: '普通用户', // 角色名称
-    },
-    {
-      id: 3,
-      userId: 1, // 用户id
-      userName: 'kw3', // 用户名称
-      phone: '18839014161', // 手机号
-      companyId: null,
-      memberId: 1, // 成员id
-      status: 0, // 0:在职 1:离职
-      roleList: null,
-      roleName: '超级管理员', // 角色名称
-    },
-  ],
-  pageNumber: 1,
-  totalCount: 3,
-};
-
-state.tableData = data.content || [];
-pagination.total = data.totalCount;
+// state.tableData = data.content || [];
+// pagination.total = data.totalCount;
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
@@ -366,7 +324,7 @@ const clickAddBtnflag = () => {
     roleList: [],
     status: undefined,
     roleName: '', // 角色名称
-    userName: '',
+    username: '',
   };
   editModalVisible.value = false;
 };
@@ -393,6 +351,8 @@ const onEditModalConfirm = () => {
 
 // modal类删除 离职
 const clickDelBtn = (row: Record<string, any>) => {
+  console.log(row);
+
   // // 前端判断无法删除时的弹窗情况
   // if (row?.binded === BindHdlStatusEnum.YES) {
   //   // 以前端请求数据为准，可能存在数据与实际不一致请求
@@ -406,6 +366,7 @@ const clickDelBtn = (row: Record<string, any>) => {
   //   return;
   // }
   console.log(row.memberId);
+
   Modal.warning({
     title: '确定为该企业成员办理离职吗?',
     content: '离职后该成员将无法继续参与平台管理或项目开发。',
@@ -417,6 +378,10 @@ const clickDelBtn = (row: Record<string, any>) => {
     },
     onOk: () => {
       // deleteUsers(params);
+      menberResign({ memberId: row.memberId }).then((res) => {
+        console.log(res, '离职');
+        fetchData();
+      });
     },
   });
 };
@@ -429,6 +394,7 @@ const clickDetailBtn = (data: any) => {
 // 变更管理员 提交
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
+  fetchData();
 };
 const editModalVisiblealterflag = () => {
   state.editData = {
@@ -440,7 +406,7 @@ const editModalVisiblealterflag = () => {
     roleList: [],
     status: undefined,
     roleName: '', // 角色名称
-    userName: '',
+    username: '',
   };
   editModalVisiblealter.value = false;
 };
@@ -458,7 +424,7 @@ const editModalVisiblealterflag = () => {
 // };
 
 onMounted(() => {
-  // fetchData();
+  fetchData();
 });
 </script>
 

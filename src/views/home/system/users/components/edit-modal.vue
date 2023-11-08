@@ -8,9 +8,9 @@
   >
     <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="userName" label="成员姓名">
+      <t-form-item field="username" label="成员姓名">
         <t-input
-          v-model="state.formModel.userName"
+          v-model="state.formModel.username"
           placeholder="请输入"
           :max-length="{
             length: 50,
@@ -77,7 +77,9 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+import { menberAdd, memberPhone } from '@/api/system/member';
+import { rolelist } from '@/api/system/role';
+
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -87,71 +89,20 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['confirm', 'cancel']);
-const inputSelect = reactive([
-  {
-    id: 1, // 用户id
-    userId: null,
-    username: 'kw', // 用户名称
-    nickname: null,
-    password: null,
-    email: null,
-    isReal: 1,
-    mobile: '18839014161', // 手机号
-    companyId: null,
-    companyName: null,
-    companyShort: null,
-    companyStatus: null,
-    companyNodeStatus: null,
-    userType: null,
-    userStatus: 1,
-    createTime: '2023-10-25 14:23:38',
-    updateTime: '2023-10-25 14:23:38',
-    createUser: null,
-    updateUser: null,
-    isDeleted: 0,
-  },
-  {
-    id: 2, // 用户id
-    userId: null,
-    username: 'pf', // 用户名称
-    nickname: null,
-    password: null,
-    email: null,
-    isReal: 1,
-    mobile: '18839014162', // 手机号
-    companyId: null,
-    companyName: null,
-    companyShort: null,
-    companyStatus: null,
-    companyNodeStatus: null,
-    userType: null,
-    userStatus: 1,
-    createTime: '2023-10-24 19:43:39',
-    updateTime: '2023-10-24 19:43:39',
-    createUser: null,
-    updateUser: null,
-    isDeleted: 0,
-  },
-]);
+
 const roleSelect = ref([
   {
-    id: 1391112170700800, // 角色id
-    roleName: '普通用户', // 角色名称
-    remark: '描述', // 描述
-    menuList: null,
-    memberCount: 0, // 成员数量
-  },
-  {
-    id: 1391112170700801, // 角色id
-    roleName: '超级管理员', // 角色名称
-    remark: '描述', // 描述
+    id: 0, // 角色id
+    roleName: '', // 角色名称
+    remark: '', // 描述
     menuList: null,
     memberCount: 0, // 成员数量
   },
 ]);
+const rolePhones = ref('');
 const formRef = ref();
 const visible = ref(true);
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
+const isEdit = computed(() => Boolean(props.data?.memberId ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
     // roleName: undefined,
@@ -159,7 +110,7 @@ const state = reactive({
     // phone: undefined,
     id: undefined,
     userId: undefined, // 用户id
-    userName: undefined, // 用户名称
+    username: undefined, // 用户名称
     phone: undefined, // 手机号
     companyId: undefined,
     memberId: undefined, // 成员id
@@ -170,7 +121,7 @@ const state = reactive({
 });
 
 const formRules = {
-  userName: [
+  username: [
     { required: true, message: '请输入成员姓名' },
     // { maxLength: 10, message: '长度不超过10个字符' },
   ],
@@ -181,11 +132,32 @@ const formRules = {
     {
       validator: (value: any, cb: any) => {
         return new Promise((resolve: any) => {
-          if (value.length === 11) {
-            console.log('name must be admin');
-            cb('name must be admin');
+          // if (value.length === 11) {
+          //   console.log('name must be admin');
+          //   cb('name must be admin');
+          // }
+          // resolve();
+          console.log(rolePhones.value, state.formModel.phone);
+
+          if (rolePhones.value === state.formModel.phone) {
+            resolve();
+            console.log(rolePhones.value, state.formModel.phone);
+          } else if (value.length === 11) {
+            memberPhone({
+              type: '0',
+              companyId: '1',
+              phone: state.formModel.phone,
+            }).then((res) => {
+              if (res.data.code === 200) {
+                console.log('====1999');
+              } else {
+                console.log('该手机号尚未在平台注册');
+                cb(res.data.message);
+              }
+              resolve();
+            });
           }
-          resolve();
+
           // window.setTimeout(() => {
 
           // }, 2000);
@@ -194,12 +166,39 @@ const formRules = {
     },
   ],
 };
+const init = () => {
+  rolelist({
+    pageSize: 1000,
+    pageNum: 1,
+    companyId: 1,
+  })
+    .then((res: any) => {
+      console.log(res);
+      roleSelect.value = res.records;
+    })
+    .catch((err) => {});
+};
 
 const onConfirm = (done: (closed: boolean) => void) => {
+  console.log('====228', formRef.value);
   formRef.value.validate((errors: any) => {
+    console.log('111', errors);
     if (!errors) {
+      console.log(errors);
       console.log(state.formModel);
-
+      menberAdd({
+        id: state.formModel.id,
+        memberId: state.formModel.memberId,
+        companyId: 1,
+        username: state.formModel.username,
+        roleList: state.formModel.roleList,
+        phone: state.formModel.phone,
+      })
+        .then((res) => {
+          done(true);
+          emit('confirm');
+        })
+        .catch((err) => {});
       //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
       //   api(state.formModel)
       //     .then(() => {
@@ -210,9 +209,9 @@ const onConfirm = (done: (closed: boolean) => void) => {
       //     .catch(() => {
       //       done(false);
       //     });
-      emit('confirm');
     } else {
       done(false);
+      console.log(state.formModel);
     }
   });
 };
@@ -235,34 +234,46 @@ const applist = (a: any) => {
   console.log(a, 'a, b, c');
 };
 onMounted(() => {
-  if (isEdit.value) {
-    console.log(props.data, '编辑');
-    const {
-      id,
-      userId,
-      userName,
-      phone,
-      companyId,
-      memberId,
-      status,
-      roleList,
-      roleName,
-    } = props.data;
-    state.formModel = {
-      id,
-      userId,
-      userName,
-      phone,
-      companyId,
-      memberId,
-      status,
-      roleList,
-      roleName,
-    };
-  } else {
-    // 编辑
-    console.log(props.data, '新增');
-  }
+  rolelist({
+    pageSize: 1000,
+    pageNum: 1,
+    companyId: 1,
+  })
+    .then((res: any) => {
+      console.log(res);
+      roleSelect.value = res.records;
+      if (isEdit.value) {
+        console.log(props.data, '编辑');
+        const {
+          id,
+          userId,
+          username,
+          phone,
+          companyId,
+          memberId,
+          status,
+          roleList,
+          roleName,
+        } = props.data;
+        state.formModel = {
+          id,
+          userId,
+          username,
+          phone,
+          companyId,
+          memberId,
+          status,
+          roleList,
+          roleName,
+        };
+        rolePhones.value = phone;
+      } else {
+        // 新增
+        console.log(props.data, '新增');
+      }
+    })
+    .catch((err) => {});
+  // init();
 });
 </script>
 

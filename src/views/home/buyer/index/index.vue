@@ -9,19 +9,49 @@
             <img :src="avatar" alt="" />
           </div>
           <div class="rights">
-            <p style="float: left; width: 300px; margin-top: 16px" class="name"
-              >张伟</p
+            <p
+              v-if="
+                dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
+              "
+              style="float: left; width: 300px; margin-top: 16px"
+              class="name"
+              >{{ dataInfo.username }}</p
+            >
+            <p
+              v-if="
+                dataInfo.certificateStatus !== 1 && dataInfo.nodeStatus !== 1
+              "
+              style="float: left; width: 300px; margin-top: 16px"
+              class="name"
+              >13230087819</p
             >
             <div class="inofs" style="float: left; margin-top: 25px">
-              <p>北京泰尔英福有限公司</p><p>|</p><p>主账号</p><p>|</p
-              ><p
+              <div
+                v-if="
+                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
+                "
+                style="float: left"
+              >
+                <p>{{ dataInfo.companyName }}</p
+                ><p>|</p
+                ><p
+                  v-if="
+                    dataInfo.certificateStatus === 1 ||
+                    dataInfo.nodeStatus === 1
+                  "
+                  >{{ dataInfo.primary === true ? '主账号' : '子账号' }}</p
+                ><p>|</p>
+              </div>
+
+              <p
+                style="float: left"
                 :class="[
-                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
                     ? 'authenticated'
                     : 'notcertified',
                 ]"
                 >{{
-                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
                     ? '已认证'
                     : '未认证'
                 }}</p
@@ -83,7 +113,6 @@
                 </div>
                 <div>
                   <p class="ition"></p>
-
                   <img :src="group2" alt="" />
                   <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
@@ -331,12 +360,18 @@
           class="purchasedlist"
         >
           <div style="width: 20%">
-            <img :src="frame" alt="" style="width: 100%; height: 100%" />
+            <img
+              :src="item.productLogo"
+              alt=""
+              style="width: 100%; height: 100%"
+            />
           </div>
           <div class="leftcont">
             <div class="tophead" style="margin-bottom: 20px"
-              ><span>{{ item.name }}</span
-              ><span style="color: #1664ff" @click="togo"> 前往 》</span></div
+              ><span>{{ item.productName }}</span
+              ><span style="color: #1664ff; cursor: pointer" @click="togo">
+                前往 》</span
+              ></div
             >
             <div
               style="
@@ -347,10 +382,12 @@
                 text-overflow: ellipsis;
               "
               title="asdasdasd"
-              >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
+              >{{ item.introduction }}
             </div>
             <div class="tophead"
-              ><span style="color: #1664ff" @click="configurationapp(item)"
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                @click="configurationapp(item)"
                 >配置应用</span
               ><span
                 style="color: #86909c; cursor: pointer"
@@ -444,7 +481,7 @@
     >
     </DetailsModalFullscreen>
     <!-- \v-show="false" -->
-    <div v-show="false" id="page" class="zhengshu-container-box">
+    <div id="page" class="zhengshu-container-box">
       <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
       <div class="zhengshu-container-box-bid">
         存证BID：{detail?.bid || '--'}
@@ -523,7 +560,7 @@ import group1 from './image/group1.png';
 import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
-import frame from './image/frame.png';
+// import frame from './image/frame.png';
 
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
@@ -534,12 +571,24 @@ const router = useRouter();
 const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();
-
+// 头部用户信息
+const dataInfo = ref({
+  id: null, // 用户id
+  username: '章三', // 用户名称
+  companyId: 1, // 机构id
+  companyName: '北京泰尔英福有限公司', // 机构名称
+  certificateStatus: 0, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  nodeStatus: 1, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  primary: true, // 主账号 true 子账号 false
+  roleNames: null, // 角色名称
+  menuCodes: null, // 菜单code
+});
 // 认证状态
 const stateles = ref({
-  companyStatus: 2, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
 });
+
 const state = reactive({
   editData: {
     id: '1111',
@@ -574,25 +623,43 @@ const images = reactive([
 // //已购应用
 const authDialogVisible = reactive([
   {
-    name: '章三1',
-  },
-  {
-    name: '章三2',
-  },
-  {
-    name: '章三3',
-  },
-  {
-    name: '章三4',
-  },
-  {
-    name: '章三5',
-  },
-  {
-    name: '章三6',
-  },
-  {
-    name: '章三7',
+    id: '2',
+    orderNum: '2',
+    productId: '1', // 商品id
+    productName: '凉皮', // 商品名称
+    introduction:
+      '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
+    useExplain: '', // 使用说明
+    customerName: '硕',
+    productLogo:
+      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
+    merchantName: '商品所属商家名称',
+    deliveryTypeName: 'SAAS',
+    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
+    productPrice: 10000,
+    accountCount: '10个账号',
+    buyDuration: '5个月',
+    realityPrice: 9400,
+    orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatusName: '待审核',
+    orderStatusInfo: null,
+    orderSteps: 3, // 订单步骤
+    rejectType: 0,
+    rejectReasonDetail: '未收到打款信息',
+    deploymentStatusName: null,
+    deploymentStatusCode: null,
+    couponMoney: 600,
+    userMobile: null,
+    orderSource: 0,
+    effectTime: null,
+    createTime: '2023-10-23 16:24:32',
+    dueDate: null,
+    voucherRejectTime: '2023-10-24 11:05:38',
+    payCompleteTime: null,
+    voucherSubmitTime: '2023-10-24 11:11:19',
+    confirmDeployedTime: null,
+    merchantDeliverTime: null,
+    attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
   },
 ]);
 // 订单概览
@@ -1218,6 +1285,10 @@ const multiples = () => {
   }
   // pdf导出
   .zhengshu-container-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: -9999;
     box-sizing: border-box;
     // position: fixed;
     // // top: 100000px;

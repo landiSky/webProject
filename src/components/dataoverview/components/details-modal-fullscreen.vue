@@ -21,7 +21,7 @@
     </template>
 
     <div class="modal-body">
-      <div v-if="detaillist.remark !== ''" class="toperror" style="">
+      <div v-if="detaillist.certificateStatus === 2" class="toperror" style="">
         <div style="width: 40%" class="topcenters">
           <div class="topleft"
             ><p style="width: 100%"
@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div v-if="detaillist.remark === ''" class="topwarn">
+      <div v-if="detaillist.certificateStatus === 2" class="topwarn">
         <div style="width: 40%" class="topcenterswarn">
           <div class="topleft"
             ><p style="width: 100%"
@@ -168,7 +168,8 @@
 import Error from '@/assets/images/home/Error.png';
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 
-// import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
+import { authDetails } from '@/api/authentication';
+
 import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
 
@@ -182,7 +183,7 @@ const props = defineProps({
     },
   },
 });
-const detaillist = {
+const detaillist = ref({
   id: '企业id',
   userId: '用户id',
   companyName: '企业名称',
@@ -199,19 +200,19 @@ const detaillist = {
     'https://img0.baidu.com/it/u=1783176477,761999961&fm=253&fmt=auto&app=120&f=JPEG?w=605&h=500',
   certificateStatus: 0,
   remark: '驳理由',
-};
+});
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();
-const formModel = ref({
-  enterprisename: null,
-  creditcode: undefined,
-  corporatename: null,
-  businesslicense: null,
-  contactname: null,
-  contactidnumber: [],
-  contactidcard: null,
-});
+// const formModel = ref({
+//   enterprisename: null,
+//   creditcode: undefined,
+//   corporatename: null,
+//   businesslicense: null,
+//   contactname: null,
+//   contactidnumber: [],
+//   contactidcard: null,
+// });
 // const fileList = [
 //   {
 //     uid: '-2',
@@ -262,6 +263,10 @@ const goback = () => {
 
 const getUserDetail = () => {
   // 调后端接口
+  authDetails({ companyId: 2 }).then((res) => {
+    console.log(res);
+    detaillist.value = res;
+  });
   // loading.value = true;
   // usersDetail({ id: props.data?.id })
   //   .then((res) => {
@@ -281,9 +286,9 @@ const editmessage = () => {
 };
 
 onMounted(() => {
-  if (props.data?.id) {
-    getUserDetail();
-  }
+  // if (props.data?.id) {
+  getUserDetail();
+  // }
 });
 // 完成
 // const onConfirm = (done: (closed: boolean) => void) => {

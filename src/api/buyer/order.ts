@@ -19,3 +19,18 @@ export function apiMemListByProduct(params: Record<string, any>) {
 export function apiAuthMember(data: Record<string, any>) {
   return $http.post('/web/product/appConfig', data);
 }
+// 文件上传
+export function fileUpload(data: Record<string, any>) {
+  return $http.post('/web/file/orderUpload', data);
+}
+
+//  文件下载
+export function fileDownload(params: Record<string, any>) {
+  return $http.get('/web/file/orderDownload', {
+    params,
+    // customFields: {
+    //     // @ts-ignore
+    //     returnRawResponse: true // 业务方直接处理原始 response
+    // }
+  });
+}

@@ -298,7 +298,7 @@ const props = defineProps({
 const emit = defineEmits(['confirm', 'cancel', 'hasdflag']);
 // 认证状态
 const stateles = ref({
-  companyStatus: 0, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
 });
 // 弹窗状态

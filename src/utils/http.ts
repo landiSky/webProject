@@ -52,10 +52,12 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         // ==============预处理start response========
         // data:存储的是后端实际返回的 json 数据
         const { data } = response;
-        const { customFields } = reqConfig;
+        const { url, customFields } = reqConfig;
 
+        // console.log('===http', url, customFields, customFields?.returnRawResponse)
         // s0: 调用方需要自行处理原始response
         if (customFields?.returnRawResponse) {
+          // console.log('====http2', url)
           return resolve(response);
         }
 

@@ -89,7 +89,7 @@ const state = reactive({
 const formRules = {
   accessAddress: [
     { required: true, message: '请输入' },
-    // { maxLength: 10, message: '长度不超过10个字符' },
+    { match: / \d+\.\d+\.\d+\.\d+/, message: '请输入正确地址' },
   ],
   account: [{ required: true, message: '请输入' }],
   password: [

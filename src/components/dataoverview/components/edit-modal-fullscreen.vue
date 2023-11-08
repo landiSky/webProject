@@ -95,7 +95,7 @@
                 : []
             "
             list-type="picture-card"
-            action="https://arco.design/"
+            action="/web/file/upload"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
@@ -258,7 +258,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, reactive } from 'vue';
 import { useUserStore } from '@/store/modules/user';
-import { authDetails, authSubmit } from '@/api/authentication';
+import { authDetails, authSubmit, authRepeat } from '@/api/authentication';
 import { storeToRefs } from 'pinia';
 
 import {
@@ -297,6 +297,8 @@ const formRef = ref();
 //   remark: '',
 // });
 const formModel = ref({
+  id: 2,
+  userId: 5,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -312,6 +314,8 @@ const formModel = ref({
   // 联系人身份证
   idCardz: '',
   idCardf: '',
+  // 新增 0 重新添加 1
+  type: 0,
 });
 // const fileList = [
 //   {
@@ -332,13 +336,16 @@ const formRules: any = {
   ],
   creditCode: [
     { required: true, message: '请输入社会信用代码' },
-    { maxLength: 20, message: '长度不超过20个字符' },
+    {
+      match: /^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/,
+      message: '请输入正确的信用代码',
+    },
   ],
   legalPersonName: [
     { required: true, message: '请输入法人姓名' },
     { maxLength: 10, message: '长度不超过20个字符' },
   ],
-  businessLicenseId: [{ required: true, message: '请上传营业执照' }],
+  // businessLicenseId: [{ required: true, message: '请上传营业执照' }],
   contactName: [
     { required: true, message: '请输入联系人姓名' },
     { maxLength: 10, message: '长度不超过10个字符' },
@@ -354,7 +361,7 @@ const formRules: any = {
   ],
 
   // contactidcard: [{ required: true, message: '请上传身份证' }],
-  contactidcard: [{ required: true, message: '请上传身份证' }],
+  // contactidcard: [{ required: true, message: '请上传身份证' }],
 };
 
 const goback = () => {
@@ -404,18 +411,24 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       console.log(formModel.value, 'closed');
-      authSubmit(formModel.value)
+      authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
-          if (res.code === 200) {
-            console.log(res);
-            emit('confirm');
-            done(true);
-            Message.success('认证已提交');
+          if (res.data.code === 200) {
+            authSubmit(formModel.value)
+              .then((res) => {
+                console.log(res);
+                emit('confirm');
+                done(true);
+                Message.success('认证已提交');
+              })
+              .catch((err) => {
+                done(false);
+              });
+          } else {
+            Message.error('信用代码已存在');
           }
         })
-        .catch((err) => {
-          done(false);
-        });
+        .catch(() => {});
 
       // const a = {
       //   id: '企业id',
@@ -462,10 +475,11 @@ onMounted(() => {
   console.log(props.data?.statusled);
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
+    formModel.value.type = props.data.statusled;
     getUserDetail();
   }
 });
-// const qqq = () => {
+// const qqq = () =>
 //   Modal.warning({
 //     title: '企业认证重复',
 //     content:

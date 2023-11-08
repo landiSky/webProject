@@ -79,44 +79,7 @@ export default [
         userId: 1,
         username: 'super',
         nickName: '超级管理员',
-        authorities: [
-          {
-            authority: 'ROUTE_BUYER_INDEX',
-          },
-          {
-            authority: 'ROUTE_BUYER_ORDER',
-          },
-          {
-            authority: 'ROUTE_SELLER_GOODS',
-          },
-          {
-            authority: 'ROUTE_SELLER_ORDER',
-          },
-          {
-            authority: 'ROUTE_SYSTEM_USERS',
-          },
-          {
-            authority: 'ROUTE_SYSTEM_ROLES',
-          },
-          // {
-          //   authority: 'ROUTE_SYSTEM_DATAOVERVIEW',
-          // },
-        ],
-        accountNonExpired: true,
-        accountNonLocked: true,
-        credentialsNonExpired: true,
-        enabled: true,
-        tenantId: 1,
-        binded: 0,
-        deptName: '泰尔英福',
-        roles: [
-          {
-            id: 1,
-            roleName: '超级管理员',
-            roleCode: 'ROLE_SUPER',
-            enabled: 0,
-          },
-        ],
+
         auths: [
           'ROUTE_BUYER',
           'ROUTE_BUYER_INDEX',

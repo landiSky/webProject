@@ -3,6 +3,7 @@
     v-model:visible="showModal"
     fullscreen
     title-align="start"
+    :on-before-ok="onConfirm"
     :closable="false"
     class="fullscreen-modal"
     @back="goback"
@@ -87,16 +88,15 @@
           >
           </t-input>
         </t-form-item>
-        <!-- @before-upload="beforeUpload" -->
+        <!-- @before-upload="beforeUpload"  v-model="formModel.businesslicense" -->
         <t-form-item label="营业执照" field="businesslicense">
           <t-upload
-            v-model="formModel.businesslicense"
-            list-type="picture-card"
-            action="/"
+            :file-list="formModel.businesslicense ? [{ url: '' }] : []"
+            action="https://arco.design/"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
-            accept="image/png,image/jpg"
+            accept=".jpg,.png,.bmp,.tif,.gif"
             @before-upload="beforeUpload"
           >
             <template #upload-button>
@@ -119,7 +119,7 @@
           </t-upload>
         </t-form-item>
         <p style="margin: -10px 0 20px 20%; color: #86909c">
-          支持jpg、png文件格式,文件大小限制5M以内。
+          支持jpg、png、bmp、tif、gif文件格式,文件大小限制10M以内。
           <!-- 支持png和jpg,要求5M以内 -->
         </p>
 
@@ -178,14 +178,14 @@
             :hide-label="true"
             style="width: 200px"
           >
-            <!-- @before-upload="beforeUpload" -->
+            <!-- @before-upload="beforeUpload"   v-model="formModel.contactidcard.contactidcardz"-->
             <t-upload
-              v-model="formModel.contactidcard.contactidcardz"
               list-type="picture-card"
-              action="/"
               :limit="1"
               image-preview
-              accept="image/png,image/jpg"
+              :file-list="formModel.businesslicense ? [{ url: '' }] : []"
+              action="https://arco.design/"
+              accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
             >
               <template #upload-button>
@@ -208,15 +208,15 @@
             </t-upload>
           </t-form-item>
           <t-form-item label="" :hide-label="true" field="contactidcardf">
-            <!-- @before-upload="beforeUpload" -->
+            <!-- @before-upload="beforeUpload"   v-model="formModel.contactidcard.contactidcardf" -->
             <t-upload
-              v-model="formModel.contactidcard.contactidcardf"
               list-type="picture-card"
-              action="/"
               :limit="1"
               image-preview
               style="margin-top: -20px"
-              accept="image/png,image/jpg"
+              :file-list="formModel.businesslicense ? [{ url: '' }] : []"
+              action="https://arco.design/"
+              accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
             >
               <template #upload-button>
@@ -241,7 +241,7 @@
         </t-form-item>
         <!-- </div> -->
         <p style="margin: -30px 0 20px 20%; color: #86909c">
-          支持jpg、png文件格式,文件大小限制5M以内。
+          支持jpg、png、bmp、tif、gif文件格式,文件大小限制10M以内。
         </p>
       </t-form>
     </div>
@@ -334,7 +334,11 @@ const formRules: any = {
   ],
   creditcode: [
     { required: true, message: '请输入社会信用代码' },
-    { maxLength: 20, message: '长度不超过20个字符' },
+    // { maxLength: 20, message: '长度不超过20个字符' },
+    {
+      match: /^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/,
+      message: '请输入正确的信用代码',
+    },
   ],
   corporatename: [
     { required: true, message: '请输入法人姓名' },

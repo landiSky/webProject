@@ -297,7 +297,7 @@ import rightlog from '@/assets/images/home/rightlog.png';
 const store = useUserStore();
 
 const { userInfo } = storeToRefs(store);
-
+// userInfo.value?.companyId
 // import { Message } from '@tele-design/web-vue';
 
 // const props = defineProps({
@@ -324,6 +324,15 @@ const visible = ref(true);
 //     phone: undefined,
 //   },
 // });
+const init = () => {
+  authentication({ companyId: 2 })
+    .then((res) => {
+      console.log(res, 'res');
+      // stateles.value = res.data === undefined ? {} : res.data;
+      stateles.value = res;
+    })
+    .catch((err) => {});
+};
 // 企业认证   去认证
 const viewdetails = () => {
   emit('confirm');
@@ -347,14 +356,8 @@ onMounted(() => {
   //   // 二是从接口获取
   //   // getDetail();
   // }
-  authentication({ companyId: userInfo.value?.companyId })
-    .then((res) => {
-      console.log(res, 'res');
-      if (res.code === 200) {
-        stateles.value = res.data === undefined ? {} : res.data;
-      }
-    })
-    .catch((err) => {});
+
+  init();
 });
 </script>
 
