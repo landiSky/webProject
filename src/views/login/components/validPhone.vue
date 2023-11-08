@@ -1,6 +1,6 @@
 <template>
   <div class="loginWrapper">
-    <div v-if="currentStep === 1" class="stepOne">
+    <!-- <div v-if="currentStep === 1" class="stepOne">
       <span class="title">欢迎登录工业互联网</span>
       <t-tabs default-active-key="1">
         <t-tab-pane key="1" title="密码登录">
@@ -54,45 +54,45 @@
           <t-link class="bottomOpt" @click="goRegister">注册账号</t-link>
         </t-tab-pane>
       </t-tabs>
-    </div>
-    <div v-if="currentStep === 2" class="stepTwo">
-      <span class="title">请绑定手机号/安全验证</span>
-      <t-form :model="safeForm" :rules="safeFormRules" layout="vertical">
-        <t-form-item field="mobile" :validate-trigger="['change', 'input']">
-          <t-input
-            v-model="safeForm.mobile"
-            placeholder="请输入手机号"
-            size="large"
-            ><template #prefix>
-              <iconpark-icon name="mobile"></iconpark-icon>
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item field="captcha" :validate-trigger="['change', 'input']">
-          <t-input
-            v-model.trim="safeForm.captcha"
-            placeholder="请输入密码"
-            size="large"
-          >
-            <template #prefix>
-              <iconpark-icon name="safe"></iconpark-icon>
-            </template>
-          </t-input>
-          <t-button type="primary">获取短信验证码</t-button>
-        </t-form-item>
-        <t-form-item>
-          <t-button
-            class="btn"
-            type="primary"
-            html-type="submit"
-            :loading="loading"
-            size="large"
-            long
-            >验证</t-button
-          >
-        </t-form-item>
-      </t-form>
-    </div>
+    </div> -->
+    <!-- <div v-if="currentStep === 2" class="stepTwo"> -->
+    <span class="title">请绑定手机号/安全验证</span>
+    <t-form :model="safeForm" :rules="safeFormRules" layout="vertical">
+      <t-form-item field="mobile" :validate-trigger="['change', 'input']">
+        <t-input
+          v-model="safeForm.mobile"
+          placeholder="请输入手机号"
+          size="large"
+          ><template #prefix>
+            <iconpark-icon name="mobile"></iconpark-icon>
+          </template>
+        </t-input>
+      </t-form-item>
+      <t-form-item field="captcha" :validate-trigger="['change', 'input']">
+        <t-input
+          v-model.trim="safeForm.captcha"
+          placeholder="请输入密码"
+          size="large"
+        >
+          <template #prefix>
+            <iconpark-icon name="safe"></iconpark-icon>
+          </template>
+        </t-input>
+        <t-button type="primary">获取短信验证码</t-button>
+      </t-form-item>
+      <t-form-item>
+        <t-button
+          class="btn"
+          type="primary"
+          html-type="submit"
+          :loading="loading"
+          size="large"
+          long
+          >验证</t-button
+        >
+      </t-form-item>
+    </t-form>
+    <!-- </div> -->
     <!-- <SliderCaptcha
       v-if="captchaVisible"
       @success="captchaSuccess"
@@ -109,7 +109,7 @@ import { useUserStore } from '@/store/modules/user';
 
 import $http from '@/utils/http';
 import { setToken } from '@/utils/auth';
-import { apiLogin, apiLoginName } from '@/api/login';
+import { apiLogin, apiLoginName, apiWebOauth } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import SliderCaptcha from './captcha.vue';
 
@@ -125,8 +125,8 @@ const loginLoading = ref(false);
 
 const formRef = ref();
 const form = ref({
-  username: '',
-  password: '',
+  username: '15210602855',
+  password: 'Xz@123456',
 });
 
 const safeForm = ref({
@@ -208,6 +208,21 @@ const clickLoginBtn = () => {
     password: sm2('123456', userStore.configInfo?.public_key),
   }).then((data) => {
     console.log('login.vue:202====login', data);
+    // eslint-disable-next-line camelcase
+    const { client_id, redirect_uri } = userStore.configInfo || {};
+    // window.open(
+    //   `http://10.14.150.253:8081/sso/web/oauth/authorize?response_type=code&scope=all&client_id=sso_platform&redirect_uri=http:%2F%2F10.14.148.246:3000%2F%23%2Flogin`,
+    //   '_blank'
+    // );
+    apiWebOauth({
+      response_type: 'code',
+      scope: 'all',
+      client_id,
+      redirect_uri,
+    }).then((data) => {
+      console.log('login.vue:218=====apiWebOauth', data);
+    });
+
     // $http.post(userStore.configInfo?.login_url).then((res) => {
     //   console.log('login.vue:209', res);
     // });

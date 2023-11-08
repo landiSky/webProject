@@ -1,5 +1,10 @@
 import $http from '@/utils/http';
 
+// 获取当前公司下用户的信息
+export function apiUserProfile(params: Record<string, any>) {
+  return $http.get('/web/user/profile', { params });
+}
+
 // 获取商品类型接口  一二级树结构
 export function apiProductType() {
   return $http.get('/web/product/type/tree');

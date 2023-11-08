@@ -48,6 +48,7 @@
 
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
+import { apiCreateOrder } from '@/api/buyer/order';
 
 const router = useRouter();
 const route = useRoute();
@@ -56,7 +57,11 @@ const onGoBack = () => {
   router.go(-1);
 };
 
-const onConfirm = () => {};
+const onConfirm = () => {
+  apiCreateOrder({}).then(() => {
+    console.log('index.vue:61==订单创建成功');
+  });
+};
 </script>
 
 <style lang="less" scoped>

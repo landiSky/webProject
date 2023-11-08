@@ -88,9 +88,13 @@ import { ref, reactive, defineEmits, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+
+import { sm2 } from '@/utils/encrypt';
 import { apiSendCaptcha, apiRegisterUser } from '@/api/login';
 import SliderCaptcha from './captcha.vue';
 
+const userStore = useUserStore();
 const router = useRouter();
 const emit = defineEmits(['login']);
 const regisLoading = ref(false);
@@ -104,8 +108,8 @@ const formRef = ref();
 const form = ref({
   phone: '15210602855',
   code: '',
-  password: '',
-  confirmPassword: '',
+  password: 'Xz@12345',
+  confirmPassword: 'Xz@12345',
 });
 
 const btnDisabled = computed(() => {
@@ -171,7 +175,9 @@ const goAgreement = () => {
 };
 
 const goLogin = () => {
-  emit('login');
+  userStore.jumpToLogin();
+  // router.push('/buyer');
+  // emit('login');
 };
 
 const goRegister = () => {
@@ -188,7 +194,14 @@ const goRegister = () => {
 
       regisLoading.value = true;
 
-      apiRegisterUser(form.value)
+      const { phone, code, password, confirmPassword } = form.value;
+
+      apiRegisterUser({
+        phone,
+        code,
+        password: sm2(password, userStore.configInfo?.public_key),
+        confirmPassword: sm2(confirmPassword, userStore.configInfo?.public_key),
+      })
         .then(() => {
           Message.success('注册成功，去登录！');
           goLogin(); // 注册成功，跳转到登录
@@ -208,7 +221,7 @@ const realSendRequest = () => {
       console.log('register.vue:190', res);
       if (res.code === 200) {
         Message.success('验证码已发送，注意查收');
-        countDownTime.value = 20; // 2分钟
+        countDownTime.value = 120; // 2分钟
         timerId.value = setInterval(() => {
           if (countDownTime.value <= 0) {
             clearInterval(timerId.value);
