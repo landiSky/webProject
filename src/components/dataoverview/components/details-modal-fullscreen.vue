@@ -335,9 +335,6 @@ onMounted(() => {
 }
 
 .fullscreen-modal {
-  // ::v-deep .tele-modal-fullscreen .tele-modal-footer {
-  //   text-align: left;
-  // }
 }
 
 .modal-body {
@@ -347,9 +344,7 @@ onMounted(() => {
   padding-top: 0;
   overflow: auto;
   background-color: #fff;
-  // ::v-deep .tele-modal-fullscreen .tele-modal-body {
-  //   padding: 0px;
-  // }
+
   .tele-form {
     max-width: 652px;
   }

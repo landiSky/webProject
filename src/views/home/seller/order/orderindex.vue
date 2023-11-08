@@ -808,7 +808,7 @@ const ondeliveryModalConfirm = () => {
     margin: 16px auto;
     background: #f6f7fb;
 
-    ::v-deep .tele-input-wrapper {
+    :deep(.tele-input-wrapper) {
       background-color: #fff;
     }
 

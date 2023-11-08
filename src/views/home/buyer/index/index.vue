@@ -10,36 +10,16 @@
           </div>
           <div class="rights">
             <p
-              v-if="
-                dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
-              "
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
               >{{ userInfo.companyName }}</p
             >
-            <p
-              v-if="
-                dataInfo.certificateStatus !== 1 && dataInfo.nodeStatus !== 1
-              "
-              style="float: left; width: 300px; margin-top: 16px"
-              class="name"
-              >13230087819</p
-            >
+
             <div class="inofs" style="float: left; margin-top: 25px">
-              <div
-                v-if="
-                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
-                "
-                style="float: left"
-              >
+              <div style="float: left">
                 <p>{{ dataInfo.companyName }}</p
                 ><p>|</p
-                ><p
-                  v-if="
-                    dataInfo.certificateStatus === 1 ||
-                    dataInfo.nodeStatus === 1
-                  "
-                  >{{ dataInfo.primary === true ? '主账号' : '子账号' }}</p
+                ><p>{{ dataInfo.primary === true ? '主账号' : '子账号' }}</p
                 ><p>|</p>
               </div>
 
@@ -572,7 +552,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
-console.log(userInfo);
+console.log(userInfoByCompany);
 const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();
@@ -870,7 +850,7 @@ const multiples = () => {
             justify-content: space-between;
             width: 90%;
 
-            ::v-deep .tele-btn-size-medium {
+            :deep(.tele-btn-size-medium) {
               height: 0;
               padding: 0;
             }
@@ -1116,41 +1096,41 @@ const multiples = () => {
       width: 99%;
       height: 100%;
 
-      ::v-deep .tele-carousel-arrow-left {
+      :deep(.tele-carousel-arrow-left) {
         top: 106%;
         left: 44%;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-arrow-right {
+      :deep(.tele-carousel-arrow-right) {
         top: 106%;
         right: 45%;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-arrow-left > svg {
+      :deep(.tele-carousel-arrow-left > svg) {
         color: #56555f;
         font-weight: 600;
         font-size: 20px;
       }
 
-      ::v-deep .tele-carousel-arrow-right > svg {
+      :deep(.tele-carousel-arrow-right > svg) {
         color: #56555f;
         font-weight: 600;
         font-size: 20px;
       }
 
-      ::v-deep .tele-carousel-indicator-wrapper-bottom {
+      :deep(.tele-carousel-indicator-wrapper-bottom) {
         bottom: -35px;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-indicator {
+      :deep(.tele-carousel-indicator) {
         display: flex;
         align-items: center;
       }
 
-      ::v-deep .tele-carousel-indicator-item {
+      :deep(.tele-carousel-indicator-item) {
         width: 8px;
         height: 8px;
         margin-right: 16px;
@@ -1160,7 +1140,7 @@ const multiples = () => {
         transform-origin: center center;
       }
 
-      ::v-deep .tele-carousel-indicator-item-active {
+      :deep(.tele-carousel-indicator-item-active) {
         width: 16px;
         height: 16px;
         background-color: #1664ff;

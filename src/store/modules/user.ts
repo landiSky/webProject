@@ -44,6 +44,7 @@ export const useUserStore = defineStore({
       const { companyId, memberId } = this.selectCompany || {};
       apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
+          console.log(data);
           this.userInfoByCompany = data;
         })
         .catch(() => {});

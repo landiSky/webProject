@@ -480,12 +480,12 @@ const canceldes = () => {
 }
 
 .fullscreen-modal {
-  ::v-deep .tele-modal-fullscreen .tele-modal-footer {
+  :deep(.tele-modal-fullscreen .tele-modal-footer) {
     text-align: left;
   }
 }
 
-::v-deep.tele-modal-body .tele-form-item:last-child {
+:deep(.tele-modal-body .tele-form-item:last-child) {
   margin-bottom: 10px;
 }
 
@@ -501,7 +501,7 @@ const canceldes = () => {
     max-width: 652px;
   }
 
-  ::v-deep .tele-upload-list-picture {
+  :deep(.tele-upload-list-picture) {
     width: 150px;
     height: 100px;
   }
