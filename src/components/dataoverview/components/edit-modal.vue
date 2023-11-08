@@ -329,6 +329,7 @@ const init = () => {
     .then((res) => {
       console.log(res, 'res');
       // stateles.value = res.data === undefined ? {} : res.data;
+      // @ts-ignore
       stateles.value = res;
     })
     .catch((err) => {});

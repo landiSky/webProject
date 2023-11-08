@@ -265,6 +265,7 @@ const getUserDetail = () => {
   // 调后端接口
   authDetails({ companyId: 2 }).then((res) => {
     console.log(res);
+    // @ts-ignore
     detaillist.value = res;
   });
   // loading.value = true;
