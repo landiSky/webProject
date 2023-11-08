@@ -30,15 +30,23 @@ export default defineConfig(({ command, mode }) => {
         strict: true,
       },
       proxy: {
+        '/api': {
+          target: `http://10.14.150.253:9190/server`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+          followRedirects: true,
+        },
         '/web': {
           target: `http://10.14.150.182:9190/server`,
           changeOrigin: true,
           agent: new https.Agent(),
+          followRedirects: true,
         },
         '/sso': {
           target: `http://10.14.150.253:8081/`,
           changeOrigin: true,
           agent: new https.Agent(),
+          followRedirects: true,
         },
       },
     },
