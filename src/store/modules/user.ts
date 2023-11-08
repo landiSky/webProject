@@ -5,7 +5,7 @@ import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 import { AccountType } from '@/enums/common';
-import { useMenuStore } from './menu';
+// import { useMenuStore } from './menu';
 
 interface UserState {
   userInfo: Record<string, any> | null; // UserInfo | null;
@@ -14,6 +14,7 @@ interface UserState {
   userInfoByCompany: Record<string, any> | null;
   selectCompany: Record<string, any> | null;
   configInfo: Record<string, any> | null;
+  updateMenu: boolean;
 }
 
 export const useUserStore = defineStore({
@@ -25,6 +26,7 @@ export const useUserStore = defineStore({
     counter: 0,
     token: null,
     configInfo: {},
+    updateMenu: false,
   }),
   getters: {
     // 获取用户信息
@@ -52,7 +54,8 @@ export const useUserStore = defineStore({
       this.selectCompany = data;
       await this.getUserByCompany();
 
-      useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
+      this.updateMenu = !this.updateMenu;
+      // useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
     },
     /**
      * 初始化信息：判断需不需要加载侧边栏，获取topmenu之后，对比当前的route path和id，从server获取sidemenu
@@ -60,27 +63,27 @@ export const useUserStore = defineStore({
      */
     async getUserBasicInfo() {
       try {
-        // const userInfo = await apiUsersInfo();
+        const userInfo = await apiUsersInfo();
 
-        const userInfo = {
-          userId: 1,
-          username: 'super',
-          nickName: '超级管理员',
+        // const userInfo = {
+        //   userId: 1,
+        //   username: 'super',
+        //   nickName: '超级管理员',
 
-          auths: [
-            'ROUTE_BUYER',
-            'ROUTE_BUYER_INDEX',
-            'ROUTE_BUYER_ORDER',
-            'ROUTE_SELLER',
-            'ROUTE_SELLER_GOODS',
-            'ROUTE_SELLER_ORDER',
-            'ROUTE_SYSTEM',
-            'ROUTE_SYSTEM_USERS',
-            'ROUTE_SYSTEM_ROLES',
-            // 'ROUTE_SYSTEM_DATAOVERVIEW',
-          ],
-          companyList: [],
-        };
+        //   auths: [
+        //     'ROUTE_BUYER',
+        //     'ROUTE_BUYER_INDEX',
+        //     'ROUTE_BUYER_ORDER',
+        //     'ROUTE_SELLER',
+        //     'ROUTE_SELLER_GOODS',
+        //     'ROUTE_SELLER_ORDER',
+        //     'ROUTE_SYSTEM',
+        //     'ROUTE_SYSTEM_USERS',
+        //     'ROUTE_SYSTEM_ROLES',
+        //     // 'ROUTE_SYSTEM_DATAOVERVIEW',
+        //   ],
+        //   companyList: [],
+        // };
 
         this.userInfo = userInfo as any;
 
@@ -100,6 +103,7 @@ export const useUserStore = defineStore({
 
           this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
+          this.updateMenu = !this.updateMenu;
           // useMenuStore().genLeftMenu([]);
         }
 
