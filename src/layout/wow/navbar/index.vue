@@ -91,8 +91,11 @@ const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const handleLogout = async () => {
   await userStore.logout();
@@ -154,14 +157,13 @@ const clickIdService = () => {
       path: '/login',
     });
   } else {
-    const { certificateStatus } = userInfoByCompany || {};
-    // if (userInfoByCompany?.companyId) {
-    //   Modal.info({
-    //     title: 'Info Notification',
-    //     content: 'This is an info description which directly indicates a neutral informative change or action.'
-    //   });
-    // } else {
-
+    const { certificateStatus, nodeStatus } = userInfoByCompany || {};
+    if (userInfoByCompany?.companyId) {
+      Modal.info({
+        content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+      });
+    }
+    // else {
     // }
     console.log('index.vue:139===打开二级');
     window.open('http://id-pointer.test.idx.space/snms/ui/index', '_blank');

@@ -199,8 +199,8 @@ const goRegister = () => {
       apiRegisterUser({
         phone,
         code,
-        password: sm2(password, userStore.configInfo?.public_key),
-        confirmPassword: sm2(confirmPassword, userStore.configInfo?.public_key),
+        password: sm2(password, userStore.configInfo?.publicKey),
+        confirmPassword: sm2(confirmPassword, userStore.configInfo?.publicKey),
       })
         .then(() => {
           Message.success('注册成功，去登录！');

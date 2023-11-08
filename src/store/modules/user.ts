@@ -5,7 +5,7 @@ import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 import { AccountType } from '@/enums/common';
-// import { useMenuStore } from './menu';
+import { useMenuStore } from './menu';
 
 interface UserState {
   userInfo: Record<string, any> | null; // UserInfo | null;
@@ -15,8 +15,6 @@ interface UserState {
   selectCompany: Record<string, any> | null;
   configInfo: Record<string, any> | null;
 }
-
-// const menuStore = useMenuStore();
 
 export const useUserStore = defineStore({
   id: 'app-user',
@@ -54,7 +52,7 @@ export const useUserStore = defineStore({
       this.selectCompany = data;
       await this.getUserByCompany();
 
-      // useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
+      useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
     },
     /**
      * 初始化信息：判断需不需要加载侧边栏，获取topmenu之后，对比当前的route path和id，从server获取sidemenu
@@ -159,10 +157,14 @@ export const useUserStore = defineStore({
      * 登出
      */
     async logout(): Promise<void> {
-      await apiLogout();
       this.userInfo = null;
+      this.userInfoByCompany = null;
+      this.selectCompany = {};
       this.token = '';
+
+      await apiLogout();
       clearToken();
+      window.location.href = `${this.configInfo?.logoutUrl}?server_uri=http://localhost:3001`;
     },
 
     clearUserInfo(): void {
@@ -171,12 +173,12 @@ export const useUserStore = defineStore({
 
     jumpToLogin(): void {
       // eslint-disable-next-line camelcase
-      const { client_id, redirect_uri } = this.configInfo || {};
+      const { clientId, redirectUri } = this.configInfo || {};
 
       window.location.href = `${
         import.meta.env.VITE_APP_LOGIN
         // eslint-disable-next-line camelcase
-      }?response_type=code&scope=all&client_id=${client_id}&redirect_uri=${redirect_uri}` as string;
+      }?response_type=code&scope=all&client_id=${clientId}&redirect_uri=${redirectUri}` as string;
     },
   },
 });

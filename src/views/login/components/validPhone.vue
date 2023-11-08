@@ -205,11 +205,11 @@ const clickLoginBtn = () => {
   loginLoading.value = true;
   apiLogin({
     username: '15112343001',
-    password: sm2('123456', userStore.configInfo?.public_key),
+    password: sm2('123456', userStore.configInfo?.publicKey),
   }).then((data) => {
     console.log('login.vue:202====login', data);
     // eslint-disable-next-line camelcase
-    const { client_id, redirect_uri } = userStore.configInfo || {};
+    const { clientId, redirectUri } = userStore.configInfo || {};
     // window.open(
     //   `http://10.14.150.253:8081/sso/web/oauth/authorize?response_type=code&scope=all&client_id=sso_platform&redirect_uri=http:%2F%2F10.14.148.246:3000%2F%23%2Flogin`,
     //   '_blank'
@@ -217,8 +217,8 @@ const clickLoginBtn = () => {
     apiWebOauth({
       response_type: 'code',
       scope: 'all',
-      client_id,
-      redirect_uri,
+      clientId,
+      redirectUri,
     }).then((data) => {
       console.log('login.vue:218=====apiWebOauth', data);
     });

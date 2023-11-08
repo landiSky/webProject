@@ -39,16 +39,16 @@ export default defineConfig(({ command, mode }) => {
           followRedirects: true,
         },
         '/web': {
-          // target: `http://10.14.150.253:9190/server`,
-          target: `http://10.14.148.103:9191`,
+          target: `http://10.14.150.253:9190/server`,
+          // target: `http://10.14.148.103:9191`,
           changeOrigin: true,
           agent: new https.Agent(),
           followRedirects: true,
         },
 
         '/sso': {
-          // target: `http://10.14.150.253:8081/`,
-          target: `http://10.14.148.103:9191`,
+          target: `http://10.14.150.253:8081/`,
+          // target: `http://10.14.148.103:9191`,
           changeOrigin: true,
           agent: new https.Agent(),
           followRedirects: true,
