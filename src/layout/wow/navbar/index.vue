@@ -39,9 +39,11 @@
     </div>
 
     <div class="right-side">
-      <t-space v-if="userInfo.userId">
+      <t-space v-if="userInfo?.userId">
         <t-link @click="goBuyer">控制台</t-link>
-        <span class="username">泰尔英福</span>
+        <span class="username">{{
+          selectCompany.companyName || userInfo.mobile
+        }}</span>
         <t-dropdown trigger="click" :popup-container="'.navbar'">
           <div class="click-item">
             <iconpark-icon name="avatar" size="34px"></iconpark-icon>
@@ -66,8 +68,8 @@
           placeholder="请输入商品名称"
           @search="onSearch"
         />
-        <t-link @click="goLogin('register')">注册</t-link>
-        <t-link @click="goLogin('login')">登录</t-link>
+        <t-link @click="goRegister()">注册</t-link>
+        <t-link @click="goLogin()">登录</t-link>
       </t-space>
     </div>
   </div>
@@ -84,18 +86,23 @@ const TabPath = {
   INDEX: '/wow/index',
   MALL: '/wow/mall',
 };
-const store = useUserStore();
+const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 
-const { userInfo }: Record<string, any> = storeToRefs(store);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const handleLogout = async () => {
-  await store.logout();
+  await userStore.logout();
 
   router.push({
     path: '/wow',
+    replace: true,
   });
 };
 const goIndex = () => {
@@ -121,12 +128,15 @@ const clickLogout = () => {
   });
 };
 
-const goLogin = (type: 'register' | 'login') => {
+const goRegister = () => {
+  router.push({
+    path: '/register',
+  });
+};
+const goLogin = () => {
+  // userStore.jumpToLogin();
   router.push({
     path: '/login',
-    params: {
-      type,
-    },
   });
 };
 
@@ -140,8 +150,8 @@ const onSearch = (value: string) => {
 };
 
 const clickIdService = () => {
-  console.log('index.vue:139===打开二级=====', userInfo.value.userId);
-  if (!userInfo.value.userId) {
+  console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
+  if (!userInfo.value?.userId) {
     router.push({
       path: '/login',
     });

@@ -5,8 +5,11 @@ import axios, {
   AxiosResponse,
 } from 'axios';
 import { Message } from '@tele-design/web-vue';
-import { getToken } from '@/utils/auth';
-import { log } from 'console';
+import { getToken, clearToken } from '@/utils/auth';
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const $http: AxiosInstance = axios.create({
   timeout: 60 * 1000,
@@ -21,7 +24,7 @@ $http.interceptors.request.use(
     // 接口携带 token
     if (token && !customFields?.withoutToken) {
       if (!config.headers) config.headers = {};
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `bearer ${token}`;
     }
 
     return config;
@@ -79,6 +82,16 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
           return resolve(data.data);
         }
 
+        console.log('http.ts:84', code, code === 101004);
+        if (code === 101004) {
+          // 重登录
+          // clearToken();
+          // console.log('http.ts:89', router);
+          // router.push('/login');
+
+          return reject(data);
+        }
+        console.log('http.ts:91');
         const errorMsg =
           message || `接口异常：没有异常 message 提示,code: ${code}`;
 
@@ -89,8 +102,12 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         // ==============预处理start response========
       })
       .catch((e: any) => {
-        console.log('http.ts:92', e);
-        //  status != 2xx 范围内的状态码都会触发该函数。
+        console.log('http.ts:101', Object.keys(e));
+        const { status } = e.response || {};
+
+        if (status === 500) {
+          Message.error('服务端不可用');
+        }
         reject(e);
       });
   });

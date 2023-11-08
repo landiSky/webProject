@@ -84,7 +84,7 @@
                   :key="durationItem.id"
                   :value="durationItem.id"
                 >
-                  {{ durationItem.duration }}个账号
+                  {{ durationItem.duration }}个月
                 </t-radio>
                 <!-- <t-radio value="Beijing">6个月</t-radio>
                 <t-radio value="Shanghai">12个月</t-radio>
@@ -134,7 +134,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
 import { SaleType } from '@/enums/common';
-// import useOrderStore from '@/store/modules/order';
+import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
@@ -147,7 +147,7 @@ import AuthMemberModal from './authMember.vue';
 
 const router = useRouter();
 const route = useRoute();
-// const orderState = useOrderStore();
+const orderState = useOrderStore();
 const authModalVisible = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
@@ -194,8 +194,43 @@ const onAuthCancel = () => {
 
 const onAuthConfirm = () => {
   authModalVisible.value = false;
-  const { companyName, name, deliveryType } = prodDetail.value;
-  // orderState.createOrderInfo = {}; // TODO  缓存要下单的订单信息
+  const {
+    companyId,
+    id,
+    companyName,
+    name,
+    deliveryType,
+    saleType,
+    logo,
+  } = prodDetail.value;
+  const { accountNumList, durationList } = selectVersion.value;
+  const { accountId, durationId } = priceParams.value;
+
+  let accountDesc = '不限';
+  let durationDesc = '不限';
+
+  if (saleType === SaleType.PACKAGE) {
+    const accountItem = accountNumList.find(
+      (item: Record<string, any>) => item.id === accountId
+    );
+    const durationItem = durationList.find(
+      (item: Record<string, any>) => item.id === durationId
+    );
+    accountDesc = `${accountItem.accountNum}个账号`;
+    durationDesc = `${durationItem.duration}个月`;
+  }
+
+  orderState.createOrderInfo = {
+    companyId,
+    id,
+
+    accountDesc,
+    durationDesc,
+    companyName,
+    name,
+    deliveryType,
+    logo,
+  };
   router.push({
     path: '/order/confirm',
   });

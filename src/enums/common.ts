@@ -13,3 +13,8 @@ export const SaleType = {
   ONEOFF: 1, // 一口价
   CONSULT: 2, // 面议
 };
+
+export const AccountType = {
+  MEMBER: 0,
+  ADMIN: 1,
+};

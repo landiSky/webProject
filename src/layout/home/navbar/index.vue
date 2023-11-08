@@ -17,16 +17,27 @@
       </div>
     </div>
     <div class="right-side">
-      <t-dropdown trigger="click" :popup-container="'.navbar'" class="company">
+      <span v-if="!userInfo?.companyList?.length">{{ userInfo?.mobile }}</span>
+      <t-dropdown
+        v-else
+        trigger="click"
+        :popup-container="'.navbar'"
+        class="company"
+        @select="onChangeCompany"
+      >
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
           <span>北京泰尔英福公司</span>
         </div>
 
         <template #content>
-          <t-doption @click="onChangeCompany">
+          <t-doption
+            v-for="company in userInfo?.companyList"
+            :key="company.companyId"
+            :value="company.companyId"
+          >
             <t-space fill>
-              <span> 北京泰尔英福公司 </span>
+              <span> {{ company.companyName }} </span>
             </t-space>
           </t-doption>
         </template>
@@ -59,10 +70,14 @@ import { useUserStore } from '@/store/modules/user';
 const store = useUserStore();
 const router = useRouter();
 
-const { userInfo } = storeToRefs(store);
+const { userInfo, selectCompany } = storeToRefs(store);
 
 const handleLogout = async () => {
-  await store.logout();
+  try {
+    await store.logout();
+  } catch (e) {
+    console.log('index.vue:67====handleLogout', e);
+  }
 
   router.push({ path: '/wow' });
 };
@@ -85,8 +100,15 @@ const goWow = () => {
   });
 };
 
-const onChangeCompany = () => {
-  console.log('===切换了企业，发送消息，刷新到买家概览页');
+const onChangeCompany = (companyId: string) => {
+  console.log('===切换了企业，发送消息，刷新到买家概览页', companyId);
+  const selectItem = userInfo.value?.companyList?.filter(
+    (company: Record<string, any>) => company.companyId === companyId
+  );
+  store.changeSelectCompany(selectItem);
+  router.push({
+    path: '/buyer/index',
+  });
   // 要在 app.vue 中监听 userstore.的变化
 };
 </script>

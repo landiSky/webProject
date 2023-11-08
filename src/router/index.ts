@@ -14,7 +14,7 @@ const constantRoutes = [
   {
     path: '/',
     name: 'root',
-    redirect: '/login',
+    redirect: '/wow',
   },
   {
     path: '/agreement',
@@ -24,6 +24,11 @@ const constantRoutes = [
   {
     path: '/login',
     name: 'login',
+    component: () => import('@/views/login/login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
     component: () => import('@/views/login/index.vue'),
   },
 ];
@@ -51,6 +56,7 @@ const routesList = [...constantRoutes, ...errorRoutes];
 // 不需要做登陆鉴权的路由放白名单里
 export const whiteList = [
   '/login',
+  '/register',
   '/404',
   '/500',
   '/403',

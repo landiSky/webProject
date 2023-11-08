@@ -19,3 +19,8 @@ export function apiMemListByProduct(params: Record<string, any>) {
 export function apiAuthMember(data: Record<string, any>) {
   return $http.post('/web/product/appConfig', data);
 }
+
+// 创建订单
+export function apiCreateOrder(data: Record<string, any>) {
+  return $http.post('/web/order/create', data);
+}

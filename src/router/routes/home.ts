@@ -117,7 +117,7 @@ const homeRoutesList = [
       {
         path: '/order/confirm',
         name: 'orderConfirm',
-        component: () => import('@/views/home/seller/confirmOrder/index.vue'),
+        component: () => import('@/views/home/buyer/confirmOrder/index.vue'),
         meta: {},
       },
     ],
