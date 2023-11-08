@@ -53,7 +53,7 @@
             </div>
           </div>
           <t-form-item label="商品ID" field="">
-            {{ formModel.productId }}
+            {{ displayId }}
           </t-form-item>
           <t-form-item label="商品名称" field="name">
             <t-input
@@ -112,6 +112,7 @@
               v-if="formModel.logo == ''"
               :ref="logoRef"
               :multiple="false"
+              :headers="uploadHeaders"
               action="/web/file/upload"
               :show-cancel-button="false"
               accept=".png,.jpg,.jpeg,.gif,.tif"
@@ -196,6 +197,7 @@
               :ref="detailImageRef"
               :show-cancel-button="false"
               :show-file-list="false"
+              :headers="uploadHeaders"
               action="/web/file/upload"
               accept=".png,.jpg,.jpeg,.gif,.tif"
               @success="uploadDetailSuccess"
@@ -269,6 +271,7 @@
               :limit="1"
               :multiple="false"
               action="/web/file/upload"
+              :headers="uploadHeaders"
               :show-cancel-button="false"
               accept=".pdf,.word"
               tip-position="bottom"
@@ -279,7 +282,7 @@
           <t-form-item label="" field="" class="hint-item">
             <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
-          <t-form-item label="详细展示信息" field="modal">
+          <t-form-item label="详细展示信息" field="detail">
             <div class="modal-list">
               <div
                 v-for="(modal, index) of modalList"
@@ -439,12 +442,16 @@
                       ></div
                     >
                     <div
+                      v-if="c.productDeliverySetInfoList.length > 1"
                       class="price-icon"
                       @click="deletePrice(copyModal[index], cIndex)"
                       ><icon-delete size="16"></icon-delete
                     ></div>
                   </div>
-                  <div class="add-price" @click="addPrice(c)"
+                  <div
+                    v-if="c.productDeliverySetInfoList.length < 4"
+                    class="add-price"
+                    @click="addPrice(c)"
                     ><icon-plus
                       stroke-width="6"
                       :style="{
@@ -457,23 +464,22 @@
                   >
                 </div>
               </t-form-item>
-              <t-form-item label="可选购买时长" field="month"
-                ><t-select
-                  :modal="copyModal[index].durationList"
+              <t-form-item label="可选购买时长" field="durationList">
+                <t-select
+                  v-model="copyModal[index].durationList"
                   :style="{ width: '100%' }"
-                  placeholder="请选择"
+                  placeholder="请选择购买时长"
                   multiple
+                  allow-search
                 >
-                  <t-option>1个月</t-option>
-                  <t-option>2个月</t-option>
-                  <t-option>3个月</t-option>
-                  <t-option>6个月</t-option>
-                  <t-option>1年</t-option>
-                  <t-option>2年</t-option>
-                  <t-option>3年</t-option>
-                  <t-option>不限</t-option>
-                </t-select></t-form-item
-              >
+                  <t-option
+                    v-for="item in durationOptions"
+                    :key="item.value"
+                    :value="item.value"
+                    >{{ item.label }}</t-option
+                  >
+                </t-select>
+              </t-form-item>
             </t-form>
           </div>
         </div>
@@ -498,7 +504,7 @@
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="formModel.name"
+                  v-model="copyModal2[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -577,8 +583,8 @@
             </t-form>
           </div>
         </div>
-        <t-divider></t-divider>
-        <div class="copy-add" @click="addCopy">
+        <t-divider v-if="showAddCopy"></t-divider>
+        <div v-if="showAddCopy" class="copy-add" @click="addCopy">
           <iconpark-icon name="squarePlus" size="20"></iconpark-icon>
           <div class="copy-add-title">添加交付版本</div>
         </div>
@@ -588,13 +594,23 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
 import { Message, Modal, FileItem } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
-import { downloadFile, genGoodsId, fetchClassList } from '@/api/goods-manage';
+import {
+  genGoodsId,
+  fetchClassList,
+  saveGoods1,
+  saveGoods2,
+  saveAndUp,
+} from '@/api/goods-manage';
+import { getToken } from '@/utils/auth';
 
-const step = ref(2);
+const step = ref(1);
 
+const uploadHeaders = {
+  Authorization: `Bearer ${getToken()}`,
+};
 const modalList = ref(['模块一：产品简介', '模块二：产品特色']);
 
 const addModal = () => {
@@ -613,19 +629,14 @@ const deleteModal = (modal: any) => {
 };
 
 const prdRef = ref();
-const useExplainList = ref();
 
 const appTypeList = ref([
   { label: '普通应用', value: 0 },
   { label: '标识应用（用户使用前需开通企业节点）', value: 1 },
 ]);
-const introduction = ref('');
 
 // 分类
-const classId = ref();
-const classList = ref<any[]>([
-  { name: '1', id: 1, children: [{ name: '2', id: 2 }] },
-]);
+const classList = ref<any[]>([]);
 const classFiledNames = { value: 'id', label: 'name' };
 
 // 详情
@@ -643,6 +654,8 @@ const deletedetailImg = (file: string) => {
 const logoRef = ref();
 const logoVisible = ref(false);
 
+const id = ref();
+const displayId = ref();
 const formModel = ref({
   productId: undefined,
   name: '',
@@ -652,6 +665,9 @@ const formModel = ref({
   detailImg: '',
   useExplain: '',
   introduction: '',
+  detail: {
+    aa: 'bb',
+  },
 });
 
 const deliveryTypeList = ref([
@@ -665,9 +681,10 @@ const priceTypeList = ref([
 ]);
 
 const formModel2 = ref({
+  productId: undefined,
   deliveryType: 0,
   saleType: 0,
-  productDeliveryList: [],
+  productDeliveryList: [] as any,
 });
 const formRules = {
   name: [{ required: true, message: '请输入商品名称' }],
@@ -677,7 +694,7 @@ const formRules = {
   type: [{ required: true }],
   introduction: [{ required: true, message: '请输入产品简介' }],
   useExplain: [{ required: true, message: '请上传产品使用说明' }],
-  modal: [{ required: true, message: '请添加详情模块' }],
+  detail: [{ required: true, message: '请添加详情模块' }],
   deliveryType: [{ required: true }],
   saleType: [{ required: true }],
 };
@@ -686,7 +703,12 @@ const copyModal = ref<any[]>([
   {
     name: '',
     url: '',
-    productDeliverySetInfoList: [],
+    productDeliverySetInfoList: [
+      {
+        accountNum: null,
+        price: null,
+      },
+    ],
     durationList: [],
   },
 ]);
@@ -710,10 +732,7 @@ const addPrice = (c: any) => {
   });
 };
 const deletePrice = (c: any, cIndex: number) => {
-  console.log(cIndex);
-  console.log(c.productDeliverySetInfoList);
   c.productDeliverySetInfoList.splice(cIndex, 1);
-  console.log(c.productDeliverySetInfoList);
 };
 const addCopy = () => {
   if (formModel2.value.saleType === 0) {
@@ -745,13 +764,34 @@ const deleteSaleCopy = (index: number) => {
   }
 };
 
+const durationOptions = [
+  { label: '1个月', value: 1 },
+  { label: '2个月', value: 2 },
+  { label: '3个月', value: 3 },
+  { label: '6个月', value: 6 },
+  { label: '1年', value: 12 },
+  { label: '2年', value: 24 },
+  { label: '3年', value: 36 },
+  { label: '不限', value: 0 },
+];
+
 const copyRules = {
-  name: [{ required: true, message: '交付版本名称' }],
-  url: [{ required: true, message: '请输入' }],
-  productDeliverySetInfoList: [{ required: true, message: '请设置套餐定价' }],
-  price: [{ required: true, message: '请输入' }],
-  count: [{ required: true, message: '请输入' }],
-  month: [{ required: true, message: '请选择' }],
+  name: [{ required: true, message: '请输入交付版本名称' }],
+  url: [{ required: true, message: '请输入应用服务地址' }],
+  productDeliverySetInfoList: [
+    {
+      required: true,
+    },
+  ],
+  durationList: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请选择购买时长');
+        return cb();
+      },
+    },
+  ],
 };
 
 const emit = defineEmits(['confirm', 'cancel']);
@@ -763,7 +803,7 @@ const props = defineProps({
 });
 const formRef = ref();
 const formRef2 = ref();
-const copyFormRef = ref<any[]>([]);
+const copyFormRef = [ref(), ref(), ref()];
 
 const setFileOverLimit = (filed: string) => {
   formRef.value.setFields({
@@ -787,9 +827,6 @@ const uploadSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
   if (res?.code === 200) {
     formModel.value.logo = fileItem.response.data;
-    downloadFile({ name: formModel.value.logo }).then((res) => {
-      console.log(res);
-    });
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
@@ -894,7 +931,7 @@ const onConfirm = async (done: (closed: boolean) => void) => {
 
 const getGoodsId = () => {
   genGoodsId().then((data: any) => {
-    formModel.value.productId = data;
+    displayId.value = data;
   });
 };
 
@@ -903,6 +940,16 @@ const getClassList = () => {
     classList.value = data;
   });
 };
+
+const showAddCopy = computed(() => {
+  if (formModel2.value.saleType === 0) {
+    return copyModal.value.length < 3;
+  }
+  if (formModel2.value.saleType === 1) {
+    return copyModal2.value.length < 3;
+  }
+  return copyModal3.value.length < 3;
+});
 
 onMounted(async () => {
   await getGoodsId();
@@ -914,22 +961,132 @@ const clickCancel = () => {
   console.log(formModel.value.type);
 };
 
+const buildForm2 = async () => {
+  const result = await formRef2.value.validate();
+  if (result) {
+    return false;
+  }
+  let length = 0;
+  if (formModel2.value.saleType === 0) {
+    length = copyModal.value.length;
+  } else if (formModel2.value.saleType === 1) {
+    length = copyModal2.value.length;
+  } else {
+    length = copyModal3.value.length;
+  }
+  if (length > 0) {
+    const result2 = await copyFormRef[0].value.validate();
+    if (result2) {
+      return false;
+    }
+  }
+  if (length > 1) {
+    const result2 = await copyFormRef[1].value.validate();
+    if (result2) {
+      return false;
+    }
+  }
+  if (length > 2) {
+    const result2 = await copyFormRef[2].value.validate();
+    if (result2) {
+      return false;
+    }
+  }
+  let failed = false;
+  if (formModel2.value.saleType === 0) {
+    for (let index = 0; index < copyModal.value.length; index += 1) {
+      const m = copyModal.value[index];
+      for (const p of m.productDeliverySetInfoList) {
+        if (!p.price || !p.accountNum) {
+          failed = true;
+          copyFormRef[index].value.setFields({
+            productDeliverySetInfoList: {
+              status: 'error',
+              message: `请完善定价设置`,
+            },
+          });
+          break;
+        }
+        if (!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) {
+          failed = true;
+          copyFormRef[index].value.setFields({
+            productDeliverySetInfoList: {
+              status: 'error',
+              message: `价格请填写10位以内整数`,
+            },
+          });
+          break;
+        }
+        if (!/^[1-9]\d*$/.test(p.accountNum)) {
+          failed = true;
+          copyFormRef[index].value.setFields({
+            productDeliverySetInfoList: {
+              status: 'error',
+              message: `账号数量请填写10位以内整数`,
+            },
+          });
+          break;
+        }
+      }
+    }
+  }
+  if (failed) {
+    console.log('定价校验失败');
+    return false;
+  }
+  let modalList;
+  if (formModel2.value.saleType === 0) {
+    modalList = copyModal.value;
+  } else if (formModel2.value.saleType === 1) {
+    modalList = copyModal2.value;
+  } else {
+    modalList = copyModal3.value;
+  }
+  formModel2.value.productDeliveryList = modalList;
+  formModel2.value.productId = id.value;
+  return true;
+};
+
 // 保存
-const clickSave = () => {
+const clickSave = async () => {
   if (step.value === 1) {
-    formRef.value.validate((result: any) => {
-      console.log(result);
+    const result = await formRef.value.validate();
+    if (result) {
+      return;
+    }
+    formModel.value.productId = displayId.value;
+    saveGoods1(formModel.value).then((res) => {
+      if (res) {
+        id.value = res;
+        Message.success('保存成功');
+      }
     });
   } else {
-    formRef.value.validate((result: any) => {
-      console.log(result);
-    });
+    const r = await buildForm2();
+    if (r) {
+      saveGoods2(formModel2.value).then((res) => {
+        console.log(res);
+        if (res) {
+          Message.success('保存成功');
+        }
+      });
+    }
   }
 };
 
 // 下一步
-const clickNext = () => {
-  step.value = 2;
+const clickNext = async () => {
+  const result = await formRef.value.validate();
+  if (result) {
+    return;
+  }
+  formModel.value.productId = displayId.value;
+  saveGoods1(formModel.value).then((res) => {
+    if (res) {
+      id.value = res;
+      step.value = 2;
+    }
+  });
 };
 
 // 上一步
@@ -941,7 +1098,17 @@ const clickPrevious = () => {
 const clickPreview = () => {};
 
 // 上架
-const clickUp = () => {};
+const clickUp = async () => {
+  const r = await buildForm2();
+  if (r) {
+    saveAndUp(formModel2.value).then((res) => {
+      console.log(res);
+      if (res) {
+        Message.success('保存成功');
+      }
+    });
+  }
+};
 </script>
 
 <style lang="less" scoped>
