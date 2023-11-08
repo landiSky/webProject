@@ -29,20 +29,29 @@ export default defineConfig(({ command, mode }) => {
       fs: {
         strict: true,
       },
+      host: '0.0.0.0',
+      port: 3001,
       proxy: {
+        '/api': {
+          target: `http://10.14.150.253:9190/server`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+          followRedirects: true,
+        },
         '/web': {
           // target: `http://10.14.150.253:9190/server`,
           target: `http://10.14.148.103:9191`,
           changeOrigin: true,
           agent: new https.Agent(),
+          followRedirects: true,
         },
 
         '/sso': {
           // target: `http://10.14.150.253:8081/`,
           target: `http://10.14.148.103:9191`,
-
           changeOrigin: true,
           agent: new https.Agent(),
+          followRedirects: true,
         },
       },
     },

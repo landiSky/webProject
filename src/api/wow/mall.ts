@@ -20,8 +20,3 @@ export function apiComputePrice(params: Record<string, any>) {
     params,
   });
 }
-
-// // 编辑用户信息
-// export function apiAccountUpdate(data: Record<string, any>) {
-//   return $http.post('/api/v1/account/update', data);
-// }

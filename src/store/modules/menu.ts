@@ -12,24 +12,22 @@ export const useMenuStore = defineStore({
   }),
 
   actions: {
-    genLeftMenu(auths: string[], path: string) {
+    genLeftMenu(auths: string[]) {
       try {
         this.leftMenu = appMenus(auths);
 
-        if (!this.leftMenu?.length) {
-          return '/403';
-        }
+        // if (!this.leftMenu?.length) {
+        //   return '/403';
+        // }
 
-        // 取第一个有权限的路由
-        let menuItem = this.leftMenu[0];
-        while (menuItem.children?.length) {
-          menuItem = menuItem?.children[0] || {};
-        }
-        this.firstRoutePath = menuItem.path || path;
-
-        return path;
+        // // 取第一个有权限的路由
+        // let menuItem = this.leftMenu[0];
+        // while (menuItem.children?.length) {
+        //   menuItem = menuItem?.children[0] || {};
+        // }
+        // this.firstRoutePath = menuItem.path || path;
       } catch (e) {
-        return path;
+        console.log('===menu-store,生成左侧菜单失败', e);
       }
     },
   },

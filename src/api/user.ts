@@ -17,5 +17,5 @@ export function apiChangePwd(data: Record<string, any>) {
 
 // 获取用户信息
 export function apiUsersInfo() {
-  return $http.get('/api/v1/users/info');
+  return $http.get('/web/user/info');
 }

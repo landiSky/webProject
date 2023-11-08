@@ -1,8 +1,10 @@
 import type { Router } from 'vue-router';
 import { whiteList } from '@/router';
-import { getToken } from '@/utils/auth';
+import { getToken, setToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
-import { useMenuStore } from '@/store/modules/menu';
+
+// import { useMenuStore } from '@/store/modules/menu';
+import { apiLoginToken } from '@/api/login';
 
 /**
  * 创建路由守卫
@@ -24,29 +26,78 @@ export function createPermissionGuard(router: Router) {
     */
 
     const userStore = useUserStore();
-    const menuStore = useMenuStore();
+    // const menuStore = useMenuStore();
+
+    console.log('permissionGuard.ts:28', to.path, from.path);
 
     if (getToken()) {
-      if (to.path === '/login') {
-        next('/buyer');
-      } else if (!userStore.userInfo) {
-        const userInfo: Record<string, any> = await userStore.initProject();
+      if (!userStore.userInfo) {
+        // const userInfo: Record<string, any> =
+        console.log('permissionGuard.ts:35', userStore.userInfo);
+        const userInfo: Record<string, any> =
+          await userStore.getUserBasicInfo();
+        console.log('permissionGuard.ts:36', userInfo);
+
         if (userInfo?.userId) {
-          // 获取用户信息失败后，跳转到login页面
-          const path = menuStore.genLeftMenu(userInfo?.auths, to.fullPath);
-          next(path);
+          next('/buyer/index');
         } else {
-          next(`/login`);
+          next('/wow/index');
         }
+        // if (userInfo?.userId) {
+        //   // 获取用户信息失败后，跳转到login页面
+        //   const path = menuStore.genLeftMenu(userInfo?.auths, to.fullPath);
+        //   next(path);
+        // } else {
+        //   next(`/login`);
+        // }
       } else if (to.matched.length === 0) {
-        next(menuStore.firstRoutePath);
+        next('/buyer/index');
       } else {
         next();
       }
+    } else if (window.location.search.includes('code=')) {
+      console.log('permissionGuard.ts:52', window.location.search);
+
+      const { search } = window.location;
+      const codeIndex = search.indexOf('code=');
+      const code = search.slice(codeIndex + 5, codeIndex + 12);
+
+      let configInfo: Record<string, any> = {};
+      if (userStore.configInfo?.client_id) {
+        configInfo = userStore.configInfo;
+      } else {
+        configInfo = JSON.parse(localStorage.getItem('configInfo') as string);
+      }
+      // eslint-disable-next-line camelcase
+      const { client_id, client_secret, redirect_uri } = configInfo;
+
+      const formData = new FormData();
+      formData.append('grant_type', 'authorization_code');
+      formData.append('scope', 'all');
+      formData.append('code', code);
+      formData.append('redirect_uri', redirect_uri);
+      formData.append('client_id', client_id);
+      formData.append('client_secret', client_secret);
+
+      apiLoginToken(formData)
+        .then((data) => {
+          console.log('permissionGuard.ts:60', data.accessToken);
+          setToken(data.accessToken);
+
+          console.log('permissionGuard.ts:61', data.accessToken);
+        })
+        .finally(() => {
+          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
+          // next({
+          //   path: '/buyer/index',
+          //   query: {},
+          // });
+        });
     } else if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      next(`/login`);
+      next('/login');
+      // userStore.jumpToLogin();
     }
   });
 }

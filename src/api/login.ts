@@ -33,6 +33,9 @@ export function apiConfigInfo() {
 export function apiWebOauth(params: Record<string, any>) {
   return $http.get('/sso/web/oauth/authorize', {
     params,
+    customFields: {
+      returnRawResponse: true,
+    },
   });
 }
 
@@ -43,10 +46,18 @@ export function apiLogin(data: Record<string, any>) {
 
 // 获取 token
 export function apiLoginToken(data: Record<string, any>) {
-  return $http.post('/sso/web/oauth/token', data);
+  return $http.post('/sso/web/oauth/token', data, {
+    customFields: {
+      withoutToken: true,
+    },
+    headers: {
+      Authorization:
+        'Basic c3NvX3BsYXRmb3JtOjhiOWNkNzRlNWE4YzVjMjk3YzM4NTFiYjliY2NiZjVi',
+    },
+  });
 }
 
 // 退出登录
 export function apiLogout() {
-  return $http.post('/sso/web/logout');
+  return $http.get('/sso/web/logout');
 }

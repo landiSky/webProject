@@ -52,7 +52,9 @@
               <div>基本信息</div>
             </div>
           </div>
-          <t-form-item label="商品ID" field=""> {{ productId }} </t-form-item>
+          <t-form-item label="商品ID" field="">
+            {{ formModel.productId }}
+          </t-form-item>
           <t-form-item label="商品名称" field="name">
             <t-input
               v-model="formModel.name"
@@ -67,21 +69,17 @@
           </t-form-item>
           <t-form-item label="商品Logo" field="logo" class="pic-item">
             <div class="file-list">
-              <div
-                v-for="file of logoFileList"
-                :key="file.uid"
-                class="file-container"
-              >
+              <div v-if="formModel.logo" class="file-container">
                 <div class="file-image">
                   <div class="image-div">
                     <t-image
                       width="100px"
-                      hidden="100px"
+                      height="100px"
                       fit="cover"
-                      :src="`${file.url}`"
+                      :src="`/web/file/download?name=9966c98f-ddef-40df-976e-8b7d86da4d25.jpg`"
                       :preview-visible="logoVisible"
                       :preview-props="{
-                        src: `${file.url}`,
+                        src: `/web/file/download?name=${formModel.logo}`,
                       }"
                       @preview-visible-change="() => (logoVisible = false)"
                     />
@@ -102,7 +100,7 @@
                             color: '#fff',
                             cursor: 'pointer',
                           }"
-                          @click="() => (logoFileList = [])"
+                          @click="() => (formModel.logo = '')"
                         />
                       </div>
                     </div>
@@ -111,17 +109,20 @@
               </div>
             </div>
             <t-upload
-              v-if="logoFileList.length == 0"
+              v-if="formModel.logo == ''"
               :ref="logoRef"
-              :limit="1"
               :multiple="false"
-              action="/api/v1/file/upload"
+              action="/web/file/upload"
               :show-cancel-button="false"
               accept=".png,.jpg,.jpeg,.gif,.tif"
               :show-file-list="false"
               @success="uploadSuccess"
               @error="uploadError"
-              @change="onChange"
+              @exceed-limit="
+                () => {
+                  setFileOverLimit('logo');
+                }
+              "
             >
               <template #upload-button>
                 <div :class="`tele-upload-list-item`">
@@ -148,25 +149,21 @@
             >
           </t-form-item>
           <t-form-item label="详情展示图" field="detailImg" class="pic-item">
-            <div class="file-list">
-              <div
-                v-for="file of imageList"
-                :key="file.uid"
-                class="file-container"
-              >
+            <div v-if="imageList.length > 0" class="file-list">
+              <div v-for="url of imageList" :key="url" class="file-container">
                 <div class="file-image">
                   <div class="image-div">
                     <t-image
                       width="100px"
-                      hidden="100px"
+                      height="100px"
                       fit="cover"
-                      :src="`${file.url}`"
-                      :preview-visible="imageVisible[`${file.url}`]"
+                      :src="`/web/file/download?name=${url}`"
+                      :preview-visible="imageVisible[`${url}`]"
                       :preview-props="{
-                        src: `${file.url}`,
+                        src: `/web/file/download?name=${url}`,
                       }"
                       @preview-visible-change="
-                        () => (imageVisible[`${file.url}`] = false)
+                        () => (imageVisible[`${url}`] = false)
                       "
                     />
                     <div class="image-hover">
@@ -178,7 +175,7 @@
                             color: '#fff',
                             cursor: 'pointer',
                           }"
-                          @click="() => (imageVisible[`${file.url}`] = true)"
+                          @click="() => (imageVisible[`${url}`] = true)"
                         />
                         <icon-delete
                           :style="{
@@ -186,7 +183,7 @@
                             color: '#fff',
                             cursor: 'pointer',
                           }"
-                          @click="deletedetailImg(file)"
+                          @click="deletedetailImg(url)"
                         />
                       </div>
                     </div>
@@ -197,15 +194,17 @@
             <t-upload
               v-if="imageList.length < 5"
               :ref="detailImageRef"
-              :multiple="true"
               :show-cancel-button="false"
               :show-file-list="false"
-              action="/"
+              action="/web/file/upload"
               accept=".png,.jpg,.jpeg,.gif,.tif"
-              @success="uploadSuccess"
-              @error="uploadError"
-              @change="fileUploadChange"
-              @exceed-limit="setFileOverLimit"
+              @success="uploadDetailSuccess"
+              @error="uploadDetailError"
+              @exceed-limit="
+                () => {
+                  setFileOverLimit('detail');
+                }
+              "
             >
               <template #upload-button>
                 <div :class="`tele-upload-list-item`">
@@ -245,7 +244,7 @@
           </t-form-item>
           <t-form-item label="产品简介" field="introduction">
             <t-textarea
-              v-model="introduction"
+              v-model="formModel.introduction"
               placeholder="请输入产品简介"
               :max-length="{
                 length: 300,
@@ -259,20 +258,26 @@
               }"
             />
           </t-form-item>
-          <t-form-item label="产品使用说明" field="useExplain">
+          <t-form-item
+            label="产品使用说明"
+            field="useExplain"
+            class="pic-item"
+            validate-trigger=""
+          >
             <t-upload
               :ref="prdRef"
-              v-model:file-list="useExplainList"
               :limit="1"
               :multiple="false"
-              action="/api/v1/file/upload"
+              action="/web/file/upload"
               :show-cancel-button="false"
               accept=".pdf,.word"
-              tip="文件大小限制10M以内，支持PDF格式、Word格式"
               tip-position="bottom"
-              @success="uploadSuccess"
-              @error="uploadError"
+              @success="uploadExpSuccess"
+              @error="uploadExpError"
             ></t-upload>
+          </t-form-item>
+          <t-form-item label="" field="" class="hint-item">
+            <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详细展示信息" field="modal">
             <div class="modal-list">
@@ -311,7 +316,7 @@
               <div>售卖设置</div>
             </div>
           </div>
-          <t-form ref="formRef" :model="formModel2" :rules="formRules">
+          <t-form ref="formRef2" :model="formModel2" :rules="formRules">
             <t-form-item label="服务交付方式" class="sale-item">
               <t-radio-group
                 v-model="formModel2.deliveryType"
@@ -365,7 +370,11 @@
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="copyModal[index]" :rules="copyRules">
+            <t-form
+              :ref="copyFormRef[index]"
+              :model="copyModal[index]"
+              :rules="copyRules"
+            >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model="copyModal[index].name"
@@ -482,7 +491,11 @@
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="copyModal2[index]" :rules="copyRules">
+            <t-form
+              :ref="copyFormRef[index]"
+              :model="copyModal2[index]"
+              :rules="copyRules"
+            >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model="formModel.name"
@@ -544,7 +557,11 @@
                 >删除</div
               >
             </div>
-            <t-form ref="formRef" :model="copyModal3[index]" :rules="copyRules">
+            <t-form
+              :ref="copyFormRef[index]"
+              :model="copyModal3[index]"
+              :rules="copyRules"
+            >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model="copyModal3[index].name"
@@ -574,6 +591,7 @@
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import { Message, Modal, FileItem } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
+import { downloadFile, genGoodsId, fetchClassList } from '@/api/goods-manage';
 
 const step = ref(2);
 
@@ -613,44 +631,33 @@ const classFiledNames = { value: 'id', label: 'name' };
 // 详情
 const detailImageRef = ref();
 const imageVisible: Record<string, any> = ref({});
-const imageList = ref<FileItem[]>([]);
-const deletedetailImg = (file: FileItem) => {
+const imageList = ref<string[]>([]);
+const deletedetailImg = (file: string) => {
   const index = imageList.value.indexOf(file);
   if (index >= 0) {
     imageList.value.splice(index, 1);
   }
 };
-function fileUploadChange(fileList: FileItem[], file: FileItem) {
-  console.log('list: ', fileList);
-  console.log('file: ', file);
-  imageList.value = fileList;
-  // imageList.value.push({
-  //   filePath: currentFile.url,
-  //   base64Content: '',
-  // });
-}
 
 // logo
 const logoRef = ref();
 const logoVisible = ref(false);
-const logoFileList = ref<FileItem[]>([]);
-const onChange = (_: FileItem[], file: FileItem) => {
-  logoFileList.value = [file];
-};
 
 const formModel = ref({
+  productId: undefined,
   name: '',
   type: 0,
   productTypeId: null,
   logo: '',
   detailImg: '',
+  useExplain: '',
+  introduction: '',
 });
 
 const deliveryTypeList = ref([
   { label: 'SAAS类', value: 0 },
   { label: '独立部署类', value: 1 },
 ]);
-const priceType = ref('套餐定价(账号+时长)');
 const priceTypeList = ref([
   { label: '套餐定价(账号+时长)', value: 0 },
   { label: '一口价定价', value: 1 },
@@ -755,12 +762,17 @@ const props = defineProps({
   valueModelRules: Object,
 });
 const formRef = ref();
-// const uploadData = (item: any) => {
-//   return {
-//     metaHandle: props.metaData?.metaHandle,
-//     fileField: item.englishName,
-//   };
-// };
+const formRef2 = ref();
+const copyFormRef = ref<any[]>([]);
+
+const setFileOverLimit = (filed: string) => {
+  formRef.value.setFields({
+    [filed]: {
+      status: 'error',
+      message: `允许上传的文件最大数量不超过${filed === 'logo' ? 1 : 5}个`,
+    },
+  });
+};
 
 const uploadError = (fileItem: FileItem) => {
   const size = fileItem.file?.size ?? 0;
@@ -773,7 +785,54 @@ const uploadError = (fileItem: FileItem) => {
 
 const uploadSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
-  if (res?.code === 10000) {
+  if (res?.code === 200) {
+    formModel.value.logo = fileItem.response.data;
+    downloadFile({ name: formModel.value.logo }).then((res) => {
+      console.log(res);
+    });
+    Message.success(`上传 ${fileItem.name} 成功`);
+  } else {
+    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
+
+const uploadDetailError = (fileItem: FileItem) => {
+  formModel.value.logo = '';
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
+};
+
+const uploadDetailSuccess = (fileItem: FileItem) => {
+  const res = fileItem.response;
+  if (res?.code === 200) {
+    imageList.value.push(fileItem.response.data);
+    formModel.value.detailImg = imageList.value.join(',');
+    Message.success(`上传 ${fileItem.name} 成功`);
+  } else {
+    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
+
+const uploadExpError = (fileItem: FileItem) => {
+  formModel.value.useExplain = '';
+  formRef.value.validateField('useExplain');
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
+};
+
+const uploadExpSuccess = (fileItem: FileItem) => {
+  const res = fileItem.response;
+  if (res?.code === 200) {
+    formModel.value.useExplain = fileItem.response.data;
+    formRef.value.validateField('useExplain');
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
@@ -833,161 +892,55 @@ const onConfirm = async (done: (closed: boolean) => void) => {
   //   return;
 };
 
-function cancelUploadingFiles() {
-  // for (const item of props.metaData?.itemVOS ?? []) {
-  //   if (
-  //     item.usedItemSchemaVO?.dataType === DATA_TYPE.FILE &&
-  //     item.inputNecessary === NormalBoolean.True
-  //   ) {
-  //     const files = valueModel.value[`${item.englishName}`] ?? [];
-  //     for (const file of files) {
-  //       if (file.response === undefined || file.response === null) {
-  //         (uploadRefs.value[item.englishName] as any).abort(file);
-  //       }
-  //     }
-  //   }
-  // }
-}
-
-const productId = ref('');
-
-const genProductId = () => {
-  const date = new Date().toLocaleDateString('en-CA').replaceAll('-', '');
-  const random = Math.random().toString().slice(-6);
-  productId.value = date + random;
+const getGoodsId = () => {
+  genGoodsId().then((data: any) => {
+    formModel.value.productId = data;
+  });
 };
 
-// 初始化
-onMounted(async () => {
-  genProductId();
-  // 统一添加网络异常提示
-  window.addEventListener('offline', () => {
-    cancelUploadingFiles();
+const getClassList = () => {
+  fetchClassList().then((data: any) => {
+    classList.value = data;
   });
-  // valueModelRules.value = props.valueModelRules ?? {};
-  // if (props.goodsData?.handleName) {
-  //   // 编辑：初始化前两个表单数据
-  //   editData.value = await goodsDetail({
-  //     handleName: props.goodsData.handleName,
-  //     updateFlag: 1,
-  //   });
-  //   instanceId = editData.value?.handleMainInfoVO?.id ?? '';
-  //   const handleName = editData.value?.handleMainInfoVO?.handleName;
-  //   if (handleName) {
-  //     const index = handleName.indexOf('/');
-  //     if (index > 0) {
-  //       formModel.value.prefix = handleName.slice(0, index);
-  //       formModel.value.handle = handleName.slice(index);
-  //     }
-  //   }
-  //   const roleVO = editData.value.handleAuthorityVO;
-  //   if (roleVO) {
-  //     roleModal.value.authGrant.type = roleVO.authGrantVO.open
-  //       ? RoleArea.All
-  //       : RoleArea.Limit;
-  //     const userList = roleVO.authGrantVO.user;
-  //     roleModal.value.authGrant.userList = userList;
-  //     showManageArea.value =
-  //       userList.filter((u: any) => u.id === (userInfo.value?.userId ?? 0))
-  //         .length > 0 ||
-  //       (
-  //         userInfo.value?.roles?.filter((e) => e.roleCode === 'ROLE_SUPER') ??
-  //         []
-  //       ).length > 0;
-  //     roleModal.value.authQuery.type = roleVO.authQueryVO.open
-  //       ? RoleArea.All
-  //       : RoleArea.Limit;
-  //     roleModal.value.authQuery.userList = roleVO.authQueryVO.user;
-  //     roleModal.value.authManage.type = roleVO.authManageVO.open
-  //       ? RoleArea.All
-  //       : RoleArea.Limit;
-  //     roleModal.value.authManage.userList = roleVO.authManageVO.user;
-  //   }
-  // } else {
-  //   showManageArea.value = true;
-  // }
+};
 
-  // // 初始化校验规则和value表单数据
-  // for (const vo of props.metaData?.itemVOS) {
-  //   if (vo.usedItemSchemaVO.dataType === DATA_TYPE.FILE) {
-  //     const fileNames =
-  //       editData.value?.handleMainInfoVO?.value[`${vo.englishName}`] ?? [];
-  //     valueModel.value[`${vo.englishName}`] = fileNames.map((fileName: any) => {
-  //       return {
-  //         name: fileName.oldName,
-  //         status: 'done',
-  //         response: {
-  //           code: 10000,
-  //           data: {
-  //             filePath: fileName.filePath,
-  //           },
-  //         },
-  //       };
-  //     });
-  //   } else if (vo.usedItemSchemaVO.dataType === DATA_TYPE.DATE) {
-  //     let value =
-  //       editData.value?.handleMainInfoVO?.value[`${vo.englishName}`] ?? '';
-  //     if (
-  //       value &&
-  //       vo.usedItemSchemaVO.dateFormat === 'YYYY-MM-DD HH:mm:ss' &&
-  //       !value.includes(':')
-  //     ) {
-  //       value = `${value} 00:00:00`;
-  //     }
-  //     valueModel.value[`${vo.englishName}`] = value;
-  //   } else {
-  //     valueModel.value[`${vo.englishName}`] =
-  //       editData.value?.handleMainInfoVO?.value[`${vo.englishName}`] ?? '';
-  //   }
-  //   if (vo.usedItemSchemaVO.dataType === DATA_TYPE.REFERENCE) {
-  //     const metaHandle = vo.usedItemReferenceVO.referenceMetaHandle;
-  //     fetchAssociateMeta(metaHandle, vo.englishName);
-  //   }
-  // }
-  // state.serializeForm =
-  //   JSON.stringify(formModel.value) +
-  //   JSON.stringify(roleModal.value) +
-  //   JSON.stringify(valueModel.value);
+onMounted(async () => {
+  await getGoodsId();
+  getClassList();
 });
 
-const getTile = (fileName: string) => {
-  const index = fileName.lastIndexOf('.');
-  if (index > 0) {
-    const tile = fileName.substring(index + 1);
-    return tile;
-  }
-  return '';
-};
-
-const setFileOverLimit = () => {
-  // formRef.value.setFields({
-  //   [`${item.englishName}`]: {
-  //     status: 'error',
-  //     message: `允许上传的文件最大数量不超过${item.usedItemSchemaVO.maxFileCount}个`,
-  //   },
-  // });
-};
-
+// 取消
 const clickCancel = () => {
   console.log(formModel.value.type);
 };
 
+// 保存
 const clickSave = () => {
-  formRef.value.validate((result: any) => {
-    console.log(result);
-  });
+  if (step.value === 1) {
+    formRef.value.validate((result: any) => {
+      console.log(result);
+    });
+  } else {
+    formRef.value.validate((result: any) => {
+      console.log(result);
+    });
+  }
 };
 
+// 下一步
 const clickNext = () => {
   step.value = 2;
 };
 
+// 上一步
 const clickPrevious = () => {
   step.value = 1;
 };
 
+// 预览
 const clickPreview = () => {};
 
+// 上架
 const clickUp = () => {};
 </script>
 

@@ -15,7 +15,7 @@
               "
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ dataInfo.username }}</p
+              >{{ userInfo.companyName }}</p
             >
             <p
               v-if="
@@ -545,13 +545,15 @@
 <script lang="ts" setup>
 import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import { storeToRefs } from 'pinia';
 import { ref, reactive } from 'vue';
 
 import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+
+import { useUserStore } from '@/store/modules/user';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -567,7 +569,10 @@ import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
-
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
+console.log(userInfo);
 const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();

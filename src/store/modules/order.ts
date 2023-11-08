@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import { apiUsersInfo } from '@/api/user';
-import { apiLogout, apiConfigInfo } from '@/api/login';
-import { UserInfo } from '@/types/store';
-import { clearToken, getToken } from '@/utils/auth';
+// import { apiUsersInfo } from '@/api/user';
+// import { apiLogout, apiConfigInfo } from '@/api/login';
+// import { UserInfo } from '@/types/store';
+// import { clearToken, getToken } from '@/utils/auth';
 
 export const useOrderStore = defineStore({
   id: 'app-order',

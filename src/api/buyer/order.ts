@@ -34,3 +34,8 @@ export function fileDownload(params: Record<string, any>) {
     // }
   });
 }
+
+// 创建订单
+export function apiCreateOrder(data: Record<string, any>) {
+  return $http.post('/web/order/create', data);
+}
