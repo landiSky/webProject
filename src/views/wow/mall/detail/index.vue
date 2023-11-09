@@ -271,7 +271,9 @@ const getPrice = () => {
     productId: prodDetail.value.id,
     ...priceParams.value,
   })
-    .then(() => {})
+    .then((data) => {
+      price.value = data;
+    })
     .catch(() => {})
     .finally(() => {
       computing.value = false;

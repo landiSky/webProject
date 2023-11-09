@@ -69,6 +69,10 @@
               }" -->
             <div v-for="(card, index) in item.cards" :key="index" class="card">
               <img :src="card.bgImg" alt="" />
+              <div class="cardContent">
+                <span>{{ card.name }}</span>
+                <span>{{ card.desc }}</span>
+              </div>
               <!-- <span>{{ card.name }}</span>
               <span>{{ card.desc }}</span> -->
             </div>
@@ -476,6 +480,40 @@ const tableData = reactive([
       width: 210px;
       height: 284px;
       margin-right: 46px;
+
+      .cardContent {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        margin-top: -76px;
+
+        span {
+          display: inline-block;
+          color: #435c97;
+          font-weight: 300;
+          font-size: 20px;
+          line-height: 28px; /* 140% */
+
+          &:first-child {
+            margin-bottom: 4px;
+          }
+
+          &:last-child {
+            font-size: 14px;
+            line-height: 22px;
+          }
+        }
+
+        .desc {
+          color: #435c97;
+          font-weight: 300;
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-style: normal;
+          line-height: 22px; /* 157.143% */
+          text-align: center;
+        }
+      }
     }
   }
 }

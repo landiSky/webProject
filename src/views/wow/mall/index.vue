@@ -23,7 +23,14 @@
       <span class="item">
         <span class="label">商品类型:</span>
         <span class="value">
-          <span :class="{ active: !apiParams.deliveryType }">不限</span>
+          <span
+            :class="{
+              active: ![DeliverType.DEPLOY, DeliverType.SAAS].includes(
+                apiParams.deliveryType
+              ),
+            }"
+            >不限</span
+          >
           <span
             :class="{ active: apiParams.deliveryType === DeliverType.DEPLOY }"
             @click="apiParams.deliveryType = DeliverType.DEPLOY"
@@ -47,12 +54,10 @@
           <span
             v-for="(item, index) in PriceEnum"
             :key="index"
-            :class="{ active: selectPriceInterval === item }"
-            @click="selectPriceInterval = item"
-            >{{
-              item.length > 1 ? `${item[0]}-${item[1]}` : `${item[0]}以上`
-            }}</span
-          >
+            :class="{ active: selectPriceInterval === index }"
+            @click="selectPriceInterval = index"
+            >{{ item.length > 1 ? `${item[0]}-${item[1]}` : `${item[0]}以上` }}
+          </span>
           <span class="customPrice">
             <span>
               自定义区间：
@@ -214,7 +219,7 @@ const productsList = ref<Record<string, any>>([]);
 const hideOnSinglePage = computed(() => pagination.total <= 8);
 const productTypeList = ref<Record<string, any>[]>([]);
 const btnLoading = ref(false);
-const selectPriceInterval = ref<number[] | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
+const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
 const customPriceStart = ref(); // 自定义价格区间起止
 const customPriceEnd = ref();
 const apiParams = ref<Record<string, any>>({
@@ -245,8 +250,12 @@ const getProductList = () => {
     params.startPrice = customPriceStart.value || null;
     params.endPrice = customPriceEnd.value || null;
   } else {
+    const temp = selectPriceInterval.value
+      ? PriceEnum[selectPriceInterval.value]
+      : [];
+
     [params.startPrice, params.endPrice] =
-      selectPriceInterval.value === -1 ? [] : selectPriceInterval.value || [];
+      selectPriceInterval.value === -1 ? [] : temp;
   }
 
   btnLoading.value = true;
@@ -300,6 +309,7 @@ const clickResetBtn = () => {
   selectPriceInterval.value = -1;
   customPriceStart.value = null;
   customPriceEnd.value = null;
+  clickSearchBtn();
 };
 
 const clickSort = (key: string, value: number) => {
@@ -431,7 +441,7 @@ onMounted(() => {
 
       .card {
         display: flex;
-        min-width: 552px;
+        width: 552px;
         margin-bottom: 16px;
         padding: 16px;
         border: 1px solid #e5e8ef;
