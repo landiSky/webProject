@@ -161,7 +161,7 @@ const bigImgPath = ref();
 const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
 const computing = ref(false);
 const price = ref();
-const templateList = ref([]);
+const templateList = ref<Record<string, any>[]>([]);
 
 // // 模块一二三
 // const testData =
