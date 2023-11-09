@@ -434,7 +434,7 @@ const getUserDetail = () => {
   authDetails({ companyId: 2 })
     .then((res) => {
       console.log(res);
-
+      // @ts-ignore
       formModel.value = res;
       formModel.value.type = 1;
       console.log(formModel.value);
