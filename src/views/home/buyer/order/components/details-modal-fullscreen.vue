@@ -407,10 +407,8 @@ import EditModal from './edit-modal.vue';
 
 const props = defineProps({
   orderId: {
-    type: Object,
-    default() {
-      return {};
-    },
+    type: String,
+    default: undefined,
   },
 });
 const state = reactive({
