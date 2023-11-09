@@ -325,7 +325,7 @@ const visible = ref(true);
 //   },
 // });
 const init = () => {
-  authentication({ companyId: 2 })
+  authentication({ companyId: 1392100221902848 })
     .then((res) => {
       console.log(res, 'res');
       // stateles.value = res.data === undefined ? {} : res.data;

@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      <div v-if="detaillist.certificateStatus === 2" class="topwarn">
+      <div v-if="detaillist.certificateStatus === 0" class="topwarn">
         <div style="width: 40%" class="topcenterswarn">
           <div class="topleft"
             ><p style="width: 100%"
@@ -100,7 +100,7 @@
               <p style="float: left; width: 20%">营业执照</p>
               <img
                 style="width: 170px; height: 100px"
-                src="https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500"
+                :src="`/web/file/download?name=${detaillist.businessLicense}`"
                 alt=""
               />
             </div>
@@ -140,12 +140,12 @@
               <p style="float: left; width: 20%">联系人身份证</p>
               <img
                 style="width: 170px; height: 100px; margin-right: 10px"
-                src="https://img0.baidu.com/it/u=356669940,3715317246&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333"
+                :src="`/web/file/download?name=${detaillist.idCardz}`"
                 alt=""
               />
               <img
                 style="width: 170px; height: 100px"
-                src="https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500"
+                :src="`/web/file/download?name=${detaillist.idCardf}`"
                 alt=""
               />
             </div>
@@ -184,23 +184,21 @@ const props = defineProps({
   },
 });
 const detaillist = ref({
-  id: '企业id',
-  userId: '用户id',
-  companyName: '企业名称',
-  creditCode: '统一社会信用代码',
-  contactName: '联系人名称',
-  contactIdCard: '联系人身份证号',
-  idCardf:
-    'https://img2.baidu.com/it/u=1628788978,405686623&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-  idCardz:
-    'https://img0.baidu.com/it/u=1356935808,1870677175&fm=253&fmt=auto&app=138&f=JPEG?w=704&h=500',
-  legalPersonName: '法人姓名',
+  id: '',
+  userId: '',
+  companyName: '',
+  creditCode: '',
+  contactName: '',
+  contactIdCard: '',
+  idCardf: '',
+  idCardz: '',
+  legalPersonName: '',
   type: 1,
-  businessLicenseId:
-    'https://img0.baidu.com/it/u=1783176477,761999961&fm=253&fmt=auto&app=120&f=JPEG?w=605&h=500',
+  businessLicense: '',
   certificateStatus: 0,
   remark: '驳理由',
 });
+
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();
@@ -225,36 +223,36 @@ const formRef = ref();
 //     url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
 //   },
 // ];
-const formRules = {
-  enterprisename: [
-    { required: true, message: '请输入企业名称' },
-    { maxLength: 50, message: '长度不超过50个字符' },
-  ],
-  creditcode: [
-    { required: true, message: '请输入社会信用代码' },
-    { maxLength: 20, message: '长度不超过20个字符' },
-  ],
-  corporatename: [
-    { required: true, message: '请输入法人姓名' },
-    { maxLength: 10, message: '长度不超过20个字符' },
-  ],
-  businesslicense: [{ required: true, message: '请上传营业执照' }],
-  contactname: [
-    { required: true, message: '请输入联系人姓名' },
-    { maxLength: 10, message: '长度不超过10个字符' },
-  ],
-  contactidnumber: [
-    { required: true, message: '请输入联系人身份证号' },
-    { maxLength: 18, message: '长度不超过18个字符' },
-    {
-      match:
-        /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/,
-      message: '请输入正确的身份证号',
-    },
-  ],
+// const formRules = {
+//   enterprisename: [
+//     { required: true, message: '请输入企业名称' },
+//     { maxLength: 50, message: '长度不超过50个字符' },
+//   ],
+//   creditcode: [
+//     { required: true, message: '请输入社会信用代码' },
+//     { maxLength: 20, message: '长度不超过20个字符' },
+//   ],
+//   corporatename: [
+//     { required: true, message: '请输入法人姓名' },
+//     { maxLength: 10, message: '长度不超过20个字符' },
+//   ],
+//   businesslicense: [{ required: true, message: '请上传营业执照' }],
+//   contactname: [
+//     { required: true, message: '请输入联系人姓名' },
+//     { maxLength: 10, message: '长度不超过10个字符' },
+//   ],
+//   contactidnumber: [
+//     { required: true, message: '请输入联系人身份证号' },
+//     { maxLength: 18, message: '长度不超过18个字符' },
+//     {
+//       match:
+//         /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/,
+//       message: '请输入正确的身份证号',
+//     },
+//   ],
 
-  contactidcard: [{ required: true, message: '请上传身份证' }],
-};
+//   contactidcard: [{ required: true, message: '请上传身份证' }],
+// };
 
 const goback = () => {
   // showModal.value = false;
@@ -287,6 +285,7 @@ const editmessage = () => {
 };
 
 onMounted(() => {
+  console.log('111');
   // if (props.data?.id) {
   getUserDetail();
   // }

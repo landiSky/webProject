@@ -59,7 +59,7 @@
         </template>
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-          <t-link @click="onEditTreeConfirmsldrole(record)"> 权限管理 </t-link>
+          <t-link @click="onEditTreeConfirmsldrole(record)"> 授权管理 </t-link>
           <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
           <t-link @click="clickEditBtn(record)">编辑</t-link>
           <t-link @click="delectlist(record.id, record.memberCount)"
@@ -267,8 +267,9 @@ const clickSearchBtn = () => {
 // 重置后，触发一次查询
 const handleReset = () => {
   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
-  state.formModel = { ...defaultFormModel };
-  state.rangeTimeList = [];
+  // state.formModel = { ...defaultFormModel };
+  // state.rangeTimeList = [];
+  state.formModel.name = '';
   clickSearchBtn();
 };
 
@@ -311,6 +312,7 @@ const delectlist = (id: number, memberCount: number) => {
           console.log(res);
 
           if (res.data.code === 200) {
+            fetchData();
             Message.success('删除成功');
           }
         });
@@ -359,6 +361,7 @@ const onEditTreeConfirmsldrole = (data: any) => {
 // 完成
 const onEditTreeConfirmsld = () => {
   flagModalTree.value = false;
+  fetchData();
 };
 // 取消
 const onEditTreeCancelsld = () => {

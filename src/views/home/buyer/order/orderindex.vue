@@ -387,6 +387,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
+import { orderList } from '@/api/buyer/order';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import tobepaid from './images/tobepaid.png';
@@ -623,6 +624,28 @@ const clickNav = (value: string | null, ins: number) => {
     orderStatusSelect.value = [];
   }
 };
+const init = () => {
+  orderList({
+    // 商品名称
+    productName: '',
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: '',
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: '',
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: '',
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: '',
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: '',
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    // 企业id，必传
+    sellerId: 2,
+    // 用户id，必传
+    buyerId: 2,
+  }).then(() => {});
+};
 // 上传支付凭证 弹窗 开关
 const editModalVisible = ref(false);
 // 交付应用 弹窗 开关
@@ -630,9 +653,7 @@ const editModalVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
-onMounted(() => {
-  console.log('执行了');
-});
+
 // 时间框选择格式是：年月日，接口入参需要加上时分秒
 const onRangeChange = (
   value: (Date | string | number | undefined)[] | undefined
@@ -684,6 +705,10 @@ const onEditModalConfirm = () => {
 };
 // 买家确认交付
 const delivery = (id: string) => {};
+onMounted(() => {
+  console.log('执行了');
+  init();
+});
 </script>
 
 <style lang="less" scoped>

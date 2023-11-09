@@ -298,7 +298,7 @@ const clickSearchBtn = () => {
 // 重置后，触发一次查询
 const handleReset = () => {
   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
-
+  state.formModel.name = '';
   clickSearchBtn();
 };
 

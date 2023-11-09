@@ -8,11 +8,11 @@
     ok-text="完成"
     @cancel="emit('cancel')"
   >
-    <template #title> 权限管理 </template>
+    <template #title> 授权管理 </template>
     <h2>请选择授权范围</h2>
     <t-tree
-      :default-expanded-keys="[1, 2, 3]"
-      :default-checked-keys="[1, 2, 3]"
+      :default-expanded-keys="state.formModel.menuList"
+      :default-checked-keys="state.formModel.menuList"
       :field-names="{
         key: 'id',
         title: 'menuName',
@@ -20,6 +20,7 @@
       }"
       :checkable="true"
       :check-strictly="false"
+      :default-expand-all="false"
       :data="treeData"
       @select="setSelecteds"
       @check="checkds"
@@ -90,10 +91,57 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
-const formRef = ref();
-const treeData = ref();
+// const formRef = ref();
+const treeData = ref([
+  {
+    id: 1,
+    parentId: 0,
+    sort: 0,
+    childNodes: [
+      {
+        id: 2,
+        parentId: 1,
+        sort: 0,
+        childNodes: [],
+        menuName: '概览',
+        type: 1,
+        createTime: '2023-10-30 10:34:10',
+        updateTime: '2023-10-30 10:34:10',
+        createUser: null,
+        updateUser: null,
+        isDeleted: 0,
+        hasChildren: 0,
+        authCode: 'ROUTE_BUYER_INDEX',
+      },
+      {
+        id: 3,
+        parentId: 1,
+        sort: 1,
+        childNodes: [],
+        menuName: '订单管理',
+        type: 1,
+        createTime: '2023-10-30 10:34:41',
+        updateTime: '2023-10-30 10:34:41',
+        createUser: null,
+        updateUser: null,
+        isDeleted: 0,
+        hasChildren: 0,
+        authCode: 'ROUTE_BUYER_ORDER',
+      },
+    ],
+    menuName: '买家中心',
+    type: 1,
+    createTime: '2023-10-30 10:33:22',
+    updateTime: '2023-10-30 10:33:22',
+    createUser: null,
+    updateUser: null,
+    isDeleted: 0,
+    hasChildren: 1,
+    authCode: 'ROUTE_BUYER',
+  },
+]);
 const visible = ref(true);
-const selected = ref();
+// const selected = ref();
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
@@ -117,7 +165,8 @@ const setSelecteds = (agfs: any, jashd: any) => {
 };
 // 点击树节点复选框时触发
 const checkds = (agfs: any, jashd: any) => {
-  roleid.value = agfs;
+  // roleid.value = agfs;
+  state.formModel.menuList = agfs;
   console.log(agfs, jashd, '点击树节点复选框时触发');
 };
 // 展开/关闭
@@ -127,15 +176,15 @@ const expands = (agfs: any, jashd: any) => {
 
 const onConfirm = (done: (closed: boolean) => void) => {
   console.log(state.formModel, roleid.value, '完成');
-  if (roleid.value.length === 0) {
+  if (state.formModel.menuList.length === 0) {
     Message.error('至少选一项');
   } else {
     apiRoleUpdate({
       id: state.formModel.id,
-      menuList: roleid.value,
+      menuList: state.formModel.menuList,
     })
       .then((res) => {
-        // emit('confirm');
+        emit('confirm');
         done(true);
         console.log(res, 'res');
       })
@@ -171,152 +220,13 @@ const onConfirm = (done: (closed: boolean) => void) => {
 //     })
 //     .catch(() => {});
 // };
-// const treeData = [
-//   {
-//     id: 1,
-//     parentId: 0,
-//     sort: 0,
-//     childNodes: [
-//       {
-//         id: 2, // 菜单id
-//         parentId: 1, // 父级id
-//         sort: 0, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '概览', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:34:10',
-//         updateTime: '2023-10-30 10:34:10',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_BUYER_INDEX',
-//       },
-//       {
-//         id: 3, // 菜单id
-//         parentId: 1, // 父级id
-//         sort: 1, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '订单管理', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:34:41',
-//         updateTime: '2023-10-30 10:34:41',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_BUYER_ORDER',
-//       },
-//     ],
-//     menuName: '买家中心',
-//     type: 1,
-//     createTime: '2023-10-30 10:33:22',
-//     updateTime: '2023-10-30 10:33:22',
-//     createUser: null,
-//     updateUser: null,
-//     isDeleted: 0,
-//     hasChildren: 1,
-//     authCode: 'ROUTE_BUYER',
-//   },
-//   {
-//     id: 4,
-//     parentId: 0,
-//     sort: 0,
-//     childNodes: [
-//       {
-//         id: 5, // 菜单id
-//         parentId: 4, // 父级id
-//         sort: 0, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '商品管理', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:35:16',
-//         updateTime: '2023-10-30 10:35:16',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_SELLER_GOODS',
-//       },
-//       {
-//         id: 6, // 菜单id
-//         parentId: 4, // 父级id
-//         sort: 1, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '订单管理', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:35:31',
-//         updateTime: '2023-10-30 10:35:31',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_SELLER_ORDER',
-//       },
-//     ],
-//     menuName: '服务商中心',
-//     type: 1,
-//     createTime: '2023-10-30 10:34:59',
-//     updateTime: '2023-10-30 10:34:59',
-//     createUser: null,
-//     updateUser: null,
-//     isDeleted: 0,
-//     hasChildren: 1,
-//     authCode: 'ROUTE_SELLER',
-//   },
-//   {
-//     id: 7,
-//     parentId: 0,
-//     sort: 0,
-//     childNodes: [
-//       {
-//         id: 8, // 菜单id
-//         parentId: 7, // 父级id
-//         sort: 0, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '企业成员管理', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:38:00',
-//         updateTime: '2023-10-30 10:38:00',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_SYSTEM_USERS',
-//       },
-//       {
-//         id: 9, // 菜单id
-//         parentId: 7, // 父级id
-//         sort: 1, // 排序
-//         childNodes: [], // 子级节点列表
-//         menuName: '企业角色管理', // 菜单名称
-//         type: 1, // 1-菜单
-//         createTime: '2023-10-30 10:38:16',
-//         updateTime: '2023-10-30 10:38:16',
-//         createUser: null,
-//         updateUser: null,
-//         isDeleted: 0,
-//         hasChildren: 0, // 是否有子级
-//         authCode: 'ROUTE_SYSTEM_ROLES',
-//       },
-//     ],
-//     menuName: '企业管理',
-//     type: 1,
-//     createTime: '2023-10-30 10:37:37',
-//     updateTime: '2023-10-30 10:37:37',
-//     createUser: null,
-//     updateUser: null,
-//     isDeleted: 0,
-//     hasChildren: 1,
-//     authCode: 'ROUTE_SYSTEM',
-//   },
-// ];
+// const treeData =
 onMounted(() => {
   if (isEdit.value) {
     // 这里分两种情况
     // 一是编辑信息从列表传入
     const { id, menuList } = props.data;
-    console.log(id);
+    console.log(id, menuList);
 
     state.formModel = { id, menuList };
 

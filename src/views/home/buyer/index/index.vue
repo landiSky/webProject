@@ -12,7 +12,7 @@
             <p
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ userInfo.companyName }}</p
+              >{{ userInfos.username }}</p
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
@@ -26,12 +26,14 @@
               <p
                 style="float: left"
                 :class="[
-                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
+                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
+                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                     ? 'authenticated'
                     : 'notcertified',
                 ]"
                 >{{
-                  dataInfo.certificateStatus === 1 || dataInfo.nodeStatus === 1
+                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
+                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                     ? '已认证'
                     : '未认证'
                 }}</p
@@ -51,37 +53,52 @@
                   <div class="btns">
                     <p style="margin: 10px 0"> 确认企业身份</p>
                     <t-button
-                      v-if="stateles.companyStatus === 3"
+                      v-if="
+                        dataInfo.certificateStatus === CompanyAuthStatus.UNAUTH
+                      "
                       type="text"
                       @click="authentication"
                       >去认证</t-button
                     >
-                    <div v-if="stateles.companyStatus !== 3" class="states">
+                    <div
+                      v-if="
+                        dataInfo.certificateStatus !== CompanyAuthStatus.UNAUTH
+                      "
+                      class="states"
+                    >
                       <p
                         style="width: 50px; text-align: center"
                         :class="[
-                          stateles.companyStatus === 0
+                          dataInfo.certificateStatus ===
+                          CompanyAuthStatus.TO_CHECK
                             ? 'tobereviewed'
-                            : stateles.companyStatus === 1
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.AUTHED
                             ? 'authenticated'
-                            : stateles.companyStatus === 2
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.REJECT
                             ? 'override'
                             : 'notcertified',
                         ]"
                         >{{
-                          stateles.companyStatus === 0
+                          dataInfo.certificateStatus ===
+                          CompanyAuthStatus.TO_CHECK
                             ? '待审核'
-                            : stateles.companyStatus === 1
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.AUTHED
                             ? '已认证'
-                            : stateles.companyStatus === 2
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.REJECT
                             ? '已驳回'
                             : '未认证'
                         }}</p
                       >
                       <span
                         v-if="
-                          stateles.companyStatus === 0 ||
-                          stateles.companyStatus === 2
+                          dataInfo.certificateStatus ===
+                            CompanyAuthStatus.TO_CHECK ||
+                          dataInfo.certificateStatus ===
+                            CompanyAuthStatus.REJECT
                         "
                         style="font-size: 12px"
                         ><t-button type="text" @click="viewdetails"
@@ -140,20 +157,20 @@
               ><span
                 style="padding: 3px 10px"
                 :class="[
-                  stateles.nodeStatus === 0
+                  dataInfo.nodeStatus === 0
                     ? 'tobereviewed'
-                    : stateles.nodeStatus === 1
+                    : dataInfo.nodeStatus === 1
                     ? 'authenticated'
-                    : stateles.nodeStatus === 2
+                    : dataInfo.nodeStatus === 2
                     ? 'override'
                     : 'notcertified',
                 ]"
                 >{{
-                  stateles.nodeStatus === 0
+                  dataInfo.nodeStatus === 0
                     ? '待审核'
-                    : stateles.nodeStatus === 1
+                    : dataInfo.nodeStatus === 1
                     ? '已认证'
-                    : stateles.nodeStatus === 2
+                    : dataInfo.nodeStatus === 2
                     ? '已驳回'
                     : '未认证'
                 }}</span
@@ -179,13 +196,16 @@
               </ul>
               <div class="fimelistdata">
                 <t-button
-                  v-if="stateles.nodeStatus === 3"
+                  v-if="dataInfo.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
                   style="display: block; margin: 15px auto 0; padding: 5px 10px"
                   @click="authenticationredf"
                   >去认证</t-button
                 >
-                <div v-if="stateles.nodeStatus !== 3" class="states">
+                <div
+                  v-if="dataInfo.nodeStatus !== NodeAuthStatus.UNAUTH"
+                  class="states"
+                >
                   <p
                     style="
                       width: 50px;
@@ -194,27 +214,27 @@
                       text-align: center;
                     "
                     :class="[
-                      stateles.nodeStatus === 0
+                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
                         ? 'tobereviewed'
-                        : stateles.nodeStatus === 1
+                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                         ? 'authenticated'
-                        : stateles.nodeStatus === 2
+                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
                         ? 'override'
                         : 'notcertified',
                     ]"
                     >{{
-                      stateles.nodeStatus === 0
+                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
                         ? '待审核'
-                        : stateles.nodeStatus === 1
+                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                         ? '已认证'
-                        : stateles.nodeStatus === 2
+                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
                         ? '已驳回'
                         : '未认证'
                     }}</p
                   >
                   <p
                     v-if="
-                      stateles.nodeStatus === 0 || stateles.nodeStatus === 2
+                      dataInfo.nodeStatus === 0 || dataInfo.nodeStatus === 2
                     "
                     style="
                       width: 80px;
@@ -528,15 +548,15 @@ import html2canvas from 'html2canvas';
 import { storeToRefs } from 'pinia';
 import { ref, reactive } from 'vue';
 
-import { useRouter } from 'vue-router';
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
-
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
-
-import { useUserStore } from '@/store/modules/user';
-
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
+
+import { useRouter } from 'vue-router';
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+import { useUserStore } from '@/store/modules/user';
+import { CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
+
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
@@ -552,27 +572,52 @@ const router = useRouter();
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
-console.log(userInfoByCompany);
+// console.log(userInfoByCompany);
 const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();
-// 头部用户信息
+// 用户信息
+const userInfos = reactive({
+  id: 4,
+  userId: null,
+  username: '你好',
+  nickname: null,
+  email: null,
+  mobile: '15112343001',
+  companyId: 1391254317244416, // 企业id
+  companyName: 'y1t企业', // 企业名称
+  companyShort: null,
+  companyStatus: 1,
+  companyNodeStatus: null,
+  userType: null,
+  userStatus: null,
+  createTime: null,
+  companyList: [
+    {
+      memberId: 1717495373822156800, // 成员id
+      memberType: 1, // 成员类型 0:普通成员 1:管理员
+      companyId: 1391254317244416, // 企业id 必传
+      companyName: 'y1t企业', // 企业名称
+    },
+  ],
+});
+// 企业状态
 const dataInfo = ref({
   id: null, // 用户id
   username: '章三', // 用户名称
   companyId: 1, // 机构id
   companyName: '北京泰尔英福有限公司', // 机构名称
-  certificateStatus: 0, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  certificateStatus: 1, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   nodeStatus: 1, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   primary: true, // 主账号 true 子账号 false
   roleNames: null, // 角色名称
   menuCodes: null, // 菜单code
 });
 // 认证状态
-const stateles = ref({
-  companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-  nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-});
+// const stateles = ref({
+//   companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+//   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+// });
 
 const state = reactive({
   editData: {
