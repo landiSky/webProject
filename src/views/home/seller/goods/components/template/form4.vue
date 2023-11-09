@@ -27,25 +27,55 @@
     <template v-for="(item, index) in form.blockList" :key="index">
       <t-divider />
       <span class="header">
-        <span>
-          <span class="leftDivider"></span>
-          区块{{ transSeq[index] }}
-        </span>
-        <t-tooltip
-          v-if="form.blockList.length === 1"
-          content="至少保留一个区块"
-        >
-          <t-link disabled @click="delBlock(index)"> 删除 </t-link>
-        </t-tooltip>
-        <t-link v-else @click="delBlock(index)"> 删除 </t-link>
-      </span>
+        <span class="leftDivider"></span>区块{{ transSeq[index] }}</span
+      >
       <t-form-item
-        :field="`blockList.${index}`"
+        :field="`blockList.${index}.name`"
+        label="区块标题"
+        :rules="[
+          {
+            required: true,
+            validator: (value: string, cb: any) =>
+              itemValid(10, '请输入区块标题', value, cb),
+          },
+        ]"
+        :validate-trigger="['change', 'input']"
+      >
+        <t-input
+          v-model="item.name"
+          placeholder="请输入区块标题"
+          :max-length="{ length: 10, errorOnly: true }"
+          allow-clear
+          show-word-limit
+        />
+      </t-form-item>
+      <t-form-item
+        :field="`blockList.${index}.desc`"
+        label="区块简介"
+        :rules="[
+          {
+            required: true,
+            validator: (value: string, cb: any) =>
+              itemValid(25, '请输入区块简介', value, cb),
+          },
+        ]"
+        :validate-trigger="['change', 'input']"
+      >
+        <t-textarea
+          v-model="item.desc"
+          placeholder="请输入区块简介"
+          :max-length="{ length: 25, errorOnly: true }"
+          allow-clear
+          show-word-limit
+        />
+      </t-form-item>
+      <t-form-item
+        :field="`blockList.${index}.picUrl`"
         label="配图"
         :rules="[
           {
             required: true,
-            validator: (value: string, cb: any) => itemValid(index, '请上传配图', value, cb),
+            validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -53,13 +83,15 @@
         <div>
           <t-upload
             list-type="picture-card"
-            :file-list="item ? item : []"
-            action="https://arco.design/"
+            :file-list="item.picUrl ? [{ url: item.picUrl }] : []"
+            :headers="{
+              Authorization: `Bearer ${getToken()}`,
+            }"
+            action="/web/file/upload"
             accept=".jpg,.png,.bmp,.tif,.gif"
-            :limit="5"
+            :limit="1"
             :auto-upload="false"
             tip="点击上传"
-            image-preview
             @change="(_: any, currentFile: any) => onUploadChange(_, currentFile, index)"
           >
           </t-upload>
@@ -71,24 +103,15 @@
       </t-form-item>
     </template>
   </t-form>
-  <t-divider />
-  <div v-show="form.blockList.length < 3" class="extraOpt">
-    <iconpark-icon
-      class="plusIcon"
-      name="squarePlus"
-      size="20px"
-      @click="addBlock"
-    ></iconpark-icon>
-    <span>添加区块</span>
-  </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, inject } from 'vue';
+import { ref, inject, defineProps } from 'vue';
 import type { Ref } from 'vue';
+import { getToken } from '@/utils/auth';
 
 const formRef = ref();
-const transSeq = ['一', '二', '三'];
+const transSeq = ['一', '二', '三', '四'];
 
 const templateList: Ref<Record<string, any>[]> = inject(
   'templateList',
@@ -103,9 +126,30 @@ const props = defineProps({
 });
 
 const initForm = {
-  type: 6,
+  type: 4,
   moduleName: '',
-  blockList: [[]],
+  blockList: [
+    {
+      name: '',
+      desc: '',
+      picUrl: '',
+    },
+    {
+      name: '',
+      desc: '',
+      picUrl: '',
+    },
+    {
+      name: '',
+      desc: '',
+      picUrl: '',
+    },
+    {
+      name: '',
+      desc: '',
+      picUrl: '',
+    },
+  ],
 };
 
 const form = ref(
@@ -115,29 +159,20 @@ const form = ref(
 );
 
 const itemValid = (
-  index: number,
+  maxLen: number,
   msg: string,
   value: string,
   cb: (params?: any) => void
 ) => {
-  const item: { url: string }[] = form.value.blockList[index];
-  if (!item) {
+  if (!value) {
     return cb(msg);
   }
 
-  if (Array.isArray(item) && item.length < 5) {
-    return cb('请上传 5 张配图');
+  if (maxLen > 0 && String(value).length > maxLen) {
+    return cb(`最多允许输入${maxLen}个字符`);
   }
 
   return cb();
-};
-
-const addBlock = () => {
-  form.value.blockList.push([]);
-};
-
-const delBlock = (index: number) => {
-  form.value.blockList.splice(index, 1);
 };
 
 const onUploadChange = (
@@ -145,9 +180,7 @@ const onUploadChange = (
   currentFile: Record<string, any>,
   index: number
 ) => {
-  form.value.blockList[index] = _.map((item: Record<string, any>) => {
-    return { url: item.url };
-  });
+  form.value.blockList[index].picUrl = currentFile.url;
 };
 
 defineExpose({
@@ -158,8 +191,7 @@ defineExpose({
 
 <style lang="less" scoped>
 .header {
-  display: flex;
-  justify-content: space-between;
+  display: block;
   margin-bottom: 20px;
   color: #1d2129;
 
@@ -174,22 +206,5 @@ defineExpose({
 
 .uploadTips {
   color: #86909c;
-}
-
-.extraOpt {
-  display: flex;
-  align-items: center;
-
-  .plusIcon {
-    cursor: pointer;
-  }
-
-  span {
-    margin-left: 8px;
-    color: #1d2129;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 20px; /* 166.667% */
-  }
 }
 </style>

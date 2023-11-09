@@ -23,18 +23,16 @@
         </div>
         <div class="tbody">
           <span>
-            <img
-              src="https://img13.360buyimg.com/n1/s450x450_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg"
-            />
-            <span>商品名称 s</span>
+            <img :src="`/web/file/download?name=${createOrderInfo?.logo}`" />
+            <span>{{ createOrderInfo?.name }}</span>
           </span>
-          <span>Saas 类</span>
-          <span>1000 元</span>
-          <span>10 个</span>
-          <span>6 个月</span>
+          <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
+          <span>{{ createOrderInfo?.price || '-' }} 元</span>
+          <span>{{ createOrderInfo?.accountDesc }}</span>
+          <span>{{ createOrderInfo?.durationDesc }}</span>
           <span>
-            <span>900 元</span>
-            <span>(含减优惠券: 500元)</span>
+            <span>{{ createOrderInfo?.price || '-' }} 元</span>
+            <!-- <span>(含减优惠券: 500元)</span> -->
           </span>
         </div>
       </div>
@@ -48,10 +46,18 @@
 
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useOrderStore } from '@/store/modules/order';
 import { apiCreateOrder } from '@/api/buyer/order';
+import { DeliverType, DeliverTypeDesc, SaleType } from '@/enums/common';
 
 const router = useRouter();
 const route = useRoute();
+
+const orderStore = useOrderStore();
+const {
+  createOrderInfo,
+}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
 
 const onGoBack = () => {
   router.go(-1);

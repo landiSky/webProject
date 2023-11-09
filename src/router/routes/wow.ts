@@ -27,7 +27,7 @@ const wowRoutesList = [
         component: () => import('@/views/wow/mall/index.vue'),
       },
       {
-        path: '/wow/mall/detail',
+        path: '/wow/mall/detail/:id',
         name: 'wowMallDetail',
         component: () => import('@/views/wow/mall/detail/index.vue'),
       },

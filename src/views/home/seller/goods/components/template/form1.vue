@@ -35,8 +35,7 @@
         :rules="[
           {
             required: true,
-            validator: (value: string, cb: any) =>
-              itemValid(10, '请输入区块标题', value, cb),
+            validator: ( value: string, cb: any ) => itemValid(12, '请输入区块标题', value, cb)
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -44,7 +43,7 @@
         <t-input
           v-model="item.name"
           placeholder="请输入区块标题"
-          :max-length="{ length: 10, errorOnly: true }"
+          :max-length="{ length: 12, errorOnly: true }"
           allow-clear
           show-word-limit
         />
@@ -56,7 +55,7 @@
           {
             required: true,
             validator: (value: string, cb: any) =>
-              itemValid(25, '请输入区块简介', value, cb),
+              itemValid(40, '请输入区块简介', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -64,7 +63,7 @@
         <t-textarea
           v-model="item.desc"
           placeholder="请输入区块简介"
-          :max-length="{ length: 25, errorOnly: true }"
+          :max-length="{ length: 40, errorOnly: true }"
           allow-clear
           show-word-limit
         />
@@ -84,7 +83,10 @@
           <t-upload
             list-type="picture-card"
             :file-list="item.picUrl ? [{ url: item.picUrl }] : []"
-            action="/api/v1/handle/bind-handle"
+            :headers="{
+              Authorization: `Bearer ${getToken()}`,
+            }"
+            action="/web/file/upload"
             accept=".jpg,.png,.bmp,.tif,.gif"
             :limit="1"
             :auto-upload="false"
@@ -103,17 +105,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject, defineProps } from 'vue';
+import { ref, defineProps, inject } from 'vue';
 import type { Ref } from 'vue';
+import { getToken } from '@/utils/auth';
 
 const formRef = ref();
-const transSeq = ['一', '二', '三', '四'];
-
+const transSeq = ['一', '二', '三'];
 const templateList: Ref<Record<string, any>[]> = inject(
   'templateList',
   ref([])
 );
-
 const props = defineProps({
   currentIndex: {
     type: Number,
@@ -122,14 +123,9 @@ const props = defineProps({
 });
 
 const initForm = {
-  type: 4,
+  type: 1,
   moduleName: '',
   blockList: [
-    {
-      name: '',
-      desc: '',
-      picUrl: '',
-    },
     {
       name: '',
       desc: '',
@@ -176,6 +172,7 @@ const onUploadChange = (
   currentFile: Record<string, any>,
   index: number
 ) => {
+  console.log('form1.vue:170', index, currentFile.url);
   form.value.blockList[index].picUrl = currentFile.url;
 };
 

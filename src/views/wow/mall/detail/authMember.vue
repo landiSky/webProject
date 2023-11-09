@@ -78,10 +78,13 @@ onMounted(() => {
       if (memberList.value.length) {
         visible.value = true;
       } else {
-        emit('cancel');
+        emit('confirm');
+        // emit('cancel');
       }
     })
-    .catch(() => {});
+    .catch(() => {
+      emit('confirm');
+    });
 });
 </script>
 

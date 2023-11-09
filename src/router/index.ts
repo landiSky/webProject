@@ -97,7 +97,6 @@ export const appMenus = (authsList: Array<string> = []) => {
     for (let i = 0; i < len; i += 1) {
       const { path, children = [], meta = {} } = list[i];
 
-      console.log('index.ts:87=====', path, RouteAuthEnum[path]);
       // TODO mock环境先去掉路由权限显示 && authsList.includes(RouteAuthEnum[path])
       if (
         !meta.hideInMenu &&

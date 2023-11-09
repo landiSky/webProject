@@ -39,7 +39,10 @@
         <t-upload
           list-type="picture-card"
           :file-list="form.picUrl ? [{ url: form.picUrl }] : []"
-          action="/api/v1/handle/bind-handle"
+          :headers="{
+            Authorization: `Bearer ${getToken()}`,
+          }"
+          action="/web/file/upload"
           accept=".jpg,.png,.bmp,.tif,.gif"
           :limit="1"
           :auto-upload="false"
@@ -177,6 +180,7 @@
 <script lang="ts" setup>
 import { ref, defineProps, inject } from 'vue';
 import type { Ref } from 'vue';
+import { getToken } from '@/utils/auth';
 
 const formRef = ref();
 
