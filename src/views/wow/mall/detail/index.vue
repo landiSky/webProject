@@ -106,10 +106,21 @@
       </div>
       <div class="intro">
         <div class="template">
+          <div class="nav">
+            <span
+              v-for="(item, index) in templateList"
+              :key="index"
+              :data-index="index"
+              @click="clickNav(index)"
+              >{{ item.moduleName }}</span
+            >
+          </div>
           <component
             :is="forCompList[item.type - 1]"
             v-for="(item, index) in templateList"
+            :id="`template${index}`"
             :key="index"
+            :ref="setNavRef"
             :template-data="item"
           ></component>
         </div>
@@ -166,6 +177,7 @@ const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 
 const computing = ref(false);
 const price = ref();
 const templateList = ref<Record<string, any>[]>([]);
+const navRef = ref<any[]>([]);
 
 // // 模块一二三
 // const testData =
@@ -196,6 +208,12 @@ const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
 
+const setNavRef = (el: any) => {
+  if (el) {
+    console.log('index.vue:212', el);
+    navRef.value.push(el);
+  }
+};
 const onAuthCancel = () => {
   authModalVisible.value = false;
 };
@@ -297,6 +315,11 @@ const onRadioChange = () => {
   getPrice();
 };
 
+const clickNav = (index: number) => {
+  console.log('index.vue:311', index, navRef.value[index]);
+  navRef.value[index].scrollIntoView(true);
+};
+
 onMounted(() => {
   apiProductDetail({ id: route.params.id })
     .then((data) => {
@@ -304,7 +327,9 @@ onMounted(() => {
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
-      templateList.value = JSON.parse(data.detail);
+
+      const tt = JSON.parse(data.detail);
+      templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
 
       console.log('index.vue:285', templateList.value);
       const { saleType } = data;
@@ -442,6 +467,32 @@ onMounted(() => {
       .template {
         flex: 1;
         margin-right: 16px;
+
+        .nav {
+          display: flex;
+          align-content: center;
+          padding: 0 24px;
+          background-color: #fff;
+          border-bottom: 1px solid #efefef;
+
+          // :deep(.tele-link)
+          span {
+            display: inline-block;
+            flex: 1;
+            padding: 11px 16px 11px 20px;
+            color: #4e5969;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px; /* 157.143% */
+            text-align: center;
+
+            &.active {
+              color: #1664ff;
+              font-weight: 500;
+              border-bottom: 1px solid #1664ff;
+            }
+          }
+        }
       }
 
       .consult {

@@ -104,10 +104,10 @@ const {
 const handleLogout = async () => {
   await userStore.logout();
 
-  router.push({
-    path: '/wow',
-    replace: true,
-  });
+  // router.push({
+  //   path: '/wow',
+  //   replace: true,
+  // });
 };
 const goIndex = () => {
   selectTab.value = TabPath.INDEX;
