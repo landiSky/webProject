@@ -729,8 +729,14 @@ const onEditModalConfirmcode = () => {
   gotoverifys.value = false;
 };
 // 认证填写 取消
-const cancelgotoverifys = () => {
-  gotoverifys.value = false;
+const cancelgotoverifys = (status: number) => {
+  if (status === 1) {
+    detailflag.value = true;
+    gotoverifys.value = false;
+  } else {
+    editModalVisible.value = true;
+    gotoverifys.value = false;
+  }
   state.editData.statusled = 0;
 };
 //  修改认证信息
