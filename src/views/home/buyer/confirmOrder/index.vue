@@ -94,16 +94,20 @@ const clickCreateOrder = () => {
     userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
   };
   submitLoading.value = true;
-  apiCreateOrder(params).then((data) => {
-    console.log('index.vue:61==订单创建成功', data);
-    router
-      .push({
-        path: '/order/confirm',
-      })
-      .finally(() => {
-        submitLoading.value = false;
+  apiCreateOrder(params)
+    .then((data) => {
+      console.log('index.vue:61==订单创建成功', data);
+
+      router.push({
+        name: 'buyerOrderDetail',
+        params: {
+          id: data.id,
+        },
       });
-  });
+    })
+    .finally(() => {
+      submitLoading.value = false;
+    });
 };
 </script>
 
