@@ -76,7 +76,7 @@
                       width="100px"
                       height="100px"
                       fit="cover"
-                      :src="`/web/file/download?name=9966c98f-ddef-40df-976e-8b7d86da4d25.jpg`"
+                      :src="`/web/file/download?name=${formModel.logo}`"
                       :preview-visible="logoVisible"
                       :preview-props="{
                         src: `/web/file/download?name=${formModel.logo}`,
@@ -283,7 +283,8 @@
             <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详细展示信息" field="detail">
-            <div class="modal-list">
+            <TemplateDrawer ref="templateRef"></TemplateDrawer>
+            <!-- <div class="modal-list">
               <div
                 v-for="(modal, index) of modalList"
                 :key="index"
@@ -307,7 +308,7 @@
                 <iconpark-icon name="squarePlus" size="20"></iconpark-icon>
                 <div class="modal-add-title">添加详情模块</div>
               </div>
-            </div>
+            </div> -->
           </t-form-item>
         </t-form>
       </div>
@@ -605,7 +606,9 @@ import {
   saveAndUp,
 } from '@/api/goods-manage';
 import { getToken } from '@/utils/auth';
+import TemplateDrawer from './template.vue';
 
+const templateRef = ref();
 const step = ref(1);
 
 const uploadHeaders = {
@@ -665,9 +668,7 @@ const formModel = ref({
   detailImg: '',
   useExplain: '',
   introduction: '',
-  detail: {
-    aa: 'bb',
-  },
+  detail: '',
 });
 
 const deliveryTypeList = ref([
@@ -694,7 +695,17 @@ const formRules = {
   type: [{ required: true }],
   introduction: [{ required: true, message: '请输入产品简介' }],
   useExplain: [{ required: true, message: '请上传产品使用说明' }],
-  detail: [{ required: true, message: '请添加详情模块' }],
+  detail: [
+    {
+      required: true,
+      message: '请添加详情模块',
+      validator: (value: string, cb: (params?: any) => void) => {
+        const { detail } = formModel.value;
+        if (!detail || detail === '[]') return cb('请添加详情模块');
+        return cb();
+      },
+    },
+  ],
   deliveryType: [{ required: true }],
   saleType: [{ required: true }],
 };
@@ -1050,6 +1061,8 @@ const buildForm2 = async () => {
 // 保存
 const clickSave = async () => {
   if (step.value === 1) {
+    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    console.log('goods-add.vue:1054', formModel.value.detail);
     const result = await formRef.value.validate();
     if (result) {
       return;

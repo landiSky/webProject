@@ -279,6 +279,13 @@ import {
   onMounted,
   computed,
 } from 'vue';
+
+import { storeToRefs } from 'pinia';
+
+import { authentication } from '@/api/authentication';
+
+import { useUserStore } from '@/store/modules/user';
+
 import auth from '@/assets/images/home/auth.png';
 import left01 from '@/assets/images/home/left01.png';
 import left02 from '@/assets/images/home/left02.png';
@@ -286,31 +293,47 @@ import right01 from '@/assets/images/home/right01.png';
 import right02 from '@/assets/images/home/right02.png';
 import right03 from '@/assets/images/home/right03.png';
 import rightlog from '@/assets/images/home/rightlog.png';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+
+const store = useUserStore();
+
+const { userInfo } = storeToRefs(store);
+// userInfo.value?.companyId
 // import { Message } from '@tele-design/web-vue';
 
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => {},
-  },
-});
+// const props = defineProps({
+//   data: {
+//     type: Object,
+//     default: () => {},
+//   },
+// });
 const emit = defineEmits(['confirm', 'cancel', 'hasdflag']);
+
 // 认证状态
 const stateles = ref({
-  companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  companyStatus: 0, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
 });
+
 // 弹窗状态
 const visible = ref(true);
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
-const state = reactive({
-  formModel: {
-    roleName: undefined,
-    roleDesc: undefined,
-    phone: undefined,
-  },
-});
+// const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
+// const state = reactive({
+//   formModel: {
+//     roleName: undefined,
+//     roleDesc: undefined,
+//     phone: undefined,
+//   },
+// });
+const init = () => {
+  authentication({ companyId: 1392100221902848 })
+    .then((res) => {
+      console.log(res, 'res');
+      // stateles.value = res.data === undefined ? {} : res.data;
+      // @ts-ignore
+      stateles.value = res;
+    })
+    .catch((err) => {});
+};
 // 企业认证   去认证
 const viewdetails = () => {
   emit('confirm');
@@ -326,15 +349,16 @@ const viewdetailsnode = () => {
 // 企业节点认证  去认证
 const nodegotoverify = () => {};
 onMounted(() => {
-  if (isEdit.value) {
-    // 这里分两种情况
-    // 一是编辑信息从列表传入
-    const { roleName, roleDesc, phone } = props.data;
-    state.formModel = { roleName, roleDesc, phone };
+  // if (isEdit.value) {
+  //   // 这里分两种情况
+  //   // 一是编辑信息从列表传入
+  //   const { roleName, roleDesc, phone } = props.data;
+  //   state.formModel = { roleName, roleDesc, phone };
+  //   // 二是从接口获取
+  //   // getDetail();
+  // }
 
-    // 二是从接口获取
-    // getDetail();
-  }
+  init();
 });
 </script>
 

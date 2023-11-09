@@ -11,8 +11,8 @@
       </div>
       <div class="right">
         <t-space>
-          <t-link href="link" class="active">平台管理</t-link>
-          <t-link href="link">标识管理</t-link>
+          <t-link class="active">平台管理</t-link>
+          <t-link @click="clickIdService">标识管理</t-link>
         </t-space>
       </div>
     </div>
@@ -25,9 +25,10 @@
         class="company"
         @select="onChangeCompany"
       >
+        <!-- <span>===={{ selectCompany }}</span> -->
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
-          <span>北京泰尔英福公司</span>
+          <span>{{ selectCompany?.companyName || '-' }}</span>
         </div>
 
         <template #content>
@@ -61,20 +62,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { NodeAuthStatus } from '@/enums/common';
 
-const store = useUserStore();
+const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, selectCompany } = storeToRefs(store);
+const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 
 const handleLogout = async () => {
   try {
-    await store.logout();
+    await userStore.logout();
   } catch (e) {
     console.log('index.vue:67====handleLogout', e);
   }
@@ -94,6 +96,43 @@ const clickLogout = () => {
   });
 };
 
+const clickIdService = () => {
+  console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
+  if (!userInfoByCompany.value?.companyId) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        router.push({
+          path: '/buyer/index',
+        });
+      },
+    });
+  } else {
+    const { nodeStatus, idPointer } = userInfoByCompany.value || {};
+    if (nodeStatus !== NodeAuthStatus.AUTHED) {
+      Modal.info({
+        title: '使用提醒',
+        content: '企业节点完成认证后，方可使用。',
+        hideCancel: false,
+        cancelText: '取消',
+        okText: '去查看',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+          });
+        },
+      });
+    } else {
+      window.open(idPointer, '_blank');
+    }
+  }
+};
+
 const goWow = () => {
   router.push({
     path: '/wow',
@@ -102,15 +141,22 @@ const goWow = () => {
 
 const onChangeCompany = (companyId: string) => {
   console.log('===切换了企业，发送消息，刷新到买家概览页', companyId);
-  const selectItem = userInfo.value?.companyList?.filter(
+  const resultList = userInfo.value?.companyList?.filter(
     (company: Record<string, any>) => company.companyId === companyId
   );
-  store.changeSelectCompany(selectItem);
+
+  const selectItem =
+    Array.isArray(resultList) && resultList.length ? resultList[0] : {};
+  userStore.changeSelectCompany(selectItem);
   router.push({
     path: '/buyer/index',
   });
   // 要在 app.vue 中监听 userstore.的变化
 };
+
+onMounted(() => {
+  console.log('index.vue:153', selectCompany.value);
+});
 </script>
 
 <style lang="less" scoped>
@@ -162,6 +208,10 @@ const onChangeCompany = (companyId: string) => {
         color: #fff;
         font-size: 14px;
         line-height: 64px;
+
+        &:hover {
+          background-color: inherit;
+        }
 
         &.active {
           background-color: #1664ff;

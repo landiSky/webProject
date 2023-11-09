@@ -477,7 +477,7 @@
       v-if="detailflag"
       :data="state.editData"
       @confirm="onEditModalConfirmflag"
-      @cancel="detailflag = false"
+      @cancel="detailflagclick"
     >
     </DetailsModalFullscreen>
     <!-- \v-show="false" -->
@@ -607,7 +607,7 @@ const dataInfo = ref({
   username: '章三', // 用户名称
   companyId: 1, // 机构id
   companyName: '北京泰尔英福有限公司', // 机构名称
-  certificateStatus: 1, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   nodeStatus: 1, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
   primary: true, // 主账号 true 子账号 false
   roleNames: null, // 角色名称
@@ -738,6 +738,11 @@ const onEditModalConfirmflag = () => {
   detailflag.value = false;
   state.editData.statusled = 1;
   gotoverifys.value = true;
+};
+// 查看详情 取消
+const detailflagclick = () => {
+  detailflag.value = false;
+  editModalVisible.value = true;
 };
 // 企业节点去认证
 const authenticationredf = () => {};

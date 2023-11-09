@@ -1,18 +1,29 @@
 import $http from '@/utils/http';
 
-//  获取企业下成员列表
+//
 export function orderList(data: Record<string, any>) {
   return $http.post('/web/order/page/customer', data);
 }
-
-//  获取企业下某个应用下有权限的成员列表
-export function apiMemListByProduct(params: Record<string, any>) {
-  return $http.get('/web/product/selectConfig', { params });
+// {
+//   // @ts-ignore
+//   returnRawResponse: true, // 业务方直接处理原始 response
+//   },
+// 订单状态数量统计
+export function orderNum(params: Record<string, any>) {
+  return $http.get('/web/order/dataStatistics', { params });
 }
 
-// 给应用授权可查看的成员
-export function apiAuthMember(data: Record<string, any>) {
-  return $http.post('/web/product/appConfig', data);
+// 凭证提交
+export function submitImg(data: Record<string, any>) {
+  return $http.post('/web/order/voucher/submit', data);
+}
+// 买家交付
+export function buyerDeployed(data: Record<string, any>) {
+  return $http.post('/web/order/confirm-deployed', data);
+}
+// 买家订单详情
+export function buyerOrderDetail(params: Record<string, any>) {
+  return $http.get('/web/order/detail', { params });
 }
 // 文件上传
 export function fileUpload(data: Record<string, any>) {

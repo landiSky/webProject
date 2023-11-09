@@ -137,7 +137,7 @@
           <span class="left">
             <img
               :src="
-                item.logo ||
+                `/web/file/download?name=${item.logo}` ||
                 'src/assets/images/wow/mall/default_product_logo.svg'
               "
               mode="scaleToFill"
@@ -155,7 +155,7 @@
             </span>
             <span class="desc">{{ item.introduction }}</span>
             <span class="price">
-              <span class="prefix">{{ item.price }}</span>
+              <span class="prefix">{{ item.lowPrice }}</span>
               <span class="suffix">元起</span>
             </span>
           </span>
@@ -175,6 +175,11 @@
           />
         </div>
       </div>
+      <t-empty v-if="!productsList.length" description="暂无上架商品">
+        <template #image>
+          <iconpark-icon name="zanwushuju" size="100px"></iconpark-icon>
+        </template>
+      </t-empty>
     </div>
   </div>
   <WowFooter></WowFooter>
@@ -268,10 +273,11 @@ const onPageSizeChange = (size: number) => {
   getProductList();
 };
 
-const goMallDetail = (productId: string) => {
+const goMallDetail = (id: string) => {
+  console.log('index.vue:276===商品 id', id);
   router.push({
     name: 'wowMallDetail',
-    params: { id: productId },
+    params: { id },
   });
 };
 

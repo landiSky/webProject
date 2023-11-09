@@ -34,14 +34,12 @@ export function createPermissionGuard(router: Router) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
         console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<
-          string,
-          any
-        > = await userStore.getUserBasicInfo();
+        const userInfo: Record<string, any> =
+          await userStore.getUserBasicInfo();
         console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
-          next('/buyer/index');
+          next();
         } else {
           next('/wow/index');
         }
@@ -89,6 +87,7 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:61', data.accessToken);
         })
         .finally(() => {
+          console.log('permissionGuard.ts:91=======', window.location.host);
           window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
           // next({
           //   path: '/buyer/index',
