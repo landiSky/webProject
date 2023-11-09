@@ -554,6 +554,7 @@ const noDatalist = ref(false);
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
+  // @ts-ignore
   formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [

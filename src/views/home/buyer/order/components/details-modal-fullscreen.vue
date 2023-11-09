@@ -475,6 +475,7 @@ const init = () => {
   // 调后端接口
   buyerOrderDetail({ id: props.orderId }).then((res) => {
     console.log(res, 'res');
+    // @ts-ignore
     dataList.value = res;
   });
 };

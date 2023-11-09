@@ -279,6 +279,7 @@ const clickAddCart = () => {
       title: '请联系企业管理员购买开通服务',
       okText: '好的',
       hideCancel: true,
+      content: '',
     });
   } else {
     authModalVisible.value = true;
