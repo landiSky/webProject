@@ -522,6 +522,12 @@ onMounted(() => {
         }
       }
     }
+
+    .paginationArea {
+      :deep(.tele-pagination) {
+        justify-content: center;
+      }
+    }
   }
 }
 </style>

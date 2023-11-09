@@ -13,7 +13,11 @@
               :key="index"
               @mouseenter="bigImgPath = imgPath"
             >
-              <img :src="`/web/file/download?name=${imgPath}`" alt="" />
+              <img
+                :src="`/web/file/download?name=${imgPath}`"
+                alt=""
+                :class="{ active: bigImgPath === imgPath }"
+              />
             </li>
           </ul>
         </div>
@@ -370,7 +374,8 @@ onMounted(() => {
             margin-right: 8px;
             border-radius: 4px;
 
-            &:hover {
+            &:hover,
+            &.active {
               box-shadow: 0 0 0 2px #1664ff;
             }
           }
