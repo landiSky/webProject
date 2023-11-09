@@ -227,7 +227,7 @@ const apiParams = ref<Record<string, any>>({
   deliveryType: null,
   priceSort: null,
   upShelfTimeSort: null,
-  name: route.params.goodsName || null,
+  name: route.query.goodsName || null,
 });
 
 const onCustomPriceBlur = () => {
