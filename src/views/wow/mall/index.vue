@@ -133,12 +133,7 @@
         </span>
       </div>
       <div class="list">
-        <span
-          v-for="item in productsList"
-          :key="item.id"
-          class="card"
-          @click="() => goMallDetail(item.id)"
-        >
+        <span v-for="item in productsList" :key="item.id" class="card">
           <span class="left">
             <img
               :src="
@@ -147,10 +142,13 @@
               "
               mode="scaleToFill"
               alt=""
+              @click="() => goMallDetail(item.id)"
             />
           </span>
           <span class="right">
-            <span class="name">{{ item.name }}</span>
+            <span class="name" @click="() => goMallDetail(item.id)">{{
+              item.name
+            }}</span>
             <span class="companyName">{{ item.companyName }}</span>
 
             <span class="tag">
@@ -462,6 +460,7 @@ onMounted(() => {
             display: block;
             width: 178px;
             height: 178px;
+            cursor: pointer;
           }
         }
 
@@ -478,6 +477,7 @@ onMounted(() => {
             font-weight: 500;
             font-size: 16px;
             line-height: 24px;
+            cursor: pointer;
           }
 
           .companyName {

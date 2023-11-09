@@ -89,10 +89,12 @@
         <span class="subTitle">当前活跃企业节点</span>
         <t-table
           :columns="columns"
-          :data="tableData"
+          :data="activeNodeList"
           :bordered="false"
           :pagination="false"
+          :scroll="{ y: '90%' }"
           class="table"
+          scrollbar
         />
       </div>
       <div class="right">
@@ -101,21 +103,21 @@
           <div class="item">
             <span class="label">互通企业数</span>
             <span>
-              <span class="value">250,000</span>
+              <span class="value">{{ activeOverall.interWorkingCount }}</span>
               <span>家</span>
             </span>
           </div>
           <div class="item">
             <span class="label">接入应用/服务</span>
             <span>
-              <span class="value">73</span>
+              <span class="value">{{ activeOverall.serverCount }}</span>
               <span>个</span>
             </span>
           </div>
           <div class="item">
             <span class="label">使用公开数据标准</span>
             <span>
-              <span class="value">23</span>
+              <span class="value">{{ activeOverall.openStandardCount }}</span>
               <span>套</span>
             </span>
           </div>
@@ -128,7 +130,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import carouse1 from '@/assets/images/wow/index/carouse1.png';
 import carouse2 from '@/assets/images/wow/index/carouse2.png';
@@ -143,9 +145,17 @@ import tab23 from '@/assets/images/wow/index/tab2-3.png';
 import tab31 from '@/assets/images/wow/index/tab3-1.png';
 import tab32 from '@/assets/images/wow/index/tab3-2.png';
 import tab33 from '@/assets/images/wow/index/tab3-3.png';
+import tab41 from '@/assets/images/wow/index/tab4-1.png';
+import tab42 from '@/assets/images/wow/index/tab4-2.png';
+import tab43 from '@/assets/images/wow/index/tab4-3.png';
+
+import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
+
+const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
+const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
 
 // 轮播图图片枚举
 const carouselList = [
@@ -278,17 +288,17 @@ const platProductsList = [
       {
         name: 'TNaas',
         desc: '“星火·链网”骨干节点',
-        bgImg: 'tab1-1.png',
+        bgImg: tab41,
       },
       {
         name: 'IDPoint',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-2.png',
+        bgImg: tab42,
       },
       {
         name: 'IDHub',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-3.png',
+        bgImg: tab43,
       },
     ],
   },
@@ -297,30 +307,30 @@ const platProductsList = [
 const columns = [
   {
     title: ' 企业前缀',
-    dataIndex: 'entPrefix',
+    dataIndex: 'companyPrefix',
   },
   {
     title: '企业名称',
-    dataIndex: 'entName',
+    dataIndex: 'companyName',
   },
   {
     title: '注册量',
-    dataIndex: 'regisNum',
+    dataIndex: 'registerCount',
   },
   {
     title: '解析量',
-    dataIndex: 'resolveNum',
+    dataIndex: 'parseCount',
   },
 ];
 
-const tableData = reactive([
-  {
-    entPrefix: '88.111.22',
-    entName: '北京泰尔英福科技有限公司',
-    regisNum: 10000,
-    resolveNum: 500,
-  },
-]);
+onMounted(() => {
+  apiActiveNode().then((data: any) => {
+    activeNodeList.value = data;
+  });
+  apiNodeOverall().then((data) => {
+    activeOverall.value = data;
+  });
+});
 </script>
 
 <style lang="less" scoped>
@@ -561,6 +571,10 @@ const tableData = reactive([
       .table {
         margin-top: -12px;
         margin-left: -16px;
+
+        :deep(.tele-empty) {
+          padding: 50px 0;
+        }
       }
     }
 
