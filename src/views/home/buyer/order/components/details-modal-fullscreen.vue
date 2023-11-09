@@ -406,7 +406,7 @@ import Copy from '../images/copy.png';
 import EditModal from './edit-modal.vue';
 
 const props = defineProps({
-  data: {
+  orderId: {
     type: Object,
     default() {
       return {};
@@ -460,10 +460,12 @@ const dataList = ref({
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   attachmentAddressArr: [
     {
-      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+      url:
+        'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
     },
     {
-      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
+      url:
+        'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
     },
   ], // 支付凭证
 });
@@ -517,7 +519,7 @@ const delivery = (id: string) => {
   console.log(id);
 };
 onMounted(() => {
-  if (props.data?.id) {
+  if (props.orderId) {
     getUserDetail();
   }
 });

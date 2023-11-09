@@ -226,6 +226,7 @@ const onAuthConfirm = () => {
       durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
 
+  // 封装确认订单需要的字段
   orderStore.createOrderInfo = {
     companyId,
     productId: id,
@@ -241,6 +242,7 @@ const onAuthConfirm = () => {
     logo,
     orderSource: source,
   };
+
   router.push({
     path: '/order/confirm',
   });

@@ -375,17 +375,18 @@
     ></EditModalDelivery> -->
 
     <!-- 全屏弹窗 -->
-    <DetailsModalFullscreen
+    <!-- <DetailsModalFullscreen
       v-if="FullscreenDetailsModal"
       :data="state.editData"
       @cancel="FullscreenDetailsModal = false"
     >
-    </DetailsModalFullscreen>
+    </DetailsModalFullscreen> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { Modal, Message } from '@tele-design/web-vue';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
@@ -395,7 +396,9 @@ import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
-import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+// import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+
+const router = useRouter();
 
 const formInline = reactive({
   commodityName: '',
@@ -669,7 +672,14 @@ const pagesizechange = (pageSize: number) => {
 // 订单详情  凭证审核
 const clickDetail = (id: string) => {
   state.editData.id = id;
-  FullscreenDetailsModal.value = true;
+
+  router.push({
+    name: 'buyerOrderDetail',
+    params: {
+      id,
+    },
+  });
+  // FullscreenDetailsModal.value = true;
 };
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {

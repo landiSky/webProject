@@ -117,10 +117,18 @@ const homeRoutesList = [
     component: PAGE_LAYOUT_NOMENU,
     children: [
       {
-        path: '/order/confirm',
+        path: '/order/confirm/:id',
         name: 'orderConfirm',
         component: () => import('@/views/home/buyer/confirmOrder/index.vue'),
         meta: {},
+      },
+      {
+        path: '/order/detail/:id',
+        name: 'buyerOrderDetail',
+        component: () => import('@/views/home/buyer/order/detail/index.vue'),
+        meta: {
+          name: '订单详情',
+        },
       },
     ],
     meta: {

@@ -92,7 +92,7 @@ export const useUserStore = defineStore({
             {
               memberId: 12, // 成员id
               memberType: 1, // 成员类型 0:普通成员 1:管理员
-              companyId: 1391254317244416, // 企业id 必传
+              companyId: 1, // 企业id 必传
               companyName: '泰尔英福巴拉巴拉1', // 企业名称
             },
             {
