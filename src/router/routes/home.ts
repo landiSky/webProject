@@ -117,7 +117,7 @@ const homeRoutesList = [
     component: PAGE_LAYOUT_NOMENU,
     children: [
       {
-        path: '/order/confirm/:id',
+        path: '/order/confirm',
         name: 'orderConfirm',
         component: () => import('@/views/home/buyer/confirmOrder/index.vue'),
         meta: {},

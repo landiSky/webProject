@@ -39,6 +39,13 @@
     </div>
 
     <div class="right-side">
+      <t-input-search
+        v-model="searchContent"
+        class="inputSearch"
+        placeholder="请输入商品名称"
+        @press-enter="onSearch"
+        @search="onSearch"
+      />
       <t-space v-if="userInfo?.userId">
         <t-link @click="goBuyer">控制台</t-link>
         <span class="username">{{
@@ -63,11 +70,6 @@
         <template #split>
           <t-divider direction="vertical" />
         </template>
-        <t-input-search
-          class="inputSearch"
-          placeholder="请输入商品名称"
-          @search="onSearch"
-        />
         <t-link @click="goRegister()">注册</t-link>
         <t-link @click="goLogin()">登录</t-link>
       </t-space>
@@ -91,6 +93,7 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
+const searchContent = ref();
 
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
@@ -98,15 +101,17 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
 const handleLogout = async () => {
   await userStore.logout();
 
-  router.push({
-    path: '/wow',
-    replace: true,
-  });
+  // router.push({
+  //   path: '/wow',
+  //   replace: true,
+  // });
 };
 const goIndex = () => {
+  selectTab.value = TabPath.INDEX;
   router.push({ path: '/wow/index' });
 };
 const gotoMall = () => {
+  selectTab.value = TabPath.MALL;
   router.push({ path: '/wow/mall' });
 };
 
@@ -138,11 +143,12 @@ const goLogin = () => {
   });
 };
 
-const onSearch = (value: string) => {
+const onSearch = () => {
+  console.log('index.vue:144', searchContent.value);
   router.push({
     name: 'wowMall',
-    params: {
-      goodsName: value,
+    query: {
+      goodsName: searchContent.value,
     },
   });
 };
@@ -194,7 +200,7 @@ const clickIdService = () => {
 };
 
 onMounted(() => {
-  selectTab.value = route.path;
+  selectTab.value = route.path || TabPath.INDEX;
 });
 </script>
 
