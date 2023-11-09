@@ -13,7 +13,7 @@ const route = useRoute();
 
 const FullscreenDetailsModal = ref(true);
 
-const orderId = route.params.id;
+const orderId = route.params.id as string;
 </script>
 
 <style lang="less"></style>
