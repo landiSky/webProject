@@ -62,16 +62,13 @@
             <span class="contentDesc">{{ item.desc }}</span>
           </div>
           <div class="cardList">
-            <div
-              v-for="(card, index) in item.cards"
-              :key="index"
-              class="card"
-              :style="{
+            <!-- :style="{
                 backgroundImage: `url(
-                  src/assets/images/wow/index/${card.bgImg}
+                  @/assets/images/wow/index/${card.bgImg}
                 )`,
-              }"
-            >
+              }" -->
+            <div v-for="(card, index) in item.cards" :key="index" class="card">
+              <img :src="card.bgImg" alt="" />
               <!-- <span>{{ card.name }}</span>
               <span>{{ card.desc }}</span> -->
             </div>
@@ -129,27 +126,35 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import carouse1 from '@/assets/images/wow/index/carouse1.png';
+import carouse2 from '@/assets/images/wow/index/carouse2.png';
+import carouse3 from '@/assets/images/wow/index/carouse3.png';
+import carouse4 from '@/assets/images/wow/index/carouse4.png';
+import tab11 from '@/assets/images/wow/index/tab1-1.png';
+import tab12 from '@/assets/images/wow/index/tab1-2.png';
+import tab13 from '@/assets/images/wow/index/tab1-3.png';
+import tab21 from '@/assets/images/wow/index/tab2-1.png';
+import tab22 from '@/assets/images/wow/index/tab2-2.png';
+import tab23 from '@/assets/images/wow/index/tab2-3.png';
+import tab31 from '@/assets/images/wow/index/tab3-1.png';
+import tab32 from '@/assets/images/wow/index/tab3-2.png';
+import tab33 from '@/assets/images/wow/index/tab3-3.png';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
 
 // 轮播图图片枚举
 const carouselList = [
-  // TODO 1 需要产品提供图片和跳转地址，当前是从一期拿了一部分
-  // {
-  //   path: '/public/indexCarouselImage/c1.png',
-  //   link: 'https://mp.weixin.qq.com/s/uuGw-xi-FGDi08IxMBjJjQ',
-  // },
   {
-    path: '/public/indexCarouselImage/c2.png',
+    path: carouse2, // /indexCarouselImage/c2.png
     link: 'https://www.teleinfo.cn/product_1/1574672998269988864.html',
   },
   {
-    path: '/public/indexCarouselImage/c3.png',
+    path: carouse3,
     link: 'https://www.teleinfo.cn/Solution/176652.html',
   },
   {
-    path: '/public/indexCarouselImage/c4.png',
+    path: carouse4,
     link: 'https://www.teleinfo.cn/Solution/176651.html',
   },
 ];
@@ -197,70 +202,74 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
         desc: '星火·链网”骨干节点',
-        bgImg: 'tab1-1.png',
+        bgImg: tab11,
       },
       {
         name: 'IDPoint',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-2.png',
+        bgImg: tab12,
       },
       {
         name: 'IDHub',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-3.png',
+        bgImg: tab13,
       },
     ],
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
         desc: '大数据监测平台',
-        bgImg: 'tab2-1.png',
+        bgImg: tab21,
       },
       {
         name: 'IDMeta',
         desc: '元数据管理平台',
-        bgImg: 'tab2-2.png',
+        bgImg: tab21,
       },
       {
         name: 'IDGuard',
         desc: '标识安全卫士',
-        bgImg: 'tab2-3.png',
+        bgImg: tab21,
       },
     ],
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
         desc: '许可公有链',
-        bgImg: 'tab3-1.png',
+        bgImg: tab31,
       },
       {
         name: 'TBaas',
         desc: '区块链服务平台',
-        bgImg: 'tab3-2.png',
+        bgImg: tab31,
       },
       {
         name: 'TPaas',
         desc: '有象账户',
-        bgImg: 'tab3-3.png',
+        bgImg: tab31,
       },
     ],
   },
   {
     title: '创新服务',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
