@@ -29,20 +29,20 @@ export function apiConfigInfo() {
   return $http.get('/sso/web/config');
 }
 
-// 获取登录 code
-export function apiWebOauth(params: Record<string, any>) {
-  return $http.get('/sso/web/oauth/authorize', {
-    params,
-    customFields: {
-      returnRawResponse: true,
-    },
-  });
-}
+// // 获取登录 code
+// export function apiWebOauth(params: Record<string, any>) {
+//   return $http.get('/sso/web/oauth/authorize', {
+//     params,
+//     customFields: {
+//       returnRawResponse: true,
+//     },
+//   });
+// }
 
-// 真正登录
-export function apiLogin(data: Record<string, any>) {
-  return $http.post('/sso/web/login', data);
-}
+// // 真正登录
+// export function apiLogin(data: Record<string, any>) {
+//   return $http.post('/sso/web/login', data);
+// }
 
 // 获取 token
 export function apiLoginToken(data: Record<string, any>) {
