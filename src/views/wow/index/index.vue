@@ -235,12 +235,12 @@ const platProductsList = [
       {
         name: 'IDMeta',
         desc: '元数据管理平台',
-        bgImg: tab21,
+        bgImg: tab22,
       },
       {
         name: 'IDGuard',
         desc: '标识安全卫士',
-        bgImg: tab21,
+        bgImg: tab23,
       },
     ],
   },
@@ -257,12 +257,12 @@ const platProductsList = [
       {
         name: 'TBaas',
         desc: '区块链服务平台',
-        bgImg: tab31,
+        bgImg: tab32,
       },
       {
         name: 'TPaas',
         desc: '有象账户',
-        bgImg: tab31,
+        bgImg: tab33,
       },
     ],
   },

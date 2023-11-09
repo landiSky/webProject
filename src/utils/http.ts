@@ -84,8 +84,8 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
           return resolve(data.data);
         }
 
-        console.log('http.ts:84', code, code === 101004);
         if (code === 101004) {
+          Message.error(message);
           // 重登录
           // clearToken();
           // console.log('http.ts:89', router);

@@ -71,6 +71,7 @@ const onConfirm = () => {
 
 onMounted(() => {
   apiMemberList({
+    productId: props.productId,
     companyId: selectCompany.value?.companyId,
   })
     .then((data: any) => {
