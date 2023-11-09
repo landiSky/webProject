@@ -430,7 +430,42 @@ const state = reactive({
     amount: '',
   },
 });
-const tableData = ref([]);
+const tableData = ref([
+  {
+    id: '2', // 订单id
+    orderNum: '2', // 订单号
+    productName: '', // 商品名称
+    customerName: '', // 买家名称
+    productLogo: '', // 商品logo
+    merchantName: '', // 卖家名称
+    deliveryTypeName: '', // 交付类型名称
+    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
+    productPrice: 10000, // 商品价格
+    accountCount: '', // 账号数量
+    buyDuration: '', // 购买时长
+    realityPrice: 9400, // 实付金额
+    orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatusName: '', // 状态名称
+    orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
+    orderSteps: 3, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
+    rejectType: 0, // 拒绝类型
+    rejectReasonDetail: '', // 支付凭证审核失败，展示驳回原因
+    deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
+    deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
+    couponMoney: 600, // 优惠金额
+    userMobile: null, // 联系方式
+    orderSource: 0, // 订单来源：0-本平台，1-跨平台
+    effectTime: null, // 成交时间
+    createTime: '', // 创建时间
+    dueDate: null, // 到期日期
+    voucherRejectTime: '', // 驳回时间
+    payCompleteTime: null, // 支付完成时间
+    voucherSubmitTime: '', // 提交凭证时间&买家支付时间
+    confirmDeployedTime: null, // 确认部署时间
+    merchantDeliverTime: null, // 服务商交付时间
+    attachmentAddressArr: [],
+  },
+]);
 // 交付类型
 const deliveryType = reactive([
   {
