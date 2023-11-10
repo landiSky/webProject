@@ -106,7 +106,7 @@
       </div>
       <div class="intro">
         <div class="template">
-          <!-- <div class="nav">
+          <div class="nav">
             <span
               v-for="(item, index) in templateList"
               :key="index"
@@ -114,7 +114,7 @@
               @click="clickNav(index)"
               >{{ item.moduleName }}</span
             >
-          </div> -->
+          </div>
           <component
             :is="forCompList[item.type - 1]"
             v-for="(item, index) in templateList"
@@ -177,7 +177,7 @@ const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 
 const computing = ref(false);
 const price = ref();
 const templateList = ref<Record<string, any>[]>([]);
-const navRef = ref<any[]>([]);
+const navRef: any[] = []; // ref<any[]>([]);
 
 // // 模块一二三
 // const testData =
@@ -211,7 +211,7 @@ const selectVersion = ref<Record<string, any>>({});
 const setNavRef = (el: any) => {
   if (el) {
     console.log('index.vue:212', el);
-    navRef.value.push(el);
+    navRef.push(el);
   }
 };
 const onAuthCancel = () => {
@@ -317,8 +317,8 @@ const onRadioChange = () => {
 };
 
 const clickNav = (index: number) => {
-  console.log('index.vue:311', index, navRef.value[index]);
-  navRef.value[index].scrollIntoView(true);
+  console.log('index.vue:311', index, navRef[index]);
+  navRef[index].scrollIntoView(true);
 };
 
 onMounted(() => {
@@ -329,9 +329,9 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
 
-      templateList.value = JSON.parse(data.detail);
-      // const tt = JSON.parse(data.detail);
-      // templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
+      // templateList.value = JSON.parse(data.detail);
+      const tt = JSON.parse(data.detail);
+      templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
 
       console.log('index.vue:285', templateList.value);
       const { saleType } = data;
