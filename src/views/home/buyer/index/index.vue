@@ -551,6 +551,12 @@ import { ref, reactive } from 'vue';
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
 
+import EditModal from '@/components/dataoverview/components/edit-modal.vue';
+
+import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
+
+import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
+
 import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
@@ -564,9 +570,9 @@ import group3 from './image/group3.png';
 import group4 from './image/group4.png';
 // import frame from './image/frame.png';
 
-import EditModal from './components/edit-modal.vue';
-import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
-import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+// import EditModal from './components/edit-modal.vue';
+// import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
+// import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
 const userStore = useUserStore();

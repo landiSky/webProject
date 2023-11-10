@@ -323,7 +323,10 @@
             </t-row>
           </div>
         </div>
-        <div v-if="false" class="noClass">
+        <div
+          v-if="formInline.total === 0 && noDatalist === true"
+          class="noClass"
+        >
           <div>
             <img :src="noSearch" alt="" />
             <div>
@@ -333,7 +336,10 @@
             </div>
           </div>
         </div>
-        <div v-if="false" class="noClass">
+        <div
+          v-if="formInline.total === 0 && noDatalist === false"
+          class="noClass"
+        >
           <div>
             <img :src="noData" alt="" />
             <div class="zwclass">暂无数据</div>
@@ -393,6 +399,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
+import { orderList } from '@/api/seller/order';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import tobepaid from './images/tobepaid.png';
@@ -401,7 +408,6 @@ import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalDelivery from './components/edit-modal-delivery.vue';
-
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const formInline = reactive({
@@ -411,9 +417,10 @@ const formInline = reactive({
   time: [],
   startTime: '',
   endTime: '',
+  tabstatus: '',
   pageNum: 1,
   pageSize: 10,
-  total: 100,
+  total: 0,
 });
 const state = reactive({
   editData: {
@@ -425,6 +432,9 @@ const state = reactive({
     amount: '',
   },
 });
+// 查询 状态
+const noDatalist = ref(false);
+// list
 const tableData = ref([
   {
     id: '2', // 订单id
@@ -459,41 +469,6 @@ const tableData = ref([
     voucherSubmitTime: '2023-10-24 11:11:19', // 提交凭证时间&买家支付时间
     confirmDeployedTime: null, // 确认部署时间
     merchantDeliverTime: null, // 服务商交付时间
-    attachmentAddressArr: null, // 附件地址
-  },
-  {
-    id: '1', // 订单id
-    orderNum: '1', // 订单号
-    productName: '双皮奶', // 商品名称
-    customerName: '硕', // 买家名称
-    productLogo:
-      'https://img2.baidu.com/it/u=2055503821,2811341464&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=543', // 商品logo
-    merchantName: '商品所属商家名称', // 卖家名称
-    deliveryTypeName: 'SAAS', // 交付类型名称
-    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-    productPrice: 10000, // 商品价格
-    accountCount: '10个账号', // 账号数量
-    buyDuration: '5个月', // 购买时长
-    realityPrice: 10000, // 实付金额
-    orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatusName: '已完成', // 状态名称
-    orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
-    orderSteps: 6, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
-    rejectType: null, // 拒绝类型
-    rejectReasonDetail: null, // 支付凭证审核失败，展示驳回原因
-    deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
-    deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
-    couponMoney: null, // 优惠金额
-    userMobile: null, // 联系方式
-    orderSource: 0, // 订单来源：0-本平台，1-跨平台
-    effectTime: null, // 成交时间
-    createTime: '2023-10-23 16:24:32', // 创建时间
-    dueDate: null, // 到期日期
-    voucherRejectTime: '2023-10-23 18:24:34', // 驳回时间
-    payCompleteTime: null, // 支付完成时间
-    voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
-    confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
-    merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
     attachmentAddressArr: null, // 附件地址
   },
 ]);
@@ -576,6 +551,8 @@ const activeIndex = ref(0);
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
+  // @ts-ignore
+  formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [
       {
@@ -637,7 +614,30 @@ const deliveryVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
+const init = () => {
+  orderList({
+    // 商品名称
+    productName: formInline.commodityName,
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: formInline.deliveryType,
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: formInline.orderStatus,
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: formInline.tabstatus,
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: formInline.startTime,
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: formInline.endTime,
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    userCompanyId: '2',
+  }).then((res) => {
+    tableData.value = res.records;
+    tableData.value.total = res.total;
+  });
+};
 onMounted(() => {
+  init();
   console.log('执行了');
 });
 // 时间框选择格式是：年月日，接口入参需要加上时分秒
@@ -660,7 +660,18 @@ const getTableData = () => {
   console.log(formInline, 'getTableData');
 };
 // 重置
-const clearSearch = () => {};
+const clearSearch = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
 
 // 清空查询项
 const clearSearchles = () => {};
