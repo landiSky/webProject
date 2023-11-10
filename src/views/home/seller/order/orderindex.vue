@@ -633,6 +633,7 @@ const init = () => {
     userCompanyId: '2',
   }).then((res) => {
     tableData.value = res.records;
+    //  @ts-ignore
     tableData.value.total = res.total;
   });
 };
