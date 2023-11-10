@@ -106,7 +106,7 @@
       </div>
       <div class="intro">
         <div class="template">
-          <div class="nav">
+          <!-- <div class="nav">
             <span
               v-for="(item, index) in templateList"
               :key="index"
@@ -114,7 +114,7 @@
               @click="clickNav(index)"
               >{{ item.moduleName }}</span
             >
-          </div>
+          </div> -->
           <component
             :is="forCompList[item.type - 1]"
             v-for="(item, index) in templateList"
@@ -329,8 +329,9 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
 
-      const tt = JSON.parse(data.detail);
-      templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
+      templateList.value = JSON.parse(data.detail);
+      // const tt = JSON.parse(data.detail);
+      // templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
 
       console.log('index.vue:285', templateList.value);
       const { saleType } = data;
