@@ -44,7 +44,7 @@ export const useUserStore = defineStore({
       const { companyId, memberId } = this.selectCompany || {};
 
       this.userInfoByCompany = {
-        id: 1, // 用户id
+        id: 1, // memberId
         username: '谢珍', // 用户名称
         companyId: 1, // 机构id
         companyName: 'kw企业', // 机构名称

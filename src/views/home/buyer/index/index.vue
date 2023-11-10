@@ -163,7 +163,7 @@
                   v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
                   style="display: block; margin: 15px auto 0; padding: 5px 10px"
-                  @click="authenticationredf"
+                  @click="nodeAuth"
                   >去认证</t-button
                 >
                 <div v-else class="states">
@@ -596,12 +596,15 @@ const oederlist = reactive({
 });
 // 去认证
 const authentication = () => {
-  console.log(editModalVisible.value);
-  authModalVisible.value = true;
+  editModalVisible.value = true; //  本平台进行企业认证
 };
 
+const nodeAuth = () => {
+  authModalVisible.value = true;
+};
 const onAuthModalConfirm = () => {
-  editModalVisible.value = true;
+  authModalVisible.value = false;
+  window.open(userInfoByCompany.idPointer, '_blank'); // 企业节点认证跳转到二级
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
@@ -646,8 +649,7 @@ const detailflagclick = () => {
   detailflag.value = false;
   editModalVisible.value = true;
 };
-// 企业节点去认证
-const authenticationredf = () => {};
+
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限

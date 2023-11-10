@@ -2,7 +2,6 @@
   <t-modal
     v-model:visible="visible"
     :width="520"
-    :height="280"
     :body-style="{ padding: '20px' }"
     @cancel="emit('cancel')"
     @close="emit('cancel')"
@@ -39,39 +38,25 @@
       </t-form-item>
     </t-form>
     <template #footer>
-      <t-button type="primary" @click="clickNextStep">下一步</t-button>
+      <t-button type="primary" :loading="btnLoading" @click="clickNextStep"
+        >下一步</t-button
+      >
     </template>
   </t-modal>
 </template>
 
 <script lang="ts" setup>
-import {
-  h,
-  defineProps,
-  defineEmits,
-  reactive,
-  ref,
-  onMounted,
-  computed,
-} from 'vue';
-import { apiHasCompany } from '@/api/authentication';
+import { defineEmits, reactive, ref, onMounted } from 'vue';
+import { apiHasCompany, apiHasCompanyShow } from '@/api/authentication';
 import { Message, Modal } from '@tele-design/web-vue';
-import { CompanyAuthStatus } from '@/enums/common';
-
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => {},
-  },
-});
 
 const emit = defineEmits(['confirm', 'cancel']);
 
 const formRef = ref();
 const visible = ref(true);
+const btnLoading = ref(false);
 
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
-const state = reactive({
+const state = reactive<{ formModel: Record<string, string | undefined> }>({
   formModel: {
     companyName: undefined,
     creditCode: undefined,
@@ -88,49 +73,46 @@ const formRules = {
 const clickNextStep = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      // apiHasCompany(state.formModel)
-      //   .then((data) => {
-      const data = {
-        nodeAuth: true,
-        companyAuth: false,
-        mobile: '15210602855',
-      };
-      const { companyAuth, nodeAuth, mobile } = data;
-      const title = nodeAuth ? '企业节点认证' : '企业认证';
+      btnLoading.value = true;
+      apiHasCompany(state.formModel)
+        .then((data) => {
+          const { companyAuth, nodeAuth, phone } = data;
 
-      Modal.warning({
-        title: `${title}重复`,
-        okText: '好的',
-        hideCancel: true,
-        content: `该企业已完成「企业节点认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。`,
-      });
-      // })
-      // .catch(() => {})
-      // .finally(() => {
-      //   emit('confirm');
-      // });
+          if (companyAuth || nodeAuth) {
+            const title = nodeAuth ? '企业节点认证' : '企业认证';
+
+            visible.value = false;
+            Modal.warning({
+              title: `${title}重复`,
+              okText: '好的',
+              titleAlign: 'start',
+              hideCancel: true,
+              content: `该企业已完成「${title}」，如需申请加入企业，请咨询企业联系人，联系方式：${
+                phone || '-'
+              }。`,
+              onOk: () => {
+                emit('confirm');
+              },
+            });
+          } else {
+            emit('confirm');
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          btnLoading.value = false;
+        });
     } else {
       done(false);
     }
   });
 };
 
-// const getDetail = () => {
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
-// };
-
 onMounted(() => {
-  if (isEdit.value) {
-    // 这里分两种情况
-    // 一是编辑信息从列表传入
-    // 二是从接口获取
-    // getDetail();
-  }
+  apiHasCompanyShow().then((data: Record<string, any>) => {
+    const { companyName, creditCode, legalPersonName } = data;
+    state.formModel = { companyName, creditCode, legalPersonName };
+  });
 });
 </script>
 

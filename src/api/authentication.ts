@@ -34,3 +34,8 @@ export function authSubmit(data: Record<string, any>) {
 export function apiHasCompany(data: Record<string, any>) {
   return $http.post('/web/company/getCompanyById', data);
 }
+
+// 认证前去判断是否有重复企业的回显
+export function apiHasCompanyShow() {
+  return $http.get('/web/company/getMasterCompanyInfo');
+}
