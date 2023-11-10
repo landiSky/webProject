@@ -10,6 +10,7 @@
   >
     <template #title> 授权管理 </template>
     <h2>请选择授权范围</h2>
+    <!-- state.formModel.menuList -->
     <t-tree
       :default-expanded-keys="state.formModel.menuList"
       :default-checked-keys="state.formModel.menuList"
@@ -94,7 +95,7 @@ const emit = defineEmits(['confirm', 'cancel']);
 // const formRef = ref();
 const treeData = ref([
   {
-    id: 1,
+    id: '1',
     parentId: 0,
     sort: 0,
     childNodes: [
@@ -139,6 +140,52 @@ const treeData = ref([
     hasChildren: 1,
     authCode: 'ROUTE_BUYER',
   },
+  {
+    id: '4',
+    parentId: '0',
+    sort: 0,
+    childNodes: [
+      {
+        id: 5,
+        parentId: 4,
+        sort: 0,
+        childNodes: [],
+        menuName: '商品管理',
+        type: 1,
+        createTime: '2023-10-30 10:35:16',
+        updateTime: '2023-10-30 10:35:16',
+        createUser: null,
+        updateUser: null,
+        isDeleted: 0,
+        hasChildren: 0,
+        authCode: 'ROUTE_SELLER_GOODS',
+      },
+      {
+        id: 6,
+        parentId: 4,
+        sort: 1,
+        childNodes: [],
+        menuName: '订单管理',
+        type: 1,
+        createTime: '2023-10-30 10:35:31',
+        updateTime: '2023-10-30 10:35:31',
+        createUser: null,
+        updateUser: null,
+        isDeleted: 0,
+        hasChildren: 0,
+        authCode: 'ROUTE_SELLER_ORDER',
+      },
+    ],
+    menuName: '服务商中心',
+    type: 1,
+    createTime: '2023-10-30 10:34:59',
+    updateTime: '2023-10-30 10:34:59',
+    createUser: null,
+    updateUser: null,
+    isDeleted: 0,
+    hasChildren: 1,
+    authCode: 'ROUTE_SELLER',
+  },
 ]);
 const visible = ref(true);
 // const selected = ref();
@@ -151,12 +198,14 @@ const state = reactive({
 });
 const roleid = ref([1, 2, 3]);
 console.log(roleid);
-
 const init = () => {
   apiMemberlist({}).then((res: any) => {
     console.log(res, 'res');
     treeData.value = res;
-    console.log(treeData.value, 'treeData.value ');
+    // console.log(treeData.value, 'treeData.value ');
+    // props.data.menuList;
+    state.formModel.menuList = props.data.menuList;
+    console.log(state.formModel.menuList, 'state.formModel.menuList');
   });
 };
 // 点击树节点时触发
@@ -165,9 +214,11 @@ const setSelecteds = (agfs: any, jashd: any) => {
 };
 // 点击树节点复选框时触发
 const checkds = (agfs: any, jashd: any) => {
+  console.log(agfs, jashd.halfCheckedKeys, '点击树节点复选框时触发');
   // roleid.value = agfs;
-  state.formModel.menuList = agfs;
-  console.log(agfs, jashd, '点击树节点复选框时触发');
+  // state.formModel.menuList = agfs;
+  state.formModel.menuList = agfs.concat(jashd.halfCheckedKeys);
+  console.log(state.formModel.menuList);
 };
 // 展开/关闭
 const expands = (agfs: any, jashd: any) => {
@@ -225,10 +276,11 @@ onMounted(() => {
   if (isEdit.value) {
     // 这里分两种情况
     // 一是编辑信息从列表传入
-    const { id, menuList } = props.data;
-    console.log(id, menuList);
+    // menuList
+    const { id } = props.data;
+    console.log(id);
 
-    state.formModel = { id, menuList };
+    state.formModel = { id };
 
     // 二是从接口获取
     // getDetail();
