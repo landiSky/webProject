@@ -964,11 +964,11 @@ const showAddCopy = computed(() => {
 const getDetail = () => {
   goodsDetail(props.data?.id).then((res) => {
     console.log(res);
-    Object.keys(formModel.value).forEach((i: string) => {
-      if (res[i]) {
-        formModel.value[i] = res[i];
-      }
-    });
+    // Object.keys(formModel.value).forEach((i: string) => {
+    //   if (res[i]) {
+    //     formModel.value[i] = res[i];
+    //   }
+    // });
   });
 };
 
