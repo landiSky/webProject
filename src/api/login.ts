@@ -26,7 +26,7 @@ export function apiSendCaptcha(params: Record<string, any>) {
 
 // 获取配置信息
 export function apiConfigInfo() {
-  return $http.get('http://sso-auth-gateway-a.dev.idx.space/sso/web/config');
+  return $http.get('/sso/web/config');
 }
 
 // // 获取登录 code

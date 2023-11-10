@@ -115,14 +115,17 @@
               >{{ item.moduleName }}</span
             >
           </div>
-          <component
-            :is="forCompList[item.type - 1]"
+          <div
             v-for="(item, index) in templateList"
             :id="`template${index}`"
             :key="index"
             :ref="setNavRef"
-            :template-data="item"
-          ></component>
+          >
+            <component
+              :is="forCompList[item.type - 1]"
+              :template-data="item"
+            ></component>
+          </div>
         </div>
         <div class="consult">
           <span class="title">服务商资质</span>
@@ -177,7 +180,7 @@ const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 
 const computing = ref(false);
 const price = ref();
 const templateList = ref<Record<string, any>[]>([]);
-const navRef: any[] = []; // ref<any[]>([]);
+const navRef = ref<any[]>([]); // ref<any[]>([]);
 
 // // 模块一二三
 // const testData =
@@ -210,8 +213,7 @@ const selectVersion = ref<Record<string, any>>({});
 
 const setNavRef = (el: any) => {
   if (el) {
-    console.log('index.vue:212', el);
-    navRef.push(el);
+    navRef.value.push(el);
   }
 };
 const onAuthCancel = () => {
@@ -317,8 +319,7 @@ const onRadioChange = () => {
 };
 
 const clickNav = (index: number) => {
-  console.log('index.vue:311', index, navRef[index]);
-  navRef[index].scrollIntoView(true);
+  navRef.value[index].scrollIntoView(true);
 };
 
 onMounted(() => {
