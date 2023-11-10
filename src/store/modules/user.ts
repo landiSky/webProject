@@ -196,7 +196,7 @@ export const useUserStore = defineStore({
 
       await apiLogout();
       clearToken();
-      window.location.href = this.configInfo?.logoutUrl;
+      window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${this.configInfo?.redirectUri}`;
     },
 
     clearUserInfo(): void {
