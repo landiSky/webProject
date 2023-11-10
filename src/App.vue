@@ -3,11 +3,35 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { useMenuStore } from '@/store/modules/menu';
 
 const userStore = useUserStore();
+
+watch(
+  () => userStore.updateMenu,
+  () => {
+    console.log('App.vue:15===更新菜单');
+    // useMenuStore().genLeftMenu(userStore.userInfoByCompany?.menuCodes || []);
+    useMenuStore().genLeftMenu([
+      'ROUTE_SELLER',
+      'ROUTE_SELLER_GOODS',
+      'ROUTE_SELLER_ORDER',
+      'ROUTE_BUYER',
+      'ROUTE_BUYER_INDEX',
+      'ROUTE_BUYER_ORDER',
+      'ROUTE_SYSTEM',
+      'ROUTE_SYSTEM_USERS',
+      'ROUTE_SYSTEM_ROLES',
+    ]);
+  },
+  {
+    immediate: true,
+  }
+);
+
 onMounted(() => {
   userStore.getConfigInfo();
   // 统一添加网络异常提示

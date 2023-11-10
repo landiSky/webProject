@@ -34,7 +34,7 @@
       v-if="detailflag"
       :data="state.editData"
       @confirm="onEditModalConfirmflag"
-      @cancel="detailflag = false"
+      @cancel="detailflagclick"
     >
     </DetailsModalFullscreen>
   </div>
@@ -81,8 +81,16 @@ const onEditModalConfirmcode = () => {
   state.editData.statusled = 0;
   gotoverifys.value = false;
 };
-const cancelgotoverifys = () => {
-  gotoverifys.value = false;
+const cancelgotoverifys = (status: number) => {
+  console.log(status, 'status');
+
+  if (status === 1) {
+    detailflag.value = true;
+    gotoverifys.value = false;
+  } else {
+    editModalVisible.value = true;
+    gotoverifys.value = false;
+  }
   state.editData.statusled = 0;
 };
 
@@ -91,6 +99,11 @@ const onEditModalConfirmflag = () => {
   detailflag.value = false;
   state.editData.statusled = 1;
   gotoverifys.value = true;
+};
+// 详情 取消
+const detailflagclick = () => {
+  detailflag.value = false;
+  editModalVisible.value = true;
 };
 </script>
 

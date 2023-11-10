@@ -59,10 +59,12 @@
         </template>
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-          <t-link @click="onEditTreeConfirmsldrole(record)"> 权限管理 </t-link>
+          <t-link @click="onEditTreeConfirmsldrole(record)"> 授权管理 </t-link>
           <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
           <t-link @click="clickEditBtn(record)">编辑</t-link>
-          <t-link @click="delectlist(record.id)">删除</t-link>
+          <t-link @click="delectlist(record.id, record.memberCount)"
+            >删除</t-link
+          >
 
           <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
         </template>
@@ -109,7 +111,8 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 // import dayjs from 'dayjs';
 import { Modal, Message } from '@tele-design/web-vue';
-import DetailDrawer from './components/detail-drawer.vue';
+import { rolelist, apiRoleDelete, apiRoleDetails } from '@/api/system/role';
+// import DetailDrawer from './components/detail-drawer.vue';
 import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import TreeModal from './components/tree-modal.vue';
@@ -228,36 +231,19 @@ function fetchData() {
 
   // mock数据
   state.tableLoading = false;
-  const data = {
-    content: [
-      {
-        id: 1391112170700800, // 角色id
-        roleName: '普通用户', // 角色名称
-        remark: '描述', // 描述
-        menuList: null,
-        memberCount: 0, // 成员数量
-      },
-      {
-        id: 1391112170700801, // 角色id
-        roleName: '普通用户', // 角色名称
-        remark: '描述', // 描述
-        menuList: null,
-        memberCount: 0, // 成员数量
-      },
-      {
-        id: 1391112170700802, // 角色id
-        roleName: '普通用户', // 角色名称
-        remark: '描述', // 描述
-        menuList: null,
-        memberCount: 0, // 成员数量
-      },
-    ],
-    pageNumber: 1,
-    totalCount: 11,
-  };
 
-  state.tableData = data.content || [];
-  pagination.total = data.totalCount;
+  rolelist({
+    pageSize: pagination.pageSize,
+    pageNum: pagination.current,
+    roleName: state.formModel.name,
+    companyId: 1,
+  })
+    .then((res: any) => {
+      console.log(res);
+      state.tableData = res.records;
+      pagination.total = res.total;
+    })
+    .catch((err) => {});
 }
 
 // 每页显示条数发生变化
@@ -272,7 +258,7 @@ const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
 };
-
+// 查询
 const clickSearchBtn = () => {
   console.log(state.formModel.name, ' state.formModel.name');
   onPageChange(1);
@@ -281,8 +267,9 @@ const clickSearchBtn = () => {
 // 重置后，触发一次查询
 const handleReset = () => {
   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
-  state.formModel = { ...defaultFormModel };
-  state.rangeTimeList = [];
+  // state.formModel = { ...defaultFormModel };
+  // state.rangeTimeList = [];
+  state.formModel.name = '';
   clickSearchBtn();
 };
 
@@ -298,41 +285,51 @@ const clickAddBtn = () => {
   editModalVisible.value = true;
 };
 // 新增编辑弹窗确定后的回调
-const onEditModalConfirm = (data: any) => {
-  console.log(data, 'e');
-  state.editData = data;
+const onEditModalConfirm = () => {
+  console.log('e');
+  // state.editData = data;
   // aaa.value = data;
   editModalVisible.value = false;
-  flagModal.value = true;
+  // flagModal.value = true;
   fetchData();
 };
-const delectlist = (id: number) => {
-  console.log(id, 'd');
+const delectdata = () => {};
+// 删除
+const delectlist = (id: number, memberCount: number) => {
+  console.log(id);
+  if (memberCount === 0) {
+    Modal.warning({
+      title: '确定删除该角色吗？',
+      titleAlign: 'start',
+      content: '',
+      okText: '删除',
+      hideCancel: false,
+      okButtonProps: {
+        status: 'danger',
+      },
+      onOk: () => {
+        apiRoleDelete({ roleId: id }).then((res) => {
+          console.log(res);
 
-  // Modal.warning({
-  //   title: '确定删除该角色吗？',
-  //   titleAlign: 'start',
-  //   content: '',
-  //   okText: '删除',
-  //   hideCancel: false,
-  //   okButtonProps: {
-  //     status: 'danger',
-  //   },
-  //   onOk: () => {
-  //     // modifyUserStatus([id], UserStatusEnum.UNUSED);
-  //   },
-  // });
-
-  Modal.warning({
-    title: '该角色下已有成员，暂无法删除。',
-    titleAlign: 'start',
-    content: '',
-    okText: '好的',
-    hideCancel: true,
-    onOk: () => {
-      // modifyUserStatus([id], UserStatusEnum.UNUSED);
-    },
-  });
+          if (res.data.code === 200) {
+            fetchData();
+            Message.success('删除成功');
+          }
+        });
+      },
+    });
+  } else {
+    Modal.warning({
+      title: '该角色下已有成员，暂无法删除。',
+      titleAlign: 'start',
+      content: '',
+      okText: '好的',
+      hideCancel: true,
+      onOk: () => {
+        // modifyUserStatus([id], UserStatusEnum.UNUSED);
+      },
+    });
+  }
 };
 
 // popover类的删除操作
@@ -364,6 +361,7 @@ const onEditTreeConfirmsldrole = (data: any) => {
 // 完成
 const onEditTreeConfirmsld = () => {
   flagModalTree.value = false;
+  fetchData();
 };
 // 取消
 const onEditTreeCancelsld = () => {

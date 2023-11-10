@@ -21,64 +21,63 @@
       <span>添加详情模块</span>
     </div>
   </div>
-  <div id="templateContainer">
-    <t-drawer
-      title="添加详情模块"
-      ok-text="下一步"
-      :width="720"
-      :visible="drawerVisible"
-      unmount-on-close
-      :mask-closable="false"
-      popup-container="#templateContainer"
-      @cancel="handleCancel"
-    >
-      <template #footer>
-        <t-button @click="handleCancel">取消</t-button>
-        <template v-if="currentStep === 1">
-          <t-button type="primary" @click="clickStep(2)">下一步 </t-button>
-        </template>
-        <template v-else>
-          <t-button @click="clickStep(1)">上一步</t-button>
-          <t-button type="primary" @click="saveTemplate">保存</t-button>
-        </template>
+  <!-- <div id="templateContainer"> popup-container="#templateContainer" -->
+  <t-drawer
+    title="添加详情模块"
+    ok-text="下一步"
+    :width="720"
+    :visible="drawerVisible"
+    unmount-on-close
+    :mask-closable="false"
+    @cancel="handleCancel"
+  >
+    <template #footer>
+      <t-button @click="handleCancel">取消</t-button>
+      <template v-if="currentStep === 1">
+        <t-button type="primary" @click="clickStep(2)">下一步 </t-button>
       </template>
+      <template v-else>
+        <t-button @click="clickStep(1)">上一步</t-button>
+        <t-button type="primary" @click="saveTemplate">保存</t-button>
+      </template>
+    </template>
 
-      <div class="step">
-        <t-steps :current="currentStep">
-          <t-step>选择展示模板</t-step>
-          <t-step>编辑模板内容</t-step>
-        </t-steps>
+    <div class="step">
+      <t-steps :current="currentStep">
+        <t-step>选择展示模板</t-step>
+        <t-step>编辑模板内容</t-step>
+      </t-steps>
+    </div>
+    <div v-if="currentStep === 1" class="template">
+      <div class="btnList">
+        <t-button
+          v-for="(item, index) in ['一', '二', '三', '四', '五', '六']"
+          :key="index"
+          :class="{ active: selectTempIndex === index }"
+          @click="selectTempIndex = index"
+          >模板{{ item }}</t-button
+        >
       </div>
-      <div v-if="currentStep === 1" class="template">
-        <div class="btnList">
-          <t-button
-            v-for="(item, index) in ['一', '二', '三', '四', '五', '六']"
-            :key="index"
-            :class="{ active: selectTempIndex === index }"
-            @click="selectTempIndex = index"
-            >模板{{ item }}</t-button
-          >
-        </div>
-        <div class="preview">
-          <span>{{ TemplateEnum?.[selectTempIndex].desc }}</span>
-          <span>{{ TemplateEnum?.[selectTempIndex].tips }}</span>
-          <img
-            :src="`src/assets/images/home/goods/template${
-              selectTempIndex + 1
-            }.png`"
-            alt="模板"
-          />
-        </div>
+      <div class="preview">
+        <span>{{ TemplateEnum?.[selectTempIndex].desc }}</span>
+        <span>{{ TemplateEnum?.[selectTempIndex].tips }}</span>
+        <img
+          :src="`src/assets/images/home/goods/template${
+            selectTempIndex + 1
+          }.png`"
+          alt="模板"
+        />
       </div>
-      <div v-else class="formWrapper">
-        <component
-          :is="dynaticComponent"
-          ref="formWrapRef"
-          :current-index="currentIndex"
-        ></component>
-      </div>
-    </t-drawer>
-  </div>
+    </div>
+    <div v-else class="formWrapper">
+      <component
+        :is="dynaticComponent"
+        ref="formWrapRef"
+        :current-index="currentIndex"
+      ></component>
+    </div>
+  </t-drawer>
+  <!-- </div> -->
 </template>
 
 <script lang="ts" setup>
@@ -91,7 +90,7 @@ import Form4 from './template/form4.vue';
 import Form5 from './template/form5.vue';
 import Form6 from './template/form6.vue';
 
-import { TemplateEnum } from './constant';
+import { TemplateEnum } from '../constant';
 
 const currentIndex = ref<number>(-1); // 如果为-1代表新增，如果>=0 代表编辑
 const drawerVisible = ref(false);
@@ -156,6 +155,7 @@ const saveTemplate = () => {
 };
 
 const addTemplate = () => {
+  console.log('template.vue:158==addTemplate');
   drawerVisible.value = true;
   currentIndex.value = -1;
 };

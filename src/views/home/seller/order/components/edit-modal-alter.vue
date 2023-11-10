@@ -220,14 +220,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less">
-// .boxModal {
-//   ::v-deep .tele-empty {
-//     padding: 10px 20px;
-//     text-align: right;
-//   }
-//   ::v-deep .tele-empty-image {
-//     display: none;
-//   }
-// }
-</style>
+<style scoped lang="less"></style>

@@ -4,7 +4,7 @@
       <div class="baseInfo">
         <div class="left">
           <div class="bigImg">
-            <img :src="bigImgPath" />
+            <img :src="`/web/file/download?name=${bigImgPath}`" />
           </div>
 
           <ul class="imgList">
@@ -13,7 +13,11 @@
               :key="index"
               @mouseenter="bigImgPath = imgPath"
             >
-              <img :src="imgPath" alt="" />
+              <img
+                :src="`/web/file/download?name=${imgPath}`"
+                alt=""
+                :class="{ active: bigImgPath === imgPath }"
+              />
             </li>
           </ul>
         </div>
@@ -29,7 +33,7 @@
             <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
               价格面议
             </span>
-            <span v-else>555555</span>
+            <span v-else>{{ price || '-' }}</span>
           </div>
 
           <div class="custom">
@@ -64,9 +68,6 @@
                 >
                   {{ account.accountNum }}个账号
                 </t-radio>
-                <!-- <t-radio value="Beijing">1个账号</t-radio>
-                <t-radio value="Shanghai">20个账号</t-radio>
-                <t-radio value="Shanghai">50个账号</t-radio> -->
               </t-radio-group>
             </span>
             <span v-else>不限</span>
@@ -84,11 +85,11 @@
                   :key="durationItem.id"
                   :value="durationItem.id"
                 >
-                  {{ durationItem.duration }}个月
+                  <span v-if="durationItem.duration > 0">
+                    {{ durationItem.duration }}个月
+                  </span>
+                  <span v-else>不限</span>
                 </t-radio>
-                <!-- <t-radio value="Beijing">6个月</t-radio>
-                <t-radio value="Shanghai">12个月</t-radio>
-                <t-radio value="Shanghai">不限</t-radio> -->
               </t-radio-group>
             </span>
             <span v-else>不限</span>
@@ -105,10 +106,21 @@
       </div>
       <div class="intro">
         <div class="template">
+          <!-- <div class="nav">
+            <span
+              v-for="(item, index) in templateList"
+              :key="index"
+              :data-index="index"
+              @click="clickNav(index)"
+              >{{ item.moduleName }}</span
+            >
+          </div> -->
           <component
             :is="forCompList[item.type - 1]"
             v-for="(item, index) in templateList"
+            :id="`template${index}`"
             :key="index"
+            :ref="setNavRef"
             :template-data="item"
           ></component>
         </div>
@@ -132,8 +144,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { Modal } from '@tele-design/web-vue';
+
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
 import { SaleType } from '@/enums/common';
+import { useUserStore } from '@/store/modules/user';
+
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import Template1 from './layout/template1.vue';
@@ -147,7 +163,8 @@ import AuthMemberModal from './authMember.vue';
 
 const router = useRouter();
 const route = useRoute();
-const orderState = useOrderStore();
+const userStore = useUserStore();
+const orderStore = useOrderStore();
 const authModalVisible = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
@@ -158,6 +175,9 @@ const previewImgList = ref<string[]>([]);
 const bigImgPath = ref();
 const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
 const computing = ref(false);
+const price = ref();
+const templateList = ref<Record<string, any>[]>([]);
+const navRef = ref<any[]>([]);
 
 // // 模块一二三
 // const testData =
@@ -172,8 +192,8 @@ const computing = ref(false);
 //   '[{"type":5,"moduleName":"模块五","blockList":[{"name1":"标题一","desc1":"简介一","name2":"标题二","desc2":"简介二","name3":"标题三","desc3":"简介三"},{"name":"","desc":"","picUrl":"","name1":"标题一一","name2":"标题二二","name3":"标题三三","desc1":"简介二","desc2":"简介二","desc3":"简介二"}]}]';
 
 // 模块六
-const testData =
-  '[{"type":6,"moduleName":"模块六","blockList":[{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
+// const testData =
+//   '[{"type":6,"moduleName":"模块六","blockList":[{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
 
 const forCompList = [
   Template1,
@@ -188,6 +208,12 @@ const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
 
+const setNavRef = (el: any) => {
+  if (el) {
+    console.log('index.vue:212', el);
+    navRef.value.push(el);
+  }
+};
 const onAuthCancel = () => {
   authModalVisible.value = false;
 };
@@ -202,6 +228,7 @@ const onAuthConfirm = () => {
     deliveryType,
     saleType,
     logo,
+    source,
   } = prodDetail.value;
   const { accountNumList, durationList } = selectVersion.value;
   const { accountId, durationId } = priceParams.value;
@@ -217,35 +244,59 @@ const onAuthConfirm = () => {
       (item: Record<string, any>) => item.id === durationId
     );
     accountDesc = `${accountItem.accountNum}个账号`;
-    durationDesc = `${durationItem.duration}个月`;
+    durationDesc =
+      durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
 
-  orderState.createOrderInfo = {
+  // 封装确认订单需要的字段
+  orderStore.createOrderInfo = {
     companyId,
-    id,
-
+    productId: id,
+    deliveryVersionId: selectVersion.value.id,
+    price: price.value,
     accountDesc,
     durationDesc,
+    accountId,
+    durationId,
     companyName,
     name,
     deliveryType,
     logo,
+    orderSource: source,
   };
+
   router.push({
     path: '/order/confirm',
   });
 };
 
 const clickAddCart = () => {
-  authModalVisible.value = true;
+  const { userInfo, userInfoByCompany } = userStore;
+  if (!userInfo?.userId) {
+    userStore.jumpToLogin();
+  } else if (!userInfoByCompany?.primary) {
+    Modal.warning({
+      title: '请联系企业管理员购买开通服务',
+      okText: '好的',
+      hideCancel: true,
+      content: '',
+    });
+  } else {
+    authModalVisible.value = true;
+  }
 };
 
-const templateList = JSON.parse(testData);
+// const templateList = JSON.parse(testData);
 
 const getPrice = () => {
   computing.value = true;
-  apiComputePrice(priceParams.value)
-    .then(() => {})
+  apiComputePrice({
+    productId: prodDetail.value.id,
+    ...priceParams.value,
+  })
+    .then((data) => {
+      price.value = data;
+    })
     .catch(() => {})
     .finally(() => {
       computing.value = false;
@@ -265,6 +316,11 @@ const onRadioChange = () => {
   getPrice();
 };
 
+const clickNav = (index: number) => {
+  console.log('index.vue:311', index, navRef.value[index]);
+  navRef.value[index].scrollIntoView(true);
+};
+
 onMounted(() => {
   apiProductDetail({ id: route.params.id })
     .then((data) => {
@@ -273,6 +329,11 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
 
+      templateList.value = JSON.parse(data.detail);
+      // const tt = JSON.parse(data.detail);
+      // templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
+
+      console.log('index.vue:285', templateList.value);
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
@@ -295,8 +356,6 @@ onMounted(() => {
           getPrice();
         }
       }
-
-      console.log('index.vue:209', data);
     })
     .catch(() => {});
 });
@@ -342,7 +401,8 @@ onMounted(() => {
             margin-right: 8px;
             border-radius: 4px;
 
-            &:hover {
+            &:hover,
+            &.active {
               box-shadow: 0 0 0 2px #1664ff;
             }
           }
@@ -409,6 +469,32 @@ onMounted(() => {
       .template {
         flex: 1;
         margin-right: 16px;
+
+        .nav {
+          display: flex;
+          align-content: center;
+          padding: 0 24px;
+          background-color: #fff;
+          border-bottom: 1px solid #efefef;
+
+          // :deep(.tele-link)
+          span {
+            display: inline-block;
+            flex: 1;
+            padding: 11px 16px 11px 20px;
+            color: #4e5969;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px; /* 157.143% */
+            text-align: center;
+
+            &.active {
+              color: #1664ff;
+              font-weight: 500;
+              border-bottom: 1px solid #1664ff;
+            }
+          }
+        }
       }
 
       .consult {

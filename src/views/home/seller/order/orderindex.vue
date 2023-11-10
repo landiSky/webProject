@@ -475,7 +475,7 @@ const tableData = ref([
     accountCount: '10个账号', // 账号数量
     buyDuration: '5个月', // 购买时长
     realityPrice: 10000, // 实付金额
-    orderStatus: 3, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
     orderStatusName: '已完成', // 状态名称
     orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
     orderSteps: 6, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
@@ -808,7 +808,7 @@ const ondeliveryModalConfirm = () => {
     margin: 16px auto;
     background: #f6f7fb;
 
-    ::v-deep .tele-input-wrapper {
+    :deep(.tele-input-wrapper) {
       background-color: #fff;
     }
 

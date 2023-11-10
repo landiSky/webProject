@@ -9,19 +9,31 @@
             <img :src="avatar" alt="" />
           </div>
           <div class="rights">
-            <p style="float: left; width: 300px; margin-top: 16px" class="name"
-              >张伟</p
+            <p
+              style="float: left; width: 300px; margin-top: 16px"
+              class="name"
+              >{{ userInfos.username }}</p
             >
+
             <div class="inofs" style="float: left; margin-top: 25px">
-              <p>北京泰尔英福有限公司</p><p>|</p><p>主账号</p><p>|</p
-              ><p
+              <div style="float: left">
+                <p>{{ dataInfo.companyName }}</p
+                ><p>|</p
+                ><p>{{ dataInfo.primary === true ? '主账号' : '子账号' }}</p
+                ><p>|</p>
+              </div>
+
+              <p
+                style="float: left"
                 :class="[
-                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
+                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                     ? 'authenticated'
                     : 'notcertified',
                 ]"
                 >{{
-                  stateles.companyStatus === 1 || stateles.nodeStatus === 1
+                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
+                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                     ? '已认证'
                     : '未认证'
                 }}</p
@@ -41,37 +53,52 @@
                   <div class="btns">
                     <p style="margin: 10px 0"> 确认企业身份</p>
                     <t-button
-                      v-if="stateles.companyStatus === 3"
+                      v-if="
+                        dataInfo.certificateStatus === CompanyAuthStatus.UNAUTH
+                      "
                       type="text"
                       @click="authentication"
                       >去认证</t-button
                     >
-                    <div v-if="stateles.companyStatus !== 3" class="states">
+                    <div
+                      v-if="
+                        dataInfo.certificateStatus !== CompanyAuthStatus.UNAUTH
+                      "
+                      class="states"
+                    >
                       <p
                         style="width: 50px; text-align: center"
                         :class="[
-                          stateles.companyStatus === 0
+                          dataInfo.certificateStatus ===
+                          CompanyAuthStatus.TO_CHECK
                             ? 'tobereviewed'
-                            : stateles.companyStatus === 1
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.AUTHED
                             ? 'authenticated'
-                            : stateles.companyStatus === 2
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.REJECT
                             ? 'override'
                             : 'notcertified',
                         ]"
                         >{{
-                          stateles.companyStatus === 0
+                          dataInfo.certificateStatus ===
+                          CompanyAuthStatus.TO_CHECK
                             ? '待审核'
-                            : stateles.companyStatus === 1
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.AUTHED
                             ? '已认证'
-                            : stateles.companyStatus === 2
+                            : dataInfo.certificateStatus ===
+                              CompanyAuthStatus.REJECT
                             ? '已驳回'
                             : '未认证'
                         }}</p
                       >
                       <span
                         v-if="
-                          stateles.companyStatus === 0 ||
-                          stateles.companyStatus === 2
+                          dataInfo.certificateStatus ===
+                            CompanyAuthStatus.TO_CHECK ||
+                          dataInfo.certificateStatus ===
+                            CompanyAuthStatus.REJECT
                         "
                         style="font-size: 12px"
                         ><t-button type="text" @click="viewdetails"
@@ -83,7 +110,6 @@
                 </div>
                 <div>
                   <p class="ition"></p>
-
                   <img :src="group2" alt="" />
                   <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
@@ -131,20 +157,20 @@
               ><span
                 style="padding: 3px 10px"
                 :class="[
-                  stateles.nodeStatus === 0
+                  dataInfo.nodeStatus === 0
                     ? 'tobereviewed'
-                    : stateles.nodeStatus === 1
+                    : dataInfo.nodeStatus === 1
                     ? 'authenticated'
-                    : stateles.nodeStatus === 2
+                    : dataInfo.nodeStatus === 2
                     ? 'override'
                     : 'notcertified',
                 ]"
                 >{{
-                  stateles.nodeStatus === 0
+                  dataInfo.nodeStatus === 0
                     ? '待审核'
-                    : stateles.nodeStatus === 1
+                    : dataInfo.nodeStatus === 1
                     ? '已认证'
-                    : stateles.nodeStatus === 2
+                    : dataInfo.nodeStatus === 2
                     ? '已驳回'
                     : '未认证'
                 }}</span
@@ -170,13 +196,16 @@
               </ul>
               <div class="fimelistdata">
                 <t-button
-                  v-if="stateles.nodeStatus === 3"
+                  v-if="dataInfo.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
                   style="display: block; margin: 15px auto 0; padding: 5px 10px"
                   @click="authenticationredf"
                   >去认证</t-button
                 >
-                <div v-if="stateles.nodeStatus !== 3" class="states">
+                <div
+                  v-if="dataInfo.nodeStatus !== NodeAuthStatus.UNAUTH"
+                  class="states"
+                >
                   <p
                     style="
                       width: 50px;
@@ -185,27 +214,27 @@
                       text-align: center;
                     "
                     :class="[
-                      stateles.nodeStatus === 0
+                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
                         ? 'tobereviewed'
-                        : stateles.nodeStatus === 1
+                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                         ? 'authenticated'
-                        : stateles.nodeStatus === 2
+                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
                         ? 'override'
                         : 'notcertified',
                     ]"
                     >{{
-                      stateles.nodeStatus === 0
+                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
                         ? '待审核'
-                        : stateles.nodeStatus === 1
+                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
                         ? '已认证'
-                        : stateles.nodeStatus === 2
+                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
                         ? '已驳回'
                         : '未认证'
                     }}</p
                   >
                   <p
                     v-if="
-                      stateles.nodeStatus === 0 || stateles.nodeStatus === 2
+                      dataInfo.nodeStatus === 0 || dataInfo.nodeStatus === 2
                     "
                     style="
                       width: 80px;
@@ -331,12 +360,18 @@
           class="purchasedlist"
         >
           <div style="width: 20%">
-            <img :src="frame" alt="" style="width: 100%; height: 100%" />
+            <img
+              :src="item.productLogo"
+              alt=""
+              style="width: 100%; height: 100%"
+            />
           </div>
           <div class="leftcont">
             <div class="tophead" style="margin-bottom: 20px"
-              ><span>{{ item.name }}</span
-              ><span style="color: #1664ff" @click="togo"> 前往 》</span></div
+              ><span>{{ item.productName }}</span
+              ><span style="color: #1664ff; cursor: pointer" @click="togo">
+                前往 》</span
+              ></div
             >
             <div
               style="
@@ -347,10 +382,12 @@
                 text-overflow: ellipsis;
               "
               title="asdasdasd"
-              >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
+              >{{ item.introduction }}
             </div>
             <div class="tophead"
-              ><span style="color: #1664ff" @click="configurationapp(item)"
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                @click="configurationapp(item)"
                 >配置应用</span
               ><span
                 style="color: #86909c; cursor: pointer"
@@ -440,11 +477,11 @@
       v-if="detailflag"
       :data="state.editData"
       @confirm="onEditModalConfirmflag"
-      @cancel="detailflag = false"
+      @cancel="detailflagclick"
     >
     </DetailsModalFullscreen>
     <!-- \v-show="false" -->
-    <div v-show="false" id="page" class="zhengshu-container-box">
+    <div id="page" class="zhengshu-container-box">
       <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
       <div class="zhengshu-container-box-bid">
         存证BID：{detail?.bid || '--'}
@@ -508,38 +545,80 @@
 <script lang="ts" setup>
 import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import { storeToRefs } from 'pinia';
 import { ref, reactive } from 'vue';
-
-import { useRouter } from 'vue-router';
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
-
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
+
+import { useRouter } from 'vue-router';
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
+import { useUserStore } from '@/store/modules/user';
+import { CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
+
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
-import frame from './image/frame.png';
+// import frame from './image/frame.png';
 
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
-
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
+// console.log(userInfoByCompany);
 const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();
-
-// 认证状态
-const stateles = ref({
-  companyStatus: 2, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-  nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+// 用户信息
+const userInfos = reactive({
+  id: 4,
+  userId: null,
+  username: '你好',
+  nickname: null,
+  email: null,
+  mobile: '15112343001',
+  companyId: 1391254317244416, // 企业id
+  companyName: 'y1t企业', // 企业名称
+  companyShort: null,
+  companyStatus: 1,
+  companyNodeStatus: null,
+  userType: null,
+  userStatus: null,
+  createTime: null,
+  companyList: [
+    {
+      memberId: 1717495373822156800, // 成员id
+      memberType: 1, // 成员类型 0:普通成员 1:管理员
+      companyId: 1391254317244416, // 企业id 必传
+      companyName: 'y1t企业', // 企业名称
+    },
+  ],
 });
+// 企业状态
+const dataInfo = ref({
+  id: null, // 用户id
+  username: '章三', // 用户名称
+  companyId: 1, // 机构id
+  companyName: '北京泰尔英福有限公司', // 机构名称
+  certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  nodeStatus: 1, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+  primary: true, // 主账号 true 子账号 false
+  roleNames: null, // 角色名称
+  menuCodes: null, // 菜单code
+});
+// 认证状态
+// const stateles = ref({
+//   companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+//   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+// });
+
 const state = reactive({
   editData: {
     id: '1111',
@@ -574,25 +653,43 @@ const images = reactive([
 // //已购应用
 const authDialogVisible = reactive([
   {
-    name: '章三1',
-  },
-  {
-    name: '章三2',
-  },
-  {
-    name: '章三3',
-  },
-  {
-    name: '章三4',
-  },
-  {
-    name: '章三5',
-  },
-  {
-    name: '章三6',
-  },
-  {
-    name: '章三7',
+    id: '2',
+    orderNum: '2',
+    productId: '1', // 商品id
+    productName: '凉皮', // 商品名称
+    introduction:
+      '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
+    useExplain: '', // 使用说明
+    customerName: '硕',
+    productLogo:
+      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
+    merchantName: '商品所属商家名称',
+    deliveryTypeName: 'SAAS',
+    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
+    productPrice: 10000,
+    accountCount: '10个账号',
+    buyDuration: '5个月',
+    realityPrice: 9400,
+    orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatusName: '待审核',
+    orderStatusInfo: null,
+    orderSteps: 3, // 订单步骤
+    rejectType: 0,
+    rejectReasonDetail: '未收到打款信息',
+    deploymentStatusName: null,
+    deploymentStatusCode: null,
+    couponMoney: 600,
+    userMobile: null,
+    orderSource: 0,
+    effectTime: null,
+    createTime: '2023-10-23 16:24:32',
+    dueDate: null,
+    voucherRejectTime: '2023-10-24 11:05:38',
+    payCompleteTime: null,
+    voucherSubmitTime: '2023-10-24 11:11:19',
+    confirmDeployedTime: null,
+    merchantDeliverTime: null,
+    attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
   },
 ]);
 // 订单概览
@@ -632,8 +729,14 @@ const onEditModalConfirmcode = () => {
   gotoverifys.value = false;
 };
 // 认证填写 取消
-const cancelgotoverifys = () => {
-  gotoverifys.value = false;
+const cancelgotoverifys = (status: number) => {
+  if (status === 1) {
+    detailflag.value = true;
+    gotoverifys.value = false;
+  } else {
+    editModalVisible.value = true;
+    gotoverifys.value = false;
+  }
   state.editData.statusled = 0;
 };
 //  修改认证信息
@@ -641,6 +744,11 @@ const onEditModalConfirmflag = () => {
   detailflag.value = false;
   state.editData.statusled = 1;
   gotoverifys.value = true;
+};
+// 查看详情 取消
+const detailflagclick = () => {
+  detailflag.value = false;
+  editModalVisible.value = true;
 };
 // 企业节点去认证
 const authenticationredf = () => {};
@@ -798,7 +906,7 @@ const multiples = () => {
             justify-content: space-between;
             width: 90%;
 
-            ::v-deep .tele-btn-size-medium {
+            :deep(.tele-btn-size-medium) {
               height: 0;
               padding: 0;
             }
@@ -1044,41 +1152,41 @@ const multiples = () => {
       width: 99%;
       height: 100%;
 
-      ::v-deep .tele-carousel-arrow-left {
+      :deep(.tele-carousel-arrow-left) {
         top: 106%;
         left: 44%;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-arrow-right {
+      :deep(.tele-carousel-arrow-right) {
         top: 106%;
         right: 45%;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-arrow-left > svg {
+      :deep(.tele-carousel-arrow-left > svg) {
         color: #56555f;
         font-weight: 600;
         font-size: 20px;
       }
 
-      ::v-deep .tele-carousel-arrow-right > svg {
+      :deep(.tele-carousel-arrow-right > svg) {
         color: #56555f;
         font-weight: 600;
         font-size: 20px;
       }
 
-      ::v-deep .tele-carousel-indicator-wrapper-bottom {
+      :deep(.tele-carousel-indicator-wrapper-bottom) {
         bottom: -35px;
         background: transparent;
       }
 
-      ::v-deep .tele-carousel-indicator {
+      :deep(.tele-carousel-indicator) {
         display: flex;
         align-items: center;
       }
 
-      ::v-deep .tele-carousel-indicator-item {
+      :deep(.tele-carousel-indicator-item) {
         width: 8px;
         height: 8px;
         margin-right: 16px;
@@ -1088,7 +1196,7 @@ const multiples = () => {
         transform-origin: center center;
       }
 
-      ::v-deep .tele-carousel-indicator-item-active {
+      :deep(.tele-carousel-indicator-item-active) {
         width: 16px;
         height: 16px;
         background-color: #1664ff;
@@ -1218,6 +1326,10 @@ const multiples = () => {
   }
   // pdf导出
   .zhengshu-container-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: -9999;
     box-sizing: border-box;
     // position: fixed;
     // // top: 100000px;

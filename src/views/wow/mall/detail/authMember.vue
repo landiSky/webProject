@@ -43,7 +43,7 @@ import { useUserStore } from '@/store/modules/user';
 import { apiMemberList, apiAuthMember } from '@/api/common';
 
 const store = useUserStore();
-const { userInfo } = storeToRefs(store);
+const { userInfo, selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,
@@ -71,17 +71,21 @@ const onConfirm = () => {
 
 onMounted(() => {
   apiMemberList({
-    companyId: userInfo.value?.companyId,
+    productId: props.productId,
+    companyId: selectCompany.value?.companyId,
   })
     .then((data: any) => {
       memberList.value = data || [];
       if (memberList.value.length) {
         visible.value = true;
       } else {
-        emit('cancel');
+        emit('confirm');
+        // emit('cancel');
       }
     })
-    .catch(() => {});
+    .catch(() => {
+      emit('confirm');
+    });
 });
 </script>
 

@@ -5,7 +5,7 @@ import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 import { AccountType } from '@/enums/common';
-import { useMenuStore } from './menu';
+// import { useMenuStore } from './menu';
 
 interface UserState {
   userInfo: Record<string, any> | null; // UserInfo | null;
@@ -14,9 +14,8 @@ interface UserState {
   userInfoByCompany: Record<string, any> | null;
   selectCompany: Record<string, any> | null;
   configInfo: Record<string, any> | null;
+  updateMenu: boolean;
 }
-
-// const menuStore = useMenuStore();
 
 export const useUserStore = defineStore({
   id: 'app-user',
@@ -27,6 +26,7 @@ export const useUserStore = defineStore({
     counter: 0,
     token: null,
     configInfo: {},
+    updateMenu: false,
   }),
   getters: {
     // 获取用户信息
@@ -42,18 +42,38 @@ export const useUserStore = defineStore({
   actions: {
     getUserByCompany() {
       const { companyId, memberId } = this.selectCompany || {};
+
+      // this.userInfoByCompany = {
+      //   id: 1, // 用户id
+      //   username: '谢珍', // 用户名称
+      //   companyId: 1, // 机构id
+      //   companyName: 'kw企业', // 机构名称
+      //   certificateStatus: 0, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+      //   nodeStatus: 3, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+      //   primary: true, // 主账号 true 子账号 false
+      //   roleNames: null, // 角色名称
+      //   menuCodes: [
+      //     'ROUTE_BUYER',
+      //     'ROUTE_BUYER_ORDER',
+      //     'ROUTE_SELLER',
+      //     'ROUTE_SELLER_GOODS',
+      //   ], // 菜单code
+      // };
       apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
+          console.log(data);
           this.userInfoByCompany = data;
         })
         .catch(() => {});
     },
 
     async changeSelectCompany(data: Record<string, any>) {
+      console.log('user.ts:70===给selectCompany赋值', data);
       this.selectCompany = data;
       await this.getUserByCompany();
 
-      useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
+      this.updateMenu = !this.updateMenu;
+      // useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
     },
     /**
      * 初始化信息：判断需不需要加载侧边栏，获取topmenu之后，对比当前的route path和id，从server获取sidemenu
@@ -65,22 +85,23 @@ export const useUserStore = defineStore({
 
         // const userInfo = {
         //   userId: 1,
+        //   mobile: '15210602855',
         //   username: 'super',
         //   nickName: '超级管理员',
-
-        //   auths: [
-        //     'ROUTE_BUYER',
-        //     'ROUTE_BUYER_INDEX',
-        //     'ROUTE_BUYER_ORDER',
-        //     'ROUTE_SELLER',
-        //     'ROUTE_SELLER_GOODS',
-        //     'ROUTE_SELLER_ORDER',
-        //     'ROUTE_SYSTEM',
-        //     'ROUTE_SYSTEM_USERS',
-        //     'ROUTE_SYSTEM_ROLES',
-        //     // 'ROUTE_SYSTEM_DATAOVERVIEW',
+        //   companyList: [
+        //     {
+        //       memberId: 12, // 成员id
+        //       memberType: 1, // 成员类型 0:普通成员 1:管理员
+        //       companyId: 1, // 企业id 必传
+        //       companyName: '泰尔英福巴拉巴拉1', // 企业名称
+        //     },
+        //     {
+        //       memberId: 13, // 成员id
+        //       memberType: 0, // 成员类型 0:普通成员 1:管理员
+        //       companyId: 2, // 企业id 必传
+        //       companyName: '泰尔英福巴拉巴拉2', // 企业名称
+        //     },
         //   ],
-        //   companyList: [],
         // };
 
         this.userInfo = userInfo as any;
@@ -94,14 +115,24 @@ export const useUserStore = defineStore({
         //     "companyName": "y1t企业" //企业名称
         // }
         if (Array.isArray(companyList) && companyList.length) {
-          const adminCompany = companyList.filter(
+          const resultList = companyList.filter(
             (company: Record<string, any>) =>
               company.memberType === AccountType.ADMIN
           );
 
+          const adminCompany =
+            Array.isArray(resultList) && resultList.length
+              ? resultList[0]
+              : null;
+          console.log(
+            'user.ts:122====有多个企业',
+            adminCompany,
+            companyList[0]
+          );
           this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
-          useMenuStore().genLeftMenu([]);
+          this.updateMenu = !this.updateMenu;
+          // useMenuStore().genLeftMenu([]);
         }
 
         return userInfo;
@@ -158,10 +189,14 @@ export const useUserStore = defineStore({
      * 登出
      */
     async logout(): Promise<void> {
-      await apiLogout();
       this.userInfo = null;
+      this.userInfoByCompany = null;
+      this.selectCompany = {};
       this.token = '';
+
+      await apiLogout();
       clearToken();
+      window.location.href = this.configInfo?.logoutUrl;
     },
 
     clearUserInfo(): void {
@@ -169,13 +204,14 @@ export const useUserStore = defineStore({
     },
 
     jumpToLogin(): void {
-      // eslint-disable-next-line camelcase
-      const { client_id, redirect_uri } = this.configInfo || {};
+      const { loginUrl } = this.configInfo || {};
 
-      window.location.href = `${
-        import.meta.env.VITE_APP_LOGIN
-        // eslint-disable-next-line camelcase
-      }?response_type=code&scope=all&client_id=${client_id}&redirect_uri=${redirect_uri}` as string;
+      window.location.href = loginUrl;
+
+      // window.location.href = `${
+      //   import.meta.env.VITE_APP_LOGIN
+      //   // eslint-disable-next-line camelcase
+      // }?response_type=code&scope=all&client_id=${clientId}&redirect_uri=${redirectUri}` as string;
     },
   },
 });

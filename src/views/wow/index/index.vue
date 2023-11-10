@@ -62,16 +62,17 @@
             <span class="contentDesc">{{ item.desc }}</span>
           </div>
           <div class="cardList">
-            <div
-              v-for="(card, index) in item.cards"
-              :key="index"
-              class="card"
-              :style="{
+            <!-- :style="{
                 backgroundImage: `url(
-                  src/assets/images/wow/index/${card.bgImg}
+                  @/assets/images/wow/index/${card.bgImg}
                 )`,
-              }"
-            >
+              }" -->
+            <div v-for="(card, index) in item.cards" :key="index" class="card">
+              <img :src="card.bgImg" alt="" />
+              <div class="cardContent">
+                <span>{{ card.name }}</span>
+                <span>{{ card.desc }}</span>
+              </div>
               <!-- <span>{{ card.name }}</span>
               <span>{{ card.desc }}</span> -->
             </div>
@@ -88,10 +89,12 @@
         <span class="subTitle">当前活跃企业节点</span>
         <t-table
           :columns="columns"
-          :data="tableData"
+          :data="activeNodeList"
           :bordered="false"
           :pagination="false"
+          :scroll="{ y: '90%' }"
           class="table"
+          scrollbar
         />
       </div>
       <div class="right">
@@ -100,21 +103,21 @@
           <div class="item">
             <span class="label">互通企业数</span>
             <span>
-              <span class="value">250,000</span>
+              <span class="value">{{ activeOverall.interWorkingCount }}</span>
               <span>家</span>
             </span>
           </div>
           <div class="item">
             <span class="label">接入应用/服务</span>
             <span>
-              <span class="value">73</span>
+              <span class="value">{{ activeOverall.serverCount }}</span>
               <span>个</span>
             </span>
           </div>
           <div class="item">
             <span class="label">使用公开数据标准</span>
             <span>
-              <span class="value">23</span>
+              <span class="value">{{ activeOverall.openStandardCount }}</span>
               <span>套</span>
             </span>
           </div>
@@ -127,29 +130,45 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import carouse1 from '@/assets/images/wow/index/carouse1.png';
+import carouse2 from '@/assets/images/wow/index/carouse2.png';
+import carouse3 from '@/assets/images/wow/index/carouse3.png';
+import carouse4 from '@/assets/images/wow/index/carouse4.png';
+import tab11 from '@/assets/images/wow/index/tab1-1.png';
+import tab12 from '@/assets/images/wow/index/tab1-2.png';
+import tab13 from '@/assets/images/wow/index/tab1-3.png';
+import tab21 from '@/assets/images/wow/index/tab2-1.png';
+import tab22 from '@/assets/images/wow/index/tab2-2.png';
+import tab23 from '@/assets/images/wow/index/tab2-3.png';
+import tab31 from '@/assets/images/wow/index/tab3-1.png';
+import tab32 from '@/assets/images/wow/index/tab3-2.png';
+import tab33 from '@/assets/images/wow/index/tab3-3.png';
+import tab41 from '@/assets/images/wow/index/tab4-1.png';
+import tab42 from '@/assets/images/wow/index/tab4-2.png';
+import tab43 from '@/assets/images/wow/index/tab4-3.png';
+
+import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
 
+const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
+const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
+
 // 轮播图图片枚举
 const carouselList = [
-  // TODO 1 需要产品提供图片和跳转地址，当前是从一期拿了一部分
-  // {
-  //   path: '/public/indexCarouselImage/c1.png',
-  //   link: 'https://mp.weixin.qq.com/s/uuGw-xi-FGDi08IxMBjJjQ',
-  // },
   {
-    path: '/public/indexCarouselImage/c2.png',
+    path: carouse2, // /indexCarouselImage/c2.png
     link: 'https://www.teleinfo.cn/product_1/1574672998269988864.html',
   },
   {
-    path: '/public/indexCarouselImage/c3.png',
+    path: carouse3,
     link: 'https://www.teleinfo.cn/Solution/176652.html',
   },
   {
-    path: '/public/indexCarouselImage/c4.png',
+    path: carouse4,
     link: 'https://www.teleinfo.cn/Solution/176651.html',
   },
 ];
@@ -197,89 +216,85 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc:
-      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
         desc: '星火·链网”骨干节点',
-        bgImg: 'tab1-1.png',
+        bgImg: tab11,
       },
       {
         name: 'IDPoint',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-2.png',
+        bgImg: tab12,
       },
       {
         name: 'IDHub',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-3.png',
+        bgImg: tab13,
       },
     ],
   },
   {
     title: '工业互联网技术服务',
-    desc:
-      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
         desc: '大数据监测平台',
-        bgImg: 'tab2-1.png',
+        bgImg: tab21,
       },
       {
         name: 'IDMeta',
         desc: '元数据管理平台',
-        bgImg: 'tab2-2.png',
+        bgImg: tab22,
       },
       {
         name: 'IDGuard',
         desc: '标识安全卫士',
-        bgImg: 'tab2-3.png',
+        bgImg: tab23,
       },
     ],
   },
   {
     title: '区块链技术服务',
-    desc:
-      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
         desc: '许可公有链',
-        bgImg: 'tab3-1.png',
+        bgImg: tab31,
       },
       {
         name: 'TBaas',
         desc: '区块链服务平台',
-        bgImg: 'tab3-2.png',
+        bgImg: tab32,
       },
       {
         name: 'TPaas',
         desc: '有象账户',
-        bgImg: 'tab3-3.png',
+        bgImg: tab33,
       },
     ],
   },
   {
     title: '创新服务',
-    desc:
-      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
         desc: '“星火·链网”骨干节点',
-        bgImg: 'tab1-1.png',
+        bgImg: tab41,
       },
       {
         name: 'IDPoint',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-2.png',
+        bgImg: tab42,
       },
       {
         name: 'IDHub',
         desc: '标识解析二级节点',
-        bgImg: 'tab1-3.png',
+        bgImg: tab43,
       },
     ],
   },
@@ -288,30 +303,30 @@ const platProductsList = [
 const columns = [
   {
     title: ' 企业前缀',
-    dataIndex: 'entPrefix',
+    dataIndex: 'companyPrefix',
   },
   {
     title: '企业名称',
-    dataIndex: 'entName',
+    dataIndex: 'companyName',
   },
   {
     title: '注册量',
-    dataIndex: 'regisNum',
+    dataIndex: 'registerCount',
   },
   {
     title: '解析量',
-    dataIndex: 'resolveNum',
+    dataIndex: 'parseCount',
   },
 ];
 
-const tableData = reactive([
-  {
-    entPrefix: '88.111.22',
-    entName: '北京泰尔英福科技有限公司',
-    regisNum: 10000,
-    resolveNum: 500,
-  },
-]);
+onMounted(() => {
+  apiActiveNode().then((data: any) => {
+    activeNodeList.value = data;
+  });
+  apiNodeOverall().then((data) => {
+    activeOverall.value = data;
+  });
+});
 </script>
 
 <style lang="less" scoped>
@@ -471,6 +486,40 @@ const tableData = reactive([
       width: 210px;
       height: 284px;
       margin-right: 46px;
+
+      .cardContent {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        margin-top: -76px;
+
+        span {
+          display: inline-block;
+          color: #435c97;
+          font-weight: 300;
+          font-size: 20px;
+          line-height: 28px; /* 140% */
+
+          &:first-child {
+            margin-bottom: 4px;
+          }
+
+          &:last-child {
+            font-size: 14px;
+            line-height: 22px;
+          }
+        }
+
+        .desc {
+          color: #435c97;
+          font-weight: 300;
+          font-size: 14px;
+          font-family: PingFang SC;
+          font-style: normal;
+          line-height: 22px; /* 157.143% */
+          text-align: center;
+        }
+      }
     }
   }
 }
@@ -518,6 +567,10 @@ const tableData = reactive([
       .table {
         margin-top: -12px;
         margin-left: -16px;
+
+        :deep(.tele-empty) {
+          padding: 50px 0;
+        }
       }
     }
 

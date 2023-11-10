@@ -78,7 +78,13 @@ const state = reactive({
 });
 
 const formRules = {
-  amount: [{ required: true, message: '请输入' }],
+  amount: [
+    { required: true, message: '请输入' },
+    {
+      match: /^[1-9]\d*$/ || /^(-?\d+)(\.\d{1,2})?$/,
+      message: '请输入正确金额',
+    },
+  ],
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {

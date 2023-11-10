@@ -39,54 +39,13 @@
         </t-tooltip>
         <t-link v-else @click="delBlock(index)"> 删除 </t-link>
       </span>
-
       <t-form-item
-        :field="`blockList.${index}.name`"
-        label="区块标题"
-        :rules="[
-          {
-            required: true, 
-            validator: (value: string, cb: any) =>
-              itemValid(15, '请输入区块标题', value, cb),
-          },
-        ]"
-        :validate-trigger="['change', 'input']"
-      >
-        <t-input
-          v-model="item.name"
-          placeholder="请输入区块标题"
-          :max-length="{ length: 15, errorOnly: true }"
-          allow-clear
-          show-word-limit
-        />
-      </t-form-item>
-      <t-form-item
-        :field="`blockList.${index}.desc`"
-        label="区块简介"
-        :rules="[
-          {
-            required: true,
-            validator: (value: string, cb: any) =>
-              itemValid(150, '请输入区块简介', value, cb),
-          },
-        ]"
-        :validate-trigger="['change', 'input']"
-      >
-        <t-textarea
-          v-model="item.desc"
-          placeholder="请输入区块简介"
-          :max-length="{ length: 150, errorOnly: true }"
-          allow-clear
-          show-word-limit
-        />
-      </t-form-item>
-      <t-form-item
-        :field="`blockList.${index}.picUrl`"
+        :field="`blockList.${index}`"
         label="配图"
         :rules="[
           {
-            required: true, 
-            validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
+            required: true,
+            validator: (value: string, cb: any) => itemValid(index, '请上传配图', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -94,12 +53,16 @@
         <div>
           <t-upload
             list-type="picture-card"
-            :file-list="item.picUrl ? [{ url: item.picUrl }] : []"
-            action="/api/v1/handle/bind-handle"
+            :file-list="item ? item : []"
+            :headers="{
+              Authorization: `Bearer ${getToken()}`,
+            }"
+            action="/web/file/upload"
             accept=".jpg,.png,.bmp,.tif,.gif"
-            :limit="1"
+            :limit="5"
             :auto-upload="false"
             tip="点击上传"
+            image-preview
             @change="(_: any, currentFile: any) => onUploadChange(_, currentFile, index)"
           >
           </t-upload>
@@ -112,7 +75,7 @@
     </template>
   </t-form>
   <t-divider />
-  <div v-show="form.blockList.length < 6" class="extraOpt">
+  <div v-show="form.blockList.length < 3" class="extraOpt">
     <iconpark-icon
       class="plusIcon"
       name="squarePlus"
@@ -124,16 +87,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, inject } from 'vue';
+import { ref, reactive, inject } from 'vue';
 import type { Ref } from 'vue';
+import { getToken } from '@/utils/auth';
 
 const formRef = ref();
-const transSeq = ['一', '二', '三', '四', '五', '六'];
+const transSeq = ['一', '二', '三'];
 
 const templateList: Ref<Record<string, any>[]> = inject(
   'templateList',
   ref([])
 );
+
 const props = defineProps({
   currentIndex: {
     type: Number,
@@ -142,15 +107,9 @@ const props = defineProps({
 });
 
 const initForm = {
-  type: 2,
+  type: 6,
   moduleName: '',
-  blockList: [
-    {
-      name: '',
-      desc: '',
-      picUrl: '',
-    },
-  ],
+  blockList: [[]],
 };
 
 const form = ref(
@@ -160,28 +119,25 @@ const form = ref(
 );
 
 const itemValid = (
-  maxLen: number,
+  index: number,
   msg: string,
   value: string,
   cb: (params?: any) => void
 ) => {
-  if (!value) {
+  const item: { url: string }[] = form.value.blockList[index];
+  if (!item) {
     return cb(msg);
   }
 
-  if (maxLen > 0 && String(value).length > maxLen) {
-    return cb(`最多允许输入${maxLen}个字符`);
+  if (Array.isArray(item) && item.length < 5) {
+    return cb('请上传 5 张配图');
   }
 
   return cb();
 };
 
 const addBlock = () => {
-  form.value.blockList.push({
-    name: '',
-    desc: '',
-    picUrl: '',
-  });
+  form.value.blockList.push([]);
 };
 
 const delBlock = (index: number) => {
@@ -193,7 +149,9 @@ const onUploadChange = (
   currentFile: Record<string, any>,
   index: number
 ) => {
-  form.value.blockList[index].picUrl = currentFile.url;
+  form.value.blockList[index] = _.map((item: Record<string, any>) => {
+    return { url: item.url };
+  });
 };
 
 defineExpose({

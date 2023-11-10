@@ -5,7 +5,7 @@
     title-align="start"
     class="fullscreen-modal"
     :on-before-ok="onConfirm"
-    @cancel="emit('cancel')"
+    @cancel="onConfirm"
     @back="goback"
   >
     <template #title>
@@ -87,17 +87,30 @@
           </t-input>
         </t-form-item>
         <!-- @before-upload="beforeUpload" -->
-        <t-form-item label="营业执照" field="businessLicenseId">
+        <t-form-item label="营业执照" field="businessLicense">
           <t-upload
-            v-model="formModel.businessLicenseId"
+            :file-list="
+              formModel.businessLicense
+                ? [
+                    {
+                      url: `/web/file/download?name=${formModel.businessLicense}`,
+                    },
+                  ]
+                : []
+            "
             list-type="picture-card"
-            action="/"
+            :headers="uploadHeaders"
+            action="/web/file/upload"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
-            accept="image/png,image/jpg"
+            accept=".jpg,.png,.bmp,.tif,.gif"
             @before-upload="beforeUpload"
+            @success="uploadSuccess"
           >
+            <!-- @success="
+              (fileItem) => uploadSuccess(fileItem, 'businessLicenseId')
+            " -->
             <template #upload-button>
               <div
                 style="
@@ -175,13 +188,23 @@
           <t-form-item field="idCardz" :hide-label="true" style="width: 200px">
             <!-- @before-upload="beforeUpload" -->
             <t-upload
-              v-model="formModel.idCardz"
+              :file-list="
+                formModel.idCardz
+                  ? [
+                      {
+                        url: `/web/file/download?name=${formModel.idCardz}`,
+                      },
+                    ]
+                  : []
+              "
               list-type="picture-card"
-              action="/"
+              action="/web/file/upload"
+              :headers="uploadHeaders"
               :limit="1"
               image-preview
-              accept="image/png,image/jpg"
+              accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
+              @success="uploadSuccessz"
             >
               <template #upload-button>
                 <div
@@ -205,14 +228,24 @@
           <t-form-item label="" :hide-label="true" field="idCardf">
             <!-- @before-upload="beforeUpload" -->
             <t-upload
-              :file-list="formModel.idCardf"
+              :file-list="
+                formModel.idCardf
+                  ? [
+                      {
+                        url: `/web/file/download?name=${formModel.idCardf}`,
+                      },
+                    ]
+                  : []
+              "
               list-type="picture-card"
-              action="/"
+              action="/web/file/upload"
+              :headers="uploadHeaders"
               :limit="1"
               image-preview
               style="margin-top: -20px"
-              accept="image/png,image/jpg"
+              accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
+              @success="uploadSuccessf"
             >
               <template #upload-button>
                 <div
@@ -254,7 +287,8 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, reactive } from 'vue';
 import { useUserStore } from '@/store/modules/user';
-import { authDetails, authSubmit } from '@/api/authentication';
+import { authDetails, authSubmit, authRepeat } from '@/api/authentication';
+import { getToken } from '@/utils/auth';
 import { storeToRefs } from 'pinia';
 
 import {
@@ -278,6 +312,10 @@ const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();
 
+const uploadHeaders = {
+  Authorization: `Bearer ${getToken()}`,
+};
+
 // const detaillist = ref({
 //   id: '',
 //   userId: '',
@@ -293,6 +331,8 @@ const formRef = ref();
 //   remark: '',
 // });
 const formModel = ref({
+  id: 1392100221902848,
+  userId: 5,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -300,7 +340,7 @@ const formModel = ref({
   // 法人姓名
   legalPersonName: '',
   // 营业执照
-  businessLicenseId: '',
+  businessLicense: '',
   // 联系人姓名
   contactName: '',
   // 联系人身份证号
@@ -308,6 +348,8 @@ const formModel = ref({
   // 联系人身份证
   idCardz: '',
   idCardf: '',
+  // 新增 0 重新添加 1
+  type: 0,
 });
 // const fileList = [
 //   {
@@ -328,13 +370,28 @@ const formRules: any = {
   ],
   creditCode: [
     { required: true, message: '请输入社会信用代码' },
-    { maxLength: 20, message: '长度不超过20个字符' },
+    {
+      match: /^[0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}$/,
+      message: '请输入正确的信用代码',
+    },
   ],
   legalPersonName: [
     { required: true, message: '请输入法人姓名' },
     { maxLength: 10, message: '长度不超过20个字符' },
   ],
-  businessLicenseId: [{ required: true, message: '请上传营业执照' }],
+  businessLicense: [
+    {
+      required: true,
+      message: '请上传营业执照',
+      validator: (value: any, cb: any) => {
+        if (!formModel.value.businessLicense) {
+          return cb('请上传营业执照');
+        }
+
+        return cb();
+      },
+    },
+  ],
   contactName: [
     { required: true, message: '请输入联系人姓名' },
     { maxLength: 10, message: '长度不超过10个字符' },
@@ -344,29 +401,43 @@ const formRules: any = {
     { maxLength: 18, message: '长度不超过18个字符' },
     {
       match:
-        /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/,
+        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
 
+  contactidcard: [
+    {
+      required: true,
+      message: '请上传身份证',
+      validator: (value: any, cb: any) => {
+        if (!formModel.value.idCardz) {
+          return cb('请上传身份证正面');
+        }
+        if (!formModel.value.idCardf) {
+          return cb('请上传身份证反面');
+        }
+        return cb();
+      },
+    },
+  ],
   // contactidcard: [{ required: true, message: '请上传身份证' }],
-  contactidcard: [{ required: true, message: '请上传身份证' }],
 };
 
 const goback = () => {
   // showModal.value = false;
   console.log('cancel');
-  emit('cancel');
+  emit('cancel', formModel.value.type);
 };
-
 const getUserDetail = () => {
-  authDetails({ companyId: userInfo.value?.companyId })
+  // userInfo.value?.companyId
+  authDetails({ companyId: 2 })
     .then((res) => {
       console.log(res);
-      if (res.code === 200) {
-        console.log(res.data);
-        formModel.value = res.data;
-      }
+      //  @ts-ignore
+      formModel.value = res;
+      formModel.value.type = 1;
+      console.log(formModel.value);
     })
     .catch((error) => {});
   // 调后端接口
@@ -383,60 +454,80 @@ const getUserDetail = () => {
   //     loading.value = false;
   //   });
 };
+// @ts-ignore
+const uploadSuccess = (fileItem: FileItem) => {
+  console.log(fileItem);
+  const res = fileItem.response;
+  if (res?.code === 200) {
+    console.log(fileItem.response.data);
+    formModel.value.businessLicense = fileItem.response.data;
+    console.log(formModel.value.businessLicense);
+    Message.success(`上传 ${fileItem.name} 成功`);
+  } else {
+    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
+// @ts-ignore
+const uploadSuccessz = (fileItem: FileItem) => {
+  console.log(fileItem);
+  const res = fileItem.response;
+  if (res?.code === 200) {
+    formModel.value.idCardz = fileItem.response.data;
+
+    Message.success(`上传 ${fileItem.name} 成功`);
+  } else {
+    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
+// @ts-ignore
+const uploadSuccessf = (fileItem: FileItem) => {
+  const res = fileItem.response;
+  if (res?.code === 200) {
+    formModel.value.idCardf = fileItem.response.data;
+
+    Message.success(`上传 ${fileItem.name} 成功`);
+  } else {
+    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
 const beforeUpload = (file: File) => {
   // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const isLt5M: boolean = file.size / 1024 / 1024 < 5;
+    console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
       reject();
     }
-    resolve();
+    // @ts-ignore
+    resolve(true);
   });
 };
 // 完成
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
+      // setFields;
       console.log(formModel.value, 'closed');
-      authSubmit(formModel.value)
+      authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
-          if (res.code === 200) {
-            console.log(res);
-            emit('confirm');
-            done(true);
-            Message.success('认证已提交');
+          if (res.data.code === 200) {
+            authSubmit(formModel.value)
+              .then((res) => {
+                console.log(res);
+                emit('confirm');
+                done(true);
+                Message.success('认证已提交');
+              })
+              .catch((err) => {
+                done(false);
+              });
+          } else {
+            Message.error('信用代码已存在');
           }
         })
-        .catch((err) => {
-          done(false);
-        });
-
-      // const a = {
-      //   id: '企业id',
-      //   userId: '用户id',
-      //   companyName: '企业名称',
-      //   creditCode: '统一社会信用代码',
-      //   contactName: '联系人名称',
-      //   contactIdCard: '联系人身份证号',
-      //   idCardf: '身份证反面ID',
-      //   idCardz: '身份证正面ID',
-      //   legalPersonName: '法人姓名',
-      //   type: props.data.statusled, // 0：提交认证 1:重新认证
-      //   businessLicenseId: '营业执照ID',
-      // };
-      // 调后端接口
-      // const api = props.data.id ? usersUpdate : usersAdd;
-      // api(formModel.value)
-      //   .then(() => {
-      //     emit('confirm');
-      //     Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-      //     done(true);
-      //   })
-      //   .catch(() => {
-      //     done(false);
-      //   });
+        .catch(() => {});
 
       // mock数据
       // Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
@@ -451,17 +542,18 @@ const onConfirm = (done: (closed: boolean) => void) => {
 const canceldes = () => {
   console.log('cancel');
 
-  emit('cancel');
+  emit('cancel', formModel.value.type);
 };
 
 onMounted(() => {
-  console.log(props.data?.statusled);
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
+    console.log(props.data?.statusled);
+
     getUserDetail();
   }
 });
-// const qqq = () => {
+// const qqq = () =>
 //   Modal.warning({
 //     title: '企业认证重复',
 //     content:
@@ -492,12 +584,12 @@ onMounted(() => {
 }
 
 .fullscreen-modal {
-  ::v-deep .tele-modal-fullscreen .tele-modal-footer {
+  :deep(.tele-modal-fullscreen .tele-modal-footer) {
     text-align: left;
   }
 }
 
-::v-deep.tele-modal-body .tele-form-item:last-child {
+:deep(.tele-modal-body .tele-form-item:last-child) {
   margin-bottom: 10px;
 }
 
@@ -513,7 +605,7 @@ onMounted(() => {
     max-width: 652px;
   }
 
-  ::v-deep .tele-upload-list-picture {
+  :deep(.tele-upload-list-picture) {
     width: 150px;
     height: 100px;
   }

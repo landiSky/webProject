@@ -1,7 +1,8 @@
 const BaseRouteAuth: { [name: string]: any } = {
   '/buyer': 'ROUTE_BUYER',
-  '/buyer/index': 'ROUTE_BUYER_INDEX', // 买家中心-概览
   '/buyer/order': 'ROUTE_BUYER_ORDER', // 买家中心-订单
+  '/buyer/index': 'ROUTE_BUYER_INDEX', // 买家中心-概览
+
   '/seller': 'ROUTE_SELLER',
   '/seller/goods': 'ROUTE_SELLER_GOODS', // 服务商中心-商品
   '/seller/order': 'ROUTE_SELLER_ORDER', // 服务商中心-订单

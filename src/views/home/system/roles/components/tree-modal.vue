@@ -1,8 +1,10 @@
 <template>
   <!-- :height="678" -->
+
   <t-modal
     v-model:visible="visible"
     :width="642"
+    :height="678"
     :on-before-ok="onConfirm"
     ok-text="完成"
     cancel-text="上一步:基本信息"
@@ -35,9 +37,11 @@ import {
   reactive,
   ref,
   onMounted,
-  computed,
+  // computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+
+import { apiMemberlist, apiRoleAdd } from '@/api/system/role';
+
 import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -45,14 +49,13 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  aaa: {
-    type: Object,
-    default: () => {},
-  },
+  // aaa: {
+  //   type: Object,
+  //   default: () => {},
+  // },
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
-
 // const formRef = ref();
 const visible = ref(true);
 const selected = ref([]);
@@ -60,10 +63,11 @@ const selected = ref([]);
 const state = reactive({
   formModel: {
     roleName: undefined,
-    roleDesc: undefined,
+    remark: undefined,
   },
 });
 const roleid = ref([]);
+// const treeData = ref([]);
 // 点击树节点时触发
 const setSelecteds = (agfs: any, jashd: any) => {
   console.log(agfs, jashd, '点击树节点时触发');
@@ -77,7 +81,12 @@ const checkds = (agfs: any, jashd: any) => {
 const expands = (agfs: any, jashd: any) => {
   console.log(agfs, jashd, '展开/关闭');
 };
-
+// const init = () => {
+//   apiMemberlist({}).then((res: any) => {
+//     console.log(res, 'res');
+//     treeData.value = res;
+//   });
+// };
 // const formRules = {
 //   roleName: [
 //     { required: true, message: '请输入姓名' },
@@ -87,6 +96,23 @@ const expands = (agfs: any, jashd: any) => {
 
 const onConfirm = (done: (closed: boolean) => void) => {
   console.log(state.formModel, roleid.value, '完成');
+  if (roleid.value.length === 0) {
+    Message.error('至少选一项');
+  } else {
+    apiRoleAdd({
+      roleName: state.formModel.roleName,
+      remark: state.formModel.remark,
+      companyId: '当前用户企业id',
+    })
+      .then((res) => {
+        emit('confirm');
+        done(true);
+        console.log(res, 'res');
+      })
+      .catch((err) => {
+        done(false);
+      });
+  }
 
   // emit('onEditModalConfirm');
   //   formRef.value.validate((errors: any) => {
@@ -105,7 +131,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
   //       done(false);
   //     }
   //   });
-  emit('confirm');
 };
 
 // const getDetail = () => {
@@ -258,9 +283,10 @@ const treeData = [
 ];
 
 onMounted(() => {
-  const { roleName, roleDesc } = props.data;
+  const { roleName, remark } = props.data;
   console.log(props.data);
-  state.formModel = { roleName, roleDesc };
+  state.formModel = { roleName, remark };
+  // init();
 });
 </script>
 

@@ -4,7 +4,7 @@
     :width="642"
     :height="378"
     :on-before-ok="onConfirm"
-    :ok-text="isEdit ? '完成' : '下一步:角色授权'"
+    :ok-text="isEdit ? '完成' : '完成'"
     @cancel="onConfirmflag"
   >
     <!-- "下一步:角色授权" -->
@@ -56,7 +56,7 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -94,9 +94,24 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!isEdit.value) {
       if (!errors) {
-        // 新增
-        emit('confirm', state.formModel);
+        console.log(state.formModel, 'state.formModel');
+        apiRoleAdd({
+          roleName: state.formModel.roleName,
+          remark: state.formModel.remark,
+          companyId: 1,
+        })
+          .then((res) => {
+            emit('confirm');
+            done(true);
+            console.log(res, 'res');
+          })
+          .catch((err) => {
+            done(false);
+          });
 
+        // state.formModel
+        // 新增
+        // emit('confirm');
         //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
         //   api(state.formModel)
         //     .then(() => {
@@ -113,18 +128,30 @@ const onConfirm = (done: (closed: boolean) => void) => {
     } else {
       // 编辑
       console.log(state.formModel);
-
-      emit('cancel');
+      apiRoleAdd({
+        roleName: state.formModel.roleName,
+        remark: state.formModel.remark,
+        companyId: 1,
+        id: state.formModel.id,
+      })
+        .then((res) => {
+          emit('confirm');
+          done(true);
+          console.log(res, 'res');
+        })
+        .catch((err) => {
+          done(false);
+        });
     }
   });
 };
 const onConfirmflag = () => {
   emit('cancel');
-  state.formModel = {
-    roleName: undefined,
-    remark: undefined,
-    id: undefined,
-  };
+  // state.formModel = {
+  //   roleName: undefined,
+  //   remark: undefined,
+  //   id: undefined,
+  // };
 };
 // const getDetail = () => {
 //   usersDetail({ id: props.data?.id })
@@ -146,6 +173,11 @@ onMounted(() => {
     state.formModel = { roleName, remark, id };
     // 二是从接口获取
     // getDetail();
+  } else if (props.data) {
+    const { roleName, remark, id } = props?.data
+      ? props.data
+      : { roleName: '', remark: '', id: '' };
+    state.formModel = { roleName, remark, id };
   }
 });
 </script>

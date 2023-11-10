@@ -26,23 +26,23 @@ export function apiSendCaptcha(params: Record<string, any>) {
 
 // 获取配置信息
 export function apiConfigInfo() {
-  return $http.get('/web/config/info');
+  return $http.get('/sso/web/config');
 }
 
-// 获取登录 code
-export function apiWebOauth(params: Record<string, any>) {
-  return $http.get('/sso/web/oauth/authorize', {
-    params,
-    customFields: {
-      returnRawResponse: true,
-    },
-  });
-}
+// // 获取登录 code
+// export function apiWebOauth(params: Record<string, any>) {
+//   return $http.get('/sso/web/oauth/authorize', {
+//     params,
+//     customFields: {
+//       returnRawResponse: true,
+//     },
+//   });
+// }
 
-// 真正登录
-export function apiLogin(data: Record<string, any>) {
-  return $http.post('/sso/web/login', data);
-}
+// // 真正登录
+// export function apiLogin(data: Record<string, any>) {
+//   return $http.post('/sso/web/login', data);
+// }
 
 // 获取 token
 export function apiLoginToken(data: Record<string, any>) {

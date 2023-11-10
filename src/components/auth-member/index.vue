@@ -44,7 +44,7 @@ import {
 } from '@/api/common';
 
 const store = useUserStore();
-const { userInfo } = storeToRefs(store);
+const { userInfo, selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,
@@ -74,7 +74,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 onMounted(() => {
   apiMemberList({
-    companyId: userInfo.value?.companyId,
+    companyId: selectCompany.value?.companyId,
     productId: props.productId,
   })
     .then((data: any) => {

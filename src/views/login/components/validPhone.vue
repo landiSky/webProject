@@ -109,7 +109,7 @@ import { useUserStore } from '@/store/modules/user';
 
 import $http from '@/utils/http';
 import { setToken } from '@/utils/auth';
-import { apiLogin, apiLoginName, apiWebOauth } from '@/api/login';
+import { apiLoginName } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import SliderCaptcha from './captcha.vue';
 
@@ -133,36 +133,6 @@ const safeForm = ref({
   mobile: '',
   captcha: '',
 });
-
-const formRules = {
-  username: [
-    {
-      validator: (value: string, cb: (params?: any) => void) => {
-        if (!value) return cb('请输入手机号或用户名');
-        if (/^$|^1[0-9][0-9]\d{8}$|^(5|6|8|9)[0-9]{7}$/.test(value)) {
-          return cb();
-        }
-        return cb('手机号格式不正确,需要填写11位手机号');
-      },
-    },
-  ],
-
-  password: [
-    {
-      validator: (value: string, cb: (params?: any) => void) => {
-        if (!value) return cb('请输入密码');
-        if (
-          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][])[\da-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][]{8,}/.test(
-            value
-          )
-        ) {
-          return cb();
-        }
-        return cb('至少包含8位字符, 且包含大小写字母、数字和特殊字符');
-      },
-    },
-  ],
-};
 
 const safeFormRules = {
   phone: [
@@ -189,51 +159,10 @@ const safeFormRules = {
   ],
 };
 
-const btnDisabled = computed(() => {
-  const { username, password } = form.value;
-
-  return !(username && password);
-});
-
 const goRegister = () => {
   emit('register');
 };
 
-const clickLoginBtn = () => {
-  console.log('login.vue:200', userStore.configInfo);
-
-  loginLoading.value = true;
-  apiLogin({
-    username: '15112343001',
-    password: sm2('123456', userStore.configInfo?.public_key),
-  }).then((data) => {
-    console.log('login.vue:202====login', data);
-    // eslint-disable-next-line camelcase
-    const { client_id, redirect_uri } = userStore.configInfo || {};
-    // window.open(
-    //   `http://10.14.150.253:8081/sso/web/oauth/authorize?response_type=code&scope=all&client_id=sso_platform&redirect_uri=http:%2F%2F10.14.148.246:3000%2F%23%2Flogin`,
-    //   '_blank'
-    // );
-    apiWebOauth({
-      response_type: 'code',
-      scope: 'all',
-      client_id,
-      redirect_uri,
-    }).then((data) => {
-      console.log('login.vue:218=====apiWebOauth', data);
-    });
-
-    // $http.post(userStore.configInfo?.login_url).then((res) => {
-    //   console.log('login.vue:209', res);
-    // });
-  });
-
-  // formRef.value.validate((errors: any) => {
-  //   if (!errors) {
-  //     captchaVisible.value = true;
-  //   }
-  // });
-};
 const realLoginRequest = () => {
   const params = {
     username: form.value.username.trim(),

@@ -122,6 +122,14 @@ const homeRoutesList = [
         component: () => import('@/views/home/buyer/confirmOrder/index.vue'),
         meta: {},
       },
+      {
+        path: '/order/detail/:id',
+        name: 'buyerOrderDetail',
+        component: () => import('@/views/home/buyer/order/detail/index.vue'),
+        meta: {
+          name: '订单详情',
+        },
+      },
     ],
     meta: {
       name: '订单确认页',

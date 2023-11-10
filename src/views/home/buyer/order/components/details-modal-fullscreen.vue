@@ -255,7 +255,7 @@
                     v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="item.url"
+                    :src="`/web/file/orderDownload?name=${item}`"
                     alt=""
                   />
                 </div>
@@ -319,7 +319,7 @@
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
                         style="width: 100px; height: 100px"
-                        :src="dataList.productLogo"
+                        :src="`/web/file/orderDownload?name=${dataList.productLogo}`"
                         alt=""
                       />
                     </div>
@@ -393,8 +393,9 @@
 <script lang="ts" setup>
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 import { utilsCopy } from '@/utils/tools';
-// import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
+import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
+import { useRouter, useRoute } from 'vue-router';
 
 // import Warn from '@/assets/images/home/warn.png';
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
@@ -405,12 +406,12 @@ import success from '../images/success.png';
 import Copy from '../images/copy.png';
 import EditModal from './edit-modal.vue';
 
+const router = useRouter();
+
 const props = defineProps({
-  data: {
-    type: Object,
-    default() {
-      return {};
-    },
+  orderId: {
+    type: String,
+    default: undefined,
   },
 });
 const state = reactive({
@@ -458,36 +459,25 @@ const dataList = ref({
   voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
-  attachmentAddressArr: [
-    {
-      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-    },
-    {
-      url: 'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-    },
-  ], // 支付凭证
+  attachmentAddressArr: [], // 支付凭证
 });
 // 上传凭证 弹窗 开关
 const editModalVisible = ref(false);
 
 const goback = () => {
-  emit('cancel');
+  // emit('cancel');
+  router.push({
+    name: 'buyerOrder',
+  });
 };
 
-const getUserDetail = () => {
+const init = () => {
   // 调后端接口
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+  buyerOrderDetail({ id: props.orderId }).then((res) => {
+    console.log(res, 'res');
+    // @ts-ignore
+    dataList.value = res;
+  });
 };
 
 // 点击复制
@@ -497,7 +487,8 @@ const clickCopy = (Num: string) => {
 
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {
-  state.updataamount.id = dataList.value.id;
+  // dataList.value.id
+  state.updataamount.id = '2';
   // state.updataamount.currentamount = dataList.value.attachmentAddressArr;
   editModalVisible.value = true;
 };
@@ -515,10 +506,14 @@ const anewupload = () => {
 // 确认已交付
 const delivery = (id: string) => {
   console.log(id);
+  buyerDeployed({ id }).then((res) => {
+    console.log(res);
+    init();
+  });
 };
 onMounted(() => {
-  if (props.data?.id) {
-    getUserDetail();
+  if (props.orderId) {
+    init();
   }
 });
 

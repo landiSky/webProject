@@ -23,44 +23,90 @@
         </div>
         <div class="tbody">
           <span>
-            <img
-              src="https://img13.360buyimg.com/n1/s450x450_jfs/t1/112503/16/27726/52988/64dc9a7cF0e258422/18c750bd3af78ff1.jpg"
-            />
-            <span>商品名称 s</span>
+            <img :src="`/web/file/download?name=${createOrderInfo?.logo}`" />
+            <span>{{ createOrderInfo?.name }}</span>
           </span>
-          <span>Saas 类</span>
-          <span>1000 元</span>
-          <span>10 个</span>
-          <span>6 个月</span>
+          <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
+          <span>{{ createOrderInfo?.price || '-' }} 元</span>
+          <span>{{ createOrderInfo?.accountDesc }}</span>
+          <span>{{ createOrderInfo?.durationDesc }}</span>
           <span>
-            <span>900 元</span>
-            <span>(含减优惠券: 500元)</span>
+            <span>{{ createOrderInfo?.price || '-' }} 元</span>
+            <!-- <span>(含减优惠券: 500元)</span> -->
           </span>
         </div>
       </div>
     </div>
     <div class="footer">
       <t-button style="margin-right: 10px" @click="onGoBack">取消</t-button>
-      <t-button type="primary">提交订单</t-button>
+      <t-button
+        type="primary"
+        :loading="submitLoading"
+        @click="clickCreateOrder"
+        >提交订单</t-button
+      >
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
+import { useOrderStore } from '@/store/modules/order';
 import { apiCreateOrder } from '@/api/buyer/order';
+import { DeliverType, DeliverTypeDesc, SaleType } from '@/enums/common';
 
 const router = useRouter();
 const route = useRoute();
 
+const userStore = useUserStore();
+const orderStore = useOrderStore();
+const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
+  storeToRefs(orderStore);
+const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);
 };
 
-const onConfirm = () => {
-  apiCreateOrder({}).then(() => {
-    console.log('index.vue:61==订单创建成功');
-  });
+const clickCreateOrder = () => {
+  const {
+    companyId,
+    productId,
+    deliveryType,
+    price,
+    deliveryVersionId,
+    orderSource,
+    accountId,
+    durationId,
+  } = createOrderInfo.value;
+  const params = {
+    sellerId: companyId, // 卖家id（商品创者所属机构id）
+    productId, // 商品id
+    deliveryType, // 交付类型 0-saas类,1-独立部署类
+    productPrice: price, // 商品金额
+    deliveryVersionId, // 交付版本id
+    orderSource, // 订单来源：0-本平台，1-跨平台
+    accountId, // 账号id
+    durationId, // 时长id
+    userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
+  };
+  submitLoading.value = true;
+  apiCreateOrder(params)
+    .then((data) => {
+      console.log('index.vue:61==订单创建成功', data);
+
+      router.push({
+        name: 'buyerOrderDetail',
+        params: {
+          id: data.id,
+        },
+      });
+    })
+    .finally(() => {
+      submitLoading.value = false;
+    });
 };
 </script>
 

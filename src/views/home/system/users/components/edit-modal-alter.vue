@@ -86,7 +86,7 @@
               v-for="(item, index) in inputSelect"
               :key="index"
               :value="item.memberId"
-              >{{ item.userName }}</t-option
+              >{{ item.username }} {{ item.phone }}</t-option
             >
           </t-select>
         </t-form-item>
@@ -104,7 +104,12 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+import {
+  menberGetadmin,
+  menberNormal,
+  verificationCode,
+  menberChangeAdmin,
+} from '@/api/system/member';
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -124,10 +129,11 @@ const times = ref();
 // const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
-    roleName: '',
+    roleName: undefined,
     phone: '',
     verification: undefined,
     roleDesc: undefined,
+    memberId: undefined,
   },
 });
 const inputSelect = ref();
@@ -152,7 +158,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       console.log(state.formModel);
-
+      menberChangeAdmin({
+        newAdminMemberId: state.formModel.roleDesc,
+        code: state.formModel.verification,
+        companyId: 1,
+        memberId: state.formModel.memberId,
+        phone: state.formModel.phone,
+      }).then((res) => {
+        emit('confirm');
+      });
       //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
       //   api(state.formModel)
       //     .then(() => {
@@ -166,7 +180,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
       // flagText.value = true;
       // counts.value = 60;
       // clearInterval(times.value);
-      emit('confirm');
     } else {
       done(false);
     }
@@ -174,17 +187,19 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 // 获取验证码
 const verificationds = () => {
-  flagText.value = false;
-  times.value = setInterval(() => {
-    if (counts.value < 1) {
-      clearInterval(times.value);
+  verificationCode({ phone: state.formModel.phone, type: '3' }).then(() => {
+    flagText.value = false;
+    times.value = setInterval(() => {
+      if (counts.value < 1) {
+        clearInterval(times.value);
 
-      flagText.value = true;
-      counts.value = 60;
-    }
+        flagText.value = true;
+        counts.value = 60;
+      }
 
-    counts.value -= 1;
-  }, 1000);
+      counts.value -= 1;
+    }, 1000);
+  });
 };
 // const getDetail = () => {
 //   usersDetail({ id: props.data?.id })
@@ -201,39 +216,48 @@ const administratorled = () => {
   //   phone: "18839014162",
   //   memberId: 1717067979902607400
   // },
-  state.formModel.roleName = '章三';
-  state.formModel.phone = '18839014162';
+  menberGetadmin({ companyId: 1 }).then((res) => {
+    console.log(res, 'res');
+
+    state.formModel.roleName = res.username;
+    state.formModel.phone = res.phone;
+  });
 };
 // 变更管理员- 查找企业下普通用户成员
 const userNamelist = () => {
-  inputSelect.value = [
-    {
-      userName: 'kw', // 用户名
-      phone: '18839014161', // 手机号
-      memberId: 1, // 成员id
-    },
-    {
-      userName: 'zh', // 用户名
-      phone: '18839014163', // 手机号
-      memberId: 1717072245149118500, // 成员id
-    },
-  ];
+  menberNormal({ companyId: 1 }).then((res) => {
+    console.log(res);
+
+    inputSelect.value = res;
+    //   [
+    //   {
+    //     userName: 'kw', // 用户名
+    //     phone: '18839014161', // 手机号
+    //     memberId: 1, // 成员id
+    //   },
+    //   {
+    //     userName: 'zh', // 用户名
+    //     phone: '18839014163', // 手机号
+    //     memberId: 1717072245149118500, // 成员id
+    //   },
+    // ];
+  });
 };
 onMounted(() => {
   administratorled();
   userNamelist();
   console.log(props.data);
-  const {
-    id,
-    userId,
-    userName,
-    phone,
-    companyId,
-    memberId,
-    status,
-    roleList,
-    roleName,
-  } = props.data;
+  //  id,
+  //   userId,
+  //   userName,
+  //   phone,
+  //   companyId,
+  //   memberId,
+  //   status,
+  //   roleList,
+  //   roleName,
+  const { memberId } = props.data;
+  state.formModel.memberId = memberId;
 });
 </script>
 

@@ -190,7 +190,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="item.productLogo"
+                      :src="`/web/file/orderDownload?name=${item.productLogo}`"
                       alt=""
                     />
                   </div>
@@ -317,7 +317,10 @@
             </t-row>
           </div>
         </div>
-        <div v-if="false" class="noClass">
+        <div
+          v-if="formInline.total === 0 && noDatalist === true"
+          class="noClass"
+        >
           <div>
             <img :src="noSearch" alt="" />
             <div>
@@ -327,7 +330,10 @@
             </div>
           </div>
         </div>
-        <div v-if="false" class="noClass">
+        <div
+          v-if="formInline.total === 0 && noDatalist === false"
+          class="noClass"
+        >
           <div>
             <img :src="noData" alt="" />
             <div class="zwclass">暂无数据</div>
@@ -345,6 +351,7 @@
         </div> -->
         <div style="float: right; margin-top: 10px">
           <t-pagination
+            v-if="formInline.total > 10"
             :total="formInline.total"
             size="medium"
             :page-size="formInline.pageSize"
@@ -375,18 +382,20 @@
     ></EditModalDelivery> -->
 
     <!-- 全屏弹窗 -->
-    <DetailsModalFullscreen
+    <!-- <DetailsModalFullscreen
       v-if="FullscreenDetailsModal"
       :data="state.editData"
       @cancel="FullscreenDetailsModal = false"
     >
-    </DetailsModalFullscreen>
+    </DetailsModalFullscreen> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { Modal, Message } from '@tele-design/web-vue';
+import { orderList, orderNum, buyerDeployed } from '@/api/buyer/order';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import tobepaid from './images/tobepaid.png';
@@ -395,7 +404,9 @@ import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
-import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+// import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+
+const router = useRouter();
 
 const formInline = reactive({
   commodityName: '',
@@ -405,8 +416,9 @@ const formInline = reactive({
   startTime: '',
   endTime: '',
   pageNum: 1,
+  tabstatus: '',
   pageSize: 10,
-  total: 100,
+  total: 0,
 });
 const state = reactive({
   editData: {
@@ -422,72 +434,36 @@ const tableData = ref([
   {
     id: '2', // 订单id
     orderNum: '2', // 订单号
-    productName: '凉皮', // 商品名称
-    customerName: '硕', // 买家名称
-    productLogo:
-      'https://img2.baidu.com/it/u=249186010,878219406&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500', // 商品logo
-    merchantName: '商品所属商家名称', // 卖家名称
-    deliveryTypeName: 'SAAS', // 交付类型名称
+    productName: '', // 商品名称
+    customerName: '', // 买家名称
+    productLogo: '', // 商品logo
+    merchantName: '', // 卖家名称
+    deliveryTypeName: '', // 交付类型名称
     deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
     productPrice: 10000, // 商品价格
-    accountCount: '10个账号', // 账号数量
-    buyDuration: '5个月', // 购买时长
+    accountCount: '', // 账号数量
+    buyDuration: '', // 购买时长
     realityPrice: 9400, // 实付金额
     orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatusName: '待审核', // 状态名称
+    orderStatusName: '', // 状态名称
     orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
     orderSteps: 3, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
     rejectType: 0, // 拒绝类型
-    rejectReasonDetail: '未收到打款信息', // 支付凭证审核失败，展示驳回原因
+    rejectReasonDetail: '', // 支付凭证审核失败，展示驳回原因
     deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
     deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
     couponMoney: 600, // 优惠金额
     userMobile: null, // 联系方式
     orderSource: 0, // 订单来源：0-本平台，1-跨平台
     effectTime: null, // 成交时间
-    createTime: '2023-10-23 16:24:32', // 创建时间
+    createTime: '', // 创建时间
     dueDate: null, // 到期日期
-    voucherRejectTime: '2023-10-24 11:05:38', // 驳回时间
+    voucherRejectTime: '', // 驳回时间
     payCompleteTime: null, // 支付完成时间
-    voucherSubmitTime: '2023-10-24 11:11:19', // 提交凭证时间&买家支付时间
+    voucherSubmitTime: '', // 提交凭证时间&买家支付时间
     confirmDeployedTime: null, // 确认部署时间
     merchantDeliverTime: null, // 服务商交付时间
-    attachmentAddressArr: null, // 附件地址
-  },
-  {
-    id: '1', // 订单id
-    orderNum: '1', // 订单号
-    productName: '双皮奶', // 商品名称
-    customerName: '硕', // 买家名称
-    productLogo:
-      'https://img2.baidu.com/it/u=249186010,878219406&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500', // 商品logo
-    merchantName: '商品所属商家名称', // 卖家名称
-    deliveryTypeName: 'SAAS', // 交付类型名称
-    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-    productPrice: 10000, // 商品价格
-    accountCount: '10个账号', // 账号数量
-    buyDuration: '5个月', // 购买时长
-    realityPrice: 10000, // 实付金额
-    orderStatus: 5, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatusName: '已完成', // 状态名称
-    orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
-    orderSteps: 6, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
-    rejectType: null, // 拒绝类型
-    rejectReasonDetail: null, // 支付凭证审核失败，展示驳回原因
-    deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
-    deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
-    couponMoney: null, // 优惠金额
-    userMobile: null, // 联系方式
-    orderSource: 0, // 订单来源：0-本平台，1-跨平台
-    effectTime: null, // 成交时间
-    createTime: '2023-10-23 16:24:32', // 创建时间
-    dueDate: null, // 到期日期
-    voucherRejectTime: '2023-10-23 18:24:34', // 驳回时间
-    payCompleteTime: null, // 支付完成时间
-    voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
-    confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
-    merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
-    attachmentAddressArr: null, // 附件地址
+    attachmentAddressArr: [],
   },
 ]);
 // 交付类型
@@ -556,19 +532,30 @@ const orderStatusSelect = ref([
   },
 ]);
 // tab 状态数量
-const statusNum = reactive({
-  count: 4, // 全部订单数量
-  payCount: 2, // 待支付页数量
-  auditCount: 1, // 待审核页数量
+const statusNum = ref<{
+  count: number;
+  payCount: number;
+  auditCount: number;
+  deliverCount: number;
+  rejectCount: number;
+  servicesDeliverCount: number;
+  completeCount: number;
+}>({
+  count: 0, // 全部订单数量
+  payCount: 0, // 待支付页数量
+  auditCount: 0, // 待审核页数量
   deliverCount: 0, // 待交付数量
   rejectCount: 0, // 已驳回数量
   servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 1, // 已完成数量
+  completeCount: 0, // 已完成数量
 });
 const activeIndex = ref(0);
+const noDatalist = ref(false);
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
+  // @ts-ignore
+  formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [
       {
@@ -623,6 +610,36 @@ const clickNav = (value: string | null, ins: number) => {
     orderStatusSelect.value = [];
   }
 };
+const init = () => {
+  orderList({
+    // 商品名称
+    productName: formInline.commodityName,
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: formInline.deliveryType,
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: formInline.orderStatus,
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: formInline.tabstatus,
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: formInline.startTime,
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: formInline.endTime,
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    userCompanyId: '2',
+  }).then((res) => {
+    console.log(res);
+    tableData.value = res.records;
+    formInline.total = res.total;
+  });
+};
+const dataStatistics = () => {
+  orderNum({}).then((res) => {
+    console.log(res, '订单数量');
+    // @ts-ignore
+    statusNum.value = res;
+  });
+};
 // 上传支付凭证 弹窗 开关
 const editModalVisible = ref(false);
 // 交付应用 弹窗 开关
@@ -630,9 +647,7 @@ const editModalVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
-onMounted(() => {
-  console.log('执行了');
-});
+
 // 时间框选择格式是：年月日，接口入参需要加上时分秒
 const onRangeChange = (
   value: (Date | string | number | undefined)[] | undefined
@@ -648,42 +663,67 @@ const onRangeChange = (
     formInline.endTime = '';
   }
 };
-// 查询
-const getTableData = () => {
-  console.log(formInline, 'getTableData');
-};
-// 重置
-const clearSearch = () => {};
 
 // 清空查询项
 const clearSearchles = () => {};
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;
+  init();
 };
 // 分页 每页条数
 const pagesizechange = (pageSize: number) => {
   console.log(pageSize, 'a');
   formInline.pageSize = pageSize;
+  init();
 };
 // 订单详情  凭证审核
 const clickDetail = (id: string) => {
   state.editData.id = id;
-  FullscreenDetailsModal.value = true;
+  router.push({
+    name: 'buyerOrderDetail',
+    params: {
+      id,
+    },
+  });
+  // FullscreenDetailsModal.value = true;
 };
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {
   state.updataamount.id = id;
-
   editModalVisible.value = true;
 };
 // 上传支付凭证 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  Message.success('上传支付凭证成功');
+  init();
 };
 // 买家确认交付
-const delivery = (id: string) => {};
+const delivery = (id: string) => {
+  //  Message.success('上传支付凭证成功');
+  buyerDeployed({ id }).then((res) => {
+    console.log(res);
+    init();
+  });
+};
+// 查询
+const getTableData = () => {
+  console.log(formInline, 'getTableData');
+  formInline.pageNum = 1;
+  noDatalist.value = true;
+  init();
+};
+// 重置
+const clearSearch = () => {
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
+onMounted(() => {
+  console.log('执行了');
+  init();
+  dataStatistics();
+});
 </script>
 
 <style lang="less" scoped>
@@ -767,7 +807,7 @@ const delivery = (id: string) => {};
     margin: 16px auto;
     background: #f6f7fb;
 
-    ::v-deep .tele-input-wrapper {
+    :deep(.tele-input-wrapper) {
       background-color: #fff;
     }
 

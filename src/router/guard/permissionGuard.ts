@@ -34,14 +34,12 @@ export function createPermissionGuard(router: Router) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
         console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<
-          string,
-          any
-        > = await userStore.getUserBasicInfo();
+        const userInfo: Record<string, any> =
+          await userStore.getUserBasicInfo();
         console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
-          next('/buyer/index');
+          next();
         } else {
           next('/wow/index');
         }
@@ -71,15 +69,15 @@ export function createPermissionGuard(router: Router) {
         configInfo = JSON.parse(localStorage.getItem('configInfo') as string);
       }
       // eslint-disable-next-line camelcase
-      const { client_id, client_secret, redirect_uri } = configInfo;
+      const { clientId, clientSecret, redirectUri } = configInfo;
 
       const formData = new FormData();
       formData.append('grant_type', 'authorization_code');
       formData.append('scope', 'all');
       formData.append('code', code);
-      formData.append('redirect_uri', redirect_uri);
-      formData.append('client_id', client_id);
-      formData.append('client_secret', client_secret);
+      formData.append('redirect_uri', redirectUri);
+      formData.append('client_id', clientId);
+      formData.append('client_secret', clientSecret);
 
       apiLoginToken(formData)
         .then((data) => {
@@ -89,6 +87,7 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:61', data.accessToken);
         })
         .finally(() => {
+          console.log('permissionGuard.ts:91=======', window.location.host);
           window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
           // next({
           //   path: '/buyer/index',

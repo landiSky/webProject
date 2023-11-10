@@ -27,15 +27,27 @@
     <template v-for="(item, index) in form.blockList" :key="index">
       <t-divider />
       <span class="header">
-        <span class="leftDivider"></span>区块{{ transSeq[index] }}</span
-      >
+        <span>
+          <span class="leftDivider"></span>
+          区块{{ transSeq[index] }}
+        </span>
+        <t-tooltip
+          v-if="form.blockList.length === 1"
+          content="至少保留一个区块"
+        >
+          <t-link disabled @click="delBlock(index)"> 删除 </t-link>
+        </t-tooltip>
+        <t-link v-else @click="delBlock(index)"> 删除 </t-link>
+      </span>
+
       <t-form-item
         :field="`blockList.${index}.name`"
         label="区块标题"
         :rules="[
           {
-            required: true,
-            validator: ( value: string, cb: any ) => itemValid(12, '请输入区块标题', value, cb)
+            required: true, 
+            validator: (value: string, cb: any) =>
+              itemValid(15, '请输入区块标题', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -43,7 +55,7 @@
         <t-input
           v-model="item.name"
           placeholder="请输入区块标题"
-          :max-length="{ length: 12, errorOnly: true }"
+          :max-length="{ length: 15, errorOnly: true }"
           allow-clear
           show-word-limit
         />
@@ -55,7 +67,7 @@
           {
             required: true,
             validator: (value: string, cb: any) =>
-              itemValid(40, '请输入区块简介', value, cb),
+              itemValid(150, '请输入区块简介', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -63,7 +75,7 @@
         <t-textarea
           v-model="item.desc"
           placeholder="请输入区块简介"
-          :max-length="{ length: 40, errorOnly: true }"
+          :max-length="{ length: 150, errorOnly: true }"
           allow-clear
           show-word-limit
         />
@@ -73,7 +85,7 @@
         label="配图"
         :rules="[
           {
-            required: true,
+            required: true, 
             validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
           },
         ]"
@@ -83,7 +95,10 @@
           <t-upload
             list-type="picture-card"
             :file-list="item.picUrl ? [{ url: item.picUrl }] : []"
-            action="https://arco.design/"
+            :headers="{
+              Authorization: `Bearer ${getToken()}`,
+            }"
+            action="/web/file/upload"
             accept=".jpg,.png,.bmp,.tif,.gif"
             :limit="1"
             :auto-upload="false"
@@ -99,14 +114,26 @@
       </t-form-item>
     </template>
   </t-form>
+  <t-divider />
+  <div v-show="form.blockList.length < 6" class="extraOpt">
+    <iconpark-icon
+      class="plusIcon"
+      name="squarePlus"
+      size="20px"
+      @click="addBlock"
+    ></iconpark-icon>
+    <span>添加区块</span>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, defineProps, inject } from 'vue';
 import type { Ref } from 'vue';
+import { getToken } from '@/utils/auth';
 
 const formRef = ref();
-const transSeq = ['一', '二', '三'];
+const transSeq = ['一', '二', '三', '四', '五', '六'];
+
 const templateList: Ref<Record<string, any>[]> = inject(
   'templateList',
   ref([])
@@ -119,19 +146,9 @@ const props = defineProps({
 });
 
 const initForm = {
-  type: 1,
+  type: 2,
   moduleName: '',
   blockList: [
-    {
-      name: '',
-      desc: '',
-      picUrl: '',
-    },
-    {
-      name: '',
-      desc: '',
-      picUrl: '',
-    },
     {
       name: '',
       desc: '',
@@ -163,12 +180,23 @@ const itemValid = (
   return cb();
 };
 
+const addBlock = () => {
+  form.value.blockList.push({
+    name: '',
+    desc: '',
+    picUrl: '',
+  });
+};
+
+const delBlock = (index: number) => {
+  form.value.blockList.splice(index, 1);
+};
+
 const onUploadChange = (
   _: any,
   currentFile: Record<string, any>,
   index: number
 ) => {
-  console.log('form1.vue:170', index, currentFile.url);
   form.value.blockList[index].picUrl = currentFile.url;
 };
 
@@ -180,7 +208,8 @@ defineExpose({
 
 <style lang="less" scoped>
 .header {
-  display: block;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
   color: #1d2129;
 
@@ -195,5 +224,22 @@ defineExpose({
 
 .uploadTips {
   color: #86909c;
+}
+
+.extraOpt {
+  display: flex;
+  align-items: center;
+
+  .plusIcon {
+    cursor: pointer;
+  }
+
+  span {
+    margin-left: 8px;
+    color: #1d2129;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px; /* 166.667% */
+  }
 }
 </style>

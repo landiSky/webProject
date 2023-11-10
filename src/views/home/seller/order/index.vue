@@ -11,7 +11,7 @@ import Dataoverview from '@/components/dataoverview/index.vue';
 
 import Orderindex from './orderindex.vue';
 
-const orderstatus = ref(0);
+const orderstatus = ref(1);
 </script>
 
 <style lang="less" scoped>

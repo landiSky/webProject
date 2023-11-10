@@ -39,6 +39,13 @@
     </div>
 
     <div class="right-side">
+      <t-input-search
+        v-model="searchContent"
+        class="inputSearch"
+        placeholder="请输入商品名称"
+        @press-enter="onSearch"
+        @search="onSearch"
+      />
       <t-space v-if="userInfo?.userId">
         <t-link @click="goBuyer">控制台</t-link>
         <span class="username">{{
@@ -63,11 +70,6 @@
         <template #split>
           <t-divider direction="vertical" />
         </template>
-        <t-input-search
-          class="inputSearch"
-          placeholder="请输入商品名称"
-          @search="onSearch"
-        />
         <t-link @click="goRegister()">注册</t-link>
         <t-link @click="goLogin()">登录</t-link>
       </t-space>
@@ -81,6 +83,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { NodeAuthStatus } from '@/enums/common';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -90,25 +93,25 @@ const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
+const searchContent = ref();
 
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const handleLogout = async () => {
   await userStore.logout();
 
-  router.push({
-    path: '/wow',
-    replace: true,
-  });
+  // router.push({
+  //   path: '/wow',
+  //   replace: true,
+  // });
 };
 const goIndex = () => {
+  selectTab.value = TabPath.INDEX;
   router.push({ path: '/wow/index' });
 };
 const gotoMall = () => {
+  selectTab.value = TabPath.MALL;
   router.push({ path: '/wow/mall' });
 };
 
@@ -140,11 +143,12 @@ const goLogin = () => {
   });
 };
 
-const onSearch = (value: string) => {
+const onSearch = () => {
+  console.log('index.vue:144', searchContent.value);
   router.push({
     name: 'wowMall',
-    params: {
-      goodsName: value,
+    query: {
+      goodsName: searchContent.value,
     },
   });
 };
@@ -152,27 +156,51 @@ const onSearch = (value: string) => {
 const clickIdService = () => {
   console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
   if (!userInfo.value?.userId) {
-    Message.warning('请先去登录');
-    router.push({
-      path: '/login',
-    });
+    userStore.jumpToLogin();
+    // router.push({
+    //   path: '/login',
+    // });
   } else {
-    const { certificateStatus } = userInfoByCompany || {};
-    // if (userInfoByCompany?.companyId) {
-    //   Modal.info({
-    //     title: 'Info Notification',
-    //     content: 'This is an info description which directly indicates a neutral informative change or action.'
-    //   });
-    // } else {
+    if (!userInfoByCompany?.companyId) {
+      Modal.info({
+        title: '使用提醒',
+        content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+          });
+        },
+      });
+    } else {
+      const { nodeStatus, idPointer } = userInfoByCompany || {};
+      if (nodeStatus !== NodeAuthStatus.AUTHED) {
+        Modal.info({
+          title: '使用提醒',
+          content: '企业节点完成认证后，方可使用。',
+          hideCancel: false,
+          cancelText: '取消',
+          okText: '去查看',
+          onOk: () => {
+            router.push({
+              path: '/buyer/index',
+            });
+          },
+        });
+      } else {
+        window.open(idPointer, '_blank');
+      }
+    }
 
-    // }
     console.log('index.vue:139===打开二级');
-    window.open('http://id-pointer.test.idx.space/snms/ui/index', '_blank');
   }
 };
 
 onMounted(() => {
-  selectTab.value = route.path;
+  selectTab.value = route.path || TabPath.INDEX;
 });
 </script>
 
