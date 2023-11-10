@@ -60,3 +60,8 @@ export function saveAndUp(data: any) {
 export function deleteGoods(id: any) {
   return $http.post(`/web/product/deleteById?id=${id}`);
 }
+
+// 上架检查
+export function preUp(id: any) {
+  return $http.post(`/web/product/upShelfCheck?id=${id}`);
+}

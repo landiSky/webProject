@@ -16,7 +16,7 @@
       @back="emit('cancel')"
     >
       <template #title>
-        <div> 新建商品 </div>
+        <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
       </template>
       <template #footer>
         <div class="footer">
@@ -604,6 +604,7 @@ import {
   saveGoods1,
   saveGoods2,
   saveAndUp,
+  goodsDetail,
 } from '@/api/goods-manage';
 import { getToken } from '@/utils/auth';
 import TemplateDrawer from './template.vue';
@@ -808,9 +809,7 @@ const copyRules = {
 const emit = defineEmits(['confirm', 'cancel']);
 
 const props = defineProps({
-  metaData: Object,
-  goodsData: Object,
-  valueModelRules: Object,
+  data: Object,
 });
 const formRef = ref();
 const formRef2 = ref();
@@ -962,9 +961,24 @@ const showAddCopy = computed(() => {
   return copyModal3.value.length < 3;
 });
 
-onMounted(async () => {
-  await getGoodsId();
+const getDetail = () => {
+  goodsDetail(props.data?.id).then((res) => {
+    console.log(res);
+    // Object.keys(formModel.value).forEach((i: string) => {
+    //   if (res[i]) {
+    //     formModel.value[i] = res[i];
+    //   }
+    // });
+  });
+};
+
+onMounted(() => {
   getClassList();
+  if (props.data?.id) {
+    getGoodsId();
+  } else {
+    getDetail();
+  }
 });
 
 // 取消
@@ -1108,7 +1122,9 @@ const clickPrevious = () => {
 };
 
 // 预览
-const clickPreview = () => {};
+const clickPreview = () => {
+  // TODO 预览
+};
 
 // 上架
 const clickUp = async () => {
