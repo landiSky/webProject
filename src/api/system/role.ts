@@ -31,19 +31,3 @@ export function apiRoleUpdate(data: Record<string, any>) {
 export function apiRoleDetails(params: Record<string, any>) {
   return $http.get('/web/role/info', { params });
 }
-//  获取企业下某个应用下有权限的成员列表
-// export function apiMemListByProduct(params: Record<string, any>) {
-//   return $http.get('/web/product/selectConfig', { params });
-// }
-
-// 给应用授权可查看的成员
-// export function apiAuthMember(data: Record<string, any>) {
-//   return $http.post('/web/product/appConfig', data);
-// }
-
-// // 角色启用、停用
-// export function apiRoleChangeState(data: any) {
-//   return $http.put('/api/v1/role/change-state', {
-//     data,
-//   });
-// }

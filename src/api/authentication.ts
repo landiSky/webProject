@@ -29,3 +29,8 @@ export function apiMemListByProduct(params: Record<string, any>) {
 export function authSubmit(data: Record<string, any>) {
   return $http.post('/web/company/saveOrUpdate', data);
 }
+
+// 认证前去判断是否有重复企业
+export function apiHasCompany(data: Record<string, any>) {
+  return $http.post('/web/company/getCompanyById', data);
+}

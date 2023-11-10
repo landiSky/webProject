@@ -15,25 +15,25 @@
       class="authForm"
       auto-label-width
     >
-      <t-form-item field="roleName" label="企业名称">
+      <t-form-item field="companyName" label="企业名称">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.companyName"
+          placeholder="请输入企业名称"
           allow-clear
         />
       </t-form-item>
 
-      <t-form-item field="roleDesc" label="统一社会信用代码">
+      <t-form-item field="creditCode" label="统一社会信用代码">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.creditCode"
+          placeholder="请输入统一社会信用代码"
           allow-clear
         />
       </t-form-item>
-      <t-form-item field="roleDesc" label="法人姓名">
+      <t-form-item field="legalPersonName" label="法人姓名">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.legalPersonName"
+          placeholder="请输入法人姓名"
           allow-clear
         />
       </t-form-item>
@@ -46,6 +46,7 @@
 
 <script lang="ts" setup>
 import {
+  h,
   defineProps,
   defineEmits,
   reactive,
@@ -53,8 +54,9 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
-import { Message } from '@tele-design/web-vue';
+import { apiHasCompany } from '@/api/authentication';
+import { Message, Modal } from '@tele-design/web-vue';
+import { CompanyAuthStatus } from '@/enums/common';
 
 const props = defineProps({
   data: {
@@ -71,31 +73,42 @@ const visible = ref(true);
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
   formModel: {
-    roleName: undefined,
-    roleDesc: undefined,
+    companyName: undefined,
+    creditCode: undefined,
+    legalPersonName: undefined,
   },
 });
 
 const formRules = {
-  roleName: [
-    { required: true, message: '请输入姓名' },
-    { maxLength: 20, message: '长度不超过20个字符' },
-  ],
+  companyName: [{ required: true, message: '请输入企业名称' }],
+  creditCode: [{ required: true, message: '请输入统一社会信用代码' }],
+  legalPersonName: [{ required: true, message: '请输入法人姓名' }],
 };
 
-const onConfirm = (done: (closed: boolean) => void) => {
+const clickNextStep = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
+      // apiHasCompany(state.formModel)
+      //   .then((data) => {
+      const data = {
+        nodeAuth: true,
+        companyAuth: false,
+        mobile: '15210602855',
+      };
+      const { companyAuth, nodeAuth, mobile } = data;
+      const title = nodeAuth ? '企业节点认证' : '企业认证';
+
+      Modal.warning({
+        title: `${title}重复`,
+        okText: '好的',
+        hideCancel: true,
+        content: `该企业已完成「企业节点认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。`,
+      });
+      // })
+      // .catch(() => {})
+      // .finally(() => {
+      //   emit('confirm');
+      // });
     } else {
       done(false);
     }
@@ -111,16 +124,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
 //     .catch(() => {});
 // };
 
-const clickNextStep = () => {
-  emit('confirm');
-};
 onMounted(() => {
   if (isEdit.value) {
     // 这里分两种情况
     // 一是编辑信息从列表传入
-    const { roleName, roleDesc } = props.data;
-    state.formModel = { roleName, roleDesc };
-
     // 二是从接口获取
     // getDetail();
   }
