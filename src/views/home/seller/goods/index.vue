@@ -40,7 +40,7 @@
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
     >
-      <template #productType="{ record }">
+      <template #productTypeId="{ record }">
         {{ record.productTypeParentName }} / {{ record.productTypeName }}
       </template>
       <template #type="{ record }">
@@ -159,16 +159,6 @@ const state = reactive<{
   detailData: {},
 });
 
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex);
-  const f = filteredValues[0];
-  if (typeof f === 'number') {
-    console.log(f);
-  } else {
-    console.log('clear');
-  }
-};
-
 const classList = [
   {
     text: '全部',
@@ -284,8 +274,8 @@ const columns = [
   },
   {
     title: '所属分类（一级、二级）',
-    dataIndex: 'productType',
-    slotName: 'productType',
+    dataIndex: 'productTypeId',
+    slotName: 'productTypeId',
     width: 180,
     filterable: {
       filters: classList,
@@ -349,7 +339,6 @@ function fetchData() {
     pageSize,
     ...state.formModel,
   };
-
   state.tableLoading = true;
   goodsList(params)
     .then((res: any) => {
@@ -361,6 +350,17 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex, filteredValues);
+  // type: 0,
+  // deliveryType: 0,
+  // status: 3,
+  // productTypeId: 1,
+  const f = filteredValues[0];
+  state.formModel[`${dataIndex}`] = f;
+  fetchData();
+};
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
