@@ -43,7 +43,7 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    getUserByCompany() {
+    getUserByCompany(onlyCompanyId: string) {
       const { companyId, memberId } = this.selectCompany || {};
 
       // this.userInfoByCompany = {
@@ -62,7 +62,7 @@ export const useUserStore = defineStore({
       //     'ROUTE_SELLER_GOODS',
       //   ], // 菜单code
       // };
-      apiUserProfile({ companyId, memberId })
+      apiUserProfile({ companyId: companyId || onlyCompanyId, memberId })
         .then((data: Record<string, any>) => {
           console.log(data);
           this.userInfoByCompany = data || {
@@ -89,6 +89,8 @@ export const useUserStore = defineStore({
       try {
         const userInfo = await apiUsersInfo();
 
+        console.log('user.ts:138==去更新 usecompany');
+
         // const userInfo = {
         //   userId: 1,
         //   mobile: '15210602855',
@@ -112,7 +114,7 @@ export const useUserStore = defineStore({
 
         this.userInfo = userInfo as any;
 
-        const { companyList } = userInfo;
+        const { companyId, companyList } = userInfo;
 
         //   {
         //     "memberId": 1717495373822156800, //成员id
@@ -137,6 +139,8 @@ export const useUserStore = defineStore({
           );
           this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
+          console.log('user.ts:139==去更新 usecompany');
+          this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
           // useMenuStore().genLeftMenu([]);
         }

@@ -28,15 +28,17 @@ export function createPermissionGuard(router: Router) {
     const userStore = useUserStore();
     // const menuStore = useMenuStore();
 
-    console.log('permissionGuard.ts:28', to.path, from.path);
+    // console.log('permissionGuard.ts:28', to.path, from.path);
 
     if (getToken()) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
-        console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<string, any> =
-          await userStore.getUserBasicInfo();
-        console.log('permissionGuard.ts:36', userInfo);
+        // console.log('permissionGuard.ts:35', userStore.userInfo);
+        const userInfo: Record<
+          string,
+          any
+        > = await userStore.getUserBasicInfo();
+        // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
           next();
