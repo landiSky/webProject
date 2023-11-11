@@ -331,8 +331,8 @@ const uploadHeaders = {
 //   remark: '',
 // });
 const formModel = ref({
-  id: 1392100221902848,
-  userId: 5,
+  id: String(userInfoByCompany.companyId),
+  userId: String(userInfoByCompany.id),
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -517,8 +517,8 @@ const onConfirm = (done: (closed: boolean) => void) => {
               .then((res) => {
                 console.log(res);
                 emit('confirm');
-                done(true);
                 Message.success('认证已提交');
+                done(true);
               })
               .catch((err) => {
                 done(false);

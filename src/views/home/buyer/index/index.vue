@@ -17,7 +17,7 @@
 
             <div class="inofs" style="float: left; margin-top: 25px">
               <div style="float: left">
-                <p>{{ userInfoByCompany.companyName }}</p
+                <p>{{ userInfoByCompany.companyName?.companyName }}</p
                 ><p>|</p
                 ><p>{{ userInfoByCompany.primary ? '主账号' : '子账号' }}</p
                 ><p>|</p>
