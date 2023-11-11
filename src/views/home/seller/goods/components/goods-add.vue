@@ -3,17 +3,11 @@
     <t-modal
       :visible="true"
       fullscreen
+      has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      :on-before-ok="onConfirm"
-      :on-before-cancel="onCancel"
-      :ok-button-props="{
-        size: 'large',
-      }"
-      :cancel-button-props="{
-        size: 'large',
-      }"
-      @back="emit('cancel')"
+      @cancel="clickCancel"
+      @close="clickCancel"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -53,7 +47,7 @@
             </div>
           </div>
           <t-form-item label="商品ID" field="">
-            {{ displayId }}
+            {{ formModel.id }}
           </t-form-item>
           <t-form-item label="商品名称" field="name">
             <t-input
@@ -596,7 +590,7 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
-import { Message, Modal, FileItem } from '@tele-design/web-vue';
+import { Message, FileItem, Modal } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
 import {
   genGoodsId,
@@ -614,22 +608,6 @@ const step = ref(1);
 
 const uploadHeaders = {
   Authorization: `Bearer ${getToken()}`,
-};
-const modalList = ref(['模块一：产品简介', '模块二：产品特色']);
-
-const addModal = () => {
-  // TODO 添加详情模块
-  console.log('添加详情模块');
-};
-const editModal = (modal: any) => {
-  // TODO 编辑详情模块
-  console.log('编辑详情模块：', modal);
-};
-const deleteModal = (modal: any) => {
-  const index = modalList.value.indexOf(modal);
-  if (index >= 0) {
-    modalList.value.splice(index, 1);
-  }
 };
 
 const prdRef = ref();
@@ -658,13 +636,23 @@ const deletedetailImg = (file: string) => {
 const logoRef = ref();
 const logoVisible = ref(false);
 
-const id = ref();
-const displayId = ref();
-const formModel = ref({
-  productId: undefined,
+interface FormInterface {
+  id: string;
+  name: string;
+  type: number;
+  productTypeId: string;
+  logo: string;
+  detailImg: string;
+  useExplain: string;
+  introduction: string;
+  detail: string;
+}
+
+const formModel = ref<FormInterface>({
+  id: '',
   name: '',
   type: 0,
-  productTypeId: null,
+  productTypeId: '',
   logo: '',
   detailImg: '',
   useExplain: '',
@@ -701,8 +689,7 @@ const formRules = {
       required: true,
       message: '请添加详情模块',
       validator: (value: string, cb: (params?: any) => void) => {
-        const { detail } = formModel.value;
-        if (!detail || detail === '[]') return cb('请添加详情模块');
+        if (!value || value === '[]') return cb('请添加详情模块');
         return cb();
       },
     },
@@ -811,6 +798,7 @@ const emit = defineEmits(['confirm', 'cancel']);
 const props = defineProps({
   data: Object,
 });
+const modalJsonString = ref('');
 const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
@@ -886,65 +874,6 @@ const uploadExpSuccess = (fileItem: FileItem) => {
   }
 };
 
-const onCancel = () => {
-  // const newFormStr =
-  //   JSON.stringify(formModel.value) +
-  //   JSON.stringify(roleModal.value) +
-  //   JSON.stringify(valueModel.value);
-  // if (!props.goodsData?.handleName && state.serializeForm !== newFormStr) {
-  //   Modal.warning({
-  //     title: '内容尚未保存，确定取消新建么？',
-  //     titleAlign: 'start',
-  //     content: '',
-  //     okText: '确定',
-  //     hideCancel: false,
-  //     onOk: () => {
-  //       emit('cancel');
-  //     },
-  //     onCancel: () => {
-  //       return false;
-  //     },
-  //   });
-  // } else {
-  //   emit('cancel');
-  // }
-};
-
-const onConfirm = async (done: (closed: boolean) => void) => {
-  // const [errors1, errors3] = await Promise.all([
-  //   formRef.value.validate(),
-  //   valueFormRef.value.validate(),
-  // ]);
-  // if (errors1 || errors3) {
-  //   done(false);
-  //   return;
-  // }
-  // if (showManageArea.value) {
-  //   const errors2 = await roleFormRef.value.validate();
-  //   if (errors2) {
-  //     done(false);
-  //     return;
-  //   }
-  // }
-  // const { prefix, handle } = formModel.value;
-  // const metaHandle = props.metaData?.metaHandle ?? '';
-  // const handleName = props.goodsData?.handleName ?? `${prefix}/${handle}`;
-  // const roleData = roleModal.value;
-  // if (
-  //   roleData.authGrant.type === RoleArea.All &&
-  //   roleData.authManage.type === RoleArea.Limit
-  // ) {
-  //   Message.error('权限管理授权用户必须同时拥有数据管理授权！');
-  done(false);
-  //   return;
-};
-
-const getGoodsId = () => {
-  genGoodsId().then((data: any) => {
-    displayId.value = data;
-  });
-};
-
 const getClassList = () => {
   fetchClassList().then((data: any) => {
     classList.value = data;
@@ -960,31 +889,6 @@ const showAddCopy = computed(() => {
   }
   return copyModal3.value.length < 3;
 });
-
-const getDetail = () => {
-  goodsDetail(props.data?.id).then((res) => {
-    console.log(res);
-    // Object.keys(formModel.value).forEach((i: string) => {
-    //   if (res[i]) {
-    //     formModel.value[i] = res[i];
-    //   }
-    // });
-  });
-};
-
-onMounted(() => {
-  getClassList();
-  if (props.data?.id) {
-    getGoodsId();
-  } else {
-    getDetail();
-  }
-});
-
-// 取消
-const clickCancel = () => {
-  console.log(formModel.value.type);
-};
 
 const buildForm2 = async () => {
   const result = await formRef2.value.validate();
@@ -1068,49 +972,160 @@ const buildForm2 = async () => {
     modalList = copyModal3.value;
   }
   formModel2.value.productDeliveryList = modalList;
-  formModel2.value.productId = id.value;
   return true;
+};
+
+const getModalJson = () => {
+  return (
+    JSON.stringify(formModel.value) +
+    JSON.stringify(formModel2.value) +
+    JSON.stringify(copyModal.value) +
+    JSON.stringify(copyModal2.value) +
+    JSON.stringify(copyModal3.value) +
+    JSON.stringify(templateRef.value.templateData)
+  );
+};
+
+const getDetail = (id: any) => {
+  goodsDetail(id).then((res) => {
+    formModel.value.name = res.name;
+    formModel.value.id = res.id;
+    formModel.value.logo = res.logo;
+    formModel.value.detailImg = res.detailImg;
+    formModel.value.detail = res.detail;
+    formModel.value.useExplain = res.useExplain;
+    formModel.value.type = res.type;
+    formModel.value.productTypeId = res.productTypeId;
+    formModel.value.introduction = res.introduction;
+    formModel2.value.productId = res.id;
+    formModel2.value.deliveryType = res.deliveryType;
+    formModel2.value.saleType = res.saleType;
+
+    if (formModel2.value.saleType === 0) {
+      copyModal.value = [];
+      for (const one of res.productDeliverySetList) {
+        const list1: any[] = [];
+        for (const two of one.accountNumList) {
+          list1.push({ accountnum: two.accountNum, price: two.price });
+        }
+        const list2: any[] = [];
+        for (const three of one.durationList) {
+          list2.push(three.duration);
+        }
+        copyModal.value.push({
+          name: one.name,
+          url: one.url,
+          productDeliverySetInfoList: list1,
+          durationList: list2,
+        });
+      }
+    } else if (formModel2.value.saleType === 1) {
+      copyModal2.value = [];
+      for (const one of res.productDeliverySetList) {
+        const list1: any[] = [];
+        for (const two of one.accountNumList) {
+          list1.push({ price: two.price });
+        }
+        copyModal2.value.push({
+          name: one.name,
+          url: one.url,
+          productDeliverySetInfoList: list1,
+        });
+      }
+    } else {
+      copyModal3.value = [];
+      for (const one of res.productDeliverySetList) {
+        copyModal3.value.push({
+          name: one.name,
+        });
+      }
+    }
+
+    modalJsonString.value = getModalJson();
+  });
+};
+
+const getGoodsId = () => {
+  genGoodsId().then((data: any) => {
+    formModel.value.id = data;
+    formModel2.value.productId = data;
+    modalJsonString.value = getModalJson();
+  });
+};
+
+onMounted(() => {
+  getClassList();
+  if (props.data?.id) {
+    formModel.value.id = props.data?.id;
+    formModel2.value.productId = props.data?.id;
+    getDetail(props.data?.id);
+  } else {
+    getGoodsId();
+  }
+});
+
+const doSave = async () => {
+  let res;
+  if (step.value === 1) {
+    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    const result = await formRef.value.validate();
+    if (result) {
+      return false;
+    }
+    res = await saveGoods1(formModel.value);
+  } else {
+    const r = await buildForm2();
+    if (r === false) {
+      return false;
+    }
+    res = await saveGoods2(formModel2.value);
+  }
+  return res;
+};
+
+// 取消
+const clickCancel = () => {
+  const nowString = getModalJson();
+  if (nowString !== modalJsonString.value) {
+    Modal.warning({
+      title: '是否保存已编辑的内容？',
+      titleAlign: 'start',
+      content: '',
+      okText: '保存并退出',
+      cancelText: '不保存',
+      hideCancel: false,
+      onOk: async () => {
+        const res = await doSave();
+        if (res) {
+          emit('cancel');
+        } else {
+          Message.error('信息暂时无法保存');
+        }
+      },
+      onCancel: () => {
+        emit('cancel');
+      },
+    });
+  } else {
+    emit('cancel');
+  }
 };
 
 // 保存
 const clickSave = async () => {
-  if (step.value === 1) {
-    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
-    console.log('goods-add.vue:1054', formModel.value.detail);
-    const result = await formRef.value.validate();
-    if (result) {
-      return;
-    }
-    formModel.value.productId = displayId.value;
-    saveGoods1(formModel.value).then((res) => {
-      if (res) {
-        id.value = res;
-        Message.success('保存成功');
-      }
-    });
-  } else {
-    const r = await buildForm2();
-    if (r) {
-      saveGoods2(formModel2.value).then((res) => {
-        console.log(res);
-        if (res) {
-          Message.success('保存成功');
-        }
-      });
-    }
-  }
+  const res = await doSave();
+  Message.success('保存成功');
 };
 
 // 下一步
 const clickNext = async () => {
+  formModel.value.detail = JSON.stringify(templateRef.value.templateData);
   const result = await formRef.value.validate();
   if (result) {
     return;
   }
-  formModel.value.productId = displayId.value;
   saveGoods1(formModel.value).then((res) => {
     if (res) {
-      id.value = res;
       step.value = 2;
     }
   });
@@ -1131,10 +1146,7 @@ const clickUp = async () => {
   const r = await buildForm2();
   if (r) {
     saveAndUp(formModel2.value).then((res) => {
-      console.log(res);
-      if (res) {
-        Message.success('保存成功');
-      }
+      Message.success('保存成功');
     });
   }
 };

@@ -68,7 +68,11 @@
 
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
-        <t-link class="action-down" @click="clickDownBtn(record)">
+        <t-link
+          v-if="record.status === StatusEnum.YSJ"
+          class="action-down"
+          @click="clickDownBtn(record)"
+        >
           下架
         </t-link>
         <t-link
@@ -101,15 +105,19 @@
   </t-page-header>
   <Detail
     v-if="modalVisible"
+    :class-des="state.classDes"
     :data="state.detailData"
     @confirm="onModalConfirm"
     @cancel="modalVisible = false"
+    @close="modalVisible = false"
+    @edit="infoToEdit"
   ></Detail>
   <Add
     v-if="addModalVisible"
     :data="state.detailData"
     @confirm="onAddModalConfirm"
     @cancel="addModalVisible = false"
+    @close="addModalVisible = false"
   ></Add>
 </template>
 
@@ -122,6 +130,7 @@ import {
   downGoods,
   deleteGoods,
   preUp,
+  goodsDetail,
 } from '@/api/goods-manage';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
@@ -134,11 +143,13 @@ const addModalVisible = ref(false);
 
 const state = reactive<{
   tableLoading: boolean;
+  classDes: string;
   formModel: Record<string, any>;
   tableData: Record<string, any>[];
   detailData: Record<string, any>;
 }>({
   tableLoading: false,
+  classDes: '',
   formModel: { ...defaultFormModel },
   tableData: [],
   detailData: {},
@@ -338,6 +349,7 @@ function fetchData() {
   state.tableLoading = true;
   goodsList(params)
     .then((res: any) => {
+      console.log(res);
       state.tableData = res.records;
       pagination.total = res.total;
     })
@@ -363,10 +375,21 @@ const clickSearchBtn = () => {
   onPageChange(1);
 };
 
+const getDetail = async (record: any) => {
+  const res = await goodsDetail(record.id);
+  return res;
+};
+
 // 详情/审核
-const clickDetailBtn = (record: Record<string, any>) => {
-  state.detailData = record;
+const clickDetailBtn = async (record: any) => {
+  state.detailData = await getDetail(record);
+  state.classDes = `${record.productTypeParentName}/${record.productTypeName}`;
   modalVisible.value = true;
+};
+
+const infoToEdit = () => {
+  modalVisible.value = false;
+  addModalVisible.value = true;
 };
 
 // 编辑全屏展示成功
@@ -378,11 +401,8 @@ const onModalConfirm = () => {
 // 下架
 const doDown = (id: any) => {
   downGoods(id).then((res) => {
-    console.log(res);
-    if (res.code === 200) {
-      Message.success('商品已下架');
-      fetchData();
-    }
+    Message.success('商品已下架');
+    fetchData();
   });
 };
 
@@ -413,10 +433,8 @@ const doEdit = (record: any) => {
 
 const doUp = (id: any) => {
   upGoods(id).then((res) => {
-    if (res.code === 200) {
-      Message.success('上架成功');
-      fetchData();
-    }
+    Message.success('上架成功');
+    fetchData();
   });
 };
 // 上架
@@ -474,10 +492,8 @@ const clickEditBtn = (record: any) => {
 // 删除操作
 const doDelete = (id: any) => {
   deleteGoods(id).then((res) => {
-    if (res.code === 200) {
-      Message.success('删除成功');
-      fetchData();
-    }
+    Message.success('删除成功');
+    fetchData();
   });
   // mock数据
 };
