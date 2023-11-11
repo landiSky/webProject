@@ -2,7 +2,6 @@
   <t-modal
     v-model:visible="visible"
     :width="520"
-    :height="280"
     :body-style="{ padding: '20px' }"
     @cancel="emit('cancel')"
     @close="emit('cancel')"
@@ -15,115 +14,105 @@
       class="authForm"
       auto-label-width
     >
-      <t-form-item field="roleName" label="企业名称">
+      <t-form-item field="companyName" label="企业名称">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.companyName"
+          placeholder="请输入企业名称"
           allow-clear
         />
       </t-form-item>
 
-      <t-form-item field="roleDesc" label="统一社会信用代码">
+      <t-form-item field="creditCode" label="统一社会信用代码">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.creditCode"
+          placeholder="请输入统一社会信用代码"
           allow-clear
         />
       </t-form-item>
-      <t-form-item field="roleDesc" label="法人姓名">
+      <t-form-item field="legalPersonName" label="法人姓名">
         <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
+          v-model="state.formModel.legalPersonName"
+          placeholder="请输入法人姓名"
           allow-clear
         />
       </t-form-item>
     </t-form>
     <template #footer>
-      <t-button type="primary" @click="clickNextStep">下一步</t-button>
+      <t-button type="primary" :loading="btnLoading" @click="clickNextStep"
+        >下一步</t-button
+      >
     </template>
   </t-modal>
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  defineEmits,
-  reactive,
-  ref,
-  onMounted,
-  computed,
-} from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
-import { Message } from '@tele-design/web-vue';
-
-const props = defineProps({
-  data: {
-    type: Object,
-    default: () => {},
-  },
-});
+import { defineEmits, reactive, ref, onMounted } from 'vue';
+import { apiHasCompany, apiHasCompanyShow } from '@/api/authentication';
+import { Message, Modal } from '@tele-design/web-vue';
 
 const emit = defineEmits(['confirm', 'cancel']);
 
 const formRef = ref();
 const visible = ref(true);
+const btnLoading = ref(false);
 
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
-const state = reactive({
+const state = reactive<{ formModel: Record<string, string | undefined> }>({
   formModel: {
-    roleName: undefined,
-    roleDesc: undefined,
+    companyName: undefined,
+    creditCode: undefined,
+    legalPersonName: undefined,
   },
 });
 
 const formRules = {
-  roleName: [
-    { required: true, message: '请输入姓名' },
-    { maxLength: 20, message: '长度不超过20个字符' },
-  ],
+  companyName: [{ required: true, message: '请输入企业名称' }],
+  creditCode: [{ required: true, message: '请输入统一社会信用代码' }],
+  legalPersonName: [{ required: true, message: '请输入法人姓名' }],
 };
 
-const onConfirm = (done: (closed: boolean) => void) => {
+const clickNextStep = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
+      btnLoading.value = true;
+      apiHasCompany(state.formModel)
+        .then((data) => {
+          const { companyAuth, nodeAuth, phone } = data;
+
+          if (companyAuth || nodeAuth) {
+            const title = nodeAuth ? '企业节点认证' : '企业认证';
+
+            visible.value = false;
+            Modal.warning({
+              title: `${title}重复`,
+              okText: '好的',
+              titleAlign: 'start',
+              hideCancel: true,
+              content: `该企业已完成「${title}」，如需申请加入企业，请咨询企业联系人，联系方式：${
+                phone || '-'
+              }。`,
+              onOk: () => {
+                emit('confirm');
+              },
+            });
+          } else {
+            emit('confirm');
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          btnLoading.value = false;
+        });
     } else {
       done(false);
     }
   });
 };
 
-// const getDetail = () => {
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
-// };
-
-const clickNextStep = () => {
-  emit('confirm');
-};
 onMounted(() => {
-  if (isEdit.value) {
-    // 这里分两种情况
-    // 一是编辑信息从列表传入
-    const { roleName, roleDesc } = props.data;
-    state.formModel = { roleName, roleDesc };
-
-    // 二是从接口获取
-    // getDetail();
-  }
+  apiHasCompanyShow().then((data: Record<string, any>) => {
+    const { companyName, creditCode, legalPersonName } = data;
+    state.formModel = { companyName, creditCode, legalPersonName };
+  });
 });
 </script>
 

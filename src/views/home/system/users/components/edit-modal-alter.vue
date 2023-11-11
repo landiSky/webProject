@@ -104,8 +104,11 @@ import {
   onMounted,
   computed,
 } from 'vue';
-import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
+
+import { storeToRefs } from 'pinia';
+
+import { useRouter } from 'vue-router';
 
 import {
   menberGetadmin,
@@ -113,8 +116,13 @@ import {
   verificationCode,
   menberChangeAdmin,
 } from '@/api/system/member';
-// import { Message } from '@tele-design/web-vue';
+
 const userStore = useUserStore();
+
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
+// import { Message } from '@tele-design/web-vue';
+
 const router = useRouter();
 
 const props = defineProps({
@@ -174,7 +182,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       menberChangeAdmin({
         newAdminMemberId: state.formModel.roleDesc,
         code: state.formModel.verification,
-        companyId: 1,
+        companyId: userInfoByCompany.companyId,
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
       }).then((res) => {
@@ -219,7 +227,7 @@ const administratorled = () => {
   //   phone: "18839014162",
   //   memberId: 1717067979902607400
   // },
-  menberGetadmin({ companyId: 1 }).then((res) => {
+  menberGetadmin({ companyId: userInfoByCompany.companyId }).then((res) => {
     console.log(res, 'res');
 
     state.formModel.roleName = res.username;
@@ -228,7 +236,7 @@ const administratorled = () => {
 };
 // 变更管理员- 查找企业下普通用户成员
 const userNamelist = () => {
-  menberNormal({ companyId: 1 }).then((res) => {
+  menberNormal({ companyId: userInfoByCompany.companyId }).then((res) => {
     console.log(res);
 
     inputSelect.value = res;

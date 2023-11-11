@@ -27,6 +27,12 @@ const wowRoutesList = [
         component: () => import('@/views/wow/mall/index.vue'),
       },
       {
+        // 前台商品详情页预览
+        path: '/wow/mall/preview/:id',
+        name: 'wowMallPreview',
+        component: () => import('@/views/wow/mall/detail/index.vue'),
+      },
+      {
         path: '/wow/mall/detail/:id',
         name: 'wowMallDetail',
         component: () => import('@/views/wow/mall/detail/index.vue'),

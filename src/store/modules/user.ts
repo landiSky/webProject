@@ -43,28 +43,28 @@ export const useUserStore = defineStore({
     getUserByCompany() {
       const { companyId, memberId } = this.selectCompany || {};
 
-      this.userInfoByCompany = {
-        id: 1, // 用户id
-        username: '谢珍', // 用户名称
-        companyId: 1, // 机构id
-        companyName: 'kw企业', // 机构名称
-        certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-        nodeStatus: 3, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-        primary: true, // 主账号 true 子账号 false
-        roleNames: null, // 角色名称
-        menuCodes: [
-          'ROUTE_BUYER',
-          'ROUTE_BUYER_ORDER',
-          'ROUTE_SELLER',
-          'ROUTE_SELLER_GOODS',
-        ], // 菜单code
-      };
-      // apiUserProfile({ companyId, memberId })
-      //   .then((data: Record<string, any>) => {
-      //     console.log(data);
-      //     this.userInfoByCompany = data;
-      //   })
-      //   .catch(() => {});
+      // this.userInfoByCompany = {
+      //   id: 1, // memberId
+      //   username: '谢珍', // 用户名称
+      //   companyId: 1, // 机构id
+      //   companyName: 'kw企业', // 机构名称
+      //   certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+      //   nodeStatus: 3, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+      //   primary: true, // 主账号 true 子账号 false
+      //   roleNames: null, // 角色名称
+      //   menuCodes: [
+      //     'ROUTE_BUYER',
+      //     'ROUTE_BUYER_ORDER',
+      //     'ROUTE_SELLER',
+      //     'ROUTE_SELLER_GOODS',
+      //   ], // 菜单code
+      // };
+      apiUserProfile({ companyId, memberId })
+        .then((data: Record<string, any>) => {
+          console.log(data);
+          this.userInfoByCompany = data;
+        })
+        .catch(() => {});
     },
 
     async changeSelectCompany(data: Record<string, any>) {
@@ -81,28 +81,28 @@ export const useUserStore = defineStore({
      */
     async getUserBasicInfo() {
       try {
-        // const userInfo = await apiUsersInfo();
+        const userInfo = await apiUsersInfo();
 
-        const userInfo = {
-          userId: 1,
-          mobile: '15210602855',
-          username: 'super',
-          nickName: '超级管理员',
-          companyList: [
-            {
-              memberId: 12, // 成员id
-              memberType: 1, // 成员类型 0:普通成员 1:管理员
-              companyId: 1, // 企业id 必传
-              companyName: '泰尔英福巴拉巴拉1', // 企业名称
-            },
-            {
-              memberId: 13, // 成员id
-              memberType: 0, // 成员类型 0:普通成员 1:管理员
-              companyId: 2, // 企业id 必传
-              companyName: '泰尔英福巴拉巴拉2', // 企业名称
-            },
-          ],
-        };
+        // const userInfo = {
+        //   userId: 1,
+        //   mobile: '15210602855',
+        //   username: 'super',
+        //   nickName: '超级管理员',
+        //   companyList: [
+        //     {
+        //       memberId: 12, // 成员id
+        //       memberType: 1, // 成员类型 0:普通成员 1:管理员
+        //       companyId: 1, // 企业id 必传
+        //       companyName: '泰尔英福巴拉巴拉1', // 企业名称
+        //     },
+        //     {
+        //       memberId: 13, // 成员id
+        //       memberType: 0, // 成员类型 0:普通成员 1:管理员
+        //       companyId: 2, // 企业id 必传
+        //       companyName: '泰尔英福巴拉巴拉2', // 企业名称
+        //     },
+        //   ],
+        // };
 
         this.userInfo = userInfo as any;
 

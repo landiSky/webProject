@@ -181,6 +181,7 @@ const clickIdService = () => {
         Modal.info({
           title: '使用提醒',
           content: '企业节点完成认证后，方可使用。',
+          titleAlign: 'start',
           hideCancel: false,
           cancelText: '取消',
           okText: '去查看',

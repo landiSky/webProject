@@ -255,7 +255,7 @@
                     v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="`/web/file/orderDownload?name=${item}`"
+                    :src="`/server/web/file/orderDownload?name=${item}`"
                     alt=""
                   />
                 </div>

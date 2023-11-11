@@ -100,7 +100,7 @@
               <p style="float: left; width: 20%">营业执照</p>
               <img
                 style="width: 170px; height: 100px"
-                :src="`/web/file/download?name=${detaillist.businessLicense}`"
+                :src="`/server/web/file/download?name=${detaillist.businessLicense}`"
                 alt=""
               />
             </div>
@@ -140,12 +140,12 @@
               <p style="float: left; width: 20%">联系人身份证</p>
               <img
                 style="width: 170px; height: 100px; margin-right: 10px"
-                :src="`/web/file/download?name=${detaillist.idCardz}`"
+                :src="`/server/web/file/download?name=${detaillist.idCardz}`"
                 alt=""
               />
               <img
                 style="width: 170px; height: 100px"
-                :src="`/web/file/download?name=${detaillist.idCardf}`"
+                :src="`/server/web/file/download?name=${detaillist.idCardf}`"
                 alt=""
               />
             </div>

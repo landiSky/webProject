@@ -93,14 +93,14 @@
               formModel.businessLicense
                 ? [
                     {
-                      url: `/web/file/download?name=${formModel.businessLicense}`,
+                      url: `/server/web/file/download?name=${formModel.businessLicense}`,
                     },
                   ]
                 : []
             "
             list-type="picture-card"
             :headers="uploadHeaders"
-            action="/web/file/upload"
+            action="/server/web/file/upload"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
@@ -192,13 +192,13 @@
                 formModel.idCardz
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardz}`,
+                        url: `/server/web/file/download?name=${formModel.idCardz}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview
@@ -232,13 +232,13 @@
                 formModel.idCardf
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardf}`,
+                        url: `/server/web/file/download?name=${formModel.idCardf}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview

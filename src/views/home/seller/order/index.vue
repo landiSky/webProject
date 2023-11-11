@@ -1,16 +1,29 @@
 <template>
   <div class="biox">
-    <Orderindex v-if="orderstatus === 0"> </Orderindex>
-    <Dataoverview v-if="orderstatus === 1"></Dataoverview>
+    <Orderindex
+      v-if="
+        userInfoByCompany.nodeStatus === 1 || userInfoByCompany.nodeStatus === 1
+      "
+    >
+    </Orderindex>
+    <Dataoverview
+      v-if="
+        userInfoByCompany.nodeStatus !== 1 || userInfoByCompany.nodeStatus !== 1
+      "
+    ></Dataoverview>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import Dataoverview from '@/components/dataoverview/index.vue';
-
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import Orderindex from './orderindex.vue';
 
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 const orderstatus = ref(0);
 </script>
 

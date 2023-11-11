@@ -2,7 +2,7 @@ import { successResponseWrap, failResponseWrap } from './response';
 
 export default [
   {
-    url: '/web/reception/selectReceptionPageList',
+    url: '/server/web/reception/selectReceptionPageList',
     method: 'get',
     response: () => {
       return successResponseWrap({
@@ -75,7 +75,7 @@ export default [
   },
 
   {
-    url: '/web/reception/selectById',
+    url: '/server/web/reception/selectById',
     method: 'get',
     response: () => {
       return successResponseWrap({
@@ -199,7 +199,7 @@ export default [
   },
 
   {
-    url: '/web/reception/computePrice',
+    url: '/server/web/reception/computePrice',
     method: 'get',
     response: () => {
       return successResponseWrap(8000);

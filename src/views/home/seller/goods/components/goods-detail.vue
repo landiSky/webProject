@@ -1,41 +1,64 @@
 <template>
   <t-modal
-    v-model:visible="showModal"
+    :visible="true"
     fullscreen
     title-align="start"
     :closable="false"
-    :on-before-ok="onConfirm"
     :body-style="{ padding: 0 }"
     class="fullscreen-modal"
     :footer="props.data.status != StatusEnum.DSH"
     @cancel="emit('cancel')"
     @close="emit('cancel')"
+    @edit="emit('edit')"
   >
     <template #title>
       <div style="width: 100%; text-align: center"> 商品详情 </div>
     </template>
     <template #footer>
       <div class="footer">
-        <t-button v-if="props.data.status === StatusEnum.YBH" type="primary"
+        <t-button
+          v-if="props.data.status === StatusEnum.YBH"
+          type="primary"
+          @click="clickEdit"
           >编辑</t-button
         >
-        <t-button v-if="props.data.status === StatusEnum.YBH">删除</t-button>
-        <t-button v-if="props.data.status === StatusEnum.WSJ" type="primary"
+        <t-button
+          v-if="props.data.status === StatusEnum.YBH"
+          @click="clickDelete"
+          >删除</t-button
+        >
+        <t-button
+          v-if="props.data.status === StatusEnum.WSJ"
+          type="primary"
+          @click="clickUp"
           >上架</t-button
         >
-        <t-button v-if="props.data.status === StatusEnum.WSJ" type="outline"
+        <t-button
+          v-if="props.data.status === StatusEnum.WSJ"
+          type="outline"
+          @click="clickPreview"
           >预览</t-button
         >
-        <t-button v-if="props.data.status === StatusEnum.WSJ">编辑</t-button>
-        <t-button v-if="props.data.status === StatusEnum.WSJ">删除</t-button>
+        <t-button v-if="props.data.status === StatusEnum.WSJ" @click="clickEdit"
+          >编辑</t-button
+        >
+        <t-button
+          v-if="props.data.status === StatusEnum.WSJ"
+          @click="clickDelete"
+          >删除</t-button
+        >
 
-        <t-button v-if="props.data.status === StatusEnum.YSJ" type="primary"
+        <t-button
+          v-if="props.data.status === StatusEnum.YSJ"
+          type="primary"
+          @click="clickView"
           >查看</t-button
         >
         <t-button
           v-if="props.data.status === StatusEnum.YSJ"
           type="primary"
           status="danger"
+          @click="clickDown"
           >下架</t-button
         >
       </div>
@@ -76,7 +99,7 @@
               <t-anchor-link href="#base">基本信息</t-anchor-link>
               <t-anchor-link href="#sale">售卖设置</t-anchor-link>
               <t-anchor-link
-                v-for="(_, index) of saleTypeList"
+                v-for="(_, index) of props.data.productDeliverySetList"
                 :key="index"
                 :href="'#st' + index"
               >
@@ -101,48 +124,50 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ '我是商品名称' }}
+                {{ props.data.name }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
-                {{ '202210191918239103' }}
+                {{ props.data.id }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
                 <img
                   class="first-img"
-                  src=""
+                  :alt="props.data.logo"
+                  :src="`/server/web/file/download?name=${props.data.logo}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
               <t-descriptions-item label="详情展示图">
                 <img
+                  v-for="url of detailImageList"
+                  :key="url"
+                  :alt="url"
                   class="first-img"
-                  src=""
-                  style="width: 158px; height: 100px; background-color: #999"
-                />
-                <img
-                  src=""
+                  :src="`/server/web/file/download?name=${url}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
               <t-descriptions-item label="商品分类">
-                {{ '硬件/智能硬件' }}
+                {{ classDes }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
                 {{ '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
-                {{ '标识应用（用户使用前需开通企业节点）' }}
+                {{ TypeEnum[props.data.type] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品简介">
-                {{
-                  '这个商品是一个智能硬件，它的特点是XXXXX，这个商品是一个智能硬件，它的特点是XXXXX这个商品是一个智能硬件，它的特点是XXXXX这个商品是一个智能硬件，它的特点是XXXXX这个商品是一个智能硬件，它的特点是XXXXX。'
-                }}
+                {{ props.data.introduction }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
-                {{ '《我是产品使用说明》' }}
+                <a
+                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
+                  download
+                  >产品使用说明</a
+                >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
-                {{ '商品优势、产品架构、产品功能、应用场景' }}
+                {{ props.data.detail }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -159,17 +184,17 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ 'SAAS类 《SAAS类应用对接指南》' }}
+                {{ DeliveryTypeEnum[props.data.deliveryType] }}
               </t-descriptions-item>
               <t-descriptions-item label="应用服务地址">
-                {{ '136.125.23.21' }}
+                {{ props.data.url }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ '套餐定价(账号+时长)' }}
+                {{ PriceTypeEnum[props.data.saleType] }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              v-for="(st, index) of saleTypeList"
+              v-for="(st, index) of props.data.productDeliverySetList"
               :id="'st' + index"
               :key="index"
               :title="'交付版本' + (index + 1)"
@@ -184,21 +209,35 @@
               :column="1"
             >
               <t-descriptions-item label="交付版本名称">
-                {{ '标准版' }}
+                {{ st.name }}
               </t-descriptions-item>
-              <t-descriptions-item v-if="index === 0" label="套餐定价设置">
-                <div v-for="p of priceList" :key="p">
-                  套餐{{ p }}：账号数 5 个，账号单价 999 元</div
+              <t-descriptions-item
+                v-if="props.data.deliveryType === 0"
+                label="套餐定价设置"
+              >
+                <div v-for="(p, pIndex) of st.accountNumList" :key="p">
+                  套餐{{ pIndex + 1 }}：账号数 {{ p.accountNum }} 个，账号单价
+                  {{ p.price }} 元</div
                 >
               </t-descriptions-item>
-              <t-descriptions-item v-if="index === 0" label="可选购买时长">
-                {{ '1个月 6个月' }}
+              <t-descriptions-item
+                v-if="props.data.deliveryType === 0"
+                label="可选购买时长"
+              >
+                {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
-              <t-descriptions-item v-if="index === 1" label="一口价金额">
-                {{ '999元' }}
+              <t-descriptions-item
+                v-if="props.data.deliveryType === 1"
+                label="一口价金额"
+              >
+                {{ st.accountNumList[0].price }} 元
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
-                <t-link>下载密钥文件</t-link>
+                <a
+                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
+                  download
+                  >应用秘钥</a
+                >
               </t-descriptions-item>
             </t-descriptions>
           </div>
@@ -210,74 +249,42 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
-// import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
 import { Message } from '@tele-design/web-vue';
-
+import {
+  deleteGoods,
+  upGoods,
+  downGoods,
+  goodsDetail,
+} from '@/api/goods-manage';
 // 状态
 const StatusEnum: { [name: string]: any } = {
-  WSJ: 0,
-  DSH: 1,
+  WSJ: 3,
+  DSH: 0,
   YBH: 2,
-  YSJ: 3,
-  0: '未上架',
-  1: '待审核',
+  YSJ: 1,
+  3: '未上架',
+  0: '待审核',
   2: '已驳回',
-  3: '已上架',
+  1: '已上架',
 };
 
 const props = defineProps({
   data: {
     type: Object,
-    default: () => {},
+    default: () => {
+      return {};
+    },
+  },
+  classDes: {
+    type: String,
+    default: () => '',
   },
 });
 
-const emit = defineEmits(['confirm', 'cancel']);
-const showModal = ref(true);
-const formRef = ref();
-
-const saleTypeList = ref([1, 2, 3]);
-const priceList = ref([1, 2, 3]);
-
-const formModel = ref({
-  username: null,
-  deptId: undefined,
-  password: null,
-  nickName: null,
-  sex: null,
-  roleIds: [],
-  email: null,
-  phone: null,
-  comments: null,
-});
-
-const formRules = {
-  nickName: [
-    { required: true, message: '请输入姓名' },
-    { maxLength: 20, message: '长度不超过20个字符' },
-  ],
-  comments: [{ maxLength: 200, message: '长度不超过200个字符' }],
-};
-
-const goback = () => {
-  emit('cancel');
-};
-
-const getDetail = () => {
-  // 调后端接口
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
-};
+const dataInfo = ref();
+const emit = defineEmits(['confirm', 'cancel', 'edit', 'preview']);
+const info = ref<any>();
+const detailImageList = ref<string[]>([]);
 
 const statusColor = computed(() => {
   if (props.data.status === StatusEnum.YSJ) {
@@ -289,53 +296,95 @@ const statusColor = computed(() => {
   return '#FFFAE8';
 });
 
-onMounted(() => {
-  console.log(props.data);
-  if (props.data?.id) {
-    getDetail();
-  }
-});
-
-const onConfirm = (done: (closed: boolean) => void) => {
-  formRef.value.validate((errors: any) => {
-    if (!errors) {
-      // 调后端接口
-      // const api = props.data.id ? usersUpdate : usersAdd;
-      // api(formModel.value)
-      //   .then(() => {
-      //     emit('confirm');
-      //     Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-      //     done(true);
-      //   })
-      //   .catch(() => {
-      //     done(false);
-      //   });
-
-      // mock数据
-      Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-      done(true);
-    } else {
-      done(false);
-    }
-  });
+// 交付方式
+const DeliveryTypeEnum: { [name: string]: any } = {
+  SAAS: 0,
+  DLBS: 1,
+  0: 'SAAS',
+  1: '独立部署',
+};
+// 应用分类
+const TypeEnum: { [name: string]: any } = {
+  PT: 0,
+  BS: 1,
+  0: '普通应用',
+  1: '标识应用',
 };
 
-// 下架操作
-const onBeforeOkDown = (done: any) => {
-  // TODO 调后端接口
-  // deleteIdentify(deleteId.value)
-  //   .then(() => {
-  //     done(true);
-  //     Message.success('删除成功!');
-  //     refresh();
-  //   })
-  //   .catch(() => {
-  //     done(false);
-  //   });
-  // mock数据
-  done(true);
-  Message.success('商品已下架');
-  emit('confirm');
+// 定价方式
+const PriceTypeEnum: { [name: string]: any } = {
+  0: '套餐定价(账号+时长)',
+  1: '一口价定价',
+  2: '价格面议',
+};
+
+const DurationEnum: { [name: string]: string } = {
+  1: '1个月',
+  2: '2个月',
+  3: '3个月',
+  6: '6个月',
+  12: '1年',
+  24: '2年',
+  36: '3年',
+  0: '不限',
+};
+
+// 预览
+const clickPreview = () => {
+  if (props.data?.id) {
+    emit('preview', props.data?.id);
+  }
+};
+
+const desDeuration = (array: any[]) => {
+  return array.map((item) => DurationEnum[item.duration]).join(' ');
+};
+
+const refreshData = async () => {
+  dataInfo.value = await goodsDetail(props.data.id);
+  detailImageList.value = dataInfo.value.detailImg.split(',');
+};
+
+onMounted(() => {
+  refreshData();
+});
+
+const clickEdit = () => {
+  emit('edit');
+};
+// 删除操作
+const doDelete = (id: any) => {
+  deleteGoods(id).then(() => {
+    Message.success('删除成功');
+    emit('confirm');
+  });
+};
+const clickDelete = () => {
+  doDelete(props.data.id);
+};
+const doUp = (id: any) => {
+  upGoods(id).then(() => {
+    Message.success('上架成功');
+    refreshData();
+  });
+};
+const clickUp = () => {
+  doUp(props.data.id);
+};
+
+// 下架
+const doDown = (id: any) => {
+  downGoods(id).then(() => {
+    Message.success('商品已下架');
+    refreshData();
+  });
+};
+const clickDown = () => {
+  doDown(props.data.id);
+};
+
+const clickView = () => {
+  console.log('view');
 };
 </script>
 

@@ -19,7 +19,7 @@ import { ref, defineProps, defineEmits } from 'vue';
 const visible = ref(true);
 const emit = defineEmits(['success']);
 const pictureConfig = {
-  url: '/static/api/v1/captcha/get',
+  url: '/sso/static/api/v1/captcha/get',
   method: 'post',
   customFields: {
     returnRawResponse: true,
@@ -32,7 +32,7 @@ const pictureConfig = {
 };
 
 const checkPictureConfig = {
-  url: '/static/api/v1/captcha/check',
+  url: '/sso/static/api/v1/captcha/check',
   method: 'post',
 };
 

@@ -100,7 +100,7 @@
               <p style="float: left; width: 20%">营业执照</p>
               <img
                 style="width: 170px; height: 100px"
-                :src="`/web/file/download?name=${detaillist.businessLicense}`"
+                :src="`/server/web/file/download?name=${detaillist.businessLicense}`"
                 alt=""
               />
             </div>
@@ -140,12 +140,12 @@
               <p style="float: left; width: 20%">联系人身份证</p>
               <img
                 style="width: 170px; height: 100px; margin-right: 10px"
-                :src="`/web/file/download?name=${detaillist.idCardz}`"
+                :src="`/server/web/file/download?name=${detaillist.idCardz}`"
                 alt=""
               />
               <img
                 style="width: 170px; height: 100px"
-                :src="`/web/file/download?name=${detaillist.idCardf}`"
+                :src="`/server/web/file/download?name=${detaillist.idCardf}`"
                 alt=""
               />
             </div>
@@ -167,11 +167,15 @@
 <script lang="ts" setup>
 import Error from '@/assets/images/home/Error.png';
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
-
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import { authDetails } from '@/api/authentication';
-
 import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 
@@ -261,11 +265,13 @@ const goback = () => {
 
 const getUserDetail = () => {
   // 调后端接口
-  authDetails({ companyId: 2 }).then((res) => {
-    console.log(res);
-    // @ts-ignore
-    detaillist.value = res;
-  });
+  authDetails({ companyId: String(userInfoByCompany.companyId) }).then(
+    (res) => {
+      console.log(res);
+      // @ts-ignore
+      detaillist.value = res;
+    }
+  );
   // loading.value = true;
   // usersDetail({ id: props.data?.id })
   //   .then((res) => {

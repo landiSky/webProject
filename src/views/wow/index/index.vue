@@ -487,6 +487,10 @@ onMounted(() => {
       height: 284px;
       margin-right: 46px;
 
+      &:hover {
+        transform: translate(0, -20px);
+      }
+
       .cardContent {
         display: flex;
         flex-direction: column;

@@ -637,7 +637,7 @@ const init = () => {
     pageSize: formInline.pageSize,
     pageNum: formInline.pageNum,
     // String(userInfoByCompany.value.companyId),
-    userCompanyId: String(1392100221902848),
+    userCompanyId: String(userInfoByCompany.value.companyId),
   }).then((res) => {
     tableData.value = res.records;
     //  @ts-ignore

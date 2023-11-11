@@ -163,7 +163,7 @@
                   v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
                   style="display: block; margin: 15px auto 0; padding: 5px 10px"
-                  @click="authenticationredf"
+                  @click="nodeAuth"
                   >去认证</t-button
                 >
                 <div v-else class="states">
@@ -264,7 +264,10 @@
           <div class="leftcont">
             <div class="tophead" style="margin-bottom: 20px"
               ><span>{{ item.productName }}</span
-              ><span style="color: #1664ff; cursor: pointer" @click="togo">
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                @click="togo(item.url)"
+              >
                 前往 》</span
               ></div
             >
@@ -287,15 +290,15 @@
                 >配置应用</span
               ><span
                 style="color: #86909c; cursor: pointer"
-                @click="instructionsuse"
+                @click="instructionsuse(item.useExplain, item.productId)"
               >
                 使用说明</span
               ></div
             >
           </div>
-          <div id="page" class="zhengshu-container-box">
-            <div> 1111 </div>
-            <!-- <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
+          <!-- <div id="page" class="zhengshu-container-box">
+            <div> 1111 </div> -->
+          <!-- <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
             <div class="zhengshu-container-box-bid">
               存证BID：{detail?.bid || '--'}
             </div>
@@ -355,7 +358,7 @@
                 </div>
               </div>
             </div> -->
-          </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -469,6 +472,7 @@ import {
   NodeAuthStatus,
   NodeAuthStatusDESC,
 } from '@/enums/common';
+import { fileDownload } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
@@ -635,11 +639,15 @@ const authDialog = () => {
 
 // 去认证
 const authentication = () => {
-  console.log(editModalVisible.value);
+  editModalVisible.value = true; //  本平台进行企业认证
+};
+
+const nodeAuth = () => {
   authModalVisible.value = true;
 };
 const onAuthModalConfirm = () => {
-  editModalVisible.value = true;
+  authModalVisible.value = false;
+  window.open(userInfoByCompany.idPointer, '_blank'); // 企业节点认证跳转到二级
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
@@ -684,8 +692,7 @@ const detailflagclick = () => {
   detailflag.value = false;
   editModalVisible.value = true;
 };
-// 企业节点去认证
-const authenticationredf = () => {};
+
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
@@ -697,7 +704,9 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = () => {};
+const togo = (urldata: string) => {
+  window.open(urldata);
+};
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProductId.value = item.id; // 配置的应用 id
@@ -708,18 +717,24 @@ const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
 // 使用说明
-const instructionsuse = () => {
+const instructionsuse = (fileurl: string, prodtId: string) => {
+  console.log(fileurl, prodtId, 'prodtId');
+
+  fileDownload({ name: fileurl, roductId: prodtId }).then((res) => {
+    console.log(res);
+  });
+
   // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
   // window.open(url, '_blank');
-  const input: any = document.getElementById('page');
-  html2canvas(input).then((canvas: any) => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new JsPDF('p', 'pt', 'a4');
-    const width = pdf.internal.pageSize.getWidth();
-    const height = pdf.internal.pageSize.getHeight();
-    pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-    pdf.save('kexincunzheng.pdf');
-  });
+  // const input: any = document.getElementById('page');
+  // html2canvas(input).then((canvas: any) => {
+  //   const imgData = canvas.toDataURL('image/png');
+  //   const pdf = new JsPDF('p', 'pt', 'a4');
+  //   const width = pdf.internal.pageSize.getWidth();
+  //   const height = pdf.internal.pageSize.getHeight();
+  //   pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+  //   pdf.save('kexincunzheng.pdf');
+  // });
 };
 // 更多
 const multiples = () => {
