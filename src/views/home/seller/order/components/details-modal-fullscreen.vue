@@ -464,6 +464,7 @@ const goback = () => {
 const init = () => {
   sellerDetail({ id: props.data.id }).then((res) => {
     console.log(res, '详情');
+    // @ts-ignore
     dataList.value = res;
   });
   // 调后端接口
