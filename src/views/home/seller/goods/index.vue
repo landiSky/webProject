@@ -134,6 +134,7 @@ import {
   deleteGoods,
   preUp,
   goodsDetail,
+  fetchClassList,
 } from '@/api/goods-manage';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
@@ -158,21 +159,6 @@ const state = reactive<{
   tableData: [],
   detailData: {},
 });
-
-const classList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: '软件/平台',
-    value: 1,
-  },
-  {
-    text: '数据管理者',
-    value: 2,
-  },
-];
 
 // 应用分类
 const TypeEnum: { [name: string]: any } = {
@@ -255,6 +241,13 @@ const StatusList = [
   },
 ];
 
+const classList = ref([
+  {
+    text: '全部',
+    value: null,
+  },
+]);
+
 const columns = [
   {
     title: '商品名称',
@@ -278,7 +271,7 @@ const columns = [
     slotName: 'productTypeId',
     width: 180,
     filterable: {
-      filters: classList,
+      filters: classList.value,
     },
   },
   {
@@ -547,7 +540,34 @@ const onPreview = (productId: string) => {
   window.open(routeData?.href, '_blank');
 };
 
+const reBuildClassList = (data: any[]) => {
+  console.log(data);
+  classList.value = [
+    {
+      text: '全部',
+      value: null,
+    },
+  ];
+  for (const fc of data) {
+    const fn = fc.name;
+    for (const sc of fc.children) {
+      const sn = sc.name;
+      const value = sc.id;
+      classList.value.push({ text: `${fn}/${sn}`, value });
+    }
+  }
+};
+
+const getClassList = () => {
+  fetchClassList().then((res: any) => {
+    if (res && res.data) {
+      reBuildClassList(res.data);
+    }
+  });
+};
+
 onMounted(() => {
+  getClassList();
   fetchData();
 });
 
