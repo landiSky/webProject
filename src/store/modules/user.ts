@@ -44,11 +44,11 @@ export const useUserStore = defineStore({
       const { companyId, memberId } = this.selectCompany || {};
 
       // this.userInfoByCompany = {
-      //   id: 1, // 用户id
+      //   id: 1, // memberId
       //   username: '谢珍', // 用户名称
       //   companyId: 1, // 机构id
       //   companyName: 'kw企业', // 机构名称
-      //   certificateStatus: 0, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
+      //   certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
       //   nodeStatus: 3, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
       //   primary: true, // 主账号 true 子账号 false
       //   roleNames: null, // 角色名称
@@ -196,7 +196,7 @@ export const useUserStore = defineStore({
 
       await apiLogout();
       clearToken();
-      window.location.href = this.configInfo?.logoutUrl;
+      window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${this.configInfo?.redirectUri}`;
     },
 
     clearUserInfo(): void {

@@ -111,6 +111,7 @@
     @cancel="modalVisible = false"
     @close="modalVisible = false"
     @edit="infoToEdit"
+    @preview="onPreview"
   ></Detail>
   <Add
     v-if="addModalVisible"
@@ -118,11 +119,13 @@
     @confirm="onAddModalConfirm"
     @cancel="addModalVisible = false"
     @close="addModalVisible = false"
+    @preview="onPreview"
   ></Add>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 import {
   goodsList,
@@ -139,6 +142,7 @@ const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
 };
 
+const router = useRouter();
 const addModalVisible = ref(false);
 
 const state = reactive<{
@@ -532,6 +536,15 @@ const clickDelBtn = (record: any) => {
       doDelete(record.id);
     },
   });
+};
+
+// 跳转到前台商品详情页
+const onPreview = (productId: string) => {
+  const routeData = router.resolve({
+    name: 'wowMallPreview',
+    params: { id: productId },
+  });
+  window.open(routeData?.href, '_blank');
 };
 
 onMounted(() => {

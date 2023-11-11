@@ -9,8 +9,8 @@
     <template #title> 上传支付凭证 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item field="currentamountlist" :hide-label="true">
+        <!-- :file-list="fileList ? fileList : []" -->
         <t-upload
-          :file-list="fileList ? fileList : []"
           list-type="picture-card"
           :headers="uploadHeaders"
           action="/web/file/orderUpload"
@@ -18,6 +18,7 @@
           image-preview
           @before-upload="beforeUpload"
           @success="uploadSuccess"
+          @change="changeclick"
         />
       </t-form-item>
     </t-form>
@@ -52,12 +53,14 @@ const updataimg = ref([
   {
     uid: '-2',
     name: '20200717-103937.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
   {
     uid: '-1',
     name: 'hahhahahahaha.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
 ]);
 const visible = ref(true);
@@ -69,8 +72,9 @@ const state = reactive({
   },
 });
 const currentamount = ref<string[]>([]);
+const currentamountnum = ref<string[]>([]);
 
-const fileList = ref([]);
+// const fileList = ref([]);
 
 const formRules = {
   currentamountlist: [
@@ -79,10 +83,13 @@ const formRules = {
       message: '至少上传一张',
       validator: (value: any, cb: any) => {
         console.log('至少上传一张111', currentamount.value);
-        if (Array.isArray(currentamount.value) && currentamount.value.length) {
+        if (
+          Array.isArray(currentamountnum.value) &&
+          currentamountnum.value.length
+        ) {
           cb();
         } else {
-          console.log('至少上传一张', currentamount.value);
+          console.log('至少上传一张', currentamountnum.value);
           return cb('至少上传一张');
         }
         return cb();
@@ -114,6 +121,11 @@ const beforeUpload = (file: File) => {
     // @ts-ignore
     resolve(true);
   });
+};
+// FileItem
+const changeclick = (fileList: any[]) => {
+  console.log(fileList, 'fileList');
+  currentamountnum.value = fileList;
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
@@ -156,18 +168,13 @@ onMounted(() => {
   // 一是编辑信息从列表传入
 
   const { id, currentamount } = props.data;
-  console.log(id, currentamount, 'currentamount');
+
   state.formModel = { id };
   currentamount.value = currentamount;
-  console.log(currentamount.value);
 
-  fileList.value = currentamount?.value.map((pathName: string) => {
-    console.log('===', pathName);
-
-    return { url: `/web/file/orderDownload?name=${pathName}` };
-  });
-
-  console.log('=====onmm', fileList.value);
+  // fileList.value = currentamount?.value.map((pathName: string) => {
+  //   return { url: `/web/file/orderDownload?name=${pathName}` };
+  // });
 
   // state.formModel.currentamount = currentamount.map((item: string) => {
   //   return state.formModel.currentamount.push({ url: item });

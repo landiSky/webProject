@@ -40,6 +40,7 @@
     <div class="orderClass">
       <div class="order">
         <t-form
+          ref="formRef"
           :inline="true"
           :model="formInline"
           class="demo-form-inline search"
@@ -407,7 +408,7 @@ import EditModal from './components/edit-modal.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
-
+const formRef = ref();
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -715,6 +716,13 @@ const getTableData = () => {
 };
 // 重置
 const clearSearch = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
   formInline.pageNum = 1;
   noDatalist.value = false;
   init();

@@ -282,9 +282,7 @@ const props = defineProps({
 });
 
 const dataInfo = ref();
-
-const emit = defineEmits(['confirm', 'cancel', 'edit']);
-
+const emit = defineEmits(['confirm', 'cancel', 'edit', 'preview']);
 const info = ref<any>();
 const detailImageList = ref<string[]>([]);
 
@@ -330,6 +328,14 @@ const DurationEnum: { [name: string]: string } = {
   36: '3年',
   0: '不限',
 };
+
+// 预览
+const clickPreview = () => {
+  if (props.data?.id) {
+    emit('preview', props.data?.id);
+  }
+};
+
 const desDeuration = (array: any[]) => {
   return array.map((item) => DurationEnum[item.duration]).join(' ');
 };
@@ -376,9 +382,7 @@ const doDown = (id: any) => {
 const clickDown = () => {
   doDown(props.data.id);
 };
-const clickPreview = () => {
-  console.log('preview');
-};
+
 const clickView = () => {
   console.log('view');
 };

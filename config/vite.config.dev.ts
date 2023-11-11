@@ -53,7 +53,7 @@ export default defineConfig(({ command, mode }) => {
         },
 
         '/sso': {
-          target: `http://10.14.151.2:8081/`,
+          target: `http://sso-auth-gateway-a.dev.idx.space`,
           // target: `http://10.14.148.103:9191`,
           changeOrigin: true,
           agent: new https.Agent(),
