@@ -21,7 +21,7 @@ export const useUserStore = defineStore({
   id: 'app-user',
   state: (): UserState => ({
     userInfo: null,
-    userInfoByCompany: null, // 存储选择的对应公司下的用户信息
+    userInfoByCompany: {}, // 存储选择的对应公司下的用户信息
     selectCompany: {}, // 对象，存储选择的公司信息，{companyId, memeberId}
     counter: 0,
     token: null,
