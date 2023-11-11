@@ -319,7 +319,7 @@
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
                         style="width: 100px; height: 100px"
-                        :src="`/web/file/orderDownload?name=${dataList.productLogo}`"
+                        :src="`/web/file/download?name=${dataList.productLogo}`"
                         alt=""
                       />
                     </div>

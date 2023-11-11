@@ -104,6 +104,9 @@ import {
   onMounted,
   computed,
 } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/modules/user';
+
 import {
   menberGetadmin,
   menberNormal,
@@ -111,6 +114,8 @@ import {
   menberChangeAdmin,
 } from '@/api/system/member';
 // import { Message } from '@tele-design/web-vue';
+const userStore = useUserStore();
+const router = useRouter();
 
 const props = defineProps({
   data: {
@@ -153,7 +158,15 @@ const formRules = {
   ],
   roleDesc: [{ required: true, message: '请输入新管理员账号' }],
 };
+const handleLogout = async () => {
+  try {
+    await userStore.logout();
+  } catch (e) {
+    console.log('index.vue:67====handleLogout', e);
+  }
 
+  router.push({ path: '/wow' });
+};
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
@@ -165,21 +178,11 @@ const onConfirm = (done: (closed: boolean) => void) => {
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
       }).then((res) => {
+        handleLogout();
         emit('confirm');
+        // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
+        // clearInterval(times.value);
       });
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
-      // flagText.value = true;
-      // counts.value = 60;
-      // clearInterval(times.value);
     } else {
       done(false);
     }

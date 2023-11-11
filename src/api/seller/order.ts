@@ -1,6 +1,6 @@
 import $http from '@/utils/http';
 
-//
+// 卖家列表
 export function orderList(data: Record<string, any>) {
   return $http.post('/web/order/page/merchant', data);
 }
@@ -13,17 +13,25 @@ export function orderNum(params: Record<string, any>) {
   return $http.get('/web/order/dataStatistics', { params });
 }
 
-// 凭证提交
-export function submitImg(data: Record<string, any>) {
-  return $http.post('/web/order/voucher/submit', data);
+// 服务商交付
+export function merchantSub(data: Record<string, any>) {
+  return $http.post('/web/order/merchant-confirm', data);
 }
-// 买家交付
-export function buyerDeployed(data: Record<string, any>) {
-  return $http.post('/web/order/confirm-deployed', data);
+// 修改金额
+export function amountUpdata(data: Record<string, any>) {
+  return $http.post('/web/order/update/price', data);
 }
-// 买家订单详情
-export function buyerOrderDetail(params: Record<string, any>) {
+// 卖家订单详情
+export function sellerDetail(params: Record<string, any>) {
   return $http.get('/web/order/detail', { params });
+}
+// 卖家订单 驳回
+export function sellerTurndown(data: Record<string, any>) {
+  return $http.post('/web/order/voucher/reject', data);
+}
+// 卖家订单 通过
+export function sellerPass(data: Record<string, any>) {
+  return $http.post('/web/order/voucher/approve', data);
 }
 // 文件上传
 export function fileUpload(data: Record<string, any>) {

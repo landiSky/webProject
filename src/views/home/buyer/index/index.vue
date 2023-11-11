@@ -12,28 +12,30 @@
             <p
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ userInfos.username }}</p
+              >{{ userInfo.username || userInfo.mobile }}</p
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
               <div style="float: left">
-                <p>{{ dataInfo.companyName }}</p
+                <p>{{ userInfoByCompany.companyName }}</p
                 ><p>|</p
-                ><p>{{ dataInfo.primary === true ? '主账号' : '子账号' }}</p
+                ><p>{{ userInfoByCompany.primary ? '主账号' : '子账号' }}</p
                 ><p>|</p>
               </div>
 
               <p
                 style="float: left"
                 :class="[
-                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
-                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
                     ? 'authenticated'
                     : 'notcertified',
                 ]"
                 >{{
-                  dataInfo.certificateStatus === CompanyAuthStatus.AUTHED ||
-                  dataInfo.nodeStatus === NodeAuthStatus.AUTHED
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
                     ? '已认证'
                     : '未认证'
                 }}</p
@@ -54,51 +56,29 @@
                     <p style="margin: 10px 0"> 确认企业身份</p>
                     <t-button
                       v-if="
-                        dataInfo.certificateStatus === CompanyAuthStatus.UNAUTH
+                        userInfoByCompany.certificateStatus ===
+                        CompanyAuthStatus.UNAUTH
                       "
                       type="text"
                       @click="authentication"
                       >去认证</t-button
                     >
-                    <div
-                      v-if="
-                        dataInfo.certificateStatus !== CompanyAuthStatus.UNAUTH
-                      "
-                      class="states"
-                    >
+                    <div v-else class="states">
                       <p
                         style="width: 50px; text-align: center"
-                        :class="[
-                          dataInfo.certificateStatus ===
-                          CompanyAuthStatus.TO_CHECK
-                            ? 'tobereviewed'
-                            : dataInfo.certificateStatus ===
-                              CompanyAuthStatus.AUTHED
-                            ? 'authenticated'
-                            : dataInfo.certificateStatus ===
-                              CompanyAuthStatus.REJECT
-                            ? 'override'
-                            : 'notcertified',
-                        ]"
+                        :class="stateClass[userInfoByCompany.certificateStatus]"
                         >{{
-                          dataInfo.certificateStatus ===
-                          CompanyAuthStatus.TO_CHECK
-                            ? '待审核'
-                            : dataInfo.certificateStatus ===
-                              CompanyAuthStatus.AUTHED
-                            ? '已认证'
-                            : dataInfo.certificateStatus ===
-                              CompanyAuthStatus.REJECT
-                            ? '已驳回'
-                            : '未认证'
+                          CompanyAuthStatusDESC[
+                            userInfoByCompany.certificateStatus
+                          ]
                         }}</p
                       >
                       <span
                         v-if="
-                          dataInfo.certificateStatus ===
-                            CompanyAuthStatus.TO_CHECK ||
-                          dataInfo.certificateStatus ===
-                            CompanyAuthStatus.REJECT
+                          [
+                            CompanyAuthStatus.TO_CHECK,
+                            CompanyAuthStatus.REJECT,
+                          ].includes(userInfoByCompany.certificateStatus)
                         "
                         style="font-size: 12px"
                         ><t-button type="text" @click="viewdetails"
@@ -156,24 +136,8 @@
                 >企业节点认证</div
               ><span
                 style="padding: 3px 10px"
-                :class="[
-                  dataInfo.nodeStatus === 0
-                    ? 'tobereviewed'
-                    : dataInfo.nodeStatus === 1
-                    ? 'authenticated'
-                    : dataInfo.nodeStatus === 2
-                    ? 'override'
-                    : 'notcertified',
-                ]"
-                >{{
-                  dataInfo.nodeStatus === 0
-                    ? '待审核'
-                    : dataInfo.nodeStatus === 1
-                    ? '已认证'
-                    : dataInfo.nodeStatus === 2
-                    ? '已驳回'
-                    : '未认证'
-                }}</span
+                :class="nodeStateClass[userInfoByCompany.nodeStatus]"
+                >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</span
               >
             </div>
             <div
@@ -196,16 +160,13 @@
               </ul>
               <div class="fimelistdata">
                 <t-button
-                  v-if="dataInfo.nodeStatus === NodeAuthStatus.UNAUTH"
+                  v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
                   style="display: block; margin: 15px auto 0; padding: 5px 10px"
                   @click="authenticationredf"
                   >去认证</t-button
                 >
-                <div
-                  v-if="dataInfo.nodeStatus !== NodeAuthStatus.UNAUTH"
-                  class="states"
-                >
+                <div v-else class="states">
                   <p
                     style="
                       width: 50px;
@@ -213,28 +174,14 @@
                       padding: 5px;
                       text-align: center;
                     "
-                    :class="[
-                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
-                        ? 'tobereviewed'
-                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
-                        ? 'authenticated'
-                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
-                        ? 'override'
-                        : 'notcertified',
-                    ]"
-                    >{{
-                      dataInfo.nodeStatus === NodeAuthStatus.TO_CHECK
-                        ? '待审核'
-                        : dataInfo.nodeStatus === NodeAuthStatus.AUTHED
-                        ? '已认证'
-                        : dataInfo.nodeStatus === NodeAuthStatus.REJECT
-                        ? '已驳回'
-                        : '未认证'
-                    }}</p
+                    :class="nodeStateClass[userInfoByCompany.nodeStatus]"
+                    >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</p
                   >
                   <p
                     v-if="
-                      dataInfo.nodeStatus === 0 || dataInfo.nodeStatus === 2
+                      [NodeAuthStatus.TO_CHECK, NodeAuthStatus.REJECT].includes(
+                        userInfoByCompany.nodeStatus
+                      )
                     "
                     style="
                       width: 80px;
@@ -255,11 +202,9 @@
       </div>
     </div>
     <!-- 热门应用服务 -->
-    <div v-if="false" class="content">
+    <!-- <div class="content">
       <h3 style="margin: 20px 0">热门应用服务</h3>
       <div class="catimg">
-        <!-- :indicator-type="indicatorType"
-          :indicator-position="indicatorPosition" -->
         <t-carousel
           :style="{
             width: '100%',
@@ -267,12 +212,6 @@
           }"
         >
           <t-carousel-item v-for="(item, index) in images" :key="index">
-            <!-- <img
-              :src="image"
-              :style="{
-                width: '100%',
-              }"
-            /> -->
             <div class="catimglist">
               <div
                 v-for="(it, index) in item"
@@ -301,57 +240,13 @@
                   >
                 </div>
               </div>
-              <!-- <div class="catimglistleft">
-                <div style="width: 30%">
-                  <img :src="frame" alt="" style="width: 100%; height: 100%" />
-                </div>
-                <div class="leftcont">
-                  <div class="tophead"
-                    ><p>企业统计台账</p
-                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
-                  >
-                  <div style="height: 70%; margin-top: 20px; float: left"
-                    ><p
-                      >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。</p
-                    >
-                  </div>
-                  <div class="tophead"
-                    ><p style="color: #1664ff" @click="configurationapp"
-                      >配置应用</p
-                    ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明下载</p
-                    ></div
-                  >
-                </div>
-              </div> -->
-              <!-- <div class="catimglistright">
-                <div style="width: 30%">
-                  <img :src="frame" alt="" style="width: 100%; height: 100%" />
-                </div>
-                <div class="leftcont">
-                  <div class="tophead"
-                    ><p>企业统计台账</p
-                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
-                  >
-                  <div style="height: 70%; margin-top: 20px; float: left"
-                    >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。
-                  </div>
-                  <div class="tophead"
-                    ><p style="color: #1664ff" @click="configurationapp"
-                      >配置应用</p
-                    ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明下载</p
-                    ></div
-                  >
-                </div>
-              </div> -->
             </div>
           </t-carousel-item>
         </t-carousel>
       </div>
-    </div>
+    </div> -->
     <!-- 已购应用 -->
-    <div class="purchased">
+    <div v-if="authDialogVisible.length !== 0" class="purchased">
       <h3>已购应用</h3>
       <div class="Applysd">
         <div
@@ -361,7 +256,7 @@
         >
           <div style="width: 20%">
             <img
-              :src="item.productLogo"
+              :src="`web/file/download?name=${item.productLogo}`"
               alt=""
               style="width: 100%; height: 100%"
             />
@@ -386,6 +281,7 @@
             </div>
             <div class="tophead"
               ><span
+                v-if="userInfoByCompany === true"
                 style="color: #1664ff; cursor: pointer"
                 @click="configurationapp(item)"
                 >配置应用</span
@@ -396,6 +292,69 @@
                 使用说明</span
               ></div
             >
+          </div>
+          <div id="page" class="zhengshu-container-box">
+            <div> 1111 </div>
+            <!-- <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
+            <div class="zhengshu-container-box-bid">
+              存证BID：{detail?.bid || '--'}
+            </div>
+            <div class="zhengshu-container-box-center">
+              <div>
+                <span>存证所有人</span>
+                <span>{detail?.belonger || '--'}</span>
+              </div>
+              <div>
+                <span>存证创建者</span>
+                <span>{detail?.creator || '--'}</span>
+              </div>
+              <div>
+                <span>存证类型</span>
+                <span
+                  >{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span
+                >
+              </div>
+              <div>
+                <span>存证时间</span>
+                <span>{detail?.ctime || '--'}</span>
+              </div>
+              <div>
+                <span>存证平台</span>
+                <span>可信存证服务平台</span>
+              </div>
+              <div>
+                <span>所属链 </span>
+                <span>
+                  {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''}
+                </span>
+              </div>
+              <div>
+                <span>交易hash</span>
+                <span>{detail?.chainInfo?.blockHash || '--'}</span>
+              </div>
+              <div>
+                <span>上链时间</span>
+                <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
+              </div>
+            </div>
+            <div class="zhengshu-container-box-shuoming">
+              <div class="zhengshu-container-box-shuoming-box">
+                <div class="zhengshu-container-box-shuoming-box-title">
+                  证书说明
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  2、本证书可作为电子数据备案凭证。
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  3、如需验证电子数据的一致性和保全时间，可在
+                  <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
+                  查询。
+                </div>
+              </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -408,13 +367,7 @@
       </div>
       <div class="overlist">
         <div
-          v-for="(item, index) in [
-            '全部订单',
-            '待支付',
-            '待审核',
-            '待交付',
-            '已完成',
-          ]"
+          v-for="(item, index) in overstatus"
           :key="index"
           class="overlistdata"
         >
@@ -430,16 +383,16 @@
               >{{ item }}</span
             >
             <span style="font-size: 30px">{{
-              (item === '全部订单'
-                ? oederlist.count
-                : item === '待支付'
-                ? oederlist.payCount
-                : item === '待审核'
-                ? oederlist.auditCount
-                : item === '待交付'
-                ? oederlist.deliverCount
-                : item === '已完成'
-                ? oederlist.completeCount
+              (item === overstatus[0]
+                ? orderlist.count
+                : item === overstatus[1]
+                ? orderlist.payCount
+                : item === overstatus[2]
+                ? orderlist.auditCount
+                : item === overstatus[3]
+                ? orderlist.deliverCount
+                : item === overstatus[4]
+                ? orderlist.completeCount
                 : ''
               ).toLocaleString()
             }}</span>
@@ -447,7 +400,6 @@
         </div>
       </div>
     </div>
-    <!-- :data="{ starlist }" -->
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
@@ -481,64 +433,12 @@
     >
     </DetailsModalFullscreen>
     <!-- \v-show="false" -->
-    <div id="page" class="zhengshu-container-box">
-      <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
-      <div class="zhengshu-container-box-bid">
-        存证BID：{detail?.bid || '--'}
-      </div>
-      <div class="zhengshu-container-box-center">
-        <div>
-          <span>存证所有人</span>
-          <span>{detail?.belonger || '--'}</span>
-        </div>
-        <div>
-          <span>存证创建者</span>
-          <span>{detail?.creator || '--'}</span>
-        </div>
-        <div>
-          <span>存证类型</span>
-          <span>{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span>
-        </div>
-        <div>
-          <span>存证时间</span>
-          <span>{detail?.ctime || '--'}</span>
-        </div>
-        <div>
-          <span>存证平台</span>
-          <span>可信存证服务平台</span>
-        </div>
-        <div>
-          <span>所属链 </span>
-          <span> {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''} </span>
-        </div>
-        <div>
-          <span>交易hash</span>
-          <span>{detail?.chainInfo?.blockHash || '--'}</span>
-        </div>
-        <div>
-          <span>上链时间</span>
-          <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
-        </div>
-      </div>
-      <div class="zhengshu-container-box-shuoming">
-        <div class="zhengshu-container-box-shuoming-box">
-          <div class="zhengshu-container-box-shuoming-box-title">
-            证书说明
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            2、本证书可作为电子数据备案凭证。
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            3、如需验证电子数据的一致性和保全时间，可在
-            <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
-            查询。
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <AuthModal
+      v-if="authModalVisible"
+      @confirm="onAuthModalConfirm"
+      @cancel="authModalVisible = false"
+    ></AuthModal>
   </div>
 </template>
 
@@ -546,7 +446,9 @@
 import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { storeToRefs } from 'pinia';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import type { Ref } from 'vue';
+import { orderOver, authDialogdata } from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -561,13 +463,20 @@ import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
-import { CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
+import {
+  CompanyAuthStatus,
+  CompanyAuthStatusDESC,
+  NodeAuthStatus,
+  NodeAuthStatusDESC,
+} from '@/enums/common';
 
+import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
 import group3 from './image/group3.png';
 import group4 from './image/group4.png';
+
 // import frame from './image/frame.png';
 
 // import EditModal from './components/edit-modal.vue';
@@ -579,46 +488,29 @@ const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 // console.log(userInfoByCompany);
-const starlist = reactive(['张三', '李四']);
 
 const selectProductId = ref();
-// 用户信息
-const userInfos = reactive({
-  id: 4,
-  userId: null,
-  username: '你好',
-  nickname: null,
-  email: null,
-  mobile: '15112343001',
-  companyId: 1391254317244416, // 企业id
-  companyName: 'y1t企业', // 企业名称
-  companyShort: null,
-  companyStatus: 1,
-  companyNodeStatus: null,
-  userType: null,
-  userStatus: null,
-  createTime: null,
-  companyList: [
-    {
-      memberId: 1717495373822156800, // 成员id
-      memberType: 1, // 成员类型 0:普通成员 1:管理员
-      companyId: 1391254317244416, // 企业id 必传
-      companyName: 'y1t企业', // 企业名称
-    },
-  ],
-});
-// 企业状态
-const dataInfo = ref({
-  id: null, // 用户id
-  username: '章三', // 用户名称
-  companyId: 1, // 机构id
-  companyName: '北京泰尔英福有限公司', // 机构名称
-  certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-  nodeStatus: 1, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-  primary: true, // 主账号 true 子账号 false
-  roleNames: null, // 角色名称
-  menuCodes: null, // 菜单code
-});
+const authModalVisible = ref(false);
+
+const stateClass = {
+  [CompanyAuthStatus.TO_CHECK]: 'tobereviewed',
+  [CompanyAuthStatus.AUTHED]: 'authenticated',
+  [CompanyAuthStatus.REJECT]: 'override',
+  [CompanyAuthStatus.UNAUTH]: 'notcertified',
+};
+const nodeStateClass = {
+  [NodeAuthStatus.TO_CHECK]: 'tobereviewed',
+  [NodeAuthStatus.AUTHED]: 'authenticated',
+  [NodeAuthStatus.REJECT]: 'override',
+  [NodeAuthStatus.UNAUTH]: 'notcertified',
+};
+// const nodeStateText = {
+//   [TextStatus.TO_CHECK]: 'tobereviewed',
+//   [TextStatus.AUTHED]: 'authenticated',
+//   [TextStatus.REJECT]: 'override',
+//   [TextStatus.UNAUTH]: 'notcertified',
+// };
+
 // 认证状态
 // const stateles = ref({
 //   companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
@@ -657,7 +549,7 @@ const images = reactive([
 ]);
 
 // //已购应用
-const authDialogVisible = reactive([
+const authDialogVisible: Record<string, any> = ref([
   {
     id: '2',
     orderNum: '2',
@@ -699,18 +591,54 @@ const authDialogVisible = reactive([
   },
 ]);
 // 订单概览
-const oederlist = reactive({
-  count: 4, // 全部订单数量
-  payCount: 2, // 待支付页数量
-  auditCount: 1, // 待审核页数量
+const orderlist: Ref<{
+  count: number;
+  payCount: number;
+  auditCount: number;
+  deliverCount: number;
+  rejectCount: number;
+  servicesDeliverCount: number;
+  completeCount: number;
+}> = ref({
+  count: 0, // 全部订单数量
+  payCount: 0, // 待支付页数量
+  auditCount: 0, // 待审核页数量
   deliverCount: 0, // 待交付数量
   rejectCount: 0, // 已驳回数量
   servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 1, // 已完成数量
+  completeCount: 0, // 已完成数量
 });
+// 概览状态
+const overstatus = ['全部订单', '待支付', '待审核', '待交付', '已完成'];
+
+// 订单概览 接口
+const orderlistdata = () => {
+  orderOver({}).then((res) => {
+    console.log(res, '订单概览 接口');
+    // @ts-ignore
+    orderlist.value = res;
+  });
+};
+// 已购应用
+const authDialog = () => {
+  console.log(userInfoByCompany.value);
+
+  // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
+  authDialogdata({
+    companyId: userInfoByCompany.value.companyId,
+    userId: userInfoByCompany.value.id,
+  }).then((res) => {
+    console.log(res);
+    authDialogVisible.value = res;
+  });
+};
+
 // 去认证
 const authentication = () => {
   console.log(editModalVisible.value);
+  authModalVisible.value = true;
+};
+const onAuthModalConfirm = () => {
   editModalVisible.value = true;
 };
 // 认证弹窗去认证事件
@@ -797,6 +725,12 @@ const instructionsuse = () => {
 const multiples = () => {
   router.push('/buyer/order');
 };
+onMounted(() => {
+  // 已购应用
+  authDialog();
+  // 订单概览
+  orderlistdata();
+});
 </script>
 
 <style scoped lang="less">
@@ -851,7 +785,9 @@ const multiples = () => {
 
           p:nth-child(2) {
             margin-right: 9px;
-            color: #86909c;
+            text-align: center;
+            // color: #86909c;
+            // padding: 3px 10px;
           }
 
           p:nth-child(3) {
@@ -861,7 +797,8 @@ const multiples = () => {
 
           p:nth-child(4) {
             margin-right: 9px;
-            color: #86909c;
+            // color: #86909c;
+            text-align: center;
           }
 
           p:nth-child(5) {

@@ -191,7 +191,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="`/web/file/orderDownload?name=${item.productLogo}`"
+                      :src="`/web/file/download?name=${item.productLogo}`"
                       alt=""
                     />
                   </div>
@@ -395,7 +395,9 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { Modal, Message } from '@tele-design/web-vue';
+// import { Modal, Message } from '@tele-design/web-vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
 import { orderList, orderNum, buyerDeployed } from '@/api/buyer/order';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
@@ -404,6 +406,10 @@ import tobereviewed from './images/tobereviewed.png';
 import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -627,7 +633,8 @@ const init = () => {
     createEnd: formInline.endTime,
     pageSize: formInline.pageSize,
     pageNum: formInline.pageNum,
-    userCompanyId: '2',
+    // userInfoByCompany.companyId
+    userCompanyId: String(userInfoByCompany.value.companyId),
   }).then((res) => {
     console.log(res);
     tableData.value = res.records;

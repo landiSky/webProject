@@ -107,7 +107,7 @@
                   >
                 </div>
               </div>
-              <div v-if="dataList.orderStatus === 5">
+              <div v-if="dataList.orderStatus === 2">
                 <div>
                   <span style="float: left; margin: 2px 5px 0 0"
                     ><img :src="tobereviewed" alt="" /></span
@@ -118,7 +118,7 @@
                   <t-button type="primary" @click="delivery">立即交付</t-button>
                 </p>
               </div>
-              <div v-if="dataList.orderStatus === 2">
+              <div v-if="dataList.orderStatus === 5">
                 <span><img :src="tobepaid" alt="" /></span
                 >&nbsp;&nbsp;待确认交付：已完成交付，待买家确认交付信息。<span
                 ></span>
@@ -224,13 +224,10 @@
                   style="float: left"
                 >
                   <img
-                    v-for="(item, index) in [
-                      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-                      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500',
-                    ]"
+                    v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="item"
+                    :src="`/web/file/orderDownload?name=${item}`"
                     alt=""
                   />
                 </div>
@@ -294,7 +291,7 @@
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
                         style="width: 100px; height: 100px"
-                        :src="dataList.productLogo"
+                        :src="`/web/file/download?name=${dataList.productLogo}`"
                         alt=""
                       />
                     </div>
@@ -315,10 +312,10 @@
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'saas类' : '独立部署类' }}
-                    <p style="color: #86909c"
+                    <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
-                    >
+                    > -->
                   </div>
                 </t-col>
                 <t-col :span="3">
@@ -339,7 +336,10 @@
                     ></div
                   >
                 </t-col>
-                <t-col v-if="dataList.orderStatus === 0" :span="3">
+                <t-col
+                  v-if="dataList.orderStatus === 0 && dataList.saleType !== 2"
+                  :span="3"
+                >
                   <div class="grid-content">
                     <t-button
                       type="text"
@@ -382,11 +382,10 @@
 <script lang="ts" setup>
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 import { utilsCopy } from '@/utils/tools';
-// import { usersDetail, usersAdd, usersUpdate } from '@/api/user-depart';
+import { sellerDetail, sellerPass, merchantSub } from '@/api/seller/order';
+
 import { Message, Modal } from '@tele-design/web-vue';
 
-// import Warn from '@/assets/images/home/warn.png';
-// import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 import tobepaid from '../images/tobepaid.png';
 import tobereviewed from '../images/tobereviewed.png';
 import error from '../images/error.png';
@@ -425,7 +424,7 @@ const dataList = ref({
     'https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
   deliveryTypeName: 'SAAS', // 交付类型名称
-  deliveryType: 1, // 交付类型
+  deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量
   buyDuration: '5个月', // 购买时长
@@ -449,6 +448,7 @@ const dataList = ref({
   voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
+  saleType: 0, // 1-一口价定价,2-面议
   attachmentAddressArr: ['http://gjkhjkdg/1.png', 'http://gjkhjkdg/2.png'], // 支付凭证
 });
 // 修改金额 弹窗 开关
@@ -461,7 +461,11 @@ const goback = () => {
   emit('cancel');
 };
 
-const getUserDetail = () => {
+const init = () => {
+  sellerDetail({ id: props.data.id }).then((res) => {
+    console.log(res, '详情');
+    dataList.value = res;
+  });
   // 调后端接口
   // loading.value = true;
   // usersDetail({ id: props.data?.id })
@@ -491,6 +495,7 @@ const modificationamount = () => {
 // 修改金额 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
+  init();
   Message.success('金额修改成功');
 };
 // 驳回
@@ -502,34 +507,38 @@ const turndownsyhn = () => {
 // 驳回 完成
 const turndownModalConfirm = () => {
   turndownVisible.value = false;
+  init();
+  Message.success('驳回成功');
 };
-onMounted(() => {
-  if (props.data?.id) {
-    getUserDetail();
-  }
-});
+
 // 通过
 
 const passok = (id: string) => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('审核成功');
-    }, 2 * 1000);
-  }
+  // function onBeforeOk(done: (closed: boolean) => void) {
+  //   setTimeout(() => {
+  //     done(true);
+  //     Message.success('审核成功');
+  //   }, 2 * 1000);
+  // }
   Modal.warning({
     title: '我已收到交易款项，同意通过该凭证。',
     content: '审核通过后，订单将交易完成。',
     titleAlign: 'start',
     okText: ' 确定',
     hideCancel: false,
-    onBeforeOk,
+    // onBeforeOk,
     // okButtonProps: {
     //   status: 'danger',
     // },
     onOk: () => {
       // deleteUsers(params);
       // onBeforeOk;
+      sellerPass({
+        id: dataList.value.id,
+      }).then((res) => {
+        Message.success('已通过');
+        init();
+      });
     },
     onCancel: () => {
       // Message.success('取消交付成功');
@@ -538,12 +547,6 @@ const passok = (id: string) => {
 };
 // 交付应用
 const delivery = () => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('交付成功');
-    }, 2 * 1000);
-  }
   if (dataList.value.deliveryType === 0) {
     Modal.warning({
       title: '我已完成账号重置，确定交付该应用',
@@ -551,13 +554,17 @@ const delivery = () => {
       titleAlign: 'start',
       okText: ' 确定',
       hideCancel: false,
-      onBeforeOk,
       // okButtonProps: {
       //   status: 'danger',
       // },
       onOk: () => {
         // deleteUsers(params);
-        Message.success('交付成功');
+        merchantSub({
+          id: dataList.value.id,
+        }).then((res) => {
+          init();
+          Message.success('交付成功');
+        });
       },
       onCancel: () => {
         // Message.success('取消交付成功');
@@ -603,6 +610,11 @@ const ondeliveryModalConfirm = () => {
 
 //   emit('cancel');
 // };
+onMounted(() => {
+  if (props.data?.id) {
+    init();
+  }
+});
 </script>
 
 <style lang="less" scoped>

@@ -1,13 +1,13 @@
 import $http from '@/utils/http';
 
-// 获取当前公司下用户的信息
-export function apiUserProfile(params: Record<string, any>) {
-  return $http.get('/web/user/profile', { params });
+// 买家中心  订单概览
+export function orderOver(params: Record<string, any>) {
+  return $http.get('/web/order/dataStatistics', { params });
 }
 
-// 获取商品类型接口  一二级树结构
-export function apiProductType() {
-  return $http.get('/web/product/type/tree');
+// 已购应用
+export function authDialogdata(params: Record<string, any>) {
+  return $http.get('/web/order/purchasedApps', { params });
 }
 
 //  获取企业下成员列表
