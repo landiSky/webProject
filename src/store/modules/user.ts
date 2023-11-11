@@ -43,7 +43,7 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
-    getUserByCompany(onlyCompanyId: string) {
+    getUserByCompany() {
       const { companyId, memberId } = this.selectCompany || {};
 
       // this.userInfoByCompany = {
@@ -62,7 +62,7 @@ export const useUserStore = defineStore({
       //     'ROUTE_SELLER_GOODS',
       //   ], // 菜单code
       // };
-      apiUserProfile({ companyId: companyId || onlyCompanyId, memberId })
+      apiUserProfile({ companyId })
         .then((data: Record<string, any>) => {
           console.log(data);
           this.userInfoByCompany = data || {
