@@ -505,10 +505,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
             console.log('edit-modal-fullscreen.vue:504', formModel.value);
             authSubmit(formModel.value)
               .then((res) => {
-                console.log(res);
+                Message.success('认证已提交');
+                userStore.getUserBasicInfo();
                 emit('confirm');
                 done(true);
-                Message.success('认证已提交');
               })
               .catch((err) => {
                 done(false);
