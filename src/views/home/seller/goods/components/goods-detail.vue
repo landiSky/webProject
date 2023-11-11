@@ -23,7 +23,10 @@
         <t-button v-if="props.data.status === StatusEnum.WSJ" type="primary"
           >上架</t-button
         >
-        <t-button v-if="props.data.status === StatusEnum.WSJ" type="outline"
+        <t-button
+          v-if="props.data.status === StatusEnum.WSJ"
+          type="outline"
+          @click="clickPreview"
           >预览</t-button
         >
         <t-button v-if="props.data.status === StatusEnum.WSJ">编辑</t-button>
@@ -232,7 +235,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['confirm', 'cancel']);
+const emit = defineEmits(['confirm', 'cancel', 'preview']);
 const showModal = ref(true);
 const formRef = ref();
 
@@ -295,6 +298,13 @@ onMounted(() => {
     getDetail();
   }
 });
+
+// 预览
+const clickPreview = () => {
+  if (props.data?.id) {
+    emit('preview', props.data?.id);
+  }
+};
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {

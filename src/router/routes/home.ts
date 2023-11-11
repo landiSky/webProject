@@ -3,26 +3,6 @@ export const PAGE_LAYOUT_NOMENU = () =>
   import('@/layout/home/layoutNoMenu.vue'); // 不需要左侧 menu 的页面布局
 
 const homeRoutesList = [
-  //   {
-  //     path: '/home',
-  //     component: PAGE_LAYOUT,
-  //     redirect: '/home/index',
-  //     children: [
-  //       {
-  //         path: '/home/index',
-  //         name: 'home',
-  //         component: () => import('@/views/home/index.vue'),
-  //         meta: {
-  //           name: 'index',
-  //           hideInMenu: false,
-  //         },
-  //       },
-  //     ],
-  //     meta: {
-  //       name: '首页',
-  //       hideInMenu: false,
-  //     },
-  //   },
   {
     path: '/buyer',
     component: PAGE_LAYOUT,

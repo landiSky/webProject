@@ -806,7 +806,7 @@ const copyRules = {
   ],
 };
 
-const emit = defineEmits(['confirm', 'cancel']);
+const emit = defineEmits(['confirm', 'cancel', 'preview']);
 
 const props = defineProps({
   data: Object,
@@ -1123,7 +1123,9 @@ const clickPrevious = () => {
 
 // 预览
 const clickPreview = () => {
-  // TODO 预览
+  if (displayId.value) {
+    emit('preview', displayId.value);
+  }
 };
 
 // 上架
