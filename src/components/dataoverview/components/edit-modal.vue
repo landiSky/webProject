@@ -294,9 +294,9 @@ import right02 from '@/assets/images/home/right02.png';
 import right03 from '@/assets/images/home/right03.png';
 import rightlog from '@/assets/images/home/rightlog.png';
 
-const store = useUserStore();
-
-const { userInfo } = storeToRefs(store);
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // userInfo.value?.companyId
 // import { Message } from '@tele-design/web-vue';
 
@@ -325,7 +325,7 @@ const visible = ref(true);
 //   },
 // });
 const init = () => {
-  authentication({ companyId: 1392100221902848 })
+  authentication({ companyId: String(userInfoByCompany.companyId) })
     .then((res) => {
       console.log(res, 'res');
       // stateles.value = res.data === undefined ? {} : res.data;

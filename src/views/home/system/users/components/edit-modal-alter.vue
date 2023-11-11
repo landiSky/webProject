@@ -104,13 +104,26 @@ import {
   onMounted,
   computed,
 } from 'vue';
+import { useUserStore } from '@/store/modules/user';
+
+import { storeToRefs } from 'pinia';
+
+import { useRouter } from 'vue-router';
+
 import {
   menberGetadmin,
   menberNormal,
   verificationCode,
   menberChangeAdmin,
 } from '@/api/system/member';
+
+const userStore = useUserStore();
+
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
+
+const router = useRouter();
 
 const props = defineProps({
   data: {
@@ -153,7 +166,15 @@ const formRules = {
   ],
   roleDesc: [{ required: true, message: '请输入新管理员账号' }],
 };
+const handleLogout = async () => {
+  try {
+    await userStore.logout();
+  } catch (e) {
+    console.log('index.vue:67====handleLogout', e);
+  }
 
+  router.push({ path: '/wow' });
+};
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
@@ -161,25 +182,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
       menberChangeAdmin({
         newAdminMemberId: state.formModel.roleDesc,
         code: state.formModel.verification,
-        companyId: 1,
+        companyId: userInfoByCompany.companyId,
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
       }).then((res) => {
+        handleLogout();
         emit('confirm');
+        // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
+        // clearInterval(times.value);
       });
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
-      // flagText.value = true;
-      // counts.value = 60;
-      // clearInterval(times.value);
     } else {
       done(false);
     }
@@ -216,7 +227,7 @@ const administratorled = () => {
   //   phone: "18839014162",
   //   memberId: 1717067979902607400
   // },
-  menberGetadmin({ companyId: 1 }).then((res) => {
+  menberGetadmin({ companyId: userInfoByCompany.companyId }).then((res) => {
     console.log(res, 'res');
 
     state.formModel.roleName = res.username;
@@ -225,7 +236,7 @@ const administratorled = () => {
 };
 // 变更管理员- 查找企业下普通用户成员
 const userNamelist = () => {
-  menberNormal({ companyId: 1 }).then((res) => {
+  menberNormal({ companyId: userInfoByCompany.companyId }).then((res) => {
     console.log(res);
 
     inputSelect.value = res;

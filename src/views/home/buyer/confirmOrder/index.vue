@@ -23,7 +23,9 @@
         </div>
         <div class="tbody">
           <span>
-            <img :src="`/web/file/download?name=${createOrderInfo?.logo}`" />
+            <img
+              :src="`/server/web/file/download?name=${createOrderInfo?.logo}`"
+            />
             <span>{{ createOrderInfo?.name }}</span>
           </span>
           <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>

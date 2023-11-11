@@ -56,8 +56,15 @@ import {
   onMounted,
   computed,
 } from 'vue';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+
 import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -98,10 +105,11 @@ const onConfirm = (done: (closed: boolean) => void) => {
         apiRoleAdd({
           roleName: state.formModel.roleName,
           remark: state.formModel.remark,
-          companyId: 1,
+          companyId: userInfoByCompany.companyId,
         })
           .then((res) => {
             emit('confirm');
+            Message.success(`${isEdit.value ? '编辑' : '新增'}成功`);
             done(true);
             console.log(res, 'res');
           })
@@ -131,7 +139,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       apiRoleAdd({
         roleName: state.formModel.roleName,
         remark: state.formModel.remark,
-        companyId: 1,
+        companyId: userInfoByCompany.companyId,
         id: state.formModel.id,
       })
         .then((res) => {

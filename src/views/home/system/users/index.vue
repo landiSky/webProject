@@ -104,16 +104,21 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue';
-// import dayjs from 'dayjs';
 
 import {
   Modal,
   // Message
 } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 
 import { memberList, menberResign } from '@/api/system/member';
 import EditModal from './components/edit-modal.vue';
 import EditModalAlter from './components/edit-modal-alter.vue';
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 // const defaultFormModel: Record<string, string | number | undefined> = {
 //   name: undefined,
@@ -266,7 +271,7 @@ function fetchData() {
     pageSize: pagination.pageSize,
     pageNum: pagination.current,
     username: state.formModel.name,
-    companyId: 1,
+    companyId: userInfoByCompany.companyId,
   }).then((res) => {
     console.log(res);
     state.tableData = res.records || [];

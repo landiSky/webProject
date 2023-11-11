@@ -79,7 +79,12 @@ import {
 } from 'vue';
 import { menberAdd, memberPhone } from '@/api/system/member';
 import { rolelist } from '@/api/system/role';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -145,7 +150,7 @@ const formRules = {
           } else if (value.length === 11) {
             memberPhone({
               type: '0',
-              companyId: '1',
+              companyId: userInfoByCompany.companyId,
               phone: state.formModel.phone,
             }).then((res) => {
               if (res.data.code === 200) {
@@ -170,7 +175,7 @@ const init = () => {
   rolelist({
     pageSize: 1000,
     pageNum: 1,
-    companyId: 1,
+    companyId: userInfoByCompany.companyId,
   })
     .then((res: any) => {
       console.log(res);
@@ -189,7 +194,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       menberAdd({
         id: state.formModel.id,
         memberId: state.formModel.memberId,
-        companyId: 1,
+        companyId: userInfoByCompany.companyId,
         username: state.formModel.username,
         roleList: state.formModel.roleList,
         phone: state.formModel.phone,
@@ -237,7 +242,7 @@ onMounted(() => {
   rolelist({
     pageSize: 1000,
     pageNum: 1,
-    companyId: 1,
+    companyId: userInfoByCompany.companyId,
   })
     .then((res: any) => {
       console.log(res);

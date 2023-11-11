@@ -246,7 +246,7 @@
       </div>
     </div> -->
     <!-- 已购应用 -->
-    <div class="purchased">
+    <div v-if="authDialogVisible.length !== 0" class="purchased">
       <h3>已购应用</h3>
       <div class="Applysd">
         <div
@@ -256,7 +256,7 @@
         >
           <div style="width: 20%">
             <img
-              :src="item.productLogo"
+              :src="`web/file/download?name=${item.productLogo}`"
               alt=""
               style="width: 100%; height: 100%"
             />
@@ -264,7 +264,10 @@
           <div class="leftcont">
             <div class="tophead" style="margin-bottom: 20px"
               ><span>{{ item.productName }}</span
-              ><span style="color: #1664ff; cursor: pointer" @click="togo">
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                @click="togo(item.url)"
+              >
                 前往 》</span
               ></div
             >
@@ -281,17 +284,81 @@
             </div>
             <div class="tophead"
               ><span
+                v-if="userInfoByCompany === true"
                 style="color: #1664ff; cursor: pointer"
                 @click="configurationapp(item)"
                 >配置应用</span
               ><span
                 style="color: #86909c; cursor: pointer"
-                @click="instructionsuse"
+                @click="instructionsuse(item.useExplain, item.productId)"
               >
                 使用说明</span
               ></div
             >
           </div>
+          <!-- <div id="page" class="zhengshu-container-box">
+            <div> 1111 </div> -->
+          <!-- <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
+            <div class="zhengshu-container-box-bid">
+              存证BID：{detail?.bid || '--'}
+            </div>
+            <div class="zhengshu-container-box-center">
+              <div>
+                <span>存证所有人</span>
+                <span>{detail?.belonger || '--'}</span>
+              </div>
+              <div>
+                <span>存证创建者</span>
+                <span>{detail?.creator || '--'}</span>
+              </div>
+              <div>
+                <span>存证类型</span>
+                <span
+                  >{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span
+                >
+              </div>
+              <div>
+                <span>存证时间</span>
+                <span>{detail?.ctime || '--'}</span>
+              </div>
+              <div>
+                <span>存证平台</span>
+                <span>可信存证服务平台</span>
+              </div>
+              <div>
+                <span>所属链 </span>
+                <span>
+                  {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''}
+                </span>
+              </div>
+              <div>
+                <span>交易hash</span>
+                <span>{detail?.chainInfo?.blockHash || '--'}</span>
+              </div>
+              <div>
+                <span>上链时间</span>
+                <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
+              </div>
+            </div>
+            <div class="zhengshu-container-box-shuoming">
+              <div class="zhengshu-container-box-shuoming-box">
+                <div class="zhengshu-container-box-shuoming-box-title">
+                  证书说明
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  2、本证书可作为电子数据备案凭证。
+                </div>
+                <div class="zhengshu-container-box-shuoming-box-center">
+                  3、如需验证电子数据的一致性和保全时间，可在
+                  <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
+                  查询。
+                </div>
+              </div>
+            </div> -->
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -303,13 +370,7 @@
       </div>
       <div class="overlist">
         <div
-          v-for="(item, index) in [
-            '全部订单',
-            '待支付',
-            '待审核',
-            '待交付',
-            '已完成',
-          ]"
+          v-for="(item, index) in overstatus"
           :key="index"
           class="overlistdata"
         >
@@ -325,16 +386,16 @@
               >{{ item }}</span
             >
             <span style="font-size: 30px">{{
-              (item === '全部订单'
-                ? oederlist.count
-                : item === '待支付'
-                ? oederlist.payCount
-                : item === '待审核'
-                ? oederlist.auditCount
-                : item === '待交付'
-                ? oederlist.deliverCount
-                : item === '已完成'
-                ? oederlist.completeCount
+              (item === overstatus[0]
+                ? orderlist.count
+                : item === overstatus[1]
+                ? orderlist.payCount
+                : item === overstatus[2]
+                ? orderlist.auditCount
+                : item === overstatus[3]
+                ? orderlist.deliverCount
+                : item === overstatus[4]
+                ? orderlist.completeCount
                 : ''
               ).toLocaleString()
             }}</span>
@@ -375,77 +436,22 @@
     >
     </DetailsModalFullscreen>
     <!-- \v-show="false" -->
-    <div id="page" class="zhengshu-container-box">
-      <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
-      <div class="zhengshu-container-box-bid">
-        存证BID：{detail?.bid || '--'}
-      </div>
-      <div class="zhengshu-container-box-center">
-        <div>
-          <span>存证所有人</span>
-          <span>{detail?.belonger || '--'}</span>
-        </div>
-        <div>
-          <span>存证创建者</span>
-          <span>{detail?.creator || '--'}</span>
-        </div>
-        <div>
-          <span>存证类型</span>
-          <span>{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span>
-        </div>
-        <div>
-          <span>存证时间</span>
-          <span>{detail?.ctime || '--'}</span>
-        </div>
-        <div>
-          <span>存证平台</span>
-          <span>可信存证服务平台</span>
-        </div>
-        <div>
-          <span>所属链 </span>
-          <span> {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''} </span>
-        </div>
-        <div>
-          <span>交易hash</span>
-          <span>{detail?.chainInfo?.blockHash || '--'}</span>
-        </div>
-        <div>
-          <span>上链时间</span>
-          <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
-        </div>
-      </div>
-      <div class="zhengshu-container-box-shuoming">
-        <div class="zhengshu-container-box-shuoming-box">
-          <div class="zhengshu-container-box-shuoming-box-title">
-            证书说明
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            2、本证书可作为电子数据备案凭证。
-          </div>
-          <div class="zhengshu-container-box-shuoming-box-center">
-            3、如需验证电子数据的一致性和保全时间，可在
-            <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
-            查询。
-          </div>
-        </div>
-      </div>
-    </div>
+
+    <AuthModal
+      v-if="authModalVisible"
+      @confirm="onAuthModalConfirm"
+      @cancel="authModalVisible = false"
+    ></AuthModal>
   </div>
-  <AuthModal
-    v-if="authModalVisible"
-    @confirm="onAuthModalConfirm"
-    @cancel="authModalVisible = false"
-  ></AuthModal>
 </template>
 
 <script lang="ts" setup>
 import JsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { storeToRefs } from 'pinia';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import type { Ref } from 'vue';
+import { orderOver, authDialogdata } from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -466,6 +472,7 @@ import {
   NodeAuthStatus,
   NodeAuthStatusDESC,
 } from '@/enums/common';
+import { fileDownload } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
@@ -482,11 +489,8 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProductId = ref();
@@ -504,6 +508,12 @@ const nodeStateClass = {
   [NodeAuthStatus.REJECT]: 'override',
   [NodeAuthStatus.UNAUTH]: 'notcertified',
 };
+// const nodeStateText = {
+//   [TextStatus.TO_CHECK]: 'tobereviewed',
+//   [TextStatus.AUTHED]: 'authenticated',
+//   [TextStatus.REJECT]: 'override',
+//   [TextStatus.UNAUTH]: 'notcertified',
+// };
 
 // 认证状态
 // const stateles = ref({
@@ -543,7 +553,7 @@ const images = reactive([
 ]);
 
 // //已购应用
-const authDialogVisible = reactive([
+const authDialogVisible: Record<string, any> = ref([
   {
     id: '2',
     orderNum: '2',
@@ -585,15 +595,48 @@ const authDialogVisible = reactive([
   },
 ]);
 // 订单概览
-const oederlist = reactive({
-  count: 4, // 全部订单数量
-  payCount: 2, // 待支付页数量
-  auditCount: 1, // 待审核页数量
+const orderlist: Ref<{
+  count: number;
+  payCount: number;
+  auditCount: number;
+  deliverCount: number;
+  rejectCount: number;
+  servicesDeliverCount: number;
+  completeCount: number;
+}> = ref({
+  count: 0, // 全部订单数量
+  payCount: 0, // 待支付页数量
+  auditCount: 0, // 待审核页数量
   deliverCount: 0, // 待交付数量
   rejectCount: 0, // 已驳回数量
   servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 1, // 已完成数量
+  completeCount: 0, // 已完成数量
 });
+// 概览状态
+const overstatus = ['全部订单', '待支付', '待审核', '待交付', '已完成'];
+
+// 订单概览 接口
+const orderlistdata = () => {
+  orderOver({}).then((res) => {
+    console.log(res, '订单概览 接口');
+    // @ts-ignore
+    orderlist.value = res;
+  });
+};
+// 已购应用
+const authDialog = () => {
+  console.log(userInfoByCompany.value);
+
+  // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
+  authDialogdata({
+    companyId: userInfoByCompany.value.companyId,
+    userId: userInfoByCompany.value.id,
+  }).then((res) => {
+    console.log(res);
+    authDialogVisible.value = res;
+  });
+};
+
 // 去认证
 const authentication = () => {
   editModalVisible.value = true; //  本平台进行企业认证
@@ -661,7 +704,9 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = () => {};
+const togo = (urldata: string) => {
+  window.open(urldata);
+};
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProductId.value = item.id; // 配置的应用 id
@@ -672,23 +717,35 @@ const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
 // 使用说明
-const instructionsuse = () => {
+const instructionsuse = (fileurl: string, prodtId: string) => {
+  console.log(fileurl, prodtId, 'prodtId');
+
+  fileDownload({ name: fileurl, roductId: prodtId }).then((res) => {
+    console.log(res);
+  });
+
   // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
   // window.open(url, '_blank');
-  const input: any = document.getElementById('page');
-  html2canvas(input).then((canvas: any) => {
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new JsPDF('p', 'pt', 'a4');
-    const width = pdf.internal.pageSize.getWidth();
-    const height = pdf.internal.pageSize.getHeight();
-    pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-    pdf.save('kexincunzheng.pdf');
-  });
+  // const input: any = document.getElementById('page');
+  // html2canvas(input).then((canvas: any) => {
+  //   const imgData = canvas.toDataURL('image/png');
+  //   const pdf = new JsPDF('p', 'pt', 'a4');
+  //   const width = pdf.internal.pageSize.getWidth();
+  //   const height = pdf.internal.pageSize.getHeight();
+  //   pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+  //   pdf.save('kexincunzheng.pdf');
+  // });
 };
 // 更多
 const multiples = () => {
   router.push('/buyer/order');
 };
+onMounted(() => {
+  // 已购应用
+  authDialog();
+  // 订单概览
+  orderlistdata();
+});
 </script>
 
 <style scoped lang="less">
@@ -743,7 +800,9 @@ const multiples = () => {
 
           p:nth-child(2) {
             margin-right: 9px;
-            color: #86909c;
+            text-align: center;
+            // color: #86909c;
+            // padding: 3px 10px;
           }
 
           p:nth-child(3) {
@@ -753,7 +812,8 @@ const multiples = () => {
 
           p:nth-child(4) {
             margin-right: 9px;
-            color: #86909c;
+            // color: #86909c;
+            text-align: center;
           }
 
           p:nth-child(5) {

@@ -2,6 +2,7 @@
   <t-modal
     v-model:visible="visible"
     :width="520"
+    :height="500"
     :on-before-ok="onConfirm"
     @cancel="emit('cancel')"
   >
@@ -54,7 +55,8 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+
+import { sellerTurndown } from '@/api/seller/order';
 import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -76,9 +78,7 @@ const state = reactive({
 });
 const radiofalg = ref(false);
 const radiotext = ref('');
-const formRules = {
-  prooftext: [{ required: true, message: '请输入' }],
-};
+
 // 单选框
 const radioChange = (value: string) => {
   console.log(value);
@@ -89,28 +89,27 @@ const radioChange = (value: string) => {
     radiofalg.value = false;
   }
 };
+const formRules = {
+  rejectReasonDetail: [{ required: true, message: '请输入' }],
+};
 const onConfirm = (done: (closed: boolean) => void) => {
   console.log(radiotext.value);
   if (radiotext.value === '') {
-    Message.error('错误文本!');
+    Message.error('至少选一项');
     done(false);
   } else {
-    //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-    //   api(state.formModel)
-    //     .then(() => {
-    //       emit('confirm');
-    //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-    //       done(true);
-    //     })
-    //     .catch(() => {
-    //       done(false);
-    //     });
-
     formRef.value.validate((errors: any) => {
       console.log(state.formModel, 'state.formModel');
       if (!errors) {
-        console.log(state.formModel);
-        emit('confirm');
+        sellerTurndown({
+          id: state.formModel.id,
+          rejectType: state.formModel.rejectType,
+          rejectReasonDetail: state.formModel.rejectReasonDetail,
+        }).then((res) => {
+          console.log(state.formModel);
+          emit('confirm');
+          done(true);
+        });
       } else {
         done(false);
       }

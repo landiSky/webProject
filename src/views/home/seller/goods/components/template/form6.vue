@@ -57,7 +57,7 @@
             :headers="{
               Authorization: `Bearer ${getToken()}`,
             }"
-            action="/web/file/upload"
+            action="/server/web/file/upload"
             accept=".jpg,.png,.bmp,.tif,.gif"
             :limit="5"
             :auto-upload="false"

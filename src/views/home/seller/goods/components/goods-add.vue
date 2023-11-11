@@ -70,10 +70,10 @@
                       width="100px"
                       height="100px"
                       fit="cover"
-                      :src="`/web/file/download?name=${formModel.logo}`"
+                      :src="`/server/web/file/download?name=${formModel.logo}`"
                       :preview-visible="logoVisible"
                       :preview-props="{
-                        src: `/web/file/download?name=${formModel.logo}`,
+                        src: `/server/web/file/download?name=${formModel.logo}`,
                       }"
                       @preview-visible-change="() => (logoVisible = false)"
                     />
@@ -107,7 +107,7 @@
               :ref="logoRef"
               :multiple="false"
               :headers="uploadHeaders"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :show-cancel-button="false"
               accept=".png,.jpg,.jpeg,.gif,.tif"
               :show-file-list="false"
@@ -152,10 +152,10 @@
                       width="100px"
                       height="100px"
                       fit="cover"
-                      :src="`/web/file/download?name=${url}`"
+                      :src="`/server/web/file/download?name=${url}`"
                       :preview-visible="imageVisible[`${url}`]"
                       :preview-props="{
-                        src: `/web/file/download?name=${url}`,
+                        src: `/server/web/file/download?name=${url}`,
                       }"
                       @preview-visible-change="
                         () => (imageVisible[`${url}`] = false)
@@ -192,7 +192,7 @@
               :show-cancel-button="false"
               :show-file-list="false"
               :headers="uploadHeaders"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               accept=".png,.jpg,.jpeg,.gif,.tif"
               @success="uploadDetailSuccess"
               @error="uploadDetailError"
@@ -264,7 +264,7 @@
               :ref="prdRef"
               :limit="1"
               :multiple="false"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :show-cancel-button="false"
               accept=".pdf,.word"

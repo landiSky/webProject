@@ -4,7 +4,13 @@
       <div class="baseInfo">
         <div class="left">
           <div class="bigImg">
-            <img :src="`/web/file/download?name=${bigImgPath}`" />
+            <img
+              :src="
+                bigImgPath
+                  ? `/server/web/file/download?name=${bigImgPath}`
+                  : defaultImg
+              "
+            />
           </div>
 
           <ul class="imgList">
@@ -14,7 +20,7 @@
               @mouseenter="bigImgPath = imgPath"
             >
               <img
-                :src="`/web/file/download?name=${imgPath}`"
+                :src="`/server/web/file/download?name=${imgPath}`"
                 alt=""
                 :class="{ active: bigImgPath === imgPath }"
               />
@@ -39,18 +45,21 @@
           <div class="custom">
             <span class="label">版本:</span>
             <span>
-              <t-radio-group
-                v-model="priceParams.deliveryVersionId"
-                type="button"
-                @change="onVersionChange"
-              >
-                <t-radio
-                  v-for="version in deliveryList"
-                  :key="version.id"
-                  :value="version.id"
-                  >{{ version.name }}
-                </t-radio>
-              </t-radio-group>
+              <template v-if="deliveryList?.length">
+                <t-radio-group
+                  v-model="priceParams.deliveryVersionId"
+                  type="button"
+                  @change="onVersionChange"
+                >
+                  <t-radio
+                    v-for="version in deliveryList"
+                    :key="version.id"
+                    :value="version.id"
+                    >{{ version.name }}
+                  </t-radio>
+                </t-radio-group>
+              </template>
+              <span>-</span>
             </span>
           </div>
           <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">
@@ -99,6 +108,7 @@
             type="primary"
             size="large"
             style="width: 296px"
+            :disabled="isPreview"
             @click="clickAddCart"
             >立即购买</t-button
           >
@@ -106,26 +116,33 @@
       </div>
       <div class="intro">
         <div class="template">
-          <div class="nav">
-            <span
+          <template v-if="templateList.length">
+            <div class="nav">
+              <span
+                v-for="(item, index) in templateList"
+                :key="index"
+                :data-index="index"
+                @click="clickNav(index)"
+                >{{ item.moduleName }}</span
+              >
+            </div>
+            <div
               v-for="(item, index) in templateList"
+              :id="`template${index}`"
               :key="index"
-              :data-index="index"
-              @click="clickNav(index)"
-              >{{ item.moduleName }}</span
+              :ref="setNavRef"
             >
-          </div>
-          <div
-            v-for="(item, index) in templateList"
-            :id="`template${index}`"
-            :key="index"
-            :ref="setNavRef"
-          >
-            <component
-              :is="forCompList[item.type - 1]"
-              :template-data="item"
-            ></component>
-          </div>
+              <component
+                :is="forCompList[item.type - 1]"
+                :template-data="item"
+              ></component>
+            </div>
+          </template>
+          <t-empty v-else description="暂无配置详情信息">
+            <template #image>
+              <iconpark-icon name="zanwushuju" size="100px"></iconpark-icon>
+            </template>
+          </t-empty>
         </div>
         <div class="consult">
           <span class="title">服务商资质</span>
@@ -155,6 +172,7 @@ import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
+import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
 import Template3 from './layout/template3.vue';
@@ -181,23 +199,6 @@ const computing = ref(false);
 const price = ref();
 const templateList = ref<Record<string, any>[]>([]);
 const navRef = ref<any[]>([]); // ref<any[]>([]);
-
-// // 模块一二三
-// const testData =
-//   '[{"type":1,"moduleName":"模板一","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"区块二简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"区块三简介：建议图片尺寸：200px * 200px，支持jpg、png、bmp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":2,"moduleName":"模板二","blockList":[{"name":"区块一","desc":"区块一简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块一11","desc":"区块一11简介：建议图片尺寸：200px * 200px，支持jpg、png、","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]},{"type":3,"moduleName":"模板三","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp","blockList":[{"name":"区块一","desc":"图片紫葡萄"},{"name":"区块二","desc1":"简介 1：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc2":"简介 2：把尔粉色发非法人非法是的色粉舒服分手的方式实习","desc3":"简介 3：把尔粉色发非法人非法是的色粉舒服分手的方式实习"}]}]';
-
-// // 模块四
-// const testData =
-//   '[{"type":4,"moduleName":"模块四","blockList":[{"name":"区块一","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块二","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块三","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"name":"区块四","desc":"建议图片尺寸：200px * 200px，支持jp","picUrl":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
-
-// // 模块五
-// const testData =
-//   '[{"type":5,"moduleName":"模块五","blockList":[{"name1":"标题一","desc1":"简介一","name2":"标题二","desc2":"简介二","name3":"标题三","desc3":"简介三"},{"name":"","desc":"","picUrl":"","name1":"标题一一","name2":"标题二二","name3":"标题三三","desc1":"简介二","desc2":"简介二","desc3":"简介二"}]}]';
-
-// 模块六
-// const testData =
-//   '[{"type":6,"moduleName":"模块六","blockList":[{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"},{"url":"https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp"}]}]';
-
 const forCompList = [
   Template1,
   Template2,
@@ -210,6 +211,7 @@ const forCompList = [
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
+const isPreview = ref(false);
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -323,6 +325,8 @@ const clickNav = (index: number) => {
 };
 
 onMounted(() => {
+  isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
+  console.log('index.vue:332', route);
   apiProductDetail({ id: route.params.id })
     .then((data) => {
       prodDetail.value = data;
@@ -466,6 +470,7 @@ onMounted(() => {
     .intro {
       display: flex;
       justify-content: start;
+      margin-bottom: 132px;
 
       .template {
         flex: 1;
@@ -499,6 +504,8 @@ onMounted(() => {
       }
 
       .consult {
+        display: flex;
+        flex-direction: column;
         width: 260px;
         height: 178px;
         padding: 24px;

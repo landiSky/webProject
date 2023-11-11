@@ -55,7 +55,8 @@ import {
   onMounted,
   computed,
 } from 'vue';
-// import { roleUpdate, roleAdd } from '@/api/role-manage';
+import { amountUpdata } from '@/api/seller/order';
+
 import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -79,10 +80,13 @@ const state = reactive({
 
 const formRules = {
   amount: [
-    { required: true, message: '请输入' },
     {
-      match: /^[1-9]\d*$/ || /^(-?\d+)(\.\d{1,2})?$/,
-      message: '请输入正确金额',
+      required: true,
+      message: '请输入金额',
+    },
+    {
+      match: /^\d+(.\d{1,2})?$/,
+      message: '只可输入小数点后两位',
     },
   ],
 };
@@ -91,18 +95,16 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       console.log(state.formModel);
-
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
-      emit('confirm');
+      amountUpdata({
+        id: state.formModel.id,
+        couponMoney: state.formModel.amount,
+      }).then((res) => {
+        console.log(res);
+        emit('confirm');
+        // Message.success();
+        Message.success('金额修改成功');
+        done(true);
+      });
     } else {
       done(false);
     }

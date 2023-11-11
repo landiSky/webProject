@@ -84,13 +84,6 @@
       @cancel="editModalVisible = false"
     ></EditModal>
     <!-- 角色权限 -->
-    <TreeModal
-      v-if="flagModal"
-      :data="state.editData"
-      @confirm="onEditTreeConfirm"
-      @cancel="onEditTreeCancel"
-    ></TreeModal>
-    <!-- 角色权限 -->
     <TreeModalsles
       v-if="flagModalTree"
       :data="state.editData"
@@ -98,12 +91,6 @@
       @cancel="onEditTreeCancelsld"
     >
     </TreeModalsles>
-
-    <!-- <EditModalFullscreen
-    v-if="editFullModalVisible"
-    @confirm="onFullModalConfirm"
-    @cancel="editFullModalVisible = false"
-  ></EditModalFullscreen> -->
   </div>
 </template>
 
@@ -111,12 +98,18 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 // import dayjs from 'dayjs';
 import { Modal, Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+
 import { rolelist, apiRoleDelete, apiRoleDetails } from '@/api/system/role';
-// import DetailDrawer from './components/detail-drawer.vue';
+
 import EditModal from './components/edit-modal.vue';
-// import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
-import TreeModal from './components/tree-modal.vue';
+
 import TreeModalsles from './components/tree-modals.vue';
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -197,29 +190,11 @@ const pagination = reactive<{
   total: 0,
 });
 
-// 时间框选择格式是：年月日，接口入参需要加上时分秒
-// const onRangeChange = (
-//   value: (Date | string | number | undefined)[] | undefined
-// ) => {
-//   if (value) {
-//     const [startDate, endDate] = value || [];
-//     [state.formModel.startTime, state.formModel.endTime] = [
-//       `${startDate} 00:00:00`,
-//       `${endDate} 23:59:59`,
-//     ];
-//   } else {
-//     state.formModel.startTime = undefined;
-//     state.formModel.endTime = undefined;
-//   }
-// };
-
 // 分页，总页数不到10页，不显示分页器
 const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const editModalVisible = ref(false);
 
-// 角色弹窗
-const flagModal = ref(false);
 // 角色弹窗
 const flagModalTree = ref(false);
 // const aaa = ref({});
@@ -236,7 +211,7 @@ function fetchData() {
     pageSize: pagination.pageSize,
     pageNum: pagination.current,
     roleName: state.formModel.name,
-    companyId: 1,
+    companyId: userInfoByCompany.companyId,
   })
     .then((res: any) => {
       console.log(res);
@@ -287,10 +262,9 @@ const clickAddBtn = () => {
 // 新增编辑弹窗确定后的回调
 const onEditModalConfirm = () => {
   console.log('e');
-  // state.editData = data;
-  // aaa.value = data;
+
   editModalVisible.value = false;
-  // flagModal.value = true;
+
   fetchData();
 };
 const delectdata = () => {};
@@ -332,27 +306,6 @@ const delectlist = (id: number, memberCount: number) => {
   }
 };
 
-// popover类的删除操作
-// const onBeforeDelOk = (done: any) => {
-//   // mock数据
-//   done(true);
-//   Message.success('删除成功!');
-//   fetchData();
-// };
-// 角色
-const onEditTreeConfirm = () => {
-  state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
-  flagModal.value = false;
-};
-// 取消
-const onEditTreeCancel = () => {
-  // state.editData = data;
-  // console.log(aaa.value, 'aaa.value;');
-
-  flagModal.value = false;
-  editModalVisible.value = true;
-  // state.editData = aaa.value;
-};
 // 权限管理
 const onEditTreeConfirmsldrole = (data: any) => {
   state.editData = data;

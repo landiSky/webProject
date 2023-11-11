@@ -93,14 +93,14 @@
               formModel.businessLicense
                 ? [
                     {
-                      url: `/web/file/download?name=${formModel.businessLicense}`,
+                      url: `/server/web/file/download?name=${formModel.businessLicense}`,
                     },
                   ]
                 : []
             "
             list-type="picture-card"
             :headers="uploadHeaders"
-            action="/web/file/upload"
+            action="/server/web/file/upload"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
@@ -192,13 +192,13 @@
                 formModel.idCardz
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardz}`,
+                        url: `/server/web/file/download?name=${formModel.idCardz}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview
@@ -232,13 +232,13 @@
                 formModel.idCardf
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardf}`,
+                        url: `/server/web/file/download?name=${formModel.idCardf}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview
@@ -290,14 +290,14 @@ import { useUserStore } from '@/store/modules/user';
 import { authDetails, authSubmit, authRepeat } from '@/api/authentication';
 import { getToken } from '@/utils/auth';
 import { storeToRefs } from 'pinia';
-
 import {
   Message,
   // Modal
 } from '@tele-design/web-vue';
 
-const store = useUserStore();
-const { userInfo } = storeToRefs(store);
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -431,7 +431,7 @@ const goback = () => {
 };
 const getUserDetail = () => {
   // userInfo.value?.companyId
-  authDetails({ companyId: 2 })
+  authDetails({ companyId: String(userInfoByCompany.companyId) })
     .then((res) => {
       console.log(res);
       //  @ts-ignore

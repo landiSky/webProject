@@ -61,9 +61,10 @@ import {
   onMounted,
   computed,
 } from 'vue';
+import { merchantSub } from '@/api/seller/order';
 // import { roleUpdate, roleAdd } from '@/api/role-manage';
 
-// import { Modal, Message } from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 
 const props = defineProps({
   data: {
@@ -89,7 +90,10 @@ const state = reactive({
 const formRules = {
   accessAddress: [
     { required: true, message: '请输入' },
-    { match: / \d+\.\d+\.\d+\.\d+/, message: '请输入正确地址' },
+    {
+      match: /^((ht|f)tps?:\/\/)?[\w-]+(\.[\w-]+)+:\d{1,5}\/?$/,
+      message: '请输入正确地址',
+    },
   ],
   account: [{ required: true, message: '请输入' }],
   password: [
@@ -106,6 +110,21 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       console.log(state.formModel);
+      merchantSub({
+        id: state.formModel.id,
+        accessAddress: state.formModel.accessAddress,
+        account: state.formModel.account,
+        password: state.formModel.password,
+        remarks: state.formModel.remarks,
+      })
+        .then((res) => {
+          Message.success('交付成功');
+          emit('confirm');
+          console.log(res);
+        })
+        .catch(() => {
+          done(false);
+        });
       // state.formModel.address = '111';
 
       //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
@@ -118,7 +137,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
       //     .catch(() => {
       //       done(false);
       //     });
-      emit('confirm');
     } else {
       done(false);
     }

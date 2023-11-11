@@ -190,7 +190,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="item.productLogo"
+                      :src="`/web/file/download?name=${item.productLogo}`"
                       alt=""
                     />
                   </div>
@@ -399,17 +399,23 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
-import { orderList } from '@/api/seller/order';
+import { orderList, merchantSub } from '@/api/seller/order';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import tobepaid from './images/tobepaid.png';
 import tobereviewed from './images/tobereviewed.png';
 import error from './images/error.png';
 import success from './images/success.png';
+
 import EditModal from './components/edit-modal.vue';
 import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -445,7 +451,7 @@ const tableData = ref([
       'https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500', // 商品logo
     merchantName: '商品所属商家名称', // 卖家名称
     deliveryTypeName: 'SAAS', // 交付类型名称
-    deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
+    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
     productPrice: 10000, // 商品价格
     accountCount: '10个账号', // 账号数量
     buyDuration: '5个月', // 购买时长
@@ -630,11 +636,12 @@ const init = () => {
     createEnd: formInline.endTime,
     pageSize: formInline.pageSize,
     pageNum: formInline.pageNum,
-    userCompanyId: '2',
+    // String(userInfoByCompany.value.companyId),
+    userCompanyId: String(userInfoByCompany.value.companyId),
   }).then((res) => {
     tableData.value = res.records;
     //  @ts-ignore
-    tableData.value.total = res.total;
+    formInline.total = res.total;
   });
 };
 onMounted(() => {
@@ -699,16 +706,9 @@ const modificationamount = (id: string, productPrice: number) => {
 // 修改金额 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  Message.success('金额修改成功');
 };
 // 交付应用
 const delivery = (deliveryType: number, id: string) => {
-  function onBeforeOk(done: (closed: boolean) => void) {
-    setTimeout(() => {
-      done(true);
-      Message.success('交付成功');
-    }, 2 * 1000);
-  }
   if (deliveryType === 0) {
     Modal.warning({
       title: '我已完成账号重置，确定交付该应用',
@@ -716,13 +716,19 @@ const delivery = (deliveryType: number, id: string) => {
       titleAlign: 'start',
       okText: ' 确定',
       hideCancel: false,
-      onBeforeOk,
+      // onBeforeOk,
       // okButtonProps: {
       //   status: 'danger',
       // },
       onOk: () => {
         // deleteUsers(params);
-        Message.success('交付成功');
+        merchantSub({
+          id: state.editData.id,
+        }).then((res) => {
+          console.log(res);
+          init();
+          Message.success('交付成功');
+        });
       },
       onCancel: () => {
         // Message.success('取消交付成功');
@@ -736,6 +742,7 @@ const delivery = (deliveryType: number, id: string) => {
 // 交付应用 完成
 const ondeliveryModalConfirm = () => {
   deliveryVisible.value = false;
+  init();
 };
 </script>
 

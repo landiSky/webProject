@@ -32,21 +32,18 @@ export default defineConfig(({ command, mode }) => {
       host: '0.0.0.0',
       port: 3001,
       proxy: {
-        // '/api': {
-        //   target: `http://10.14.151.2:9190/server`,
-        //   changeOrigin: true,
-        //   agent: new https.Agent(),
-        //   followRedirects: true,
-        // },
+        '/api': {
+          target: `http://10.14.151.2:9190/server`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+          followRedirects: true,
+        },
         '/web': {
-          // target: `http://10.14.150.253:9190/server`,
-          target: `http://10.14.150.182:9191`,
-          // target: `http://10.14.151.2:9191/`,
+          // target: `http://10.14.150.182:9190/server`,
+          target: `http://10.14.148.103:9191`,
+          // target: `http://10.14.151.2:9191`,
+
           // target: 'http://server-platform-gateway-a.dev.idx.space/server',
-          //           运营后台地址：http://operation-platform-inventory-teleinfo.dev.idx.space/operation
-          // 运营后台地址清单：http://operation-platform-inventory-teleinfo.dev.idx.space/inventory
-          // 服务商地址：http://server-platform-gateway-a.dev.idx.space/server
-          // @谢珍
           changeOrigin: true,
           agent: new https.Agent(),
           followRedirects: true,

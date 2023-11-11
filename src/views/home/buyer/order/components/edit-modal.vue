@@ -13,7 +13,7 @@
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
-          action="/web/file/orderUpload"
+          action="/server/web/file/orderUpload"
           :limit="5"
           image-preview
           @before-upload="beforeUpload"
@@ -53,14 +53,12 @@ const updataimg = ref([
   {
     uid: '-2',
     name: '20200717-103937.png',
-    url:
-      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
   {
     uid: '-1',
     name: 'hahhahahahaha.png',
-    url:
-      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
 ]);
 const visible = ref(true);
