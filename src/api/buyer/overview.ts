@@ -2,12 +2,12 @@ import $http from '@/utils/http';
 
 // 买家中心  订单概览
 export function orderOver(params: Record<string, any>) {
-  return $http.get('/web/order/dataStatistics', { params });
+  return $http.get('/server/web/order/dataStatistics', { params });
 }
 
 // 已购应用
 export function authDialogdata(params: Record<string, any>) {
-  return $http.get('/web/order/purchasedApps', { params });
+  return $http.get('/server/web/order/purchasedApps', { params });
 }
 // 获取当前公司下用户的信息
 export function apiUserProfile(params: Record<string, any>) {

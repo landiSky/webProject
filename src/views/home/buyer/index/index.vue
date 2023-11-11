@@ -17,9 +17,15 @@
 
             <div class="inofs" style="float: left; margin-top: 25px">
               <div style="float: left">
-                <p>{{ userInfoByCompany.companyName }}</p
+                <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
-                ><p>{{ userInfoByCompany.primary ? '主账号' : '子账号' }}</p
+                ><p>{{
+                  userInfoByCompany.companyId
+                    ? userInfoByCompany.primary
+                      ? '主账号'
+                      : '子账号'
+                    : '-'
+                }}</p
                 ><p>|</p>
               </div>
 
@@ -56,8 +62,9 @@
                     <p style="margin: 10px 0"> 确认企业身份</p>
                     <t-button
                       v-if="
+                        !userInfoByCompany.companyId ||
                         userInfoByCompany.certificateStatus ===
-                        CompanyAuthStatus.UNAUTH
+                          CompanyAuthStatus.UNAUTH
                       "
                       type="text"
                       @click="authentication"
@@ -370,7 +377,7 @@
       </div>
       <div class="overlist">
         <div
-          v-for="(item, index) in overstatus"
+          v-for="(item, index) in orderOverall"
           :key="index"
           class="overlistdata"
         >
@@ -383,21 +390,10 @@
                 color: #86909c;
                 font-size: 14px;
               "
-              >{{ item }}</span
+              >{{ item.title }}</span
             >
             <span style="font-size: 30px">{{
-              (item === overstatus[0]
-                ? orderlist.count
-                : item === overstatus[1]
-                ? orderlist.payCount
-                : item === overstatus[2]
-                ? orderlist.auditCount
-                : item === overstatus[3]
-                ? orderlist.deliverCount
-                : item === overstatus[4]
-                ? orderlist.completeCount
-                : ''
-              ).toLocaleString()
+              (orderlist[item.field] || '').toLocaleString() || 0
             }}</span>
           </div>
         </div>
@@ -489,8 +485,11 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProductId = ref();
@@ -595,15 +594,7 @@ const authDialogVisible: Record<string, any> = ref([
   },
 ]);
 // 订单概览
-const orderlist: Ref<{
-  count: number;
-  payCount: number;
-  auditCount: number;
-  deliverCount: number;
-  rejectCount: number;
-  servicesDeliverCount: number;
-  completeCount: number;
-}> = ref({
+const orderlist = ref<Record<string, any>>({
   count: 0, // 全部订单数量
   payCount: 0, // 待支付页数量
   auditCount: 0, // 待审核页数量
@@ -613,7 +604,28 @@ const orderlist: Ref<{
   completeCount: 0, // 已完成数量
 });
 // 概览状态
-const overstatus = ['全部订单', '待支付', '待审核', '待交付', '已完成'];
+const orderOverall = [
+  {
+    title: '全部订单',
+    field: 'count',
+  },
+  {
+    title: '待支付',
+    field: 'payCount',
+  },
+  {
+    title: '待审核',
+    field: 'auditCount',
+  },
+  {
+    title: '待交付',
+    field: 'deliverCount',
+  },
+  {
+    title: '已完成',
+    field: 'completeCount',
+  },
+];
 
 // 订单概览 接口
 const orderlistdata = () => {

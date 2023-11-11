@@ -4,7 +4,7 @@ import { apiLogout, apiConfigInfo } from '@/api/login';
 import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
-import { AccountType } from '@/enums/common';
+import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
 // import { useMenuStore } from './menu';
 
 interface UserState {
@@ -21,7 +21,10 @@ export const useUserStore = defineStore({
   id: 'app-user',
   state: (): UserState => ({
     userInfo: null,
-    userInfoByCompany: {}, // 存储选择的对应公司下的用户信息
+    userInfoByCompany: {
+      certificateStatus: CompanyAuthStatus.UNAUTH,
+      nodeStatus: NodeAuthStatus.UNAUTH,
+    }, // 存储选择的对应公司下的用户信息
     selectCompany: {}, // 对象，存储选择的公司信息，{companyId, memeberId}
     counter: 0,
     token: null,
@@ -62,7 +65,10 @@ export const useUserStore = defineStore({
       apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
           console.log(data);
-          this.userInfoByCompany = data;
+          this.userInfoByCompany = data || {
+            certificateStatus: CompanyAuthStatus.UNAUTH,
+            nodeStatus: NodeAuthStatus.UNAUTH,
+          };
         })
         .catch(() => {});
     },
@@ -190,7 +196,10 @@ export const useUserStore = defineStore({
      */
     async logout(): Promise<void> {
       this.userInfo = null;
-      this.userInfoByCompany = null;
+      this.userInfoByCompany = {
+        certificateStatus: CompanyAuthStatus.UNAUTH,
+        nodeStatus: NodeAuthStatus.UNAUTH,
+      };
       this.selectCompany = {};
       this.token = '';
 
