@@ -3,7 +3,7 @@ import { successResponseWrap, failResponseWrap } from './response';
 export default [
   {
     // 认证状态借口
-    url: '/web/company/getStatus',
+    url: '/server/web/company/getStatus',
     method: 'get',
     response: () => {
       return successResponseWrap({
@@ -21,7 +21,7 @@ export default [
   },
   {
     // 认证提交
-    url: '/web/company/saveOrUpdate',
+    url: '/server/web/company/saveOrUpdate',
     method: 'post',
     response: () => {
       return successResponseWrap({
@@ -32,7 +32,7 @@ export default [
   },
   {
     // 认证详情
-    url: '/web/company/info',
+    url: '/server/web/company/info',
     method: 'get',
     response: () => {
       return successResponseWrap({

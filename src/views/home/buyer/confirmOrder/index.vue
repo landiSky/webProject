@@ -23,7 +23,9 @@
         </div>
         <div class="tbody">
           <span>
-            <img :src="`/web/file/download?name=${createOrderInfo?.logo}`" />
+            <img
+              :src="`/server/web/file/download?name=${createOrderInfo?.logo}`"
+            />
             <span>{{ createOrderInfo?.name }}</span>
           </span>
           <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
@@ -63,8 +65,9 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();
-const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
-  storeToRefs(orderStore);
+const {
+  createOrderInfo,
+}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
 const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);

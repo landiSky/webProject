@@ -2,7 +2,7 @@ import { successResponseWrap, failResponseWrap } from './response';
 
 export default [
   {
-    url: '/web/product/type/tree',
+    url: '/server/web/product/type/tree',
     method: 'get',
     response: () => {
       return successResponseWrap([
@@ -162,7 +162,7 @@ export default [
     },
   },
   {
-    url: '/web/member/getCompanyMember',
+    url: '/server/web/member/getCompanyMember',
     method: 'get',
     response: () => {
       return successResponseWrap([
@@ -186,14 +186,14 @@ export default [
     },
   },
   {
-    url: '/web/product/appConfig',
+    url: '/server/web/product/appConfig',
     method: 'post',
     response: () => {
       return successResponseWrap([]);
     },
   },
   {
-    url: '/web/product/selectConfig',
+    url: '/server/web/product/selectConfig',
     method: 'get',
     response: () => {
       return successResponseWrap([

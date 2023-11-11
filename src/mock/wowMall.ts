@@ -2,7 +2,7 @@ import { successResponseWrap, failResponseWrap } from './response';
 
 export default [
   {
-    url: '/web/reception/selectReceptionPageList',
+    url: '/server/web/reception/selectReceptionPageList',
     method: 'get',
     response: () => {
       return successResponseWrap({
@@ -15,7 +15,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 2,
@@ -24,7 +25,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 0,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 3,
@@ -33,7 +35,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 4,
@@ -42,7 +45,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 0,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
           {
             id: 5,
@@ -51,7 +55,8 @@ export default [
             introduction: '简介',
             price: '88.66',
             deliveryType: 1,
-            logo: 'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
+            logo:
+              'https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg',
           },
         ],
       });
@@ -75,7 +80,7 @@ export default [
   },
 
   {
-    url: '/web/reception/selectById',
+    url: '/server/web/reception/selectById',
     method: 'get',
     response: () => {
       return successResponseWrap({
@@ -199,7 +204,7 @@ export default [
   },
 
   {
-    url: '/web/reception/computePrice',
+    url: '/server/web/reception/computePrice',
     method: 'get',
     response: () => {
       return successResponseWrap(8000);

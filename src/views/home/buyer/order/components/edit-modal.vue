@@ -13,7 +13,7 @@
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
-          action="/web/file/orderUpload"
+          action="/server/web/file/orderUpload"
           :limit="5"
           image-preview
           @before-upload="beforeUpload"

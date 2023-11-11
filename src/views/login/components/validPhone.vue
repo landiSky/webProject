@@ -109,7 +109,7 @@ import { useUserStore } from '@/store/modules/user';
 
 import $http from '@/utils/http';
 import { setToken } from '@/utils/auth';
-import { apiLoginName } from '@/api/login';
+// import { apiLoginName } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import SliderCaptcha from './captcha.vue';
 
@@ -170,27 +170,27 @@ const realLoginRequest = () => {
   };
   loading.value = true;
 
-  apiLoginName(params)
-    .then((response) => {
-      currentStep.value = 2;
-      const { token } = response;
-      // 将token存入localstorage
-      setToken(token);
-      Message.success('登录成功');
-      // 登录成功，进入首页
-      router.push('/buyer');
-    })
-    .catch((error) => {
-      formRef.value.setFields({
-        password: {
-          status: 'error',
-          message: error.message,
-        },
-      });
-    })
-    .finally(() => {
-      loading.value = false;
-    });
+  // apiLoginName(params)
+  //   .then((response) => {
+  //     currentStep.value = 2;
+  //     const { token } = response;
+  //     // 将token存入localstorage
+  //     setToken(token);
+  //     Message.success('登录成功');
+  //     // 登录成功，进入首页
+  //     router.push('/buyer');
+  //   })
+  //   .catch((error) => {
+  //     formRef.value.setFields({
+  //       password: {
+  //         status: 'error',
+  //         message: error.message,
+  //       },
+  //     });
+  //   })
+  //   .finally(() => {
+  //     loading.value = false;
+  //   });
 };
 
 const captchaSuccess = () => {

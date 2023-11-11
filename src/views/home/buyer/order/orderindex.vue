@@ -191,7 +191,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="`/web/file/orderDownload?name=${item.productLogo}`"
+                      :src="`/server/web/file/orderDownload?name=${item.productLogo}`"
                       alt=""
                     />
                   </div>

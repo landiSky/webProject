@@ -133,7 +133,7 @@
                 <img
                   class="first-img"
                   :alt="props.data.logo"
-                  :src="`/web/file/download?name=${props.data.logo}`"
+                  :src="`/server/web/file/download?name=${props.data.logo}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
@@ -143,7 +143,7 @@
                   :key="url"
                   :alt="url"
                   class="first-img"
-                  :src="`/web/file/download?name=${url}`"
+                  :src="`/server/web/file/download?name=${url}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
@@ -161,7 +161,7 @@
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
-                  :href="`/web/file/download?name=${props.data.useExplain}`"
+                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
                   download
                   >产品使用说明</a
                 >
@@ -234,7 +234,7 @@
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a
-                  :href="`/web/file/download?name=${props.data.useExplain}`"
+                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
                   download
                   >应用秘钥</a
                 >

@@ -93,14 +93,14 @@
               formModel.businessLicense
                 ? [
                     {
-                      url: `/web/file/download?name=${formModel.businessLicense}`,
+                      url: `/server/web/file/download?name=${formModel.businessLicense}`,
                     },
                   ]
                 : []
             "
             list-type="picture-card"
             :headers="uploadHeaders"
-            action="/web/file/upload"
+            action="/server/web/file/upload"
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
@@ -192,13 +192,13 @@
                 formModel.idCardz
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardz}`,
+                        url: `/server/web/file/download?name=${formModel.idCardz}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview
@@ -232,13 +232,13 @@
                 formModel.idCardf
                   ? [
                       {
-                        url: `/web/file/download?name=${formModel.idCardf}`,
+                        url: `/server/web/file/download?name=${formModel.idCardf}`,
                       },
                     ]
                   : []
               "
               list-type="picture-card"
-              action="/web/file/upload"
+              action="/server/web/file/upload"
               :headers="uploadHeaders"
               :limit="1"
               image-preview
@@ -400,8 +400,7 @@ const formRules: any = {
     { required: true, message: '请输入联系人身份证号' },
     { maxLength: 18, message: '长度不超过18个字符' },
     {
-      match:
-        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
+      match: /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
