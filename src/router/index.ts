@@ -6,6 +6,7 @@ import { RouteAuthEnum } from '@/enums/authEnum';
 // import DynamicRoutes from './routes';
 import homeRoutesList from './routes/home';
 import wowRoutesList from './routes/wow';
+import operationRoutesList from './routes/operation';
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
@@ -21,11 +22,11 @@ const constantRoutes = [
     name: 'agreement',
     component: () => import('@/views/agreement/userProtocol.vue'),
   },
-  {
-    path: '/login',
-    name: 'login',
-    component: () => import('@/views/login/login.vue'),
-  },
+  // {
+  //   path: '/login',
+  //   name: 'login',
+  //   component: () => import('@/views/login/login.vue'),
+  // },
   {
     path: '/register',
     name: 'register',
@@ -55,7 +56,7 @@ const routesList = [...constantRoutes, ...errorRoutes];
 
 // 不需要做登陆鉴权的路由放白名单里
 export const whiteList = [
-  '/login',
+  // '/login',
   '/register',
   '/404',
   '/500',
@@ -69,7 +70,12 @@ export const whiteList = [
 
 const router = createRouter({
   history: createWebHashHistory(), // createWebHistory(),
-  routes: [...routesList, ...homeRoutesList, ...wowRoutesList],
+  routes: [
+    ...routesList,
+    ...homeRoutesList,
+    ...wowRoutesList,
+    ...operationRoutesList,
+  ],
   scrollBehavior() {
     return { top: 0 };
   },
