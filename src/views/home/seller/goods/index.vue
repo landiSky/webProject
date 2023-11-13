@@ -389,7 +389,6 @@ const infoToEdit = () => {
   addModalVisible.value = true;
 };
 
-// 编辑全屏展示成功
 const onModalConfirm = () => {
   modalVisible.value = false;
   fetchData();

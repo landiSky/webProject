@@ -1,6 +1,6 @@
 <template>
   <t-modal
-    :visible="true"
+    v-model:visible="visible"
     fullscreen
     title-align="start"
     :closable="false"
@@ -10,6 +10,7 @@
     @cancel="emit('cancel')"
     @close="emit('cancel')"
     @edit="emit('edit')"
+    @back="emit('cancel')"
   >
     <template #title>
       <div style="width: 100%; text-align: center"> 商品详情 </div>
@@ -167,7 +168,7 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
-                {{ props.data.detail }}
+                {{ JSON.parse(props.data.detail).map((item: any)=>item.moduleName).join(',') }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -185,9 +186,6 @@
             >
               <t-descriptions-item label="服务交付类型">
                 {{ DeliveryTypeEnum[props.data.deliveryType] }}
-              </t-descriptions-item>
-              <t-descriptions-item label="应用服务地址">
-                {{ props.data.url }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
                 {{ PriceTypeEnum[props.data.saleType] }}
@@ -210,6 +208,12 @@
             >
               <t-descriptions-item label="交付版本名称">
                 {{ st.name }}
+              </t-descriptions-item>
+              <t-descriptions-item
+                v-if="props.data.deliveryType == 0"
+                label="应用服务地址"
+              >
+                {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="props.data.deliveryType === 0"
@@ -256,6 +260,8 @@ import {
   downGoods,
   goodsDetail,
 } from '@/api/goods-manage';
+
+const visible = ref(true);
 // 状态
 const StatusEnum: { [name: string]: any } = {
   WSJ: 3,

@@ -1,13 +1,14 @@
 <template>
   <div class="add-goods-container">
     <t-modal
-      :visible="true"
+      v-model:visible="visible"
       fullscreen
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
       @cancel="clickCancel"
       @close="clickCancel"
+      @back="clickCancel"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -61,7 +62,12 @@
             >
             </t-input>
           </t-form-item>
-          <t-form-item label="商品Logo" field="logo" class="pic-item">
+          <t-form-item
+            label="商品Logo"
+            field="logo"
+            class="pic-item"
+            validate-trigger="blur"
+          >
             <div class="file-list">
               <div v-if="formModel.logo" class="file-container">
                 <div class="file-image">
@@ -113,6 +119,7 @@
               :show-file-list="false"
               @success="uploadSuccess"
               @error="uploadError"
+              @progress="uploadProgress"
               @exceed-limit="
                 () => {
                   setFileOverLimit('logo');
@@ -120,21 +127,23 @@
               "
             >
               <template #upload-button>
-                <div :class="`tele-upload-list-item`">
-                  <div class="tele-upload-picture-card">
-                    <div class="tele-upload-picture-card-text">
-                      <IconPlus size="16" />
-                      <div
-                        style="
-                          margin-top: 8px;
-                          font-weight: 500;
-                          font-size: 12px;
-                        "
-                        >点击上传</div
-                      >
+                <t-spin size="24" :loading="logoUploading">
+                  <div :class="`tele-upload-list-item`">
+                    <div class="tele-upload-picture-card">
+                      <div class="tele-upload-picture-card-text">
+                        <IconPlus size="16" />
+                        <div
+                          style="
+                            margin-top: 8px;
+                            font-weight: 500;
+                            font-size: 12px;
+                          "
+                          >点击上传</div
+                        >
+                      </div>
                     </div>
                   </div>
-                </div>
+                </t-spin>
               </template>
             </t-upload>
           </t-form-item>
@@ -143,7 +152,12 @@
               >支持jpg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
-          <t-form-item label="详情展示图" field="detailImg" class="pic-item">
+          <t-form-item
+            label="详情展示图"
+            field="detailImg"
+            class="pic-item"
+            validate-trigger="blur"
+          >
             <div v-if="imageList.length > 0" class="file-list">
               <div v-for="url of imageList" :key="url" class="file-container">
                 <div class="file-image">
@@ -195,6 +209,7 @@
               action="/server/web/file/upload"
               accept=".png,.jpg,.jpeg,.gif,.tif"
               @success="uploadDetailSuccess"
+              @progress="uploadDetailProgress"
               @error="uploadDetailError"
               @exceed-limit="
                 () => {
@@ -203,21 +218,23 @@
               "
             >
               <template #upload-button>
-                <div :class="`tele-upload-list-item`">
-                  <div class="tele-upload-picture-card">
-                    <div class="tele-upload-picture-card-text">
-                      <IconPlus size="16" />
-                      <div
-                        style="
-                          margin-top: 8px;
-                          font-weight: 500;
-                          font-size: 12px;
-                        "
-                        >点击上传</div
-                      >
+                <t-spin size="24" :loading="detailUploading">
+                  <div :class="`tele-upload-list-item`">
+                    <div class="tele-upload-picture-card">
+                      <div class="tele-upload-picture-card-text">
+                        <IconPlus size="16" />
+                        <div
+                          style="
+                            margin-top: 8px;
+                            font-weight: 500;
+                            font-size: 12px;
+                          "
+                          >点击上传</div
+                        >
+                      </div>
                     </div>
                   </div>
-                </div>
+                </t-spin>
               </template>
             </t-upload>
           </t-form-item>
@@ -263,6 +280,7 @@
             <t-upload
               :ref="prdRef"
               :limit="1"
+              :file-list="expList"
               :multiple="false"
               action="/server/web/file/upload"
               :headers="uploadHeaders"
@@ -603,6 +621,7 @@ import {
 import { getToken } from '@/utils/auth';
 import TemplateDrawer from './template.vue';
 
+const visible = ref(true);
 const templateRef = ref();
 const step = ref(1);
 
@@ -659,6 +678,8 @@ const formModel = ref<FormInterface>({
   introduction: '',
   detail: '',
 });
+
+const expList = ref<any[]>([]);
 
 const deliveryTypeList = ref([
   { label: 'SAAS类', value: 0 },
@@ -812,7 +833,10 @@ const setFileOverLimit = (filed: string) => {
   });
 };
 
+const logoUploading = ref(false);
+
 const uploadError = (fileItem: FileItem) => {
+  logoUploading.value = false;
   const size = fileItem.file?.size ?? 0;
   if (size > 2 * 1024 * 1024) {
     Message.error(`上传失败，文件大小不要超过2M`);
@@ -821,7 +845,12 @@ const uploadError = (fileItem: FileItem) => {
   }
 };
 
+const uploadProgress = () => {
+  logoUploading.value = true;
+};
+
 const uploadSuccess = (fileItem: FileItem) => {
+  logoUploading.value = false;
   const res = fileItem.response;
   if (res?.code === 200) {
     formModel.value.logo = fileItem.response.data;
@@ -831,7 +860,14 @@ const uploadSuccess = (fileItem: FileItem) => {
   }
 };
 
+const detailUploading = ref(false);
+
+const uploadDetailProgress = () => {
+  detailUploading.value = true;
+};
+
 const uploadDetailError = (fileItem: FileItem) => {
+  detailUploading.value = false;
   formModel.value.logo = '';
   const size = fileItem.file?.size ?? 0;
   if (size > 2 * 1024 * 1024) {
@@ -842,6 +878,7 @@ const uploadDetailError = (fileItem: FileItem) => {
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
+  detailUploading.value = false;
   const res = fileItem.response;
   if (res?.code === 200) {
     imageList.value.push(fileItem.response.data);
@@ -998,15 +1035,20 @@ const getDetail = (id: any) => {
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
     formModel2.value.productId = res.id;
-    formModel2.value.deliveryType = res.deliveryType;
-    formModel2.value.saleType = res.saleType;
+    formModel2.value.deliveryType = res.deliveryType || 0;
+    formModel2.value.saleType = res.saleType || 0;
+
+    imageList.value = res.detailImg.split(',');
+    if (res.useExplain) {
+      expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
+    }
 
     if (formModel2.value.saleType === 0) {
       copyModal.value = [];
       for (const one of res.productDeliverySetList) {
         const list1: any[] = [];
         for (const two of one.accountNumList) {
-          list1.push({ accountnum: two.accountNum, price: two.price });
+          list1.push({ accountNum: two.accountNum, price: two.price });
         }
         const list2: any[] = [];
         for (const three of one.durationList) {
@@ -1070,6 +1112,7 @@ const doSave = async () => {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     const result = await formRef.value.validate();
     if (result) {
+      console.log(result);
       return false;
     }
     res = await saveGoods1(formModel.value);
@@ -1114,7 +1157,9 @@ const clickCancel = () => {
 // 保存
 const clickSave = async () => {
   const res = await doSave();
-  Message.success('保存成功');
+  if (res) {
+    Message.success('保存成功');
+  }
 };
 
 // 下一步
@@ -1148,7 +1193,7 @@ const clickUp = async () => {
   const r = await buildForm2();
   if (r) {
     saveAndUp(formModel2.value).then((res) => {
-      Message.success('保存成功');
+      Message.success('上架申请成功');
     });
   }
 };
