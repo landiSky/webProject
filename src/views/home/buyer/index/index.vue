@@ -783,8 +783,14 @@ const multiples = () => {
   router.push('/buyer/order');
 };
 onMounted(() => {
-  // 已购应用
-  authDialog();
+  if (
+    userInfoByCompany.value.certificateStatus === 1 ||
+    userInfoByCompany.value.nodeStatus === 1
+  ) {
+    // 已购应用
+    authDialog();
+  }
+
   // 订单概览
   orderlistdata();
 });
