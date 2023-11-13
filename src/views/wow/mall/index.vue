@@ -29,6 +29,7 @@
                 apiParams.deliveryType
               ),
             }"
+            @click="apiParams.deliveryType = null"
             >不限</span
           >
           <span
