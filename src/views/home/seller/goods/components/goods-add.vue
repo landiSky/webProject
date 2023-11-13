@@ -522,10 +522,7 @@
                   }"
                 />
               </t-form-item>
-              <t-form-item
-                label="一口价金额"
-                field="productDeliverySetInfoList"
-              >
+              <t-form-item label="一口价金额" field="onePiece">
                 <t-input
                   v-model="
                     copyModal2[index].productDeliverySetInfoList[0].price
@@ -971,6 +968,33 @@ const buildForm2 = async () => {
       }
     }
   }
+  if (formModel2.value.saleType === 1) {
+    for (let index = 0; index < copyModal2.value.length; index += 1) {
+      const m = copyModal2.value[index];
+      for (const p of m.productDeliverySetInfoList) {
+        if (!p.price) {
+          failed = true;
+          copyFormRef[index].value.setFields({
+            productDeliverySetInfoList: {
+              status: 'error',
+              message: `请填写一口价`,
+            },
+          });
+          break;
+        }
+        if (!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) {
+          failed = true;
+          copyFormRef[index].value.setFields({
+            productDeliverySetInfoList: {
+              status: 'error',
+              message: `一口价请填写10位以内整数`,
+            },
+          });
+          break;
+        }
+      }
+    }
+  }
   if (failed) {
     console.log('定价校验失败');
     return false;
@@ -1012,6 +1036,7 @@ const getDetail = (id: any) => {
     formModel2.value.deliveryType = res.deliveryType || 0;
     formModel2.value.saleType = res.saleType || 0;
 
+    templateRef.value.templateData = JSON.parse(res.detail);
     imageList.value = res.detailImg.split(',');
     if (res.useExplain) {
       expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
