@@ -190,7 +190,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="`/web/file/download?name=${item.productLogo}`"
+                      :src="`/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
                       alt=""
                     />
                   </div>
@@ -357,6 +357,7 @@
         </div> -->
         <div style="float: right; margin-top: 10px">
           <t-pagination
+            v-if="tableData.length > 0"
             :total="formInline.total"
             size="medium"
             :page-size="formInline.pageSize"
@@ -441,42 +442,42 @@ const state = reactive({
 // 查询 状态
 const noDatalist = ref(false);
 // list
-const tableData = ref([
-  {
-    id: '2', // 订单id
-    orderNum: '2', // 订单号
-    productName: '凉皮', // 商品名称
-    customerName: '硕', // 买家名称
-    productLogo:
-      'https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500', // 商品logo
-    merchantName: '商品所属商家名称', // 卖家名称
-    deliveryTypeName: 'SAAS', // 交付类型名称
-    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-    productPrice: 10000, // 商品价格
-    accountCount: '10个账号', // 账号数量
-    buyDuration: '5个月', // 购买时长
-    realityPrice: 9400, // 实付金额
-    orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatusName: '待审核', // 状态名称
-    orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
-    orderSteps: 3, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
-    rejectType: 0, // 拒绝类型
-    rejectReasonDetail: '未收到打款信息', // 支付凭证审核失败，展示驳回原因
-    deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
-    deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
-    couponMoney: 600, // 优惠金额
-    userMobile: null, // 联系方式
-    orderSource: 0, // 订单来源：0-本平台，1-跨平台
-    effectTime: '2023-10-24 11:11:19', // 成交时间
-    createTime: '2023-10-23 16:24:32', // 创建时间
-    dueDate: null, // 到期日期
-    voucherRejectTime: '2023-10-24 11:05:38', // 驳回时间
-    payCompleteTime: null, // 支付完成时间
-    voucherSubmitTime: '2023-10-24 11:11:19', // 提交凭证时间&买家支付时间
-    confirmDeployedTime: null, // 确认部署时间
-    merchantDeliverTime: null, // 服务商交付时间
-    attachmentAddressArr: null, // 附件地址
-  },
+const tableData: Record<string, any> = ref([
+  // {
+  //   id: '2', // 订单id
+  //   orderNum: '2', // 订单号
+  //   productName: '凉皮', // 商品名称
+  //   customerName: '硕', // 买家名称
+  //   productLogo:
+  //     'https://img2.baidu.com/it/u=131926818,980064900&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=500', // 商品logo
+  //   merchantName: '商品所属商家名称', // 卖家名称
+  //   deliveryTypeName: 'SAAS', // 交付类型名称
+  //   deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
+  //   productPrice: 10000, // 商品价格
+  //   accountCount: '10个账号', // 账号数量
+  //   buyDuration: '5个月', // 购买时长
+  //   realityPrice: 9400, // 实付金额
+  //   orderStatus: 0, // 订单状态0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+  //   orderStatusName: '待审核', // 状态名称
+  //   orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
+  //   orderSteps: 3, // 订单步骤：1-商品下单，2-买家支付，3-卖家收款，4-服务商交付，5-卖家确认交付，6-完成
+  //   rejectType: 0, // 拒绝类型
+  //   rejectReasonDetail: '未收到打款信息', // 支付凭证审核失败，展示驳回原因
+  //   deploymentStatusName: null, // 交付类型为「部署类」部署完成显示该状态
+  //   deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
+  //   couponMoney: 600, // 优惠金额
+  //   userMobile: null, // 联系方式
+  //   orderSource: 0, // 订单来源：0-本平台，1-跨平台
+  //   effectTime: '2023-10-24 11:11:19', // 成交时间
+  //   createTime: '2023-10-23 16:24:32', // 创建时间
+  //   dueDate: null, // 到期日期
+  //   voucherRejectTime: '2023-10-24 11:05:38', // 驳回时间
+  //   payCompleteTime: null, // 支付完成时间
+  //   voucherSubmitTime: '2023-10-24 11:11:19', // 提交凭证时间&买家支付时间
+  //   confirmDeployedTime: null, // 确认部署时间
+  //   merchantDeliverTime: null, // 服务商交付时间
+  //   attachmentAddressArr: null, // 附件地址
+  // },
 ]);
 // 交付类型
 const deliveryType = reactive([
