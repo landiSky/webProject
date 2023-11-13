@@ -70,6 +70,7 @@
                       @click="authentication"
                       >去认证</t-button
                     >
+
                     <div v-else class="states">
                       <p
                         style="width: 50px; text-align: center"
@@ -92,7 +93,13 @@
                           >查看详情</t-button
                         ></span
                       >
+                      <!-- <t-button type="text" @click="authentication"
+                        >去认证</t-button
+                      > -->
                     </div>
+                    <!-- <t-button type="text" @click="authentication"
+                      >去认证</t-button
+                    > -->
                   </div>
                 </div>
                 <div>
@@ -101,7 +108,15 @@
                   <span style="float: left; margin-top: 3px">企业成员管理</span>
                   <div class="btns">
                     <p style="margin: 10px 0"> 管理企业组织架构&成员权限</p>
-                    <t-button type="text" @click="distributionrole">
+                    <t-button
+                      v-if="
+                        userInfoByCompany.certificateStatus ===
+                          CompanyAuthStatus.AUTHED ||
+                        userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                      "
+                      type="text"
+                      @click="distributionrole"
+                    >
                       邀请成员/分配权限</t-button
                     >
                     <!-- <p></p> -->
@@ -634,12 +649,12 @@ const orderlistdata = () => {
 };
 // 已购应用
 const authDialog = () => {
-  console.log(userInfoByCompany.value);
+  console.log(userInfoByCompany.value, '---');
 
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
     companyId: userInfoByCompany.value?.companyId,
-    userId: userInfoByCompany.value?.id,
+    userId: userInfoByCompany.value?.id || '',
   }).then((res) => {
     console.log(res);
     authDialogVisible.value = res;
@@ -672,7 +687,8 @@ const hasdflags = () => {
 };
 // 查看详情
 const viewdetails = () => {
-  detailflag.value = true;
+  editModalVisible.value = true;
+  // detailflag.value = true;
 };
 // 认证填写完成
 const onEditModalConfirmcode = () => {
@@ -729,8 +745,25 @@ const onEditModalConfirmAlter = () => {
 const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
 
-  fileDownload({ name: fileurl, roductId: prodtId }).then((res) => {
+  fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
     console.log(res);
+    // console.log(res, '导出数据');
+    const link = document.createElement('a');
+    //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
+    const blogw = new Blob([res], {
+      // type: 'application/x-abiword;charset=utf-8'
+      // type: 'application/msword;charset=utf-8',
+      type: 'application/pdf;charset=utf-8',
+    });
+    const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
+    link.href = objectUrl;
+    // let file_name = `${moment().format(
+    //   'YYYY-MM-DD HH:mm:ss'
+    // )}的${list_name}列表.xlsx`;
+    const fileName = '使用说明';
+    link.download = fileName; //  下载的时候自定义的文件名
+    link.click();
+    window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
   });
 
   // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
