@@ -7,7 +7,7 @@
     :body-style="{ padding: 0 }"
     :loadding="loading"
     :footer="
-      props.data.status != StatusEnum.YBH && props.data.status != StatusEnum.WSJ
+      formModel.status != StatusEnum.YBH && formModel.status != StatusEnum.WSJ
     "
     class="fullscreen-modal"
     @cancel="emit('cancel')"
@@ -19,25 +19,25 @@
     <template #footer>
       <div class="footer">
         <t-button
-          v-if="props.data.status === StatusEnum.WTB"
+          v-if="formModel.status === StatusEnum.WTB"
           type="primary"
           @click="start"
           >开启同步</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.TBZ"
+          v-if="formModel.status === StatusEnum.TBZ"
           type="primary"
           status="danger"
           @click="stop"
           >停止同步</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.WTB"
+          v-if="formModel.status === StatusEnum.WTB"
           @click="Message.warning('敬请期待')"
           >打标</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.TBZ"
+          v-if="formModel.status === StatusEnum.TBZ"
           type="primary"
           @click="Message.warning('敬请期待')"
           >打标</t-button
@@ -47,16 +47,16 @@
     <div>
       <div class="status-div" :style="{ backgroundColor: statusColor }">
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.TBZ"
+          v-if="formModel.status === StatusEnum.TBZ"
           name="success"
         ></iconpark-icon>
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.WTB"
+          v-if="formModel.status === StatusEnum.WTB"
           name="wait"
         ></iconpark-icon>
-        商品同步状态：{{ StatusEnum[props.data.status] }}
+        商品同步状态：{{ StatusEnum[formModel.status] }}
         <div class="seprator-line">丨</div>
-        <div> 上架时间 {{ props.data.upShelfTime }}</div>
+        <div> 上架时间 {{ formModel.upShelfTime }}</div>
       </div>
 
       <div class="modal-body">
@@ -66,7 +66,7 @@
               <t-anchor-link href="#base">基本信息</t-anchor-link>
               <t-anchor-link href="#sale">售卖设置</t-anchor-link>
               <t-anchor-link
-                v-for="(_, index) of props.data.productDeliverySetList"
+                v-for="(_, index) of formModel.productDeliverySetList"
                 :key="index"
                 :href="'#st' + index"
               >
@@ -91,22 +91,22 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ props.data.name }}
+                {{ formModel.name }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
-                {{ props.data.id }}
+                {{ formModel.id }}
               </t-descriptions-item>
               <t-descriptions-item label="商家名称">
-                {{ props.data.companyName }}
+                {{ formModel.companyName }}
               </t-descriptions-item>
               <t-descriptions-item label="所属平台">
-                {{ '-' }}
+                {{ formModel.platformOperationCompany }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
                 <img
                   class="first-img"
-                  :alt="props.data.logo"
-                  :src="`/web/file/download?name=${props.data.logo}`"
+                  :alt="formModel.logo"
+                  :src="`/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
@@ -116,31 +116,39 @@
                   :key="url"
                   :alt="url"
                   class="first-img"
-                  :src="`/web/file/download?name=${url}`"
+                  :src="`/server/web/file/download?name=${url}&productId=${formModel.id}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
               <t-descriptions-item label="商品分类">
-                {{ classDes }}
+                {{ formModel.productTypeParentName }}/{{
+                  formModel.productTypeName
+                }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
                 {{ '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
-                {{ TypeEnum[props.data.type] }}
+                {{ TypeEnum[formModel.type] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品简介">
-                {{ props.data.introduction }}
+                {{ formModel.introduction }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
-                  :href="`/web/file/download?name=${props.data.useExplain}`"
+                  :href="`/server/web/file/download?name=${formModel.useExplain}&productId=${formModel.id}`"
                   download
                   >产品使用说明</a
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
-                {{ props.data.detail }}
+                {{
+                  formModel.detail
+                    ? JSON.parse(formModel.detail)
+                        .map((item: any) => item.moduleName)
+                        .join(',')
+                    : '-'
+                }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -157,14 +165,14 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[props.data.deliveryType] }}
+                {{ DeliveryTypeEnum[formModel.deliveryType] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[props.data.saleType] }}
+                {{ PriceTypeEnum[formModel.saleType] }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              v-for="(st, index) of props.data.productDeliverySetList"
+              v-for="(st, index) of formModel.productDeliverySetList"
               :id="'st' + index"
               :key="index"
               :title="'交付版本' + (index + 1)"
@@ -182,13 +190,13 @@
                 {{ st.name }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType == 0"
+                v-if="formModel.deliveryType == 0"
                 label="应用服务地址"
               >
                 {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 0"
+                v-if="formModel.deliveryType === 0"
                 label="套餐定价设置"
               >
                 <div v-for="(p, pIndex) of st.accountNumList" :key="p">
@@ -197,20 +205,20 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 0"
+                v-if="formModel.deliveryType === 0"
                 label="可选购买时长"
               >
                 {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 1"
+                v-if="formModel.deliveryType === 1"
                 label="一口价金额"
               >
                 {{ st.accountNumList[0].price }} 元
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a
-                  :href="`/web/file/download?name=${props.data.useExplain}`"
+                  :href="`/server/web/file/download?name=${formModel.useExplain}`"
                   download
                   >应用秘钥</a
                 >
@@ -224,7 +232,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
+import { ref, defineProps, defineEmits, onMounted, computed } from 'vue';
 import { goodsDetail, startSync, stopSync } from '@/api/operation/sync-class';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -288,7 +296,7 @@ const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
 const formRef = ref();
 
-const formModel = ref();
+const formModel = ref<Record<string, any>>({});
 const detailImageList = ref<string[]>([]);
 
 const refreshData = async () => {
@@ -365,10 +373,10 @@ const getDetail = () => {
 };
 
 const statusColor = computed(() => {
-  if (props.data.status === StatusEnum.YSJ) {
+  if (formModel.value.status === StatusEnum.YSJ) {
     return '#E8F4FF';
   }
-  if (props.data.status === StatusEnum.YSJ) {
+  if (formModel.value.status === StatusEnum.YSJ) {
     return '#FFECE8';
   }
   return '#FFFAE8';
