@@ -117,8 +117,14 @@
                   style="margin-left: 20px; padding: 7px 15px"
                   @click="viewdetails"
                   >去认证</t-button
-                ></p
-              >
+                >
+              </p>
+              <!-- <t-button
+                type="primary"
+                style="margin-left: 20px; padding: 7px 15px"
+                @click="viewdetails"
+                >去认证</t-button
+              > -->
             </div>
           </div>
         </div>

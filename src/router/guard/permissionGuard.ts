@@ -91,7 +91,9 @@ export function createPermissionGuard(router: Router) {
         .then((data: Record<string, any>) => {
           console.log('permissionGuard.ts:60', data.accessToken);
           setToken(data.accessToken);
-          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
+
+          const lastUri = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
+          window.location.href = `${window.location.protocol}//${window.location.host}/${lastUri}`;
           console.log('permissionGuard.ts:61', data.accessToken);
         })
         .catch((err: any) => {

@@ -88,43 +88,46 @@
         </t-form-item>
         <!-- @before-upload="beforeUpload" -->
         <t-form-item label="营业执照" field="businessLicense">
-          <t-upload
-            :file-list="
-              formModel.businessLicense
-                ? [
-                    {
-                      url: `/server/web/file/download?name=${formModel.businessLicense}`,
-                    },
-                  ]
-                : []
-            "
-            list-type="picture-card"
-            :headers="uploadHeaders"
-            action="/server/web/file/upload"
-            :limit="1"
-            style="width: 150px; height: 100px"
-            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
-            :before-upload="beforeUpload"
-            @success="uploadSuccess"
-          >
-            <template #upload-button>
-              <div
-                style="
-                  width: 150px;
-                  height: 100px;
-                  color: var(--color-text-1);
-                  text-align: center;
-                  background-color: var(--color-fill-2);
-                  border: 1px dashed var(--color-fill-4);
-                "
-              >
-                <div style="margin-top: 30px">
-                  <div> <IconPlus /></div>
-                  <div style="">点击上传</div>
+          <t-form-item :hide-label="true">
+            <t-upload
+              :file-list="
+                formModel.businessLicense
+                  ? [
+                      {
+                        url: `/server/web/file/download?name=${formModel.businessLicense}`,
+                      },
+                    ]
+                  : []
+              "
+              list-type="picture-card"
+              :headers="uploadHeaders"
+              action="/server/web/file/upload"
+              :limit="1"
+              style="width: 150px; height: 100px"
+              accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+              :before-upload="beforeUpload"
+              @success="uploadSuccess"
+            >
+              <!-- @change="changeclick" -->
+              <template #upload-button>
+                <div
+                  style="
+                    width: 150px;
+                    height: 100px;
+                    color: var(--color-text-1);
+                    text-align: center;
+                    background-color: var(--color-fill-2);
+                    border: 1px dashed var(--color-fill-4);
+                  "
+                >
+                  <div style="margin-top: 30px">
+                    <div> <IconPlus /></div>
+                    <div style="">点击上传</div>
+                  </div>
                 </div>
-              </div>
-            </template>
-          </t-upload>
+              </template>
+            </t-upload>
+          </t-form-item>
         </t-form-item>
 
         <p style="margin: -10px 0 20px 20%; color: #86909c">
@@ -363,22 +366,22 @@ const formRules: any = {
     { required: true, message: '请输入法人姓名' },
     { maxLength: 10, message: '长度不超过20个字符' },
   ],
-  // businessLicense: [
-  //   {
-  //     required: true,
-  //     message: '请上传营业执照',
-  //     validator: (value: any, cb: any) => {
-  //       console.log(
-  //         'edit-modal-fullscreen.vue:387',
-  //         formModel.value.businessLicense
-  //       );
-  //       // if (!formModel.value.businessLicense) {
-  //       //   return cb('请上传营业执照');
-  //       // }
-  //       return cb();
-  //     },
-  //   },
-  // ],
+  businessLicense: [
+    {
+      required: true,
+      message: '请上传营业执照',
+      validator: (value: any, cb: any) => {
+        console.log(
+          'edit-modal-fullscreen.vue:387',
+          formModel.value.businessLicense
+        );
+        if (!formModel.value.businessLicense) {
+          return cb('请上传营业执照');
+        }
+        return cb();
+      },
+    },
+  ],
   contactName: [
     { required: true, message: '请输入联系人姓名' },
     { maxLength: 10, message: '长度不超过10个字符' },
@@ -442,17 +445,21 @@ const getUserDetail = () => {
   //   });
 };
 
-// @ts-ignore
+// @ts-ignore 营业执照
 const uploadSuccess = (fileItem: FileItem) => {
   console.log('=====uploadSuccess', fileItem);
   const res = fileItem.response;
   if (res?.code === 200) {
+    console.log(fileItem.response.data);
+
     formModel.value.businessLicense = fileItem.response.data;
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
   }
 };
+// 营业执照
+
 // @ts-ignore
 const uploadSuccessz = (fileItem: FileItem) => {
   console.log('edit-modal-fullscreen.vue:490====uploadSuccessz');
@@ -497,30 +504,25 @@ const onConfirm = (done: (closed: boolean) => void) => {
     if (!errors) {
       // setFields;
       console.log(formModel.value, 'closed');
-      authRepeat({ creditCode: formModel.value.creditCode })
-        .then((res) => {
-          if (res.data.code === 200) {
-            console.log('edit-modal-fullscreen.vue:504', formModel.value);
-            authSubmit(formModel.value)
-              .then((res) => {
-                Message.success('认证已提交');
-                userStore.getUserBasicInfo();
-                emit('confirm');
-                done(true);
-              })
-              .catch((err) => {
-                done(false);
-              });
-          } else {
-            Message.error('信用代码已存在');
-          }
-        })
-        .catch(() => {});
-
-      // mock数据
-      // Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-      // Message.success('认证已提交');
-      // done(true);
+      // authRepeat({ creditCode: formModel.value.creditCode })
+      //   .then((res) => {
+      //     if (res.data.code === 200) {
+      //       console.log('edit-modal-fullscreen.vue:504', formModel.value);
+      //       authSubmit(formModel.value)
+      //         .then((res) => {
+      //           Message.success('认证已提交');
+      //           userStore.getUserBasicInfo();
+      //           emit('confirm');
+      //           done(true);
+      //         })
+      //         .catch((err) => {
+      //           done(false);
+      //         });
+      //     } else {
+      //       Message.error('信用代码已存在');
+      //     }
+      //   })
+      //   .catch(() => {});
     } else {
       done(false);
     }

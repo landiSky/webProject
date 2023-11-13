@@ -4,6 +4,7 @@ const operationRoutesList = [
   {
     path: '/goods',
     component: PAGE_LAYOUT,
+    redirect: '/goods/manage',
     children: [
       {
         path: '/goods/manage',

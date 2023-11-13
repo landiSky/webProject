@@ -62,7 +62,7 @@ export const useUserStore = defineStore({
       //     'ROUTE_SELLER_GOODS',
       //   ], // 菜单code
       // };
-      apiUserProfile({ companyId })
+      apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
           console.log(data);
           this.userInfoByCompany = data || {

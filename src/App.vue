@@ -24,11 +24,12 @@ const opearationRouteList = [
 watch(
   () => userStore.updateMenu,
   () => {
-    console.log('App.vue:15===更新菜单');
     const { isAdmin } = userStore.userInfo || {};
+    console.log('App.vue:15===更新菜单', isAdmin, userStore.userInfo);
     const authList = isAdmin // 是后台管理员的话显示运营后台菜单
       ? opearationRouteList
       : userStore.userInfoByCompany?.menuCodes || [];
+    console.log('App.vue:31', authList);
     useMenuStore().genLeftMenu(authList);
   },
   {
