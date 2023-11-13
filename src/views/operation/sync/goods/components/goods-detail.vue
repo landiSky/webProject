@@ -159,9 +159,6 @@
               <t-descriptions-item label="服务交付类型">
                 {{ DeliveryTypeEnum[props.data.deliveryType] }}
               </t-descriptions-item>
-              <t-descriptions-item label="应用服务地址">
-                {{ props.data.url }}
-              </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
                 {{ PriceTypeEnum[props.data.saleType] }}
               </t-descriptions-item>
@@ -183,6 +180,12 @@
             >
               <t-descriptions-item label="交付版本名称">
                 {{ st.name }}
+              </t-descriptions-item>
+              <t-descriptions-item
+                v-if="props.data.deliveryType == 0"
+                label="应用服务地址"
+              >
+                {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="props.data.deliveryType === 0"

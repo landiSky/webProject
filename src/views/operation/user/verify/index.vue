@@ -184,24 +184,6 @@ const state = reactive<{
   tableData: [],
 });
 
-const showDetail = (
-  record: Record<string, string>,
-  entType: number,
-  actionType: number
-) => {
-  if (entType === EntTypeEnum.ENTPOINT) {
-    // TODO 跳转二级系统
-    console.log(actionType);
-    return;
-  }
-  router.push({
-    name: 'verify-detail',
-    query: {
-      id: record.companyId ?? 0,
-    },
-  });
-};
-
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
   console.log(dataIndex);
   const f = filteredValues[0];
@@ -311,6 +293,27 @@ function fetchData() {
     });
 }
 
+const showDetail = (
+  record: Record<string, string>,
+  entType: number,
+  actionType: number
+) => {
+  if (entType === EntTypeEnum.ENTPOINT) {
+    // TODO 跳转二级系统
+    console.log(actionType);
+    return;
+  }
+  router
+    .push({
+      name: 'verify-detail',
+      query: {
+        id: record.companyId ?? 0,
+      },
+    })
+    .then(() => {
+      fetchData();
+    });
+};
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
