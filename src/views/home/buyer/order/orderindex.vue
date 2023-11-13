@@ -634,7 +634,7 @@ const init = () => {
     pageSize: formInline.pageSize,
     pageNum: formInline.pageNum,
     // userInfoByCompany.companyId
-    userCompanyId: String(userInfoByCompany.value.companyId),
+    userCompanyId: String(userInfoByCompany.value?.companyId),
   }).then((res) => {
     console.log(res);
     tableData.value = res.records;

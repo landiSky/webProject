@@ -281,11 +281,8 @@ import right03 from '@/assets/images/home/right03.png';
 import rightlog from '@/assets/images/home/rightlog.png';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // userInfo.value?.companyId
 
 const nodeState2class = {
@@ -328,7 +325,7 @@ const visible = ref(true);
 //   },
 // });
 const init = () => {
-  authentication({ companyId: String(userInfoByCompany.companyId) })
+  authentication({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
       console.log(res, 'res');
       // stateles.value = res.data === undefined ? {} : res.data;

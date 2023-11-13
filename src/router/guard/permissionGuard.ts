@@ -77,20 +77,30 @@ export function createPermissionGuard(router: Router) {
       formData.append('grant_type', 'authorization_code');
       formData.append('scope', 'all');
       formData.append('code', code);
-      formData.append('redirect_uri', redirectUri);
+
+      formData.append(
+        'redirect_uri',
+        import.meta.env.DEV
+          ? `${import.meta.env.VITE_APP_DEV_HOST}`
+          : redirectUri
+      ); // TODO 只做本地测试这样写，上线
       formData.append('client_id', clientId);
       formData.append('client_secret', clientSecret);
 
       apiLoginToken(formData)
-        .then((data) => {
+        .then((data: Record<string, any>) => {
           console.log('permissionGuard.ts:60', data.accessToken);
           setToken(data.accessToken);
-
+          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
           console.log('permissionGuard.ts:61', data.accessToken);
         })
+        .catch((err: any) => {
+          console.log('permissionGuard.ts:89==获取 token 异常', err);
+          window.location.href = `${window.location.protocol}//${window.location.host}/#/wow`;
+        })
         .finally(() => {
-          console.log('permissionGuard.ts:91=======', window.location.host);
-          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
+          // console.log('permissionGuard.ts:91=======', window.location.host);
+          // window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
           // next({
           //   path: '/buyer/index',
           //   query: {},
@@ -99,8 +109,8 @@ export function createPermissionGuard(router: Router) {
     } else if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      next('/login');
-      // userStore.jumpToLogin();
+      // next('/login');
+      userStore.jumpToLogin();
     }
   });
 }

@@ -485,11 +485,8 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProductId = ref();
@@ -553,45 +550,45 @@ const images = reactive([
 
 // //已购应用
 const authDialogVisible: Record<string, any> = ref([
-  {
-    id: '2',
-    orderNum: '2',
-    productId: '1', // 商品id
-    productName: '凉皮', // 商品名称
-    introduction:
-      '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
-    useExplain: '', // 使用说明
-    customerName: '硕',
-    productLogo:
-      'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
-    merchantName: '商品所属商家名称',
-    deliveryTypeName: 'SAAS',
-    deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-    productPrice: 10000,
-    accountCount: '10个账号',
-    buyDuration: '5个月',
-    realityPrice: 9400,
-    orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatusName: '待审核',
-    orderStatusInfo: null,
-    orderSteps: 3, // 订单步骤
-    rejectType: 0,
-    rejectReasonDetail: '未收到打款信息',
-    deploymentStatusName: null,
-    deploymentStatusCode: null,
-    couponMoney: 600,
-    userMobile: null,
-    orderSource: 0,
-    effectTime: null,
-    createTime: '2023-10-23 16:24:32',
-    dueDate: null,
-    voucherRejectTime: '2023-10-24 11:05:38',
-    payCompleteTime: null,
-    voucherSubmitTime: '2023-10-24 11:11:19',
-    confirmDeployedTime: null,
-    merchantDeliverTime: null,
-    attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
-  },
+  // {
+  //   id: '2',
+  //   orderNum: '2',
+  //   productId: '1', // 商品id
+  //   productName: '凉皮', // 商品名称
+  //   introduction:
+  //     '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
+  //   useExplain: '', // 使用说明
+  //   customerName: '硕',
+  //   productLogo:
+  //     'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
+  //   merchantName: '商品所属商家名称',
+  //   deliveryTypeName: 'SAAS',
+  //   deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
+  //   productPrice: 10000,
+  //   accountCount: '10个账号',
+  //   buyDuration: '5个月',
+  //   realityPrice: 9400,
+  //   orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+  //   orderStatusName: '待审核',
+  //   orderStatusInfo: null,
+  //   orderSteps: 3, // 订单步骤
+  //   rejectType: 0,
+  //   rejectReasonDetail: '未收到打款信息',
+  //   deploymentStatusName: null,
+  //   deploymentStatusCode: null,
+  //   couponMoney: 600,
+  //   userMobile: null,
+  //   orderSource: 0,
+  //   effectTime: null,
+  //   createTime: '2023-10-23 16:24:32',
+  //   dueDate: null,
+  //   voucherRejectTime: '2023-10-24 11:05:38',
+  //   payCompleteTime: null,
+  //   voucherSubmitTime: '2023-10-24 11:11:19',
+  //   confirmDeployedTime: null,
+  //   merchantDeliverTime: null,
+  //   attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
+  // },
 ]);
 // 订单概览
 const orderlist = ref<Record<string, any>>({
@@ -641,8 +638,8 @@ const authDialog = () => {
 
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
-    companyId: userInfoByCompany.value.companyId,
-    userId: userInfoByCompany.value.id,
+    companyId: userInfoByCompany.value?.companyId,
+    userId: userInfoByCompany.value?.id,
   }).then((res) => {
     console.log(res);
     authDialogVisible.value = res;

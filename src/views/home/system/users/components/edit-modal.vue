@@ -150,7 +150,7 @@ const formRules = {
           } else if (value.length === 11) {
             memberPhone({
               type: '0',
-              companyId: userInfoByCompany.companyId,
+              companyId: userInfoByCompany.value.companyId,
               phone: state.formModel.phone,
             }).then((res) => {
               if (res.data.code === 200) {
@@ -175,7 +175,7 @@ const init = () => {
   rolelist({
     pageSize: 1000,
     pageNum: 1,
-    companyId: userInfoByCompany.companyId,
+    companyId: userInfoByCompany.value.companyId,
   })
     .then((res: any) => {
       console.log(res);
@@ -194,7 +194,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       menberAdd({
         id: state.formModel.id,
         memberId: state.formModel.memberId,
-        companyId: userInfoByCompany.companyId,
+        companyId: userInfoByCompany.value.companyId,
         username: state.formModel.username,
         roleList: state.formModel.roleList,
         phone: state.formModel.phone,
@@ -242,7 +242,7 @@ onMounted(() => {
   rolelist({
     pageSize: 1000,
     pageNum: 1,
-    companyId: userInfoByCompany.companyId,
+    companyId: userInfoByCompany.value.companyId,
   })
     .then((res: any) => {
       console.log(res);

@@ -6,6 +6,7 @@ const homeRoutesList = [
   {
     path: '/buyer',
     component: PAGE_LAYOUT,
+    redirect: '/buyer/index',
     children: [
       {
         path: '/buyer/index',

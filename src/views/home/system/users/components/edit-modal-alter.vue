@@ -182,7 +182,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       menberChangeAdmin({
         newAdminMemberId: state.formModel.roleDesc,
         code: state.formModel.verification,
-        companyId: userInfoByCompany.companyId,
+        companyId: userInfoByCompany.value?.companyId,
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
       }).then((res) => {
@@ -227,32 +227,36 @@ const administratorled = () => {
   //   phone: "18839014162",
   //   memberId: 1717067979902607400
   // },
-  menberGetadmin({ companyId: userInfoByCompany.companyId }).then((res) => {
-    console.log(res, 'res');
+  menberGetadmin({ companyId: userInfoByCompany.value?.companyId }).then(
+    (res) => {
+      console.log(res, 'res');
 
-    state.formModel.roleName = res.username;
-    state.formModel.phone = res.phone;
-  });
+      state.formModel.roleName = res.username;
+      state.formModel.phone = res.phone;
+    }
+  );
 };
 // 变更管理员- 查找企业下普通用户成员
 const userNamelist = () => {
-  menberNormal({ companyId: userInfoByCompany.companyId }).then((res) => {
-    console.log(res);
+  menberNormal({ companyId: userInfoByCompany.value?.companyId }).then(
+    (res) => {
+      console.log(res);
 
-    inputSelect.value = res;
-    //   [
-    //   {
-    //     userName: 'kw', // 用户名
-    //     phone: '18839014161', // 手机号
-    //     memberId: 1, // 成员id
-    //   },
-    //   {
-    //     userName: 'zh', // 用户名
-    //     phone: '18839014163', // 手机号
-    //     memberId: 1717072245149118500, // 成员id
-    //   },
-    // ];
-  });
+      inputSelect.value = res;
+      //   [
+      //   {
+      //     userName: 'kw', // 用户名
+      //     phone: '18839014161', // 手机号
+      //     memberId: 1, // 成员id
+      //   },
+      //   {
+      //     userName: 'zh', // 用户名
+      //     phone: '18839014163', // 手机号
+      //     memberId: 1717072245149118500, // 成员id
+      //   },
+      // ];
+    }
+  );
 };
 onMounted(() => {
   administratorled();

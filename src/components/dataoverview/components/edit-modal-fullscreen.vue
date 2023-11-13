@@ -293,11 +293,8 @@ import {
 } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -317,8 +314,8 @@ const uploadHeaders = {
 };
 
 const formModel = ref({
-  id: userInfo.value.companyId,
-  userId: userInfo.value.userId,
+  id: userInfo.value?.companyId,
+  userId: userInfo.value?.userId,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -390,7 +387,8 @@ const formRules: any = {
     { required: true, message: '请输入联系人身份证号' },
     { maxLength: 18, message: '长度不超过18个字符' },
     {
-      match: /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
+      match:
+        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
@@ -420,7 +418,7 @@ const goback = () => {
 };
 const getUserDetail = () => {
   // userInfo.value?.companyId
-  authDetails({ companyId: String(userInfoByCompany.companyId) })
+  authDetails({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
       console.log(res);
       //  @ts-ignore

@@ -49,6 +49,31 @@ export default defineConfig(({ command, mode }) => {
           agent: new https.Agent(),
           followRedirects: true,
         },
+        '/api/': {
+          target: 'http://operation-platform-gateway-a:80/',
+          // target: `http://10.14.148.103:9191`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+          followRedirects: true,
+        },
+        '/inventory': {
+          // target: `http://10.14.150.182:9091`, // 亚涛
+          // target: `http://10.14.148.103:9191`, // 凯文
+          // target: `http://10.14.150.253:9092`, // 鹏飞
+          target: `http://operation-platform-gateway-a.dev.idx.space`,
+          changeOrigin: true,
+          agent: new https.Agent(),
+          // rewrite: (path) => path.replace(/^\/sync/, ''),
+        },
+        '/operation': {
+          target: 'http://operation-platform-gateway-a.dev.idx.space',
+          // target: `http://10.14.150.182:9091`, // 亚涛
+          // target: `http://10.14.148.103:9191`, // 凯文
+          // target: `http://10.14.150.253:9092`, // 鹏飞
+          changeOrigin: true,
+          agent: new https.Agent(),
+          // rewrite: (path) => path.replace(/^\/api/, ''),
+        },
       },
     },
     plugins: [

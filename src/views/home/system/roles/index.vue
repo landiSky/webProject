@@ -211,7 +211,7 @@ function fetchData() {
     pageSize: pagination.pageSize,
     pageNum: pagination.current,
     roleName: state.formModel.name,
-    companyId: userInfoByCompany.companyId,
+    companyId: userInfoByCompany.value?.companyId,
   })
     .then((res: any) => {
       console.log(res);

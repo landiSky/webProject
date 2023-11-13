@@ -1,0 +1,353 @@
+<template>
+  <t-page-header flex title="认证管理" :show-back="false">
+    <t-row :wrap="false">
+      <t-col flex="auto">
+        <t-form :model="state.formModel">
+          <t-row :gutter="12" justify="start">
+            <t-col flex="240px">
+              <t-form-item field="name" hide-label>
+                <t-input
+                  v-model="state.formModel.account"
+                  placeholder="请输入企业主账号"
+                  allow-clear
+                />
+              </t-form-item>
+            </t-col>
+            <t-col flex="240px">
+              <t-form-item field="name" hide-label>
+                <t-input
+                  v-model="state.formModel.name"
+                  placeholder="请输入企业名称"
+                  allow-clear
+                />
+              </t-form-item>
+            </t-col>
+
+            <t-col flex="70px">
+              <t-button type="primary" @click="clickSearchBtn"> 查询 </t-button>
+            </t-col>
+            <t-col flex="68px">
+              <t-button @click="handleReset"> 重置 </t-button>
+            </t-col>
+          </t-row>
+        </t-form>
+      </t-col>
+    </t-row>
+
+    <t-table
+      row-key="id"
+      :loading="state.tableLoading"
+      :columns="columns"
+      :data="state.tableData"
+      :pagination="{
+        'show-total': true,
+        'show-jumper': true,
+        'show-page-size': true,
+        'hide-on-single-page': hideOnSinglePage,
+        ...pagination,
+      }"
+      bordered
+      @page-change="onPageChange"
+      @page-size-change="onPageSizeChange"
+      @filter-change="filterChange"
+    >
+      <template #entStatus="{ record }">
+        <span
+          v-if="record.companyStatus === EntStatusEnum.YBH"
+          class="circle red"
+        ></span>
+        <span
+          v-else-if="record.companyStatus === EntStatusEnum.WRZ"
+          class="circle gray"
+        ></span>
+        <span
+          v-else-if="record.companyStatus === EntStatusEnum.DSH"
+          class="circle orange"
+        ></span>
+        <span v-else class="circle green"></span>
+        {{ EntStatusEnum[record.companyStatus] }}
+        <span
+          v-if="record.companyStatus === EntStatusEnum.DSH"
+          class="action"
+          @click="showDetail(record, EntTypeEnum.ENT, ActionTypeEnum.VERIFY)"
+          >去审核</span
+        >
+        <span v-else-if="record.companyStatus === EntStatusEnum.WRZ"></span>
+        <span
+          v-else
+          class="action"
+          @click="showDetail(record, EntTypeEnum.ENT, ActionTypeEnum.DETAIL)"
+          >详情</span
+        >
+      </template>
+      <template #entPointStatus="{ record }">
+        <span
+          v-if="record.nodeStatus === EntStatusEnum.YBH"
+          class="circle red"
+        ></span>
+        <span
+          v-else-if="record.nodeStatus === EntStatusEnum.WRZ"
+          class="circle gray"
+        ></span>
+        <span
+          v-else-if="record.nodeStatus === EntStatusEnum.DSH"
+          class="circle orange"
+        ></span>
+        <span v-else class="circle green"></span>
+        {{ EntStatusEnum[record.nodeStatus] }}
+        <span
+          v-if="record.nodeStatus === EntStatusEnum.DSH"
+          class="action"
+          @click="
+            showDetail(record, EntTypeEnum.ENTPOINT, ActionTypeEnum.VERIFY)
+          "
+          >去审核</span
+        >
+        <span v-else-if="record.nodeStatus === EntStatusEnum.WRZ"></span>
+        <span
+          v-else
+          class="action"
+          @click="
+            showDetail(record, EntTypeEnum.ENTPOINT, ActionTypeEnum.DETAIL)
+          "
+          >详情</span
+        >
+      </template>
+    </t-table>
+  </t-page-header>
+</template>
+
+<script setup lang="ts">
+import { reactive, computed, onMounted } from 'vue';
+import { verifyList } from '@/api/operation/user';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// 状态
+const EntStatusEnum: { [name: string]: any } = {
+  WRZ: 3,
+  DSH: 0,
+  YBH: 2,
+  YRZ: 1,
+  3: '未认证',
+  0: '待审核',
+  2: '已驳回',
+  1: '已认证',
+};
+
+const EntStatusList = [
+  {
+    text: '全部',
+    value: null,
+  },
+  {
+    text: '未认证',
+    value: 3,
+  },
+  {
+    text: '待审核',
+    value: 0,
+  },
+  {
+    text: '已驳回',
+    value: 2,
+  },
+  {
+    text: '已认证',
+    value: 1,
+  },
+];
+
+const EntTypeEnum: { [name: string]: any } = {
+  ENT: 0, // 企业
+  ENTPOINT: 1, // 企业节点
+};
+
+const ActionTypeEnum: { [name: string]: any } = {
+  DETAIL: 0, // 详情
+  VERIFY: 1, // 审核
+};
+
+const defaultFormModel: Record<string, string> = {
+  account: '',
+  name: '',
+};
+
+const state = reactive<{
+  tableLoading: boolean;
+  formModel: Record<string, any>;
+  tableData: Record<string, any>[];
+}>({
+  tableLoading: false,
+  formModel: { ...defaultFormModel },
+  tableData: [],
+});
+
+const showDetail = (
+  record: Record<string, string>,
+  entType: number,
+  actionType: number
+) => {
+  if (entType === EntTypeEnum.ENTPOINT) {
+    // TODO 跳转二级系统
+    console.log(actionType);
+    return;
+  }
+  router.push({
+    name: 'verify-detail',
+    query: {
+      id: record.companyId ?? 0,
+    },
+  });
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex);
+  const f = filteredValues[0];
+  if (typeof f === 'number') {
+    console.log(f);
+  } else {
+    console.log('clear');
+  }
+};
+
+const columns = [
+  {
+    title: '企业主账号',
+    dataIndex: 'phone',
+    ellipsis: true,
+    tooltip: true,
+    width: 170,
+    fixed: 'left',
+  },
+  {
+    title: '企业名称',
+    dataIndex: 'companyName',
+    ellipsis: true,
+    tooltip: true,
+    width: 250,
+    fixed: 'left',
+  },
+  {
+    title: '企业账号数',
+    dataIndex: 'memberCount',
+    ellipsis: true,
+    tooltip: true,
+    sortable: {
+      sortDirections: ['ascend', 'descend'],
+    },
+    width: 170,
+  },
+
+  {
+    title: '发布商品数',
+    dataIndex: 'productCount',
+    ellipsis: true,
+    tooltip: true,
+    width: 170,
+    sortable: {
+      sortDirections: ['ascend', 'descend'],
+    },
+  },
+  {
+    title: '企业认证状态',
+    dataIndex: 'companyStatus',
+    ellipsis: true,
+    tooltip: true,
+    slotName: 'entStatus',
+    width: 220,
+    filterable: {
+      filters: EntStatusList,
+    },
+  },
+  {
+    title: '企业节点认证状态',
+    dataIndex: 'nodeStatus',
+    ellipsis: true,
+    tooltip: true,
+    slotName: 'entPointStatus',
+    width: 220,
+    filterable: {
+      filters: EntStatusList,
+    },
+  },
+];
+
+const pagination = reactive<{
+  current: number; // 当前页码
+  pageSize: number;
+  total: number;
+}>({
+  current: 1,
+  pageSize: 10,
+  total: 0,
+});
+
+// 分页，总页数不到10页，不显示分页器
+const hideOnSinglePage = computed(() => pagination.total <= 10);
+
+function fetchData() {
+  const { current, pageSize } = pagination;
+  const params = {
+    pageNum: current, // 从0开始
+    pageSize,
+    companyName: state.formModel.name,
+    phone: state.formModel.account,
+    product: 1,
+    member: 1,
+  };
+  // 接口请求
+  state.tableLoading = true;
+  verifyList(params)
+    .then((res: any) => {
+      if (res.code === 200) {
+        state.tableData = res.data.records;
+        pagination.total = res.data.total;
+      }
+    })
+    .finally(() => {
+      state.tableLoading = false;
+    });
+}
+
+// 每页显示条数发生变化
+const onPageSizeChange = (size: number) => {
+  pagination.pageSize = size;
+  pagination.current = 1;
+  fetchData();
+};
+
+// 页码发生变化
+const onPageChange = (current: number) => {
+  pagination.current = current;
+  fetchData();
+};
+
+const clickSearchBtn = () => {
+  onPageChange(1);
+};
+
+// 重置后，触发一次查询
+const handleReset = () => {
+  // 如果都没有默认项，可以使用state.formModel.resetFields()函数
+  state.formModel = { ...defaultFormModel };
+  clickSearchBtn();
+};
+
+onMounted(() => {
+  fetchData();
+});
+</script>
+
+<style lang="less" scoped>
+.action {
+  color: #1664ff;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: PingFang SC;
+  font-style: normal;
+  line-height: 20px;
+  cursor: pointer;
+}
+</style>

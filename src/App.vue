@@ -10,11 +10,26 @@ import { useMenuStore } from '@/store/modules/menu';
 
 const userStore = useUserStore();
 
+const opearationRouteList = [
+  'ROUTE_GOODS',
+  'ROUTE_GOODS_MANAGE',
+  'ROUTE_GOODS_OBSERVE',
+  'ROUTE_USER',
+  'ROUTE_USER_VERIFY',
+  'ROUTE_SYNC',
+  'ROUTE_SYNC_CLASS',
+  'ROUTE_SYNC_GOODS',
+];
+
 watch(
   () => userStore.updateMenu,
   () => {
     console.log('App.vue:15===更新菜单');
-    useMenuStore().genLeftMenu(userStore.userInfoByCompany?.menuCodes || []);
+    const { isAdmin } = userStore.userInfo || {};
+    const authList = isAdmin // 是后台管理员的话显示运营后台菜单
+      ? opearationRouteList
+      : userStore.userInfoByCompany?.menuCodes || [];
+    useMenuStore().genLeftMenu(authList);
   },
   {
     immediate: true,

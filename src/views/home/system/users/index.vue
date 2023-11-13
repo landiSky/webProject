@@ -271,7 +271,7 @@ function fetchData() {
     pageSize: pagination.pageSize,
     pageNum: pagination.current,
     username: state.formModel.name,
-    companyId: userInfoByCompany.companyId,
+    companyId: userInfoByCompany.value?.companyId,
   }).then((res) => {
     console.log(res);
     state.tableData = res.records || [];
