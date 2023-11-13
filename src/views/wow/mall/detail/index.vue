@@ -334,9 +334,9 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
 
-      // templateList.value = JSON.parse(data.detail);
-      const tt = JSON.parse(data.detail);
-      templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
+      templateList.value = JSON.parse(data.detail);
+      // const tt = JSON.parse(data.detail);
+      // templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
 
       console.log('index.vue:285', templateList.value);
       const { saleType } = data;
