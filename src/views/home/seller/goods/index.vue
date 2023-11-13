@@ -259,7 +259,7 @@ const columns = [
   },
   {
     title: '商品ID',
-    dataIndex: 'productId',
+    dataIndex: 'id',
     ellipsis: true,
     tooltip: true,
     width: 200,

@@ -114,7 +114,7 @@ export const useUserStore = defineStore({
 
         this.userInfo = userInfo as any;
 
-        const { companyId, companyList } = userInfo;
+        const { companyId, companyList, isAdmin } = userInfo;
         // const { companyList } = userInfo;
 
         //   {
@@ -123,6 +123,11 @@ export const useUserStore = defineStore({
         //     "companyId": 1391254317244416, //企业id 必传
         //     "companyName": "y1t企业" //企业名称
         // }
+
+        if (isAdmin) {
+          this.updateMenu = !this.updateMenu;
+          return userInfo;
+        }
         if (Array.isArray(companyList) && companyList.length) {
           const resultList = companyList.filter(
             (company: Record<string, any>) =>
