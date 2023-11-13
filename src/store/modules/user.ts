@@ -62,9 +62,9 @@ export const useUserStore = defineStore({
       //     'ROUTE_SELLER_GOODS',
       //   ], // 菜单code
       // };
-      apiUserProfile({ companyId, memberId })
+      return apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
-          console.log(data);
+          console.log('===获取用户企业信息===apiUserProfile', data);
           this.userInfoByCompany = data || {
             certificateStatus: CompanyAuthStatus.UNAUTH,
             nodeStatus: NodeAuthStatus.UNAUTH,
@@ -77,7 +77,7 @@ export const useUserStore = defineStore({
       console.log('user.ts:70===给selectCompany赋值', data);
       this.selectCompany = data;
       await this.getUserByCompany();
-
+      console.log('user.ts:79===获取用户企业信息结束==');
       this.updateMenu = !this.updateMenu;
       // useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
     },
