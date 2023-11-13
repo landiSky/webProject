@@ -2,6 +2,7 @@ import type { App } from 'vue';
 import { createRouter, RouteRecordRaw, createWebHashHistory } from 'vue-router';
 import NProgress from 'nprogress'; // progress bar
 import 'nprogress/nprogress.css';
+import { useUserStore } from '@/store/modules/user';
 import { RouteAuthEnum } from '@/enums/authEnum';
 // import DynamicRoutes from './routes';
 import homeRoutesList from './routes/home';
@@ -91,6 +92,10 @@ export function JumpToLogin() {
 
 // 全部左侧menu，在store中根据permission动态生成左侧菜单
 export const appMenus = (authsList: Array<string> = []) => {
+  console.log('router.js=====index.ts:94', authsList);
+
+  const { isAdmin } = useUserStore().userInfo || {};
+
   // TODO 优化迭代逻辑
   const iterMenu = (list: Array<any>): any => {
     const menuList: Array<{
@@ -106,7 +111,7 @@ export const appMenus = (authsList: Array<string> = []) => {
       // TODO mock环境先去掉路由权限显示 && authsList.includes(RouteAuthEnum[path])
       if (
         !meta.hideInMenu &&
-        (authsList.includes(RouteAuthEnum[path]) || meta.noAuth)
+        (authsList.includes(RouteAuthEnum[path]) || (!isAdmin && meta.noAuth))
       ) {
         const menuItem = {
           name: meta.name,
@@ -124,7 +129,7 @@ export const appMenus = (authsList: Array<string> = []) => {
     return menuList;
   };
 
-  return iterMenu(homeRoutesList);
+  return iterMenu([...homeRoutesList, ...operationRoutesList]);
 };
 
 export default router;
