@@ -73,7 +73,7 @@
         </t-descriptions-item>
         <t-descriptions-item label="营业执照">
           <img
-            :src="currentData.itemInfo.businessLicenseId"
+            :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicenseId}`"
             style="width: 158px; height: 100px; background-color: #999"
           />
         </t-descriptions-item>
@@ -99,11 +99,11 @@
         <t-descriptions-item label="联系人身份证">
           <img
             class="first-img"
-            :src="currentData.itemInfo.idCardz"
+            :src="`/server/web/file/download?name=${currentData.itemInfo.idCardz}`"
             style="width: 158px; height: 100px; background-color: #999"
           />
           <img
-            :src="currentData.itemInfo.idCardf"
+            :src="`/server/web/file/download?name=${currentData.itemInfo.idCardf}`"
             style="width: 158px; height: 100px; background-color: #999"
           />
         </t-descriptions-item>
