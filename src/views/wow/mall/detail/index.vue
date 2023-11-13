@@ -59,7 +59,7 @@
                   </t-radio>
                 </t-radio-group>
               </template>
-              <span>-</span>
+              <span v-else>-</span>
             </span>
           </div>
           <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">

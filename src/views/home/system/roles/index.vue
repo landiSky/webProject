@@ -212,6 +212,7 @@ function fetchData() {
     pageNum: pagination.current,
     roleName: state.formModel.name,
     companyId: userInfoByCompany.value?.companyId,
+    type: 0,
   })
     .then((res: any) => {
       console.log(res);

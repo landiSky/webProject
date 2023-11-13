@@ -243,6 +243,7 @@ onMounted(() => {
     pageSize: 1000,
     pageNum: 1,
     companyId: userInfoByCompany.value.companyId,
+    type: 1,
   })
     .then((res: any) => {
       console.log(res);

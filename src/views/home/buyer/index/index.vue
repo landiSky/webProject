@@ -500,11 +500,8 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProductId = ref();
@@ -786,8 +783,14 @@ const multiples = () => {
   router.push('/buyer/order');
 };
 onMounted(() => {
-  // 已购应用
-  authDialog();
+  if (
+    userInfoByCompany.value.certificateStatus === 1 ||
+    userInfoByCompany.value.nodeStatus === 1
+  ) {
+    // 已购应用
+    authDialog();
+  }
+
   // 订单概览
   orderlistdata();
 });
