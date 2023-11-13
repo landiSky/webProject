@@ -355,8 +355,8 @@ const modalVisible = ref(false); // 编辑全屏展示弹窗
 function fetchData() {
   const { current, pageSize } = pagination;
   const params = {
-    page: current - 1, // 从0开始
-    size: pageSize,
+    pageNum: current, // 从0开始
+    pageSize,
     ...state.formModel,
   };
 
