@@ -91,7 +91,7 @@ const clickNextStep = (done: (closed: boolean) => void) => {
                 phone || '-'
               }。`,
               onOk: () => {
-                emit('confirm');
+                emit('cancel');
               },
             });
           } else {

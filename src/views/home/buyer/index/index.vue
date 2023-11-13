@@ -671,7 +671,7 @@ const nodeAuth = () => {
 };
 const onAuthModalConfirm = () => {
   authModalVisible.value = false;
-  window.open(userInfoByCompany.idPointer, '_blank'); // 企业节点认证跳转到二级
+  window.open(userInfoByCompany.value.idPointer, '_blank'); // 企业节点认证跳转到二级
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
