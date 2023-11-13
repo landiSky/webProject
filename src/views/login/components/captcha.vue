@@ -1,6 +1,6 @@
 <template>
   <t-slider-captcha
-    :visible="visible"
+    v-model:visible="visible"
     :get-picture-config="pictureConfig"
     :check-picture-config="checkPictureConfig"
     @success="onSuccess"

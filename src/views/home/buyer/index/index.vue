@@ -500,8 +500,11 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProductId = ref();
@@ -671,7 +674,7 @@ const nodeAuth = () => {
 };
 const onAuthModalConfirm = () => {
   authModalVisible.value = false;
-  window.open(userInfoByCompany.idPointer, '_blank'); // 企业节点认证跳转到二级
+  window.open(userInfoByCompany.value.idPointer, '_blank'); // 企业节点认证跳转到二级
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
