@@ -522,12 +522,8 @@
                   }"
                 />
               </t-form-item>
-              <t-form-item label="一口价金额" field="onePiece">
-                <t-input
-                  v-model="
-                    copyModal2[index].productDeliverySetInfoList[0].price
-                  "
-                  allow-clear
+              <t-form-item label="一口价金额" field="onePiece" required>
+                <t-input v-model="copyModal2[index].onePiece" allow-clear
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -709,6 +705,7 @@ const copyModal2 = ref<any[]>([
     name: '',
     url: '',
     productDeliverySetInfoList: [{ price: null }],
+    onePiece: null,
   },
 ]);
 const copyModal3 = ref<any[]>([
@@ -731,13 +728,19 @@ const addCopy = () => {
     copyModal.value.push({
       name: '',
       url: '',
-      productDeliverySetInfoList: [],
+      productDeliverySetInfoList: [
+        {
+          accountNum: null,
+          price: null,
+        },
+      ],
       durationList: [],
     });
   } else if (formModel2.value.saleType === 1) {
     copyModal2.value.push({
       name: '',
       url: '',
+      onePiece: null,
       productDeliverySetInfoList: [{ price: null }],
     });
   } else {
@@ -775,6 +778,17 @@ const copyRules = {
       required: true,
     },
   ],
+  onePiece: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入一口价金额');
+        if (!/^[1-9]\d*$/.test(value) || value.length > 10)
+          return cb('一口价请填写10位以内整数');
+        return cb();
+      },
+    },
+  ],
   durationList: [
     {
       required: true,
@@ -809,12 +823,12 @@ const logoUploading = ref(false);
 
 const uploadError = (fileItem: FileItem) => {
   logoUploading.value = false;
-  const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
+  // const size = fileItem.file?.size ?? 0;
+  // if (size > 2 * 1024 * 1024) {
+  Message.error(`上传失败，文件大小不要超过2M`);
+  // } else {
+  //   Message.error(`上传失败，请检查网络`);
+  // }
 };
 
 const uploadProgress = () => {
@@ -841,12 +855,12 @@ const uploadDetailProgress = () => {
 const uploadDetailError = (fileItem: FileItem) => {
   detailUploading.value = false;
   formModel.value.logo = '';
-  const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
+  // const size = fileItem.file?.size ?? 0;
+  // if (size > 2 * 1024 * 1024) {
+  Message.error(`上传失败，文件大小不要超过2M`);
+  // } else {
+  //   Message.error(`上传失败，请检查网络`);
+  // }
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
@@ -864,12 +878,12 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
 const uploadExpError = (fileItem: FileItem) => {
   formModel.value.useExplain = '';
   formRef.value.validateField('useExplain');
-  const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
+  // const size = fileItem.file?.size ?? 0;
+  // if (size > 2 * 1024 * 1024) {
+  Message.error(`上传失败，文件大小不要超过2M`);
+  // } else {
+  //   Message.error(`上传失败，请检查网络`);
+  // }
 };
 
 const uploadExpSuccess = (fileItem: FileItem) => {
@@ -888,6 +902,21 @@ const getClassList = () => {
     classList.value = data;
   });
 };
+
+function deepClone(source: any) {
+  if (!source && typeof source !== 'object') {
+    throw new Error('error arguments');
+  }
+  const targetObj: any = source.constructor === Array ? [] : {};
+  Object.keys(source).forEach((keys) => {
+    if (source[keys] && typeof source[keys] === 'object') {
+      targetObj[keys] = deepClone(source[keys]);
+    } else {
+      targetObj[keys] = source[keys];
+    }
+  });
+  return targetObj;
+}
 
 const showAddCopy = computed(() => {
   if (formModel2.value.saleType === 0) {
@@ -968,42 +997,23 @@ const buildForm2 = async () => {
       }
     }
   }
-  if (formModel2.value.saleType === 1) {
-    for (let index = 0; index < copyModal2.value.length; index += 1) {
-      const m = copyModal2.value[index];
-      for (const p of m.productDeliverySetInfoList) {
-        if (!p.price) {
-          failed = true;
-          copyFormRef[index].value.setFields({
-            productDeliverySetInfoList: {
-              status: 'error',
-              message: `请填写一口价`,
-            },
-          });
-          break;
-        }
-        if (!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) {
-          failed = true;
-          copyFormRef[index].value.setFields({
-            productDeliverySetInfoList: {
-              status: 'error',
-              message: `一口价请填写10位以内整数`,
-            },
-          });
-          break;
-        }
-      }
-    }
-  }
   if (failed) {
-    console.log('定价校验失败');
     return false;
   }
   let modalList;
   if (formModel2.value.saleType === 0) {
     modalList = copyModal.value;
   } else if (formModel2.value.saleType === 1) {
-    modalList = copyModal2.value;
+    let tempList = deepClone(copyModal2.value);
+    for (let index = 0; index < tempList.length; index += 1) {
+      tempList[index].productDeliverySetInfoList[0].price = parseInt(
+        tempList[index].onePiece,
+        10
+      );
+      tempList[index].onePiece = null;
+      tempList = JSON.parse(JSON.stringify(tempList));
+    }
+    modalList = tempList;
   } else {
     modalList = copyModal3.value;
   }
