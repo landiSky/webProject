@@ -105,7 +105,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
         apiRoleAdd({
           roleName: state.formModel.roleName,
           remark: state.formModel.remark,
-          companyId: userInfoByCompany.companyId,
+          companyId: userInfoByCompany.value?.companyId,
         })
           .then((res) => {
             emit('confirm');
@@ -139,7 +139,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       apiRoleAdd({
         roleName: state.formModel.roleName,
         remark: state.formModel.remark,
-        companyId: userInfoByCompany.companyId,
+        companyId: userInfoByCompany.value?.companyId,
         id: state.formModel.id,
       })
         .then((res) => {

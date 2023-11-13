@@ -4,7 +4,7 @@ import { apiLogout, apiConfigInfo } from '@/api/login';
 import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
-import { AccountType } from '@/enums/common';
+import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
 // import { useMenuStore } from './menu';
 
 interface UserState {
@@ -21,7 +21,10 @@ export const useUserStore = defineStore({
   id: 'app-user',
   state: (): UserState => ({
     userInfo: null,
-    userInfoByCompany: null, // 存储选择的对应公司下的用户信息
+    userInfoByCompany: {
+      certificateStatus: CompanyAuthStatus.UNAUTH,
+      nodeStatus: NodeAuthStatus.UNAUTH,
+    }, // 存储选择的对应公司下的用户信息
     selectCompany: {}, // 对象，存储选择的公司信息，{companyId, memeberId}
     counter: 0,
     token: null,
@@ -59,10 +62,13 @@ export const useUserStore = defineStore({
       //     'ROUTE_SELLER_GOODS',
       //   ], // 菜单code
       // };
-      apiUserProfile({ companyId, memberId })
+      apiUserProfile({ companyId })
         .then((data: Record<string, any>) => {
           console.log(data);
-          this.userInfoByCompany = data;
+          this.userInfoByCompany = data || {
+            certificateStatus: CompanyAuthStatus.UNAUTH,
+            nodeStatus: NodeAuthStatus.UNAUTH,
+          };
         })
         .catch(() => {});
     },
@@ -82,6 +88,8 @@ export const useUserStore = defineStore({
     async getUserBasicInfo() {
       try {
         const userInfo = await apiUsersInfo();
+
+        console.log('user.ts:138==去更新 usecompany');
 
         // const userInfo = {
         //   userId: 1,
@@ -106,7 +114,7 @@ export const useUserStore = defineStore({
 
         this.userInfo = userInfo as any;
 
-        const { companyList } = userInfo;
+        const { companyId, companyList } = userInfo;
 
         //   {
         //     "memberId": 1717495373822156800, //成员id
@@ -131,6 +139,8 @@ export const useUserStore = defineStore({
           );
           this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
+          console.log('user.ts:139==去更新 usecompany');
+          this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
           // useMenuStore().genLeftMenu([]);
         }
@@ -190,7 +200,10 @@ export const useUserStore = defineStore({
      */
     async logout(): Promise<void> {
       this.userInfo = null;
-      this.userInfoByCompany = null;
+      this.userInfoByCompany = {
+        certificateStatus: CompanyAuthStatus.UNAUTH,
+        nodeStatus: NodeAuthStatus.UNAUTH,
+      };
       this.selectCompany = {};
       this.token = '';
 

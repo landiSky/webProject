@@ -41,61 +41,66 @@ export default defineConfig(({ command, mode }) => {
         '/web': {
           // target: `http://10.14.150.182:9190/server`,
           // target: `http://10.14.148.103:9191`,
-          target: `http://10.14.151.2:9191`,
+          'target': `http://10.14.151.2:9191`,
 
           // target: 'http://server-platform-gateway-a.dev.idx.space/server',
-          changeOrigin: true,
-          agent: new https.Agent(),
-          followRedirects: true,
-        },
+          '/server': {
+            // target: `http://sso-auth-gateway-a:80`,
+            target: 'http://server-platform-gateway-a.dev.idx.space',
+            // target: `http://10.14.151.2:9191/`,
+            changeOrigin: true,
+            agent: new https.Agent(),
+            followRedirects: true,
+          },
 
-        '/sso': {
-          target: `http://sso-auth-gateway-a.dev.idx.space`,
-          // target: `http://10.14.148.103:9191`,
-          changeOrigin: true,
-          agent: new https.Agent(),
-          followRedirects: true,
-        },
-      },
-    },
-    plugins: [
-      vue({
-        template: {
-          compilerOptions: {
-            isCustomElement: (tag) => tag.startsWith('iconpark-icon'),
+          '/sso': {
+            target: 'http://sso-auth-gateway-a.dev.idx.space',
+            // target: `http://10.14.148.103:9191`,
+            changeOrigin: true,
+            agent: new https.Agent(),
+            followRedirects: true,
           },
         },
-      }),
-      vueJsx(),
-      svgLoader({ svgoConfig: {} }),
-      eslint({
-        cache: false,
-        include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
-        exclude: ['node_modules'],
-      }),
-      VueSetupExtend(),
-      hasMockPlugin(mode === 'mock'),
-    ],
-    resolve: {
-      alias: [
-        {
-          find: '@',
-          replacement: resolve(__dirname, '../src'),
-        },
-        {
-          find: 'assets',
-          replacement: resolve(__dirname, '../src/assets'),
-        },
-        {
-          find: 'vue',
-          replacement: 'vue/dist/vue.esm-bundler.js', // compile template
-        },
+      },
+      plugins: [
+        vue({
+          template: {
+            compilerOptions: {
+              isCustomElement: (tag) => tag.startsWith('iconpark-icon'),
+            },
+          },
+        }),
+        vueJsx(),
+        svgLoader({ svgoConfig: {} }),
+        eslint({
+          cache: false,
+          include: ['src/**/*.ts', 'src/**/*.tsx', 'src/**/*.vue'],
+          exclude: ['node_modules'],
+        }),
+        VueSetupExtend(),
+        hasMockPlugin(mode === 'mock'),
       ],
-      extensions: ['.ts', '.js', '.tsx'],
+      resolve: {
+        alias: [
+          {
+            find: '@',
+            replacement: resolve(__dirname, '../src'),
+          },
+          {
+            find: 'assets',
+            replacement: resolve(__dirname, '../src/assets'),
+          },
+          {
+            find: 'vue',
+            replacement: 'vue/dist/vue.esm-bundler.js', // compile template
+          },
+        ],
+        extensions: ['.ts', '.js', '.tsx'],
+      },
+      define: {
+        'process.env': {},
+      },
+      publicDir: 'assets',
     },
-    define: {
-      'process.env': {},
-    },
-    publicDir: 'assets',
   };
 });

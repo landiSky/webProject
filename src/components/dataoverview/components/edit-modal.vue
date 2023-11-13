@@ -3,7 +3,6 @@
     v-model:visible="visible"
     :width="742"
     :height="520"
-    :on-before-ok="onConfirm"
     body-class="modals"
     :closable="true"
     :footer="false"
@@ -29,23 +28,11 @@
                 <p>企业认证</p>
                 <p
                   style="width: 50px; margin-top: 10px"
-                  :class="[
-                    stateles.companyStatus === 0
-                      ? 'tobereviewed'
-                      : stateles.companyStatus === 1
-                      ? 'authenticated'
-                      : stateles.companyStatus === 2
-                      ? 'override'
-                      : 'notcertified',
-                  ]"
+                  :class="
+                    companyState2class[userInfoByCompany.certificateStatus]
+                  "
                   >{{
-                    stateles.companyStatus === 0
-                      ? '待审核'
-                      : stateles.companyStatus === 1
-                      ? '已认证'
-                      : stateles.companyStatus === 2
-                      ? '已驳回'
-                      : '未认证'
+                    CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
                   }}</p
                 >
               </div>
@@ -102,17 +89,14 @@
             </div>
             <div class="desdetails">
               <p style="color: #86909c; font-size: 14px; line-height: 32px">{{
-                stateles.companyStatus === 0
-                  ? '您的认证申请正在审核中'
-                  : stateles.companyStatus === 2
-                  ? '您的认证申请被驳回'
-                  : stateles.companyStatus === 1
-                  ? '恭喜您已通过企业认证'
-                  : ''
+                longCompanyDesc[userInfoByCompany.certificateStatus]
               }}</p>
               <p
                 v-if="
-                  stateles.companyStatus === 0 || stateles.companyStatus === 2
+                  [
+                    CompanyAuthStatus.TO_CHECK,
+                    CompanyAuthStatus.REJECT,
+                  ].includes(userInfoByCompany.certificateStatus)
                 "
               >
                 <t-button
@@ -122,7 +106,12 @@
                   >查看详情</t-button
                 ></p
               >
-              <p v-if="stateles.companyStatus === 3">
+              <p
+                v-if="
+                  userInfoByCompany.certificateStatus ===
+                  CompanyAuthStatus.UNAUTH
+                "
+              >
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
@@ -152,24 +141,8 @@
                 <p>企业节点认证</p>
                 <p
                   style="width: 50px; margin-top: 10px"
-                  :class="[
-                    stateles.nodeStatus === 0
-                      ? 'tobereviewed'
-                      : stateles.nodeStatus === 1
-                      ? 'authenticated'
-                      : stateles.nodeStatus === 2
-                      ? 'override'
-                      : 'notcertified',
-                  ]"
-                  >{{
-                    stateles.nodeStatus === 0
-                      ? '待审核'
-                      : stateles.nodeStatus === 1
-                      ? '已认证'
-                      : stateles.nodeStatus === 2
-                      ? '已驳回'
-                      : '未认证'
-                  }}</p
+                  :class="nodeState2class[userInfoByCompany.nodeStatus]"
+                  >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</p
                 >
               </div>
             </div>
@@ -238,15 +211,15 @@
 
             <div class="desdetails">
               <p style="color: #86909c; font-size: 14px; line-height: 32px">{{
-                stateles.nodeStatus === 0
-                  ? '您的认证申请正在审核中'
-                  : stateles.nodeStatus === 2
-                  ? '您的认证申请被驳回'
-                  : stateles.nodeStatus === 1
-                  ? '恭喜您已通过企业认证'
-                  : ''
+                longNodeDesc[userInfoByCompany.nodeStatus]
               }}</p>
-              <p v-if="stateles.nodeStatus === 0 || stateles.nodeStatus === 2">
+              <p
+                v-if="
+                  [NodeAuthStatus.TO_CHECK, NodeAuthStatus.REJECT].includes(
+                    userInfoByCompany.nodeStatus
+                  )
+                "
+              >
                 <t-button
                   type="primary"
                   style="margin-left: 20px; padding: 7px 15px"
@@ -254,7 +227,7 @@
                   >查看详情</t-button
                 ></p
               >
-              <p v-if="stateles.nodeStatus === 3">
+              <p v-if="NodeAuthStatus.UNAUTH === userInfoByCompany.nodeStatus">
                 <t-button
                   type="primary"
                   style="padding: 7px 15px"
@@ -282,6 +255,19 @@ import {
 
 import { storeToRefs } from 'pinia';
 
+import {
+  CompanyAuthStatus,
+  NodeAuthStatus,
+  CompanyAuthStatusDESC,
+  NodeAuthStatusDESC,
+} from '@/enums/common';
+// import {
+//   CompanyAuthStatus,
+//   NodeAuthStatus,
+//   CompanyAuthStatusDESC,
+//   NodeAuthStatusDESC,
+// } from '@/enums/common';
+
 import { authentication } from '@/api/authentication';
 
 import { useUserStore } from '@/store/modules/user';
@@ -298,21 +284,35 @@ const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 // userInfo.value?.companyId
-// import { Message } from '@tele-design/web-vue';
 
-// const props = defineProps({
-//   data: {
-//     type: Object,
-//     default: () => {},
-//   },
-// });
+const nodeState2class = {
+  [NodeAuthStatus.TO_CHECK]: 'tobereviewed',
+  [NodeAuthStatus.AUTHED]: 'authenticated',
+  [NodeAuthStatus.REJECT]: 'override',
+  [NodeAuthStatus.UNAUTH]: 'notcertified',
+};
+
+const longNodeDesc = {
+  [NodeAuthStatus.TO_CHECK]: '您的认证申请正在审核中',
+  [NodeAuthStatus.AUTHED]: '恭喜您已通过企业认证',
+  [NodeAuthStatus.REJECT]: '您的认证申请被驳回',
+  [NodeAuthStatus.UNAUTH]: '',
+};
+
+const longCompanyDesc = {
+  [CompanyAuthStatus.TO_CHECK]: '您的认证申请正在审核中',
+  [CompanyAuthStatus.AUTHED]: '恭喜您已通过企业认证',
+  [CompanyAuthStatus.REJECT]: '您的认证申请被驳回',
+  [CompanyAuthStatus.UNAUTH]: '',
+};
+const companyState2class = {
+  [CompanyAuthStatus.TO_CHECK]: 'tobereviewed',
+  [CompanyAuthStatus.AUTHED]: 'authenticated',
+  [CompanyAuthStatus.REJECT]: 'override',
+  [CompanyAuthStatus.UNAUTH]: 'notcertified',
+};
+
 const emit = defineEmits(['confirm', 'cancel', 'hasdflag']);
-
-// 认证状态
-const stateles = ref({
-  companyStatus: 0, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-  nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-});
 
 // 弹窗状态
 const visible = ref(true);
@@ -325,7 +325,7 @@ const visible = ref(true);
 //   },
 // });
 const init = () => {
-  authentication({ companyId: String(userInfoByCompany.companyId) })
+  authentication({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
       console.log(res, 'res');
       // stateles.value = res.data === undefined ? {} : res.data;
@@ -357,8 +357,7 @@ onMounted(() => {
   //   // 二是从接口获取
   //   // getDetail();
   // }
-
-  init();
+  // init();
 });
 </script>
 

@@ -102,15 +102,11 @@
             :headers="uploadHeaders"
             action="/server/web/file/upload"
             :limit="1"
-            image-preview
             style="width: 150px; height: 100px"
-            accept=".jpg,.png,.bmp,.tif,.gif"
-            @before-upload="beforeUpload"
+            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+            :before-upload="beforeUpload"
             @success="uploadSuccess"
           >
-            <!-- @success="
-              (fileItem) => uploadSuccess(fileItem, 'businessLicenseId')
-            " -->
             <template #upload-button>
               <div
                 style="
@@ -130,6 +126,7 @@
             </template>
           </t-upload>
         </t-form-item>
+
         <p style="margin: -10px 0 20px 20%; color: #86909c">
           支持jpg、png文件格式,文件大小限制5M以内。
           <!-- 支持png和jpg,要求5M以内 -->
@@ -316,23 +313,9 @@ const uploadHeaders = {
   Authorization: `Bearer ${getToken()}`,
 };
 
-// const detaillist = ref({
-//   id: '',
-//   userId: '',
-//   companyName: '',
-//   creditCode: '',
-//   contactName: '',
-//   contactIdCard: '',
-//   idCardf: '',
-//   idCardz: '',
-//   legalPersonName: '',
-//   businessLicenseId: '',
-//   certificateStatus: 0, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-//   remark: '',
-// });
 const formModel = ref({
-  id: String(userInfoByCompany.companyId),
-  userId: String(userInfoByCompany.id),
+  id: userInfo.value?.companyId,
+  userId: userInfo.value?.userId,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -350,6 +333,7 @@ const formModel = ref({
   idCardf: '',
   // 新增 0 重新添加 1
   type: 0,
+  companyCerPath: '',
 });
 // const fileList = [
 //   {
@@ -379,19 +363,22 @@ const formRules: any = {
     { required: true, message: '请输入法人姓名' },
     { maxLength: 10, message: '长度不超过20个字符' },
   ],
-  businessLicense: [
-    {
-      required: true,
-      message: '请上传营业执照',
-      validator: (value: any, cb: any) => {
-        if (!formModel.value.businessLicense) {
-          return cb('请上传营业执照');
-        }
-
-        return cb();
-      },
-    },
-  ],
+  // businessLicense: [
+  //   {
+  //     required: true,
+  //     message: '请上传营业执照',
+  //     validator: (value: any, cb: any) => {
+  //       console.log(
+  //         'edit-modal-fullscreen.vue:387',
+  //         formModel.value.businessLicense
+  //       );
+  //       // if (!formModel.value.businessLicense) {
+  //       //   return cb('请上传营业执照');
+  //       // }
+  //       return cb();
+  //     },
+  //   },
+  // ],
   contactName: [
     { required: true, message: '请输入联系人姓名' },
     { maxLength: 10, message: '长度不超过10个字符' },
@@ -431,7 +418,7 @@ const goback = () => {
 };
 const getUserDetail = () => {
   // userInfo.value?.companyId
-  authDetails({ companyId: String(userInfoByCompany.companyId) })
+  authDetails({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
       console.log(res);
       //  @ts-ignore
@@ -454,14 +441,13 @@ const getUserDetail = () => {
   //     loading.value = false;
   //   });
 };
+
 // @ts-ignore
 const uploadSuccess = (fileItem: FileItem) => {
-  console.log(fileItem);
+  console.log('=====uploadSuccess', fileItem);
   const res = fileItem.response;
   if (res?.code === 200) {
-    console.log(fileItem.response.data);
     formModel.value.businessLicense = fileItem.response.data;
-    console.log(formModel.value.businessLicense);
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
@@ -469,6 +455,7 @@ const uploadSuccess = (fileItem: FileItem) => {
 };
 // @ts-ignore
 const uploadSuccessz = (fileItem: FileItem) => {
+  console.log('edit-modal-fullscreen.vue:490====uploadSuccessz');
   console.log(fileItem);
   const res = fileItem.response;
   if (res?.code === 200) {
@@ -513,11 +500,12 @@ const onConfirm = (done: (closed: boolean) => void) => {
       authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
           if (res.data.code === 200) {
+            console.log('edit-modal-fullscreen.vue:504', formModel.value);
             authSubmit(formModel.value)
               .then((res) => {
-                console.log(res);
-                emit('confirm');
                 Message.success('认证已提交');
+                userStore.getUserBasicInfo();
+                emit('confirm');
                 done(true);
               })
               .catch((err) => {
@@ -546,6 +534,7 @@ const canceldes = () => {
 };
 
 onMounted(() => {
+  console.log('edit-modal-fullscreen.vue:537', props.data?.statusled);
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
     console.log(props.data?.statusled);

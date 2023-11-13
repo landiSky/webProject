@@ -265,7 +265,7 @@ const goback = () => {
 
 const getUserDetail = () => {
   // 调后端接口
-  authDetails({ companyId: String(userInfoByCompany.companyId) }).then(
+  authDetails({ companyId: String(userInfoByCompany.value?.companyId) }).then(
     (res) => {
       console.log(res);
       // @ts-ignore

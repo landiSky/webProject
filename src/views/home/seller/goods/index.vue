@@ -40,7 +40,7 @@
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
     >
-      <template #productType="{ record }">
+      <template #productTypeId="{ record }">
         {{ record.productTypeParentName }} / {{ record.productTypeName }}
       </template>
       <template #type="{ record }">
@@ -134,6 +134,7 @@ import {
   deleteGoods,
   preUp,
   goodsDetail,
+  fetchClassList,
 } from '@/api/goods-manage';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
@@ -158,31 +159,6 @@ const state = reactive<{
   tableData: [],
   detailData: {},
 });
-
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex);
-  const f = filteredValues[0];
-  if (typeof f === 'number') {
-    console.log(f);
-  } else {
-    console.log('clear');
-  }
-};
-
-const classList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: '软件/平台',
-    value: 1,
-  },
-  {
-    text: '数据管理者',
-    value: 2,
-  },
-];
 
 // 应用分类
 const TypeEnum: { [name: string]: any } = {
@@ -265,6 +241,13 @@ const StatusList = [
   },
 ];
 
+const classList = ref([
+  {
+    text: '全部',
+    value: null,
+  },
+]);
+
 const columns = [
   {
     title: '商品名称',
@@ -284,11 +267,11 @@ const columns = [
   },
   {
     title: '所属分类（一级、二级）',
-    dataIndex: 'productType',
-    slotName: 'productType',
+    dataIndex: 'productTypeId',
+    slotName: 'productTypeId',
     width: 180,
     filterable: {
-      filters: classList,
+      filters: classList.value,
     },
   },
   {
@@ -349,7 +332,6 @@ function fetchData() {
     pageSize,
     ...state.formModel,
   };
-
   state.tableLoading = true;
   goodsList(params)
     .then((res: any) => {
@@ -361,6 +343,17 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex, filteredValues);
+  // type: 0,
+  // deliveryType: 0,
+  // status: 3,
+  // productTypeId: 1,
+  const f = filteredValues[0];
+  state.formModel[`${dataIndex}`] = f;
+  fetchData();
+};
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
@@ -547,7 +540,34 @@ const onPreview = (productId: string) => {
   window.open(routeData?.href, '_blank');
 };
 
+const reBuildClassList = (data: any[]) => {
+  console.log(data);
+  classList.value = [
+    {
+      text: '全部',
+      value: null,
+    },
+  ];
+  for (const fc of data) {
+    const fn = fc.name;
+    for (const sc of fc.children) {
+      const sn = sc.name;
+      const value = sc.id;
+      classList.value.push({ text: `${fn}/${sn}`, value });
+    }
+  }
+};
+
+const getClassList = () => {
+  fetchClassList().then((res: any) => {
+    if (res && res.data) {
+      reBuildClassList(res.data);
+    }
+  });
+};
+
 onMounted(() => {
+  getClassList();
   fetchData();
 });
 
