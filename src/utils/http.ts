@@ -81,7 +81,6 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
 
         //  TODO2: 这里逻辑可以根据项目进行修改code: 10000表示成功, 根据项目调整
         if (code === 200) {
-          console.log(url);
           if (
             url?.startsWith('/operation/web/') ||
             url?.startsWith('/inventory/web/')

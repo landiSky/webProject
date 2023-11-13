@@ -108,26 +108,20 @@ function fetchData() {
 }
 
 const handleChange = (type: string, record: any) => {
-  console.log(type);
-  console.log(record);
-  const params = {
+  const params: Record<string, any> = {
     id: record.id,
     serverId: record.serverId,
-    sync: 0,
-    syncUpShelf: 0,
   };
   if (type === 'sync') {
     if (record.sync === StatusEnum.ALL) {
       params.sync = 0;
     } else {
       params.sync = 1;
-      params.syncUpShelf = 0;
     }
   } else if (record.syncUpShelf === StatusEnum.ALL) {
     params.syncUpShelf = 0;
   } else {
     params.syncUpShelf = 1;
-    params.sync = 0;
   }
   changeObserve(params).then((res) => {
     if (res.code === 200) {
