@@ -115,7 +115,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.jpeg,.gif,.tif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               :show-file-list="false"
               @success="uploadSuccess"
               @error="uploadError"
@@ -149,7 +149,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -207,7 +207,7 @@
               :show-file-list="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".png,.jpg,.jpeg,.gif,.tif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               @success="uploadDetailSuccess"
               @progress="uploadDetailProgress"
               @error="uploadDetailError"
@@ -240,7 +240,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item label="商品分类" field="productTypeId">
@@ -285,7 +285,7 @@
               action="/server/web/file/upload"
               :headers="uploadHeaders"
               :show-cancel-button="false"
-              accept=".pdf,.word"
+              accept=".pdf,.doc,.docx"
               tip-position="bottom"
               @success="uploadExpSuccess"
               @error="uploadExpError"
@@ -296,31 +296,6 @@
           </t-form-item>
           <t-form-item label="详细展示信息" field="detail">
             <TemplateDrawer ref="templateRef"></TemplateDrawer>
-            <!-- <div class="modal-list">
-              <div
-                v-for="(modal, index) of modalList"
-                :key="index"
-                class="modal"
-              >
-                <div class="modal-name"> {{ modal }} </div>
-                <div class="modal-action">
-                  <t-button type="text" size="small" @click="editModal(modal)"
-                    >编辑</t-button
-                  >
-                  <t-button
-                    type="text"
-                    size="small"
-                    style="color: #4e5969"
-                    @click="deleteModal(modal)"
-                    >删除</t-button
-                  >
-                </div>
-              </div>
-              <div class="modal-add" @click="addModal">
-                <iconpark-icon name="squarePlus" size="20"></iconpark-icon>
-                <div class="modal-add-title">添加详情模块</div>
-              </div>
-            </div> -->
           </t-form-item>
         </t-form>
       </div>
@@ -1018,8 +993,7 @@ const getModalJson = () => {
     JSON.stringify(formModel2.value) +
     JSON.stringify(copyModal.value) +
     JSON.stringify(copyModal2.value) +
-    JSON.stringify(copyModal3.value) +
-    JSON.stringify(templateRef.value.templateData)
+    JSON.stringify(copyModal3.value)
   );
 };
 
@@ -1128,8 +1102,12 @@ const doSave = async () => {
 
 // 取消
 const clickCancel = () => {
+  if (step.value === 1) {
+    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  }
   const nowString = getModalJson();
   if (nowString !== modalJsonString.value) {
+    console.log(2);
     Modal.warning({
       title: '是否保存已编辑的内容？',
       titleAlign: 'start',
@@ -1158,6 +1136,7 @@ const clickCancel = () => {
 const clickSave = async () => {
   const res = await doSave();
   if (res) {
+    modalJsonString.value = getModalJson();
     Message.success('保存成功');
   }
 };
@@ -1171,6 +1150,7 @@ const clickNext = async () => {
   }
   saveGoods1(formModel.value).then((res) => {
     if (res) {
+      modalJsonString.value = getModalJson();
       step.value = 2;
     }
   });
@@ -1194,6 +1174,7 @@ const clickUp = async () => {
   if (r) {
     saveAndUp(formModel2.value).then((res) => {
       Message.success('上架申请成功');
+      emit('confirm');
     });
   }
 };

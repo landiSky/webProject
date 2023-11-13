@@ -570,7 +570,9 @@ onMounted(() => {
   fetchData();
 });
 
-const onAddModalConfirm = () => {};
+const onAddModalConfirm = () => {
+  fetchData();
+};
 </script>
 
 <style lang="less" scoped>
