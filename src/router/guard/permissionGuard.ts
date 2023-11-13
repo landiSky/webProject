@@ -40,9 +40,12 @@ export function createPermissionGuard(router: Router) {
         > = await userStore.getUserBasicInfo();
         // console.log('permissionGuard.ts:36', userInfo);
 
+        const indexUrl = userInfo?.isAdmin ? '/goods' : '/buyer';
         if (userInfo?.userId) {
-          next();
+          console.log('permissionGuard.ts:43', to.fullPath);
+          next(indexUrl);
         } else {
+          console.log('permissionGuard.ts:46', to.fullPath);
           next('/wow/index');
         }
         // if (userInfo?.userId) {
@@ -53,8 +56,11 @@ export function createPermissionGuard(router: Router) {
         //   next(`/login`);
         // }
       } else if (to.matched.length === 0) {
-        next('/buyer/index');
+        console.log('permissionGuard.ts:55', to.fullPath);
+        const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
+        next(indexUrl);
       } else {
+        console.log('permissionGuard.ts:58', to.fullPath);
         next();
       }
     } else if (window.location.search.includes('code=')) {
@@ -92,23 +98,16 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:60', data.accessToken);
           setToken(data.accessToken);
 
-          const lastUri = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
-          window.location.href = `${window.location.protocol}//${window.location.host}/${lastUri}`;
-          console.log('permissionGuard.ts:61', data.accessToken);
+          const indexUrl = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
+          console.log('permissionGuard.ts:61', indexUrl);
+          window.location.href = `${window.location.protocol}//${window.location.host}/${indexUrl}`;
         })
         .catch((err: any) => {
           console.log('permissionGuard.ts:89==获取 token 异常', err);
           window.location.href = `${window.location.protocol}//${window.location.host}/#/wow`;
-        })
-        .finally(() => {
-          // console.log('permissionGuard.ts:91=======', window.location.host);
-          // window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer`;
-          // next({
-          //   path: '/buyer/index',
-          //   query: {},
-          // });
         });
     } else if (whiteList.indexOf(to.path) !== -1) {
+      console.log('permissionGuard.ts:113', to.fullPath);
       next();
     } else {
       // next('/login');

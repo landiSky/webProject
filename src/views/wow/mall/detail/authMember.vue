@@ -40,13 +40,18 @@ import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
-import { apiMemberList, apiAuthMember } from '@/api/common';
+import {
+  apiMemberList,
+  apiAuthMember,
+  apiMemListByProduct,
+} from '@/api/common';
 
 const store = useUserStore();
 const { userInfo, selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,
+  deliverySetId: String,
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const visible = ref(false);
@@ -86,6 +91,17 @@ onMounted(() => {
     .catch(() => {
       emit('confirm');
     });
+
+  apiMemListByProduct({
+    productId: props.productId,
+    productDeliverySetId: props.deliverySetId,
+  })
+    .then((data: any) => {
+      selectMemList.value = (data || []).map(
+        (item: { username: string; memberId: string }) => item.memberId
+      );
+    })
+    .catch(() => {});
 });
 </script>
 
