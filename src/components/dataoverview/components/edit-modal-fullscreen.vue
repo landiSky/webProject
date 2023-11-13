@@ -504,25 +504,25 @@ const onConfirm = (done: (closed: boolean) => void) => {
     if (!errors) {
       // setFields;
       console.log(formModel.value, 'closed');
-      // authRepeat({ creditCode: formModel.value.creditCode })
-      //   .then((res) => {
-      //     if (res.data.code === 200) {
-      //       console.log('edit-modal-fullscreen.vue:504', formModel.value);
-      //       authSubmit(formModel.value)
-      //         .then((res) => {
-      //           Message.success('认证已提交');
-      //           userStore.getUserBasicInfo();
-      //           emit('confirm');
-      //           done(true);
-      //         })
-      //         .catch((err) => {
-      //           done(false);
-      //         });
-      //     } else {
-      //       Message.error('信用代码已存在');
-      //     }
-      //   })
-      //   .catch(() => {});
+      authRepeat({ creditCode: formModel.value.creditCode })
+        .then((res) => {
+          if (res.data.code === 200) {
+            console.log('edit-modal-fullscreen.vue:504', formModel.value);
+            authSubmit(formModel.value)
+              .then((res) => {
+                Message.success('认证已提交');
+                userStore.getUserBasicInfo();
+                emit('confirm');
+                done(true);
+              })
+              .catch((err) => {
+                done(false);
+              });
+          } else {
+            Message.error('信用代码已存在');
+          }
+        })
+        .catch(() => {});
     } else {
       done(false);
     }
