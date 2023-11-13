@@ -265,7 +265,7 @@
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a
-                  :href="`/web/file/download?name=${formModel.useExplain}`"
+                  :href="`/server/web/file/download?name=${formModel.useExplain}`"
                   download
                   >应用秘钥</a
                 >
@@ -356,10 +356,6 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
-  classDes: {
-    type: String,
-    default: () => '',
-  },
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
@@ -367,20 +363,12 @@ const showModal = ref(true);
 const formModel = ref<Record<string, any>>({});
 
 const getDetail = () => {
-  console.log(3333, formModel.value);
-  goodsDetail(props.data?.id)
-    .then((res) => {
-      if (res.code === 200) {
-        formModel.value = res.data || {};
-        detailImageList.value = (res.data.detailImg as string).split(',');
-        console.log(4444, formModel.value);
-        loading.value = false;
-      }
-    })
-    .catch((e) => {
-      Message.error(e);
-      console.log(3333, e);
-    });
+  goodsDetail(props.data?.id).then((res) => {
+    if (res.code === 200) {
+      formModel.value = res.data || {};
+      detailImageList.value = (res.data.detailImg as string).split(',');
+    }
+  });
 };
 
 const statusColor = computed(() => {
@@ -394,7 +382,6 @@ const statusColor = computed(() => {
 });
 
 onMounted(() => {
-  console.log(props.data);
   if (props.data?.id) {
     getDetail();
   }
@@ -466,7 +453,7 @@ const doDelete = (id: any) => {
   deleteGoods(id).then((res) => {
     if (res.code === 200) {
       Message.success('删除成功');
-      emit('cancel');
+      emit('confirm');
     }
   });
 };

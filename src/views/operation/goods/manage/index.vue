@@ -109,7 +109,7 @@
     v-if="modalVisible"
     :data="state.detailData"
     @confirm="onModalConfirm"
-    @cancel="modalVisible = false"
+    @cancel="onModalConfirm"
   ></Detail>
 </template>
 
