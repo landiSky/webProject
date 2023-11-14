@@ -1,16 +1,11 @@
 <template>
   <div class="biox">
-    <Orderindex
-      v-if="
-        userInfoByCompany.nodeStatus === 1 || userInfoByCompany.nodeStatus === 1
-      "
-    >
-    </Orderindex>
-    <Dataoverview
+    <Orderindex> </Orderindex>
+    <!-- <Dataoverview
       v-if="
         userInfoByCompany.nodeStatus !== 1 || userInfoByCompany.nodeStatus !== 1
       "
-    ></Dataoverview>
+    ></Dataoverview> -->
   </div>
 </template>
 

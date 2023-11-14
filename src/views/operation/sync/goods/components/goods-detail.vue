@@ -142,7 +142,13 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
-                {{ formModel.detail ? JSON.parse(formModel.detail).map((item: any)=>item.moduleName).join(',') : '-' }}
+                {{
+                  formModel.detail
+                    ? JSON.parse(formModel.detail)
+                        .map((item: any) => item.moduleName)
+                        .join(',')
+                    : '-'
+                }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions

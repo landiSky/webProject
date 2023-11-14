@@ -30,29 +30,32 @@
       :rules="[
         {
           required: true,
-          validator: (value: string, cb: any) => itemValid(0, '请上传配图', value, cb),
+          validator: (value: string, cb: any) => imgValid(value, cb),
         },
       ]"
-      :validate-trigger="['change', 'input']"
+      :validate-trigger="['blur']"
     >
       <div>
         <t-upload
           list-type="picture-card"
-          :file-list="form.picUrl ? [{ url: form.picUrl }] : []"
+          :file-list="
+            form.picUrl
+              ? [{ url: `/server/web/file/download?name=${form.picUrl}` }]
+              : []
+          "
           :headers="{
             Authorization: `Bearer ${getToken()}`,
           }"
           action="/server/web/file/upload"
-          accept=".jpg,.png,.bmp,.tif,.gif"
+          accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
           :limit="1"
-          :auto-upload="false"
           tip="点击上传"
-          @change="(_:any, currentFile: any) => onUploadChange(_, currentFile)"
+          @success="(fileItem: any) => onUploadSuccess(fileItem)"
         >
         </t-upload>
         <span class="uploadTips">
           建议图片尺寸：200px *
-          200px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+          200px，支持jpg、png、bmp、tif、gif、jpeg文件格式，文件大小限制10M以内。
         </span>
       </div>
     </t-form-item>
@@ -220,6 +223,14 @@ const form = ref(
     : { ...initForm }
 );
 
+const imgValid = (value: string, cb: (params?: any) => void) => {
+  if (!form.value.picUrl) {
+    return cb('请上传配图');
+  }
+
+  return cb();
+};
+
 const itemValid = (
   maxLen: number,
   msg: string,
@@ -237,8 +248,11 @@ const itemValid = (
   return cb();
 };
 
-const onUploadChange = (_: any, currentFile: Record<string, any>) => {
-  form.value.picUrl = currentFile.url;
+const onUploadSuccess = (fileItem: any) => {
+  const { code, data } = fileItem.response || {};
+  if (code === 200) {
+    form.value.picUrl = data;
+  }
 };
 
 defineExpose({

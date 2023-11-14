@@ -21,9 +21,7 @@
                 ><p>|</p
                 ><p>{{
                   userInfoByCompany.companyId
-                    ? userInfoByCompany.primary
-                      ? '主账号'
-                      : '子账号'
+                    ? AccountTypeDesc[userInfoByCompany.primary]
                     : '-'
                 }}</p
                 ><p>|</p>
@@ -417,7 +415,8 @@
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
-      :product-id="selectProductId"
+      :product-id="selectProduct.id"
+      :delivery-set-id="selectProduct.deliveryId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
     >
@@ -478,11 +477,14 @@ import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
 import {
+  AccountType,
+  AccountTypeDesc,
   CompanyAuthStatus,
   CompanyAuthStatusDESC,
   NodeAuthStatus,
   NodeAuthStatusDESC,
 } from '@/enums/common';
+
 import { fileDownload } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
@@ -500,11 +502,14 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
-const selectProductId = ref();
+const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
 
 const stateClass = {
@@ -734,7 +739,7 @@ const togo = (urldata: string) => {
 };
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
-  selectProductId.value = item.id; // 配置的应用 id
+  selectProduct.value = item; // 配置的应用 id
   editModalVisiblealter.value = true;
 };
 // 配置应用 确定

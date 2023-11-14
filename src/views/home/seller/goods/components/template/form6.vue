@@ -48,7 +48,7 @@
             validator: (value: string, cb: any) => itemValid(index, '请上传配图', value, cb),
           },
         ]"
-        :validate-trigger="['change', 'input']"
+        :validate-trigger="['blur']"
       >
         <div>
           <t-upload
@@ -58,12 +58,10 @@
               Authorization: `Bearer ${getToken()}`,
             }"
             action="/server/web/file/upload"
-            accept=".jpg,.png,.bmp,.tif,.gif"
+            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
             :limit="5"
-            :auto-upload="false"
             tip="点击上传"
-            image-preview
-            @change="(_: any, currentFile: any) => onUploadChange(_, currentFile, index)"
+            @success="(fileItem: any) => onUploadSuccess(fileItem, index)"
           >
           </t-upload>
           <span class="uploadTips">
@@ -125,6 +123,8 @@ const itemValid = (
   cb: (params?: any) => void
 ) => {
   const item: { url: string }[] = form.value.blockList[index];
+
+  console.log('form6.vue:126', index, item, form.value.blockList);
   if (!item) {
     return cb(msg);
   }
@@ -144,15 +144,28 @@ const delBlock = (index: number) => {
   form.value.blockList.splice(index, 1);
 };
 
-const onUploadChange = (
-  _: any,
-  currentFile: Record<string, any>,
-  index: number
-) => {
-  form.value.blockList[index] = _.map((item: Record<string, any>) => {
-    return { url: item.url };
-  });
+const onUploadSuccess = (fileItem: any, index: number) => {
+  console.log('form1.vue:171', index, fileItem, form.value.blockList);
+  const { code, data } = fileItem.response || {};
+
+  if (code === 200) {
+    form.value.blockList[index].push({
+      url: `/server/web/file/download?name=${data}`,
+    });
+
+    console.log('form6.vue:154', index, form.value.blockList);
+  }
 };
+
+// const onUploadChange = (
+//   _: any,
+//   currentFile: Record<string, any>,
+//   index: number
+// ) => {
+//   form.value.blockList[index] = _.map((item: Record<string, any>) => {
+//     return { url: item.url };
+//   });
+// };
 
 defineExpose({
   form,
