@@ -6,9 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @cancel="clickCancel"
-      @close="clickCancel"
-      @back="clickCancel"
+      @on-before-cancel="cancelCheck"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -650,7 +648,7 @@ const formModel = ref<FormInterface>({
   detailImg: '',
   useExplain: '',
   introduction: '',
-  detail: '',
+  detail: '[]',
   companyId: '',
 });
 
@@ -1061,40 +1059,76 @@ const getDetail = (id: any) => {
 
     if (formModel2.value.saleType === 0) {
       copyModal.value = [];
-      for (const one of res.productDeliverySetList) {
-        const list1: any[] = [];
-        for (const two of one.accountNumList) {
-          list1.push({ accountNum: two.accountNum, price: two.price });
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list1: any[] = [];
+          const pList = one.accountNumList;
+          if (pList && pList.length > 0) {
+            for (const two of pList) {
+              list1.push({ accountNum: two.accountNum, price: two.price });
+            }
+          } else {
+            list1.push({ accountNum: '', price: '' });
+          }
+          const list2: any[] = [];
+          for (const three of one.durationList) {
+            list2.push(three.duration);
+          }
+          copyModal.value.push({
+            name: one.name,
+            url: one.url,
+            productDeliverySetInfoList: list1,
+            durationList: list2,
+          });
         }
-        const list2: any[] = [];
-        for (const three of one.durationList) {
-          list2.push(three.duration);
-        }
+      } else {
         copyModal.value.push({
-          name: one.name,
-          url: one.url,
-          productDeliverySetInfoList: list1,
-          durationList: list2,
+          name: '',
+          url: '',
+          productDeliverySetInfoList: [{ accountNum: '', price: '' }],
+          durationList: [],
         });
       }
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
-      for (const one of res.productDeliverySetList) {
-        const list1: any[] = [];
-        for (const two of one.accountNumList) {
-          list1.push({ price: two.price });
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list1: any[] = [];
+          const pList = one.accountNumList;
+          if (pList && pList.length > 0) {
+            for (const two of pList) {
+              list1.push({ price: two.price });
+            }
+          } else {
+            list1.push({ price: '' });
+          }
+          copyModal2.value.push({
+            name: one.name,
+            url: one.url,
+            productDeliverySetInfoList: list1,
+          });
         }
+      } else {
         copyModal2.value.push({
-          name: one.name,
-          url: one.url,
-          productDeliverySetInfoList: list1,
+          name: '',
+          url: '',
+          productDeliverySetInfoList: [{ price: '' }],
         });
       }
     } else {
       copyModal3.value = [];
-      for (const one of res.productDeliverySetList) {
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          copyModal3.value.push({
+            name: one.name,
+          });
+        }
+      } else {
         copyModal3.value.push({
-          name: one.name,
+          name: '',
         });
       }
     }
@@ -1150,7 +1184,8 @@ const clickCancel = () => {
   }
   const nowString = getModalJson();
   if (nowString !== modalJsonString.value) {
-    console.log(2);
+    console.log(nowString);
+    console.log(modalJsonString.value);
     Modal.warning({
       title: '是否保存已编辑的内容？',
       titleAlign: 'start',
@@ -1173,6 +1208,11 @@ const clickCancel = () => {
   } else {
     emit('cancel');
   }
+};
+
+const cancelCheck = () => {
+  clickCancel();
+  return false;
 };
 
 // 保存
