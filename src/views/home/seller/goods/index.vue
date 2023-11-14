@@ -338,7 +338,6 @@ function fetchData() {
   state.tableLoading = true;
   goodsList(params)
     .then((res: any) => {
-      console.log(res);
       state.tableData = res.records;
       pagination.total = res.total;
     })
@@ -348,11 +347,6 @@ function fetchData() {
 }
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
-  // type: 0,
-  // deliveryType: 0,
-  // status: 3,
-  // productTypeId: 1,
   const f = filteredValues[0];
   state.formModel[`${dataIndex}`] = f;
   fetchData();
@@ -537,7 +531,6 @@ const onPreview = (productId: string) => {
 };
 
 const reBuildClassList = (data: any[]) => {
-  console.log(data);
   classList.value = [
     {
       text: '全部',

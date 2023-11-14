@@ -81,7 +81,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       const api = isEdit.value ? updateClass : addClass;
-      console.log(formModel.value);
       api(formModel.value)
         .then((res) => {
           if (res.code === 200) {

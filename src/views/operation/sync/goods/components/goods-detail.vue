@@ -296,7 +296,6 @@ const props = defineProps({
 
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
-const formRef = ref();
 
 const formModel = ref<Record<string, any>>({});
 const detailImageList = ref<string[]>([]);
@@ -385,7 +384,6 @@ const statusColor = computed(() => {
 });
 
 onMounted(() => {
-  console.log(props.data);
   if (props.data?.id) {
     getDetail();
   }

@@ -393,7 +393,7 @@ const clickDown = () => {
 };
 
 const clickView = () => {
-  console.log('view');
+  emit('preview', dataInfo.value.id);
 };
 </script>
 

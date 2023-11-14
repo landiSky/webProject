@@ -50,6 +50,7 @@
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
+      @sorter-change="sorterChanged"
     >
       <template #entStatus="{ record }">
         <span
@@ -123,6 +124,7 @@ import { verifyList } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
 
 import { useRouter } from 'vue-router';
+import { stat } from 'fs';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -172,9 +174,11 @@ const ActionTypeEnum: { [name: string]: any } = {
   VERIFY: 1, // 审核
 };
 
-const defaultFormModel: Record<string, string> = {
+const defaultFormModel: Record<string, any> = {
   account: '',
   name: '',
+  product: null,
+  member: null,
 };
 
 const state = reactive<{
@@ -186,16 +190,6 @@ const state = reactive<{
   formModel: { ...defaultFormModel },
   tableData: [],
 });
-
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex);
-  const f = filteredValues[0];
-  if (typeof f === 'number') {
-    console.log(f);
-  } else {
-    console.log('clear');
-  }
-};
 
 const columns = [
   {
@@ -279,8 +273,6 @@ function fetchData() {
     pageSize,
     companyName: state.formModel.name,
     phone: state.formModel.account,
-    product: 1,
-    member: 1,
   };
   // 接口请求
   state.tableLoading = true;
@@ -295,6 +287,37 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+const sorterChanged = (dataIndex: string, direction: string) => {
+  if (direction === 'descend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 1;
+    } else {
+      state.formModel.product = 1;
+    }
+  } else if (direction === 'ascend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 0;
+    } else {
+      state.formModel.product = 0;
+    }
+  } else if (dataIndex === 'memberCount') {
+    state.formModel.member = null;
+  } else {
+    state.formModel.product = null;
+  }
+  fetchData();
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  fetchData();
+};
 
 const showDetail = (
   record: Record<string, string>,
