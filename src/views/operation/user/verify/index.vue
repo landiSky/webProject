@@ -124,7 +124,6 @@ import { verifyList } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
 
 import { useRouter } from 'vue-router';
-import { stat } from 'fs';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -179,6 +178,8 @@ const defaultFormModel: Record<string, any> = {
   name: '',
   product: null,
   member: null,
+  companyStatus: null,
+  nodeStatus: null,
 };
 
 const state = reactive<{
