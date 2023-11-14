@@ -12,7 +12,7 @@
             <p
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ userInfo.username || userInfo.mobile }}</p
+              >{{ userInfoByCompany?.username || userInfo.mobile }}</p
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">

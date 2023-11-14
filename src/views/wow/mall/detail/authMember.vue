@@ -29,7 +29,7 @@
 
     <template #footer>
       <t-button @click="emit('cancel')">取消</t-button>
-      <t-button type="outline" @click="emit('confirm')">跳过</t-button>
+      <t-button type="outline" @click="emit('confirm', [])">跳过</t-button>
       <t-button type="primary" @click="onConfirm">确定</t-button>
     </template>
   </t-modal>
@@ -63,15 +63,19 @@ const onConfirm = () => {
   if (!selectMemList.value.length) {
     return Message.warning(' 请选择要邀请的成员');
   }
-  apiAuthMember({
-    productId: props.productId,
-    memberIds: selectMemList.value,
-  })
-    .then(() => {
-      Message.success('邀请成功!');
-      emit('confirm');
-    })
-    .catch(() => {});
+
+  emit('confirm', selectMemList.value);
+  // apiAuthMember({
+  //   memberId: selectCompany.value?.memberId,
+  //   productId: props.productId,
+  //   memberIds: selectMemList.value,
+  //   productDeliverySetId: props.deliverySetId,
+  // })
+  //   .then(() => {
+  //     Message.success('邀请成功!');
+  //     emit('confirm');
+  //   })
+  //   .catch(() => {});
 };
 
 onMounted(() => {
@@ -84,15 +88,16 @@ onMounted(() => {
       if (memberList.value.length) {
         visible.value = true;
       } else {
-        emit('confirm');
+        emit('confirm', []);
         // emit('cancel');
       }
     })
     .catch(() => {
-      emit('confirm');
+      emit('confirm', []);
     });
 
   apiMemListByProduct({
+    memberId: selectCompany.value?.memberId,
     productId: props.productId,
     productDeliverySetId: props.deliverySetId,
   })

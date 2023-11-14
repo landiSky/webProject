@@ -106,10 +106,10 @@ const captchaVisible = ref(false);
 
 const formRef = ref();
 const form = ref({
-  phone: '15210602855',
+  phone: '',
   code: '',
-  password: 'Xz@12345',
-  confirmPassword: 'Xz@12345',
+  password: '',
+  confirmPassword: '',
 });
 
 const btnDisabled = computed(() => {
@@ -206,7 +206,10 @@ const goRegister = () => {
           Message.success('注册成功，去登录！');
           goLogin(); // 注册成功，跳转到登录
         })
-        .catch(() => {})
+        .catch(() => {
+          clearInterval(timerId.value);
+          countDownTime.value = 0;
+        })
         .finally(() => {
           regisLoading.value = false;
         });

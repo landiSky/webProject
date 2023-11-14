@@ -301,6 +301,7 @@ import {
 } from '@/api/operation/goods';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
+import RejectModal from './reject-modal.vue';
 
 const router = useRouter();
 const loading = ref(true);

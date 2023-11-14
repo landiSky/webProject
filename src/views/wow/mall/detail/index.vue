@@ -223,7 +223,7 @@ const onAuthCancel = () => {
   authModalVisible.value = false;
 };
 
-const onAuthConfirm = () => {
+const onAuthConfirm = (memberIdList: string[]) => {
   authModalVisible.value = false;
   const {
     companyId,
@@ -268,6 +268,8 @@ const onAuthConfirm = () => {
     deliveryType,
     logo,
     orderSource: source,
+    saleType,
+    memberIdList,
   };
 
   router.push({
@@ -349,10 +351,7 @@ onMounted(() => {
       bigImgPath.value = previewImgList.value?.[0];
 
       templateList.value = JSON.parse(data.detail);
-      // const tt = JSON.parse(data.detail);
-      // templateList.value = [tt[0], tt[0], tt[0], tt[0], tt[0], tt[0]];
 
-      console.log('index.vue:285', templateList.value);
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
@@ -373,6 +372,15 @@ onMounted(() => {
           priceParams.value.accountId = accountNumList?.[0].id;
           priceParams.value.durationId = durationList?.[0].id;
           getPrice();
+        } else if (saleType === SaleType.CONSULT) {
+          deliveryList.value.forEach((item: Record<string, any>) => {
+            versionObj[item.id] = item;
+          });
+
+          selectVersion.value = deliveryList.value?.[0];
+          const { id } = selectVersion.value;
+
+          priceParams.value.deliveryVersionId = id;
         }
       }
     })
@@ -507,6 +515,7 @@ onMounted(() => {
             font-size: 14px;
             line-height: 22px; /* 157.143% */
             text-align: center;
+            cursor: pointer;
 
             &.active {
               color: #1664ff;
@@ -526,7 +535,6 @@ onMounted(() => {
         color: #000;
         font-weight: 400;
         font-size: 14px;
-        font-family: PingFang SC;
         line-height: 22px; /* 157.143% */
         background-color: #fff;
         border-radius: 4px;

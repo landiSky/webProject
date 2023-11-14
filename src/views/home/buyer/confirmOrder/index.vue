@@ -14,7 +14,7 @@
       </div>
       <div class="table">
         <div class="thead">
-          <span>商家: xxx</span>
+          <span>商家: {{ createOrderInfo?.companyName || '-' }}</span>
           <span>交付类型</span>
           <span>商品金额</span>
           <span>帐号数量</span>
@@ -29,11 +29,24 @@
             <span>{{ createOrderInfo?.name }}</span>
           </span>
           <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
-          <span>{{ createOrderInfo?.price || '-' }} 元</span>
-          <span>{{ createOrderInfo?.accountDesc }}</span>
-          <span>{{ createOrderInfo?.durationDesc }}</span>
           <span>
-            <span>{{ createOrderInfo?.price || '-' }} 元</span>
+            <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
+              面议
+            </template>
+            <template v-else>{{ createOrderInfo?.price || '-' }} 元</template>
+          </span>
+          <span>{{ createOrderInfo?.accountDesc }}</span>
+
+          <span>{{ createOrderInfo?.durationDesc }}</span>
+
+          <span>
+            <span>
+              <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
+                面议
+              </template>
+              <template v-else>{{ createOrderInfo?.price || '-' }} 元</template>
+            </span>
+
             <!-- <span>(含减优惠券: 500元)</span> -->
           </span>
         </div>
@@ -58,6 +71,7 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import { apiCreateOrder } from '@/api/buyer/order';
+
 import { DeliverType, DeliverTypeDesc, SaleType } from '@/enums/common';
 
 const router = useRouter();
@@ -82,8 +96,11 @@ const clickCreateOrder = () => {
     orderSource,
     accountId,
     durationId,
+    memberIdList,
   } = createOrderInfo.value;
   const params = {
+    memberId: userStore.selectCompany?.memberId,
+    memberIdList,
     sellerId: companyId, // 卖家id（商品创者所属机构id）
     productId, // 商品id
     deliveryType, // 交付类型 0-saas类,1-独立部署类

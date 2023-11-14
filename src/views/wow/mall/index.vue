@@ -159,8 +159,11 @@
             </span>
             <span class="desc">{{ item.introduction }}</span>
             <span class="price">
-              <span class="prefix">{{ item.lowPrice }}</span>
-              <span class="suffix">元起</span>
+              <template v-if="item.lowPrice !== -1">
+                <span class="prefix">{{ item.lowPrice }}</span>
+                <span class="suffix">元起</span>
+              </template>
+              <span v-else class="prefix">价格面议</span>
             </span>
           </span>
         </span>

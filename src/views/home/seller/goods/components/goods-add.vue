@@ -50,7 +50,7 @@
           </t-form-item>
           <t-form-item label="商品名称" field="name">
             <t-input
-              v-model="formModel.name"
+              v-model.trim="formModel.name"
               allow-clear
               show-word-limit
               :max-length="{
@@ -366,7 +366,7 @@
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="copyModal[index].name"
+                  v-model.trim="copyModal[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -382,7 +382,7 @@
                 field="url"
               >
                 <t-input
-                  v-model="copyModal[index].url"
+                  v-model.trim="copyModal[index].url"
                   placeholder="请输入应用服务地址"
                   :max-length="{
                     length: 50,
@@ -409,7 +409,7 @@
                     <div class="price-name">套餐{{ cIndex + 1 }}：</div>
                     <div class="price-count"
                       ><t-input
-                        v-model="
+                        v-model.trim="
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .accountNum
                         "
@@ -419,7 +419,7 @@
                     >
                     <div class="price-value"
                       ><t-input
-                        v-model="
+                        v-model.trim="
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .price
                         "
@@ -490,7 +490,7 @@
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="copyModal2[index].name"
+                  v-model.trim="copyModal2[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -506,7 +506,7 @@
                 field="url"
               >
                 <t-input
-                  v-model="copyModal2[index].url"
+                  v-model.trim="copyModal2[index].url"
                   placeholder="请输入应用服务地址"
                   :max-length="{
                     length: 50,
@@ -521,7 +521,7 @@
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
-                <t-input v-model="copyModal2[index].onePiece" allow-clear
+                <t-input v-model.trim="copyModal2[index].onePiece" allow-clear
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -549,7 +549,7 @@
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model="copyModal3[index].name"
+                  v-model.trim="copyModal3[index].name"
                   allow-clear
                   show-word-limit
                   :max-length="{
@@ -778,7 +778,21 @@ const durationOptions = [
 
 const copyRules = {
   name: [{ required: true, message: '请输入交付版本名称' }],
-  url: [{ required: true, message: '请输入应用服务地址' }],
+  url: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入应用服务地址');
+        if (
+          !/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-.,@?^=%&:/~+#]*[\w\-@?^=%&/~+#])?/.test(
+            value
+          )
+        )
+          return cb('请检查应用服务地址');
+        return cb();
+      },
+    },
+  ],
   productDeliverySetInfoList: [
     {
       required: true,
@@ -1213,8 +1227,7 @@ const clickCancel = () => {
 };
 
 const cancelCheck = () => {
-  clickCancel();
-  return false;
+  return true;
 };
 
 // 保存
@@ -1280,8 +1293,11 @@ const clickUp = async () => {
   const r = await buildForm2();
   if (r) {
     saveAndUp(formModel2.value).then((res) => {
-      Message.success('上架申请成功');
-      emit('confirm');
+      console.log(res);
+      if (res) {
+        Message.success('上架申请成功');
+        emit('confirm');
+      }
     });
   }
 };

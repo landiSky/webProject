@@ -38,21 +38,22 @@ export function createPermissionGuard(router: Router) {
           await userStore.getUserBasicInfo();
         // console.log('permissionGuard.ts:36', userInfo);
 
-        const indexUrl = userInfo?.isAdmin ? '/goods' : '/buyer';
         if (userInfo?.userId) {
-          console.log('permissionGuard.ts:43', to.fullPath);
-          next(indexUrl);
+          if (userInfo?.bindStatus === 1) {
+            // 跳转到绑定页面，进行手机号绑定和安全校验
+            next('/safetycheck');
+          }
+          console.log('permissionGuard.ts:43', userInfo?.isAdmin, to.fullPath);
+          // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
+          if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
+            next('/goods');
+          } else {
+            next();
+          }
         } else {
           console.log('permissionGuard.ts:46', to.fullPath);
           next('/wow/index');
         }
-        // if (userInfo?.userId) {
-        //   // 获取用户信息失败后，跳转到login页面
-        //   const path = menuStore.genLeftMenu(userInfo?.auths, to.fullPath);
-        //   next(path);
-        // } else {
-        //   next(`/login`);
-        // }
       } else if (to.matched.length === 0) {
         console.log('permissionGuard.ts:55', to.fullPath);
         const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
@@ -96,9 +97,10 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:60', data.accessToken);
           setToken(data.accessToken);
 
-          const indexUrl = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
-          console.log('permissionGuard.ts:61', indexUrl);
-          window.location.href = `${window.location.protocol}//${window.location.host}/${indexUrl}`;
+          // 这时候还拿不到userInfo
+          // const indexUrl = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
+          console.log('permissionGuard.ts:61===获取 token 成功');
+          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer/index`;
         })
         .catch((err: any) => {
           console.log('permissionGuard.ts:89==获取 token 异常', err);

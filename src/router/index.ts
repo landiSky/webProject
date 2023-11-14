@@ -33,6 +33,11 @@ const constantRoutes = [
     name: 'register',
     component: () => import('@/views/login/index.vue'),
   },
+  {
+    path: '/safetycheck',
+    name: 'safetyCheck',
+    component: () => import('@/views/login/safetyCheck.vue'),
+  },
 ];
 
 const errorRoutes: RouteRecordRaw[] = [

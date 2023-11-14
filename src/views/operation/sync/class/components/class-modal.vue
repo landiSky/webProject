@@ -9,7 +9,7 @@
     <t-form ref="formRef" :model="formModel" :rules="formRules">
       <t-form-item field="name" label="分类名称">
         <t-input
-          v-model="formModel.name"
+          v-model.trim="formModel.name"
           placeholder="请输入分类名称"
           :max-length="{
             length: 50,
@@ -22,7 +22,7 @@
 
       <t-form-item field="note" label="备注">
         <t-textarea
-          v-model="formModel.remark"
+          v-model.trim="formModel.remark"
           placeholder="请输入备注"
           :max-length="{
             length: 200,
