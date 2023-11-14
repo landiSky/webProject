@@ -5,13 +5,13 @@
       :key="index"
       class="templateItem"
     >
-      <span> 模块{{ index }}: {{ item.moduleName }} </span>
+      <span> 模块{{ number2local[index] }}: {{ item.moduleName }} </span>
       <span>
         <t-button type="text" @click="editTemplate(index)">编辑</t-button>
         <t-button type="text" @click="delTemplate(index)">删除</t-button>
       </span>
     </div>
-    <div class="templateAdd">
+    <div v-if="templateList?.length < 7" class="templateAdd">
       <iconpark-icon
         class="plusIcon"
         name="squarePlus"
@@ -95,6 +95,8 @@ import { TemplateEnum } from '../constant';
 const currentIndex = ref<number>(-1); // 如果为-1代表新增，如果>=0 代表编辑
 const drawerVisible = ref(false);
 
+const number2local: string[] = ['一', '二', '三', '四', '五', '六', '七'];
+
 // const emit = defineEmits(['save', 'close']);
 const props = defineProps({
   templateData: {
@@ -104,8 +106,8 @@ const props = defineProps({
 });
 
 // 编辑还是新增
-const templateList = ref<Record<string, any>>(
-  props.templateData ? props.templateData : []
+const templateList = ref<Record<string, any>[]>(
+  props.templateData ? (props.templateData as any[]) : []
 );
 
 provide('templateList', templateList);
@@ -160,12 +162,12 @@ const addTemplate = () => {
   currentIndex.value = -1;
 };
 
-const editTemplate = (index: string) => {
+const editTemplate = (index: number) => {
   drawerVisible.value = true;
   currentIndex.value = Number(index);
   selectTempIndex.value = templateList.value[index].type - 1;
 };
-const delTemplate = (index: string) => {
+const delTemplate = (index: number) => {
   templateList.value.splice(index, 1);
 };
 

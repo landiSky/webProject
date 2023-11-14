@@ -38,7 +38,7 @@ const [block1, block2] = props.templateData.blockList;
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
-  font-family: PingFang SC;
+  padding: 20px;
   background-color: #fff;
 
   .title {
