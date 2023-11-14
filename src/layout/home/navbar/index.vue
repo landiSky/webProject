@@ -22,7 +22,7 @@
         v-else
         trigger="click"
         :popup-container="'.navbar'"
-        class="company"
+        class="companyDropdown"
         @select="onChangeCompany"
       >
         <!-- <span>===={{ selectCompany }}</span> -->
@@ -36,6 +36,7 @@
             v-for="company in userInfo?.companyList"
             :key="company.companyId"
             :value="company.companyId"
+            :class="{ active: selectCompany?.companyId === company.companyId }"
           >
             <t-space fill>
               <span> {{ company.companyName }} </span>
@@ -250,9 +251,11 @@ onMounted(() => {
     }
 
     .click-item {
-      margin-right: 8px;
-      padding: 10px 24px 10px 10px;
-
+      &:first-child {
+        margin-right: 24px;
+      }
+      // margin-right: 8px;
+      // padding: 10px 24px 10px 10px;
       &:hover {
         background-color: #272e3b;
         cursor: pointer;
@@ -317,8 +320,12 @@ onMounted(() => {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.company {
+:deep(.companyDropdown) {
   width: 198px;
+
+  .active {
+    background-color: #4086ff;
+  }
 }
 
 .logout {
