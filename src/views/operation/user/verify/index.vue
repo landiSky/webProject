@@ -50,6 +50,7 @@
       @page-change="onPageChange"
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
+      @sorter-change="sorterChanged"
     >
       <template #entStatus="{ record }">
         <span
@@ -153,12 +154,12 @@ const EntStatusList = [
     value: 0,
   },
   {
-    text: '已驳回',
-    value: 2,
-  },
-  {
     text: '已认证',
     value: 1,
+  },
+  {
+    text: '已驳回',
+    value: 2,
   },
 ];
 
@@ -172,9 +173,13 @@ const ActionTypeEnum: { [name: string]: any } = {
   VERIFY: 1, // 审核
 };
 
-const defaultFormModel: Record<string, string> = {
+const defaultFormModel: Record<string, any> = {
   account: '',
   name: '',
+  product: null,
+  member: null,
+  companyStatus: null,
+  nodeStatus: null,
 };
 
 const state = reactive<{
@@ -186,16 +191,6 @@ const state = reactive<{
   formModel: { ...defaultFormModel },
   tableData: [],
 });
-
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex);
-  const f = filteredValues[0];
-  if (typeof f === 'number') {
-    console.log(f);
-  } else {
-    console.log('clear');
-  }
-};
 
 const columns = [
   {
@@ -277,10 +272,7 @@ function fetchData() {
   const params = {
     pageNum: current, // 从0开始
     pageSize,
-    companyName: state.formModel.name,
-    phone: state.formModel.account,
-    product: 1,
-    member: 1,
+    ...state.formModel,
   };
   // 接口请求
   state.tableLoading = true;
@@ -295,6 +287,39 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+const sorterChanged = (dataIndex: string, direction: string) => {
+  if (direction === 'descend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 1;
+    } else {
+      state.formModel.product = 1;
+    }
+  } else if (direction === 'ascend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 0;
+    } else {
+      state.formModel.product = 0;
+    }
+  } else if (dataIndex === 'memberCount') {
+    state.formModel.member = null;
+  } else {
+    state.formModel.product = null;
+  }
+  fetchData();
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex, filteredValues);
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  console.log(state.formModel);
+  fetchData();
+};
 
 const showDetail = (
   record: Record<string, string>,

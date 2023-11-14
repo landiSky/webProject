@@ -388,7 +388,6 @@ const sorterChanged = (_: any, direction: string) => {
   fetchData();
 };
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
   const f = filteredValues[0];
   if (typeof f === 'boolean') {
     state.formModel[`${dataIndex}`] = null;

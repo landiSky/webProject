@@ -14,7 +14,6 @@
       :pagination="false"
       bordered
       :draggable="{ type: 'handle', width: 40 }"
-      @filter-change="filterChange"
       @change="handleChange"
     >
       <template #operations="{ record }">
@@ -57,16 +56,6 @@ const state = reactive<{
   editData: {},
   parentId: null,
 });
-
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex);
-  const f = filteredValues[0];
-  if (typeof f === 'number') {
-    console.log(f);
-  } else {
-    console.log('clear');
-  }
-};
 
 const columns = [
   {

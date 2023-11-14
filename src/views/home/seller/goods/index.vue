@@ -105,11 +105,10 @@
   </t-page-header>
   <Detail
     v-if="modalVisible"
-    :class-des="state.classDes"
     :data="state.detailData"
     @confirm="onModalConfirm"
-    @cancel="modalVisible = false"
-    @close="modalVisible = false"
+    @cancel="onModalConfirm"
+    @close="onModalConfirm"
     @edit="infoToEdit"
     @preview="onPreview"
   ></Detail>
@@ -133,7 +132,6 @@ import {
   downGoods,
   deleteGoods,
   preUp,
-  goodsDetail,
   fetchClassList,
 } from '@/api/goods-manage';
 import { useUserStore } from '@/store/modules/user';
@@ -153,13 +151,11 @@ const addModalVisible = ref(false);
 
 const state = reactive<{
   tableLoading: boolean;
-  classDes: string;
   formModel: Record<string, any>;
   tableData: Record<string, any>[];
   detailData: Record<string, any>;
 }>({
   tableLoading: false,
-  classDes: '',
   formModel: { ...defaultFormModel },
   tableData: [],
   detailData: {},
@@ -342,7 +338,6 @@ function fetchData() {
   state.tableLoading = true;
   goodsList(params)
     .then((res: any) => {
-      console.log(res);
       state.tableData = res.records;
       pagination.total = res.total;
     })
@@ -352,11 +347,6 @@ function fetchData() {
 }
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
-  // type: 0,
-  // deliveryType: 0,
-  // status: 3,
-  // productTypeId: 1,
   const f = filteredValues[0];
   state.formModel[`${dataIndex}`] = f;
   fetchData();
@@ -379,15 +369,9 @@ const clickSearchBtn = () => {
   onPageChange(1);
 };
 
-const getDetail = async (record: any) => {
-  const res = await goodsDetail(record.id);
-  return res;
-};
-
 // 详情/审核
 const clickDetailBtn = async (record: any) => {
-  state.detailData = await getDetail(record);
-  state.classDes = `${record.productTypeParentName}/${record.productTypeName}`;
+  state.detailData = record;
   modalVisible.value = true;
 };
 
@@ -547,7 +531,6 @@ const onPreview = (productId: string) => {
 };
 
 const reBuildClassList = (data: any[]) => {
-  console.log(data);
   classList.value = [
     {
       text: '全部',

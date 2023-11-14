@@ -1179,7 +1179,6 @@ const doSave = async () => {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     const result = await formRef.value.validate();
     if (result) {
-      console.log(result);
       return false;
     }
     res = await saveGoods1(formModel.value);
@@ -1200,8 +1199,6 @@ const clickCancel = () => {
   }
   const nowString = getModalJson();
   if (nowString !== modalJsonString.value) {
-    console.log(nowString);
-    console.log(modalJsonString.value);
     Modal.warning({
       title: '是否保存已编辑的内容？',
       titleAlign: 'start',
@@ -1293,7 +1290,6 @@ const clickUp = async () => {
   const r = await buildForm2();
   if (r) {
     saveAndUp(formModel2.value).then((res) => {
-      console.log(res);
       if (res) {
         Message.success('上架申请成功');
         emit('confirm');

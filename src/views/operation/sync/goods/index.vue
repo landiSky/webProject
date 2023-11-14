@@ -330,9 +330,6 @@ function fetchData() {
     pageNum: current,
     pageSize,
     type: 0,
-    // deliveryType: 1,
-    // status: 1,
-    // productTypeId: '2',
     ...state.formModel,
   };
 
@@ -351,10 +348,6 @@ function fetchData() {
 }
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
-  // deliveryType: 0,
-  // status: 3,
-  // productTypeId: 1,
   const f = filteredValues[0];
   state.formModel[`${dataIndex}`] = f;
   fetchData();
@@ -444,7 +437,6 @@ const clickDetailBtn = (record: Record<string, any>) => {
 };
 
 const reBuildClassList = (data: any[]) => {
-  console.log(data);
   TypeList.value = [
     {
       text: '全部',
