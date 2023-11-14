@@ -360,11 +360,11 @@ onMounted(() => {
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
-        if (saleType === SaleType.ONEOFF) {
+        if ([SaleType.ONEOFF, SaleType.PACKAGE].includes(saleType)) {
           // 一口价
-          priceParams.value.deliveryVersionId = deliveryList.value[0].id;
-          getPrice();
-        } else if (saleType === SaleType.PACKAGE) {
+          //   priceParams.value.deliveryVersionId = deliveryList.value[0].id;
+          //   getPrice();
+          // } else if (saleType === SaleType.PACKAGE) {
           deliveryList.value.forEach((item: Record<string, any>) => {
             versionObj[item.id] = item;
           });

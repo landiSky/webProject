@@ -226,6 +226,7 @@ defineExpose({
   padding: 20px;
 
   .btnList {
+    display: flex;
     margin-bottom: 16px;
     color: #4e5969;
     font-weight: 400;
