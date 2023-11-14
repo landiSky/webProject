@@ -97,8 +97,11 @@ const clickCreateOrder = () => {
     orderSource,
     accountId,
     durationId,
+    memberIdList,
   } = createOrderInfo.value;
   const params = {
+    memberId: userStore.selectCompany?.memberId,
+    memberIdList,
     sellerId: companyId, // 卖家id（商品创者所属机构id）
     productId, // 商品id
     deliveryType, // 交付类型 0-saas类,1-独立部署类

@@ -11,11 +11,11 @@ export function apiMemberList(params: Record<string, any>) {
 }
 
 //  获取企业下某个应用下有权限的成员列表
-export function apiMemListByProduct(params: Record<string, any>) {
-  return $http.get('/server/web/product/selectConfig', { params });
+export function apiMemListByProduct(data: Record<string, any>) {
+  return $http.post('/server/web/product/app/selectConfig', data);
 }
 
 // 给应用授权可查看的成员
 export function apiAuthMember(data: Record<string, any>) {
-  return $http.post('/server/web/product/appConfig', data);
+  return $http.post('/server/web/product/app/saveConfig', data);
 }
