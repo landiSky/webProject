@@ -676,7 +676,8 @@ const nodeAuth = () => {
 };
 const onAuthModalConfirm = () => {
   authModalVisible.value = false;
-  window.open(userInfoByCompany.value.idPointer, '_blank'); // 企业节点认证跳转到二级
+  const { snmsUrls } = userInfo.value || {};
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
