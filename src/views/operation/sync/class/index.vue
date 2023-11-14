@@ -11,6 +11,7 @@
       :loading="state.tableLoading"
       :columns="columns"
       :data="state.tableData"
+      :pagination="false"
       bordered
       :draggable="{ type: 'handle', width: 40 }"
       @filter-change="filterChange"
