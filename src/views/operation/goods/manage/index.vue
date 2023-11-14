@@ -123,7 +123,10 @@ import {
   upGoods,
 } from '@/api/operation/goods';
 import { classList } from '@/api/operation/sync-class';
+import { useRouter } from 'vue-router';
 import Detail from './components/goods-detail.vue';
+
+const router = useRouter();
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
@@ -433,6 +436,11 @@ const clickDetailBtn = (record: Record<string, any>) => {
 // 预览
 const clickPreviewBtn = (record: Record<string, any>) => {
   // TODO 跳转预览页面
+  const routeData = router.resolve({
+    name: 'wowMallPreview',
+    params: { id: record.id },
+  });
+  window.open(routeData?.href, '_blank');
 };
 
 // 下架操作

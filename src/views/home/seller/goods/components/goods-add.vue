@@ -587,7 +587,12 @@ import {
   goodsDetail,
 } from '@/api/goods-manage';
 import { getToken } from '@/utils/auth';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import TemplateDrawer from './template.vue';
+
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 const visible = ref(true);
 const templateRef = ref();
@@ -633,6 +638,7 @@ interface FormInterface {
   useExplain: string;
   introduction: string;
   detail: string;
+  companyId: string;
 }
 
 const formModel = ref<FormInterface>({
@@ -645,6 +651,7 @@ const formModel = ref<FormInterface>({
   useExplain: '',
   introduction: '',
   detail: '',
+  companyId: '',
 });
 
 const expList = ref<any[]>([]);
@@ -1105,6 +1112,7 @@ const getGoodsId = () => {
 };
 
 onMounted(() => {
+  formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
   if (props.data?.id) {
     formModel.value.id = props.data?.id;
