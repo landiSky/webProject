@@ -651,7 +651,7 @@ const FullscreenDetailsModal = ref(false);
 const dataStatistics = () => {
   orderNum({
     userCompanyId: String(userInfoByCompany.value?.companyId),
-    flag: '0',
+    flag: '1',
   }).then((res) => {
     console.log(res, '订单数量');
 
