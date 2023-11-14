@@ -545,14 +545,14 @@ const orderStatusSelect = ref([
   },
 ]);
 // tab 状态数量
-const statusNum = reactive({
-  count: 4, // 全部订单数量
-  payCount: 2, // 待支付页数量
-  auditCount: 1, // 待审核页数量
+const statusNum: Record<string, any> = ref({
+  count: 0, // 全部订单数量
+  payCount: 0, // 待支付页数量
+  auditCount: 0, // 待审核页数量
   deliverCount: 0, // 待交付数量
   rejectCount: 0, // 已驳回数量
   servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 1, // 已完成数量
+  completeCount: 0, // 已完成数量
 });
 const activeIndex = ref(0);
 const clickNav = (value: string | null, ins: number) => {
@@ -653,7 +653,7 @@ const dataStatistics = () => {
     flag: '0',
   }).then((res) => {
     console.log(res, '订单数量');
-    // @ts-ignore
+
     statusNum.value = res;
   });
 };
@@ -680,6 +680,9 @@ const onRangeChange = (
 // 查询
 const getTableData = () => {
   console.log(formInline, 'getTableData');
+  formInline.pageNum = 1;
+  noDatalist.value = true;
+  init();
 };
 // 重置
 const clearSearch = () => {

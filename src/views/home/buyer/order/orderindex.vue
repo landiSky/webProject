@@ -734,7 +734,6 @@ const clearSearch = () => {
   formInline.startTime = '';
   formInline.endTime = '';
   formInline.orderStatus = null;
-
   formInline.pageNum = 1;
   noDatalist.value = false;
   init();

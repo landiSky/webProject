@@ -251,7 +251,7 @@
                   font-size: 14px;
                   line-height: 15px;
                 "
-                >商品信息</span
+                >商品信息{{ dataList.productId }}</span
               ></div
             >
             <div class="cardContent">
@@ -360,7 +360,7 @@
       v-if="editModalVisible"
       :data="state.updataamount"
       @confirm="onEditModalConfirm"
-      @cancel="editModalVisible = false"
+      @cancel="editModalVisibleflag"
     ></EditModal>
     <!-- 驳回弹窗 -->
     <EditModalTurndown
@@ -499,6 +499,9 @@ const onEditModalConfirm = () => {
   editModalVisible.value = false;
   init();
   Message.success('金额修改成功');
+};
+const editModalVisibleflag = () => {
+  editModalVisible.value = false;
 };
 // 驳回
 const turndownsyhn = () => {

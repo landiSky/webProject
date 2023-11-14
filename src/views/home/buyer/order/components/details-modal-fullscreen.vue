@@ -491,7 +491,7 @@ const clickCopy = (Num: string) => {
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {
   // dataList.value.id
-  state.updataamount.id = '2';
+  state.updataamount.id = id;
   // state.updataamount.currentamount = dataList.value.attachmentAddressArr;
   editModalVisible.value = true;
 };
