@@ -618,6 +618,7 @@ const clickNav = (value: string | null, ins: number) => {
   } else {
     orderStatusSelect.value = [];
   }
+  // init();
 };
 const init = () => {
   orderList({

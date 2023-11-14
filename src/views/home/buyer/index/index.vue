@@ -304,7 +304,7 @@
             </div>
             <div class="tophead"
               ><span
-                v-if="userInfoByCompany === true"
+                v-if="userInfoByCompany.primary === true"
                 style="color: #1664ff; cursor: pointer"
                 @click="configurationapp(item)"
                 >配置应用</span
@@ -695,8 +695,11 @@ const tomall = () => {
 };
 // 前往
 const togo = (id: string, dueDate: string) => {
+  console.log(id, dueDate);
   if (dueDate) {
-    orderGo({ deliveryId: id }).then((res) => {});
+    orderGo({ deliveryId: id }).then((res) => {
+      console.log(res);
+    });
     // window.open(urldata);
   }
 };
