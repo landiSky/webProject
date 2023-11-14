@@ -166,7 +166,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 48px;
   padding-right: 24px;
   background-color: #1d2129;
 
