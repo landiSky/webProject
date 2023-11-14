@@ -299,8 +299,10 @@ import {
   downGoods,
   verifyGoods,
 } from '@/api/operation/goods';
+import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
+const router = useRouter();
 const loading = ref(true);
 const detailImageList = ref<string[]>([]);
 const rejectVisible = ref(false);
@@ -413,11 +415,15 @@ const clickRejectBtn = () => {
 };
 // 预览
 const clickPreviewBtn = () => {
-  // TODO 预览
+  const routeData = router.resolve({
+    name: 'wowMallPreview',
+    params: { id: props.data.id },
+  });
+  window.open(routeData?.href, '_blank');
 };
 // 查看
 const clickViewBtn = () => {
-  // TODO 查看
+  clickPreviewBtn();
 };
 // 下架操作
 const doDown = (id: any) => {

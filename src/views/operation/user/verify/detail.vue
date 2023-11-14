@@ -73,7 +73,7 @@
         </t-descriptions-item>
         <t-descriptions-item label="营业执照">
           <img
-            :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicenseId}`"
+            :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicense}`"
             style="width: 158px; height: 100px; background-color: #999"
           />
         </t-descriptions-item>
