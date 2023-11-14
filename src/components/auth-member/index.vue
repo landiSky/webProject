@@ -48,6 +48,7 @@ const { userInfo, selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,
+  deliverySetId: String,
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const visible = ref(true);
@@ -61,6 +62,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
   }
   apiAuthMember({
     productId: props.productId,
+    productDeliverySetId: props.deliverySetId,
     memberIds: selectMemList.value,
   })
     .then(() => {
@@ -82,7 +84,10 @@ onMounted(() => {
     })
     .catch(() => {});
 
-  apiMemListByProduct({ productId: props.productId })
+  apiMemListByProduct({
+    productId: props.productId,
+    productDeliverySetId: props.deliverySetId,
+  })
     .then((data: any) => {
       selectMemList.value = (data || []).map(
         (item: { username: string; memberId: string }) => item.memberId

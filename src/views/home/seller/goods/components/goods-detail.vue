@@ -168,7 +168,11 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
-                {{ JSON.parse(props.data.detail).map((item: any)=>item.moduleName).join(',') }}
+                {{
+                  JSON.parse(props.data.detail)
+                    .map((item: any) => item.moduleName)
+                    .join(',')
+                }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -216,7 +220,7 @@
                 {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 0"
+                v-if="props.data.saleType === 0"
                 label="套餐定价设置"
               >
                 <div v-for="(p, pIndex) of st.accountNumList" :key="p">
@@ -225,13 +229,13 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 0"
+                v-if="props.data.saleType === 0"
                 label="可选购买时长"
               >
                 {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType === 1"
+                v-if="props.data.saleType === 1"
                 label="一口价金额"
               >
                 {{ st.accountNumList[0].price }} 元

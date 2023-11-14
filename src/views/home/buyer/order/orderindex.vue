@@ -644,7 +644,10 @@ const init = () => {
   });
 };
 const dataStatistics = () => {
-  orderNum({}).then((res) => {
+  orderNum({
+    userCompanyId: String(userInfoByCompany.value?.companyId),
+    flag: '0',
+  }).then((res) => {
     console.log(res, '订单数量');
     // @ts-ignore
     statusNum.value = res;

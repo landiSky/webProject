@@ -400,7 +400,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
-import { orderList, merchantSub } from '@/api/seller/order';
+import { orderList, merchantSub, orderNum } from '@/api/seller/order';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import noSearch from '@/assets/images/noSearch.png';
@@ -647,8 +647,19 @@ const init = () => {
     formInline.total = res.total;
   });
 };
+const dataStatistics = () => {
+  orderNum({
+    userCompanyId: String(userInfoByCompany.value?.companyId),
+    flag: '0',
+  }).then((res) => {
+    console.log(res, '订单数量');
+    // @ts-ignore
+    statusNum.value = res;
+  });
+};
 onMounted(() => {
   init();
+  dataStatistics();
   console.log('执行了');
 });
 // 时间框选择格式是：年月日，接口入参需要加上时分秒

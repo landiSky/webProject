@@ -155,6 +155,7 @@
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
+    :delivery-set-id="selectVersion.id"
     @cancel="onAuthCancel"
     @confirm="onAuthConfirm"
   ></AuthMemberModal>
@@ -167,7 +168,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { Modal } from '@tele-design/web-vue';
 
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
-import { SaleType } from '@/enums/common';
+import { SaleType, AccountType, AccountTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
@@ -278,15 +279,29 @@ const clickAddCart = () => {
   const { userInfo, userInfoByCompany } = userStore;
   if (!userInfo?.userId) {
     userStore.jumpToLogin();
-  } else if (!userInfoByCompany?.primary) {
+  } else if (userInfoByCompany?.primary === AccountType.MAIN) {
+    authModalVisible.value = true;
+  } else if (userInfoByCompany?.primary === AccountType.MEMBER) {
     Modal.warning({
       title: '请联系企业管理员购买开通服务',
       okText: '好的',
       hideCancel: true,
       content: '',
     });
-  } else {
-    authModalVisible.value = true;
+  } else if (userInfoByCompany?.primary === AccountType.UNAUTH) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不认证',
+      okText: '去认证',
+      onOk: () => {
+        router.push({
+          path: '/buyer/index',
+        });
+      },
+    });
   }
 };
 
@@ -326,7 +341,6 @@ const clickNav = (index: number) => {
 
 onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
-  console.log('index.vue:332', route);
   apiProductDetail({ id: route.params.id })
     .then((data) => {
       prodDetail.value = data;

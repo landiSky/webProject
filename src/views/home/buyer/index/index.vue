@@ -21,9 +21,7 @@
                 ><p>|</p
                 ><p>{{
                   userInfoByCompany.companyId
-                    ? userInfoByCompany.primary
-                      ? '主账号'
-                      : '子账号'
+                    ? AccountTypeDesc[userInfoByCompany.primary]
                     : '-'
                 }}</p
                 ><p>|</p>
@@ -417,7 +415,8 @@
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
-      :product-id="selectProductId"
+      :product-id="selectProduct.id"
+      :delivery-set-id="selectProduct.deliveryId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
     >
@@ -478,11 +477,14 @@ import { useRouter } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
 import {
+  AccountType,
+  AccountTypeDesc,
   CompanyAuthStatus,
   CompanyAuthStatusDESC,
   NodeAuthStatus,
   NodeAuthStatusDESC,
 } from '@/enums/common';
+
 import { fileDownload } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
@@ -504,7 +506,7 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
-const selectProductId = ref();
+const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
 
 const stateClass = {
@@ -641,7 +643,10 @@ const orderOverall = [
 
 // 订单概览 接口
 const orderlistdata = () => {
-  orderOver({}).then((res) => {
+  orderOver({
+    userCompanyId: String(userInfoByCompany.value?.companyId),
+    flag: '0',
+  }).then((res) => {
     console.log(res, '订单概览 接口');
     // @ts-ignore
     orderlist.value = res;
@@ -671,7 +676,8 @@ const nodeAuth = () => {
 };
 const onAuthModalConfirm = () => {
   authModalVisible.value = false;
-  window.open(userInfoByCompany.value.idPointer, '_blank'); // 企业节点认证跳转到二级
+  const { snmsUrls } = userInfo.value || {};
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
@@ -734,7 +740,7 @@ const togo = (urldata: string) => {
 };
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
-  selectProductId.value = item.id; // 配置的应用 id
+  selectProduct.value = item; // 配置的应用 id
   editModalVisiblealter.value = true;
 };
 // 配置应用 确定

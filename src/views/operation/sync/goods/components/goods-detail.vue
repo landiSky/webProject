@@ -63,12 +63,12 @@
         <div class="archor"
           ><t-affix :offset-top="180">
             <t-anchor>
-              <t-anchor-link href="#base">基本信息</t-anchor-link>
-              <t-anchor-link href="#sale">售卖设置</t-anchor-link>
+              <t-anchor-link href="#sbase">基本信息</t-anchor-link>
+              <t-anchor-link href="#ssale">售卖设置</t-anchor-link>
               <t-anchor-link
                 v-for="(_, index) of formModel.productDeliverySetList"
                 :key="index"
-                :href="'#st' + index"
+                :href="'#sst' + index"
               >
                 交付版本{{ index + 1 }}
               </t-anchor-link>
@@ -78,7 +78,7 @@
         <div class="content">
           <div class="center">
             <t-descriptions
-              id="base"
+              id="sbase"
               title="基本信息"
               :title-style="{
                 fontSize: '14px',
@@ -152,7 +152,7 @@
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              id="sale"
+              id="ssale"
               title="售卖设置"
               :title-style="{
                 fontSize: '14px',
@@ -173,7 +173,7 @@
             </t-descriptions>
             <t-descriptions
               v-for="(st, index) of formModel.productDeliverySetList"
-              :id="'st' + index"
+              :id="'sst' + index"
               :key="index"
               :title="'交付版本' + (index + 1)"
               :title-style="{
@@ -196,7 +196,7 @@
                 {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 0"
+                v-if="formModel.saleType === 0"
                 label="套餐定价设置"
               >
                 <div v-for="(p, pIndex) of st.accountNumList" :key="p">
@@ -205,13 +205,13 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 0"
+                v-if="formModel.saleType === 0"
                 label="可选购买时长"
               >
                 {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 1"
+                v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
                 {{ st.accountNumList[0].price }} 元
@@ -360,8 +360,8 @@ const getDetail = () => {
   goodsDetail(props.data?.id)
     .then((res) => {
       if (res.code === 200) {
-        formModel.value = res || {};
-        detailImageList.value = res.detailImg.split(',');
+        formModel.value = res.data || {};
+        detailImageList.value = res.data.detailImg.split(',');
       }
     })
     .catch((e) => {

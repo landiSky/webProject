@@ -131,7 +131,7 @@ export const useUserStore = defineStore({
         if (Array.isArray(companyList) && companyList.length) {
           const resultList = companyList.filter(
             (company: Record<string, any>) =>
-              company.memberType === AccountType.ADMIN
+              company.memberType === AccountType.MAIN
           );
 
           const adminCompany =

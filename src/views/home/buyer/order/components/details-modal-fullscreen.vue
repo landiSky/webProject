@@ -340,9 +340,10 @@
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'saas类' : '独立部署类' }}
-                    <p style="color: #86909c"
-                      >({{ dataList.accountCount
-                      }}{{ dataList.buyDuration }})</p
+                    <p v-if="dataList.accountCount" style="color: #86909c"
+                      >({{ dataList.accountCount }}个账号{{
+                        dataList.buyDuration
+                      }}个月)</p
                     >
                   </div>
                 </t-col>
