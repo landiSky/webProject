@@ -411,7 +411,7 @@
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
-      :product-id="selectProduct.id"
+      :product-id="selectProduct.productId"
       :delivery-set-id="selectProduct.deliveryId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
@@ -496,8 +496,11 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
