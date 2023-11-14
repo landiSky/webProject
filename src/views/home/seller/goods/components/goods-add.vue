@@ -6,9 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @cancel="clickCancel"
-      @close="clickCancel"
-      @back="clickCancel"
+      @on-before-cancel="cancelCheck"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -591,6 +589,7 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import TemplateDrawer from './template.vue';
 
+let needSave = false;
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
@@ -650,7 +649,7 @@ const formModel = ref<FormInterface>({
   detailImg: '',
   useExplain: '',
   introduction: '',
-  detail: '',
+  detail: '[]',
   companyId: '',
 });
 
@@ -1061,40 +1060,76 @@ const getDetail = (id: any) => {
 
     if (formModel2.value.saleType === 0) {
       copyModal.value = [];
-      for (const one of res.productDeliverySetList) {
-        const list1: any[] = [];
-        for (const two of one.accountNumList) {
-          list1.push({ accountNum: two.accountNum, price: two.price });
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list1: any[] = [];
+          const pList = one.accountNumList;
+          if (pList && pList.length > 0) {
+            for (const two of pList) {
+              list1.push({ accountNum: two.accountNum, price: two.price });
+            }
+          } else {
+            list1.push({ accountNum: '', price: '' });
+          }
+          const list2: any[] = [];
+          for (const three of one.durationList) {
+            list2.push(three.duration);
+          }
+          copyModal.value.push({
+            name: one.name,
+            url: one.url,
+            productDeliverySetInfoList: list1,
+            durationList: list2,
+          });
         }
-        const list2: any[] = [];
-        for (const three of one.durationList) {
-          list2.push(three.duration);
-        }
+      } else {
         copyModal.value.push({
-          name: one.name,
-          url: one.url,
-          productDeliverySetInfoList: list1,
-          durationList: list2,
+          name: '',
+          url: '',
+          productDeliverySetInfoList: [{ accountNum: '', price: '' }],
+          durationList: [],
         });
       }
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
-      for (const one of res.productDeliverySetList) {
-        const list1: any[] = [];
-        for (const two of one.accountNumList) {
-          list1.push({ price: two.price });
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list1: any[] = [];
+          const pList = one.accountNumList;
+          if (pList && pList.length > 0) {
+            for (const two of pList) {
+              list1.push({ price: two.price });
+            }
+          } else {
+            list1.push({ price: '' });
+          }
+          copyModal2.value.push({
+            name: one.name,
+            url: one.url,
+            productDeliverySetInfoList: list1,
+          });
         }
+      } else {
         copyModal2.value.push({
-          name: one.name,
-          url: one.url,
-          productDeliverySetInfoList: list1,
+          name: '',
+          url: '',
+          productDeliverySetInfoList: [{ price: '' }],
         });
       }
     } else {
       copyModal3.value = [];
-      for (const one of res.productDeliverySetList) {
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          copyModal3.value.push({
+            name: one.name,
+          });
+        }
+      } else {
         copyModal3.value.push({
-          name: one.name,
+          name: '',
         });
       }
     }
@@ -1105,6 +1140,7 @@ const getDetail = (id: any) => {
 
 const getGoodsId = () => {
   genGoodsId().then((data: any) => {
+    needSave = true;
     formModel.value.id = data;
     formModel2.value.productId = data;
     modalJsonString.value = getModalJson();
@@ -1150,7 +1186,8 @@ const clickCancel = () => {
   }
   const nowString = getModalJson();
   if (nowString !== modalJsonString.value) {
-    console.log(2);
+    console.log(nowString);
+    console.log(modalJsonString.value);
     Modal.warning({
       title: '是否保存已编辑的内容？',
       titleAlign: 'start',
@@ -1175,12 +1212,18 @@ const clickCancel = () => {
   }
 };
 
+const cancelCheck = () => {
+  clickCancel();
+  return false;
+};
+
 // 保存
 const clickSave = async () => {
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
     Message.success('保存成功');
+    needSave = false;
   }
 };
 
@@ -1206,6 +1249,27 @@ const clickPrevious = () => {
 
 // 预览
 const clickPreview = () => {
+  if (needSave) {
+    Modal.warning({
+      title: '暂时无法预览',
+      titleAlign: 'start',
+      content: '请先保存信息后再进行效果预览，保存后信息仍可以修改。',
+      okText: '保存并预览',
+      cancelText: '取消',
+      hideCancel: false,
+      onOk: async () => {
+        const res = await doSave();
+        if (res) {
+          if (formModel.value.id) {
+            emit('preview', formModel.value.id);
+          }
+        } else {
+          Message.error('信息暂时无法保存');
+        }
+      },
+    });
+    return;
+  }
   if (formModel.value.id) {
     emit('preview', formModel.value.id);
   }
