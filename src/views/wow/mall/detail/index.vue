@@ -165,7 +165,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { Modal } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
 import { SaleType, AccountType, AccountTypeDesc } from '@/enums/common';
@@ -281,6 +281,8 @@ const clickAddCart = () => {
   const { userInfo, userInfoByCompany } = userStore;
   if (!userInfo?.userId) {
     userStore.jumpToLogin();
+  } else if (userInfoByCompany?.companyId === prodDetail.value.companyId) {
+    Message.warning('无法购买本企业商品!');
   } else if (userInfoByCompany?.primary === AccountType.MAIN) {
     authModalVisible.value = true;
   } else if (userInfoByCompany?.primary === AccountType.MEMBER) {
@@ -310,6 +312,9 @@ const clickAddCart = () => {
 // const templateList = JSON.parse(testData);
 
 const getPrice = () => {
+  if (prodDetail.value.saleType === SaleType.CONSULT) {
+    return;
+  }
   computing.value = true;
   apiComputePrice({
     productId: prodDetail.value.id,
@@ -357,7 +362,7 @@ onMounted(() => {
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
         if (saleType === SaleType.ONEOFF) {
           // 一口价
-          priceParams.value.deliveryVersionId = deliveryList.value;
+          priceParams.value.deliveryVersionId = deliveryList.value[0].id;
           getPrice();
         } else if (saleType === SaleType.PACKAGE) {
           deliveryList.value.forEach((item: Record<string, any>) => {
