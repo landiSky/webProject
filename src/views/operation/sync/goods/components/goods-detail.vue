@@ -190,7 +190,7 @@
                 {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 0"
+                v-if="formModel.saleType === 0"
                 label="套餐定价设置"
               >
                 <div v-for="(p, pIndex) of st.accountNumList" :key="p">
@@ -199,13 +199,13 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 0"
+                v-if="formModel.saleType === 0"
                 label="可选购买时长"
               >
                 {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="formModel.deliveryType === 1"
+                v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
                 {{ st.accountNumList[0].price }} 元
@@ -354,8 +354,8 @@ const getDetail = () => {
   goodsDetail(props.data?.id)
     .then((res) => {
       if (res.code === 200) {
-        formModel.value = res || {};
-        detailImageList.value = res.detailImg.split(',');
+        formModel.value = res.data || {};
+        detailImageList.value = res.data.detailImg.split(',');
       }
     })
     .catch((e) => {
