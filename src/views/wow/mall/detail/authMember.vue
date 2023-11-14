@@ -96,17 +96,17 @@ onMounted(() => {
       emit('confirm', []);
     });
 
-  apiMemListByProduct({
-    memberId: selectCompany.value?.memberId,
-    productId: props.productId,
-    productDeliverySetId: props.deliverySetId,
-  })
-    .then((data: any) => {
-      selectMemList.value = (data || []).map(
-        (item: { username: string; memberId: string }) => item.memberId
-      );
-    })
-    .catch(() => {});
+  // apiMemListByProduct({
+  //   memberId: selectCompany.value?.memberId,
+  //   productId: props.productId,
+  //   productDeliverySetId: props.deliverySetId,
+  // })
+  //   .then((data: any) => {
+  //     selectMemList.value = (data || []).map(
+  //       (item: { username: string; memberId: string }) => item.memberId
+  //     );
+  //   })
+  //   .catch(() => {});
 });
 </script>
 

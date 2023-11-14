@@ -61,8 +61,8 @@ const onConfirm = (done: (closed: boolean) => void) => {
     if (!errors) {
       verifyGoods({
         id: props.id ?? '',
-        certStatus: 2,
-        verifyGoods: formModel.value.reason,
+        status: 2,
+        rejectReason: formModel.value.reason,
       })
         .then((res) => {
           if (res.code === 200) {

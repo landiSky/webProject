@@ -482,11 +482,11 @@ const deliveryType = reactive([
     label: '全部',
   },
   {
-    value: '1',
+    value: '0',
     label: 'SAAS',
   },
   {
-    value: '2',
+    value: '1',
     label: '独立部署',
   },
 ]);
@@ -678,7 +678,18 @@ const onRangeChange = (
 };
 
 // 清空查询项
-const clearSearchles = () => {};
+const clearSearchles = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;

@@ -294,7 +294,7 @@
               <t-col :span="3">
                 <div class="grid-content">
                   <t-button
-                    v-if="item.orderStatus === 0"
+                    v-if="item.orderStatus === 0 && item.saleType !== 2"
                     type="text"
                     style="width: 100%"
                     @click="modificationamount(item.id, item.productPrice)"
@@ -486,11 +486,11 @@ const deliveryType = reactive([
     label: '全部',
   },
   {
-    value: '1',
+    value: '0',
     label: 'SAAS',
   },
   {
-    value: '2',
+    value: '1',
     label: '独立部署',
   },
 ]);
@@ -699,7 +699,18 @@ const clearSearch = () => {
 };
 
 // 清空查询项
-const clearSearchles = () => {};
+const clearSearchles = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;

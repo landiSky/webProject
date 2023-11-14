@@ -583,6 +583,7 @@ const delivery = () => {
 // 交付应用 完成
 const ondeliveryModalConfirm = () => {
   deliveryVisible.value = false;
+  init();
 };
 // 完成
 // const onConfirm = (done: (closed: boolean) => void) => {

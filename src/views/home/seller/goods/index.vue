@@ -136,8 +136,13 @@ import {
   goodsDetail,
   fetchClassList,
 } from '@/api/goods-manage';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
+
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -327,9 +332,11 @@ const modalVisible = ref(false); // 编辑全屏展示弹窗
 
 function fetchData() {
   const { current, pageSize } = pagination;
+  const companyId = String(userInfoByCompany.value?.companyId);
   const params = {
     pageNum: current,
     pageSize,
+    companyId,
     ...state.formModel,
   };
   state.tableLoading = true;

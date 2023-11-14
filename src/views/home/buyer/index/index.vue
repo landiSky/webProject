@@ -286,7 +286,7 @@
               ><span>{{ item.productName }}</span
               ><span
                 style="color: #1664ff; cursor: pointer"
-                @click="togo(item.url)"
+                @click="togo(item.deliveryId, item.dueDate)"
               >
                 前往 》</span
               ></div
@@ -461,7 +461,7 @@ import html2canvas from 'html2canvas';
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted } from 'vue';
 import type { Ref } from 'vue';
-import { orderOver, authDialogdata } from '@/api/buyer/overview';
+import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -566,47 +566,7 @@ const images = reactive([
 ]);
 
 // //已购应用
-const authDialogVisible: Record<string, any> = ref([
-  // {
-  //   id: '2',
-  //   orderNum: '2',
-  //   productId: '1', // 商品id
-  //   productName: '凉皮', // 商品名称
-  //   introduction:
-  //     '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
-  //   useExplain: '', // 使用说明
-  //   customerName: '硕',
-  //   productLogo:
-  //     'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
-  //   merchantName: '商品所属商家名称',
-  //   deliveryTypeName: 'SAAS',
-  //   deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-  //   productPrice: 10000,
-  //   accountCount: '10个账号',
-  //   buyDuration: '5个月',
-  //   realityPrice: 9400,
-  //   orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-  //   orderStatusName: '待审核',
-  //   orderStatusInfo: null,
-  //   orderSteps: 3, // 订单步骤
-  //   rejectType: 0,
-  //   rejectReasonDetail: '未收到打款信息',
-  //   deploymentStatusName: null,
-  //   deploymentStatusCode: null,
-  //   couponMoney: 600,
-  //   userMobile: null,
-  //   orderSource: 0,
-  //   effectTime: null,
-  //   createTime: '2023-10-23 16:24:32',
-  //   dueDate: null,
-  //   voucherRejectTime: '2023-10-24 11:05:38',
-  //   payCompleteTime: null,
-  //   voucherSubmitTime: '2023-10-24 11:11:19',
-  //   confirmDeployedTime: null,
-  //   merchantDeliverTime: null,
-  //   attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
-  // },
-]);
+const authDialogVisible: Record<string, any> = ref([]);
 // 订单概览
 const orderlist = ref<Record<string, any>>({
   count: 0, // 全部订单数量
@@ -735,8 +695,11 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = (urldata: string) => {
-  window.open(urldata);
+const togo = (id: string, dueDate: string) => {
+  if (dueDate) {
+    orderGo({ deliveryId: id }).then((res) => {});
+    // window.open(urldata);
+  }
 };
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
