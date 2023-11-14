@@ -456,10 +456,8 @@
 </template>
 
 <script lang="ts" setup>
-import JsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { storeToRefs } from 'pinia';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import type { Ref } from 'vue';
 import { orderOver, authDialogdata } from '@/api/buyer/overview';
 
@@ -646,6 +644,7 @@ const orderOverall = [
 
 // 订单概览 接口
 const orderlistdata = () => {
+  console.log('index.vue:648===获取订单概览接口', userInfoByCompany.value);
   orderOver({
     userCompanyId: String(userInfoByCompany.value?.companyId),
     flag: '0',
@@ -791,7 +790,8 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
 const multiples = () => {
   router.push('/buyer/order');
 };
-onMounted(() => {
+
+const initOpt = () => {
   if (
     userInfoByCompany.value.certificateStatus === 1 ||
     userInfoByCompany.value.nodeStatus === 1
@@ -802,6 +802,20 @@ onMounted(() => {
 
   // 订单概览
   orderlistdata();
+};
+
+watch(
+  () => userInfoByCompany.value,
+  () => {
+    console.log(
+      'index.vue:811====监听到userInfoByCompany变化',
+      userInfoByCompany.value
+    );
+    initOpt();
+  }
+);
+onMounted(() => {
+  initOpt();
 });
 </script>
 

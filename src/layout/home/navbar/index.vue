@@ -141,7 +141,7 @@ const goWow = () => {
   });
 };
 
-const onChangeCompany = (companyId: string) => {
+const onChangeCompany = async (companyId: string) => {
   console.log('===切换了企业，发送消息，刷新到买家概览页', companyId);
   const resultList = userInfo.value?.companyList?.filter(
     (company: Record<string, any>) => company.companyId === companyId
@@ -149,10 +149,12 @@ const onChangeCompany = (companyId: string) => {
 
   const selectItem =
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
-  userStore.changeSelectCompany(selectItem);
+  await userStore.changeSelectCompany(selectItem);
+
   router.push({
     path: '/buyer/index',
   });
+
   // 要在 app.vue 中监听 userstore.的变化
 };
 
