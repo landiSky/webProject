@@ -589,6 +589,7 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import TemplateDrawer from './template.vue';
 
+let needSave = false;
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
@@ -1139,6 +1140,7 @@ const getDetail = (id: any) => {
 
 const getGoodsId = () => {
   genGoodsId().then((data: any) => {
+    needSave = true;
     formModel.value.id = data;
     formModel2.value.productId = data;
     modalJsonString.value = getModalJson();
@@ -1221,6 +1223,7 @@ const clickSave = async () => {
   if (res) {
     modalJsonString.value = getModalJson();
     Message.success('保存成功');
+    needSave = false;
   }
 };
 
@@ -1246,6 +1249,27 @@ const clickPrevious = () => {
 
 // 预览
 const clickPreview = () => {
+  if (needSave) {
+    Modal.warning({
+      title: '暂时无法预览',
+      titleAlign: 'start',
+      content: '请先保存信息后再进行效果预览，保存后信息仍可以修改。',
+      okText: '保存并预览',
+      cancelText: '取消',
+      hideCancel: false,
+      onOk: async () => {
+        const res = await doSave();
+        if (res) {
+          if (formModel.value.id) {
+            emit('preview', formModel.value.id);
+          }
+        } else {
+          Message.error('信息暂时无法保存');
+        }
+      },
+    });
+    return;
+  }
   if (formModel.value.id) {
     emit('preview', formModel.value.id);
   }
