@@ -7,9 +7,10 @@
             <t-col flex="240px">
               <t-form-item field="name" hide-label>
                 <t-input
-                  v-model="state.formModel.name"
+                  v-model.trim="state.formModel.name"
                   placeholder="请输入商品名称"
                   allow-clear
+                  @change="clickSearchBtn"
                 />
               </t-form-item>
             </t-col>

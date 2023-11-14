@@ -10,7 +10,7 @@
     <t-form ref="formRef" :model="formModel" :rules="formRules">
       <t-form-item field="reason" hide-label="true">
         <t-textarea
-          v-model="formModel.reason"
+          v-model.trim="formModel.reason"
           placeholder="请输入驳回原因"
           :max-length="{
             length: 500,

@@ -10,7 +10,7 @@
             <t-col flex="200px">
               <t-form-item field="name" hide-label>
                 <t-input
-                  v-model="state.formModel.name"
+                  v-model.trim="state.formModel.name"
                   placeholder="搜索商品名称"
                   allow-clear
                   @change="clickSearchBtn"
@@ -117,8 +117,8 @@
     v-if="addModalVisible"
     :data="state.detailData"
     @confirm="onAddModalConfirm"
-    @cancel="addModalVisible = false"
-    @close="addModalVisible = false"
+    @cancel="onAddModalConfirm"
+    @close="onAddModalConfirm"
     @preview="onPreview"
   ></Add>
 </template>
@@ -571,6 +571,7 @@ onMounted(() => {
 });
 
 const onAddModalConfirm = () => {
+  addModalVisible.value = false;
   fetchData();
 };
 </script>

@@ -7,7 +7,7 @@
             <t-col flex="240px">
               <t-form-item field="name" hide-label>
                 <t-input
-                  v-model="state.formModel.account"
+                  v-model.trim="state.formModel.account"
                   placeholder="请输入企业主账号"
                   allow-clear
                 />
@@ -16,7 +16,7 @@
             <t-col flex="240px">
               <t-form-item field="name" hide-label>
                 <t-input
-                  v-model="state.formModel.name"
+                  v-model.trim="state.formModel.name"
                   placeholder="请输入企业名称"
                   allow-clear
                 />
