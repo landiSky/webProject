@@ -5,8 +5,8 @@ export function orderOver(params: Record<string, any>) {
   return $http.get('/server/web/order/dataStatistics', { params });
 }
 // 买家中心 前往
-export function orderGo(data: Record<string, any>) {
-  return $http.post('/server/web/order/jumpApps', data);
+export function orderGo(params: Record<string, any>) {
+  return $http.get('/server/web/order/jumpApps', { params });
 }
 
 // 已购应用
