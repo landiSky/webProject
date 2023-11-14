@@ -278,7 +278,7 @@
         >
           <div style="width: 20%">
             <img
-              :src="`web/file/download?name=${item.productLogo}`"
+              :src="`/server/web/file/download?name=${item.productLogo}`"
               alt=""
               style="width: 100%; height: 100%"
             />

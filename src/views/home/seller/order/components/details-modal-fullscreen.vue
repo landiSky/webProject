@@ -227,7 +227,7 @@
                     v-for="(item, index) in dataList.attachmentAddressArr"
                     :key="index"
                     style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="`/web/file/orderDownload?name=${item}`"
+                    :src="`/server/web/file/orderDownload?name=${item}`"
                     alt=""
                   />
                 </div>
@@ -291,7 +291,7 @@
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
                         style="width: 100px; height: 100px"
-                        :src="`/web/file/orderDownload?name=${dataList.productLogo}`"
+                        :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
                         alt=""
                       />
                     </div>
@@ -450,6 +450,7 @@ const dataList = ref({
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   saleType: 0, // 1-一口价定价,2-面议
   attachmentAddressArr: ['http://gjkhjkdg/1.png', 'http://gjkhjkdg/2.png'], // 支付凭证
+  productId: '', // 商品id
 });
 // 修改金额 弹窗 开关
 const editModalVisible = ref(false);

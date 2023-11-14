@@ -190,7 +190,7 @@
                     <!-- item.productLogo -->
                     <img
                       style="width: 100px; height: 100px"
-                      :src="`/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
                       alt=""
                     />
                   </div>
@@ -622,6 +622,8 @@ const deliveryVisible = ref(false);
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
 const init = () => {
+  console.log(userInfoByCompany.value, 'userInfoByCompany.value');
+
   orderList({
     // 商品名称
     productName: formInline.commodityName,
@@ -638,7 +640,7 @@ const init = () => {
     pageSize: formInline.pageSize,
     pageNum: formInline.pageNum,
     // String(userInfoByCompany.value.companyId),
-    userCompanyId: String(userInfoByCompany.value?.companyId),
+    userCompanyId: userInfoByCompany.value.companyId,
   }).then((res) => {
     tableData.value = res.records;
     //  @ts-ignore

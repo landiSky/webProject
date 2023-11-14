@@ -319,7 +319,7 @@
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
                         style="width: 100px; height: 100px"
-                        :src="`/web/file/download?name=${dataList.productLogo}`"
+                        :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
                         alt=""
                       />
                     </div>
@@ -460,7 +460,9 @@ const dataList = ref({
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   attachmentAddressArr: [], // 支付凭证
+  productId: '', // 商品id
 });
+
 // 上传凭证 弹窗 开关
 const editModalVisible = ref(false);
 
@@ -496,6 +498,7 @@ const modificationamount = (id: string) => {
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
   Message.success('上传成功');
+  init();
 };
 // 重新上传
 const anewupload = () => {

@@ -192,7 +192,7 @@
 
                     <img
                       style="width: 100px; height: 100px"
-                      :src="`web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
                       alt=""
                     />
                   </div>
