@@ -107,11 +107,7 @@
                   <div class="btns">
                     <p style="margin: 10px 0"> 管理企业组织架构&成员权限</p>
                     <t-button
-                      v-if="
-                        userInfoByCompany.certificateStatus ===
-                          CompanyAuthStatus.AUTHED ||
-                        userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      "
+                      v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
                       @click="distributionrole"
                     >
@@ -304,12 +300,12 @@
             </div>
             <div class="tophead"
               ><span
-                v-if="userInfoByCompany.primary === true"
+                v-if="userInfoByCompany.primary === AccountType?.MAIN"
                 style="color: #1664ff; cursor: pointer"
                 @click="configurationapp(item)"
                 >配置应用</span
               ><span
-                style="color: #86909c; cursor: pointer"
+                style="margin-left: auto; color: #86909c; cursor: pointer"
                 @click="instructionsuse(item.useExplain, item.productId)"
               >
                 使用说明</span
@@ -500,8 +496,11 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -547,21 +546,6 @@ const gotoverifys = ref(false);
 const detailflag = ref(false);
 // 配置应用 弹窗
 const editModalVisiblealter = ref(false);
-// 轮播图数据
-const images = reactive([
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-]);
 
 // //已购应用
 const authDialogVisible: Record<string, any> = ref([]);
@@ -618,10 +602,10 @@ const authDialog = () => {
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
     companyId: userInfoByCompany.value?.companyId,
-    userId: userInfoByCompany.value?.id || '',
+    userId: userInfo.value?.userId, // userInfoByCompany.value?.id || '',
   }).then((res) => {
     console.log(res);
-    authDialogVisible.value = res;
+    authDialogVisible.value = res || [];
   });
 };
 
@@ -695,13 +679,15 @@ const tomall = () => {
 };
 // 前往
 const togo = (id: string, dueDate: string) => {
-  console.log(id, dueDate);
-  if (dueDate) {
-    orderGo({ deliveryId: id }).then((res) => {
-      console.log(res);
-    });
-    // window.open(urldata);
-  }
+  console.log('index.vue:685===点击前往', id, dueDate);
+  // if (dueDate) {   // TODO 过期时间判断
+  orderGo({ deliveryId: id }).then((res: any) => {
+    console.log('获取应用访问地址====', res);
+    window.open(res, '_blank');
+    // window.location.href=
+  });
+  // window.open(urldata);
+  // }
 };
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
