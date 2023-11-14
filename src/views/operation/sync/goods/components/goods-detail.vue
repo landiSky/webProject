@@ -218,9 +218,11 @@
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a
-                  :href="`/server/web/file/download?name=${formModel.useExplain}`"
+                  :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
+                    st.appSecret
+                  )}`"
                   download
-                  >应用秘钥</a
+                  >下载秘钥文件</a
                 >
               </t-descriptions-item>
             </t-descriptions>

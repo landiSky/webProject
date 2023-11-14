@@ -105,7 +105,6 @@
   </t-page-header>
   <Detail
     v-if="modalVisible"
-    :class-des="state.classDes"
     :data="state.detailData"
     @confirm="onModalConfirm"
     @cancel="modalVisible = false"
@@ -133,7 +132,6 @@ import {
   downGoods,
   deleteGoods,
   preUp,
-  goodsDetail,
   fetchClassList,
 } from '@/api/goods-manage';
 import { useUserStore } from '@/store/modules/user';
@@ -153,13 +151,11 @@ const addModalVisible = ref(false);
 
 const state = reactive<{
   tableLoading: boolean;
-  classDes: string;
   formModel: Record<string, any>;
   tableData: Record<string, any>[];
   detailData: Record<string, any>;
 }>({
   tableLoading: false,
-  classDes: '',
   formModel: { ...defaultFormModel },
   tableData: [],
   detailData: {},
@@ -379,15 +375,9 @@ const clickSearchBtn = () => {
   onPageChange(1);
 };
 
-const getDetail = async (record: any) => {
-  const res = await goodsDetail(record.id);
-  return res;
-};
-
 // 详情/审核
 const clickDetailBtn = async (record: any) => {
-  state.detailData = await getDetail(record);
-  state.classDes = `${record.productTypeParentName}/${record.productTypeName}`;
+  state.detailData = record;
   modalVisible.value = true;
 };
 

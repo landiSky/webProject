@@ -6,7 +6,7 @@
     :closable="false"
     :body-style="{ padding: 0 }"
     class="fullscreen-modal"
-    :footer="props.data.status != StatusEnum.DSH"
+    :footer="dataInfo.status != StatusEnum.DSH"
     @cancel="emit('cancel')"
     @close="emit('cancel')"
     @edit="emit('edit')"
@@ -18,45 +18,41 @@
     <template #footer>
       <div class="footer">
         <t-button
-          v-if="props.data.status === StatusEnum.YBH"
+          v-if="dataInfo.status === StatusEnum.YBH"
           type="primary"
           @click="clickEdit"
           >编辑</t-button
         >
-        <t-button
-          v-if="props.data.status === StatusEnum.YBH"
-          @click="clickDelete"
+        <t-button v-if="dataInfo.status === StatusEnum.YBH" @click="clickDelete"
           >删除</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.WSJ"
+          v-if="dataInfo.status === StatusEnum.WSJ"
           type="primary"
           @click="clickUp"
           >上架</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.WSJ"
+          v-if="dataInfo.status === StatusEnum.WSJ"
           type="outline"
           @click="clickPreview"
           >预览</t-button
         >
-        <t-button v-if="props.data.status === StatusEnum.WSJ" @click="clickEdit"
+        <t-button v-if="dataInfo.status === StatusEnum.WSJ" @click="clickEdit"
           >编辑</t-button
         >
-        <t-button
-          v-if="props.data.status === StatusEnum.WSJ"
-          @click="clickDelete"
+        <t-button v-if="dataInfo.status === StatusEnum.WSJ" @click="clickDelete"
           >删除</t-button
         >
 
         <t-button
-          v-if="props.data.status === StatusEnum.YSJ"
+          v-if="dataInfo.status === StatusEnum.YSJ"
           type="primary"
           @click="clickView"
           >查看</t-button
         >
         <t-button
-          v-if="props.data.status === StatusEnum.YSJ"
+          v-if="dataInfo.status === StatusEnum.YSJ"
           type="primary"
           status="danger"
           @click="clickDown"
@@ -67,29 +63,29 @@
     <div>
       <div class="status-div" :style="{ backgroundColor: statusColor }">
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.YSJ"
+          v-if="dataInfo.status === StatusEnum.YSJ"
           name="success"
         ></iconpark-icon>
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.YBH"
+          v-if="dataInfo.status === StatusEnum.YBH"
           name="error"
         ></iconpark-icon>
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.WSJ"
+          v-if="dataInfo.status === StatusEnum.WSJ"
           name="alert"
         ></iconpark-icon>
         <iconpark-icon
-          v-if="props.data.status === StatusEnum.DSH"
+          v-if="dataInfo.status === StatusEnum.DSH"
           name="wait"
         ></iconpark-icon>
         <div style="margin-left: 8px">
-          商品状态：{{ StatusEnum[props.data.status] }}。
+          商品状态：{{ StatusEnum[dataInfo.status] }}。
         </div>
-        <div v-if="props.data.status === StatusEnum.DSH">
+        <div v-if="dataInfo.status === StatusEnum.DSH">
           通过审核后，将同时在本平台和标识网络其他平台同步上架。</div
         >
-        <div v-if="props.data.status === StatusEnum.YBH">
-          驳回原因：{{ props.data.rejectReason }}</div
+        <div v-if="dataInfo.status === StatusEnum.YBH">
+          驳回原因：{{ dataInfo.rejectReason }}</div
         >
       </div>
 
@@ -100,7 +96,7 @@
               <t-anchor-link href="#base">基本信息</t-anchor-link>
               <t-anchor-link href="#sale">售卖设置</t-anchor-link>
               <t-anchor-link
-                v-for="(_, index) of props.data.productDeliverySetList"
+                v-for="(_, index) of dataInfo.productDeliverySetList"
                 :key="index"
                 :href="'#st' + index"
               >
@@ -125,16 +121,16 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ props.data.name }}
+                {{ dataInfo.name }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
-                {{ props.data.id }}
+                {{ dataInfo.id }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
                 <img
                   class="first-img"
-                  :alt="props.data.logo"
-                  :src="`/server/web/file/download?name=${props.data.logo}`"
+                  :alt="dataInfo.logo"
+                  :src="`/server/web/file/download?name=${dataInfo.logo}`"
                   style="width: 158px; height: 100px; background-color: #999"
                 />
               </t-descriptions-item>
@@ -155,21 +151,21 @@
                 {{ '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
-                {{ TypeEnum[props.data.type] }}
+                {{ TypeEnum[dataInfo.type] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品简介">
-                {{ props.data.introduction }}
+                {{ dataInfo.introduction }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
-                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
+                  :href="`/server/web/file/download?name=${dataInfo.useExplain}`"
                   download
                   >产品使用说明</a
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
                 {{
-                  JSON.parse(props.data.detail)
+                  JSON.parse(dataInfo.detail)
                     .map((item: any) => item.moduleName)
                     .join(',')
                 }}
@@ -189,14 +185,14 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[props.data.deliveryType] }}
+                {{ DeliveryTypeEnum[dataInfo.deliveryType] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[props.data.saleType] }}
+                {{ PriceTypeEnum[dataInfo.saleType] }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              v-for="(st, index) of props.data.productDeliverySetList"
+              v-for="(st, index) of dataInfo.productDeliverySetList"
               :id="'st' + index"
               :key="index"
               :title="'交付版本' + (index + 1)"
@@ -214,13 +210,13 @@
                 {{ st.name }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.deliveryType == 0"
+                v-if="dataInfo.deliveryType == 0"
                 label="应用服务地址"
               >
                 {{ st.url }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.saleType === 0"
+                v-if="dataInfo.saleType === 0"
                 label="套餐定价设置"
               >
                 <div v-for="(p, pIndex) of st.accountNumList" :key="p">
@@ -229,22 +225,24 @@
                 >
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.saleType === 0"
+                v-if="dataInfo.saleType === 0"
                 label="可选购买时长"
               >
                 {{ desDeuration(st.durationList) }}
               </t-descriptions-item>
               <t-descriptions-item
-                v-if="props.data.saleType === 1"
+                v-if="dataInfo.saleType === 1"
                 label="一口价金额"
               >
                 {{ st.accountNumList[0].price }} 元
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a
-                  :href="`/server/web/file/download?name=${props.data.useExplain}`"
+                  :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
+                    st.appSecret
+                  )}`"
                   download
-                  >应用秘钥</a
+                  >下载秘钥文件</a
                 >
               </t-descriptions-item>
             </t-descriptions>
@@ -291,16 +289,15 @@ const props = defineProps({
   },
 });
 
-const dataInfo = ref();
+const dataInfo = ref<Record<string, any>>({});
 const emit = defineEmits(['confirm', 'cancel', 'edit', 'preview']);
-const info = ref<any>();
 const detailImageList = ref<string[]>([]);
 
 const statusColor = computed(() => {
-  if (props.data.status === StatusEnum.YSJ) {
+  if (dataInfo.value.status === StatusEnum.YSJ) {
     return '#E8F4FF';
   }
-  if (props.data.status === StatusEnum.YSJ) {
+  if (dataInfo.value.status === StatusEnum.YSJ) {
     return '#FFECE8';
   }
   return '#FFFAE8';
@@ -351,7 +348,7 @@ const desDeuration = (array: any[]) => {
 };
 
 const refreshData = async () => {
-  dataInfo.value = await goodsDetail(props.data.id);
+  dataInfo.value = await goodsDetail(props.data?.id);
   detailImageList.value = dataInfo.value.detailImg.split(',');
 };
 
@@ -370,7 +367,7 @@ const doDelete = (id: any) => {
   });
 };
 const clickDelete = () => {
-  doDelete(props.data.id);
+  doDelete(dataInfo.value.id);
 };
 const doUp = (id: any) => {
   upGoods(id).then(() => {
@@ -379,7 +376,7 @@ const doUp = (id: any) => {
   });
 };
 const clickUp = () => {
-  doUp(props.data.id);
+  doUp(dataInfo.value.id);
 };
 
 // 下架
@@ -390,7 +387,7 @@ const doDown = (id: any) => {
   });
 };
 const clickDown = () => {
-  doDown(props.data.id);
+  doDown(dataInfo.value.id);
 };
 
 const clickView = () => {

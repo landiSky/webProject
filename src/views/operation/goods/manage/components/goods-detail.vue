@@ -269,13 +269,6 @@
               >
                 {{ st.accountNumList ? st.accountNumList[0].price : '-' }} 元
               </t-descriptions-item>
-              <t-descriptions-item label="应用秘钥">
-                <a
-                  :href="`/server/web/file/download?name=${formModel.useExplain}`"
-                  download
-                  >应用秘钥</a
-                >
-              </t-descriptions-item>
             </t-descriptions>
           </div>
         </div>
