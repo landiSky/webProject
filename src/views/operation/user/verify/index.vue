@@ -120,9 +120,12 @@
 <script setup lang="ts">
 import { reactive, computed, onMounted } from 'vue';
 import { verifyList } from '@/api/operation/user';
+import { useUserStore } from '@/store/modules/user';
+
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const userStore = useUserStore();
 
 // 状态
 const EntStatusEnum: { [name: string]: any } = {
@@ -299,8 +302,8 @@ const showDetail = (
   actionType: number
 ) => {
   if (entType === EntTypeEnum.ENTPOINT) {
-    // TODO 跳转二级系统
-    console.log(actionType);
+    const { snmsUrls } = userStore.userInfo || {};
+    window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级的企业节点审核页面
     return;
   }
   router

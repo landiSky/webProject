@@ -98,7 +98,8 @@ const clickLogout = () => {
 
 const clickIdService = () => {
   console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
-  if (!userInfoByCompany.value?.companyId) {
+  const { nodeStatus } = userInfoByCompany.value || {};
+  if (nodeStatus !== NodeAuthStatus.AUTHED) {
     Modal.info({
       title: '使用提醒',
       content: '需申请企业节点后使用，请先开通或绑定企业节点。',
@@ -113,23 +114,24 @@ const clickIdService = () => {
       },
     });
   } else {
-    const { nodeStatus, idPointer } = userInfoByCompany.value || {};
-    if (nodeStatus !== NodeAuthStatus.AUTHED) {
-      Modal.info({
-        title: '使用提醒',
-        content: '企业节点完成认证后，方可使用。',
-        hideCancel: false,
-        cancelText: '取消',
-        okText: '去查看',
-        onOk: () => {
-          router.push({
-            path: '/buyer/index',
-          });
-        },
-      });
-    } else {
-      window.open(idPointer, '_blank');
-    }
+    const { snmsUrls } = userInfo.value || {};
+    window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
+    // if (nodeStatus !== NodeAuthStatus.AUTHED) {
+    //   Modal.info({
+    //     title: '使用提醒',
+    //     content: '企业节点完成认证后，方可使用。',
+    //     hideCancel: false,
+    //     cancelText: '取消',
+    //     okText: '去查看',
+    //     onOk: () => {
+    //       router.push({
+    //         path: '/buyer/index',
+    //       });
+    //     },
+    //   });
+    // } else {
+    //   window.open(idPointer, '_blank');
+    // }
   }
 };
 
