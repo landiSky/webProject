@@ -326,7 +326,7 @@
                     <div
                       style="
                         float: left;
-                        width: 50%;
+                        width: 30%;
                         margin-top: 5px;
                         line-height: 20px;
                         text-align: left;
@@ -427,7 +427,7 @@ const state = reactive({
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
-const dataList = ref({
+const dataList: Record<string, any> = ref({
   id: '1', // 订单id
   orderNum: '1', // 订单号
   productName: '双皮奶', // 商品名称
@@ -579,6 +579,7 @@ onMounted(() => {
   }
 
   :deep(.tele-steps-item-finish .tele-steps-item-description) {
+    // float: left;
     margin-left: -36px;
   }
 }
@@ -586,7 +587,7 @@ onMounted(() => {
 .modal-body {
   height: 100%;
   padding-top: 0;
-  overflow: auto;
+  // overflow: auto;
   background-color: #fff;
 
   .tele-form {
@@ -595,7 +596,7 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 100%;
+    width: 85%;
     height: 100%;
     margin-left: 15%;
 

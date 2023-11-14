@@ -555,6 +555,31 @@ const statusNum: Record<string, any> = ref({
   completeCount: 0, // 已完成数量
 });
 const activeIndex = ref(0);
+const init = () => {
+  console.log(userInfoByCompany.value, 'userInfoByCompany.value');
+  orderList({
+    // 商品名称
+    productName: formInline.commodityName,
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: formInline.deliveryType,
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: formInline.orderStatus,
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: formInline.tabstatus,
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: formInline.startTime,
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: formInline.endTime,
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    // String(userInfoByCompany.value.companyId),
+    userCompanyId: userInfoByCompany.value.companyId,
+  }).then((res) => {
+    tableData.value = res.records;
+    //  @ts-ignore
+    formInline.total = res.total;
+  });
+};
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
@@ -613,6 +638,7 @@ const clickNav = (value: string | null, ins: number) => {
   } else {
     orderStatusSelect.value = [];
   }
+  init();
 };
 // 修改金额 弹窗 开关
 const editModalVisible = ref(false);
@@ -621,32 +647,7 @@ const deliveryVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
-const init = () => {
-  console.log(userInfoByCompany.value, 'userInfoByCompany.value');
 
-  orderList({
-    // 商品名称
-    productName: formInline.commodityName,
-    // 交付类型:0-saas类,1-独立部署类
-    deliveryType: formInline.deliveryType,
-    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatus: formInline.orderStatus,
-    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
-    tabPage: formInline.tabstatus,
-    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
-    createStart: formInline.startTime,
-    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
-    createEnd: formInline.endTime,
-    pageSize: formInline.pageSize,
-    pageNum: formInline.pageNum,
-    // String(userInfoByCompany.value.companyId),
-    userCompanyId: userInfoByCompany.value.companyId,
-  }).then((res) => {
-    tableData.value = res.records;
-    //  @ts-ignore
-    formInline.total = res.total;
-  });
-};
 const dataStatistics = () => {
   orderNum({
     userCompanyId: String(userInfoByCompany.value?.companyId),
@@ -734,6 +735,7 @@ const modificationamount = (id: string, productPrice: number) => {
 // 修改金额 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
+  init();
 };
 // 交付应用
 const delivery = (deliveryType: number, id: string) => {
