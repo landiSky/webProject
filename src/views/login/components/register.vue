@@ -106,10 +106,10 @@ const captchaVisible = ref(false);
 
 const formRef = ref();
 const form = ref({
-  phone: '15210602855',
+  phone: '',
   code: '',
-  password: 'Xz@12345',
-  confirmPassword: 'Xz@12345',
+  password: '',
+  confirmPassword: '',
 });
 
 const btnDisabled = computed(() => {
