@@ -165,9 +165,11 @@
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
                 {{
-                  JSON.parse(dataInfo.detail)
-                    .map((item: any) => item.moduleName)
-                    .join(',')
+                    dataInfo.detail
+                    ? JSON.parse(dataInfo.detail)
+                        .map((item: any) => item.moduleName)
+                        .join(',')
+                    : '-'
                 }}
               </t-descriptions-item>
             </t-descriptions>

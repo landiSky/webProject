@@ -107,8 +107,8 @@
     v-if="modalVisible"
     :data="state.detailData"
     @confirm="onModalConfirm"
-    @cancel="modalVisible = false"
-    @close="modalVisible = false"
+    @cancel="onModalConfirm"
+    @close="onModalConfirm"
     @edit="infoToEdit"
     @preview="onPreview"
   ></Detail>
