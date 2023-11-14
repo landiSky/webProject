@@ -223,7 +223,7 @@ const onAuthCancel = () => {
   authModalVisible.value = false;
 };
 
-const onAuthConfirm = () => {
+const onAuthConfirm = (memberIdList: string[]) => {
   authModalVisible.value = false;
   const {
     companyId,
@@ -269,6 +269,7 @@ const onAuthConfirm = () => {
     logo,
     orderSource: source,
     saleType,
+    memberIdList,
   };
 
   router.push({

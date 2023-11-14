@@ -41,6 +41,10 @@ export function createPermissionGuard(router: Router) {
         // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
+          if (userInfo?.bindStatus === 1) {
+            // 跳转到绑定页面，进行手机号绑定和安全校验
+            next('/safetycheck');
+          }
           console.log('permissionGuard.ts:43', userInfo?.isAdmin, to.fullPath);
           // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
           if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {

@@ -12,6 +12,11 @@ export function apiSendCaptcha(params: Record<string, any>) {
   });
 }
 
+// 绑定手机号或安全校验接口
+export function apiBindPhone(data: Record<string, any>) {
+  return $http.post('/server/web/user/userBind', data);
+}
+
 // 获取配置信息
 export function apiConfigInfo() {
   return $http.get('/sso/web/config');

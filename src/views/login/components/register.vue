@@ -206,7 +206,10 @@ const goRegister = () => {
           Message.success('注册成功，去登录！');
           goLogin(); // 注册成功，跳转到登录
         })
-        .catch(() => {})
+        .catch(() => {
+          clearInterval(timerId.value);
+          countDownTime.value = 0;
+        })
         .finally(() => {
           regisLoading.value = false;
         });
