@@ -154,12 +154,12 @@ const EntStatusList = [
     value: 0,
   },
   {
-    text: '已驳回',
-    value: 2,
-  },
-  {
     text: '已认证',
     value: 1,
+  },
+  {
+    text: '已驳回',
+    value: 2,
   },
 ];
 
@@ -272,8 +272,7 @@ function fetchData() {
   const params = {
     pageNum: current, // 从0开始
     pageSize,
-    companyName: state.formModel.name,
-    phone: state.formModel.account,
+    ...state.formModel,
   };
   // 接口请求
   state.tableLoading = true;
@@ -311,12 +310,14 @@ const sorterChanged = (dataIndex: string, direction: string) => {
 };
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex, filteredValues);
   const f = filteredValues[0];
   if (typeof f === 'boolean') {
     state.formModel[`${dataIndex}`] = null;
   } else {
     state.formModel[`${dataIndex}`] = f;
   }
+  console.log(state.formModel);
   fetchData();
 };
 
