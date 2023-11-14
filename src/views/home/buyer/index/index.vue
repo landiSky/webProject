@@ -411,7 +411,7 @@
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
-      :product-id="selectProduct.id"
+      :product-id="selectProduct.productId"
       :delivery-set-id="selectProduct.deliveryId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"

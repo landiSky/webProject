@@ -61,9 +61,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
     return Message.warning(' 请选择要邀请的成员');
   }
   apiAuthMember({
+    memberId: selectCompany.value?.memberId,
     productId: props.productId,
+    memberIdList: selectMemList.value,
     productDeliverySetId: props.deliverySetId,
-    memberIds: selectMemList.value,
   })
     .then(() => {
       Message.success('邀请成功!');
@@ -85,6 +86,7 @@ onMounted(() => {
     .catch(() => {});
 
   apiMemListByProduct({
+    memberId: selectCompany.value?.memberId,
     productId: props.productId,
     productDeliverySetId: props.deliverySetId,
   })
