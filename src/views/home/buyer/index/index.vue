@@ -95,9 +95,9 @@
                         >去认证</t-button
                       > -->
                     </div>
-                    <!-- <t-button type="text" @click="authentication"
+                    <t-button type="text" @click="authentication"
                       >去认证</t-button
-                    > -->
+                    >
                   </div>
                 </div>
                 <div>
@@ -700,7 +700,7 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
 
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
-    console.log(res);
+    // console.log(res);
     // console.log(res, '导出数据');
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些

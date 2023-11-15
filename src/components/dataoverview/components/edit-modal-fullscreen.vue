@@ -107,6 +107,7 @@
               accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
               :before-upload="beforeUpload"
               @success="uploadSuccess"
+              @change="changeclick"
             >
               <!-- @change="changeclick" -->
               <template #upload-button>
@@ -430,19 +431,10 @@ const getUserDetail = () => {
       console.log(formModel.value);
     })
     .catch((error) => {});
-  // 调后端接口
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+};
+const changeclick = (fileList: any, fileItem: any) => {
+  console.log(fileList, fileItem, 'fileItem');
+  formModel.value.businessLicense = fileList[0]?.name || '';
 };
 
 // @ts-ignore 营业执照
@@ -504,25 +496,25 @@ const onConfirm = (done: (closed: boolean) => void) => {
     if (!errors) {
       // setFields;
       console.log(formModel.value, 'closed');
-      authRepeat({ creditCode: formModel.value.creditCode })
-        .then((res) => {
-          if (res.data.code === 200) {
-            console.log('edit-modal-fullscreen.vue:504', formModel.value);
-            authSubmit(formModel.value)
-              .then((res) => {
-                Message.success('认证已提交');
-                userStore.getUserBasicInfo();
-                emit('confirm');
-                done(true);
-              })
-              .catch((err) => {
-                done(false);
-              });
-          } else {
-            Message.error('信用代码已存在');
-          }
-        })
-        .catch(() => {});
+      // authRepeat({ creditCode: formModel.value.creditCode })
+      //   .then((res) => {
+      //     if (res.data.code === 200) {
+      //       console.log('edit-modal-fullscreen.vue:504', formModel.value);
+      //       authSubmit(formModel.value)
+      //         .then((res) => {
+      //           Message.success('认证已提交');
+      //           userStore.getUserBasicInfo();
+      //           emit('confirm');
+      //           done(true);
+      //         })
+      //         .catch((err) => {
+      //           done(false);
+      //         });
+      //     } else {
+      //       Message.error('信用代码已存在');
+      //     }
+      //   })
+      //   .catch(() => {});
     } else {
       done(false);
     }
