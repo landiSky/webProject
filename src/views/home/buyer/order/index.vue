@@ -4,6 +4,7 @@
     </Orderindex>
     <Dataoverview
       v-if="userInfoByCompany.primary === AccountType.UNAUTH"
+      :title="'订单管理'"
     ></Dataoverview>
   </div>
 </template>

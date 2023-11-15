@@ -16,7 +16,7 @@
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
-              <div style="float: left">
+              <div class="inofslist" style="float: left">
                 <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
                 ><p>{{
@@ -28,7 +28,7 @@
               </div>
 
               <p
-                style="float: left"
+                class="statuslist"
                 :class="[
                   userInfoByCompany.certificateStatus ===
                     CompanyAuthStatus.AUTHED ||
@@ -821,38 +821,51 @@ onMounted(() => {
         }
 
         .inofs {
-          p {
-            float: left;
+          .inofslist {
+            p {
+              float: left;
+            }
+
+            p:nth-child(1) {
+              margin-right: 9px;
+              color: #86909c;
+            }
+
+            p:nth-child(2) {
+              margin-right: 9px;
+              color: #86909c;
+              text-align: center;
+              // padding: 3px 10px;
+            }
+
+            p:nth-child(3) {
+              margin-right: 9px;
+              color: #86909c;
+            }
+
+            p:nth-child(4) {
+              margin-right: 9px;
+              color: #86909c;
+              // color: #86909c;
+              text-align: center;
+            }
           }
 
-          p:nth-child(1) {
-            margin-right: 9px;
-            color: #86909c;
-          }
-
-          p:nth-child(2) {
-            margin-right: 9px;
-            text-align: center;
-            // color: #86909c;
-            // padding: 3px 10px;
-          }
-
-          p:nth-child(3) {
-            margin-right: 9px;
-            color: #86909c;
-          }
-
-          p:nth-child(4) {
-            margin-right: 9px;
-            // color: #86909c;
-            text-align: center;
-          }
-
-          p:nth-child(5) {
-            padding: 3px;
-            font-size: 12px;
-          }
+          // p:nth-child(5) {
+          //   padding: 5px;
+          //   font-size: 12px;
+          // }
           // 已认证
+          .statuslist {
+            float: left;
+            width: 52px;
+            height: 24px;
+            margin-top: -3px;
+            font-size: 12px;
+            line-height: 24px;
+            text-align: center;
+          }
+
           .authenticated {
             color: #009a29;
             background-color: #e8ffea;
@@ -924,6 +937,7 @@ onMounted(() => {
                 //   color: #1664ff;
                 // }
                 .states {
+                  padding: 3px;
                   // 已认证
                   .authenticated {
                     color: #009a29;

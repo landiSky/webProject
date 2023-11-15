@@ -4,6 +4,7 @@
     </Orderindex>
     <Dataoverview
       v-if="userInfoByCompany.primary === AccountType.UNAUTH"
+      :title="orderstatus"
     ></Dataoverview>
   </div>
 </template>
@@ -22,7 +23,7 @@ import Orderindex from './orderindex.vue';
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
-const orderstatus = ref(0);
+const orderstatus = ref('订单管理');
 </script>
 
 <style lang="less" scoped>

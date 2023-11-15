@@ -26,7 +26,11 @@
             style="background-color: transparent; border: none"
           /> -->
         </t-form-item>
-        <t-form-item field="verification" label="手机验证码">
+        <t-form-item
+          field="verification"
+          label="手机验证码"
+          validate-trigger="blur"
+        >
           <!-- v-model="state.formModel.verification" -->
           <t-input
             v-model="state.formModel.verification"
@@ -64,7 +68,11 @@
           </t-input>
         </t-form-item>
         <!-- :max-length="{ length: 50, errorOnly: true, }" -->
-        <t-form-item field="roleDesc" label="新管理员账号">
+        <t-form-item
+          field="roleDesc"
+          label="新管理员账号"
+          validate-trigger="blur"
+        >
           <!-- <t-input
           v-model="state.formModel.roleDesc"
           placeholder="请输入新管理员账号"
@@ -74,7 +82,7 @@
           <!-- v-model="state.formModel.roleDesc" -->
           <t-select
             v-model="state.formModel.roleDesc"
-            placeholder="请输入新管理员账号"
+            placeholder="请输入新管理员的姓名或手机号"
             allow-search
           >
             <template #empty>

@@ -4,6 +4,7 @@
     </Userindex>
     <Dataoverview
       v-if="userInfoByCompany.primary === AccountType.UNAUTH"
+      :title="'企业成员管理'"
     ></Dataoverview>
   </div>
 </template>
