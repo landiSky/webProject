@@ -604,8 +604,10 @@ onMounted(() => {
       width: 210px;
       height: 284px;
       margin-right: 46px;
+      color: #435c97;
 
       &:hover {
+        color: #1664ff;
         transform: translate(0, -20px);
       }
 
@@ -617,7 +619,6 @@ onMounted(() => {
 
         span {
           display: inline-block;
-          color: #435c97;
           font-weight: 300;
           font-size: 20px;
           line-height: 28px; /* 140% */
@@ -633,7 +634,6 @@ onMounted(() => {
         }
 
         .desc {
-          color: #435c97;
           font-weight: 300;
           font-size: 14px;
           font-family: PingFang SC;
