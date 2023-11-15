@@ -78,7 +78,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal, Message } from '@tele-design/web-vue';
@@ -95,16 +95,20 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
+watch(
+  () => route.path,
+  (newV) => {
+    selectTab.value = newV;
+  }
+);
 const handleLogout = async () => {
   await userStore.logout();
-
-  // router.push({
-  //   path: '/wow',
-  //   replace: true,
-  // });
 };
 const goIndex = () => {
   selectTab.value = TabPath.INDEX;
