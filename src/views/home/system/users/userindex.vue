@@ -6,7 +6,11 @@
     </template> -->
       <t-row :wrap="false">
         <t-col flex="auto">
-          <t-button type="primary" @click="clickAddBtn">
+          <t-button
+            v-if="userInfoByCompany.profile !== 2"
+            type="primary"
+            @click="clickAddBtn"
+          >
             新增企业成员
           </t-button>
         </t-col>

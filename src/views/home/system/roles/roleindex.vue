@@ -6,7 +6,13 @@
       </template>
       <t-row :wrap="false">
         <t-col flex="auto">
-          <t-button type="primary" @click="clickAddBtn"> 新建角色 </t-button>
+          <t-button
+            v-if="userInfoByCompany.profile !== 2"
+            type="primary"
+            @click="clickAddBtn"
+          >
+            新建角色
+          </t-button>
         </t-col>
         <t-col flex="auto">
           <t-form :model="state.formModel">
@@ -59,13 +65,27 @@
         </template>
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-          <t-link @click="onEditTreeConfirmsldrole(record)"> 授权管理 </t-link>
-          <!-- <t-link @click="clickDelBtn(record)">modal删除</t-link> -->
-          <t-link @click="clickEditBtn(record)">编辑</t-link>
-          <t-link @click="delectlist(record.id, record.memberCount)"
+          <t-link
+            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            @click="onEditTreeConfirmsldrole(record)"
+          >
+            授权管理
+          </t-link>
+
+          <t-link
+            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            @click="clickEditBtn(record)"
+            >编辑</t-link
+          >
+          <t-link
+            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            @click="delectlist(record.id, record.memberCount)"
             >删除</t-link
           >
-
+          <span
+            v-if="userInfoByCompany.profile === 2 || userInfo.isAdmin === true"
+            >-</span
+          >
           <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
         </template>
       </t-table>
@@ -185,7 +205,7 @@ const pagination = reactive<{
   pageSize: number;
   total: number;
 }>({
-  current: 0,
+  current: 1,
   pageSize: 10,
   total: 0,
 });
@@ -231,13 +251,16 @@ const onPageSizeChange = (size: number) => {
 
 // 页码发生变化
 const onPageChange = (current: number) => {
+  state.formModel.name = '';
   pagination.current = current;
   fetchData();
 };
 // 查询
 const clickSearchBtn = () => {
   console.log(state.formModel.name, ' state.formModel.name');
-  onPageChange(1);
+  // onPageChange(1);
+  pagination.current = 1;
+  fetchData();
 };
 
 // 重置后，触发一次查询
@@ -323,6 +346,7 @@ const onEditTreeCancelsld = () => {
 };
 
 onMounted(() => {
+  console.log(userInfo.value);
   fetchData();
 });
 </script>
