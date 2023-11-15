@@ -216,7 +216,8 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -237,7 +238,8 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -258,7 +260,8 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -279,7 +282,8 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -304,18 +308,32 @@ const columns = [
   {
     title: ' 企业前缀',
     dataIndex: 'companyPrefix',
+    width: 88,
+    ellipsis: true,
+    tooltip: { position: 'top' },
   },
   {
     title: '企业名称',
     dataIndex: 'companyName',
+    ellipsis: true,
+    tooltip: { position: 'top' },
+    // width: 148,
   },
   {
     title: '注册量',
-    dataIndex: 'registerCount',
+    width: 146,
+    render: ({ record }: Record<string, any>) => {
+      const { registerCount } = record;
+      return String(registerCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
   },
   {
     title: '解析量',
-    dataIndex: 'parseCount',
+    width: 136,
+    render: ({ record }: Record<string, any>) => {
+      const { parseCount } = record;
+      return String(parseCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
   },
 ];
 
@@ -560,7 +578,15 @@ onMounted(() => {
     .left {
       margin-right: 16px;
 
+      :deep(.tele-table-header) {
+        background-color: transparent;
+      }
+
       :deep(.tele-table-th) {
+        color: #1d2129;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px; /* 157.143% */
         background-color: transparent;
       }
 
@@ -568,10 +594,13 @@ onMounted(() => {
         border-bottom: none;
       }
 
+      :deep(.tele-table-cell) {
+        padding: 16px 28px 0 0;
+      }
+
       .table {
         margin-top: -12px;
-        margin-left: -16px;
-
+        // margin-left: -16px;
         :deep(.tele-empty) {
           padding: 50px 0;
         }
