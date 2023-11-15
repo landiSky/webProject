@@ -127,7 +127,17 @@ const state = reactive({
 
 const formRules = {
   username: [
-    { required: true, message: '请输入成员姓名' },
+    {
+      required: true,
+      message: '请输入成员姓名',
+      validator: (value: any, cb: any) => {
+        // @ts-ignore
+        if (!state.formModel.username?.split(' ').join('')) {
+          return cb('请输入成员名称');
+        }
+        return cb();
+      },
+    },
     { maxLength: 10, message: '长度不超过10个字符' },
   ],
   roleList: [{ required: true, message: '请选择成员角色' }],

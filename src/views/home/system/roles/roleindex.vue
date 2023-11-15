@@ -7,7 +7,7 @@
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
-            v-if="userInfoByCompany.profile !== 2"
+            v-if="userInfoByCompany.profile !== rolestatusled.ROLESTATUS"
             type="primary"
             @click="clickAddBtn"
           >
@@ -66,24 +66,36 @@
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
           <t-link
-            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            v-if="
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
+              userInfo.isAdmin === false
+            "
             @click="onEditTreeConfirmsldrole(record)"
           >
             授权管理
           </t-link>
 
           <t-link
-            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            v-if="
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
+              userInfo.isAdmin === false
+            "
             @click="clickEditBtn(record)"
             >编辑</t-link
           >
           <t-link
-            v-if="userInfoByCompany.profile !== 2 || userInfo.isAdmin === false"
+            v-if="
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
+              userInfo.isAdmin === false
+            "
             @click="delectlist(record.id, record.memberCount)"
             >删除</t-link
           >
           <span
-            v-if="userInfoByCompany.profile === 2 || userInfo.isAdmin === true"
+            v-if="
+              userInfoByCompany.profile === rolestatusled.ROLESTATUS ||
+              userInfo.isAdmin === true
+            "
             >-</span
           >
           <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
@@ -122,6 +134,7 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 import { rolelist, apiRoleDelete, apiRoleDetails } from '@/api/system/role';
+import { rolestatusled } from '@/enums/common';
 
 import EditModal from './components/edit-modal.vue';
 

@@ -7,7 +7,7 @@
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
-            v-if="userInfoByCompany.profile !== 2"
+            v-if="userInfoByCompany.profile !== rolestatusled.ROLESTATUS"
             type="primary"
             @click="clickAddBtn"
           >
@@ -66,7 +66,7 @@
           <t-link
             v-if="
               (record.memberType === 1 && record.status === 0) ||
-              userInfoByCompany.profile !== 2
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
             "
             @click="clickDetailBtn(record)"
           >
@@ -75,7 +75,7 @@
           <t-link
             v-if="
               (record.status === 0 && record.memberType !== 1) ||
-              userInfoByCompany.profile !== 2
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
             "
             @click="clickEditBtn(record)"
           >
@@ -84,12 +84,16 @@
           <t-link
             v-if="
               (record.status === 0 && record.memberType !== 1) ||
-              userInfoByCompany.profile !== 2
+              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
             "
             @click="clickDelBtn(record)"
             >离职</t-link
           >
-          <span v-if="record.status === 1 || userInfoByCompany.profile === 2"
+          <span
+            v-if="
+              record.status === 1 ||
+              userInfoByCompany.profile === rolestatusled.ROLESTATUS
+            "
             >--</span
           >
         </template>
@@ -129,6 +133,7 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 import { memberList, menberResign } from '@/api/system/member';
+import { rolestatusled } from '@/enums/common';
 import EditModal from './components/edit-modal.vue';
 import EditModalAlter from './components/edit-modal-alter.vue';
 

@@ -92,10 +92,10 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
 
         if (code === 101004) {
           Message.error(message);
-          // 重登录
-          console.log('http.ts:89===code==101004 跳转到前台首页');
-          clearToken();
-          router.push('/wow/index');
+          window.location.reload();
+          // console.log('http.ts:89===code==101004 跳转到前台首页');
+          // clearToken();
+          // router.push('/wow/index');
           return reject(data);
         }
         console.log('http.ts:91');
