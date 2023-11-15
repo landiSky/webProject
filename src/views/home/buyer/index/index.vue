@@ -71,7 +71,12 @@
 
                     <div v-else class="states">
                       <p
-                        style="width: 50px; text-align: center"
+                        style="
+                          width: 50px;
+                          padding: 3px;
+                          font-size: 12px;
+                          text-align: center;
+                        "
                         :class="stateClass[userInfoByCompany.certificateStatus]"
                         >{{
                           CompanyAuthStatusDESC[
@@ -151,7 +156,7 @@
                 "
                 >企业节点认证</div
               ><span
-                style="padding: 3px 10px"
+                style="padding: 4px 8px; line-height: 22px"
                 :class="nodeStateClass[userInfoByCompany.nodeStatus]"
                 >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</span
               >
@@ -859,11 +864,11 @@ onMounted(() => {
           .statuslist {
             float: left;
             width: 52px;
-            height: 24px;
             margin-top: -3px;
+            padding: 1px 8px;
+            font-weight: 400;
             font-size: 12px;
-            line-height: 24px;
-            text-align: center;
+            line-height: 22px;
           }
 
           .authenticated {
@@ -937,7 +942,6 @@ onMounted(() => {
                 //   color: #1664ff;
                 // }
                 .states {
-                  padding: 3px;
                   // 已认证
                   .authenticated {
                     color: #009a29;
