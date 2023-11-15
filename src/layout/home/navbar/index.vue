@@ -17,7 +17,9 @@
       </div>
     </div>
     <div class="right-side">
-      <span v-if="!userInfo?.companyList?.length">{{ userInfo?.mobile }}</span>
+      <span v-if="!userInfo?.companyList?.length" style="margin-right: 32px">{{
+        userInfo?.mobile
+      }}</span>
       <t-dropdown
         v-else
         trigger="click"
@@ -25,7 +27,6 @@
         class="companyDropdown"
         @select="onChangeCompany"
       >
-        <!-- <span>===={{ selectCompany }}</span> -->
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
           <span>{{ selectCompany?.companyName || '-' }}</span>
