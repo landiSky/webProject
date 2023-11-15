@@ -130,27 +130,27 @@ const onConfirm = (done: (closed: boolean) => void) => {
       } else {
         done(false);
       }
-    } else {
+    } else if (isEdit.value) {
       // 编辑
 
-      // if (!errors) {
-      apiRoleAdd({
-        roleName: state.formModel.roleName,
-        remark: state.formModel.remark,
-        companyId: userInfoByCompany.value?.companyId,
-        id: state.formModel.id,
-      })
-        .then((res) => {
-          Message.success('编辑成功');
-          emit('confirm');
-          done(true);
+      if (!errors) {
+        apiRoleAdd({
+          roleName: state.formModel.roleName,
+          remark: state.formModel.remark,
+          companyId: userInfoByCompany.value?.companyId,
+          id: state.formModel.id,
         })
-        .catch((err) => {
-          done(false);
-        });
-      // } else {
-      //   done(false);
-      // }
+          .then((res) => {
+            Message.success('编辑成功');
+            emit('confirm');
+            done(true);
+          })
+          .catch((err) => {
+            done(false);
+          });
+      } else {
+        done(false);
+      }
     }
   });
 };
