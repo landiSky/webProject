@@ -8,16 +8,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineEmits, watch } from 'vue';
 
-// const props = defineProps({
-//   visible: {
-//     type: Boolean,
-//     default: false,
-//   },
-// });
 const visible = ref(true);
-const emit = defineEmits(['success']);
+
+const emit = defineEmits(['success', 'cancel']);
 const pictureConfig = {
   url: '/sso/static/api/v1/captcha/get',
   method: 'post',
@@ -35,6 +30,15 @@ const checkPictureConfig = {
   url: '/sso/static/api/v1/captcha/check',
   method: 'post',
 };
+
+watch(
+  () => visible.value,
+  (newV: boolean) => {
+    if (!newV) {
+      emit('cancel');
+    }
+  }
+);
 
 const onSuccess = () => emit('success');
 </script>

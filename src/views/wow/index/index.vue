@@ -5,6 +5,8 @@
         width: '100%',
         height: '450px',
       }"
+      auto-play
+      indicator-type="line"
     >
       <t-carousel-item v-for="item in carouselList" :key="item.path">
         <img
@@ -122,7 +124,9 @@
             </span>
           </div>
         </div>
-        <t-button type="primary">申请开通企业节点</t-button>
+        <t-button type="primary" @click="clickApplyIdService"
+          >申请开通企业节点</t-button
+        >
       </div>
     </div>
   </div>
@@ -132,6 +136,10 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { Modal, Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+import { NodeAuthStatus } from '@/enums/common';
 import carouse1 from '@/assets/images/wow/index/carouse1.png';
 import carouse2 from '@/assets/images/wow/index/carouse2.png';
 import carouse3 from '@/assets/images/wow/index/carouse3.png';
@@ -152,7 +160,12 @@ import tab43 from '@/assets/images/wow/index/tab4-3.png';
 import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
+const userStore = useUserStore();
 const router = useRouter();
+
+const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
+  userStore
+);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -336,6 +349,46 @@ const columns = [
     },
   },
 ];
+
+const clickApplyIdService = () => {
+  if (!userInfo.value?.userId) {
+    // userStore.jumpToLogin();
+    Message.warning('暂未登录，请先登录后使用');
+  } else if (!userInfoByCompany?.companyId) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        router.push({
+          path: '/buyer/index',
+        });
+      },
+    });
+  } else {
+    const { nodeStatus, idPointer } = userInfoByCompany || {};
+    if (nodeStatus !== NodeAuthStatus.AUTHED) {
+      Modal.info({
+        title: '使用提醒',
+        content: '企业节点完成认证后，方可使用。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '取消',
+        okText: '去查看',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+          });
+        },
+      });
+    } else {
+      window.open(idPointer, '_blank');
+    }
+  }
+};
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {

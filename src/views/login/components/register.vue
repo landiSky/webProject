@@ -80,6 +80,7 @@
   <SliderCaptcha
     v-if="captchaVisible"
     @success="captchaSuccess"
+    @cancel="captchaVisible = false"
   ></SliderCaptcha>
 </template>
 
