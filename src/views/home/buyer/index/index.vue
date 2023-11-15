@@ -466,7 +466,7 @@ import EditModalFullscreen from '@/components/dataoverview/components/edit-modal
 
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
 
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
@@ -495,9 +495,13 @@ import group4 from './image/group4.png';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -760,8 +764,22 @@ watch(
     initOpt();
   }
 );
+
+// 在当前路由下点击 标识服务，去开通，弹窗三要素弹窗
+watch(
+  () => route.query?.openAuthModal,
+  (newV) => {
+    if (newV) {
+      authModalVisible.value = true;
+    }
+  }
+);
 onMounted(() => {
   initOpt();
+
+  if (route.query?.openAuthModal) {
+    authModalVisible.value = true;
+  }
 });
 </script>
 

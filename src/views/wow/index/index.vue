@@ -124,9 +124,16 @@
             </span>
           </div>
         </div>
-        <t-button type="primary" @click="clickApplyIdService"
-          >申请开通企业节点</t-button
+        <t-button
+          v-if="userInfoByCompany?.nodeStatus === NodeAuthStatus?.AUTHED"
+          type="primary"
+          @click="goIdService"
         >
+          标识服务
+        </t-button>
+        <t-button v-else type="primary" @click="clickIdService">
+          申请开通企业节点
+        </t-button>
       </div>
     </div>
   </div>
@@ -189,6 +196,50 @@ const clickCarousel = (link: string) => {
   window.open(link);
 };
 
+const clickIdService = () => {
+  if (!userInfo.value?.userId) {
+    Modal.info({
+      title: '登录提醒',
+      content: '暂未登录，需要登录后方可查看标识服务。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不登录',
+      okText: '去登录',
+      onOk: () => {
+        userStore.jumpToLogin();
+      },
+    });
+  } else {
+    const { snmsUrls } = userInfo.value || {};
+    const { nodeStatus } = userInfoByCompany.value || {};
+    if (nodeStatus === NodeAuthStatus.AUTHED) {
+      window.open(snmsUrls.idPointer, '_blank');
+    } else {
+      Modal.info({
+        title: '使用提醒',
+        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+            query: {
+              openAuthModal: 1,
+            },
+          });
+        },
+      });
+    }
+  }
+};
+
+const goIdService = () => {
+  const { snmsUrls } = userInfo.value || {};
+  window.open(snmsUrls.idPointer, '_blank');
+};
+
 // 轮播图下面模块汇总
 const allCategList = [
   {
@@ -203,7 +254,7 @@ const allCategList = [
     title: '标识服务',
     desc: '快速开通标识服务，享受跨区域服务',
     action: () => {
-      window.open('http://www.baidu.com', '_blank'); // TODO 2 这里替换为该平台对应的二级服务地址
+      clickIdService();
     },
   },
   {

@@ -18,7 +18,7 @@
             <t-link>限免应用</t-link>
           </t-tooltip>
 
-          <t-link>标识服务</t-link>
+          <t-link @click="clickIdService">标识服务</t-link>
           <t-tooltip content="敬请期待">
             <t-link>平台产品</t-link>
           </t-tooltip>
@@ -156,49 +156,44 @@ const onSearch = () => {
   });
 };
 
-// const clickIdService = () => {
-// console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
-//   if (!userInfo.value?.userId) {
-//     userStore.jumpToLogin();
-//     // router.push({
-//     //   path: '/login',
-//     // });
-//   } else {
-//     if (!userInfoByCompany?.companyId) {
-//     Modal.info({
-//       title: '使用提醒',
-//       content: '需申请企业节点后使用，请先开通或绑定企业节点。',
-//       titleAlign: 'start',
-//       hideCancel: false,
-//       cancelText: '暂不开通',
-//       okText: '去开通',
-//       onOk: () => {
-//         router.push({
-//           path: '/buyer/index',
-//         });
-//       },
-//     });
-//   } else {
-//     const { nodeStatus, idPointer } = userInfoByCompany || {};
-//     if (nodeStatus !== NodeAuthStatus.AUTHED) {
-//       Modal.info({
-//         title: '使用提醒',
-//         content: '企业节点完成认证后，方可使用。',
-//         titleAlign: 'start',
-//         hideCancel: false,
-//         cancelText: '取消',
-//         okText: '去查看',
-//         onOk: () => {
-//           router.push({
-//             path: '/buyer/index',
-//           });
-//         },
-//       });
-//     } else {
-//       window.open(idPointer, '_blank');
-//     }
-//   }
-// };
+const clickIdService = () => {
+  if (!userInfo.value?.userId) {
+    Modal.info({
+      title: '登录提醒',
+      content: '暂未登录，需要登录后方可查看标识服务。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不登录',
+      okText: '去登录',
+      onOk: () => {
+        userStore.jumpToLogin();
+      },
+    });
+  } else {
+    const { snmsUrls } = userInfo.value || {};
+    const { nodeStatus } = userInfoByCompany.value || {};
+    if (nodeStatus === NodeAuthStatus.AUTHED) {
+      window.open(snmsUrls.idPointer, '_blank');
+    } else {
+      Modal.info({
+        title: '使用提醒',
+        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+            query: {
+              openAuthModal: 1,
+            },
+          });
+        },
+      });
+    }
+  }
+};
 
 onMounted(() => {
   selectTab.value = route.path || TabPath.INDEX;
