@@ -127,8 +127,7 @@ import {
 
 const userStore = useUserStore();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const router = useRouter();
@@ -193,12 +192,16 @@ const onConfirm = (done: (closed: boolean) => void) => {
         companyId: userInfoByCompany.value?.companyId,
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
-      }).then((res) => {
-        handleLogout();
-        emit('confirm');
-        // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-        // clearInterval(times.value);
-      });
+      })
+        .then((res) => {
+          handleLogout();
+          emit('confirm');
+          // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
+          // clearInterval(times.value);
+        })
+        .catch(() => {
+          done(false);
+        });
     } else {
       done(false);
     }

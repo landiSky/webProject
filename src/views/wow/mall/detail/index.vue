@@ -39,7 +39,7 @@
             <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
               价格面议
             </span>
-            <span v-else>{{ price || '-' }}</span>
+            <span v-else>¥ {{ price || '-' }}</span>
           </div>
 
           <div class="custom">
@@ -525,6 +525,13 @@ onMounted(() => {
             display: inline-block;
             width: 60px;
             margin-right: 16px;
+          }
+
+          :deep(.tele-radio-button-content) {
+            color: #1664ff;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 20px; /* 166.667% */
           }
         }
       }

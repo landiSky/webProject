@@ -456,6 +456,7 @@ onMounted(() => {
 
   .headerWrap {
     display: flex;
+    cursor: pointer;
 
     .headerItem {
       display: flex;
