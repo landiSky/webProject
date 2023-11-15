@@ -106,8 +106,7 @@
               style="width: 150px; height: 100px"
               accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
               :before-upload="beforeUpload"
-              @success="uploadSuccess"
-              @change="changeclick"
+              @change="(fileList: any) => onUploadChange(fileList, 'businessLicense')"
             >
               <!-- @change="changeclick" -->
               <template #upload-button>
@@ -205,7 +204,7 @@
               image-preview
               accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
-              @success="uploadSuccessz"
+              @change="(fileList: any) => onUploadChange(fileList, 'idCardz')"
             >
               <template #upload-button>
                 <div
@@ -246,7 +245,7 @@
               style="margin-top: -20px"
               accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
-              @success="uploadSuccessf"
+              @change="(fileList: any) => onUploadChange(fileList, 'idCardf')"
             >
               <template #upload-button>
                 <div
@@ -297,8 +296,11 @@ import {
 } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -317,7 +319,7 @@ const uploadHeaders = {
   Authorization: `Bearer ${getToken()}`,
 };
 
-const formModel = ref({
+const formModel = ref<Record<string, any>>({
   id: userInfo.value?.companyId,
   userId: userInfo.value?.userId,
   // 企业名称
@@ -391,8 +393,7 @@ const formRules: any = {
     { required: true, message: '请输入联系人身份证号' },
     { maxLength: 18, message: '长度不超过18个字符' },
     {
-      match:
-        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
+      match: /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
@@ -437,19 +438,39 @@ const changeclick = (fileList: any, fileItem: any) => {
   formModel.value.businessLicense = fileList[0]?.name || '';
 };
 
-// @ts-ignore 营业执照
-const uploadSuccess = (fileItem: FileItem) => {
-  console.log('=====uploadSuccess', fileItem);
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    console.log(fileItem.response.data);
-
-    formModel.value.businessLicense = fileItem.response.data;
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
+const onUploadChange = (fileList: any, field: string) => {
+  formModel.value[field] = '';
+  fileList.forEach((item: Record<string, any>) => {
+    const { code, data } = item.response || {};
+    if (code === 200) {
+      formModel.value[field] = data;
+    }
+  });
 };
+
+const onBusUploadChange = (fileList: any) => {
+  formModel.value.businessLicense = '';
+  fileList.forEach((item: Record<string, any>) => {
+    const { code, data } = item.response || {};
+    if (code === 200) {
+      formModel.value.businessLicense = data;
+    }
+  });
+};
+
+// // @ts-ignore 营业执照
+// const uploadSuccess = (fileItem: FileItem) => {
+//   console.log('=====uploadSuccess', fileItem);
+//   const res = fileItem.response;
+//   // if (res?.code === 200) {
+//   //   console.log(fileItem.response.data);
+
+//   //   formModel.value.businessLicense = fileItem.response.data;
+//   //   Message.success(`上传 ${fileItem.name} 成功`);
+//   // } else {
+//   //   Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+//   // }
+// };
 // 营业执照
 
 // @ts-ignore
@@ -492,7 +513,9 @@ const beforeUpload = (file: File) => {
 };
 // 完成
 const onConfirm = (done: (closed: boolean) => void) => {
+  console.log('edit-modal-fullscreen.vue:504', formModel.value.businessLicense);
   formRef.value.validate((errors: any) => {
+    console.log('edit-modal-fullscreen.vue:503', errors);
     if (!errors) {
       // setFields;
       console.log(formModel.value, 'closed');
