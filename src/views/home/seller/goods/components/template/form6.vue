@@ -48,12 +48,12 @@
             validator: (value: string, cb: any) => itemValid(index, '请上传配图', value, cb),
           },
         ]"
-        :validate-trigger="['blur']"
+        validate-trigger="[]"
       >
         <div>
+          <!-- :file-list="item ? item : []" -->
           <t-upload
             list-type="picture-card"
-            :file-list="item ? item : []"
             :headers="{
               Authorization: `Bearer ${getToken()}`,
             }"
@@ -61,12 +61,13 @@
             accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
             :limit="5"
             tip="点击上传"
-            @success="(fileItem: any) => onUploadSuccess(fileItem, index)"
+            @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
+            @change="(fileList: any, fileItem: any) => onUploadChange(fileList, fileItem, index)"
           >
           </t-upload>
           <span class="uploadTips">
             建议图片尺寸：200px *
-            200px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+            200px，支持jpg、png、bmp、tif、gif、jpeg文件格式，文件大小限制10M以内。
           </span>
         </div>
       </t-form-item>
@@ -144,28 +145,42 @@ const delBlock = (index: number) => {
   form.value.blockList.splice(index, 1);
 };
 
-const onUploadSuccess = (fileItem: any, index: number) => {
-  console.log('form1.vue:171', index, fileItem, form.value.blockList);
-  const { code, data } = fileItem.response || {};
-
-  if (code === 200) {
-    form.value.blockList[index].push({
-      url: `/server/web/file/download?name=${data}`,
-    });
-
-    console.log('form6.vue:154', index, form.value.blockList);
-  }
+const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      formRef.value.setFields({
+        [`blockList.${index}`]: {
+          status: 'error',
+          message: '文件大小不能超过 10M',
+        },
+      });
+      reject();
+    } else {
+      console.log('form6.vue:158==before done');
+      resolve(true);
+    }
+  });
 };
 
-// const onUploadChange = (
-//   _: any,
-//   currentFile: Record<string, any>,
-//   index: number
-// ) => {
-//   form.value.blockList[index] = _.map((item: Record<string, any>) => {
-//     return { url: item.url };
-//   });
-// };
+const onUploadChange = (fileList: any, fileItem: any, index: number) => {
+  const { code } = fileItem.response || {};
+  if (code === 200) {
+    const temp = fileList.map((item: Record<string, any>) => {
+      const res = item.response || {};
+      if (res.code === 200) {
+        return {
+          url: `/server/web/file/download?name=${res.data}`,
+        };
+      }
+      return {};
+    });
+
+    form.value.blockList[index] = temp;
+    if (temp.length === 5) {
+      formRef.value.clearValidate(`blockList.${index}`);
+    }
+  }
+};
 
 defineExpose({
   form,

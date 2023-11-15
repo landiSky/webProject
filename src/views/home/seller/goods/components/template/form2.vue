@@ -89,7 +89,7 @@
             validator: (value: any, cb: any) => imgValid(index, value, cb),
           },
         ]"
-        :validate-trigger="['blur']"
+        validate-trigger="[]"
       >
         <div>
           <t-upload
@@ -106,7 +106,8 @@
             accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
             :limit="1"
             tip="点击上传"
-            @success="(fileItem: any) => onUploadSuccess(fileItem, index)"
+            @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
+            @change="(fileList: any) => onUploadChange(fileList, index)"
           >
           </t-upload>
           <span class="uploadTips">
@@ -204,11 +205,31 @@ const delBlock = (index: number) => {
   form.value.blockList.splice(index, 1);
 };
 
-const onUploadSuccess = (fileItem: any, index: number) => {
-  const { code, data } = fileItem.response || {};
-  if (code === 200) {
-    form.value.blockList[index].picUrl = data;
-  }
+const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      formRef.value.setFields({
+        [`blockList.${index}.picUrl`]: {
+          status: 'error',
+          message: '文件大小不能超过 10M',
+        },
+      });
+      reject();
+    } else {
+      resolve(true);
+    }
+  });
+};
+
+const onUploadChange = (fileList: any, index: number) => {
+  form.value.blockList[index].picUrl = '';
+  fileList.forEach((item: Record<string, any>) => {
+    const { code, data } = item.response || {};
+    if (code === 200) {
+      form.value.blockList[index].picUrl = data;
+      formRef.value.clearValidate(`blockList.${index}.picUrl`);
+    }
+  });
 };
 
 defineExpose({
