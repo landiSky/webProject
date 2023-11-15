@@ -17,11 +17,12 @@
         <t-col flex="auto">
           <t-form :model="state.formModel">
             <t-row :gutter="12" justify="end">
-              <t-col flex="192px">
+              <t-col flex="240px">
                 <t-form-item field="name" hide-label>
                   <t-input
                     v-model="state.formModel.name"
                     placeholder="请输入企业成员姓名"
+                    :max-length="30"
                     allow-clear
                   />
                 </t-form-item>
@@ -121,8 +122,7 @@ import EditModal from './components/edit-modal.vue';
 import EditModalAlter from './components/edit-modal-alter.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 // const defaultFormModel: Record<string, string | number | undefined> = {
 //   name: undefined,
