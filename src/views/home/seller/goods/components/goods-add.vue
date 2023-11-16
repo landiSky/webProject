@@ -109,20 +109,18 @@
             <t-upload
               v-if="formModel.logo == ''"
               :ref="logoRef"
+              :file-list="logoList"
+              :limit="1"
               :multiple="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
               accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               :show-file-list="false"
+              @before-upload="beforeUpload"
               @success="uploadSuccess"
               @error="uploadError"
               @progress="uploadProgress"
-              @exceed-limit="
-                () => {
-                  setFileOverLimit('logo');
-                }
-              "
             >
               <template #upload-button>
                 <t-spin size="24" :loading="logoUploading">
@@ -201,19 +199,17 @@
             <t-upload
               v-if="imageList.length < 5"
               :ref="detailImageRef"
+              :file-list="detailList"
+              :limit="1"
               :show-cancel-button="false"
               :show-file-list="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+              @before-upload="beforeUpload"
               @success="uploadDetailSuccess"
               @progress="uploadDetailProgress"
               @error="uploadDetailError"
-              @exceed-limit="
-                () => {
-                  setFileOverLimit('detail');
-                }
-              "
             >
               <template #upload-button>
                 <t-spin size="24" :loading="detailUploading">
@@ -285,6 +281,7 @@
               :show-cancel-button="false"
               accept=".pdf,.doc,.docx"
               tip-position="bottom"
+              @before-upload="beforeUpload"
               @success="uploadExpSuccess"
               @error="uploadExpError"
             ></t-upload>
@@ -660,6 +657,8 @@ const formModel = ref<FormInterface>({
   companyId: '',
 });
 
+const logoList = ref<any[]>([]);
+const detailList = ref<any[]>([]);
 const expList = ref<any[]>([]);
 
 const deliveryTypeList = ref([
@@ -850,12 +849,13 @@ const logoUploading = ref(false);
 
 const uploadError = (fileItem: FileItem) => {
   logoUploading.value = false;
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  formModel.value.logo = '';
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadProgress = () => {
@@ -881,13 +881,12 @@ const uploadDetailProgress = () => {
 
 const uploadDetailError = (fileItem: FileItem) => {
   detailUploading.value = false;
-  formModel.value.logo = '';
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
@@ -905,12 +904,12 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
 const uploadExpError = (fileItem: FileItem) => {
   formModel.value.useExplain = '';
   formRef.value.validateField('useExplain');
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadExpSuccess = (fileItem: FileItem) => {
@@ -1168,7 +1167,53 @@ const getGoodsId = () => {
   });
 };
 
+function cancelUploadingFiles() {
+  for (const file of logoList.value) {
+    if (file.response === undefined || file.response === null) {
+      logoRef.value.abort(file);
+    }
+  }
+  for (const file of detailList.value) {
+    if (file.response === undefined || file.response === null) {
+      detailImageRef.value.abort(file);
+    }
+  }
+  for (const file of expList.value) {
+    if (file.response === undefined || file.response === null) {
+      prdRef.value.abort(file);
+    }
+  }
+}
+
+const online = ref(true);
+
+const beforeUpload = (file: File) => {
+  // console.log(file, 'file');
+  return new Promise<void>((resolve, reject) => {
+    const over2 = file.size > 1024 * 1024 * 2;
+    if (over2) {
+      Message.warning(`上传失败，文件大小不要超过2M`);
+      reject();
+    }
+    if (!online.value) {
+      Message.warning('网络异常，暂时无法上传，请检查网络');
+      reject();
+    }
+    // @ts-ignore
+    resolve(true);
+  });
+};
+
 onMounted(() => {
+  window.addEventListener('online', () => {
+    console.log('aaaaa');
+    online.value = true;
+  });
+  window.addEventListener('offline', () => {
+    console.log('bbbb');
+    cancelUploadingFiles();
+    online.value = false;
+  });
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
   if (props.data?.id) {

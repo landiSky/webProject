@@ -224,8 +224,7 @@ onMounted(async () => {
 .verify-result {
   display: flex;
   align-items: center;
-  height: 46px;
-  padding: 0 24px;
+  padding: 12px 24px;
 
   .verify-result-title {
     margin-left: 8px;
@@ -237,6 +236,7 @@ onMounted(async () => {
   }
 
   .verify-result-content {
+    flex: 1;
     margin-left: 8px;
     color: var(--t-41-d-2129, #1d2129);
     font-weight: 400;

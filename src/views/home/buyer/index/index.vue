@@ -12,7 +12,7 @@
             <p
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ userInfoByCompany?.username || userInfo.mobile }}</p
+              >{{ userInfoByCompany?.username || userInfo?.mobile }}</p
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
@@ -100,9 +100,9 @@
                         >去认证</t-button
                       > -->
                     </div>
-                    <t-button type="text" @click="authentication"
+                    <!-- <t-button type="text" @click="authentication"
                       >去认证</t-button
-                    >
+                    > -->
                   </div>
                 </div>
                 <div>
@@ -757,12 +757,10 @@ const initOpt = () => {
 
 watch(
   () => userInfoByCompany.value,
-  () => {
-    console.log(
-      'index.vue:811====监听到userInfoByCompany变化',
-      userInfoByCompany.value
-    );
-    initOpt();
+  (newV) => {
+    if (newV?.companyId) {
+      initOpt();
+    }
   }
 );
 

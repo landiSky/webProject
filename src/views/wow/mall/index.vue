@@ -65,7 +65,7 @@
               <t-input-number
                 v-model="customPriceStart"
                 :style="{ width: '98px' }"
-                placeholder="请输入数值"
+                placeholder="输入最小价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -73,7 +73,7 @@
               <t-input-number
                 v-model="customPriceEnd"
                 :style="{ width: '98px' }"
-                placeholder="请输入数值"
+                placeholder="输入最大价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -97,8 +97,16 @@
       <div class="sort">
         <span
           :class="{
-            active: !(apiParams.priceSort || apiParams.upShelfTimeSort),
+            active: !(
+              [priceSortEnum.ASC, priceSortEnum.DES].includes(
+                apiParams.priceSort
+              ) ||
+              [shelveSortEnum.ASC, shelveSortEnum.DES].includes(
+                apiParams.upShelfTimeSort
+              )
+            ),
           }"
+          class="allSort"
           @click="clickAllSort"
           >综合排序</span
         >
@@ -107,11 +115,11 @@
           <span class="caretWrap">
             <icon-caret-up
               :class="{ active: apiParams.priceSort === priceSortEnum.ASC }"
-              @click="clickSort('priceSort', priceSortEnum.ASC)"
+              @click="clickPriceSort(priceSortEnum.ASC)"
             />
             <icon-caret-down
               :class="{ active: apiParams.priceSort === priceSortEnum.DES }"
-              @click="clickSort('priceSort', priceSortEnum.DES)"
+              @click="clickPriceSort(priceSortEnum.DES)"
             />
           </span>
         </span>
@@ -122,13 +130,13 @@
               :class="{
                 active: apiParams.upShelfTimeSort === shelveSortEnum.ASC,
               }"
-              @click="clickSort('upShelfTimeSort', shelveSortEnum.ASC)"
+              @click="clickUpShelfSort(shelveSortEnum.ASC)"
             />
             <icon-caret-down
               :class="{
                 active: apiParams.upShelfTimeSort === shelveSortEnum.DES,
               }"
-              @click="clickSort('upShelfTimeSort', shelveSortEnum.DES)"
+              @click="clickUpShelfSort(shelveSortEnum.DES)"
             />
           </span>
         </span>
@@ -173,7 +181,7 @@
             </span>
             <span class="price">
               <template v-if="item.lowPrice !== -1">
-                <span class="prefix">¥ {{ item.lowPrice }}</span>
+                <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
                 <span class="suffix">元起</span>
               </template>
               <span v-else class="prefix">价格面议</span>
@@ -265,9 +273,10 @@ const getProductList = () => {
     params.startPrice = customPriceStart.value || null;
     params.endPrice = customPriceEnd.value || null;
   } else {
-    const temp = selectPriceInterval.value
-      ? PriceEnum[selectPriceInterval.value]
-      : [];
+    const temp =
+      Number(selectPriceInterval.value) >= 0
+        ? PriceEnum[selectPriceInterval.value as number]
+        : [];
 
     [params.startPrice, params.endPrice] =
       selectPriceInterval.value === -1 ? [] : temp;
@@ -328,15 +337,25 @@ const clickResetBtn = () => {
   getProductList();
 };
 
-const clickSort = (key: string, value: number) => {
-  apiParams.value[key] = value;
-  clickSearchBtn();
+const clickPriceSort = (value: number) => {
+  apiParams.value.upShelfTimeSort = null; // 综合排序、价格排序、上架时间排序都互斥
+  apiParams.value.priceSort = value;
+  pagination.page = 1;
+  getProductList();
+};
+
+const clickUpShelfSort = (value: number) => {
+  apiParams.value.priceSort = null;
+  apiParams.value.upShelfTimeSort = value;
+  pagination.page = 1;
+  getProductList();
 };
 
 const clickAllSort = () => {
   apiParams.value.priceSort = null;
   apiParams.value.upShelfTimeSort = null;
-  clickSearchBtn();
+  pagination.page = 1;
+  getProductList();
 };
 
 onMounted(() => {
@@ -376,13 +395,16 @@ onMounted(() => {
 
       .label {
         display: inline-block;
-        width: 70px;
+        min-width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
       }
 
       .value {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
         color: #1d2129;
         font-weight: 400;
 
@@ -418,6 +440,10 @@ onMounted(() => {
       margin-bottom: 16px;
       padding: 0 24px;
       background: #f2f3f8;
+
+      .allSort {
+        cursor: pointer;
+      }
 
       & > span {
         display: flex;

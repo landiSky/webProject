@@ -226,6 +226,33 @@ defineExpose({
 .step {
   padding: 20px 50px;
   background-color: #f2f3f8;
+
+  :deep(.tele-steps) {
+    .tele-steps-icon {
+      padding-top: 1px;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .tele-steps-item-wait {
+      .tele-steps-icon {
+        color: #4e5969;
+        background-color: #fff;
+      }
+    }
+
+    .tele-steps-item-finish {
+      .tele-steps-icon {
+        color: #1664ff;
+        background-color: #fff;
+
+        svg {
+          stroke-width: 8px;
+        }
+      }
+    }
+  }
 }
 
 .template {
@@ -270,7 +297,7 @@ defineExpose({
     }
 
     img {
-      width: 640px;
+      width: 600px;
       margin-top: 12px;
     }
   }

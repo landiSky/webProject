@@ -214,7 +214,8 @@
                 v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
-                {{ st.accountNumList[0].price }} 元
+                {{ st.accountNumList?.first.price || '-' }}
+                元
               </t-descriptions-item>
               <t-descriptions-item label="应用秘钥">
                 <a

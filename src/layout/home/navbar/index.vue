@@ -83,7 +83,7 @@ const handleLogout = async () => {
     console.log('index.vue:67====handleLogout', e);
   }
 
-  router.push({ path: '/wow' });
+  // router.push({ path: '/wow' });
 };
 
 const clickLogout = () => {

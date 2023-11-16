@@ -15,10 +15,20 @@
               </t-form-item>
             </t-col>
             <t-col flex="240px">
-              <t-form-item field="name" hide-label>
+              <t-form-item field="companyName" hide-label>
                 <t-input
                   v-model.trim="state.formModel.companyName"
                   placeholder="请输入商家名称"
+                  allow-clear
+                  @change="clickSearchBtn"
+                />
+              </t-form-item>
+            </t-col>
+            <t-col flex="240px">
+              <t-form-item field="platformPrefix" hide-label>
+                <t-input
+                  v-model.trim="state.formModel.platformPrefix"
+                  placeholder="请输入所属平台前缀"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -62,18 +72,22 @@
         </div>
       </template>
       <template #productTypeId="{ record }">
-        {{ `${record.productTypeParentName}/${record.productTypeName}` }}
+        {{
+          `${record.productTypeParentName ?? '-'}/${
+            record.productTypeName ?? '-'
+          }`
+        }}
       </template>
       <template #type="{ record }">
-        {{ AppTypeEnum[record.type] }}
+        {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] }}
+        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
         <span v-else class="circle green"></span>
-        {{ StatusEnum[record.status] }}
+        {{ StatusEnum[record.status] ?? '-' }}
       </template>
 
       <template #operations="{ record }">
@@ -111,6 +125,7 @@ import Detail from './components/goods-detail.vue';
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
+  platformPrefix: '',
 };
 
 const state = reactive<{
@@ -203,21 +218,6 @@ const StatusList = [
   },
 ];
 
-const PrefixList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: '88.111',
-    value: '88.111',
-  },
-  {
-    text: '88.112',
-    value: '88.112',
-  },
-];
-
 const columns = [
   {
     title: '商品ID',
@@ -264,9 +264,6 @@ const columns = [
     title: '所属平台前缀',
     dataIndex: 'platformPrefix',
     width: 126,
-    filterable: {
-      filters: PrefixList,
-    },
   },
   {
     title: '应用类型',
@@ -329,7 +326,6 @@ function fetchData() {
   const params = {
     pageNum: current,
     pageSize,
-    type: 0,
     ...state.formModel,
   };
 
@@ -347,12 +343,6 @@ function fetchData() {
     });
 }
 
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  state.formModel[`${dataIndex}`] = f;
-  fetchData();
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -364,6 +354,16 @@ const onPageSizeChange = (size: number) => {
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  onPageChange(1);
 };
 
 const clickSearchBtn = () => {

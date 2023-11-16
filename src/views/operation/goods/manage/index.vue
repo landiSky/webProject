@@ -9,6 +9,7 @@
                 <t-input
                   v-model.trim="state.formModel.name"
                   placeholder="请输入商品名称"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -50,16 +51,20 @@
           class="circle blue"
         ></span>
         <span v-else class="circle light-blue"></span>
-        {{ PlatformEnum[record.source] }}
+        {{ PlatformEnum[record.source] ?? '-' }}
       </template>
       <template #productTypeId="{ record }">
-        {{ `${record.productTypeParentName}/${record.productTypeName}` }}
+        {{
+          `${record.productTypeParentName ?? '-'}/${
+            record.productTypeName ?? '-'
+          } `
+        }}
       </template>
       <template #type="{ record }">
-        {{ AppTypeEnum[record.type] }}
+        {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] }}
+        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.YBH" class="circle red"></span>
@@ -72,7 +77,7 @@
           class="circle orange"
         ></span>
         <span v-else class="circle green"></span>
-        {{ StatusEnum[record.status] }}
+        {{ StatusEnum[record.status] ?? '-' }}
       </template>
 
       <template #operations="{ record }">
@@ -92,13 +97,19 @@
           下架
         </t-link>
         <t-link
-          v-if="record.status === StatusEnum.WSJ"
+          v-if="
+            record.status === StatusEnum.WSJ &&
+            record.source === PlatformEnum.OTHER
+          "
           @click="clickUpBtn(record)"
         >
           上架
         </t-link>
         <t-link
-          v-if="record.status === StatusEnum.WSJ"
+          v-if="
+            record.status === StatusEnum.WSJ &&
+            record.source === PlatformEnum.OTHER
+          "
           @click="clickDeleteBtn(record)"
         >
           删除
@@ -298,7 +309,7 @@ const columns = [
     },
   },
   {
-    title: '应用分类',
+    title: '应用类型',
     dataIndex: 'type',
     slotName: 'type',
     width: 120,
@@ -326,7 +337,7 @@ const columns = [
   },
   {
     title: '上架时间',
-    dataIndex: 'createdTime',
+    dataIndex: 'upShelfTime',
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
@@ -377,26 +388,6 @@ function fetchData() {
     });
 }
 
-const sorterChanged = (_: any, direction: string) => {
-  if (direction === 'descend') {
-    state.formModel.upShelfTimeSort = 1;
-  } else if (direction === 'ascend') {
-    state.formModel.upShelfTimeSort = 0;
-  } else {
-    state.formModel.upShelfTimeSort = null;
-  }
-  fetchData();
-};
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  if (typeof f === 'boolean') {
-    state.formModel[`${dataIndex}`] = null;
-  } else {
-    state.formModel[`${dataIndex}`] = f;
-  }
-  fetchData();
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -408,6 +399,26 @@ const onPageSizeChange = (size: number) => {
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
+};
+
+const sorterChanged = (_: any, direction: string) => {
+  if (direction === 'descend') {
+    state.formModel.upShelfTimeSort = 1;
+  } else if (direction === 'ascend') {
+    state.formModel.upShelfTimeSort = 0;
+  } else {
+    state.formModel.upShelfTimeSort = null;
+  }
+  onPageChange(1);
+};
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  onPageChange(1);
 };
 
 const clickSearchBtn = () => {
