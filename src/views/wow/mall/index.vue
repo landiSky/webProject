@@ -384,7 +384,7 @@ onMounted(() => {
 
       .label {
         display: inline-block;
-        width: 70px;
+        min-width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
