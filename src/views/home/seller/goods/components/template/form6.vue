@@ -61,6 +61,7 @@
             accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
             :limit="5"
             tip="点击上传"
+            image-preview
             @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
             @change="(fileList: any, fileItem: any) => onUploadChange(fileList, fileItem, index)"
           >

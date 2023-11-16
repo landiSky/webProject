@@ -173,7 +173,7 @@
             </span>
             <span class="price">
               <template v-if="item.lowPrice !== -1">
-                <span class="prefix">¥ {{ item.lowPrice }}</span>
+                <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
                 <span class="suffix">元起</span>
               </template>
               <span v-else class="prefix">价格面议</span>
@@ -265,15 +265,15 @@ const getProductList = () => {
     params.startPrice = customPriceStart.value || null;
     params.endPrice = customPriceEnd.value || null;
   } else {
-    const temp = selectPriceInterval.value
-      ? PriceEnum[selectPriceInterval.value]
-      : [];
+    const temp =
+      Number(selectPriceInterval.value) >= 0
+        ? PriceEnum[selectPriceInterval.value as number]
+        : [];
 
     [params.startPrice, params.endPrice] =
       selectPriceInterval.value === -1 ? [] : temp;
   }
 
-  btnLoading.value = true;
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
       console.log('index.vue:106', response);
@@ -315,6 +315,7 @@ const getProductType = () => {
 
 const clickSearchBtn = () => {
   pagination.page = 1;
+  btnLoading.value = true;
   getProductList();
 };
 
@@ -324,7 +325,8 @@ const clickResetBtn = () => {
   selectPriceInterval.value = -1;
   customPriceStart.value = null;
   customPriceEnd.value = null;
-  clickSearchBtn();
+  pagination.page = 1;
+  getProductList();
 };
 
 const clickSort = (key: string, value: number) => {
@@ -367,23 +369,31 @@ onMounted(() => {
     }
 
     .item {
+      display: flex;
+      justify-content: start;
       margin-bottom: 16px;
       font-size: 14px;
       line-height: 22px;
 
       .label {
+        display: inline-block;
+        width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
       }
 
       .value {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
         color: #1d2129;
         font-weight: 400;
 
         & > span:not(.customPrice) {
           display: inline-block;
           margin-right: 40px;
+          margin-bottom: 2px;
           padding: 2px 10px;
           line-height: 22px;
           cursor: pointer;

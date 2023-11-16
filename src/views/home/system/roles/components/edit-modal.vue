@@ -14,7 +14,7 @@
       }}</template
     >
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="roleName" label="角色名称">
+      <t-form-item field="roleName" label="角色名称" validate-trigger="blur">
         <t-input
           v-model="state.formModel.roleName"
           placeholder="请输入"
@@ -94,7 +94,7 @@ const formRules = {
   roleName: [
     {
       required: true,
-      message: isEdit.value ? '角色名字不能为空' : '请输入角色名称',
+      message: isEdit.value ? '角色名称不能为空' : '请输入角色名称',
       validator: (value: any, cb: any) => {
         // @ts-ignore
         if (!state.formModel.roleName?.split(' ').join('')) {

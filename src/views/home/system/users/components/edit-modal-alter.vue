@@ -3,10 +3,11 @@
     <t-modal
       v-model:visible="visible"
       :width="642"
+      :heigh="800"
       :on-before-ok="onConfirm"
       @cancel="emit('cancel')"
     >
-      <template #title> 变更管理员 </template>
+      <template #title> 变更管理员</template>
       <t-form ref="formRef" :model="state.formModel" :rules="formRules">
         <t-form-item field="roleName" label="管理员账号">
           <span>{{ state.formModel.roleName }}</span>

@@ -51,7 +51,7 @@
           <t-input
             v-model="formModel.companyName"
             :max-length="{
-              length: 50,
+              length: 255,
               errorOnly: true,
             }"
             allow-clear
@@ -64,7 +64,7 @@
           <t-input
             v-model="formModel.creditCode"
             :max-length="{
-              length: 20,
+              length: 32,
               errorOnly: true,
             }"
             allow-clear
@@ -77,7 +77,7 @@
           <t-input
             v-model="formModel.legalPersonName"
             :max-length="{
-              length: 10,
+              length: 128,
               errorOnly: true,
             }"
             allow-clear
@@ -104,7 +104,7 @@
               action="/server/web/file/upload"
               :limit="1"
               style="width: 150px; height: 100px"
-              accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+              accept=".jpg,.png,.bmp,.jpeg"
               :before-upload="beforeUpload"
               @change="(fileList: any) => onUploadChange(fileList, 'businessLicense')"
             >
@@ -131,7 +131,7 @@
         </t-form-item>
 
         <p style="margin: -10px 0 20px 20%; color: #86909c">
-          支持jpg、png文件格式,文件大小限制5M以内。
+          支持jpg、jpeg、png、bmp文件格式,文件大小限制10M以内。
           <!-- 支持png和jpg,要求5M以内 -->
         </p>
 
@@ -154,7 +154,7 @@
               font-size: 14px;
               line-height: 15px;
             "
-            >企业信息</span
+            >联系人信息</span
           ></div
         >
         <t-form-item label="联系人姓名" field="contactName">
@@ -202,7 +202,7 @@
               :headers="uploadHeaders"
               :limit="1"
               image-preview
-              accept=".jpg,.png,.bmp,.tif,.gif"
+              accept=".jpg,.png,.bmp,.jpeg"
               @before-upload="beforeUpload"
               @change="(fileList: any) => onUploadChange(fileList, 'idCardz')"
             >
@@ -243,7 +243,7 @@
               :limit="1"
               image-preview
               style="margin-top: -20px"
-              accept=".jpg,.png,.bmp,.tif,.gif"
+              accept=".jpg,.png,.bmp,.jpeg"
               @before-upload="beforeUpload"
               @change="(fileList: any) => onUploadChange(fileList, 'idCardf')"
             >
@@ -269,7 +269,7 @@
         </t-form-item>
         <!-- </div> -->
         <p style="margin: -30px 0 20px 20%; color: #86909c">
-          支持jpg、png文件格式,文件大小限制5M以内。
+          支持jpg、jpeg、png、bmp文件格式,文件大小限制10M以内。
         </p>
       </t-form>
     </div>
@@ -353,7 +353,7 @@ const formModel = ref<Record<string, any>>({
 const formRules: any = {
   companyName: [
     { required: true, message: '请输入企业名称' },
-    { maxLength: 50, message: '长度不超过50个字符' },
+    { maxLength: 255, message: '长度不超过255个字符' },
   ],
   creditCode: [
     { required: true, message: '请输入社会信用代码' },
@@ -364,7 +364,7 @@ const formRules: any = {
   ],
   legalPersonName: [
     { required: true, message: '请输入法人姓名' },
-    { maxLength: 10, message: '长度不超过20个字符' },
+    { maxLength: 128, message: '长度不超过128个字符' },
   ],
   businessLicense: [
     {
@@ -498,7 +498,7 @@ const uploadSuccessf = (fileItem: FileItem) => {
 const beforeUpload = (file: File) => {
   // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
-    const isLt5M: boolean = file.size / 1024 / 1024 < 5;
+    const isLt5M: boolean = file.size / 1024 / 1024 < 10;
     console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在5MB以内');
