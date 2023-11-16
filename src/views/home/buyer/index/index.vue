@@ -12,7 +12,7 @@
             <p
               style="float: left; width: 300px; margin-top: 16px"
               class="name"
-              >{{ userInfoByCompany?.username || userInfo.mobile }}</p
+              >{{ userInfoByCompany?.username || userInfo?.mobile }}</p
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
@@ -502,8 +502,11 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
