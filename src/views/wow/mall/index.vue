@@ -65,7 +65,7 @@
               <t-input-number
                 v-model="customPriceStart"
                 :style="{ width: '98px' }"
-                placeholder="请输入数值"
+                placeholder="输入最小价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -73,7 +73,7 @@
               <t-input-number
                 v-model="customPriceEnd"
                 :style="{ width: '98px' }"
-                placeholder="请输入数值"
+                placeholder="输入最大价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -97,7 +97,14 @@
       <div class="sort">
         <span
           :class="{
-            active: !(apiParams.priceSort || apiParams.upShelfTimeSort),
+            active: !(
+              [priceSortEnum.ASC, priceSortEnum.DES].includes(
+                apiParams.priceSort
+              ) ||
+              [shelveSortEnum.ASC, shelveSortEnum.DES].includes(
+                apiParams.upShelfTimeSort
+              )
+            ),
           }"
           @click="clickAllSort"
           >综合排序</span
@@ -377,7 +384,7 @@ onMounted(() => {
 
       .label {
         display: inline-block;
-        width: 70px;
+        min-width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
