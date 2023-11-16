@@ -101,7 +101,10 @@
           上架
         </t-link>
         <t-link
-          v-if="record.status === StatusEnum.WSJ"
+          v-if="
+            record.status === StatusEnum.WSJ &&
+            record.source === PlatformEnum.OTHER
+          "
           @click="clickDeleteBtn(record)"
         >
           删除
