@@ -253,10 +253,10 @@
           <t-form-item label="应用类型" field="type">
             <t-radio-group v-model="formModel.type" :options="appTypeList" />
           </t-form-item>
-          <t-form-item label="产品简介" field="introduction">
+          <t-form-item label="商品简介" field="introduction">
             <t-textarea
               v-model="formModel.introduction"
-              placeholder="请输入产品简介"
+              placeholder="请输入商品简介"
               :max-length="{
                 length: 300,
                 errorOnly: true,
@@ -290,9 +290,9 @@
             ></t-upload>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
-            <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
+            <div class="hint">文件大小限制2M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
-          <t-form-item label="详细展示信息" field="detail">
+          <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer ref="templateRef"></TemplateDrawer>
           </t-form-item>
         </t-form>
@@ -573,7 +573,14 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
+import {
+  defineProps,
+  defineEmits,
+  ref,
+  onMounted,
+  computed,
+  nextTick,
+} from 'vue';
 import { Message, FileItem, Modal } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
 import {
@@ -677,7 +684,7 @@ const formRules = {
   detailImg: [{ required: true, message: '请至少上传一张详情图' }],
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
-  introduction: [{ required: true, message: '请输入产品简介' }],
+  introduction: [{ required: true, message: '请输入商品简介' }],
   useExplain: [{ required: true, message: '请上传产品使用说明' }],
   detail: [
     {
@@ -1065,8 +1072,8 @@ const getDetail = (id: any) => {
     formModel2.value.productId = res.id;
     formModel2.value.deliveryType = res.deliveryType || 0;
     formModel2.value.saleType = res.saleType || 0;
-
     templateRef.value.templateData = JSON.parse(res.detail);
+
     imageList.value = res.detailImg.split(',');
     if (res.useExplain) {
       expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
@@ -1255,6 +1262,11 @@ const clickNext = async () => {
 // 上一步
 const clickPrevious = () => {
   step.value = 1;
+  nextTick(() => {
+    templateRef.value.templateData = formModel.value.detail
+      ? JSON.parse(formModel.value.detail)
+      : '[]';
+  });
 };
 
 // 预览

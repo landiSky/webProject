@@ -273,7 +273,6 @@ const getProductList = () => {
       selectPriceInterval.value === -1 ? [] : temp;
   }
 
-  btnLoading.value = true;
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
       console.log('index.vue:106', response);
@@ -315,6 +314,7 @@ const getProductType = () => {
 
 const clickSearchBtn = () => {
   pagination.page = 1;
+  btnLoading.value = true;
   getProductList();
 };
 
@@ -324,7 +324,8 @@ const clickResetBtn = () => {
   selectPriceInterval.value = -1;
   customPriceStart.value = null;
   customPriceEnd.value = null;
-  clickSearchBtn();
+  pagination.page = 1;
+  getProductList();
 };
 
 const clickSort = (key: string, value: number) => {
@@ -367,11 +368,15 @@ onMounted(() => {
     }
 
     .item {
+      display: flex;
+      justify-content: start;
       margin-bottom: 16px;
       font-size: 14px;
       line-height: 22px;
 
       .label {
+        display: inline-block;
+        width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
@@ -384,6 +389,7 @@ onMounted(() => {
         & > span:not(.customPrice) {
           display: inline-block;
           margin-right: 40px;
+          margin-bottom: 2px;
           padding: 2px 10px;
           line-height: 22px;
           cursor: pointer;

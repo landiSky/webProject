@@ -14,7 +14,14 @@
                   placeholder="搜索商品名称"
                   allow-clear
                   @change="clickSearchBtn"
-                />
+                >
+                  <template #suffix>
+                    <icon-search
+                      style="cursor: pointer"
+                      @click="clickSearchBtn"
+                    ></icon-search>
+                  </template>
+                </t-input>
               </t-form-item>
             </t-col>
           </t-row>

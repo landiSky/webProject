@@ -11,13 +11,6 @@
       :loading="state.tableLoading"
       :columns="columns"
       :data="state.tableData"
-      :pagination="{
-        'show-total': true,
-        'show-jumper': true,
-        'show-page-size': true,
-        'hide-on-single-page': hideOnSinglePage,
-        ...pagination,
-      }"
       bordered
     >
       <template #operations="{ record }">
@@ -94,12 +87,11 @@ const StatusEnum: { [name: string]: any } = {
 };
 
 function fetchData() {
-  // 接口请求
   state.tableLoading = true;
   observeList()
     .then((res: any) => {
       if (res.code === 200) {
-        state.tableData = res.data || [];
+        state.tableData = res.data;
       }
     })
     .finally(() => {
