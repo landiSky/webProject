@@ -65,7 +65,8 @@
         <template #operations="{ record }">
           <t-link
             v-if="
-              (record.memberType === 1 && record.status === 0) ||
+              record.memberType === 1 &&
+              record.status === 0 &&
               userInfoByCompany.profile !== rolestatusled.ROLESTATUS
             "
             @click="clickDetailBtn(record)"
@@ -73,19 +74,13 @@
             变更管理员
           </t-link>
           <t-link
-            v-if="
-              (record.status === 0 && record.memberType !== 1) ||
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
-            "
+            v-if="record.status === 0 && record.memberType !== 1"
             @click="clickEditBtn(record)"
           >
             编辑
           </t-link>
           <t-link
-            v-if="
-              (record.status === 0 && record.memberType !== 1) ||
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
-            "
+            v-if="record.status === 0 && record.memberType !== 1"
             @click="clickDelBtn(record)"
             >离职</t-link
           >
