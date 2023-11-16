@@ -305,7 +305,7 @@ const columns = [
     },
   },
   {
-    title: '应用分类',
+    title: '应用类型',
     dataIndex: 'type',
     slotName: 'type',
     width: 120,
