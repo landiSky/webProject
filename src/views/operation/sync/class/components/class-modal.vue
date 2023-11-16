@@ -20,7 +20,7 @@
         />
       </t-form-item>
 
-      <t-form-item field="note" label="备注">
+      <t-form-item field="remark" label="备注">
         <t-textarea
           v-model.trim="formModel.remark"
           placeholder="请输入备注"
@@ -71,10 +71,7 @@ const formRules = {
     { required: true, message: '请输入分类名称' },
     { maxLength: 50, message: '长度不超过50个字符' },
   ],
-  note: [
-    { required: false, message: '请输入备注' },
-    { maxLength: 200, message: '长度不超过200个字符' },
-  ],
+  remark: [{ maxLength: 200, message: '长度不超过200个字符' }],
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
