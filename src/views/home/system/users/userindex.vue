@@ -7,7 +7,7 @@
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
-            v-if="userInfoByCompany.profile !== rolestatusled.ROLESTATUS"
+            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
             type="primary"
             @click="clickAddBtn"
           >
@@ -67,27 +67,35 @@
             v-if="
               record.memberType === 1 &&
               record.status === 0 &&
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS
             "
             @click="clickDetailBtn(record)"
           >
             变更管理员
           </t-link>
           <t-link
-            v-if="record.status === 0 && record.memberType !== 1"
+            v-if="
+              record.status === 0 &&
+              record.memberType !== 1 &&
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS
+            "
             @click="clickEditBtn(record)"
           >
             编辑
           </t-link>
           <t-link
-            v-if="record.status === 0 && record.memberType !== 1"
+            v-if="
+              record.status === 0 &&
+              record.memberType !== 1 &&
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS
+            "
             @click="clickDelBtn(record)"
             >离职</t-link
           >
           <span
             v-if="
               record.status === 1 ||
-              userInfoByCompany.profile === rolestatusled.ROLESTATUS
+              userInfoByCompany.primary === rolestatusled.ROLESTATUS
             "
             >--</span
           >
@@ -354,21 +362,6 @@ const onEditModalConfirm = () => {
   fetchData();
 };
 
-// // 修改状态的接口
-// const modifyUserStatus = (ids: Array<number>, enabled: 0 | 1) => {
-//   changeUserStatus({
-//     ids,
-//     enabled, // : UserStatusEnum.USED : UserStatusEnum.UNUSED
-//   })
-//     .then(() => {
-//       Message.success(
-//         `${enabled === UserStatusEnum.USED ? '启用' : '停用'}成功!`
-//       );
-//       fetchData();
-//     })
-//     .catch(() => {});
-// };
-
 // modal类删除 离职
 const clickDelBtn = (row: Record<string, any>) => {
   console.log(row);
@@ -385,7 +378,6 @@ const clickDelBtn = (row: Record<string, any>) => {
   //   });
   //   return;
   // }
-  console.log(row.memberId);
 
   Modal.warning({
     title: '确定为该企业成员办理离职吗?',
@@ -430,18 +422,6 @@ const editModalVisiblealterflag = () => {
   };
   editModalVisiblealter.value = false;
 };
-
-// 编辑全屏展示
-// function handleEditFullscreen(data: any) {
-//   state.editData = data;
-//   editFullModalVisible.value = true;
-// }
-
-// 编辑全屏展示成功
-// const onFullModalConfirm = () => {
-//   editFullModalVisible.value = false;
-//   fetchData();
-// };
 
 onMounted(() => {
   fetchData();

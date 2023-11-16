@@ -7,7 +7,7 @@
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
-            v-if="userInfoByCompany.profile !== rolestatusled.ROLESTATUS"
+            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
             type="primary"
             @click="clickAddBtn"
           >
@@ -66,36 +66,23 @@
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
           <t-link
-            v-if="
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
-              userInfo.isAdmin === false
-            "
+            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
             @click="onEditTreeConfirmsldrole(record)"
           >
             授权管理
           </t-link>
 
           <t-link
-            v-if="
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
-              userInfo.isAdmin === false
-            "
+            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
             @click="clickEditBtn(record)"
             >编辑</t-link
           >
           <t-link
-            v-if="
-              userInfoByCompany.profile !== rolestatusled.ROLESTATUS ||
-              userInfo.isAdmin === false
-            "
+            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
             @click="delectlist(record.id, record.memberCount)"
             >删除</t-link
           >
-          <span
-            v-if="
-              userInfoByCompany.profile === rolestatusled.ROLESTATUS ||
-              userInfo.isAdmin === true
-            "
+          <span v-if="userInfoByCompany.primary === rolestatusled.ROLESTATUS"
             >-</span
           >
           <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
