@@ -16,7 +16,7 @@
             >
 
             <div class="inofs" style="float: left; margin-top: 25px">
-              <div style="float: left">
+              <div class="inofslist" style="float: left">
                 <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
                 ><p>{{
@@ -28,7 +28,7 @@
               </div>
 
               <p
-                style="float: left"
+                class="statuslist"
                 :class="[
                   userInfoByCompany.certificateStatus ===
                     CompanyAuthStatus.AUTHED ||
@@ -71,7 +71,12 @@
 
                     <div v-else class="states">
                       <p
-                        style="width: 50px; text-align: center"
+                        style="
+                          width: 50px;
+                          padding: 3px;
+                          font-size: 12px;
+                          text-align: center;
+                        "
                         :class="stateClass[userInfoByCompany.certificateStatus]"
                         >{{
                           CompanyAuthStatusDESC[
@@ -107,11 +112,7 @@
                   <div class="btns">
                     <p style="margin: 10px 0"> 管理企业组织架构&成员权限</p>
                     <t-button
-                      v-if="
-                        userInfoByCompany.certificateStatus ===
-                          CompanyAuthStatus.AUTHED ||
-                        userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      "
+                      v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
                       @click="distributionrole"
                     >
@@ -155,7 +156,7 @@
                 "
                 >企业节点认证</div
               ><span
-                style="padding: 3px 10px"
+                style="padding: 4px 8px; line-height: 22px"
                 :class="nodeStateClass[userInfoByCompany.nodeStatus]"
                 >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</span
               >
@@ -286,7 +287,7 @@
               ><span>{{ item.productName }}</span
               ><span
                 style="color: #1664ff; cursor: pointer"
-                @click="togo(item.url)"
+                @click="togo(item.deliveryId, item.dueDate)"
               >
                 前往 》</span
               ></div
@@ -304,12 +305,12 @@
             </div>
             <div class="tophead"
               ><span
-                v-if="userInfoByCompany === true"
+                v-if="userInfoByCompany.primary === AccountType?.MAIN"
                 style="color: #1664ff; cursor: pointer"
                 @click="configurationapp(item)"
                 >配置应用</span
               ><span
-                style="color: #86909c; cursor: pointer"
+                style="margin-left: auto; color: #86909c; cursor: pointer"
                 @click="instructionsuse(item.useExplain, item.productId)"
               >
                 使用说明</span
@@ -415,7 +416,7 @@
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
-      :product-id="selectProduct.id"
+      :product-id="selectProduct.productId"
       :delivery-set-id="selectProduct.deliveryId"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
@@ -459,7 +460,7 @@
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch } from 'vue';
 import type { Ref } from 'vue';
-import { orderOver, authDialogdata } from '@/api/buyer/overview';
+import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -470,7 +471,7 @@ import EditModalFullscreen from '@/components/dataoverview/components/edit-modal
 
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
 
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
@@ -499,12 +500,10 @@ import group4 from './image/group4.png';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const router = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -550,64 +549,9 @@ const gotoverifys = ref(false);
 const detailflag = ref(false);
 // 配置应用 弹窗
 const editModalVisiblealter = ref(false);
-// 轮播图数据
-const images = reactive([
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-  [
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-    'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  ],
-]);
 
 // //已购应用
-const authDialogVisible: Record<string, any> = ref([
-  // {
-  //   id: '2',
-  //   orderNum: '2',
-  //   productId: '1', // 商品id
-  //   productName: '凉皮', // 商品名称
-  //   introduction:
-  //     '支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链', // 简介
-  //   useExplain: '', // 使用说明
-  //   customerName: '硕',
-  //   productLogo:
-  //     'https://img1.baidu.com/it/u=118352358,542469960&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500', // 商品图品
-  //   merchantName: '商品所属商家名称',
-  //   deliveryTypeName: 'SAAS',
-  //   deliveryType: 0, // 交付类型:0-saas类,1-独立部署类
-  //   productPrice: 10000,
-  //   accountCount: '10个账号',
-  //   buyDuration: '5个月',
-  //   realityPrice: 9400,
-  //   orderStatus: 1, // 订单状态：0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-  //   orderStatusName: '待审核',
-  //   orderStatusInfo: null,
-  //   orderSteps: 3, // 订单步骤
-  //   rejectType: 0,
-  //   rejectReasonDetail: '未收到打款信息',
-  //   deploymentStatusName: null,
-  //   deploymentStatusCode: null,
-  //   couponMoney: 600,
-  //   userMobile: null,
-  //   orderSource: 0,
-  //   effectTime: null,
-  //   createTime: '2023-10-23 16:24:32',
-  //   dueDate: null,
-  //   voucherRejectTime: '2023-10-24 11:05:38',
-  //   payCompleteTime: null,
-  //   voucherSubmitTime: '2023-10-24 11:11:19',
-  //   confirmDeployedTime: null,
-  //   merchantDeliverTime: null,
-  //   attachmentAddressArr: null, // 支付凭证,调用文件下载接口进行图片回显
-  // },
-]);
+const authDialogVisible: Record<string, any> = ref([]);
 // 订单概览
 const orderlist = ref<Record<string, any>>({
   count: 0, // 全部订单数量
@@ -661,10 +605,10 @@ const authDialog = () => {
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
     companyId: userInfoByCompany.value?.companyId,
-    userId: userInfoByCompany.value?.id || '',
+    userId: userInfo.value?.userId, // userInfoByCompany.value?.id || '',
   }).then((res) => {
     console.log(res);
-    authDialogVisible.value = res;
+    authDialogVisible.value = res || [];
   });
 };
 
@@ -737,8 +681,16 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = (urldata: string) => {
-  window.open(urldata);
+const togo = (id: string, dueDate: string) => {
+  console.log('index.vue:685===点击前往', id, dueDate);
+  // if (dueDate) {   // TODO 过期时间判断
+  orderGo({ deliveryId: id }).then((res: any) => {
+    console.log('获取应用访问地址====', res);
+    window.open(res, '_blank');
+    // window.location.href=
+  });
+  // window.open(urldata);
+  // }
 };
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
@@ -754,7 +706,7 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
 
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
-    console.log(res);
+    // console.log(res);
     // console.log(res, '导出数据');
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
@@ -814,8 +766,22 @@ watch(
     initOpt();
   }
 );
+
+// 在当前路由下点击 标识服务，去开通，弹窗三要素弹窗
+watch(
+  () => route.query?.openAuthModal,
+  (newV) => {
+    if (newV) {
+      authModalVisible.value = true;
+    }
+  }
+);
 onMounted(() => {
   initOpt();
+
+  if (route.query?.openAuthModal) {
+    authModalVisible.value = true;
+  }
 });
 </script>
 
@@ -860,38 +826,51 @@ onMounted(() => {
         }
 
         .inofs {
-          p {
-            float: left;
+          .inofslist {
+            p {
+              float: left;
+            }
+
+            p:nth-child(1) {
+              margin-right: 9px;
+              color: #86909c;
+            }
+
+            p:nth-child(2) {
+              margin-right: 9px;
+              color: #86909c;
+              text-align: center;
+              // padding: 3px 10px;
+            }
+
+            p:nth-child(3) {
+              margin-right: 9px;
+              color: #86909c;
+            }
+
+            p:nth-child(4) {
+              margin-right: 9px;
+              color: #86909c;
+              // color: #86909c;
+              text-align: center;
+            }
           }
 
-          p:nth-child(1) {
-            margin-right: 9px;
-            color: #86909c;
-          }
-
-          p:nth-child(2) {
-            margin-right: 9px;
-            text-align: center;
-            // color: #86909c;
-            // padding: 3px 10px;
-          }
-
-          p:nth-child(3) {
-            margin-right: 9px;
-            color: #86909c;
-          }
-
-          p:nth-child(4) {
-            margin-right: 9px;
-            // color: #86909c;
-            text-align: center;
-          }
-
-          p:nth-child(5) {
-            padding: 3px;
-            font-size: 12px;
-          }
+          // p:nth-child(5) {
+          //   padding: 5px;
+          //   font-size: 12px;
+          // }
           // 已认证
+          .statuslist {
+            float: left;
+            width: 52px;
+            margin-top: -3px;
+            padding: 1px 8px;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 22px;
+          }
+
           .authenticated {
             color: #009a29;
             background-color: #e8ffea;

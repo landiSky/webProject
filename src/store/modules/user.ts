@@ -143,10 +143,10 @@ export const useUserStore = defineStore({
             adminCompany,
             companyList[0]
           );
-          this.changeSelectCompany(adminCompany || companyList[0]);
+          await this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
           console.log('user.ts:139==去更新 usecompany');
-          this.changeSelectCompany({ companyId, companyName: '' });
+          await this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
           // useMenuStore().genLeftMenu([]);
         }

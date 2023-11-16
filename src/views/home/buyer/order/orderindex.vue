@@ -3,7 +3,7 @@
   <div class="contain">
     <div class="content-heard">
       <div class="heard-name">订单管理</div>
-      <div class="cardclass">
+      <div v-if="false" class="cardclass">
         <ul v-for="(item, index) in orderStatusTypeNav" :key="index">
           <li @click="clickNav(item.value, index)">
             <a :class="{ activecclass: activeIndex === index }"
@@ -482,11 +482,11 @@ const deliveryType = reactive([
     label: '全部',
   },
   {
-    value: '1',
+    value: '0',
     label: 'SAAS',
   },
   {
-    value: '2',
+    value: '1',
     label: '独立部署',
   },
 ]);
@@ -560,10 +560,34 @@ const statusNum = ref<{
 });
 const activeIndex = ref(0);
 const noDatalist = ref(false);
+const init = () => {
+  orderList({
+    // 商品名称
+    productName: formInline.commodityName,
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: formInline.deliveryType,
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: formInline.orderStatus,
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: formInline.tabstatus,
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: formInline.startTime,
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: formInline.endTime,
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    // userInfoByCompany.companyId
+    userCompanyId: String(userInfoByCompany.value?.companyId),
+  }).then((res) => {
+    console.log(res);
+    tableData.value = res.records;
+    formInline.total = res.total;
+  });
+};
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
-  // @ts-ignore
+  //  @ts-ignore
   formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [
@@ -618,31 +642,9 @@ const clickNav = (value: string | null, ins: number) => {
   } else {
     orderStatusSelect.value = [];
   }
+  init();
 };
-const init = () => {
-  orderList({
-    // 商品名称
-    productName: formInline.commodityName,
-    // 交付类型:0-saas类,1-独立部署类
-    deliveryType: formInline.deliveryType,
-    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatus: formInline.orderStatus,
-    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
-    tabPage: formInline.tabstatus,
-    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
-    createStart: formInline.startTime,
-    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
-    createEnd: formInline.endTime,
-    pageSize: formInline.pageSize,
-    pageNum: formInline.pageNum,
-    // userInfoByCompany.companyId
-    userCompanyId: String(userInfoByCompany.value?.companyId),
-  }).then((res) => {
-    console.log(res);
-    tableData.value = res.records;
-    formInline.total = res.total;
-  });
-};
+
 const dataStatistics = () => {
   orderNum({
     userCompanyId: String(userInfoByCompany.value?.companyId),
@@ -678,7 +680,18 @@ const onRangeChange = (
 };
 
 // 清空查询项
-const clearSearchles = () => {};
+const clearSearchles = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;
@@ -734,7 +747,6 @@ const clearSearch = () => {
   formInline.startTime = '';
   formInline.endTime = '';
   formInline.orderStatus = null;
-
   formInline.pageNum = 1;
   noDatalist.value = false;
   init();

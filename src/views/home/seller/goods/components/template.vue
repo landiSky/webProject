@@ -61,12 +61,7 @@
       <div class="preview">
         <span>{{ TemplateEnum?.[selectTempIndex].desc }}</span>
         <span>{{ TemplateEnum?.[selectTempIndex].tips }}</span>
-        <img
-          :src="`src/assets/images/home/goods/template${
-            selectTempIndex + 1
-          }.png`"
-          alt="模板"
-        />
+        <img :src="tempateImgList[selectTempIndex]" alt="模板" />
       </div>
     </div>
     <div v-else class="formWrapper">
@@ -81,8 +76,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineProps, defineEmits, provide } from 'vue';
-import type { Ref } from 'vue';
+import { ref, computed, defineProps, provide } from 'vue';
+import template1 from '@/assets/images/home/goods/template1.png';
+import template2 from '@/assets/images/home/goods/template2.png';
+import template3 from '@/assets/images/home/goods/template3.png';
+import template4 from '@/assets/images/home/goods/template4.png';
+import template5 from '@/assets/images/home/goods/template5.png';
+import template6 from '@/assets/images/home/goods/template6.png';
 import Form1 from './template/form1.vue';
 import Form2 from './template/form2.vue';
 import Form3 from './template/form3.vue';
@@ -96,8 +96,15 @@ const currentIndex = ref<number>(-1); // 如果为-1代表新增，如果>=0 代
 const drawerVisible = ref(false);
 
 const number2local: string[] = ['一', '二', '三', '四', '五', '六', '七'];
+const tempateImgList = [
+  template1,
+  template2,
+  template3,
+  template4,
+  template5,
+  template6,
+];
 
-// const emit = defineEmits(['save', 'close']);
 const props = defineProps({
   templateData: {
     type: Array,
@@ -139,7 +146,6 @@ const handleCancel = () => {
 
 const saveTemplate = () => {
   const { formRef, form } = formWrapRef.value;
-  console.log('======表单数据:', form);
 
   formRef.validate((errors: any) => {
     if (!errors) {
@@ -226,6 +232,7 @@ defineExpose({
   padding: 20px;
 
   .btnList {
+    display: flex;
     margin-bottom: 16px;
     color: #4e5969;
     font-weight: 400;

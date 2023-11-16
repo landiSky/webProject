@@ -1,11 +1,11 @@
 <template>
   <div class="biox">
-    <Orderindex> </Orderindex>
-    <!-- <Dataoverview
-      v-if="
-        userInfoByCompany.nodeStatus !== 1 || userInfoByCompany.nodeStatus !== 1
-      "
-    ></Dataoverview> -->
+    <Orderindex v-if="userInfoByCompany.primary !== AccountType.UNAUTH">
+    </Orderindex>
+    <Dataoverview
+      v-if="userInfoByCompany.primary === AccountType.UNAUTH"
+      :title="'订单管理'"
+    ></Dataoverview>
   </div>
 </template>
 
@@ -13,6 +13,7 @@
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import Dataoverview from '@/components/dataoverview/index.vue';
 import { useUserStore } from '@/store/modules/user';
+import { AccountType } from '@/enums/common';
 import { storeToRefs } from 'pinia';
 
 import Orderindex from './orderindex.vue';

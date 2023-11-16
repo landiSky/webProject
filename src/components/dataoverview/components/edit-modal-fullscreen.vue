@@ -106,7 +106,7 @@
               style="width: 150px; height: 100px"
               accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
               :before-upload="beforeUpload"
-              @success="uploadSuccess"
+              @change="(fileList: any) => onUploadChange(fileList, 'businessLicense')"
             >
               <!-- @change="changeclick" -->
               <template #upload-button>
@@ -204,7 +204,7 @@
               image-preview
               accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
-              @success="uploadSuccessz"
+              @change="(fileList: any) => onUploadChange(fileList, 'idCardz')"
             >
               <template #upload-button>
                 <div
@@ -245,7 +245,7 @@
               style="margin-top: -20px"
               accept=".jpg,.png,.bmp,.tif,.gif"
               @before-upload="beforeUpload"
-              @success="uploadSuccessf"
+              @change="(fileList: any) => onUploadChange(fileList, 'idCardf')"
             >
               <template #upload-button>
                 <div
@@ -316,7 +316,7 @@ const uploadHeaders = {
   Authorization: `Bearer ${getToken()}`,
 };
 
-const formModel = ref({
+const formModel = ref<Record<string, any>>({
   id: userInfo.value?.companyId,
   userId: userInfo.value?.userId,
   // 企业名称
@@ -430,34 +430,45 @@ const getUserDetail = () => {
       console.log(formModel.value);
     })
     .catch((error) => {});
-  // 调后端接口
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+};
+const changeclick = (fileList: any, fileItem: any) => {
+  console.log(fileList, fileItem, 'fileItem');
+  formModel.value.businessLicense = fileList[0]?.name || '';
 };
 
-// @ts-ignore 营业执照
-const uploadSuccess = (fileItem: FileItem) => {
-  console.log('=====uploadSuccess', fileItem);
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    console.log(fileItem.response.data);
-
-    formModel.value.businessLicense = fileItem.response.data;
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
+const onUploadChange = (fileList: any, field: string) => {
+  formModel.value[field] = '';
+  fileList.forEach((item: Record<string, any>) => {
+    const { code, data } = item.response || {};
+    if (code === 200) {
+      formModel.value[field] = data;
+    }
+  });
 };
+
+const onBusUploadChange = (fileList: any) => {
+  formModel.value.businessLicense = '';
+  fileList.forEach((item: Record<string, any>) => {
+    const { code, data } = item.response || {};
+    if (code === 200) {
+      formModel.value.businessLicense = data;
+    }
+  });
+};
+
+// // @ts-ignore 营业执照
+// const uploadSuccess = (fileItem: FileItem) => {
+//   console.log('=====uploadSuccess', fileItem);
+//   const res = fileItem.response;
+//   // if (res?.code === 200) {
+//   //   console.log(fileItem.response.data);
+
+//   //   formModel.value.businessLicense = fileItem.response.data;
+//   //   Message.success(`上传 ${fileItem.name} 成功`);
+//   // } else {
+//   //   Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+//   // }
+// };
 // 营业执照
 
 // @ts-ignore
@@ -500,7 +511,9 @@ const beforeUpload = (file: File) => {
 };
 // 完成
 const onConfirm = (done: (closed: boolean) => void) => {
+  console.log('edit-modal-fullscreen.vue:504', formModel.value.businessLicense);
   formRef.value.validate((errors: any) => {
+    console.log('edit-modal-fullscreen.vue:503', errors);
     if (!errors) {
       // setFields;
       console.log(formModel.value, 'closed');

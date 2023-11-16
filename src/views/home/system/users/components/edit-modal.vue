@@ -8,12 +8,12 @@
   >
     <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="username" label="成员姓名">
+      <t-form-item field="username" label="成员姓名" validate-trigger="blur">
         <t-input
           v-model="state.formModel.username"
           placeholder="请输入"
           :max-length="{
-            length: 50,
+            length: 10,
             errorOnly: true,
           }"
           allow-clear
@@ -42,7 +42,7 @@
         </t-select> -->
       </t-form-item>
 
-      <t-form-item field="roleList" label="成员角色">
+      <t-form-item field="roleList" label="成员角色" validate-trigger="blur">
         <t-select
           v-model="state.formModel.roleList"
           placeholder="请选择"
@@ -56,7 +56,7 @@
           >
         </t-select>
       </t-form-item>
-      <t-form-item field="phone" label="手机号">
+      <t-form-item field="phone" label="手机号" validate-trigger="blur">
         <t-input
           v-model="state.formModel.phone"
           placeholder="请输入"
@@ -127,8 +127,18 @@ const state = reactive({
 
 const formRules = {
   username: [
-    { required: true, message: '请输入成员姓名' },
-    // { maxLength: 10, message: '长度不超过10个字符' },
+    {
+      required: true,
+      message: '请输入成员姓名',
+      validator: (value: any, cb: any) => {
+        // @ts-ignore
+        if (!state.formModel.username?.split(' ').join('')) {
+          return cb('请输入成员名称');
+        }
+        return cb();
+      },
+    },
+    { maxLength: 10, message: '长度不超过10个字符' },
   ],
   roleList: [{ required: true, message: '请选择成员角色' }],
   phone: [
@@ -154,9 +164,9 @@ const formRules = {
               phone: state.formModel.phone,
             }).then((res) => {
               if (res.data.code === 200) {
-                console.log('====1999');
+                // console.log('====1999');
               } else {
-                console.log('该手机号尚未在平台注册');
+                // console.log('该手机号尚未在平台注册');
                 cb(res.data.message);
               }
               resolve();
@@ -185,7 +195,6 @@ const init = () => {
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
-  console.log('====228', formRef.value);
   formRef.value.validate((errors: any) => {
     console.log('111', errors);
     if (!errors) {
@@ -202,18 +211,11 @@ const onConfirm = (done: (closed: boolean) => void) => {
         .then((res) => {
           done(true);
           emit('confirm');
+          // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
         })
-        .catch((err) => {});
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
+        .catch((err) => {
+          done(false);
+        });
     } else {
       done(false);
       console.log(state.formModel);
@@ -221,23 +223,16 @@ const onConfirm = (done: (closed: boolean) => void) => {
   });
 };
 
-// const getDetail = () => {
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
 // };
 // 获取已注册用户
-const getName = () => {};
+// const getName = () => {};
 // 查询角色
-const roleName = () => {};
+// const roleName = () => {};
 // 查找手机号是否注册
-const resPhone = () => {};
-const applist = (a: any) => {
-  console.log(a, 'a, b, c');
-};
+// const resPhone = () => {};
+// const applist = (a: any) => {
+//   console.log(a, 'a, b, c');
+// };
 onMounted(() => {
   rolelist({
     pageSize: 1000,

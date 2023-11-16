@@ -54,3 +54,13 @@ export const NodeAuthStatusDESC = {
   [NodeAuthStatus.REJECT]: '已驳回',
   [NodeAuthStatus.UNAUTH]: '未认证',
 };
+
+export const AppType = {
+  COMMON: 0, // 普通应用
+  IDAPP: 1, // 标识应用
+};
+// 角色
+export const rolestatusled = {
+  // 2 普通用户
+  ROLESTATUS: 2,
+};

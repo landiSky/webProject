@@ -294,7 +294,7 @@
               <t-col :span="3">
                 <div class="grid-content">
                   <t-button
-                    v-if="item.orderStatus === 0"
+                    v-if="item.orderStatus === 0 && item.saleType !== 2"
                     type="text"
                     style="width: 100%"
                     @click="modificationamount(item.id, item.productPrice)"
@@ -486,11 +486,11 @@ const deliveryType = reactive([
     label: '全部',
   },
   {
-    value: '1',
+    value: '0',
     label: 'SAAS',
   },
   {
-    value: '2',
+    value: '1',
     label: '独立部署',
   },
 ]);
@@ -545,16 +545,41 @@ const orderStatusSelect = ref([
   },
 ]);
 // tab 状态数量
-const statusNum = reactive({
-  count: 4, // 全部订单数量
-  payCount: 2, // 待支付页数量
-  auditCount: 1, // 待审核页数量
+const statusNum: Record<string, any> = ref({
+  count: 0, // 全部订单数量
+  payCount: 0, // 待支付页数量
+  auditCount: 0, // 待审核页数量
   deliverCount: 0, // 待交付数量
   rejectCount: 0, // 已驳回数量
   servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 1, // 已完成数量
+  completeCount: 0, // 已完成数量
 });
 const activeIndex = ref(0);
+const init = () => {
+  console.log(userInfoByCompany.value, 'userInfoByCompany.value');
+  orderList({
+    // 商品名称
+    productName: formInline.commodityName,
+    // 交付类型:0-saas类,1-独立部署类
+    deliveryType: formInline.deliveryType,
+    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
+    orderStatus: formInline.orderStatus,
+    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
+    tabPage: formInline.tabstatus,
+    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
+    createStart: formInline.startTime,
+    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
+    createEnd: formInline.endTime,
+    pageSize: formInline.pageSize,
+    pageNum: formInline.pageNum,
+    // String(userInfoByCompany.value.companyId),
+    userCompanyId: userInfoByCompany.value.companyId,
+  }).then((res) => {
+    tableData.value = res.records;
+    //  @ts-ignore
+    formInline.total = res.total;
+  });
+};
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
@@ -613,6 +638,7 @@ const clickNav = (value: string | null, ins: number) => {
   } else {
     orderStatusSelect.value = [];
   }
+  init();
 };
 // 修改金额 弹窗 开关
 const editModalVisible = ref(false);
@@ -621,39 +647,14 @@ const deliveryVisible = ref(false);
 
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
-const init = () => {
-  console.log(userInfoByCompany.value, 'userInfoByCompany.value');
 
-  orderList({
-    // 商品名称
-    productName: formInline.commodityName,
-    // 交付类型:0-saas类,1-独立部署类
-    deliveryType: formInline.deliveryType,
-    // 订单状态:0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-    orderStatus: formInline.orderStatus,
-    // tab页:0-待支付,1-待审核,2-待交付,3-已完成,全部订单-null
-    tabPage: formInline.tabstatus,
-    // 订单创建时间-起始,pattern='yyyy-MM-dd HH:mm:ss'
-    createStart: formInline.startTime,
-    // 订单创建时间-结束,pattern='yyyy-MM-dd HH:mm:ss'
-    createEnd: formInline.endTime,
-    pageSize: formInline.pageSize,
-    pageNum: formInline.pageNum,
-    // String(userInfoByCompany.value.companyId),
-    userCompanyId: userInfoByCompany.value.companyId,
-  }).then((res) => {
-    tableData.value = res.records;
-    //  @ts-ignore
-    formInline.total = res.total;
-  });
-};
 const dataStatistics = () => {
   orderNum({
     userCompanyId: String(userInfoByCompany.value?.companyId),
-    flag: '0',
+    flag: '1',
   }).then((res) => {
     console.log(res, '订单数量');
-    // @ts-ignore
+
     statusNum.value = res;
   });
 };
@@ -680,6 +681,9 @@ const onRangeChange = (
 // 查询
 const getTableData = () => {
   console.log(formInline, 'getTableData');
+  formInline.pageNum = 1;
+  noDatalist.value = true;
+  init();
 };
 // 重置
 const clearSearch = () => {
@@ -696,7 +700,18 @@ const clearSearch = () => {
 };
 
 // 清空查询项
-const clearSearchles = () => {};
+const clearSearchles = () => {
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+
+  formInline.pageNum = 1;
+  noDatalist.value = false;
+  init();
+};
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;
@@ -720,6 +735,7 @@ const modificationamount = (id: string, productPrice: number) => {
 // 修改金额 完成
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
+  init();
 };
 // 交付应用
 const delivery = (deliveryType: number, id: string) => {

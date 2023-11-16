@@ -166,6 +166,7 @@ onMounted(() => {
   // 一是编辑信息从列表传入
 
   const { id, currentamount } = props.data;
+  console.log(id);
 
   state.formModel = { id };
   currentamount.value = currentamount;

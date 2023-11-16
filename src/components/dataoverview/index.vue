@@ -1,5 +1,10 @@
 <template>
   <div class="overview">
+    <div class="title">
+      <p class="titletop">
+        {{ props.title }}
+      </p>
+    </div>
     <div class="centers">
       <div class="datalist">
         <div class="dataimg">
@@ -41,18 +46,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, defineProps } from 'vue';
 import empty from '@/assets/images/home/empty.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
+const props = defineProps({
+  title: String,
+});
 const state = reactive({
   editData: {
     id: '1111',
     // 0是提交认证 1是修改认证
     statusled: 0,
   },
+});
+onMounted(() => {
+  console.log(props.title);
 });
 // 立即认证弹窗
 const editModalVisible = ref(false);
@@ -111,6 +122,19 @@ const detailflagclick = () => {
 .overview {
   width: 100%;
   height: 100%;
+
+  .title {
+    width: 100%;
+    height: 72px;
+    border-bottom: 1px solid #f6f7fb;
+
+    .titletop {
+      padding-left: 30px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 72px;
+    }
+  }
 
   .centers {
     display: flex;

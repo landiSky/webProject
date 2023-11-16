@@ -5,6 +5,7 @@
     :width="642"
     :height="500"
     :on-before-ok="onConfirm"
+    :esc-to-close="false"
     ok-text="完成"
     @cancel="emit('cancel')"
   >
@@ -26,47 +27,6 @@
       @check="checkds"
       @expand="expands"
     />
-    <!-- <t-tree-select
-      v-model="selected"
-      :allow-search="true"
-      :allow-clear="true"
-      :tree-checkable="true"
-      :tree-check-strictly="true"
-      :data="treeData"
-      placeholder="Please select ..."
-      style="width: 300px"
-    ></t-tree-select> -->
-    <!-- <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="roleName" label="角色名称">
-        <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
-          :max-length="{
-            length: 50,
-            errorOnly: true,
-          }"
-          allow-clear
-          show-word-limit
-        />
-      </t-form-item>
-
-      <t-form-item field="roleDesc" label="角色描述">
-        <t-textarea
-          v-model="state.formModel.roleDesc"
-          placeholder="请输入"
-          :max-length="{
-            length: 100,
-            errorOnly: true,
-          }"
-          allow-clear
-          show-word-limit
-          :auto-size="{
-            minRows: 2,
-            maxRows: 5,
-          }"
-        />
-      </t-form-item>
-    </t-form> -->
   </t-modal>
 </template>
 
@@ -233,7 +193,8 @@ const expands = (agfs: any, jashd: any) => {
 const onConfirm = (done: (closed: boolean) => void) => {
   console.log(state.formModel, roleid.value, '完成');
   if (state.formModel.menuList.length === 0) {
-    Message.error('至少选一项');
+    Message.error('角色最少配置一个权限点');
+    done(false);
   } else {
     const tempMenuList = [...treeState.check, ...treeState.halfCheck];
     apiRoleUpdate({

@@ -157,10 +157,23 @@
                 DeliverTypeDesc[item.deliveryType]
               }}</t-tag>
             </span>
-            <span class="desc">{{ item.introduction }}</span>
+            <span class="desc">
+              <t-typography-paragraph
+                :ellipsis="{
+                  rows: 2,
+                  showTooltip: {
+                    type: 'tooltip',
+                    props: {
+                      isBright: true,
+                    },
+                  },
+                }"
+                >{{ item.introduction }}
+              </t-typography-paragraph>
+            </span>
             <span class="price">
               <template v-if="item.lowPrice !== -1">
-                <span class="prefix">{{ item.lowPrice }}</span>
+                <span class="prefix">¥ {{ item.lowPrice }}</span>
                 <span class="suffix">元起</span>
               </template>
               <span v-else class="prefix">价格面议</span>
@@ -485,6 +498,7 @@ onMounted(() => {
           }
 
           .companyName {
+            margin-bottom: 4px;
             color: #4e5969;
             font-weight: 400;
             font-size: 14px;

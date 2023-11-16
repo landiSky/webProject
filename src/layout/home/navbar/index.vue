@@ -17,15 +17,16 @@
       </div>
     </div>
     <div class="right-side">
-      <span v-if="!userInfo?.companyList?.length">{{ userInfo?.mobile }}</span>
+      <span v-if="!userInfo?.companyList?.length" style="margin-right: 32px">{{
+        userInfo?.mobile
+      }}</span>
       <t-dropdown
         v-else
         trigger="click"
         :popup-container="'.navbar'"
-        class="company"
+        class="companyDropdown"
         @select="onChangeCompany"
       >
-        <!-- <span>===={{ selectCompany }}</span> -->
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
           <span>{{ selectCompany?.companyName || '-' }}</span>
@@ -36,6 +37,7 @@
             v-for="company in userInfo?.companyList"
             :key="company.companyId"
             :value="company.companyId"
+            :class="{ active: selectCompany?.companyId === company.companyId }"
           >
             <t-space fill>
               <span> {{ company.companyName }} </span>
@@ -97,12 +99,11 @@ const clickLogout = () => {
 };
 
 const clickIdService = () => {
-  console.log('index.vue:139===打开二级=====', userInfo.value?.userId);
   const { nodeStatus } = userInfoByCompany.value || {};
   if (nodeStatus !== NodeAuthStatus.AUTHED) {
     Modal.info({
       title: '使用提醒',
-      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
       titleAlign: 'start',
       hideCancel: false,
       cancelText: '暂不开通',
@@ -110,28 +111,15 @@ const clickIdService = () => {
       onOk: () => {
         router.push({
           path: '/buyer/index',
+          query: {
+            openAuthModal: 1,
+          },
         });
       },
     });
   } else {
     const { snmsUrls } = userInfo.value || {};
     window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
-    // if (nodeStatus !== NodeAuthStatus.AUTHED) {
-    //   Modal.info({
-    //     title: '使用提醒',
-    //     content: '企业节点完成认证后，方可使用。',
-    //     hideCancel: false,
-    //     cancelText: '取消',
-    //     okText: '去查看',
-    //     onOk: () => {
-    //       router.push({
-    //         path: '/buyer/index',
-    //       });
-    //     },
-    //   });
-    // } else {
-    //   window.open(idPointer, '_blank');
-    // }
   }
 };
 
@@ -250,9 +238,11 @@ onMounted(() => {
     }
 
     .click-item {
-      margin-right: 8px;
-      padding: 10px 24px 10px 10px;
-
+      &:first-child {
+        margin-right: 24px;
+      }
+      // margin-right: 8px;
+      // padding: 10px 24px 10px 10px;
       &:hover {
         background-color: #272e3b;
         cursor: pointer;
@@ -317,8 +307,12 @@ onMounted(() => {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
-.company {
+:deep(.companyDropdown) {
   width: 198px;
+
+  .active {
+    background-color: #4086ff;
+  }
 }
 
 .logout {

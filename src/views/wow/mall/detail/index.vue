@@ -39,7 +39,7 @@
             <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
               价格面议
             </span>
-            <span v-else>{{ price || '-' }}</span>
+            <span v-else>¥ {{ price || '-' }}</span>
           </div>
 
           <div class="custom">
@@ -168,7 +168,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
-import { SaleType, AccountType, AccountTypeDesc } from '@/enums/common';
+import { SaleType, AccountType, AppType, NodeAuthStatus } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
@@ -277,22 +277,58 @@ const onAuthConfirm = (memberIdList: string[]) => {
   });
 };
 
-const clickAddCart = () => {
+const clickAddCart = (): void => {
   const { userInfo, userInfoByCompany } = userStore;
+
   if (!userInfo?.userId) {
     userStore.jumpToLogin();
-  } else if (userInfoByCompany?.companyId === prodDetail.value.companyId) {
+    return;
+  }
+
+  if (userInfoByCompany?.companyId === prodDetail.value.companyId) {
     Message.warning('无法购买本企业商品!');
-  } else if (userInfoByCompany?.primary === AccountType.MAIN) {
-    authModalVisible.value = true;
-  } else if (userInfoByCompany?.primary === AccountType.MEMBER) {
+    return;
+  }
+
+  if (userInfoByCompany?.primary === AccountType.MAIN) {
+    // 标识应用需要判断是否做过企业节点认证
+    if (
+      prodDetail.value.type === AppType.IDAPP &&
+      userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
+    ) {
+      Modal.info({
+        title: '使用提醒',
+        content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+          });
+        },
+      });
+    } else {
+      authModalVisible.value = true;
+    }
+
+    return;
+  }
+
+  if (userInfoByCompany?.primary === AccountType.MEMBER) {
     Modal.warning({
       title: '请联系企业管理员购买开通服务',
+      titleAlign: 'start',
       okText: '好的',
       hideCancel: true,
       content: '',
     });
-  } else if (userInfoByCompany?.primary === AccountType.UNAUTH) {
+
+    return;
+  }
+
+  if (userInfoByCompany?.primary === AccountType.UNAUTH) {
     Modal.info({
       title: '使用提醒',
       content: '需申请企业节点后使用，请先开通或绑定企业节点。',
@@ -360,11 +396,11 @@ onMounted(() => {
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
-        if (saleType === SaleType.ONEOFF) {
+        if ([SaleType.ONEOFF, SaleType.PACKAGE].includes(saleType)) {
           // 一口价
-          priceParams.value.deliveryVersionId = deliveryList.value[0].id;
-          getPrice();
-        } else if (saleType === SaleType.PACKAGE) {
+          //   priceParams.value.deliveryVersionId = deliveryList.value[0].id;
+          //   getPrice();
+          // } else if (saleType === SaleType.PACKAGE) {
           deliveryList.value.forEach((item: Record<string, any>) => {
             versionObj[item.id] = item;
           });
@@ -489,6 +525,13 @@ onMounted(() => {
             display: inline-block;
             width: 60px;
             margin-right: 16px;
+          }
+
+          :deep(.tele-radio-button-content) {
+            color: #1664ff;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 20px; /* 166.667% */
           }
         }
       }

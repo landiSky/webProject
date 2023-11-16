@@ -92,64 +92,65 @@ const state = reactive({
 
 const formRules = {
   roleName: [
-    { required: true, message: '请输入姓名' },
-    { maxLength: 20, message: '长度不超过20个字符' },
+    {
+      required: true,
+      message: isEdit.value ? '角色名字不能为空' : '请输入角色名称',
+      validator: (value: any, cb: any) => {
+        // @ts-ignore
+        if (!state.formModel.roleName?.split(' ').join('')) {
+          return cb('请输入角色名称');
+        }
+        return cb();
+      },
+    },
+    { maxLength: 20, message: '长度不超过50个字符' },
   ],
+  remark: [{ maxLength: 100, message: '长度不超过100个字符' }],
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!isEdit.value) {
       if (!errors) {
-        console.log(state.formModel, 'state.formModel');
         apiRoleAdd({
           roleName: state.formModel.roleName,
           remark: state.formModel.remark,
           companyId: userInfoByCompany.value?.companyId,
         })
           .then((res) => {
+            Message.success('新增成功');
             emit('confirm');
-            Message.success(`${isEdit.value ? '编辑' : '新增'}成功`);
+
             done(true);
             console.log(res, 'res');
           })
           .catch((err) => {
             done(false);
           });
-
-        // state.formModel
-        // 新增
-        // emit('confirm');
-        //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-        //   api(state.formModel)
-        //     .then(() => {
-        //       emit('confirm');
-        //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-        //       done(true);
-        //     })
-        //     .catch(() => {
-        //       done(false);
-        //     });
       } else {
         done(false);
       }
-    } else {
+    } else if (isEdit.value) {
       // 编辑
-      console.log(state.formModel);
-      apiRoleAdd({
-        roleName: state.formModel.roleName,
-        remark: state.formModel.remark,
-        companyId: userInfoByCompany.value?.companyId,
-        id: state.formModel.id,
-      })
-        .then((res) => {
-          emit('confirm');
-          done(true);
-          console.log(res, 'res');
+
+      if (!errors) {
+        apiRoleAdd({
+          roleName: state.formModel.roleName,
+          remark: state.formModel.remark,
+          companyId: userInfoByCompany.value?.companyId,
+          id: state.formModel.id,
         })
-        .catch((err) => {
-          done(false);
-        });
+          .then((res) => {
+            Message.success('编辑成功');
+            emit('confirm');
+            done(true);
+          })
+          .catch((err) => {
+            done(false);
+          });
+      } else {
+        done(false);
+      }
     }
   });
 };
@@ -161,14 +162,6 @@ const onConfirmflag = () => {
   //   id: undefined,
   // };
 };
-// const getDetail = () => {
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
-// };
 
 onMounted(() => {
   if (isEdit.value) {

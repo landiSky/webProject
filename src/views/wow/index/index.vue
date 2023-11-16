@@ -5,6 +5,8 @@
         width: '100%',
         height: '450px',
       }"
+      auto-play
+      indicator-type="line"
     >
       <t-carousel-item v-for="item in carouselList" :key="item.path">
         <img
@@ -122,7 +124,16 @@
             </span>
           </div>
         </div>
-        <t-button type="primary">申请开通企业节点</t-button>
+        <t-button
+          v-if="userInfoByCompany?.nodeStatus === NodeAuthStatus?.AUTHED"
+          type="primary"
+          @click="goIdService"
+        >
+          标识服务
+        </t-button>
+        <t-button v-else type="primary" @click="clickIdService">
+          申请开通企业节点
+        </t-button>
       </div>
     </div>
   </div>
@@ -132,6 +143,10 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { Modal, Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+import { NodeAuthStatus } from '@/enums/common';
 import carouse1 from '@/assets/images/wow/index/carouse1.png';
 import carouse2 from '@/assets/images/wow/index/carouse2.png';
 import carouse3 from '@/assets/images/wow/index/carouse3.png';
@@ -152,7 +167,11 @@ import tab43 from '@/assets/images/wow/index/tab4-3.png';
 import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
+const userStore = useUserStore();
 const router = useRouter();
+
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -176,6 +195,50 @@ const clickCarousel = (link: string) => {
   window.open(link);
 };
 
+const clickIdService = () => {
+  if (!userInfo.value?.userId) {
+    Modal.info({
+      title: '登录提醒',
+      content: '暂未登录，需要登录后方可查看标识服务。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不登录',
+      okText: '去登录',
+      onOk: () => {
+        userStore.jumpToLogin();
+      },
+    });
+  } else {
+    const { snmsUrls } = userInfo.value || {};
+    const { nodeStatus } = userInfoByCompany.value || {};
+    if (nodeStatus === NodeAuthStatus.AUTHED) {
+      window.open(snmsUrls.idPointer, '_blank');
+    } else {
+      Modal.info({
+        title: '使用提醒',
+        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+            query: {
+              openAuthModal: 1,
+            },
+          });
+        },
+      });
+    }
+  }
+};
+
+const goIdService = () => {
+  const { snmsUrls } = userInfo.value || {};
+  window.open(snmsUrls.idPointer, '_blank');
+};
+
 // 轮播图下面模块汇总
 const allCategList = [
   {
@@ -190,7 +253,7 @@ const allCategList = [
     title: '标识服务',
     desc: '快速开通标识服务，享受跨区域服务',
     action: () => {
-      window.open('http://www.baidu.com', '_blank'); // TODO 2 这里替换为该平台对应的二级服务地址
+      clickIdService();
     },
   },
   {
@@ -304,20 +367,74 @@ const columns = [
   {
     title: ' 企业前缀',
     dataIndex: 'companyPrefix',
+    width: 88,
+    ellipsis: true,
+    tooltip: { position: 'top' },
   },
   {
     title: '企业名称',
     dataIndex: 'companyName',
+    ellipsis: true,
+    tooltip: { position: 'top' },
+    // width: 148,
   },
   {
     title: '注册量',
-    dataIndex: 'registerCount',
+    width: 146,
+    render: ({ record }: Record<string, any>) => {
+      const { registerCount } = record;
+      return String(registerCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
   },
   {
     title: '解析量',
-    dataIndex: 'parseCount',
+    width: 136,
+    render: ({ record }: Record<string, any>) => {
+      const { parseCount } = record;
+      return String(parseCount).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
   },
 ];
+
+const clickApplyIdService = () => {
+  if (!userInfo.value?.userId) {
+    // userStore.jumpToLogin();
+    Message.warning('暂未登录，请先登录后使用');
+  } else if (!userInfoByCompany?.companyId) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        router.push({
+          path: '/buyer/index',
+        });
+      },
+    });
+  } else {
+    const { nodeStatus, idPointer } = userInfoByCompany || {};
+    if (nodeStatus !== NodeAuthStatus.AUTHED) {
+      Modal.info({
+        title: '使用提醒',
+        content: '企业节点完成认证后，方可使用。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '取消',
+        okText: '去查看',
+        onOk: () => {
+          router.push({
+            path: '/buyer/index',
+          });
+        },
+      });
+    } else {
+      window.open(idPointer, '_blank');
+    }
+  }
+};
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {
@@ -339,6 +456,7 @@ onMounted(() => {
 
   .headerWrap {
     display: flex;
+    cursor: pointer;
 
     .headerItem {
       display: flex;
@@ -486,8 +604,10 @@ onMounted(() => {
       width: 210px;
       height: 284px;
       margin-right: 46px;
+      color: #435c97;
 
       &:hover {
+        color: #1664ff;
         transform: translate(0, -20px);
       }
 
@@ -499,7 +619,6 @@ onMounted(() => {
 
         span {
           display: inline-block;
-          color: #435c97;
           font-weight: 300;
           font-size: 20px;
           line-height: 28px; /* 140% */
@@ -515,7 +634,6 @@ onMounted(() => {
         }
 
         .desc {
-          color: #435c97;
           font-weight: 300;
           font-size: 14px;
           font-family: PingFang SC;
@@ -560,7 +678,15 @@ onMounted(() => {
     .left {
       margin-right: 16px;
 
+      :deep(.tele-table-header) {
+        background-color: transparent;
+      }
+
       :deep(.tele-table-th) {
+        color: #1d2129;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 22px; /* 157.143% */
         background-color: transparent;
       }
 
@@ -568,10 +694,13 @@ onMounted(() => {
         border-bottom: none;
       }
 
+      :deep(.tele-table-cell) {
+        padding: 16px 28px 0 0;
+      }
+
       .table {
         margin-top: -12px;
-        margin-left: -16px;
-
+        // margin-left: -16px;
         :deep(.tele-empty) {
           padding: 50px 0;
         }

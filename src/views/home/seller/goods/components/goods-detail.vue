@@ -165,7 +165,7 @@
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
                 {{
-                    dataInfo.detail
+                  dataInfo.detail
                     ? JSON.parse(dataInfo.detail)
                         .map((item: any) => item.moduleName)
                         .join(',')
