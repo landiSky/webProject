@@ -173,7 +173,7 @@
             </span>
             <span class="price">
               <template v-if="item.lowPrice !== -1">
-                <span class="prefix">¥ {{ item.lowPrice }}</span>
+                <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
                 <span class="suffix">元起</span>
               </template>
               <span v-else class="prefix">价格面议</span>
@@ -265,9 +265,10 @@ const getProductList = () => {
     params.startPrice = customPriceStart.value || null;
     params.endPrice = customPriceEnd.value || null;
   } else {
-    const temp = selectPriceInterval.value
-      ? PriceEnum[selectPriceInterval.value]
-      : [];
+    const temp =
+      Number(selectPriceInterval.value) >= 0
+        ? PriceEnum[selectPriceInterval.value as number]
+        : [];
 
     [params.startPrice, params.endPrice] =
       selectPriceInterval.value === -1 ? [] : temp;
@@ -383,6 +384,9 @@ onMounted(() => {
       }
 
       .value {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
         color: #1d2129;
         font-weight: 400;
 
