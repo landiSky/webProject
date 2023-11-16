@@ -100,9 +100,9 @@
                         >去认证</t-button
                       > -->
                     </div>
-                    <!-- <t-button type="text" @click="authentication"
+                    <t-button type="text" @click="authentication"
                       >去认证</t-button
-                    > -->
+                    >
                   </div>
                 </div>
                 <div>
@@ -134,7 +134,6 @@
                 </div>
                 <div>
                   <p class="ition"></p>
-
                   <img :src="group4" alt="" />
                   <span style="float: left">企业成员管理</span>
                   <div class="btns">
