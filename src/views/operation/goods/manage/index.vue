@@ -9,6 +9,7 @@
                 <t-input
                   v-model.trim="state.formModel.name"
                   placeholder="请输入商品名称"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
