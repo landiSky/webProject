@@ -761,12 +761,10 @@ const initOpt = () => {
 
 watch(
   () => userInfoByCompany.value,
-  () => {
-    console.log(
-      'index.vue:811====监听到userInfoByCompany变化',
-      userInfoByCompany.value
-    );
-    initOpt();
+  (newV) => {
+    if (newV?.companyId) {
+      initOpt();
+    }
   }
 );
 
