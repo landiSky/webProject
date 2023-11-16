@@ -106,6 +106,7 @@
               )
             ),
           }"
+          class="allSort"
           @click="clickAllSort"
           >综合排序</span
         >
@@ -114,11 +115,11 @@
           <span class="caretWrap">
             <icon-caret-up
               :class="{ active: apiParams.priceSort === priceSortEnum.ASC }"
-              @click="clickSort('priceSort', priceSortEnum.ASC)"
+              @click="clickPriceSort(priceSortEnum.ASC)"
             />
             <icon-caret-down
               :class="{ active: apiParams.priceSort === priceSortEnum.DES }"
-              @click="clickSort('priceSort', priceSortEnum.DES)"
+              @click="clickPriceSort(priceSortEnum.DES)"
             />
           </span>
         </span>
@@ -129,13 +130,13 @@
               :class="{
                 active: apiParams.upShelfTimeSort === shelveSortEnum.ASC,
               }"
-              @click="clickSort('upShelfTimeSort', shelveSortEnum.ASC)"
+              @click="clickUpShelfSort(shelveSortEnum.ASC)"
             />
             <icon-caret-down
               :class="{
                 active: apiParams.upShelfTimeSort === shelveSortEnum.DES,
               }"
-              @click="clickSort('upShelfTimeSort', shelveSortEnum.DES)"
+              @click="clickUpShelfSort(shelveSortEnum.DES)"
             />
           </span>
         </span>
@@ -336,15 +337,25 @@ const clickResetBtn = () => {
   getProductList();
 };
 
-const clickSort = (key: string, value: number) => {
-  apiParams.value[key] = value;
-  clickSearchBtn();
+const clickPriceSort = (value: number) => {
+  apiParams.value.upShelfTimeSort = null; // 综合排序、价格排序、上架时间排序都互斥
+  apiParams.value.priceSort = value;
+  pagination.page = 1;
+  getProductList();
+};
+
+const clickUpShelfSort = (value: number) => {
+  apiParams.value.priceSort = null;
+  apiParams.value.upShelfTimeSort = value;
+  pagination.page = 1;
+  getProductList();
 };
 
 const clickAllSort = () => {
   apiParams.value.priceSort = null;
   apiParams.value.upShelfTimeSort = null;
-  clickSearchBtn();
+  pagination.page = 1;
+  getProductList();
 };
 
 onMounted(() => {
@@ -429,6 +440,10 @@ onMounted(() => {
       margin-bottom: 16px;
       padding: 0 24px;
       background: #f2f3f8;
+
+      .allSort {
+        cursor: pointer;
+      }
 
       & > span {
         display: flex;
