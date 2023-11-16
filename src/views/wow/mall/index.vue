@@ -368,11 +368,15 @@ onMounted(() => {
     }
 
     .item {
+      display: flex;
+      justify-content: start;
       margin-bottom: 16px;
       font-size: 14px;
       line-height: 22px;
 
       .label {
+        display: inline-block;
+        width: 70px;
         margin-right: 20px;
         color: #4e5969;
         font-weight: 500;
@@ -385,6 +389,7 @@ onMounted(() => {
         & > span:not(.customPrice) {
           display: inline-block;
           margin-right: 40px;
+          margin-bottom: 2px;
           padding: 2px 10px;
           line-height: 22px;
           cursor: pointer;
