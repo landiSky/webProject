@@ -54,7 +54,11 @@
         {{ PlatformEnum[record.source] }}
       </template>
       <template #productTypeId="{ record }">
-        {{ `${record.productTypeParentName}/${record.productTypeName}` }}
+        {{
+          `${record.productTypeParentName ?? '-'}/${
+            record.productTypeName
+          } ?? '-'`
+        }}
       </template>
       <template #type="{ record }">
         {{ AppTypeEnum[record.type] }}
@@ -333,7 +337,7 @@ const columns = [
   },
   {
     title: '上架时间',
-    dataIndex: 'createdTime',
+    dataIndex: 'upShelfTime',
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
