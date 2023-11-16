@@ -850,12 +850,13 @@ const logoUploading = ref(false);
 
 const uploadError = (fileItem: FileItem) => {
   logoUploading.value = false;
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  formModel.value.logo = '';
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadProgress = () => {
@@ -881,13 +882,12 @@ const uploadDetailProgress = () => {
 
 const uploadDetailError = (fileItem: FileItem) => {
   detailUploading.value = false;
-  formModel.value.logo = '';
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
@@ -905,12 +905,12 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
 const uploadExpError = (fileItem: FileItem) => {
   formModel.value.useExplain = '';
   formRef.value.validateField('useExplain');
-  // const size = fileItem.file?.size ?? 0;
-  // if (size > 2 * 1024 * 1024) {
-  Message.error(`上传失败，文件大小不要超过2M`);
-  // } else {
-  //   Message.error(`上传失败，请检查网络`);
-  // }
+  const size = fileItem.file?.size ?? 0;
+  if (size > 2 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过2M`);
+  } else {
+    Message.error(`上传失败，请检查网络`);
+  }
 };
 
 const uploadExpSuccess = (fileItem: FileItem) => {
