@@ -51,20 +51,20 @@
           class="circle blue"
         ></span>
         <span v-else class="circle light-blue"></span>
-        {{ PlatformEnum[record.source] }}
+        {{ PlatformEnum[record.source] ?? '-' }}
       </template>
       <template #productTypeId="{ record }">
         {{
           `${record.productTypeParentName ?? '-'}/${
-            record.productTypeName
-          } ?? '-'`
+            record.productTypeName ?? '-'
+          } `
         }}
       </template>
       <template #type="{ record }">
-        {{ AppTypeEnum[record.type] }}
+        {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] }}
+        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.YBH" class="circle red"></span>
@@ -77,7 +77,7 @@
           class="circle orange"
         ></span>
         <span v-else class="circle green"></span>
-        {{ StatusEnum[record.status] }}
+        {{ StatusEnum[record.status] ?? '-' }}
       </template>
 
       <template #operations="{ record }">

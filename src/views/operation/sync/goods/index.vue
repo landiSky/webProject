@@ -72,18 +72,22 @@
         </div>
       </template>
       <template #productTypeId="{ record }">
-        {{ `${record.productTypeParentName}/${record.productTypeName}` }}
+        {{
+          `${record.productTypeParentName ?? '-'}/${
+            record.productTypeName ?? '-'
+          }`
+        }}
       </template>
       <template #type="{ record }">
-        {{ AppTypeEnum[record.type] }}
+        {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] }}
+        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
         <span v-else class="circle green"></span>
-        {{ StatusEnum[record.status] }}
+        {{ StatusEnum[record.status] ?? '-' }}
       </template>
 
       <template #operations="{ record }">
