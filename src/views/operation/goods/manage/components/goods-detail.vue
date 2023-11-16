@@ -487,7 +487,8 @@ const clickDeleteBtn = (record: Record<string, any>) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 62px;
+  padding: 20px 24px;
+  line-height: 22px;
 }
 
 .modal-body {
