@@ -253,10 +253,10 @@
           <t-form-item label="应用类型" field="type">
             <t-radio-group v-model="formModel.type" :options="appTypeList" />
           </t-form-item>
-          <t-form-item label="产品简介" field="introduction">
+          <t-form-item label="商品简介" field="introduction">
             <t-textarea
               v-model="formModel.introduction"
-              placeholder="请输入产品简介"
+              placeholder="请输入商品简介"
               :max-length="{
                 length: 300,
                 errorOnly: true,
@@ -292,7 +292,7 @@
           <t-form-item label="" field="" class="hint-item">
             <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
-          <t-form-item label="详细展示信息" field="detail">
+          <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer ref="templateRef"></TemplateDrawer>
           </t-form-item>
         </t-form>
@@ -677,7 +677,7 @@ const formRules = {
   detailImg: [{ required: true, message: '请至少上传一张详情图' }],
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
-  introduction: [{ required: true, message: '请输入产品简介' }],
+  introduction: [{ required: true, message: '请输入商品简介' }],
   useExplain: [{ required: true, message: '请上传产品使用说明' }],
   detail: [
     {
