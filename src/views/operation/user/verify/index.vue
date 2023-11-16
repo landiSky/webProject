@@ -288,39 +288,6 @@ function fetchData() {
     });
 }
 
-const sorterChanged = (dataIndex: string, direction: string) => {
-  if (direction === 'descend') {
-    if (dataIndex === 'memberCount') {
-      state.formModel.member = 1;
-    } else {
-      state.formModel.product = 1;
-    }
-  } else if (direction === 'ascend') {
-    if (dataIndex === 'memberCount') {
-      state.formModel.member = 0;
-    } else {
-      state.formModel.product = 0;
-    }
-  } else if (dataIndex === 'memberCount') {
-    state.formModel.member = null;
-  } else {
-    state.formModel.product = null;
-  }
-  fetchData();
-};
-
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
-  const f = filteredValues[0];
-  if (typeof f === 'boolean') {
-    state.formModel[`${dataIndex}`] = null;
-  } else {
-    state.formModel[`${dataIndex}`] = f;
-  }
-  console.log(state.formModel);
-  fetchData();
-};
-
 const showDetail = (
   record: Record<string, string>,
   entType: number,
@@ -353,6 +320,39 @@ const onPageSizeChange = (size: number) => {
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
+};
+
+const sorterChanged = (dataIndex: string, direction: string) => {
+  if (direction === 'descend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 1;
+    } else {
+      state.formModel.product = 1;
+    }
+  } else if (direction === 'ascend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 0;
+    } else {
+      state.formModel.product = 0;
+    }
+  } else if (dataIndex === 'memberCount') {
+    state.formModel.member = null;
+  } else {
+    state.formModel.product = null;
+  }
+  onPageChange(1);
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  console.log(dataIndex, filteredValues);
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  console.log(state.formModel);
+  onPageChange(1);
 };
 
 const clickSearchBtn = () => {

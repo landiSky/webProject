@@ -384,26 +384,6 @@ function fetchData() {
     });
 }
 
-const sorterChanged = (_: any, direction: string) => {
-  if (direction === 'descend') {
-    state.formModel.upShelfTimeSort = 1;
-  } else if (direction === 'ascend') {
-    state.formModel.upShelfTimeSort = 0;
-  } else {
-    state.formModel.upShelfTimeSort = null;
-  }
-  fetchData();
-};
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  if (typeof f === 'boolean') {
-    state.formModel[`${dataIndex}`] = null;
-  } else {
-    state.formModel[`${dataIndex}`] = f;
-  }
-  fetchData();
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -415,6 +395,26 @@ const onPageSizeChange = (size: number) => {
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
+};
+
+const sorterChanged = (_: any, direction: string) => {
+  if (direction === 'descend') {
+    state.formModel.upShelfTimeSort = 1;
+  } else if (direction === 'ascend') {
+    state.formModel.upShelfTimeSort = 0;
+  } else {
+    state.formModel.upShelfTimeSort = null;
+  }
+  onPageChange(1);
+};
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  onPageChange(1);
 };
 
 const clickSearchBtn = () => {

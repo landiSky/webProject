@@ -329,7 +329,6 @@ function fetchData() {
   const params = {
     pageNum: current,
     pageSize,
-    type: 0,
     ...state.formModel,
   };
 
@@ -347,15 +346,6 @@ function fetchData() {
     });
 }
 
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  if (typeof f === 'boolean') {
-    state.formModel[`${dataIndex}`] = null;
-  } else {
-    state.formModel[`${dataIndex}`] = f;
-  }
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -367,6 +357,16 @@ const onPageSizeChange = (size: number) => {
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
+  onPageChange(1);
 };
 
 const clickSearchBtn = () => {
