@@ -290,7 +290,7 @@
             ></t-upload>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
-            <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
+            <div class="hint">文件大小限制2M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer ref="templateRef"></TemplateDrawer>
