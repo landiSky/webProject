@@ -144,10 +144,10 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ formModel.name }}
+                {{ formModel.nam || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
-                {{ formModel.id }}
+                {{ formModel.id || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
                 <img
@@ -176,10 +176,10 @@
                 {{ '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
-                {{ TypeEnum[formModel.type] }}
+                {{ TypeEnum[formModel.type] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品简介">
-                {{ formModel.introduction }}
+                {{ formModel.introduction || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
@@ -198,10 +198,10 @@
                 }}
               </t-descriptions-item>
               <t-descriptions-item label="服务商名称">
-                {{ formModel.companyName }}
+                {{ formModel.companyName || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="所属平台">
-                {{ formModel.platformOperationCompany }}
+                {{ formModel.platformOperationCompany || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -218,10 +218,10 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[formModel.deliveryType] }}
+                {{ DeliveryTypeEnum[formModel.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[formModel.saleType] }}
+                {{ PriceTypeEnum[formModel.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
@@ -240,13 +240,13 @@
               :column="1"
             >
               <t-descriptions-item label="交付版本名称">
-                {{ st.name }}
+                {{ st.name || '-' }}
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="formModel.deliveryType == 0"
                 label="应用服务地址"
               >
-                {{ st.url }}
+                {{ st.url || '-' }}
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="formModel.saleType === 0"
@@ -261,13 +261,14 @@
                 v-if="formModel.saleType === 0"
                 label="可选购买时长"
               >
-                {{ desDeuration(st.durationList) }}
+                {{ desDeuration(st.durationList) || '-' }}
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
-                {{ st.accountNumList ? st.accountNumList[0].price : '-' }} 元
+                {{ st.accountNumList?.first.price || '-' }}
+                元
               </t-descriptions-item>
             </t-descriptions>
           </div>
