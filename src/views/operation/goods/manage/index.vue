@@ -284,7 +284,7 @@ const columns = [
   },
   {
     title: '所属商家',
-    dataIndex: 'saler',
+    dataIndex: 'companyName',
     ellipsis: true,
     tooltip: true,
     width: 200,
