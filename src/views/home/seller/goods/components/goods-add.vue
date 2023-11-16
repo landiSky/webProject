@@ -573,7 +573,14 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
+import {
+  defineProps,
+  defineEmits,
+  ref,
+  onMounted,
+  computed,
+  nextTick,
+} from 'vue';
 import { Message, FileItem, Modal } from '@tele-design/web-vue';
 import { IconEye } from '@tele-design/web-vue/es/icon';
 import {
@@ -1065,8 +1072,8 @@ const getDetail = (id: any) => {
     formModel2.value.productId = res.id;
     formModel2.value.deliveryType = res.deliveryType || 0;
     formModel2.value.saleType = res.saleType || 0;
-
     templateRef.value.templateData = JSON.parse(res.detail);
+
     imageList.value = res.detailImg.split(',');
     if (res.useExplain) {
       expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
@@ -1255,6 +1262,11 @@ const clickNext = async () => {
 // 上一步
 const clickPrevious = () => {
   step.value = 1;
+  nextTick(() => {
+    templateRef.value.templateData = formModel.value.detail
+      ? JSON.parse(formModel.value.detail)
+      : '[]';
+  });
 };
 
 // 预览
