@@ -15,10 +15,20 @@
               </t-form-item>
             </t-col>
             <t-col flex="240px">
-              <t-form-item field="name" hide-label>
+              <t-form-item field="companyName" hide-label>
                 <t-input
                   v-model.trim="state.formModel.companyName"
                   placeholder="请输入商家名称"
+                  allow-clear
+                  @change="clickSearchBtn"
+                />
+              </t-form-item>
+            </t-col>
+            <t-col flex="240px">
+              <t-form-item field="platformPrefix" hide-label>
+                <t-input
+                  v-model.trim="state.formModel.platformPrefix"
+                  placeholder="请输入所属平台前缀"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -111,6 +121,7 @@ import Detail from './components/goods-detail.vue';
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
+  platformPrefix: '',
 };
 
 const state = reactive<{
@@ -203,21 +214,6 @@ const StatusList = [
   },
 ];
 
-const PrefixList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: '88.111',
-    value: '88.111',
-  },
-  {
-    text: '88.112',
-    value: '88.112',
-  },
-];
-
 const columns = [
   {
     title: '商品ID',
@@ -264,9 +260,6 @@ const columns = [
     title: '所属平台前缀',
     dataIndex: 'platformPrefix',
     width: 126,
-    filterable: {
-      filters: PrefixList,
-    },
   },
   {
     title: '应用类型',
