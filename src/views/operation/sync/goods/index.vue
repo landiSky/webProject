@@ -349,8 +349,11 @@ function fetchData() {
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
   const f = filteredValues[0];
-  state.formModel[`${dataIndex}`] = f;
-  fetchData();
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
 };
 
 // 每页显示条数发生变化
