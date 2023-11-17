@@ -3,7 +3,7 @@
   <div class="contain">
     <div class="content-heard">
       <div class="heard-name">订单管理</div>
-      <div v-if="false" class="cardclass">
+      <div class="cardclass">
         <ul v-for="(item, index) in orderStatusTypeNav" :key="index">
           <li @click="clickNav(item.value, index)">
             <a :class="{ activecclass: activeIndex === index }"
