@@ -46,6 +46,11 @@ export function saveGoods1(data: any) {
   return $http.post(`/server/web/product/insert`, data);
 }
 
+// 更新1
+export function updateGoods1(data: any) {
+  return $http.post(`/server/web/product/update`, data);
+}
+
 // 保存2
 export function saveGoods2(data: any) {
   return $http.post(`/server/web/product/delivery/save`, data);
