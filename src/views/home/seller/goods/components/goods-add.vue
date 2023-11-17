@@ -351,6 +351,7 @@
               <div
                 v-if="copyModal.length > 1"
                 class="body-title-right"
+                style="cursor: pointer"
                 @click="deleteSaleCopy(index)"
                 >删除</div
               >
