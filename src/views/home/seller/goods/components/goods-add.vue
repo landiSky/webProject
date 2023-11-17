@@ -6,7 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @on-before-cancel="cancelCheck"
+      @back="clickCancel"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -593,6 +593,8 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import TemplateDrawer from './template.vue';
 
+const emit = defineEmits(['cancel', 'preview']);
+
 let needSave = false;
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
@@ -825,8 +827,6 @@ const copyRules = {
     },
   ],
 };
-
-const emit = defineEmits(['confirm', 'cancel', 'preview']);
 
 const props = defineProps({
   data: Object,
@@ -1206,11 +1206,9 @@ const beforeUpload = (file: File) => {
 
 onMounted(() => {
   window.addEventListener('online', () => {
-    console.log('aaaaa');
     online.value = true;
   });
   window.addEventListener('offline', () => {
-    console.log('bbbb');
     cancelUploadingFiles();
     online.value = false;
   });
@@ -1261,22 +1259,21 @@ const clickCancel = () => {
       onOk: async () => {
         const res = await doSave();
         if (res) {
+          visible.value = false;
           emit('cancel');
         } else {
           Message.error('信息暂时无法保存');
         }
       },
       onCancel: () => {
+        visible.value = false;
         emit('cancel');
       },
     });
   } else {
+    visible.value = false;
     emit('cancel');
   }
-};
-
-const cancelCheck = () => {
-  return true;
 };
 
 // 保存
@@ -1349,7 +1346,7 @@ const clickUp = async () => {
     saveAndUp(formModel2.value).then((res) => {
       if (res) {
         Message.success('上架申请成功');
-        emit('confirm');
+        emit('cancel');
       }
     });
   }
