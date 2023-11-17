@@ -8,9 +8,11 @@
     :body-style="{ padding: 0 }"
     class="fullscreen-modal"
     :footer="
-      props.data.status != StatusEnum.YBH &&
-      props.data.status != StatusEnum.WSJ &&
-      props.data.source != PlatformEnum.OTHER
+      !(
+        props.data.status == StatusEnum.YBH ||
+        (props.data.status == StatusEnum.WSJ &&
+          props.data.source == PlatformEnum.SELF)
+      )
     "
     @cancel="emit('cancel')"
     @close="emit('cancel')"
@@ -373,7 +375,9 @@ const getDetail = () => {
   goodsDetail(props.data?.id).then((res) => {
     if (res.code === 200) {
       formModel.value = res.data || {};
-      detailImageList.value = (res.data.detailImg as string).split(',');
+      detailImageList.value = res.data.detailImg
+        ? (res.data.detailImg as string).split(',')
+        : [];
     }
   });
 };

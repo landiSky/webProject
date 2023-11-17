@@ -1078,7 +1078,7 @@ const getDetail = (id: any) => {
     formModel2.value.saleType = res.saleType || 0;
     templateRef.value.templateData = JSON.parse(res.detail);
 
-    imageList.value = res.detailImg.split(',');
+    imageList.value = res.detailImg ? res.detailImg.split(',') : [];
     if (res.useExplain) {
       expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
     }

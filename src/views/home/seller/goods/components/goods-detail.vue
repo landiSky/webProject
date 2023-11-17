@@ -349,7 +349,9 @@ const desDeuration = (array: any[]) => {
 
 const refreshData = async () => {
   dataInfo.value = await goodsDetail(props.data?.id);
-  detailImageList.value = dataInfo.value.detailImg.split(',');
+  detailImageList.value = dataInfo.value.detailImg
+    ? dataInfo.value.detailImg.split(',')
+    : [];
 };
 
 onMounted(() => {
