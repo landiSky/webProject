@@ -281,7 +281,8 @@ const clickAddCart = (): void => {
   const { userInfo, userInfoByCompany } = userStore;
 
   if (!userInfo?.userId) {
-    userStore.jumpToLogin();
+    sessionStorage.setItem('mallDetailPath', route.fullPath);
+    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
     return;
   }
 
