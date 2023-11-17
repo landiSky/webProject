@@ -135,6 +135,7 @@
               <component
                 :is="forCompList[item.type - 1]"
                 :template-data="item"
+                :bg-index="index"
               ></component>
             </div>
           </template>
