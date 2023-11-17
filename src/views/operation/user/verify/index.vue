@@ -7,7 +7,7 @@
             <t-col flex="240px">
               <t-form-item field="name" hide-label>
                 <t-input
-                  v-model.trim="state.formModel.account"
+                  v-model.trim="state.formModel.phone"
                   placeholder="请输入企业主账号"
                   allow-clear
                 />
@@ -174,7 +174,7 @@ const ActionTypeEnum: { [name: string]: any } = {
 };
 
 const defaultFormModel: Record<string, any> = {
-  account: '',
+  phone: '',
   companyName: '',
   product: null,
   member: null,
