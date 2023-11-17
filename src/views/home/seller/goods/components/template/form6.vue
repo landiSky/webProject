@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, inject } from 'vue';
+import { ref, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
 import { Message } from '@tele-design/web-vue';
@@ -107,17 +107,15 @@ const props = defineProps({
   },
 });
 
-const initForm = {
-  type: 6,
-  moduleName: '',
-  blockList: [[]],
+const initForm = () => {
+  return {
+    type: 6,
+    moduleName: '',
+    blockList: [[]],
+  };
 };
 
-const form = ref(
-  props.currentIndex > -1 && Array.isArray(templateList.value)
-    ? { ...templateList.value[props.currentIndex] }
-    : { ...initForm }
-);
+const form = ref(initForm());
 
 const itemValid = (
   index: number,
@@ -195,6 +193,14 @@ const onUploadChange = (fileList: any, fileItem: any, index: number) => {
     Message.error('登录已过期，请重新登录');
   }
 };
+
+onMounted(() => {
+  if (props.currentIndex > -1 && Array.isArray(templateList.value)) {
+    form.value = JSON.parse(
+      JSON.stringify(templateList.value[props.currentIndex])
+    );
+  }
+});
 
 defineExpose({
   form,

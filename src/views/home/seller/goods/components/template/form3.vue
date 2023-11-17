@@ -183,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, inject } from 'vue';
+import { ref, defineProps, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
 
@@ -201,29 +201,27 @@ const props = defineProps({
   },
 });
 
-const initForm = {
-  type: 3,
-  moduleName: '',
-  picUrl: '',
-  blockList: [
-    {
-      name: '',
-      desc: '',
-    },
-    {
-      name: '',
-      desc1: '',
-      desc2: '',
-      desc3: '',
-    },
-  ],
+const initForm = () => {
+  return {
+    type: 3,
+    moduleName: '',
+    picUrl: '',
+    blockList: [
+      {
+        name: '',
+        desc: '',
+      },
+      {
+        name: '',
+        desc1: '',
+        desc2: '',
+        desc3: '',
+      },
+    ],
+  };
 };
 
-const form = ref(
-  props.currentIndex > -1 && Array.isArray(templateList.value)
-    ? { ...templateList.value[props.currentIndex] }
-    : { ...initForm }
-);
+const form = ref(initForm());
 
 const imgValid = (value: string, cb: (params?: any) => void) => {
   if (!form.value.picUrl) {
@@ -276,6 +274,14 @@ const onUploadChange = (fileList: any) => {
     }
   });
 };
+
+onMounted(() => {
+  if (props.currentIndex > -1 && Array.isArray(templateList.value)) {
+    form.value = JSON.parse(
+      JSON.stringify(templateList.value[props.currentIndex])
+    );
+  }
+});
 
 defineExpose({
   form,
