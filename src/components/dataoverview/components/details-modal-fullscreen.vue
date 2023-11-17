@@ -22,8 +22,11 @@
       </template>
 
       <div class="modal-body">
-        <!-- v-if="detaillist.certificateStatus === 2" -->
-        <div class="toperror" style="">
+        <div
+          v-if="detaillist.certificateStatus === 2"
+          class="toperror"
+          style=""
+        >
           <div style="width: 40%" class="topcenters">
             <div class="topleft"
               ><p style="width: 100%"
@@ -35,12 +38,10 @@
                   >认证已驳回，请修改后重新提交认证。</span
                 ></p
               >
-              <!-- <p style="float: left; margin-top: 5px"
-                >驳回原因：{{
-                  detaillist.remark
-                }}</p
-              > -->
-              <p style="float: left; margin-top: 5px">
+              <p style="float: left; margin-top: 5px"
+                >驳回原因：{{ detaillist.remark }}</p
+              >
+              <!-- <p style="float: left; margin-top: 5px">
                 <t-typography-paragraph
                   style="float: left"
                   :ellipsis="{
@@ -51,7 +52,7 @@
                   驳回原因:
                   {{ detaillist.remark }}
                 </t-typography-paragraph>
-              </p>
+              </p> -->
             </div>
             <div class="topright" style="display: flex; align-items: center">
               <t-button type="primary" @click="editmessage"
