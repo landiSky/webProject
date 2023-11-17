@@ -103,6 +103,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :limit="1"
+              image-preview
               style="width: 150px; height: 100px"
               accept=".jpg,.png,.bmp,.jpeg"
               :before-upload="beforeUpload"
@@ -161,7 +162,7 @@
           <t-input
             v-model="formModel.contactName"
             :max-length="{
-              length: 10,
+              length: 128,
               errorOnly: true,
             }"
             allow-clear
@@ -185,7 +186,11 @@
         </t-form-item>
         <!-- <div style="display: flex"> -->
         <t-form-item label="联系人身份证" field="contactidcard">
-          <t-form-item field="idCardz" :hide-label="true" style="width: 200px">
+          <t-form-item
+            field="idCardz"
+            :hide-label="true"
+            style="width: 200px; margin-bottom: 0"
+          >
             <!-- @before-upload="beforeUpload" -->
             <t-upload
               :file-list="
@@ -268,7 +273,7 @@
           </t-form-item>
         </t-form-item>
         <!-- </div> -->
-        <p style="margin: -30px 0 20px 20%; color: #86909c">
+        <p style="margin: -10px 0 20px 20%; color: #86909c">
           支持jpg、jpeg、png、bmp文件格式,文件大小限制10M以内。
         </p>
       </t-form>
@@ -296,11 +301,8 @@ import {
 } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -387,13 +389,14 @@ const formRules: any = {
   ],
   contactName: [
     { required: true, message: '请输入联系人姓名' },
-    { maxLength: 10, message: '长度不超过10个字符' },
+    { maxLength: 128, message: '长度不超过128个字符' },
   ],
   contactIdCard: [
     { required: true, message: '请输入联系人身份证号' },
     { maxLength: 18, message: '长度不超过18个字符' },
     {
-      match: /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
+      match:
+        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
@@ -596,7 +599,7 @@ onMounted(() => {
 }
 
 :deep(.tele-modal-body .tele-form-item:last-child) {
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
 }
 
 .modal-body {

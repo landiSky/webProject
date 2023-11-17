@@ -134,7 +134,6 @@
                 </div>
                 <div>
                   <p class="ition"></p>
-
                   <img :src="group4" alt="" />
                   <span style="float: left">企业成员管理</span>
                   <div class="btns">
@@ -502,11 +501,8 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});

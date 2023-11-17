@@ -34,8 +34,10 @@ export function createPermissionGuard(router: Router) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
         // console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<string, any> =
-          await userStore.getUserBasicInfo();
+        const userInfo: Record<
+          string,
+          any
+        > = await userStore.getUserBasicInfo();
         // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
@@ -106,7 +108,10 @@ export function createPermissionGuard(router: Router) {
           console.log('permissionGuard.ts:89==获取 token 异常', err);
           window.location.href = `${window.location.protocol}//${window.location.host}/#/wow`;
         });
-    } else if (whiteList.indexOf(to.path) !== -1) {
+    } else if (
+      whiteList.indexOf(to.path) !== -1 ||
+      to.path.startsWith('/wow/mall/detail/')
+    ) {
       console.log('permissionGuard.ts:113', to.fullPath);
       next();
     } else {

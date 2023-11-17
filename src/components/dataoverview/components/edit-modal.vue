@@ -122,6 +122,12 @@
               <!-- <t-button
                 type="primary"
                 style="margin-left: 20px; padding: 7px 15px"
+                @click="firmgotoverify"
+                >查看详情</t-button
+              > -->
+              <!-- <t-button
+                type="primary"
+                style="margin-left: 20px; padding: 7px 15px"
                 @click="viewdetails"
                 >去认证</t-button
               > -->
