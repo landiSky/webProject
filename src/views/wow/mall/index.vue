@@ -180,7 +180,7 @@
               </t-typography-paragraph>
             </span>
             <span class="price">
-              <template v-if="item.lowPrice !== -1">
+              <template v-if="item.lowPrice !== '-1.00'">
                 <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
                 <span class="suffix">元起</span>
               </template>

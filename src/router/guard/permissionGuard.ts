@@ -28,7 +28,7 @@ export function createPermissionGuard(router: Router) {
     const userStore = useUserStore();
     // const menuStore = useMenuStore();
 
-    // console.log('permissionGuard.ts:28', to.path, from.path);
+    // console.log('permissionGuard.ts:28', to, from.path);
 
     if (getToken()) {
       if (!userStore.userInfo) {
@@ -99,8 +99,12 @@ export function createPermissionGuard(router: Router) {
 
           // 这时候还拿不到userInfo
           // const indexUrl = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
-          console.log('permissionGuard.ts:61===获取 token 成功');
-          window.location.href = `${window.location.protocol}//${window.location.host}/#/buyer/index`;
+          // 从商品详情页跳转登录，成功后返回
+          const mallDetailPath = sessionStorage.getItem('mallDetailPath');
+          const uriHash = mallDetailPath || '/buyer/index';
+          window.location.replace(
+            `${window.location.protocol}//${window.location.host}/#${uriHash}`
+          );
         })
         .catch((err: any) => {
           console.log('permissionGuard.ts:89==获取 token 异常', err);

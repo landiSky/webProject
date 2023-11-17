@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <div class="container-bg">
+      <img class="container-bg-img" src="@/assets/images/login-bg.jpg" />
+    </div>
+
     <!-- <Login v-if="optType === 'login'" @register="loginToRegister" /> -->
     <Register />
   </div>
@@ -47,9 +51,26 @@ onMounted(() => {
 .container {
   position: relative;
   height: 100%;
-  overflow: auto;
-  background: url('@/assets/images/login-bg.svg') no-repeat center center;
-  background-size: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .container-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container-bg-img {
+    width: 100%;
+    min-width: 1920px;
+    height: auto;
+  }
 
   .container-title {
     padding-bottom: 18px;

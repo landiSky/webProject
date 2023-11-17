@@ -33,7 +33,7 @@
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
               面议
             </template>
-            <template v-else>{{ createOrderInfo?.price || '-' }} 元</template>
+            <template v-else>¥{{ createOrderInfo?.price || '-' }} 元</template>
           </span>
           <span>{{ createOrderInfo?.accountDesc }}</span>
 
@@ -44,7 +44,9 @@
               <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
                 面议
               </template>
-              <template v-else>{{ createOrderInfo?.price || '-' }} 元</template>
+              <template v-else
+                >¥{{ createOrderInfo?.price || '-' }} 元</template
+              >
             </span>
 
             <!-- <span>(含减优惠券: 500元)</span> -->

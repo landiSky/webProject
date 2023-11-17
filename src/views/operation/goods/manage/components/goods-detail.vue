@@ -394,13 +394,25 @@ onMounted(() => {
   }
 });
 
-// 通过
-const clickPassBtn = () => {
+const doPass = () => {
   verifyGoods({ id: props.data?.id, status: 1 }).then((res) => {
     if (res.code === 200) {
       Message.success('审核已通过');
       getDetail();
     }
+  });
+};
+// 通过
+const clickPassBtn = () => {
+  Modal.warning({
+    title: '确定通过该认证申请吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '通过',
+    hideCancel: false,
+    onOk: () => {
+      doPass();
+    },
   });
 };
 

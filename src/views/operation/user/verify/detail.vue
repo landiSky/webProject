@@ -12,13 +12,7 @@
     </template>
     <template #extra>
       <div v-if="isVerify" class="extra-btn">
-        <t-popconfirm
-          content="确定通过该认证申请吗？"
-          type="warning"
-          @ok="clickPass"
-        >
-          <t-button type="primary">通过</t-button>
-        </t-popconfirm>
+        <t-button type="primary" @click="clickPass">通过</t-button>
         <t-button type="primary" status="danger" @click="rejectVisible = true"
           >驳回</t-button
         >
@@ -119,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { reactive, onMounted, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { verifyDetail, verify } from '@/api/operation/user';
@@ -188,12 +182,25 @@ const clickReject = () => {
   getInfo();
 };
 
-const clickPass = () => {
+const doPass = () => {
   verify({ companyId: route.query.id as string, certStatus: 1 }).then((res) => {
     if (res.code === 200) {
       Message.success('申请已通过');
       getInfo();
     }
+  });
+};
+// 通过
+const clickPass = () => {
+  Modal.warning({
+    title: '确定通过该认证申请吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '通过',
+    hideCancel: false,
+    onOk: () => {
+      doPass();
+    },
   });
 };
 

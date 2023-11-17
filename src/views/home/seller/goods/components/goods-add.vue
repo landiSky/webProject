@@ -1014,7 +1014,7 @@ const buildForm2 = async () => {
           });
           break;
         }
-        if (!/^[1-9]\d*$/.test(p.accountNum)) {
+        if (!/^[1-9]\d*$/.test(p.accountNum) || p.accountNum.length > 10) {
           failed = true;
           copyFormRef[index].value.setFields({
             productDeliverySetInfoList: {

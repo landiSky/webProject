@@ -275,7 +275,7 @@ onUnmounted(() => {
   top: 27%;
   left: 55%;
   width: 448px;
-  height: 520px;
+  min-height: 520px;
   padding: 60px 60px 40px 60px;
   text-align: center;
   background-color: white;
