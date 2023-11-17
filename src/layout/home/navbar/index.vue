@@ -302,7 +302,7 @@ onMounted(() => {
   font-weight: 500;
   line-height: 12px;
   background-color: #1d2129;
-  border: 1px solid #1d2129;
+  border: none;
   border-radius: 0 0 2px 2px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
@@ -327,7 +327,7 @@ onMounted(() => {
 
   &:not(.tele-dropdown-option-disabled):hover {
     color: #fff;
-    background-color: #272e3b;
+    background-color: #4086ff;
 
     &.doption-user-info {
       background-color: transparent; // 个人信息没有hover效果

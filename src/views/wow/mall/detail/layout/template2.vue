@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ hasBg: props.bgIndex % 2 === 0 }">
     <div class="title">{{ props.templateData.moduleName }}</div>
     <div class="list">
       <template
@@ -33,6 +33,10 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  bgIndex: {
+    type: Number,
+    default: 0,
+  },
 });
 </script>
 
@@ -41,9 +45,12 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
   padding: 20px;
-  background-color: #fff;
+
+  &.hasBg {
+    background-color: #fff;
+  }
 
   .title {
     margin-bottom: 8px;

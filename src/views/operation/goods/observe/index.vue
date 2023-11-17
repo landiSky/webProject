@@ -11,6 +11,7 @@
       :loading="state.tableLoading"
       :columns="columns"
       :data="state.tableData"
+      :pagination="pagination"
       bordered
     >
       <template #operations="{ record }">
@@ -73,12 +74,9 @@ const pagination = reactive<{
   total: number;
 }>({
   current: 0,
-  pageSize: 10,
+  pageSize: 999,
   total: 0,
 });
-
-// 分页，总页数不到10页，不显示分页器
-const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const StatusEnum: { [name: string]: any } = {
   NO: 0, // 未选中
@@ -91,6 +89,7 @@ function fetchData() {
   observeList()
     .then((res: any) => {
       if (res.code === 200) {
+        pagination.total = res.data.length;
         state.tableData = res.data;
       }
     })

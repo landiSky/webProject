@@ -132,7 +132,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, inject } from 'vue';
+import { ref, defineProps, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
 
@@ -150,23 +150,21 @@ const props = defineProps({
   },
 });
 
-const initForm = {
-  type: 2,
-  moduleName: '',
-  blockList: [
-    {
-      name: '',
-      desc: '',
-      picUrl: '',
-    },
-  ],
+const initForm = () => {
+  return {
+    type: 2,
+    moduleName: '',
+    blockList: [
+      {
+        name: '',
+        desc: '',
+        picUrl: '',
+      },
+    ],
+  };
 };
 
-const form = ref(
-  props.currentIndex > -1 && Array.isArray(templateList.value)
-    ? { ...templateList.value[props.currentIndex] }
-    : { ...initForm }
-);
+const form = ref(initForm());
 
 const imgValid = (index: number, value: string, cb: (params?: any) => void) => {
   const urlPath = form.value.blockList[index].picUrl;
@@ -232,6 +230,14 @@ const onUploadChange = (fileList: any, index: number) => {
     }
   });
 };
+
+onMounted(() => {
+  if (props.currentIndex > -1 && Array.isArray(templateList.value)) {
+    form.value = JSON.parse(
+      JSON.stringify(templateList.value[props.currentIndex])
+    );
+  }
+});
 
 defineExpose({
   form,
