@@ -226,8 +226,12 @@ export const useUserStore = defineStore({
       this.userInfo = null;
     },
 
-    jumpToLogin(): void {
+    jumpToLogin(routeName: string | undefined = ''): void {
       const { loginUrl } = this.configInfo || {};
+
+      if (routeName !== 'wowMallDetail') {
+        sessionStorage.setItem('mallDetailPath', '');
+      }
 
       // window.location.href = loginUrl;
 
