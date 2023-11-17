@@ -115,6 +115,9 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         if (status === 500) {
           Message.error('服务端不可用');
         }
+        if (status === 413) {
+          Message.error('请求失败：请求实体太大');
+        }
         reject(e);
       });
   });

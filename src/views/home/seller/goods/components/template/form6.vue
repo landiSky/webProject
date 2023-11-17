@@ -51,8 +51,8 @@
         validate-trigger="[]"
       >
         <div>
-          <!-- :file-list="item ? item : []" -->
           <t-upload
+            :file-list="item ? item : []"
             list-type="picture-card"
             :headers="{
               Authorization: `Bearer ${getToken()}`,
@@ -87,9 +87,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, inject } from 'vue';
+import { ref, inject } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
+import { Message } from '@tele-design/web-vue';
 
 const formRef = ref();
 const transSeq = ['一', '二', '三'];
@@ -164,15 +165,25 @@ const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
 };
 
 const onUploadChange = (fileList: any, fileItem: any, index: number) => {
-  const { code } = fileItem.response || {};
-  if (code === 200) {
+  // const { code } = fileItem.response || {};
+  const { response, status } = fileItem;
+
+  if (response?.code === 200 || (!response && status === 'done')) {
+    // 200 是上传成功，后面是删除时用的
     const temp = fileList.map((item: Record<string, any>) => {
-      const res = item.response || {};
-      if (res.code === 200) {
-        return {
-          url: `/server/web/file/download?name=${res.data}`,
-        };
+      const { uid, name, response, url } = item;
+      if (response) {
+        if (response.code === 200) {
+          return {
+            uid,
+            name,
+            url: `/server/web/file/download?name=${response.data}`,
+          };
+        }
+      } else {
+        return { uid, name, url };
       }
+
       return {};
     });
 
@@ -180,6 +191,8 @@ const onUploadChange = (fileList: any, fileItem: any, index: number) => {
     if (temp.length === 5) {
       formRef.value.clearValidate(`blockList.${index}`);
     }
+  } else if (response?.code === 101004) {
+    Message.error('登录已过期，请重新登录');
   }
 };
 

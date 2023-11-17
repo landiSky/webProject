@@ -77,6 +77,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, defineProps, provide } from 'vue';
+import { Modal } from '@tele-design/web-vue';
 import template1 from '@/assets/images/home/goods/template1.png';
 import template2 from '@/assets/images/home/goods/template2.png';
 import template3 from '@/assets/images/home/goods/template3.png';
@@ -140,8 +141,26 @@ const initDrawer = () => {
 };
 
 const handleCancel = () => {
-  drawerVisible.value = false;
-  initDrawer();
+  console.log('template.vue:143', props.templateData);
+  if (props.templateData?.length) {
+    Modal.warning({
+      title: '已编辑信息尚未保存，取消后将清空',
+      titleAlign: 'start',
+      content: '',
+      okText: '确定',
+      hideCancel: false,
+      onOk: () => {
+        drawerVisible.value = false;
+        initDrawer();
+      },
+      onCancel: () => {
+        return false;
+      },
+    });
+  } else {
+    drawerVisible.value = false;
+    initDrawer();
+  }
 };
 
 const saveTemplate = () => {

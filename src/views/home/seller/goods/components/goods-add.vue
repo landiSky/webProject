@@ -6,7 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @on-before-cancel="cancelCheck"
+      @back="clickCancel"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -200,7 +200,6 @@
               v-if="imageList.length < 5"
               :ref="detailImageRef"
               :file-list="detailList"
-              :limit="1"
               :show-cancel-button="false"
               :show-file-list="false"
               :headers="uploadHeaders"
@@ -352,6 +351,7 @@
               <div
                 v-if="copyModal.length > 1"
                 class="body-title-right"
+                style="cursor: pointer"
                 @click="deleteSaleCopy(index)"
                 >删除</div
               >
@@ -593,6 +593,8 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import TemplateDrawer from './template.vue';
 
+const emit = defineEmits(['cancel', 'preview']);
+
 let needSave = false;
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
@@ -783,7 +785,10 @@ const durationOptions = [
 ];
 
 const copyRules = {
-  name: [{ required: true, message: '请输入交付版本名称' }],
+  name: [
+    { required: true, message: '请输入交付版本名称' },
+    { maxLength: 10, message: '最多可输入10个字符' },
+  ],
   url: [
     {
       required: true,
@@ -798,6 +803,7 @@ const copyRules = {
         return cb();
       },
     },
+    { maxLength: 50, message: '最多可输入50个字符' },
   ],
   productDeliverySetInfoList: [
     {
@@ -825,8 +831,6 @@ const copyRules = {
     },
   ],
 };
-
-const emit = defineEmits(['confirm', 'cancel', 'preview']);
 
 const props = defineProps({
   data: Object,
@@ -1206,11 +1210,9 @@ const beforeUpload = (file: File) => {
 
 onMounted(() => {
   window.addEventListener('online', () => {
-    console.log('aaaaa');
     online.value = true;
   });
   window.addEventListener('offline', () => {
-    console.log('bbbb');
     cancelUploadingFiles();
     online.value = false;
   });
@@ -1261,22 +1263,21 @@ const clickCancel = () => {
       onOk: async () => {
         const res = await doSave();
         if (res) {
+          visible.value = false;
           emit('cancel');
         } else {
           Message.error('信息暂时无法保存');
         }
       },
       onCancel: () => {
+        visible.value = false;
         emit('cancel');
       },
     });
   } else {
+    visible.value = false;
     emit('cancel');
   }
-};
-
-const cancelCheck = () => {
-  return true;
 };
 
 // 保存
@@ -1349,7 +1350,7 @@ const clickUp = async () => {
     saveAndUp(formModel2.value).then((res) => {
       if (res) {
         Message.success('上架申请成功');
-        emit('confirm');
+        emit('cancel');
       }
     });
   }

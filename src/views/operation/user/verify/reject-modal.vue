@@ -13,7 +13,7 @@
           v-model.trim="formModel.reason"
           placeholder="请输入驳回原因"
           :max-length="{
-            length: 500,
+            length: 100,
             errorOnly: true,
           }"
           :auto-size="{
@@ -47,7 +47,7 @@ const formRef = ref();
 const formRules = {
   reason: [
     { required: true, message: '请输入驳回原因' },
-    { maxLength: 500, message: '最多可输入500个字符' },
+    { maxLength: 100, message: '最多可输入100个字符' },
   ],
 };
 

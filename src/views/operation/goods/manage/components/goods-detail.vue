@@ -267,7 +267,11 @@
                 v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
-                {{ st.accountNumList?.first.price || '-' }}
+                {{
+                  st.accountNumList && st.accountNumList.length > 0
+                    ? st.accountNumList[0].price
+                    : '-'
+                }}
                 元
               </t-descriptions-item>
             </t-descriptions>
@@ -429,7 +433,7 @@ const doDown = (id: any) => {
     }
   });
 };
-const clickDownBtn = (record: Record<string, any>) => {
+const clickDownBtn = () => {
   doDown;
   Modal.warning({
     title: '确定下架该商品吗？',
@@ -441,13 +445,13 @@ const clickDownBtn = (record: Record<string, any>) => {
       status: 'danger',
     },
     onOk: () => {
-      doDown(record.id);
+      doDown(props.data?.id);
     },
   });
 };
 // 上架
-const clickUpBtn = (record: Record<string, any>) => {
-  upGoods(record.id).then((res) => {
+const clickUpBtn = () => {
+  upGoods(props.data?.id).then((res) => {
     if (res.code === 200) {
       Message.success('上架成功');
       getDetail();
@@ -465,7 +469,7 @@ const doDelete = (id: any) => {
   });
 };
 
-const clickDeleteBtn = (record: Record<string, any>) => {
+const clickDeleteBtn = () => {
   Modal.warning({
     title: '确定删除该商品吗？',
     titleAlign: 'start',
@@ -476,7 +480,7 @@ const clickDeleteBtn = (record: Record<string, any>) => {
       status: 'danger',
     },
     onOk: () => {
-      doDelete(record.id);
+      doDelete(props.data?.id);
     },
   });
 };

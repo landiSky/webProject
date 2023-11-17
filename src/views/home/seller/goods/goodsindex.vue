@@ -113,18 +113,14 @@
   <Detail
     v-if="modalVisible"
     :data="state.detailData"
-    @confirm="onModalConfirm"
     @cancel="onModalConfirm"
-    @close="onModalConfirm"
     @edit="infoToEdit"
     @preview="onPreview"
   ></Detail>
   <Add
     v-if="addModalVisible"
     :data="state.detailData"
-    @confirm="onAddModalConfirm"
     @cancel="onAddModalConfirm"
-    @close="onAddModalConfirm"
     @preview="onPreview"
   ></Add>
 </template>

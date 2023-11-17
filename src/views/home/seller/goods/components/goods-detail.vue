@@ -7,8 +7,6 @@
     :body-style="{ padding: 0 }"
     class="fullscreen-modal"
     :footer="dataInfo.status != StatusEnum.DSH"
-    @cancel="emit('cancel')"
-    @close="emit('cancel')"
     @edit="emit('edit')"
     @back="emit('cancel')"
   >
@@ -292,7 +290,7 @@ const props = defineProps({
 });
 
 const dataInfo = ref<Record<string, any>>({});
-const emit = defineEmits(['confirm', 'cancel', 'edit', 'preview']);
+const emit = defineEmits(['cancel', 'edit', 'preview']);
 const detailImageList = ref<string[]>([]);
 
 const statusColor = computed(() => {
@@ -365,7 +363,7 @@ const clickEdit = () => {
 const doDelete = (id: any) => {
   deleteGoods(id).then(() => {
     Message.success('删除成功');
-    emit('confirm');
+    emit('cancel');
   });
 };
 const clickDelete = () => {
