@@ -200,7 +200,6 @@
               v-if="imageList.length < 5"
               :ref="detailImageRef"
               :file-list="detailList"
-              :limit="1"
               :show-cancel-button="false"
               :show-file-list="false"
               :headers="uploadHeaders"
