@@ -267,7 +267,11 @@
                 v-if="formModel.saleType === 1"
                 label="一口价金额"
               >
-                {{ st.accountNumList?.first.price || '-' }}
+                {{
+                  st.accountNumList && st.accountNumList.length > 0
+                    ? st.accountNumList[0].price
+                    : '-'
+                }}
                 元
               </t-descriptions-item>
             </t-descriptions>
