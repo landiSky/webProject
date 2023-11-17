@@ -247,7 +247,6 @@
               :headers="uploadHeaders"
               :limit="1"
               image-preview
-              style="margin-top: -20px"
               accept=".jpg,.png,.bmp,.jpeg"
               @before-upload="beforeUpload"
               @change="(fileList: any) => onUploadChange(fileList, 'idCardf')"
@@ -501,12 +500,12 @@ const uploadSuccessf = (fileItem: FileItem) => {
   }
 };
 const beforeUpload = (file: File) => {
-  // console.log(file, 'file');
+  console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const isLt5M: boolean = file.size / 1024 / 1024 < 10;
     console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
-      Message.warning('上传图片大小必须限制在5MB以内');
+      Message.warning('上传图片大小必须限制在10MB以内');
       // return false;
       reject();
     }
