@@ -785,7 +785,10 @@ const durationOptions = [
 ];
 
 const copyRules = {
-  name: [{ required: true, message: '请输入交付版本名称' }],
+  name: [
+    { required: true, message: '请输入交付版本名称' },
+    { maxLength: 10, message: '最多可输入10个字符' },
+  ],
   url: [
     {
       required: true,
@@ -800,6 +803,7 @@ const copyRules = {
         return cb();
       },
     },
+    { maxLength: 50, message: '最多可输入50个字符' },
   ],
   productDeliverySetInfoList: [
     {
