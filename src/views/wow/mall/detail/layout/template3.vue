@@ -1,12 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container" :class="{ hasBg: props.bgIndex % 2 === 0 }">
     <div class="title">{{ props.templateData.moduleName }}</div>
     <div class="list">
       <img
+        :style="{ height: imgHeight }"
         :src="`/server/web/file/download?name=${props.templateData.picUrl}`"
         alt=""
       />
-      <span class="wrap">
+      <span ref="wrapRef" class="wrap">
         <span class="subtitle">{{ block1.name }}</span>
         <span class="desc">{{ block1.desc }}</span>
         <span class="subtitle">{{ block2.name }}</span>
@@ -19,13 +20,24 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
+import { onMounted, ref, defineProps } from 'vue';
 
 const props = defineProps({
   templateData: {
     type: Object,
     default: () => {},
   },
+  bgIndex: {
+    type: Number,
+    default: 0,
+  },
+});
+
+const wrapRef = ref();
+const imgHeight = ref();
+
+onMounted(() => {
+  imgHeight.value = `${wrapRef.value.offsetHeight}px`;
 });
 
 // eslint-disable-next-line vue/no-setup-props-destructure
@@ -37,9 +49,12 @@ const [block1, block2] = props.templateData.blockList;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
   padding: 20px;
-  background-color: #fff;
+
+  &.hasBg {
+    background-color: #fff;
+  }
 
   .title {
     margin-bottom: 8px;

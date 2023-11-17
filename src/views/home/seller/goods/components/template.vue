@@ -11,7 +11,7 @@
         <t-button type="text" @click="delTemplate(index)">删除</t-button>
       </span>
     </div>
-    <div v-if="templateList?.length < 7" class="templateAdd">
+    <div v-if="templateList?.length < 6" class="templateAdd">
       <iconpark-icon
         class="plusIcon"
         name="squarePlus"
@@ -21,7 +21,6 @@
       <span>添加详情模块</span>
     </div>
   </div>
-  <!-- <div id="templateContainer"> popup-container="#templateContainer" -->
   <t-drawer
     title="添加详情模块"
     ok-text="下一步"
@@ -126,8 +125,6 @@ const formWrapRef = ref();
 
 const forCompList = [Form1, Form2, Form3, Form4, Form5, Form6];
 const dynaticComponent = computed(() => {
-  console.log('template.vue:75', selectTempIndex.value);
-
   return forCompList[selectTempIndex.value];
 });
 
