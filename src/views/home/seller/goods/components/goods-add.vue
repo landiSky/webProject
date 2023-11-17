@@ -583,6 +583,7 @@ import { IconEye } from '@tele-design/web-vue/es/icon';
 import {
   genGoodsId,
   fetchClassList,
+  updateGoods1,
   saveGoods1,
   saveGoods2,
   saveAndUp,
@@ -1235,7 +1236,11 @@ const doSave = async () => {
     if (result) {
       return false;
     }
-    res = await saveGoods1(formModel.value);
+    if (props.data?.id) {
+      res = await updateGoods1(formModel.value);
+    } else {
+      res = await saveGoods1(formModel.value);
+    }
   } else {
     const r = await buildForm2();
     if (r === false) {
