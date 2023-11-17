@@ -1,14 +1,16 @@
 <template>
   <div class="container">
     <div class="title">{{ props.templateData.moduleName }}</div>
-    <div class="list">
-      <span
+    <div>
+      <div
         v-for="(item, index) in props.templateData.blockList"
         :key="index"
-        class="item"
+        class="list"
       >
-        <img :src="item.url" alt="" />
-      </span>
+        <span v-for="(subItem, subIndex) in item" :key="subIndex" class="item">
+          <img :src="subItem.url" alt="" />
+        </span>
+      </div>
     </div>
   </div>
 </template>
