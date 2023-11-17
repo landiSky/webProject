@@ -334,7 +334,7 @@ const clickAddCart = (): void => {
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {
     Modal.info({
       title: '使用提醒',
-      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      content: '需申请企业认证后使用，请先进行企业节点认证。',
       titleAlign: 'start',
       hideCancel: false,
       cancelText: '暂不认证',

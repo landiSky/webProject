@@ -113,7 +113,7 @@
           </t-upload>
           <span class="uploadTips">
             建议图片尺寸：200px *
-            200px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+            200px，支持jpg、png、bmp、tif、gif、jpeg文件格式，文件大小限制10M以内。
           </span>
         </div>
       </t-form-item>
