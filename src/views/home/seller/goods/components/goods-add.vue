@@ -1302,7 +1302,8 @@ const clickNext = async () => {
   if (result) {
     return;
   }
-  saveGoods1(formModel.value).then((res) => {
+  const api = props.data?.id ? updateGoods1 : saveGoods1;
+  api(formModel.value).then((res) => {
     if (res) {
       modalJsonString.value = getModalJson();
       step.value = 2;
