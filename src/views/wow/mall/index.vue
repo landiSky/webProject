@@ -422,7 +422,11 @@ onMounted(() => {
           }
 
           &.active {
+            display: block;
+            // width: 52px;
+            height: 26px;
             color: #fff;
+            text-align: center;
             background: #1664ff;
             border-radius: 4px;
           }
