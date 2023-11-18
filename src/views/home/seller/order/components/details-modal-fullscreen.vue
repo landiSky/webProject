@@ -330,11 +330,19 @@
                 </t-col>
 
                 <t-col :span="3">
-                  <div class="grid-content">{{ dataList.accountCount }}个</div>
+                  <div class="grid-content">{{
+                    dataList.saleType === 0
+                      ? dataList.accountCount + '个'
+                      : '不限'
+                  }}</div>
                 </t-col>
                 <t-col :span="2">
                   <div class="grid-content">
-                    {{ dataList.buyDuration }}小时</div
+                    {{
+                      dataList.saleType === 0
+                        ? dataList.buyDuration + '小时'
+                        : '不限'
+                    }}小时</div
                   >
                 </t-col>
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
@@ -682,15 +690,15 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 100%;
+    width: 74%;
     height: 100%;
-    margin-left: 15%;
+    margin-left: 13%;
 
     .asjhdg {
-      width: 65%;
+      width: 100%;
       height: 100%;
-      margin-top: 15px;
-
+      margin: 15px auto;
+      // margin-top: 15px;
       .information {
         float: left;
         width: 100%;
@@ -755,6 +763,8 @@ onMounted(() => {
 
         .aligntextback {
           text-align: center;
+          border: 1px solid #e5e8ef;
+          border-top: none;
           // background: #f2f3f8;
         }
       }

@@ -199,7 +199,7 @@
             >
             <div class="information">
               <div class="informationlist">
-                <p style="float: left; width: 8%">订单号</p>
+                <p style="float: left; width: 6%">订单号</p>
                 <p style="float: left">{{ dataList.orderNum }}</p>
                 <p
                   style="float: left; margin-left: 7px; cursor: pointer"
@@ -223,11 +223,11 @@
                 }}</p>
               </div> -->
               <div class="informationlist">
-                <p style="float: left; width: 8%">商家信息</p>
+                <p style="float: left; width: 6%">商家信息</p>
                 <p style="float: left">{{ dataList.merchantName }}</p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 8%">联系方式</p>
+                <p style="float: left; width: 6%">联系方式</p>
                 <p style="float: left">{{ dataList.sellerPhone }}</p>
                 <p
                   style="float: left; margin-left: 7px; cursor: pointer"
@@ -245,7 +245,7 @@
                 </p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 8%">支付凭证</p>
+                <p style="float: left; width: 6%">支付凭证</p>
                 <div v-if="dataList.attachmentAddressArr.length === 0"
                   >待上传</div
                 >
@@ -361,11 +361,21 @@
                 </t-col>
 
                 <t-col :span="3">
-                  <div class="grid-content">{{ dataList.accountCount }}个</div>
+                  <div class="grid-content">
+                    {{
+                      dataList.saleType === 0
+                        ? dataList.accountCount + '个'
+                        : '不限'
+                    }}
+                  </div>
                 </t-col>
                 <t-col :span="2">
                   <div class="grid-content">
-                    {{ dataList.buyDuration }}小时</div
+                    {{
+                      dataList.saleType === 0
+                        ? dataList.buyDuration + '小时'
+                        : '不限'
+                    }}</div
                   >
                 </t-col>
                 <t-col :span="5">
@@ -619,15 +629,15 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 85%;
+    width: 74%;
     height: 100%;
-    margin-left: 22%;
+    margin-left: 13%;
 
     .asjhdg {
-      width: 65%;
+      width: 100%;
       height: 100%;
-      margin-top: 15px;
-
+      margin: 15px auto;
+      // margin-top: 15px;
       .information {
         float: left;
         width: 100%;
@@ -692,6 +702,8 @@ onMounted(() => {
 
         .aligntextback {
           text-align: center;
+          border: 1px solid #e5e8ef;
+          border-top: none;
           // background: #f2f3f8;
         }
       }
