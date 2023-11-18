@@ -372,7 +372,8 @@ onMounted(() => {
 }
 
 .content {
-  margin: 0 132px 120px 132px;
+  width: 1176px;
+  margin: 0 auto 120px auto;
 
   .search {
     display: flex;
@@ -508,6 +509,7 @@ onMounted(() => {
             display: block;
             width: 178px;
             height: 178px;
+            border-radius: 2px;
             cursor: pointer;
           }
         }
