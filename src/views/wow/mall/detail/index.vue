@@ -7,7 +7,7 @@
             <img
               :src="
                 bigImgPath
-                  ? `/server/web/file/download?name=${bigImgPath}`
+                  ? `/server/web/file/download?name=${bigImgPath}&productId=${prodDetail.id}`
                   : defaultImg
               "
             />
@@ -20,7 +20,7 @@
               @mouseenter="bigImgPath = imgPath"
             >
               <img
-                :src="`/server/web/file/download?name=${imgPath}`"
+                :src="`/server/web/file/download?name=${imgPath}&productId=${prodDetail.id}`"
                 alt=""
                 :class="{ active: bigImgPath === imgPath }"
               />
@@ -136,6 +136,7 @@
                 :is="forCompList[item.type - 1]"
                 :template-data="item"
                 :bg-index="index"
+                :product-id="prodDetail.id"
               ></component>
             </div>
           </template>
@@ -224,8 +225,7 @@ const onAuthCancel = () => {
   authModalVisible.value = false;
 };
 
-const onAuthConfirm = (memberIdList: string[]) => {
-  authModalVisible.value = false;
+const onAuthConfirm = (memberIdList: string[]): any => {
   const {
     companyId,
     id,
@@ -242,8 +242,9 @@ const onAuthConfirm = (memberIdList: string[]) => {
   let accountDesc = '不限';
   let durationDesc = '不限';
 
+  let accountItem = null;
   if (saleType === SaleType.PACKAGE) {
-    const accountItem = accountNumList.find(
+    accountItem = accountNumList.find(
       (item: Record<string, any>) => item.id === accountId
     );
     const durationItem = durationList.find(
@@ -253,6 +254,18 @@ const onAuthConfirm = (memberIdList: string[]) => {
     durationDesc =
       durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
+
+  if (
+    !Number.isNaN(accountItem?.accountNum) &&
+    memberIdList?.length > accountItem?.accountNum - 1
+  ) {
+    Message.warning(
+      `应用授权人员数已超过购买账号数【${accountItem?.accountNum}】`
+    );
+    return;
+  }
+
+  authModalVisible.value = false;
 
   // 封装确认订单需要的字段
   orderStore.createOrderInfo = {
@@ -334,7 +347,7 @@ const clickAddCart = (): void => {
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {
     Modal.info({
       title: '使用提醒',
-      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
+      content: '需申请企业认证后使用，请先进行企业节点认证。',
       titleAlign: 'start',
       hideCancel: false,
       cancelText: '暂不认证',

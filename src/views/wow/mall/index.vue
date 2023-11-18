@@ -146,7 +146,7 @@
           <span class="left">
             <img
               :src="
-                `/server/web/file/download?name=${item.logo}` ||
+                `/server/web/file/download?name=${item.logo}&productId=${item.id}` ||
                 'src/assets/images/wow/mall/default_product_logo.svg'
               "
               mode="scaleToFill"
@@ -227,7 +227,7 @@ const route = useRoute();
 
 const pagination = reactive({
   page: 1,
-  size: 8,
+  size: 10,
   total: 0,
 });
 const priceSortEnum = {
@@ -239,7 +239,7 @@ const shelveSortEnum = {
   DES: 1,
 };
 const productsList = ref<Record<string, any>>([]);
-const hideOnSinglePage = computed(() => pagination.total <= 8);
+const hideOnSinglePage = computed(() => pagination.total <= 10);
 const productTypeList = ref<Record<string, any>[]>([]);
 const btnLoading = ref(false);
 const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
@@ -284,7 +284,6 @@ const getProductList = () => {
 
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
-      console.log('index.vue:106', response);
       const { total, records } = response || {};
       productsList.value = records || [];
       pagination.total = total;

@@ -367,7 +367,9 @@ const getDetail = () => {
     .then((res) => {
       if (res.code === 200) {
         formModel.value = res.data || {};
-        detailImageList.value = res.data.detailImg.split(',');
+        detailImageList.value = res.data.detailImg
+          ? res.data.detailImg.split(',')
+          : [];
       }
     })
     .catch((e) => {

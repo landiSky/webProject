@@ -48,13 +48,16 @@
 <script lang="ts" setup>
 import { defineEmits, reactive, ref, onMounted } from 'vue';
 import { apiHasCompany, apiHasCompanyShow } from '@/api/authentication';
-import { Message, Modal } from '@tele-design/web-vue';
+import { Modal } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
 
+const userStore = useUserStore();
 const emit = defineEmits(['confirm', 'cancel']);
 
 const formRef = ref();
 const visible = ref(true);
 const btnLoading = ref(false);
+const { userInfo } = userStore;
 
 const state = reactive<{ formModel: Record<string, string | undefined> }>({
   formModel: {
@@ -87,15 +90,18 @@ const clickNextStep = (done: (closed: boolean) => void) => {
               okText: '好的',
               titleAlign: 'start',
               hideCancel: true,
-              content: `该企业已完成「${title}」，如需申请加入企业，请咨询企业联系人，联系方式：${
+
+              content: `您认证的企业已在平台申请【${title}】，请联系${
                 phone || '-'
-              }。`,
+              }申请加入企业`,
               onOk: () => {
                 emit('cancel');
               },
             });
           } else {
             emit('confirm');
+            const { snmsUrls } = userInfo || {};
+            window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
           }
         })
         .catch(() => {})

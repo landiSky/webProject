@@ -4,7 +4,7 @@
     <div class="list">
       <img
         :style="{ height: imgHeight }"
-        :src="`/server/web/file/download?name=${props.templateData.picUrl}`"
+        :src="`/server/web/file/download?name=${props.templateData.picUrl}&productId=${props.productId}`"
         alt=""
       />
       <span ref="wrapRef" class="wrap">
@@ -31,6 +31,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  productId: String,
 });
 
 const wrapRef = ref();
