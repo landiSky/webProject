@@ -8,7 +8,7 @@
         class="list"
       >
         <span v-for="(subItem, subIndex) in item" :key="subIndex" class="item">
-          <img :src="subItem.url" alt="" />
+          <img :src="`${subItem.url}&productId=${props.productId}`" alt="" />
         </span>
       </div>
     </div>
@@ -27,6 +27,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  productId: String,
 });
 </script>
 

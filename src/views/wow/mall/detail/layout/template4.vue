@@ -7,7 +7,10 @@
         :key="index"
         class="item"
       >
-        <img :src="`/server/web/file/download?name=${item.picUrl}`" alt="" />
+        <img
+          :src="`/server/web/file/download?name=${item.picUrl}&productId=${props.productId}`"
+          alt=""
+        />
         <span class="wrap">
           <span class="subtitle">{{ item.name }}</span>
           <span class="desc">{{ item.desc }}</span>
@@ -29,6 +32,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  productId: String,
 });
 </script>
 

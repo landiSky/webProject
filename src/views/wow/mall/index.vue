@@ -146,7 +146,7 @@
           <span class="left">
             <img
               :src="
-                `/server/web/file/download?name=${item.logo}` ||
+                `/server/web/file/download?name=${item.logo}&productId=${item.id}` ||
                 'src/assets/images/wow/mall/default_product_logo.svg'
               "
               mode="scaleToFill"
