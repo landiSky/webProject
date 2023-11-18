@@ -509,6 +509,7 @@ onMounted(() => {
             display: block;
             width: 178px;
             height: 178px;
+            border-radius: 2px;
             cursor: pointer;
           }
         }
