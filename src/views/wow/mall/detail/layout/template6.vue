@@ -55,18 +55,17 @@ const props = defineProps({
   .list {
     display: flex;
     justify-content: start;
-    padding: 0 24px;
-
+    // padding: 0 24px;
     .item {
       display: flex;
       align-items: start;
-      margin-right: 12px;
+      // margin-right: 12px;
       padding: 20px;
 
       img {
-        width: 60px;
-        height: 60px;
-        margin-right: 12px;
+        width: 140px;
+        height: 140px;
+        // margin-right: 12px;
       }
     }
   }

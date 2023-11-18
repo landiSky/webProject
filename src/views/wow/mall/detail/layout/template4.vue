@@ -60,11 +60,11 @@ const props = defineProps({
   .list {
     display: flex;
     justify-content: start;
-    padding: 0 24px;
-
+    // padding: 0 24px;
     .item {
       display: flex;
       align-items: start;
+      width: 200px;
       margin-right: 12px;
 
       img {

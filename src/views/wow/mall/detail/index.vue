@@ -257,7 +257,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
   if (
     !Number.isNaN(accountItem?.accountNum) &&
-    memberIdList.length > accountItem.accountNum - 1
+    memberIdList?.length > accountItem?.accountNum - 1
   ) {
     Message.warning(
       `应用授权人员数已超过购买账号数【${accountItem?.accountNum}】`
