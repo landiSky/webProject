@@ -170,13 +170,13 @@
                     <span class="dingdclass">订单号：</span>{{ item.orderNum }}
                   </div>
                   <div class="grid-content-list">
-                    <span class="dingdclass">买家：</span
-                    >{{ item.customerName }}
+                    <span class="dingdclass">商品来源：</span
+                    >{{ item.merchantName }}
                   </div>
-                  <div class="grid-content-list">
+                  <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
                     >{{ item.orderSource === 0 ? '本平台' : '跨平台' }}
-                  </div>
+                  </div> -->
                 </div>
               </t-col>
             </t-row>
@@ -188,8 +188,6 @@
                     class="imgs"
                     style="float: left; width: 100px; margin: 0 10px 0 16px"
                   >
-                    <!-- item.productLogo -->
-
                     <img
                       style="width: 100px; height: 100px"
                       :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"

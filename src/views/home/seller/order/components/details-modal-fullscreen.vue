@@ -319,20 +319,37 @@
                   </div>
                 </t-col>
                 <t-col :span="3">
-                  <div class="grid-content">¥{{ dataList.productPrice }}</div>
+                  <div class="grid-content"
+                    >¥{{ dataList.productPrice
+                    }}{{
+                      String(dataList.productPrice).indexOf('.') > -1
+                        ? ''
+                        : '元'
+                    }}</div
+                  >
                 </t-col>
 
                 <t-col :span="3">
-                  <div class="grid-content">{{ dataList.accountCount }}</div>
+                  <div class="grid-content">{{ dataList.accountCount }}个</div>
                 </t-col>
                 <t-col :span="2">
-                  <div class="grid-content"> {{ dataList.buyDuration }}</div>
+                  <div class="grid-content">
+                    {{ dataList.buyDuration }}小时</div
+                  >
                 </t-col>
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">
-                    ¥{{ dataList.realityPrice }}
+                    ¥{{ dataList.realityPrice
+                    }}{{
+                      String(dataList.couponMoney).indexOf('.') > -1 ? '' : '元'
+                    }}
                     <p style="color: #86909c"
-                      >(以优惠：{{ dataList.couponMoney }}元)</p
+                      >(已优惠：{{ dataList.couponMoney
+                      }}{{
+                        String(dataList.couponMoney).indexOf('.') > -1
+                          ? ''
+                          : '元'
+                      }})</p
                     ></div
                   >
                 </t-col>
@@ -486,6 +503,7 @@ const init = () => {
 // 点击复制
 const clickCopy = (Num: string) => {
   utilsCopy(Num);
+  Message.success('复制成功');
 };
 
 // 修改金额 弹窗

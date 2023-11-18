@@ -66,23 +66,36 @@
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
           <t-link
-            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
+            v-if="
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
+              record.isAdmin === false
+            "
             @click="onEditTreeConfirmsldrole(record)"
           >
             授权管理
           </t-link>
 
           <t-link
-            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
+            v-if="
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
+              record.isAdmin === false
+            "
             @click="clickEditBtn(record)"
             >编辑</t-link
           >
           <t-link
-            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
+            v-if="
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
+              record.isAdmin === false
+            "
             @click="delectlist(record.id, record.memberCount)"
             >删除</t-link
           >
-          <span v-if="userInfoByCompany.primary === rolestatusled.ROLESTATUS"
+          <span
+            v-if="
+              userInfoByCompany.primary === rolestatusled.ROLESTATUS ||
+              record.isAdmin === true
+            "
             >-</span
           >
           <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
