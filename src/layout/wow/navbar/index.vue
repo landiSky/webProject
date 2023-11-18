@@ -95,13 +95,21 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,
   (newV) => {
-    selectTab.value = newV;
+    // 商品详情页也激活【商城】
+    if (route.name === 'wowMallDetail') {
+      selectTab.value = TabPath.MALL;
+    } else {
+      selectTab.value = newV;
+    }
   }
 );
 const handleLogout = async () => {
@@ -194,7 +202,12 @@ const clickIdService = () => {
 };
 
 onMounted(() => {
-  selectTab.value = route.path || TabPath.INDEX;
+  if (route.name === 'wowMallDetail') {
+    // 商品详情页也激活【商城】
+    selectTab.value = TabPath.MALL;
+  } else {
+    selectTab.value = route.path || TabPath.INDEX;
+  }
 });
 </script>
 
