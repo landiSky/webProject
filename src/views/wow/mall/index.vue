@@ -64,7 +64,7 @@
               自定义区间：
               <t-input-number
                 v-model="customPriceStart"
-                :style="{ width: '98px' }"
+                :style="{ width: '110px' }"
                 placeholder="输入最小价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
@@ -72,7 +72,7 @@
               ~
               <t-input-number
                 v-model="customPriceEnd"
-                :style="{ width: '98px' }"
+                :style="{ width: '110px' }"
                 placeholder="输入最大价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
