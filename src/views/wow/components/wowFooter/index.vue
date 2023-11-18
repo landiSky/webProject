@@ -47,7 +47,8 @@
 
     .navigator {
       display: flex;
-      margin-bottom: 80px;
+      width: 1176px;
+      margin: 0 auto 80px auto;
 
       .item {
         display: flex;
@@ -74,7 +75,8 @@
     .copyright {
       display: flex;
       justify-content: space-between;
-      padding: 23px 0 19px 0;
+      width: 1176px;
+      margin: 24px auto 20px auto;
       color: #1d2129;
       font-size: 12px;
       line-height: 18px;
