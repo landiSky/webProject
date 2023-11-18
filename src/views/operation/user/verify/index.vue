@@ -10,6 +10,7 @@
                   v-model.trim="state.formModel.phone"
                   placeholder="请输入企业主账号"
                   allow-clear
+                  @change="clickSearchBtn"
                 />
               </t-form-item>
             </t-col>
@@ -19,6 +20,7 @@
                   v-model.trim="state.formModel.companyName"
                   placeholder="请输入企业名称"
                   allow-clear
+                  @change="clickSearchBtn"
                 />
               </t-form-item>
             </t-col>
