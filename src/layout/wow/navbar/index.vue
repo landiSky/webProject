@@ -101,7 +101,12 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
 watch(
   () => route.path,
   (newV) => {
-    selectTab.value = newV;
+    // 商品详情页也激活【商城】
+    if (route.name === 'wowMallDetail') {
+      selectTab.value = TabPath.MALL;
+    } else {
+      selectTab.value = newV;
+    }
   }
 );
 const handleLogout = async () => {
@@ -194,7 +199,12 @@ const clickIdService = () => {
 };
 
 onMounted(() => {
-  selectTab.value = route.path || TabPath.INDEX;
+  if (route.name === 'wowMallDetail') {
+    // 商品详情页也激活【商城】
+    selectTab.value = TabPath.MALL;
+  } else {
+    selectTab.value = route.path || TabPath.INDEX;
+  }
 });
 </script>
 

@@ -65,7 +65,7 @@
               <t-input-number
                 v-model="customPriceStart"
                 :style="{ width: '98px' }"
-                placeholder="输入最小价格"
+                placeholder="最小价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -73,7 +73,7 @@
               <t-input-number
                 v-model="customPriceEnd"
                 :style="{ width: '98px' }"
-                placeholder="输入最大价格"
+                placeholder="最大价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
               />
@@ -85,7 +85,6 @@
         <t-button
           type="primary"
           style="margin-right: 16px"
-          :loading="btnLoading"
           @click="clickSearchBtn"
         >
           查询</t-button
@@ -141,73 +140,83 @@
           </span>
         </span>
       </div>
-      <div class="list">
-        <span v-for="item in productsList" :key="item.id" class="card">
-          <span class="left">
-            <img
-              :src="
-                `/server/web/file/download?name=${item.logo}&productId=${item.id}` ||
-                'src/assets/images/wow/mall/default_product_logo.svg'
-              "
-              mode="scaleToFill"
-              alt=""
-              @click="() => goMallDetail(item.id)"
-            />
-          </span>
-          <span class="right">
-            <span class="name" @click="() => goMallDetail(item.id)">{{
-              item.name
-            }}</span>
-            <span class="companyName">{{ item.companyName }}</span>
+      <t-spin
+        :loading="btnLoading"
+        :size="32"
+        tip="加载中"
+        style="min-height: 150px; text-align: center"
+      >
+        <div class="list">
+          <span v-for="item in productsList" :key="item.id" class="card">
+            <span class="left">
+              <img
+                :src="
+                  `/server/web/file/download?name=${item.logo}&productId=${item.id}` ||
+                  'src/assets/images/wow/mall/default_product_logo.svg'
+                "
+                mode="scaleToFill"
+                alt=""
+                @click="() => goMallDetail(item.id)"
+              />
+            </span>
+            <span class="right">
+              <span class="name" @click="() => goMallDetail(item.id)">{{
+                item.name
+              }}</span>
+              <span class="companyName">{{ item.companyName }}</span>
 
-            <span class="tag">
-              <t-tag color="#E8F4FF">{{
-                DeliverTypeDesc[item.deliveryType]
-              }}</t-tag>
-            </span>
-            <span class="desc">
-              <t-typography-paragraph
-                :ellipsis="{
-                  rows: 2,
-                  showTooltip: {
-                    type: 'tooltip',
-                    props: {
-                      isBright: true,
+              <span class="tag">
+                <t-tag color="#E8F4FF">{{
+                  DeliverTypeDesc[item.deliveryType]
+                }}</t-tag>
+              </span>
+              <span class="desc">
+                <t-typography-paragraph
+                  :ellipsis="{
+                    rows: 2,
+                    showTooltip: {
+                      type: 'tooltip',
+                      props: {
+                        isBright: true,
+                      },
                     },
-                  },
-                }"
-                >{{ item.introduction }}
-              </t-typography-paragraph>
-            </span>
-            <span class="price">
-              <template v-if="item.lowPrice !== '-1.00'">
-                <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
-                <span class="suffix">元起</span>
-              </template>
-              <span v-else class="prefix">价格面议</span>
+                  }"
+                  >{{ item.introduction }}
+                </t-typography-paragraph>
+              </span>
+              <span class="price">
+                <template v-if="item.lowPrice !== '-1.00'">
+                  <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
+                  <span class="suffix">元起</span>
+                </template>
+                <span v-else class="prefix">价格面议</span>
+              </span>
             </span>
           </span>
-        </span>
-      </div>
-      <div>
-        <div v-if="!hideOnSinglePage" class="paginationArea">
-          <t-pagination
-            v-model:current="pagination.page"
-            v-model:page-size="pagination.size"
-            :total="pagination.total"
-            show-total
-            show-jumper
-            show-page-size
-            @change="onPageChange"
-            @page-size-change="onPageSizeChange"
-          />
         </div>
-      </div>
-      <t-empty v-if="!productsList.length" description="暂无上架商品">
-        <template #image>
-          <iconpark-icon name="zanwushuju" size="100px"></iconpark-icon>
-        </template>
-      </t-empty>
+        <div>
+          <div v-if="!hideOnSinglePage" class="paginationArea">
+            <t-pagination
+              v-model:current="pagination.page"
+              v-model:page-size="pagination.size"
+              :total="pagination.total"
+              show-total
+              show-jumper
+              show-page-size
+              @change="onPageChange"
+              @page-size-change="onPageSizeChange"
+            />
+          </div>
+        </div>
+        <t-empty
+          v-if="!btnLoading && !productsList.length"
+          description="暂无上架商品"
+        >
+          <template #image>
+            <iconpark-icon name="zanwushuju" size="100px"></iconpark-icon>
+          </template>
+        </t-empty>
+      </t-spin>
     </div>
   </div>
   <WowFooter></WowFooter>
@@ -422,7 +431,11 @@ onMounted(() => {
           }
 
           &.active {
+            display: block;
+            // width: 52px;
+            height: 26px;
             color: #fff;
+            text-align: center;
             background: #1664ff;
             border-radius: 4px;
           }

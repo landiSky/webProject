@@ -10,7 +10,7 @@ import { useMenuStore } from '@/store/modules/menu';
 
 const userStore = useUserStore();
 
-const opearationRouteList = [
+const infoRouteList = [
   'ROUTE_GOODS',
   'ROUTE_GOODS_MANAGE',
   'ROUTE_GOODS_OBSERVE',
@@ -21,14 +21,26 @@ const opearationRouteList = [
   'ROUTE_SYNC_GOODS',
 ];
 
+const opearationRouteList = [
+  'ROUTE_GOODS',
+  'ROUTE_GOODS_MANAGE',
+  'ROUTE_GOODS_OBSERVE',
+  'ROUTE_USER',
+  'ROUTE_USER_VERIFY',
+];
+
 watch(
   () => userStore.updateMenu,
   () => {
-    const { isAdmin } = userStore.userInfo || {};
+    const { isAdmin, source } = userStore.userInfo || {};
     console.log('App.vue:15===更新菜单', isAdmin, userStore.userInfo);
-    const authList = isAdmin // 是后台管理员的话显示运营后台菜单
-      ? opearationRouteList
-      : userStore.userInfoByCompany?.menuCodes || [];
+    let authList = userStore.userInfoByCompany?.menuCodes || [];
+    if (isAdmin) {
+      authList = opearationRouteList;
+    }
+    if (source) {
+      authList = infoRouteList;
+    }
     console.log('App.vue:31', authList);
     useMenuStore().genLeftMenu(authList);
   },

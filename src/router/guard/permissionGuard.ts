@@ -39,7 +39,7 @@ export function createPermissionGuard(router: Router) {
         // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
-          if (userInfo?.bindStatus === 1) {
+          if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
             // 跳转到绑定页面，进行手机号绑定和安全校验
             next('/safetycheck');
           }

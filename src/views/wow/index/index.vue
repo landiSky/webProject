@@ -342,21 +342,21 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc: '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
-        name: 'TNaas',
-        desc: '“星火·链网”骨干节点',
+        name: '',
+        desc: '新型产业园区服务',
         bgImg: tab41,
       },
       {
-        name: 'IDPoint',
-        desc: '标识解析二级节点',
+        name: '',
+        desc: '“双碳”业务体系',
         bgImg: tab42,
       },
       {
-        name: 'IDHub',
-        desc: '标识解析二级节点',
+        name: '',
+        desc: '工业互联网智能硬件',
         bgImg: tab43,
       },
     ],
