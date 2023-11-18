@@ -2,7 +2,6 @@
   <t-form
     ref="formRef"
     :model="form"
-    :style="{ width: '680px' }"
     :label-col="{ span: 4 }"
     label-align="left"
     auto-label-width

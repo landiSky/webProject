@@ -320,9 +320,17 @@ defineExpose({
 }
 
 .formWrapper {
-  padding: 24px 20px;
+  padding-top: 24px;
   font-weight: 400;
   font-size: 12px;
   line-height: 20px; /* 166.667% */
+
+  :deep(.tele-upload-list) {
+    .tele-upload-picture-card,
+    .tele-upload-list-picture {
+      width: 100px;
+      height: 100px;
+    }
+  }
 }
 </style>
