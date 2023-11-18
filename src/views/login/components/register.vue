@@ -3,14 +3,14 @@
     <span class="title">欢迎注册账号</span>
 
     <t-form ref="formRef" :model="form" :rules="formRules" layout="vertical">
-      <t-form-item field="phone" :validate-trigger="['change', 'input']">
+      <t-form-item field="phone" :validate-trigger="['change', 'blur']">
         <t-input v-model="form.phone" placeholder="请输入手机号" size="large"
           ><template #prefix>
             <iconpark-icon name="mobile"></iconpark-icon>
           </template>
         </t-input>
       </t-form-item>
-      <t-form-item field="code" :validate-trigger="['change', 'input']">
+      <t-form-item field="code" :validate-trigger="['change', 'blur']">
         <t-input
           v-model="form.code"
           placeholder="短信验证码"

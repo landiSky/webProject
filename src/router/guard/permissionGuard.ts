@@ -34,12 +34,14 @@ export function createPermissionGuard(router: Router) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
         // console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<string, any> =
-          await userStore.getUserBasicInfo();
+        const userInfo: Record<
+          string,
+          any
+        > = await userStore.getUserBasicInfo();
         // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
-          if (userInfo?.bindStatus === 1) {
+          if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
             // 跳转到绑定页面，进行手机号绑定和安全校验
             next('/safetycheck');
           }

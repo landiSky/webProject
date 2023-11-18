@@ -42,12 +42,12 @@ import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import {
   apiMemberList,
-  apiAuthMember,
-  apiMemListByProduct,
+  // apiAuthMember,
+  // apiMemListByProduct,
 } from '@/api/common';
 
 const store = useUserStore();
-const { userInfo, selectCompany } = storeToRefs(store);
+const { selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,

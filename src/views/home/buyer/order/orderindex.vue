@@ -170,13 +170,13 @@
                     <span class="dingdclass">订单号：</span>{{ item.orderNum }}
                   </div>
                   <div class="grid-content-list">
-                    <span class="dingdclass">买家：</span
-                    >{{ item.customerName }}
+                    <span class="dingdclass">商品来源：</span
+                    >{{ item.merchantName }}
                   </div>
-                  <div class="grid-content-list">
+                  <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
                     >{{ item.orderSource === 0 ? '本平台' : '跨平台' }}
-                  </div>
+                  </div> -->
                 </div>
               </t-col>
             </t-row>
@@ -188,8 +188,6 @@
                     class="imgs"
                     style="float: left; width: 100px; margin: 0 10px 0 16px"
                   >
-                    <!-- item.productLogo -->
-
                     <img
                       style="width: 100px; height: 100px"
                       :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
@@ -212,7 +210,7 @@
               <t-col :span="3">
                 <div class="grid-content bg-purple-light">
                   {{ item.deliveryTypeName }}
-                  <p style="color: #86909c"
+                  <p v-if="item.saleType === 0" style="color: #86909c"
                     >({{ item.accountCount }}个账号{{
                       item.buyDuration
                     }}个月)</p
@@ -220,11 +218,24 @@
                 </div>
               </t-col>
               <t-col :span="3">
-                <div class="grid-content"> ¥{{ item.productPrice }}</div>
+                <div class="grid-content">
+                  ¥{{ item.productPrice
+                  }}{{
+                    String(item.productPrice).indexOf('.') > -1 ? '' : '元'
+                  }}</div
+                >
               </t-col>
 
               <t-col :span="3">
-                <div class="grid-content">¥{{ item.realityPrice }}</div>
+                <div class="grid-content"
+                  >¥{{ item.realityPrice
+                  }}{{
+                    String(item.realityPrice).indexOf('.') > -1 ? '' : '元'
+                  }}
+                  <p style="color: #86909c"
+                    >(已优惠:{{ item.couponMoney }})元</p
+                  ></div
+                >
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -233,7 +244,7 @@
                     style="display: flex; justify-content: center"
                   >
                     <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobepaid" alt=""
+                      <img :src="tobereviewed" alt=""
                     /></span>
 
                     <span style="float: left">待支付</span>
@@ -243,7 +254,7 @@
                     style="display: flex; justify-content: center"
                   >
                     <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobereviewed" alt=""
+                      <img :src="tobepaid" alt=""
                     /></span>
 
                     <span style="float: left">待审核</span>

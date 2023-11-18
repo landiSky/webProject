@@ -125,12 +125,12 @@
                 @click="firmgotoverify"
                 >查看详情</t-button
               > -->
-              <!-- <t-button
+              <t-button
                 type="primary"
                 style="margin-left: 20px; padding: 7px 15px"
                 @click="viewdetails"
                 >去认证</t-button
-              > -->
+              >
             </div>
           </div>
         </div>
@@ -253,17 +253,15 @@
       >
     </div>
   </t-modal>
+  <AuthModal
+    v-if="authModalVisible"
+    @confirm="onAuthModalConfirm"
+    @cancel="authModalVisible = false"
+  ></AuthModal>
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  defineEmits,
-  reactive,
-  ref,
-  onMounted,
-  computed,
-} from 'vue';
+import { defineEmits, ref, onMounted } from 'vue';
 
 import { storeToRefs } from 'pinia';
 
@@ -273,16 +271,11 @@ import {
   CompanyAuthStatusDESC,
   NodeAuthStatusDESC,
 } from '@/enums/common';
-// import {
-//   CompanyAuthStatus,
-//   NodeAuthStatus,
-//   CompanyAuthStatusDESC,
-//   NodeAuthStatusDESC,
-// } from '@/enums/common';
 
 import { authentication } from '@/api/authentication';
 
 import { useUserStore } from '@/store/modules/user';
+import AuthModal from '@/components/auth-modal/index.vue';
 
 import auth from '@/assets/images/home/auth.png';
 import left01 from '@/assets/images/home/left01.png';
@@ -293,10 +286,9 @@ import right03 from '@/assets/images/home/right03.png';
 import rightlog from '@/assets/images/home/rightlog.png';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
-// userInfo.value?.companyId
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
+const authModalVisible = ref(false);
 const nodeState2class = {
   [NodeAuthStatus.TO_CHECK]: 'tobereviewed',
   [NodeAuthStatus.AUTHED]: 'authenticated',
@@ -336,6 +328,11 @@ const visible = ref(true);
 //     phone: undefined,
 //   },
 // });
+
+const onAuthModalConfirm = () => {
+  authModalVisible.value = false;
+  emit('cancel');
+};
 const init = () => {
   authentication({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
@@ -359,7 +356,9 @@ const viewdetailsnode = () => {
   // console.log('aaa');
 };
 // 企业节点认证  去认证
-const nodegotoverify = () => {};
+const nodegotoverify = () => {
+  authModalVisible.value = true;
+};
 onMounted(() => {
   // if (isEdit.value) {
   //   // 这里分两种情况

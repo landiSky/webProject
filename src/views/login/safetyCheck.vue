@@ -8,7 +8,7 @@
         :rules="safeFormRules"
         layout="vertical"
       >
-        <t-form-item field="phone" :validate-trigger="['change', 'input']">
+        <t-form-item field="phone" :validate-trigger="['change', 'blur']">
           <t-input
             v-model="safeForm.phone"
             placeholder="请输入手机号"
@@ -18,11 +18,12 @@
             </template>
           </t-input>
         </t-form-item>
-        <t-form-item field="captcha" :validate-trigger="['change', 'input']">
+        <t-form-item field="captcha" :validate-trigger="['change', 'blur']">
           <t-input
             v-model.trim="safeForm.captcha"
-            placeholder="请输入验证码"
+            placeholder="短信验证码"
             size="large"
+            class="captcha"
           >
             <template #prefix>
               <iconpark-icon name="safe"></iconpark-icon>
@@ -30,6 +31,7 @@
           </t-input>
           <t-button
             :loading="sendBtnLoading"
+            class="textBtn"
             type="primary"
             size="large"
             @click="clickSendBtn"
@@ -46,6 +48,7 @@
             :loading="checkBtnLoading"
             size="large"
             long
+            :disabled="btnDisabled"
             @click="clickCheckBtn"
             >验证</t-button
           >
@@ -56,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onUnmounted } from 'vue';
+import { ref, onUnmounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Message } from '@tele-design/web-vue';
@@ -78,11 +81,17 @@ const safeForm = ref({
   captcha: '',
 });
 
+const btnDisabled = computed(() => {
+  const { phone, captcha } = safeForm.value;
+
+  return !(phone && captcha);
+});
+
 const safeFormRules = {
   phone: [
     {
       validator: (value: string, cb: (params?: any) => void) => {
-        if (!value) return cb('请输入手机号或用户名');
+        if (!value) return cb('请输入手机号');
         if (/^$|^1[0-9][0-9]\d{8}$|^(5|6|8|9)[0-9]{7}$/.test(value)) {
           return cb();
         }
@@ -118,7 +127,6 @@ const clickSendBtn = () => {
   sendBtnLoading.value = true;
   apiSendCaptcha({ phone: safeForm.value.phone, type: 4 })
     .then((res) => {
-      console.log('register.vue:190', res);
       if (res.code === 200) {
         Message.success('验证码已发送，注意查收');
         countDownTime.value = 180; // 3分钟
@@ -195,6 +203,16 @@ onUnmounted(() => {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 8px 20px 0 rgba(124, 140, 241, 0.2);
+
+    .captcha {
+      width: 178px;
+      margin-right: 20px;
+    }
+
+    .textBtn {
+      width: 130px;
+      height: 40px;
+    }
 
     .title {
       display: inline-block;

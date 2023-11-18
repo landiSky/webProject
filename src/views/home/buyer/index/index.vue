@@ -100,9 +100,9 @@
                         >去认证</t-button
                       > -->
                     </div>
-                    <!-- <t-button type="text" @click="authentication"
+                    <t-button type="text" @click="authentication"
                       >去认证</t-button
-                    > -->
+                    >
                   </div>
                 </div>
                 <div>
@@ -621,8 +621,6 @@ const nodeAuth = () => {
 };
 const onAuthModalConfirm = () => {
   authModalVisible.value = false;
-  const { snmsUrls } = userInfo.value || {};
-  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {

@@ -2,13 +2,18 @@
   <t-modal
     v-model:visible="visible"
     :width="520"
+    :hright="400"
     :on-before-ok="onConfirm"
     ok-text="提交审核"
     @cancel="emitflag"
   >
     <template #title> 上传支付凭证 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="currentamountlist" :hide-label="true">
+      <t-form-item
+        field="currentamountlist"
+        :hide-label="true"
+        style="margin-bottom: 10px"
+      >
         <!-- :file-list="fileList ? fileList : []" -->
         <t-upload
           list-type="picture-card"
@@ -16,11 +21,22 @@
           action="/server/web/file/orderUpload"
           :limit="5"
           image-preview
+          accept=".jpg,.png,.bmp,.jpeg"
           @before-upload="beforeUpload"
           @success="uploadSuccess"
           @change="changeclick"
-        />
+        >
+          <template #upload-button>
+            <div class="tele-upload-picture-card">
+              <div class="tele-upload-picture-card-text">
+                <IconPlus />
+                <div style="margin-top: 10px; font-weight: 600">点击上传</div>
+              </div>
+            </div>
+          </template>
+        </t-upload>
       </t-form-item>
+      <div> 支持jpg、jpeg、png、bmp文件格式,文件大小限制10M以内。 </div>
     </t-form>
   </t-modal>
 </template>
@@ -109,10 +125,10 @@ const uploadSuccess = (fileItem: FileItem) => {
 const beforeUpload = (file: File) => {
   // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
-    const isLt5M: boolean = file.size / 1024 / 1024 < 5;
+    const isLt5M: boolean = file.size / 1024 / 1024 < 10;
     console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
-      Message.warning('上传图片大小必须限制在5MB以内');
+      Message.warning('上传图片大小必须限制在10MB以内');
       // return false;
       reject();
     }

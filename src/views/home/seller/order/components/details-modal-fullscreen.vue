@@ -319,20 +319,45 @@
                   </div>
                 </t-col>
                 <t-col :span="3">
-                  <div class="grid-content">¥{{ dataList.productPrice }}</div>
+                  <div class="grid-content"
+                    >¥{{ dataList.productPrice
+                    }}{{
+                      String(dataList.productPrice).indexOf('.') > -1
+                        ? ''
+                        : '元'
+                    }}</div
+                  >
                 </t-col>
 
                 <t-col :span="3">
-                  <div class="grid-content">{{ dataList.accountCount }}</div>
+                  <div class="grid-content">{{
+                    dataList.saleType === 0
+                      ? dataList.accountCount + '个'
+                      : '不限'
+                  }}</div>
                 </t-col>
                 <t-col :span="2">
-                  <div class="grid-content"> {{ dataList.buyDuration }}</div>
+                  <div class="grid-content">
+                    {{
+                      dataList.saleType === 0
+                        ? dataList.buyDuration + '小时'
+                        : '不限'
+                    }}小时</div
+                  >
                 </t-col>
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">
-                    ¥{{ dataList.realityPrice }}
+                    ¥{{ dataList.realityPrice
+                    }}{{
+                      String(dataList.couponMoney).indexOf('.') > -1 ? '' : '元'
+                    }}
                     <p style="color: #86909c"
-                      >(以优惠：{{ dataList.couponMoney }}元)</p
+                      >(已优惠：{{ dataList.couponMoney
+                      }}{{
+                        String(dataList.couponMoney).indexOf('.') > -1
+                          ? ''
+                          : '元'
+                      }})</p
                     ></div
                   >
                 </t-col>
@@ -486,6 +511,7 @@ const init = () => {
 // 点击复制
 const clickCopy = (Num: string) => {
   utilsCopy(Num);
+  Message.success('复制成功');
 };
 
 // 修改金额 弹窗
@@ -664,15 +690,15 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 100%;
+    width: 74%;
     height: 100%;
-    margin-left: 15%;
+    margin-left: 13%;
 
     .asjhdg {
-      width: 65%;
+      width: 100%;
       height: 100%;
-      margin-top: 15px;
-
+      margin: 15px auto;
+      // margin-top: 15px;
       .information {
         float: left;
         width: 100%;
@@ -737,6 +763,8 @@ onMounted(() => {
 
         .aligntextback {
           text-align: center;
+          border: 1px solid #e5e8ef;
+          border-top: none;
           // background: #f2f3f8;
         }
       }

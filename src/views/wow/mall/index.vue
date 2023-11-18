@@ -64,7 +64,7 @@
               自定义区间：
               <t-input-number
                 v-model="customPriceStart"
-                :style="{ width: '98px' }"
+                :style="{ width: '110px' }"
                 placeholder="输入最小价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
@@ -72,7 +72,7 @@
               ~
               <t-input-number
                 v-model="customPriceEnd"
-                :style="{ width: '98px' }"
+                :style="{ width: '110px' }"
                 placeholder="输入最大价格"
                 :min="0"
                 @blur="onCustomPriceBlur"
@@ -146,7 +146,7 @@
           <span class="left">
             <img
               :src="
-                `/server/web/file/download?name=${item.logo}` ||
+                `/server/web/file/download?name=${item.logo}&productId=${item.id}` ||
                 'src/assets/images/wow/mall/default_product_logo.svg'
               "
               mode="scaleToFill"
@@ -227,7 +227,7 @@ const route = useRoute();
 
 const pagination = reactive({
   page: 1,
-  size: 8,
+  size: 10,
   total: 0,
 });
 const priceSortEnum = {
@@ -239,7 +239,7 @@ const shelveSortEnum = {
   DES: 1,
 };
 const productsList = ref<Record<string, any>>([]);
-const hideOnSinglePage = computed(() => pagination.total <= 8);
+const hideOnSinglePage = computed(() => pagination.total <= 10);
 const productTypeList = ref<Record<string, any>[]>([]);
 const btnLoading = ref(false);
 const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
@@ -284,7 +284,6 @@ const getProductList = () => {
 
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
-      console.log('index.vue:106', response);
       const { total, records } = response || {};
       productsList.value = records || [];
       pagination.total = total;
@@ -373,7 +372,8 @@ onMounted(() => {
 }
 
 .content {
-  margin: 0 132px 120px 132px;
+  width: 1176px;
+  margin: 0 auto 120px auto;
 
   .search {
     display: flex;
@@ -422,7 +422,11 @@ onMounted(() => {
           }
 
           &.active {
+            display: block;
+            // width: 52px;
+            height: 26px;
             color: #fff;
+            text-align: center;
             background: #1664ff;
             border-radius: 4px;
           }
@@ -509,6 +513,7 @@ onMounted(() => {
             display: block;
             width: 178px;
             height: 178px;
+            border-radius: 2px;
             cursor: pointer;
           }
         }
