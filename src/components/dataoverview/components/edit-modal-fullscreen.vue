@@ -106,7 +106,7 @@
               image-preview
               style="width: 150px; height: 100px"
               accept=".jpg,.png,.bmp,.jpeg"
-              :before-upload="beforeUpload"
+              @before-upload="beforeUpload"
               @change="(fileList: any) => onUploadChange(fileList, 'businessLicense')"
             >
               <!-- @change="changeclick" -->

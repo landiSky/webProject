@@ -1,10 +1,11 @@
 <template>
   <t-modal
     v-model:visible="visible"
-    :width="520"
-    :hright="400"
+    :width="572"
+    :height="272"
     :on-before-ok="onConfirm"
     ok-text="提交审核"
+    class=""
     @cancel="emitflag"
   >
     <template #title> 上传支付凭证 </template>
@@ -15,6 +16,7 @@
         style="margin-bottom: 10px"
       >
         <!-- :file-list="fileList ? fileList : []" -->
+        <!-- @success="uploadSuccess" -->
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
@@ -22,8 +24,8 @@
           :limit="5"
           image-preview
           accept=".jpg,.png,.bmp,.jpeg"
+          class="uploadimg"
           @before-upload="beforeUpload"
-          @success="uploadSuccess"
           @change="changeclick"
         >
           <template #upload-button>
@@ -36,7 +38,9 @@
           </template>
         </t-upload>
       </t-form-item>
-      <div> 支持jpg、jpeg、png、bmp文件格式,文件大小限制10M以内。 </div>
+      <div style="color: #86909c">
+        支持jpg、jpeg、png、bmp文件格式,文件大小限制5M以内。
+      </div>
     </t-form>
   </t-modal>
 </template>
@@ -82,13 +86,10 @@ const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id�
 const state = reactive({
   formModel: {
     id: '',
-    // currentamount: [],
   },
 });
 const currentamount = ref<string[]>([]);
 const currentamountnum = ref<string[]>([]);
-
-// const fileList = ref([]);
 
 const formRules = {
   currentamountlist: [
@@ -111,24 +112,25 @@ const formRules = {
     },
   ],
 };
-// @ts-ignore
-const uploadSuccess = (fileItem: FileItem) => {
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    // state.formModel.currentamount.push(fileItem.response.data);
-    currentamount.value.push(fileItem.response.data);
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
+
+// FileItem
+const changeclick = (fileList: any[]) => {
+  console.log(fileList, 'fileList');
+  const urlList = fileList.map((item: Record<string, any>) => {
+    const { uid, name, response, url } = item;
+    console.log(response);
+
+    return response?.data;
+  });
+
+  currentamountnum.value = urlList;
 };
 const beforeUpload = (file: File) => {
-  // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
-    const isLt5M: boolean = file.size / 1024 / 1024 < 10;
+    const isLt5M: boolean = file.size / 1024 / 1024 < 5;
     console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
-      Message.warning('上传图片大小必须限制在10MB以内');
+      Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
       reject();
     }
@@ -136,36 +138,20 @@ const beforeUpload = (file: File) => {
     resolve(true);
   });
 };
-// FileItem
-const changeclick = (fileList: any[]) => {
-  console.log(fileList, 'fileList');
-  currentamountnum.value = fileList;
-};
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel, currentamount.value);
+      console.log(state.formModel, currentamountnum.value);
       submitImg({
         id: state.formModel.id,
         attachmentAddressArr: currentamount.value,
       }).then((res) => {
         console.log(res, 'res');
         currentamount.value = [];
+        // Message.success('上传支付凭证成功');
         emit('confirm');
       });
-      // console.log(formRef.value.setFields);
-      //  Message.success('上传支付凭证成功');
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
     } else {
       done(false);
     }
@@ -204,11 +190,42 @@ onMounted(() => {
   //     },
   //   });
   // }, 3000);
-
-  // 二是从接口获取
-  // getDetail();
-  // }
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.uploadimg {
+  :deep(.tele-upload-list) {
+    height: 100px;
+
+    .tele-upload-list-picture {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 0;
+
+      &:nth-child(5) {
+        margin-right: 0;
+      }
+    }
+
+    .tele-upload-picture-card {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  // :deep(.tele-upload-list-picture) {
+  //   width: 100px;
+  //   height: 100px;
+  //   margin-bottom: 0;
+
+  //   &:nth-child(5) {
+  //     margin-right: 0;
+  //   }
+  // }
+
+  // :deep(.tele-upload-picture-card) {
+  //   width: 100px;
+  //   height: 100px;
+  // }
+}
+</style>

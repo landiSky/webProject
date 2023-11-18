@@ -35,6 +35,7 @@ export default defineConfig(({ command, mode }) => {
         '/server': {
           // target: `http://sso-auth-gateway-a:80`,
           // idsphere- web - a
+          // target: 'http://operation-platform-inventory-teleinfo.dev.idx.space',
           target: 'http://server-platform-gateway-a.dev.idx.space',
           // target: `http://10.14.150.182:9191/`,
           changeOrigin: true,
