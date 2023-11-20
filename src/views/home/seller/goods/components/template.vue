@@ -22,7 +22,7 @@
     </div>
   </div>
   <t-drawer
-    title="添加详情模块"
+    :title="`${currentIndex === -1 ? '添加' : '编辑'}详情模块`"
     ok-text="下一步"
     :width="720"
     :visible="drawerVisible"
@@ -307,7 +307,7 @@ defineExpose({
     }
 
     img {
-      width: 600px;
+      width: 640px;
       margin-top: 12px;
     }
   }
@@ -315,6 +315,8 @@ defineExpose({
 
 .formWrapper {
   padding-top: 24px;
+  padding-right: 20px;
+  padding-left: 20px;
   font-weight: 400;
   font-size: 12px;
   line-height: 20px; /* 166.667% */
