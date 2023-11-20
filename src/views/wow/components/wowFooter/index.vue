@@ -1,6 +1,12 @@
 <template>
   <div class="footer">
-    <div class="header"></div>
+    <div class="header">
+      <div class="headerWraper">
+        <span>IDSphere</span>
+        <t-divider direction="vertical"></t-divider>
+        <span>应用运营平台</span>
+      </div>
+    </div>
     <div class="content">
       <div class="navigator">
         <div class="item">
@@ -36,9 +42,25 @@
 .footer {
   .header {
     height: 92px;
-    background-image: url('@/assets/images/wow/index/footer_header_bg.svg');
+    background-image: url('@/assets/images/wow/index/footer_header_bg.png');
     background-position: center center;
     background-size: cover;
+
+    .headerWraper {
+      display: flex;
+      align-items: center;
+      width: 1176px;
+      height: 92px;
+      margin: 0 auto;
+      color: #fff;
+      font-weight: 500;
+      font-size: 30px;
+      line-height: 38px; /* 126.667% */
+
+      :deep(.tele-divider-vertical) {
+        margin: 0 28px;
+      }
+    }
   }
 
   .content {
