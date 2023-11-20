@@ -90,7 +90,7 @@ const radioChange = (value: string) => {
   }
 };
 const formRules = {
-  rejectReasonDetail: [{ required: true, message: '请输入' }],
+  rejectReasonDetail: [{ required: true, message: '请输入驳回原因' }],
 };
 const onConfirm = (done: (closed: boolean) => void) => {
   console.log(radiotext.value);

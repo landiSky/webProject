@@ -231,7 +231,7 @@
                 <p style="float: left">{{ dataList.sellerPhone }}</p>
                 <p
                   style="float: left; margin-left: 7px; cursor: pointer"
-                  @click="clickCopy(dataList.userMobile)"
+                  @click="clickCopy(dataList.sellerPhone)"
                 >
                   <t-tooltip
                     class="item"
@@ -350,13 +350,16 @@
                   </div>
                 </t-col>
                 <t-col :span="3">
-                  <div class="grid-content"
+                  <div v-if="dataList.saleType !== 2" class="grid-content"
                     >¥{{ dataList.productPrice }}
                     <!-- {{
                       String(dataList.productPrice).indexOf('.') > -1
                         ? ''
                         : '元'
                     }} -->
+                  </div>
+                  <div v-if="dataList.saleType === 2" class="grid-content">
+                    面议
                   </div>
                 </t-col>
 
@@ -379,7 +382,7 @@
                   >
                 </t-col>
                 <t-col :span="5">
-                  <div class="grid-content">
+                  <div v-if="dataList.saleType !== 2" class="grid-content">
                     ¥{{ dataList.realityPrice }}
                     <!-- {{
                       String(dataList.realityPrice).indexOf('.') > -1
@@ -395,6 +398,9 @@
                       }})</p
                     ></div
                   >
+                  <div v-if="dataList.saleType === 2" class="grid-content">
+                    面议
+                  </div>
                 </t-col>
                 <!-- <t-col v-if="dataList.orderStatus === 0" :span="3">
                   <div class="grid-content">

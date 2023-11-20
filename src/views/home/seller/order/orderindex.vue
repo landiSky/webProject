@@ -218,16 +218,20 @@
                 </div>
               </t-col>
               <t-col :span="3">
-                <div class="grid-content"> ¥{{ item.productPrice }}</div>
+                <div v-if="item.saleType !== 2" class="grid-content">
+                  ¥{{ item.productPrice }}</div
+                >
+                <div v-if="item.saleType === 2"> 面议 </div>
               </t-col>
 
               <t-col :span="3">
-                <div class="grid-content"
+                <div v-if="item.saleType !== 2" class="grid-content"
                   >¥{{ item.realityPrice }}
                   <p style="color: #86909c"
                     >(已优惠:{{ item.couponMoney }}元)</p
                   ></div
                 >
+                <div v-if="item.saleType === 2"> 面议 </div>
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -300,11 +304,14 @@
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
+                  <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
                   <t-button
                     v-if="item.orderStatus === 0 && item.saleType !== 2"
                     type="text"
                     style="width: 100%"
-                    @click="modificationamount(item.id, item.productPrice)"
+                    @click="
+                      modificationamount(item.orderNum, item.productPrice)
+                    "
                     >修改优惠金额</t-button
                   >
                   <t-button

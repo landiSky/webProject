@@ -321,13 +321,16 @@
                   </div>
                 </t-col>
                 <t-col :span="3">
-                  <div class="grid-content"
+                  <div v-if="dataList.saleType !== 2" class="grid-content"
                     >¥{{ dataList.productPrice }}
                     <!-- {{
                       String(dataList.productPrice).indexOf('.') > -1
                         ? ''
                         : '元'
                     }} -->
+                  </div>
+                  <div v-if="dataList.saleType === 2" class="grid-content">
+                    面议
                   </div>
                 </t-col>
 
@@ -348,7 +351,7 @@
                   >
                 </t-col>
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
-                  <div class="grid-content">
+                  <div v-if="dataList.saleType !== 2" class="grid-content">
                     ¥{{ dataList.realityPrice }}
                     <!-- {{
                       String(dataList.couponMoney).indexOf('.') > -1 ? '' : '元'
@@ -362,6 +365,9 @@
                       }} -->元 )</p
                     ></div
                   >
+                  <div v-if="dataList.saleType === 2" class="grid-content">
+                    面议
+                  </div>
                 </t-col>
                 <t-col
                   v-if="dataList.orderStatus === 0 && dataList.saleType !== 2"
