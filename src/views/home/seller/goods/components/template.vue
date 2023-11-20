@@ -22,12 +22,13 @@
     </div>
   </div>
   <t-drawer
-    title="添加详情模块"
+    :title="`${currentIndex === -1 ? '添加' : '编辑'}详情模块`"
     ok-text="下一步"
     :width="720"
     :visible="drawerVisible"
     unmount-on-close
     :mask-closable="false"
+    :drawer-body-style="{ padding: 0 }"
     @cancel="handleCancel"
   >
     <template #footer>
@@ -53,6 +54,7 @@
           v-for="(item, index) in ['一', '二', '三', '四', '五', '六']"
           :key="index"
           :class="{ active: selectTempIndex === index }"
+          :disabled="currentIndex !== -1"
           @click="selectTempIndex = index"
           >模板{{ item }}</t-button
         >
@@ -231,14 +233,6 @@ defineExpose({
   }
 }
 
-#templateContainer {
-  z-index: 1;
-
-  :deep(.tele-drawer-body) {
-    padding: 0;
-  }
-}
-
 .step {
   padding: 20px 50px;
   background-color: #f2f3f8;
@@ -313,16 +307,26 @@ defineExpose({
     }
 
     img {
-      width: 600px;
+      width: 640px;
       margin-top: 12px;
     }
   }
 }
 
 .formWrapper {
-  padding: 24px 20px;
+  padding-top: 24px;
+  padding-right: 20px;
+  padding-left: 20px;
   font-weight: 400;
   font-size: 12px;
   line-height: 20px; /* 166.667% */
+
+  :deep(.tele-upload-list) {
+    .tele-upload-picture-card,
+    .tele-upload-list-picture {
+      width: 100px;
+      height: 100px;
+    }
+  }
 }
 </style>
