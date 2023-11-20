@@ -91,12 +91,17 @@
         <div class="archor"
           ><t-affix :offset-top="180">
             <t-anchor>
-              <t-anchor-link href="#base">基本信息</t-anchor-link>
-              <t-anchor-link href="#sale">售卖设置</t-anchor-link>
+              <t-anchor-link href="#base" @click.prevent="toAnchor('#base')"
+                >基本信息</t-anchor-link
+              >
+              <t-anchor-link href="#sale" @click.prevent="toAnchor('#sale')"
+                >售卖设置</t-anchor-link
+              >
               <t-anchor-link
                 v-for="(_, index) of dataInfo.productDeliverySetList"
                 :key="index"
                 :href="'#st' + index"
+                @click.prevent="toAnchor('#st' + index)"
               >
                 交付版本{{ index + 1 }}
               </t-anchor-link>
@@ -255,12 +260,13 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import {
   deleteGoods,
   upGoods,
   downGoods,
   goodsDetail,
+  preUp,
 } from '@/api/goods-manage';
 
 const visible = ref(true);
@@ -369,7 +375,20 @@ const doDelete = (id: any) => {
   });
 };
 const clickDelete = () => {
-  doDelete(dataInfo.value.id);
+  // doDelete(dataInfo.value.id);
+  Modal.warning({
+    title: '确定删除该商品吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '删除商品',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      doDelete(dataInfo.value.id);
+    },
+  });
 };
 const doUp = (id: any) => {
   upGoods(id).then(() => {
@@ -377,8 +396,32 @@ const doUp = (id: any) => {
     refreshData();
   });
 };
-const clickUp = () => {
-  doUp(dataInfo.value.id);
+const clickUp = async () => {
+  // doUp(dataInfo.value.id);
+  const r = await preUp(dataInfo.value.id);
+  if (r) {
+    Modal.warning({
+      title: '确定上架该商品吗？',
+      titleAlign: 'start',
+      content: '商品通过上架审核后，将同时在本平台和标识网络其他平台同步上架。',
+      okText: '上架商品',
+      hideCancel: false,
+      onOk: () => {
+        doUp(dataInfo.value.id);
+      },
+    });
+  } else {
+    Modal.warning({
+      title: '商品信息未完善，请先完善商品信息',
+      titleAlign: 'start',
+      content: '',
+      okText: '完善商品信息',
+      hideCancel: false,
+      onOk: () => {
+        emit('edit');
+      },
+    });
+  }
 };
 
 // 下架
@@ -389,11 +432,30 @@ const doDown = (id: any) => {
   });
 };
 const clickDown = () => {
-  doDown(dataInfo.value.id);
+  // doDown(dataInfo.value.id);
+  Modal.warning({
+    title: '确定下架该商品吗？',
+    titleAlign: 'start',
+    content: '下架后本商品将同步从标识网络其他平台下架。',
+    okText: '下架商品',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      doDown(dataInfo.value.id);
+    },
+  });
 };
 
 const clickView = () => {
   emit('preview', dataInfo.value.id);
+};
+
+const toAnchor = (link: string) => {
+  console.log(link);
+  const ele = document.getElementById(link);
+  ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
 </script>
 
