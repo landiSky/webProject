@@ -53,6 +53,8 @@ const navbarHeight = '48px';
 }
 
 .layout-sider {
+  padding-top: 6px;
+
   > :deep(.tele-layout-sider-children) {
     overflow-y: hidden;
   }
