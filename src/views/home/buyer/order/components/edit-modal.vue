@@ -23,7 +23,7 @@
           action="/server/web/file/orderUpload"
           :limit="5"
           image-preview
-          accept=".jpg,.png,.bmp,.jpeg"
+          accept=".jpg,.png,.bmp,.tif,.gif,.jpeg"
           class="uploadimg"
           @before-upload="beforeUpload"
           @change="changeclick"
@@ -39,7 +39,7 @@
         </t-upload>
       </t-form-item>
       <div style="color: #86909c">
-        支持jpg、jpeg、png、bmp文件格式,文件大小限制5M以内。
+        支持jpg、png、bmp、tif、gif、jpeg文件格式,文件大小限制5M以内。
       </div>
     </t-form>
   </t-modal>
@@ -145,7 +145,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
       console.log(state.formModel, currentamountnum.value);
       submitImg({
         id: state.formModel.id,
-        attachmentAddressArr: currentamount.value,
+        attachmentAddressArr: currentamountnum.value,
       }).then((res) => {
         console.log(res, 'res');
         currentamount.value = [];

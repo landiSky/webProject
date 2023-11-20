@@ -351,13 +351,13 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content"
-                    >¥{{ dataList.productPrice
-                    }}{{
+                    >¥{{ dataList.productPrice }}
+                    <!-- {{
                       String(dataList.productPrice).indexOf('.') > -1
                         ? ''
                         : '元'
-                    }}</div
-                  >
+                    }} -->
+                  </div>
                 </t-col>
 
                 <t-col :span="3">
@@ -373,19 +373,19 @@
                   <div class="grid-content">
                     {{
                       dataList.saleType === 0
-                        ? dataList.buyDuration + '小时'
+                        ? dataList.buyDuration + '个月'
                         : '不限'
                     }}</div
                   >
                 </t-col>
                 <t-col :span="5">
                   <div class="grid-content">
-                    ¥{{ dataList.realityPrice
-                    }}{{
+                    ¥{{ dataList.realityPrice }}
+                    <!-- {{
                       String(dataList.realityPrice).indexOf('.') > -1
                         ? ''
                         : '元'
-                    }}
+                    }} -->
                     <p style="color: #86909c"
                       >(已优惠：{{ dataList.couponMoney
                       }}{{

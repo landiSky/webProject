@@ -298,7 +298,7 @@
                     type="text"
                     style="width: 100%"
                     @click="modificationamount(item.id, item.productPrice)"
-                    >修改金额</t-button
+                    >修改优惠金额</t-button
                   >
                   <t-button
                     v-if="item.orderStatus === 1"

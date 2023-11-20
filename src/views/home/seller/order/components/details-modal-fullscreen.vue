@@ -218,7 +218,9 @@
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 8%">支付凭证</p>
-                <div v-if="dataList.attachmentAddressArr.length === 0"></div>
+                <div v-if="dataList.attachmentAddressArr.length === 0"
+                  >待上传</div
+                >
                 <div
                   v-if="dataList.attachmentAddressArr.length !== 0"
                   style="float: left"
@@ -311,7 +313,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'saas类' : '独立部署类' }}
+                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -320,13 +322,13 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content"
-                    >¥{{ dataList.productPrice
-                    }}{{
+                    >¥{{ dataList.productPrice }}
+                    <!-- {{
                       String(dataList.productPrice).indexOf('.') > -1
                         ? ''
                         : '元'
-                    }}</div
-                  >
+                    }} -->
+                  </div>
                 </t-col>
 
                 <t-col :span="3">
@@ -340,24 +342,24 @@
                   <div class="grid-content">
                     {{
                       dataList.saleType === 0
-                        ? dataList.buyDuration + '小时'
+                        ? dataList.buyDuration + '个月'
                         : '不限'
-                    }}小时</div
+                    }}</div
                   >
                 </t-col>
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">
-                    ¥{{ dataList.realityPrice
-                    }}{{
+                    ¥{{ dataList.realityPrice }}
+                    <!-- {{
                       String(dataList.couponMoney).indexOf('.') > -1 ? '' : '元'
-                    }}
+                    }} -->
                     <p style="color: #86909c"
-                      >(已优惠：{{ dataList.couponMoney
-                      }}{{
+                      >(已优惠：{{ dataList.couponMoney }}
+                      <!-- {{
                         String(dataList.couponMoney).indexOf('.') > -1
                           ? ''
                           : '元'
-                      }})</p
+                      }} -->元 )</p
                     ></div
                   >
                 </t-col>
