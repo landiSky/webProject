@@ -113,6 +113,7 @@ const props = defineProps({
         font-weight: 400;
         font-size: 14px;
         line-height: 22px; /* 157.143% */
+        word-break: break-all;
       }
     }
   }

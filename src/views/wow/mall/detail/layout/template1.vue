@@ -86,6 +86,7 @@ const props = defineProps({
         font-size: 14px;
         line-height: 22px; /* 157.143% */
         text-align: center;
+        word-break: break-all;
       }
     }
   }
