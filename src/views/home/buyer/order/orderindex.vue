@@ -45,85 +45,66 @@
           :model="formInline"
           class="demo-form-inline search"
         >
-          <t-space direction="vertical">
-            <t-row class="grid-demo">
-              <t-col :span="4">
-                <t-form-item :hide-label="true">
-                  <div class="elinput" style="width: 90%">
-                    <t-input
-                      v-model="formInline.commodityName"
-                      placeholder="请输入商品名称"
-                    ></t-input>
-                  </div>
-                </t-form-item>
+          <t-spin>
+            <t-row>
+              <t-col flex="196px" style="margin-right: 12px">
+                <t-input
+                  v-model="formInline.commodityName"
+                  placeholder="请输入商品名称"
+                  allow-clear
+                />
               </t-col>
-              <t-col :span="5">
-                <t-form-item label="交付类型:">
-                  <t-select
-                    v-model="formInline.deliveryType"
-                    placeholder="全部"
-                    style="width: 90%"
-                  >
-                    <t-option
-                      v-for="list in deliveryType"
-                      :key="list.value"
-                      :label="list.label"
-                      :value="list.value"
-                    ></t-option>
-                  </t-select>
-                </t-form-item>
+              <t-col flex="220px" style="margin-right: 12px">
+                <t-select
+                  v-model="formInline.deliveryType"
+                  placeholder="全部"
+                  allow-clear
+                >
+                  <template #prefix> 交付类型: </template>
+                  <t-option
+                    v-for="list in deliveryType"
+                    :key="list.value"
+                    :label="list.label"
+                    :value="list.value"
+                  ></t-option>
+                </t-select>
               </t-col>
-              <t-col :span="5">
-                <t-form-item label="订单状态:">
-                  <t-select
-                    v-model="formInline.orderStatus"
-                    :disabled="orderStatusSelect.length === 0"
-                    placeholder="全部"
-                    style="width: 90%"
-                  >
-                    <t-option
-                      v-for="list in orderStatusSelect"
-                      :key="list.value"
-                      :label="list.label"
-                      :value="list.value"
-                    ></t-option>
-                  </t-select>
-                </t-form-item>
+              <t-col flex="220px" style="margin-right: 12px">
+                <t-select
+                  v-model="formInline.orderStatus"
+                  :disabled="orderStatusSelect.length === 0"
+                  placeholder="全部"
+                  allow-clear
+                >
+                  <template #prefix> 订单状态: </template>
+                  <t-option
+                    v-for="list in orderStatusSelect"
+                    :key="list.value"
+                    :label="list.label"
+                    :value="list.value"
+                  ></t-option>
+                </t-select>
               </t-col>
-              <t-col :span="7">
-                <t-form-item :hide-label="true">
-                  <!-- <t-range-picker
-                    v-model="formInline.time"
-                    format="YYYY-MM-DD HH:mm:ss"
-                    range-separator="-"
-                    start-placeholder="下单开始时间"
-                    end-placeholder="下单结束时间"
-                    style="width: 100%"
-                  >
-                  </t-range-picker> -->
-                  <!-- HH:mm:ss -->
-                  <t-range-picker
-                    v-model="formInline.time"
-                    :placeholder="['下单开始时间', '下单结束时间']"
-                    format="YYYY-MM-DD"
-                    style="width: 100%"
-                    @change="onRangeChange"
-                  />
-                </t-form-item>
+              <t-col flex="372px" style="margin-right: 12px">
+                <t-range-picker
+                  v-model="formInline.time"
+                  :placeholder="['下单开始时间', '下单结束时间']"
+                  format="YYYY-MM-DD"
+                  style="width: 100%"
+                  @change="onRangeChange"
+                />
               </t-col>
-              <t-col :span="3">
-                <t-form-item :hide-label="true">
-                  <t-button
-                    type="primary"
-                    style="margin: 0 20px 0 20px"
-                    @click="getTableData()"
-                    >查询
-                  </t-button>
-                  <t-button @click="clearSearch">重置</t-button>
-                </t-form-item>
+              <t-col flex="auto">
+                <t-button
+                  type="primary"
+                  style="margin: 0 20px 0 20px"
+                  @click="getTableData()"
+                  >查询
+                </t-button>
+                <t-button @click="clearSearch">重置</t-button>
               </t-col>
             </t-row>
-          </t-space>
+          </t-spin>
         </t-form>
       </div>
       <div class="cardContent">
@@ -880,8 +861,10 @@ onMounted(() => {
 
     :deep(.tele-form-item-label-col) {
       padding-right: 0;
-      // padding-left: 10px;
-      // text-align: center;
+    }
+
+    .order {
+      margin-bottom: 15px;
     }
 
     .cardContent {
@@ -998,17 +981,4 @@ onMounted(() => {
     }
   }
 }
-
-// .orderClass ::v-deep .tele-input-wrapper {
-//   line-height: 1;
-//   background-color: red;
-//   font-family: 'PingFang SC';
-//   font-style: normal;
-//   font-weight: 400;
-//   font-size: 12px;
-//   color: #86909c;
-// }
-// .orderClass ::v-deep .t-input__inner {
-//   padding: 0;
-// }
 </style>

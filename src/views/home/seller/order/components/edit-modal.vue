@@ -8,7 +8,7 @@
     <template #title> 修改订单价格 </template>
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item label="订单号">
-        <span>{{ state.formModel.id }}</span>
+        <span>{{ state.formModel.orderid }}</span>
         <!-- <t-input
           v-model="state.formModel.roleName"
           placeholder="请输入"
@@ -75,6 +75,7 @@ const state = reactive({
     id: '',
     currentamount: '',
     amount: '',
+    orderid: '',
   },
 });
 
@@ -118,10 +119,10 @@ onMounted(() => {
   // const { roleName, roleDesc, amount } = props.data;
   // { roleName, roleDesc, amount };
   console.log(props.data, 'props.data');
-  const { currentamount, id, amount } = props.data;
+  const { currentamount, id, amount, orderid } = props.data;
   console.log(currentamount, id);
 
-  state.formModel = { id, currentamount, amount };
+  state.formModel = { id, currentamount, amount, orderid };
 
   // 二是从接口获取
   // getDetail();

@@ -17,12 +17,13 @@
       >
         <!-- :file-list="fileList ? fileList : []" -->
         <!-- @success="uploadSuccess" -->
-        <!-- accept=".jpg,.png,.bmp,.tif,.gif,.jpeg" -->
+
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
           action="/server/web/file/orderUpload"
           :limit="5"
+          accept=".jpg,.png,.bmp,.tif,.gif,.jpeg"
           image-preview
           class="uploadimg"
           @before-upload="beforeUpload"
