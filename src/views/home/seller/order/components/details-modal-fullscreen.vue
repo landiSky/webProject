@@ -253,7 +253,7 @@
                   font-size: 14px;
                   line-height: 15px;
                 "
-                >商品信息{{ dataList.productId }}</span
+                >商品信息</span
               ></div
             >
             <div class="cardContent">
@@ -372,7 +372,7 @@
                       type="text"
                       style="width: 100%"
                       @click="modificationamount"
-                      >修改金额</t-button
+                      >修改优惠金额</t-button
                     >
                   </div>
                 </t-col>
