@@ -921,6 +921,7 @@ const uploadExpSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
   if (res?.code === 200) {
     formModel.value.useExplain = fileItem.response.data;
+    expList.value = [fileItem];
     formRef.value.validateField('useExplain');
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
@@ -1353,11 +1354,20 @@ const clickPreview = () => {
 const clickUp = async () => {
   const r = await buildForm2();
   if (r) {
-    saveAndUp(formModel2.value).then((res) => {
-      if (res) {
-        Message.success('上架申请成功');
-        emit('cancel');
-      }
+    Modal.warning({
+      title: '确定上架该商品吗？',
+      titleAlign: 'start',
+      content: '商品通过上架审核后，将同时在本平台和标识网络其他平台同步上架。',
+      okText: '上架商品',
+      hideCancel: false,
+      onOk: () => {
+        saveAndUp(formModel2.value).then((res) => {
+          if (res) {
+            Message.success('上架申请成功');
+            emit('cancel');
+          }
+        });
+      },
     });
   }
 };
