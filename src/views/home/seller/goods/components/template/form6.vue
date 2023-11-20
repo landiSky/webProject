@@ -57,12 +57,13 @@
               Authorization: `Bearer ${getToken()}`,
             }"
             action="/server/web/file/upload"
-            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+            accept=".jpg,.png,.bmp,.gif,jpeg"
             :limit="5"
             tip="点击上传"
             image-preview
             @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
             @change="(fileList: any, fileItem: any) => onUploadChange(fileList, fileItem, index)"
+            @success="onUploadSuccess"
           >
           </t-upload>
           <span class="uploadTips">
@@ -159,6 +160,14 @@ const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
       resolve(true);
     }
   });
+};
+
+const onUploadSuccess = (fileItem: any) => {
+  const { response } = fileItem;
+
+  if (response?.code && response.code !== 200) {
+    Message.error(response.message);
+  }
 };
 
 const onUploadChange = (fileList: any, fileItem: any, index: number) => {

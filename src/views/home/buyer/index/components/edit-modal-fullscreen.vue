@@ -104,7 +104,7 @@
             :limit="1"
             image-preview
             style="width: 150px; height: 100px"
-            accept=".jpg,.png,.bmp,.tif,.gif"
+            accept=".jpg,.png,.bmp,.gif"
             @before-upload="beforeUpload"
             @success="uploadSuccess"
           >
@@ -202,7 +202,7 @@
               :headers="uploadHeaders"
               :limit="1"
               image-preview
-              accept=".jpg,.png,.bmp,.tif,.gif"
+              accept=".jpg,.png,.bmp,.gif"
               @before-upload="beforeUpload"
               @success="uploadSuccessz"
             >
@@ -243,7 +243,7 @@
               :limit="1"
               image-preview
               style="margin-top: -20px"
-              accept=".jpg,.png,.bmp,.tif,.gif"
+              accept=".jpg,.png,.bmp,.gif"
               @before-upload="beforeUpload"
               @success="uploadSuccessf"
             >

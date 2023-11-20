@@ -46,12 +46,13 @@
             Authorization: `Bearer ${getToken()}`,
           }"
           action="/server/web/file/upload"
-          accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+          accept=".jpg,.png,.bmp,.gif,jpeg"
           :limit="1"
           tip="点击上传"
           image-preview
           @before-upload="(file: Record<string, any>) => onBeforeUpload(file)"
           @change="(fileList: any) => onUploadChange(fileList)"
+          @success="onUploadSuccess"
         >
         </t-upload>
         <span class="uploadTips">
@@ -185,6 +186,7 @@
 import { ref, defineProps, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
+import { Message } from '@tele-design/web-vue';
 
 const formRef = ref();
 
@@ -261,6 +263,14 @@ const onBeforeUpload = (currentFile: Record<string, any>) => {
       resolve(true);
     }
   });
+};
+
+const onUploadSuccess = (fileItem: any) => {
+  const { response } = fileItem;
+
+  if (response?.code && response.code !== 200) {
+    Message.error(response.message);
+  }
 };
 
 const onUploadChange = (fileList: any) => {

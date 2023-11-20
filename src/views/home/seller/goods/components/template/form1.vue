@@ -91,12 +91,13 @@
             :headers="{
               Authorization: `Bearer ${getToken()}`,
             }"
-            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+            accept=".jpg,.png,.bmp,.gif,jpeg"
             :limit="1"
             tip="点击上传"
             image-preview
             @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
             @change="(fileList: any) => onUploadChange(fileList, index)"
+            @success="onUploadSuccess"
           >
           </t-upload>
 
@@ -114,6 +115,7 @@
 import { ref, defineProps, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
+import { Message } from '@tele-design/web-vue';
 
 const formRef = ref();
 const transSeq = ['一', '二', '三'];
@@ -193,6 +195,14 @@ const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
       resolve(true);
     }
   });
+};
+
+const onUploadSuccess = (fileItem: any) => {
+  const { response } = fileItem;
+
+  if (response?.code && response.code !== 200) {
+    Message.error(response.message);
+  }
 };
 
 const onUploadChange = (fileList: any, index: number) => {
