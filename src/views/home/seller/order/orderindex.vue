@@ -210,7 +210,7 @@
               <t-col :span="3">
                 <div class="grid-content bg-purple-light">
                   {{ item.deliveryTypeName }}
-                  <p style="color: #86909c"
+                  <p v-if="item.saleType === 0" style="color: #86909c"
                     >({{ item.accountCount }}个账号{{
                       item.buyDuration
                     }}个月)</p
@@ -222,7 +222,12 @@
               </t-col>
 
               <t-col :span="3">
-                <div class="grid-content">¥{{ item.realityPrice }}</div>
+                <div class="grid-content"
+                  >¥{{ item.realityPrice }}
+                  <p style="color: #86909c"
+                    >(已优惠:{{ item.couponMoney }}元)</p
+                  ></div
+                >
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -289,7 +294,9 @@
                 </div>
               </t-col>
               <t-col :span="3">
-                <div class="grid-content"> {{ item.effectTime }}</div>
+                <div class="grid-content">
+                  {{ item.effectTime ? item.effectTime : '--' }}</div
+                >
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
@@ -357,7 +364,7 @@
         </div> -->
         <div style="float: right; margin-top: 10px">
           <t-pagination
-            v-if="tableData.length > 0"
+            v-if="formInline.total > 10"
             :total="formInline.total"
             size="medium"
             :page-size="formInline.pageSize"

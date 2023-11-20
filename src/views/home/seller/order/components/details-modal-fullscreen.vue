@@ -447,8 +447,7 @@ const dataList = ref({
   orderNum: '1', // 订单号
   productName: '双皮奶', // 商品名称
   customerName: '硕', // 买家名称
-  productLogo:
-    'https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702', // 商品logo
+  productLogo: '', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
   deliveryTypeName: 'SAAS', // 交付类型名称
   deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
@@ -476,7 +475,7 @@ const dataList = ref({
   confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   saleType: 0, // 1-一口价定价,2-面议
-  attachmentAddressArr: ['http://gjkhjkdg/1.png', 'http://gjkhjkdg/2.png'], // 支付凭证
+  attachmentAddressArr: [], // 支付凭证
   productId: '', // 商品id
 });
 // 修改金额 弹窗 开关

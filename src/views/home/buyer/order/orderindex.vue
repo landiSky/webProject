@@ -218,24 +218,26 @@
                 </div>
               </t-col>
               <t-col :span="3">
-                <div class="grid-content">
-                  ¥{{ item.productPrice
-                  }}{{
+                <div v-if="item.saleType !== 2" class="grid-content">
+                  ¥{{ item.productPrice }}
+                  <!-- {{
                     String(item.productPrice).indexOf('.') > -1 ? '' : '元'
-                  }}</div
-                >
+                  }} -->
+                </div>
+                <div v-if="item.saleType === 2"> 面议 </div>
               </t-col>
 
               <t-col :span="3">
-                <div class="grid-content"
-                  >¥{{ item.realityPrice
-                  }}{{
+                <div v-if="item.saleType !== 2" class="grid-content"
+                  >¥{{ item.realityPrice }}
+                  <!-- {{
                     String(item.realityPrice).indexOf('.') > -1 ? '' : '元'
-                  }}
+                  }} -->
                   <p style="color: #86909c"
-                    >(已优惠:{{ item.couponMoney }})元</p
-                  ></div
-                >
+                    >(已优惠:{{ item.couponMoney }}元)</p
+                  >
+                </div>
+                <div v-if="item.saleType === 2"> 面议 </div>
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -302,12 +304,14 @@
                 </div>
               </t-col>
               <t-col :span="3">
-                <div class="grid-content"> {{ item.effectTime }}</div>
+                <div class="grid-content">
+                  {{ item.effectTime ? item.effectTime : '--' }}</div
+                >
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
                   <t-button
-                    v-if="item.orderStatus === 0"
+                    v-if="item.orderStatus === 0 || item.orderStatus === 4"
                     type="text"
                     style="width: 100%"
                     @click="modificationamount(item.id)"
