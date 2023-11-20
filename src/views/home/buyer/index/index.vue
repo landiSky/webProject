@@ -96,9 +96,9 @@
                           >查看详情</t-button
                         ></span
                       >
-                      <t-button type="text" @click="authentication"
+                      <!-- <t-button type="text" @click="authentication"
                         >去认证</t-button
-                      >
+                      > -->
                     </div>
                     <!-- <t-button type="text" @click="authentication"
                       >去认证</t-button
