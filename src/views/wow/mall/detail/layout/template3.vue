@@ -94,6 +94,7 @@ const [block1, block2] = props.templateData.blockList;
         font-weight: 400;
         font-size: 14px;
         line-height: 22px; /* 157.143% */
+        word-break: break-all;
       }
     }
   }
