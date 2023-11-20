@@ -28,6 +28,7 @@
     :visible="drawerVisible"
     unmount-on-close
     :mask-closable="false"
+    :drawer-body-style="{ padding: 0 }"
     @cancel="handleCancel"
   >
     <template #footer>
@@ -53,6 +54,7 @@
           v-for="(item, index) in ['一', '二', '三', '四', '五', '六']"
           :key="index"
           :class="{ active: selectTempIndex === index }"
+          :disabled="currentIndex !== -1"
           @click="selectTempIndex = index"
           >模板{{ item }}</t-button
         >
@@ -228,14 +230,6 @@ defineExpose({
 
   .plusIcon {
     margin-right: 8px;
-  }
-}
-
-#templateContainer {
-  z-index: 1;
-
-  :deep(.tele-drawer-body) {
-    padding: 0;
   }
 }
 
