@@ -17,7 +17,7 @@
       >
         <!-- :file-list="fileList ? fileList : []" -->
         <!-- @success="uploadSuccess" -->
-        <!-- accept=".jpg,.png,.bmp,.tif,.gif,.jpeg" -->
+        <!-- accept=".jpg,.png,.bmp,.gif,.jpeg" -->
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
@@ -73,12 +73,14 @@ const updataimg = ref([
   {
     uid: '-2',
     name: '20200717-103937.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
   {
     uid: '-1',
     name: 'hahhahahahaha.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
 ]);
 const visible = ref(true);

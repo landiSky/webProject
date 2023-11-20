@@ -91,7 +91,7 @@
               Authorization: `Bearer ${getToken()}`,
             }"
             action="/server/web/file/upload"
-            accept=".jpg,.png,.bmp,.tif,.gif,jpeg"
+            accept=".jpg,.png,.bmp,.gif,jpeg"
             :limit="1"
             tip="点击上传"
             image-preview
