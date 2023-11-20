@@ -276,7 +276,7 @@
                     style="display: flex; justify-content: center"
                   >
                     <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobereviewed" alt=""
+                      <img :src="tobepaid" alt=""
                     /></span>
 
                     <span style="float: left">待交付</span>
@@ -607,8 +607,8 @@ const clickNav = (value: string | null, ins: number) => {
   if (ins === 1) {
     orderStatusSelect.value = [
       {
-        label: '待交付',
-        value: '2',
+        label: '待支付',
+        value: '0',
       },
       {
         label: ' 已驳回',

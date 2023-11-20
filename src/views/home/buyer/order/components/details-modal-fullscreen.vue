@@ -134,7 +134,11 @@
                     }}</span></p
                   >
                   <p
-                    >服务到期时间&nbsp;&nbsp;<span>{{ dataList.dueDate }}</span>
+                    >服务到期时间&nbsp;&nbsp;<span>{{
+                      dataList.saleType === 2 || dataList.saleType === 1
+                        ? '不限'
+                        : dataList.dueDate
+                    }}</span>
                   </p>
                 </div>
               </div>
@@ -390,12 +394,7 @@
                         : '元'
                     }} -->
                     <p style="color: #86909c"
-                      >(已优惠：{{ dataList.couponMoney
-                      }}{{
-                        String(dataList.couponMoney).indexOf('.') > -1
-                          ? ''
-                          : '元'
-                      }})</p
+                      >(已优惠：{{ dataList.couponMoney }}元)</p
                     ></div
                   >
                   <div v-if="dataList.saleType === 2" class="grid-content">

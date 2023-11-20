@@ -17,13 +17,13 @@
       >
         <!-- :file-list="fileList ? fileList : []" -->
         <!-- @success="uploadSuccess" -->
+        <!-- accept=".jpg,.png,.bmp,.tif,.gif,.jpeg" -->
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
           action="/server/web/file/orderUpload"
           :limit="5"
           image-preview
-          accept=".jpg,.png,.bmp,.tif,.gif,.jpeg"
           class="uploadimg"
           @before-upload="beforeUpload"
           @change="changeclick"
@@ -127,10 +127,19 @@ const changeclick = (fileList: any[]) => {
 };
 const beforeUpload = (file: File) => {
   return new Promise<void>((resolve, reject) => {
-    const isLt5M: boolean = file.size / 1024 / 1024 < 5;
+    const type = file?.name.substr(
+      file?.name.lastIndexOf('.') + 1,
+      file?.name.length
+    );
+    console.log(type, 'http://10.14.148.103:9191');
+    const isLt5M: boolean = file.size / 1024 / 1024 < 4.8;
     console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在5MB以内');
+      // return false;
+      reject();
+    } else if (type === 'pdf' || type === 'xlsx') {
+      Message.warning('请上传正确的文件格式');
       // return false;
       reject();
     }
