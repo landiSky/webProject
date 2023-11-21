@@ -115,7 +115,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               :show-file-list="false"
               @before-upload="beforeUpload"
               @success="uploadSuccess"
@@ -145,7 +145,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -204,7 +204,7 @@
               :show-file-list="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               @before-upload="beforeUpload"
               @success="uploadDetailSuccess"
               @progress="uploadDetailProgress"
