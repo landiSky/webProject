@@ -202,10 +202,10 @@
                           width="100px"
                           height="100px"
                           fit="cover"
-                          :src="`/inventory/web/file/download?name=${url}&productId=${formModel.id}`"
+                          :src="`/server/web/file/download?name=${url}&productId=${formModel.id}`"
                           :preview-visible="imageVisible[`${url}`]"
                           :preview-props="{
-                            src: `/inventory/web/file/download?name=${url}&productId=${formModel.id}`,
+                            src: `/server/web/file/download?name=${url}&productId=${formModel.id}`,
                           }"
                           @preview-visible-change="
                             () => (imageVisible[`${url}`] = false)
