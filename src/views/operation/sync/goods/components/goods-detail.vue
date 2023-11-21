@@ -103,22 +103,82 @@
                 {{ formModel.platformOperationCompany }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
-                <img
-                  class="first-img"
-                  :alt="formModel.logo"
-                  :src="`/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`"
-                  style="width: 158px; height: 100px; background-color: #999"
-                />
+                <div class="file-list">
+                  <div class="file-container">
+                    <div class="file-image">
+                      <div class="image-div">
+                        <t-image
+                          width="100px"
+                          height="100px"
+                          fit="cover"
+                          :src="`/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`"
+                          :preview-visible="imageVisible[`${formModel.logo}`]"
+                          :preview-props="{
+                            src: `/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`,
+                          }"
+                          @preview-visible-change="
+                            () => (imageVisible[`${formModel.logo}`] = false)
+                          "
+                        />
+                        <div class="image-hover">
+                          <div class="hover-bg"> </div>
+                          <div class="icon-list">
+                            <icon-eye
+                              :style="{
+                                fontSize: '20px',
+                                color: '#fff',
+                                cursor: 'pointer',
+                              }"
+                              @click="
+                                () => (imageVisible[`${formModel.logo}`] = true)
+                              "
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </t-descriptions-item>
               <t-descriptions-item label="详情展示图">
-                <img
-                  v-for="url of detailImageList"
-                  :key="url"
-                  :alt="url"
-                  class="first-img"
-                  :src="`/server/web/file/download?name=${url}&productId=${formModel.id}`"
-                  style="width: 158px; height: 100px; background-color: #999"
-                />
+                <div v-if="detailImageList.length > 0" class="file-list">
+                  <div
+                    v-for="url of detailImageList"
+                    :key="url"
+                    class="file-container"
+                  >
+                    <div class="file-image">
+                      <div class="image-div">
+                        <t-image
+                          width="100px"
+                          height="100px"
+                          fit="cover"
+                          :src="`/server/web/file/download?name=${url}&productId=${formModel.id}`"
+                          :preview-visible="imageVisible[`${url}`]"
+                          :preview-props="{
+                            src: `/server/web/file/download?name=${url}&productId=${formModel.id}`,
+                          }"
+                          @preview-visible-change="
+                            () => (imageVisible[`${url}`] = false)
+                          "
+                        />
+                        <div class="image-hover">
+                          <div class="hover-bg"> </div>
+                          <div class="icon-list">
+                            <icon-eye
+                              :style="{
+                                fontSize: '20px',
+                                color: '#fff',
+                                cursor: 'pointer',
+                              }"
+                              @click="() => (imageVisible[`${url}`] = true)"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </t-descriptions-item>
               <t-descriptions-item label="商品分类">
                 {{ formModel.productTypeParentName }}/{{
@@ -304,6 +364,7 @@ const showModal = ref(true);
 
 const formModel = ref<Record<string, any>>({});
 const detailImageList = ref<string[]>([]);
+const imageVisible: Record<string, any> = ref({});
 
 const refreshData = async () => {
   goodsDetail(props.data?.id).then((res) => {
@@ -457,5 +518,76 @@ onMounted(() => {
   display: flex;
   gap: 8px;
   justify-content: center;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.file-container {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 100px;
+  margin-right: 8px;
+
+  .file-image {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    background: #f6f7fb;
+    border-radius: 2px;
+
+    .image-div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      border: 1px solid #e5e8ef;
+      border-radius: 2px;
+
+      .image-hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100px;
+        height: 100px;
+        padding: 40px 20px;
+        border-radius: 2px;
+        opacity: 0;
+
+        .hover-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          padding: 40px 20px;
+          background: #1d2129;
+          border-radius: 2px;
+          opacity: 0.5;
+        }
+
+        .icon-list {
+          position: relative;
+          z-index: 999;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          height: 20px;
+        }
+      }
+
+      .image-hover:hover {
+        opacity: 1;
+      }
+    }
+  }
 }
 </style>
