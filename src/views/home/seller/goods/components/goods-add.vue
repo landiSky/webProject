@@ -1233,6 +1233,7 @@ const doSave = async () => {
   let res;
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
       return false;
@@ -1286,18 +1287,6 @@ const clickCancel = () => {
   }
 };
 
-const beforeClose = () => {
-  if (step.value === 1) {
-    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
-  }
-  const nowString = getModalJson();
-  if (nowString !== modalJsonString.value) {
-    clickCancel();
-    return false;
-  }
-  return true;
-};
-
 // 保存
 const clickSave = async () => {
   const res = await doSave();
@@ -1311,6 +1300,7 @@ const clickSave = async () => {
 // 下一步
 const clickNext = async () => {
   formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
     return;
