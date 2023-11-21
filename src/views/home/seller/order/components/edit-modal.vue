@@ -118,7 +118,7 @@ onMounted(() => {
   // 一是编辑信息从列表传入
   // const { roleName, roleDesc, amount } = props.data;
   // { roleName, roleDesc, amount };
-  console.log(props.data, 'props.data');
+  // console.log(props.data, 'props.data');
   const { currentamount, id, amount, orderid } = props.data;
   console.log(currentamount, id);
 
