@@ -171,10 +171,7 @@
                 <div class="grid-content bg-purple-light">
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
-                    <p
-                      v-if="item.saleType === 0"
-                      class="bottom"
-                      style="color: #86909c"
+                    <p v-if="item.saleType === 0" class="bottom"
                       >({{ item.accountCount }}个账号{{
                         item.buyDuration
                       }}个月)</p
@@ -195,9 +192,7 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
-                    <p class="bottom" style="color: #86909c"
-                      >(已优惠:{{ item.couponMoney }}元)</p
-                    >
+                    <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p>
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
@@ -969,6 +964,11 @@ const ondeliveryModalConfirm = () => {
               display: inline-block;
               margin-bottom: 4px;
             }
+
+            .bottom {
+              color: #86909c;
+              line-height: 20px;
+            }
           }
 
           .imgs {
@@ -990,10 +990,6 @@ const ondeliveryModalConfirm = () => {
             font-weight: 400;
             font-size: 12px;
             line-height: 20px;
-            // width: 50%;
-            // margin-top: 5px;
-            // line-height: 20px;
-            // text-align: left;
           }
         }
       }
