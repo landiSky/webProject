@@ -237,6 +237,9 @@ defineExpose({
   background-color: #f2f3f8;
 
   :deep(.tele-steps) {
+    width: 332px;
+    margin: 0 auto;
+
     .tele-steps-icon {
       padding-top: 1px;
       font-weight: 500;
