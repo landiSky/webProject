@@ -276,7 +276,7 @@
         >
           <div style="width: 20%">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}`"
+              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
               alt=""
               style="width: 100%; height: 100%"
             />
@@ -701,19 +701,31 @@ const configurationapp = (item: Record<string, any>) => {
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
+const filetype = (val: any) => {
+  if (val === 'doc') {
+    return 'application/msword;charset=utf-8';
+  }
+  if (val === 'docx') {
+    return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8';
+  }
+  return 'application/pdf;charset=utf-8';
+};
 // 使用说明
 const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
-
+  const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
+  console.log(type, 'type----');
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
     // console.log(res);
     // console.log(res, '导出数据');
+
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
     const blogw = new Blob([res], {
       // type: 'application/x-abiword;charset=utf-8'
       // type: 'application/msword;charset=utf-8',
-      type: 'application/pdf;charset=utf-8',
+      // type: 'application/pdf;charset=utf-8',
+      type: filetype(type),
     });
     const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
     link.href = objectUrl;
@@ -738,6 +750,7 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
   //   pdf.save('kexincunzheng.pdf');
   // });
 };
+
 // 更多
 const multiples = () => {
   router.push('/buyer/order');
