@@ -92,7 +92,25 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
 
         if (code === 101004) {
           Message.error(message);
-          window.location.reload();
+          clearToken();
+
+          // 这样写是为了请登录域名下的 cookie
+          const configInfo = JSON.parse(
+            localStorage.getItem('configInfo') as string
+          );
+
+          const { logoutUrl, redirectUri } = configInfo || {};
+          const serverUri = import.meta.env.DEV
+            ? import.meta.env.VITE_APP_DEV_HOST
+            : redirectUri;
+
+          if (logoutUrl) {
+            window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+          } else {
+            window.location.reload();
+          }
+
+          // window.location.reload();
           // console.log('http.ts:89===code==101004 跳转到前台首页');
           // clearToken();
           // router.push('/wow/index');

@@ -40,254 +40,230 @@
         </div>
         <div class="centers">
           <div class="asjhdg">
-            <div style="margin-bottom: 30px"
-              ><span
+            <div class="asjhdg-title">
+              <span
                 style="
                   float: left;
                   width: 4px;
-                  height: 15px;
-                  margin-right: 10px;
+                  height: 12px;
+                  margin-right: 8px;
                   background-color: #1664ff;
                 "
-              ></span
-              ><span
+              >
+              </span>
+              <span
                 style="
                   float: left;
-                  height: 10px;
                   font-weight: 500;
                   font-size: 14px;
-                  line-height: 15px;
+                  line-height: 22px;
                 "
                 >订单状态</span
-              ></div
-            >
+              >
+            </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <div>
-                  <span
-                    ><img
-                      :src="tobereviewed"
-                      alt=""
-                      style="float: left; margin: 2px 5px 0 0"
-                  /></span>
-                  <span>
-                    待支付：商品已下单，请买家上传支付凭证并提交服务商审核。</span
-                  >
-                </div>
+                <t-space class="order-success">
+                  <div class="order-success-icon is-warning">
+                    <icon-clock-circle-fill />
+                  </div>
 
-                <p style="margin-top: 6px">
+                  <div class="order-success-text">
+                    待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
+                  </div>
                   <t-button
                     type="primary"
                     @click="modificationamount(dataList.id)"
                     >上传凭证</t-button
                   >
-                </p>
+                </t-space>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <div>
-                  <span
-                    ><img
-                      style="float: left; margin: 2px 5px 0 0"
-                      :src="tobepaid"
-                      alt=""
-                  /></span>
-                  <span> 待审核：支付凭证已提交，待服务商进行审核。</span>
-                </div>
-
-                <!-- <p style="margin-top: 10px">
-                  <t-button
-                    type="primary"
-                    status="danger"
-                    style="margin-right: 10px"
-                    @click="turndownsyhn"
-                    >驳回</t-button
-                  >
-                  <t-button type="primary" @click="passok(dataList.id)"
-                    >通过</t-button
-                  >
-                </p> -->
+                <t-space class="order-success">
+                  <div class="order-success-icon is-warning">
+                    <icon-clock-circle-fill />
+                  </div>
+                  <div class="order-success-text">
+                    待审核：支付凭证已提交，待服务商进行审核。
+                  </div>
+                </t-space>
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <div>
-                  <span
-                    ><img
-                      style="float: left; margin: 3px 5px 0 0"
-                      :src="tobepaid"
-                      alt="" /></span
-                  ><span>待交付：服务商已确认收款，待完成交付。</span>
-                </div>
+                <t-space class="order-success">
+                  <div class="order-success-icon is-primary">
+                    <icon-clock-circle-fill />
+                  </div>
+                  <div class="order-success-text">
+                    待交付：服务商已确认收款，待完成交付。
+                  </div>
+                </t-space>
               </div>
               <div v-if="dataList.orderStatus === 3">
-                <div>
-                  <span style="float: left; margin: 3px 3px 0 0"
-                    ><img :src="success" alt="" /></span
-                  >&nbsp;&nbsp;<span
-                    style="float: left; font-weight: 500; font-size: 14px"
-                    >已完成：订单已完成。</span
-                  >
-                </div>
+                <t-space class="order-success">
+                  <div class="order-success-icon">
+                    <icon-check-circle-fill />
+                  </div>
 
-                <div>
-                  <p style="margin: 7px 0 7px 0"
-                    >部署状态&nbsp;&nbsp;<span>{{
+                  <div class="order-success-text">已完成：订单已完成。</div>
+                </t-space>
+
+                <div class="order-item-deploy">
+                  <t-space>
+                    <div class="order-item-left">部署状态</div>
+                    <div class="order-item-right">{{
                       dataList.deploymentStatusName
-                    }}</span></p
-                  >
-                  <p
-                    >服务到期时间&nbsp;&nbsp;<span>{{
+                    }}</div>
+                  </t-space>
+                </div>
+                <div class="order-item-due-date">
+                  <t-space>
+                    <div class="order-item-left">服务到期时间</div>
+                    <div class="order-item-right">{{
                       dataList.saleType === 2 || dataList.saleType === 1
                         ? '不限'
                         : dataList.dueDate
-                    }}</span>
-                  </p>
+                    }}</div>
+                  </t-space>
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 4">
-                <div>
-                  <span style="float: left; margin: 3px 5px 0 0"
-                    ><img :src="error" alt="" /></span
-                  >&nbsp;&nbsp;<span
-                    style="float: left; font-weight: 500; font-size: 14px"
-                    >已驳回：支付凭证已被服务商驳回，请买家重新上传支付凭证。</span
-                  >
-                </div>
+                <t-space class="order-success">
+                  <div class="order-success-icon is-danger">
+                    <icon-close-circle-fill />
+                  </div>
 
-                <div>
-                  <p style="margin: 7px 0 7px 0"
-                    >驳回原因&nbsp;&nbsp;<span>
-                      {{ dataList.rejectReasonDetail }}</span
-                    >
-                  </p>
-                  <p style="margin: 7px 0 7px 0"
-                    >驳回时间&nbsp;&nbsp;<span>{{
-                      dataList.voucherRejectTime
-                    }}</span></p
-                  >
-                  <t-button type="primary" anew @click="anewupload"
-                    >重新上传凭证</t-button
-                  >
+                  <div class="order-success-text">
+                    已驳回：支付凭证已被服务商驳回，请买家重新上传支付凭证。
+                  </div>
+                </t-space>
+                <div class="order-item-deploy">
+                  <t-space>
+                    <div class="order-item-left">驳回原因</div>
+                    <div class="order-item-right">{{
+                      dataList.rejectReasonDetail
+                    }}</div>
+                  </t-space>
                 </div>
+                <div class="order-item-due-date">
+                  <t-space>
+                    <div class="order-item-left">驳回时间</div>
+                    <div class="order-item-right">{{
+                      dataList.voucherRejectTime || '-'
+                    }}</div>
+                  </t-space>
+                </div>
+                <t-button type="primary" anew @click="anewupload"
+                  >重新上传凭证</t-button
+                >
               </div>
               <div v-if="dataList.orderStatus === 5">
-                <span><img :src="tobereviewed" alt="" /></span
-                >&nbsp;&nbsp;待确认交付：服务商已完成交付，请买家确认交付信息。<span
-                ></span>
-                <p style="margin-top: 10px">
+                <t-space class="order-success">
+                  <div class="order-success-icon is-primary">
+                    <icon-clock-circle-fill />
+                  </div>
+
+                  <div class="order-success-text">
+                    待确认交付：服务商已完成交付，请买家确认交付信息。
+                  </div>
+                </t-space>
+                <div>
                   <t-button type="primary" @click="delivery(dataList.id)"
                     >确认已交付</t-button
                   >
-                </p>
-              </div>
-            </div>
-
-            <div style="float: left; margin: 20px 0 10px 0"
-              ><span
-                style="
-                  float: left;
-                  width: 4px;
-                  height: 15px;
-                  margin-right: 10px;
-                  background-color: #1664ff;
-                "
-              ></span
-              ><span
-                style="
-                  float: left;
-                  height: 10px;
-                  font-weight: 500;
-                  font-size: 14px;
-                  line-height: 15px;
-                "
-                >订单信息</span
-              ></div
-            >
-            <div class="information">
-              <div class="informationlist">
-                <p style="float: left; width: 6%">订单号</p>
-                <p style="float: left">{{ dataList.orderNum }}</p>
-                <p
-                  style="float: left; margin-left: 7px; cursor: pointer"
-                  @click="clickCopy(dataList.orderNum)"
-                >
-                  <t-tooltip
-                    class="item"
-                    effect="dark"
-                    content="复制"
-                    placement="top"
-                    style="cursor: pointer"
-                  >
-                    <img :src="Copy" alt="" />
-                  </t-tooltip>
-                </p>
-              </div>
-              <!-- <div class="informationlist">
-                <p style="float: left; width: 8%">订单来源</p>
-                <p style="float: left">{{
-                  dataList.orderSource === 0 ? '本平台' : '跨平台'
-                }}</p>
-              </div> -->
-              <div class="informationlist">
-                <p style="float: left; width: 6%">商家信息</p>
-                <p style="float: left">{{ dataList.merchantName }}</p>
-              </div>
-              <div class="informationlist">
-                <p style="float: left; width: 6%">联系方式</p>
-                <p style="float: left">{{ dataList.sellerPhone }}</p>
-                <p
-                  style="float: left; margin-left: 7px; cursor: pointer"
-                  @click="clickCopy(dataList.sellerPhone)"
-                >
-                  <t-tooltip
-                    class="item"
-                    effect="dark"
-                    content="复制"
-                    placement="top"
-                    style="cursor: pointer"
-                  >
-                    <img :src="Copy" alt="" />
-                  </t-tooltip>
-                </p>
-              </div>
-              <div class="informationlist">
-                <p style="float: left; width: 6%">支付凭证</p>
-                <div v-if="dataList.attachmentAddressArr.length === 0"
-                  >待上传</div
-                >
-                <div
-                  v-if="dataList.attachmentAddressArr.length !== 0"
-                  style="float: left"
-                >
-                  <img
-                    v-for="(item, index) in dataList.attachmentAddressArr"
-                    :key="index"
-                    style="width: 70px; height: 70px; margin-right: 10px"
-                    :src="`/server/web/file/orderDownload?name=${item}`"
-                    alt=""
-                  />
                 </div>
               </div>
             </div>
-            <div style="float: left; margin-bottom: 20px"
-              ><span
+            <div class="asjhdg-title" style="margin-top: 24px">
+              <span
                 style="
                   float: left;
                   width: 4px;
-                  height: 15px;
-                  margin-right: 10px;
+                  height: 12px;
+                  margin-right: 8px;
                   background-color: #1664ff;
                 "
-              ></span
-              ><span
+              >
+              </span>
+              <span
                 style="
                   float: left;
-                  height: 10px;
                   font-weight: 500;
                   font-size: 14px;
-                  line-height: 15px;
+                  line-height: 22px;
+                "
+                >订单信息</span
+              >
+            </div>
+
+            <div class="information">
+              <div class="informationlist">
+                <t-space>
+                  <div>订单号</div>
+                  <t-typography-paragraph copyable>
+                    {{ dataList.orderNum }}
+                  </t-typography-paragraph>
+                </t-space>
+              </div>
+              <div class="informationlist">
+                <t-space>
+                  <div>商家信息</div>
+                  <t-typography-paragraph>
+                    {{ dataList.merchantName }}
+                  </t-typography-paragraph>
+                </t-space>
+              </div>
+              <div class="informationlist">
+                <t-space>
+                  <div>联系方式</div>
+                  <t-typography-paragraph copyable>
+                    {{ dataList.sellerPhone }}
+                  </t-typography-paragraph>
+                </t-space>
+              </div>
+              <div class="informationlist">
+                <t-space align="start">
+                  <div>支付凭证</div>
+
+                  <div v-if="dataList.attachmentAddressArr.length === 0"
+                    >待上传</div
+                  >
+                  <div
+                    v-if="dataList.attachmentAddressArr.length !== 0"
+                    style="float: left"
+                  >
+                    <img
+                      v-for="(item, index) in dataList.attachmentAddressArr"
+                      :key="index"
+                      style="width: 70px; height: 70px; margin-right: 10px"
+                      :src="`/server/web/file/orderDownload?name=${item}`"
+                      alt=""
+                    />
+                  </div>
+                </t-space>
+              </div>
+            </div>
+
+            <div class="asjhdg-title" style="margin-top: 24px">
+              <span
+                style="
+                  float: left;
+                  width: 4px;
+                  height: 12px;
+                  margin-right: 8px;
+                  background-color: #1664ff;
+                "
+              >
+              </span>
+              <span
+                style="
+                  float: left;
+                  font-weight: 500;
+                  font-size: 14px;
+                  line-height: 22px;
                 "
                 >商品信息</span
-              ></div
-            >
+              >
+            </div>
             <div class="cardContent">
               <t-row type="flex" class="row-title aligntext">
                 <t-col :span="7">
@@ -434,13 +410,6 @@ import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useRouter, useRoute } from 'vue-router';
 
-// import Warn from '@/assets/images/home/warn.png';
-// import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
-import tobepaid from '../images/tobepaid.png';
-import tobereviewed from '../images/tobereviewed.png';
-import error from '../images/error.png';
-import success from '../images/success.png';
-import Copy from '../images/copy.png';
 import EditModal from './edit-modal.vue';
 
 const router = useRouter();
@@ -644,21 +613,27 @@ onMounted(() => {
       margin: 15px auto;
       // margin-top: 15px;
       .information {
-        float: left;
-        width: 100%;
-        margin-top: 15px;
-
         .informationlist {
-          float: left;
-          width: 100%;
-          margin-bottom: 10px;
+          margin-bottom: 12px;
+
+          :deep(.tele-space-item) {
+            &:first-child {
+              margin-right: 12px !important;
+              color: #4e5969;
+            }
+          }
+
+          .tele-typography {
+            margin-bottom: 0;
+          }
         }
       }
 
       .statusinfo {
         width: 100%;
-        padding: 15px 0 15px 15px;
+        padding: 20px;
         border: 1px solid #e5e8ef;
+        border-radius: 2px;
       }
 
       .cardContent {
@@ -720,6 +695,41 @@ onMounted(() => {
     width: 100%;
     height: 90px;
     background-color: #f2f3f8;
+  }
+}
+
+.asjhdg-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.order-success {
+  .order-success-icon {
+    color: #00aa2a;
+    font-size: 16px;
+
+    &.is-primary {
+      color: #1664ff;
+    }
+
+    &.is-warning {
+      color: #fa9600;
+    }
+
+    &.is-danger {
+      color: #e63f3f;
+    }
+  }
+
+  .order-success-text {
+    color: #1d2129;
+    font-weight: 500;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 22px;
   }
 }
 </style>
