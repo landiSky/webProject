@@ -241,7 +241,10 @@
                   <div class="desc">
                     <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
                     <t-button
-                      v-if="item.orderStatus === 0 && item.saleType !== 2"
+                      v-if="
+                        (item.orderStatus === 0 && item.saleType !== 2) ||
+                        item.orderStatus === 4
+                      "
                       type="text"
                       style="width: 100%"
                       @click="
@@ -262,7 +265,7 @@
                     >
                     <!-- v-if="item.orderStatus === 5" -->
                     <t-button
-                      v-if="item.orderStatus === 5"
+                      v-if="item.orderStatus === 2"
                       type="text"
                       style="width: 100%"
                       @click="delivery(item.deliveryType, item.id)"

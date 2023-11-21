@@ -277,7 +277,12 @@
                 <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
                   <div class="grid-content">实付金额</div>
                 </t-col>
-                <t-col v-if="dataList.orderStatus === 0" :span="3">
+                <t-col
+                  v-if="
+                    dataList.orderStatus === 0 || dataList.orderStatus === 4
+                  "
+                  :span="3"
+                >
                   <div class="grid-content">操作</div>
                 </t-col>
               </t-row>
@@ -370,7 +375,10 @@
                   </div>
                 </t-col>
                 <t-col
-                  v-if="dataList.orderStatus === 0 && dataList.saleType !== 2"
+                  v-if="
+                    (dataList.orderStatus === 0 && dataList.saleType !== 2) ||
+                    dataList.orderStatus === 4
+                  "
                   :span="3"
                 >
                   <div class="grid-content">
