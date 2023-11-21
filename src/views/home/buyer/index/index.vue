@@ -802,6 +802,7 @@ onMounted(() => {
       height: 80px;
       margin: 30px 0 20px 0;
       background-color: #fff;
+      border-radius: 4px;
 
       .imgs {
         float: left;
@@ -900,6 +901,7 @@ onMounted(() => {
         height: 100%;
         background-color: #fff;
         border: 1px solid #e5e8ef;
+        border-radius: 4px;
 
         .titleleft {
           padding: 0 0 0 20px;
@@ -1069,6 +1071,7 @@ onMounted(() => {
         background-image: url('./image/backgroup.png');
         // background-color: #fff;
         background-size: cover;
+        border-radius: 4px;
 
         .firm {
           width: 100%;
@@ -1266,6 +1269,7 @@ onMounted(() => {
     margin: 0 2% 30px 2%;
     padding: 7px 20px 20px 20px;
     border: 1px solid #e5e8ef;
+    border-radius: 4px;
 
     .Applysd {
       //   height: 500px;
@@ -1285,6 +1289,7 @@ onMounted(() => {
         // flex-shrink: 0;
         background-color: #fff;
         border: 1px solid #e5e8ef;
+        border-radius: 4px;
 
         .leftcont {
           display: flex;
@@ -1307,6 +1312,7 @@ onMounted(() => {
     padding: 7px 20px 20px 20px;
     background-image: url('./image/btn.png');
     border: 1px solid #e5e8ef;
+    border-radius: 4px;
 
     .tooplist {
       display: flex;
