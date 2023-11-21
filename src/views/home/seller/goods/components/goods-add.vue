@@ -115,7 +115,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               :show-file-list="false"
               @before-upload="beforeUpload"
               @success="uploadSuccess"
@@ -145,7 +145,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -204,7 +204,7 @@
               :show-file-list="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               @before-upload="beforeUpload"
               @success="uploadDetailSuccess"
               @progress="uploadDetailProgress"
@@ -351,7 +351,6 @@
               <div
                 v-if="copyModal.length > 1"
                 class="body-title-right"
-                style="cursor: pointer"
                 @click="deleteSaleCopy(index)"
                 >删除</div
               >
@@ -840,7 +839,6 @@ const modalJsonString = ref('');
 const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
-
 const setFileOverLimit = (filed: string) => {
   formRef.value.setFields({
     [filed]: {
@@ -1426,6 +1424,7 @@ const clickUp = async () => {
       color: #4e5969;
       font-size: 12px;
       line-height: 20px;
+      cursor: pointer;
     }
   }
 
