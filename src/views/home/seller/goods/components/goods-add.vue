@@ -1120,13 +1120,18 @@ const getDetail = (id: any) => {
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
       const list = res.productDeliverySetList;
+      console.log(list);
+
       if (list && list.length > 0) {
         for (const one of list) {
           const list1: any[] = [];
           const pList = one.accountNumList;
+          let onePiece;
           if (pList && pList.length > 0) {
             for (const two of pList) {
-              list1.push({ price: two.price });
+              onePiece = parseInt(two.price, 10);
+              list1.push({ price: onePiece });
+              break;
             }
           } else {
             list1.push({ price: '' });
@@ -1135,6 +1140,7 @@ const getDetail = (id: any) => {
             name: one.name,
             url: one.url,
             productDeliverySetInfoList: list1,
+            onePiece,
           });
         }
       } else {
