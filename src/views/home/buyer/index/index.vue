@@ -291,7 +291,7 @@
                 前往 》</span
               ></div
             >
-            <div
+            <!-- <div
               style="
                 height: 50px;
                 margin-bottom: 20px;
@@ -301,7 +301,16 @@
               "
               title="asdasdasd"
               >{{ item.introduction }}
-            </div>
+            </div> -->
+            <t-typography-paragraph
+              style="float: left"
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+            >
+              {{ item.introduction }}
+            </t-typography-paragraph>
             <div class="tophead"
               ><span
                 v-if="userInfoByCompany.primary === AccountType?.MAIN"
