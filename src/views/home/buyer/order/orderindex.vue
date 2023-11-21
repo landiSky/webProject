@@ -832,7 +832,7 @@ onMounted(() => {
     }
 
     .order {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .cardContent {
