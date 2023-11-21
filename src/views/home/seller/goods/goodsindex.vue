@@ -8,7 +8,7 @@
               <t-button type="primary" @click="addGoods"> 新建商品 </t-button>
             </t-col>
             <t-col flex="200px">
-              <t-form-item field="name" hide-label>
+              <t-form-item field="name" hide-label class="search-form">
                 <t-input
                   v-model.trim="state.formModel.name"
                   placeholder="搜索商品名称"
@@ -576,5 +576,9 @@ const onAddModalConfirm = () => {
 <style lang="less" scoped>
 .action-down {
   color: #e63f3f;
+}
+
+.search-form {
+  margin-bottom: 16px;
 }
 </style>

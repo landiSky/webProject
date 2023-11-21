@@ -76,19 +76,18 @@ const formRules = {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel);
       amountUpdata({
         id: state.formModel.id,
         couponMoney: state.formModel.amount,
       })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           emit('confirm');
-          // Message.success();
           Message.success('金额修改成功');
           done(true);
         })
-        .catch((err) => {});
+        .catch(() => {
+          done(false);
+        });
     } else {
       done(false);
     }
