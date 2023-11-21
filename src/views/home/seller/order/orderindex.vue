@@ -678,6 +678,7 @@ const clearSearchles = () => {
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;
+  init();
 };
 // 分页 每页条数
 const pagesizechange = (pageSize: number) => {
