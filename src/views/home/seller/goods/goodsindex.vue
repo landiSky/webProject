@@ -248,7 +248,7 @@ const StatusList = [
 const classList = ref([
   {
     text: '全部',
-    value: null,
+    value: ' ',
   },
 ]);
 
@@ -541,7 +541,7 @@ const reBuildClassList = (data: any[]) => {
   classList.value = [
     {
       text: '全部',
-      value: null,
+      value: ' ',
     },
   ];
   for (const fc of data) {
