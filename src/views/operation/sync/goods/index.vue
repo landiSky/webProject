@@ -9,6 +9,7 @@
                 <t-input
                   v-model.trim="state.formModel.name"
                   placeholder="请输入商品名称"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -19,6 +20,7 @@
                 <t-input
                   v-model.trim="state.formModel.companyName"
                   placeholder="请输入商家名称"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -29,6 +31,7 @@
                 <t-input
                   v-model.trim="state.formModel.platformPrefix"
                   placeholder="请输入所属平台前缀"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
