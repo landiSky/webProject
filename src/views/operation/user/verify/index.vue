@@ -9,6 +9,7 @@
                 <t-input
                   v-model.trim="state.formModel.phone"
                   placeholder="请输入企业主账号"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />
@@ -19,6 +20,7 @@
                 <t-input
                   v-model.trim="state.formModel.companyName"
                   placeholder="请输入企业名称"
+                  max-length="20"
                   allow-clear
                   @change="clickSearchBtn"
                 />

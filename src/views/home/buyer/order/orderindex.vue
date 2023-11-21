@@ -97,11 +97,13 @@
               <t-col flex="auto">
                 <t-button
                   type="primary"
-                  style="margin: 0 20px 0 20px"
+                  style="margin-right: 8px"
                   @click="getTableData()"
                   >查询
                 </t-button>
-                <t-button @click="clearSearch">重置</t-button>
+                <t-button style="background-color: #fff" @click="clearSearch"
+                  >重置</t-button
+                >
               </t-col>
             </t-row>
           </t-spin>
@@ -405,8 +407,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 

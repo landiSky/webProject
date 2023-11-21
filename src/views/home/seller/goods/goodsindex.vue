@@ -349,12 +349,6 @@ function fetchData() {
     });
 }
 
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  state.formModel[`${dataIndex}`] = f;
-  fetchData();
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -369,6 +363,16 @@ const onPageChange = (current: number) => {
 };
 
 const clickSearchBtn = () => {
+  onPageChange(1);
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
   onPageChange(1);
 };
 

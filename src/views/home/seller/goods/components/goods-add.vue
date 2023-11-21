@@ -6,7 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @back="clickCancel"
+      @back="emit('cancel')"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -145,7 +145,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -1120,13 +1120,18 @@ const getDetail = (id: any) => {
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
       const list = res.productDeliverySetList;
+      console.log(list);
+
       if (list && list.length > 0) {
         for (const one of list) {
           const list1: any[] = [];
           const pList = one.accountNumList;
+          let onePiece;
           if (pList && pList.length > 0) {
             for (const two of pList) {
-              list1.push({ price: two.price });
+              onePiece = parseInt(two.price, 10);
+              list1.push({ price: onePiece });
+              break;
             }
           } else {
             list1.push({ price: '' });
@@ -1135,6 +1140,7 @@ const getDetail = (id: any) => {
             name: one.name,
             url: one.url,
             productDeliverySetInfoList: list1,
+            onePiece,
           });
         }
       } else {
@@ -1233,6 +1239,7 @@ const doSave = async () => {
   let res;
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
       return false;
@@ -1299,6 +1306,7 @@ const clickSave = async () => {
 // 下一步
 const clickNext = async () => {
   formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
     return;

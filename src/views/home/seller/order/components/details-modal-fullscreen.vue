@@ -444,6 +444,7 @@ const state = reactive({
     id: '',
     currentamount: 0,
     amount: '',
+    orderid: '',
   },
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
@@ -525,6 +526,7 @@ const clickCopy = (Num: string) => {
 const modificationamount = () => {
   state.updataamount.id = dataList.value.id;
   state.updataamount.currentamount = dataList.value.productPrice;
+  state.updataamount.orderid = dataList.value.orderNum;
   editModalVisible.value = true;
 };
 // 修改金额 完成
