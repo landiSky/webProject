@@ -286,7 +286,7 @@
               ><span>{{ item.productName }}</span
               ><span
                 style="color: #1664ff; cursor: pointer"
-                @click="togo(item.deliveryId, item.dueDate)"
+                @click="togo(item.id, item.dueDate)"
               >
                 前往 》</span
               ></div
@@ -501,8 +501,11 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -678,10 +681,10 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = (id: string, dueDate: string) => {
-  console.log('index.vue:685===点击前往', id, dueDate);
+const togo = (idd: string, dueDate: string) => {
+  console.log('index.vue:685===点击前往', idd, dueDate);
   // if (dueDate) {   // TODO 过期时间判断
-  orderGo({ deliveryId: id }).then((res: any) => {
+  orderGo({ id: idd }).then((res: any) => {
     console.log('获取应用访问地址====', res);
     window.open(res, '_blank');
     // window.location.href=
