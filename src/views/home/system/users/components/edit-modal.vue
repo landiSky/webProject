@@ -16,7 +16,6 @@
             length: 10,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
         />
         <!-- <t-select
@@ -60,7 +59,6 @@
         <t-input
           v-model="state.formModel.phone"
           placeholder="请输入"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -83,8 +81,11 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({

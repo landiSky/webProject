@@ -22,7 +22,6 @@
             length: 50,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -35,7 +34,6 @@
             length: 100,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
           :auto-size="{
             minRows: 2,
@@ -63,8 +61,11 @@ import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const props = defineProps({
   data: {

@@ -33,7 +33,6 @@ watch(
   () => userStore.updateMenu,
   () => {
     const { isAdmin, source } = userStore.userInfo || {};
-    console.log('App.vue:15===更新菜单', isAdmin, userStore.userInfo);
     let authList = userStore.userInfoByCompany?.menuCodes || [];
     if (isAdmin) {
       authList = opearationRouteList;
@@ -41,7 +40,6 @@ watch(
     if (source) {
       authList = infoRouteList;
     }
-    console.log('App.vue:31', authList);
     useMenuStore().genLeftMenu(authList);
   },
   {

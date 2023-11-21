@@ -270,7 +270,7 @@
         >
           <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}`"
+              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
               alt=""
               style="width: 102px; height: 102px"
             />
@@ -281,10 +281,11 @@
               ><span
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
-                @click="togo(item.deliveryId, item.dueDate)"
+                @click="togo(item.id, item.dueDate)"
               >
-                前往 <span class="to-img"></span></span
-            ></div>
+                前往 》</span
+              ></div
+            >
             <div
               style="
                 margin-bottom: 26px;
@@ -296,6 +297,15 @@
               title="asdasdasd"
               >{{ item.introduction }}
             </div>
+            <t-typography-paragraph
+              style="float: left"
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+            >
+              {{ item.introduction }}
+            </t-typography-paragraph>
             <div class="tophead"
               ><span
                 v-if="userInfoByCompany.primary === AccountType?.MAIN"
@@ -668,10 +678,10 @@ const tomall = () => {
   router.push('/wow/mall');
 };
 // 前往
-const togo = (id: string, dueDate: string) => {
-  console.log('index.vue:685===点击前往', id, dueDate);
+const togo = (idd: string, dueDate: string) => {
+  console.log('index.vue:685===点击前往', idd, dueDate);
   // if (dueDate) {   // TODO 过期时间判断
-  orderGo({ deliveryId: id }).then((res: any) => {
+  orderGo({ id: idd }).then((res: any) => {
     console.log('获取应用访问地址====', res);
     window.open(res, '_blank');
     // window.location.href=
@@ -688,19 +698,31 @@ const configurationapp = (item: Record<string, any>) => {
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
+const filetype = (val: any) => {
+  if (val === 'doc') {
+    return 'application/msword;charset=utf-8';
+  }
+  if (val === 'docx') {
+    return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8';
+  }
+  return 'application/pdf;charset=utf-8';
+};
 // 使用说明
 const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
-
+  const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
+  console.log(type, 'type----');
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
     // console.log(res);
     // console.log(res, '导出数据');
+
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
     const blogw = new Blob([res], {
       // type: 'application/x-abiword;charset=utf-8'
       // type: 'application/msword;charset=utf-8',
-      type: 'application/pdf;charset=utf-8',
+      // type: 'application/pdf;charset=utf-8',
+      type: filetype(type),
     });
     const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
     link.href = objectUrl;
@@ -725,6 +747,7 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
   //   pdf.save('kexincunzheng.pdf');
   // });
 };
+
 // 更多
 const multiples = () => {
   router.push('/buyer/order');

@@ -58,6 +58,7 @@ const selectMemList = ref<string[]>([]);
 // eslint-disable-next-line consistent-return
 const onConfirm = (done: (closed: boolean) => void) => {
   if (!selectMemList.value.length) {
+    done(false);
     return Message.warning(' 请选择要邀请的成员');
   }
   apiAuthMember({

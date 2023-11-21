@@ -97,11 +97,13 @@
               <t-col flex="auto">
                 <t-button
                   type="primary"
-                  style="margin: 0 20px 0 20px"
+                  style="margin-right: 8px"
                   @click="getTableData()"
                   >查询
                 </t-button>
-                <t-button @click="clearSearch">重置</t-button>
+                <t-button style="background-color: #fff" @click="clearSearch"
+                  >重置</t-button
+                >
               </t-col>
             </t-row>
           </t-spin>
@@ -131,28 +133,20 @@
         </t-row>
 
         <div v-if="tableData.length > 0" style="width: 100%">
-          <div
-            v-for="item in tableData"
-            :key="item.id"
-            style="
-              width: 100%;
-              margin-bottom: 10px;
-              background-color: #fff;
-              border: 1px solid #e5e8ef;
-            "
-          >
+          <div v-for="item in tableData" :key="item.id" class="orderCard">
             <t-row type="flex">
               <t-col :span="24">
                 <div class="grid-contentled">
                   <div class="grid-content-list">
-                    {{ item.createTime }}
+                    <span></span>
+                    <span>{{ item.createTime }}</span>
                   </div>
                   <div class="grid-content-list">
-                    <span class="dingdclass">订单号：</span>{{ item.orderNum }}
+                    <span>订单号：</span>
+                    <span>{{ item.orderNum }}</span>
                   </div>
                   <div class="grid-content-list">
-                    <span class="dingdclass">商品来源：</span
-                    >{{ item.merchantName }}
+                    <span>商品来源：</span><span>{{ item.merchantName }}</span>
                   </div>
                   <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -165,151 +159,116 @@
             <t-row type="flex" class="row-titlelrd aligntext" justify="end">
               <t-col :span="7">
                 <div class="grid-content">
-                  <div
-                    class="imgs"
-                    style="float: left; width: 100px; margin: 0 10px 0 16px"
-                  >
+                  <div class="imgs">
                     <img
-                      style="width: 100px; height: 100px"
                       :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
                       alt=""
                     />
                   </div>
-                  <div
-                    style="
-                      float: left;
-                      width: 50%;
-                      margin-top: 5px;
-                      line-height: 20px;
-                      text-align: left;
-                    "
-                  >
+                  <div class="title">
                     {{ item.productName }}
                   </div>
                 </div>
               </t-col>
               <t-col :span="3">
                 <div class="grid-content bg-purple-light">
-                  {{ item.deliveryTypeName }}
-                  <p v-if="item.saleType === 0" style="color: #86909c"
-                    >({{ item.accountCount }}个账号{{
-                      item.buyDuration
-                    }}个月)</p
-                  >
+                  <div class="desc">
+                    <span class="top">{{ item.deliveryTypeName }}</span>
+                    <p v-if="item.saleType === 0" class="bottom"
+                      >({{ item.accountCount }}个账号{{
+                        item.buyDuration
+                      }}个月)</p
+                    >
+                  </div>
                 </div>
               </t-col>
               <t-col :span="3">
                 <div v-if="item.saleType !== 2" class="grid-content">
-                  ¥{{ item.productPrice }}
+                  <div class="desc">¥{{ item.productPrice }}</div>
                   <!-- {{
                     String(item.productPrice).indexOf('.') > -1 ? '' : '元'
                   }} -->
                 </div>
-                <div v-if="item.saleType === 2"> 面议 </div>
+                <div v-if="item.saleType === 2" class="grid-content">
+                  <div class="desc">面议</div>
+                </div>
               </t-col>
 
               <t-col :span="3">
-                <div v-if="item.saleType !== 2" class="grid-content"
-                  >¥{{ item.realityPrice }}
-                  <!-- {{
+                <div v-if="item.saleType !== 2" class="grid-content">
+                  <div class="desc">
+                    <span class="top">¥{{ item.realityPrice }}</span>
+                    <!-- {{
                     String(item.realityPrice).indexOf('.') > -1 ? '' : '元'
                   }} -->
-                  <p style="color: #86909c"
-                    >(已优惠:{{ item.couponMoney }}元)</p
-                  >
+                    <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p>
+                  </div>
                 </div>
-                <div v-if="item.saleType === 2"> 面议 </div>
+                <div v-if="item.saleType === 2" class="grid-content">
+                  <div class="desc">面议</div>
+                </div>
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
-                  <div
-                    v-if="item?.orderStatus === 0"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobereviewed" alt=""
-                    /></span>
+                  <div class="desc payStatus">
+                    <div v-if="item?.orderStatus === 0">
+                      <img :src="tobereviewed" alt="" />
+                      <span style="float: left">待支付</span>
+                    </div>
+                    <div v-if="item.orderStatus === 1">
+                      <img :src="tobepaid" alt="" />
 
-                    <span style="float: left">待支付</span>
-                  </div>
-                  <div
-                    v-if="item.orderStatus === 1"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobepaid" alt=""
-                    /></span>
-
-                    <span style="float: left">待审核</span>
-                  </div>
-                  <div
-                    v-if="item.orderStatus === 4"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="error" alt=""
-                    /></span>
-
-                    <span style="float: left">已驳回</span>
-                  </div>
-                  <div
-                    v-if="item.orderStatus === 2"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobepaid" alt=""
-                    /></span>
-
-                    <span style="float: left">待交付</span>
-                  </div>
-                  <div
-                    v-if="item.orderStatus === 5"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="tobereviewed" alt=""
-                    /></span>
-
-                    <span style="float: left">待确认交付</span>
-                  </div>
-                  <div
-                    v-if="item.orderStatus === 3"
-                    style="display: flex; justify-content: center"
-                  >
-                    <span style="float: left; padding: 1px 3px 0 0">
-                      <img :src="success" alt=""
-                    /></span>
-
-                    <span style="float: left">已完成</span>
+                      <span style="float: left">待审核</span>
+                    </div>
+                    <div v-if="item.orderStatus === 4">
+                      <img :src="error" alt="" />
+                      <span style="float: left">已驳回</span>
+                    </div>
+                    <div v-if="item.orderStatus === 2">
+                      <img :src="tobepaid" alt="" />
+                      <span style="float: left">待交付</span>
+                    </div>
+                    <div v-if="item.orderStatus === 5">
+                      <img :src="tobereviewed" alt="" />
+                      <span style="float: left">待确认交付</span>
+                    </div>
+                    <div v-if="item.orderStatus === 3">
+                      <img :src="success" alt="" />
+                      <span style="float: left">已完成</span>
+                    </div>
                   </div>
                 </div>
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
-                  {{ item.effectTime ? item.effectTime : '--' }}</div
-                >
+                  <div class="desc">{{
+                    item.effectTime ? item.effectTime : '--'
+                  }}</div>
+                </div>
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
-                  <t-button
-                    v-if="item.orderStatus === 0 || item.orderStatus === 4"
-                    type="text"
-                    style="width: 100%"
-                    @click="modificationamount(item.id)"
-                    >上传支付凭证</t-button
-                  >
+                  <div class="desc">
+                    <t-button
+                      v-if="item.orderStatus === 0 || item.orderStatus === 4"
+                      type="text"
+                      style="width: 100%"
+                      @click="modificationamount(item.id)"
+                      >上传支付凭证</t-button
+                    >
 
-                  <!-- v-if="item.orderStatus === 5" -->
-                  <t-button
-                    v-if="item.orderStatus === 5"
-                    type="text"
-                    style="width: 100%"
-                    @click="delivery(item.id)"
-                    >确认已交付</t-button
-                  >
-                  <span style="cursor: pointer" @click="clickDetail(item.id)"
-                    >订单详情</span
-                  >
+                    <!-- v-if="item.orderStatus === 5" -->
+                    <t-button
+                      v-if="item.orderStatus === 5"
+                      type="text"
+                      style="width: 100%"
+                      @click="delivery(item.id)"
+                      >确认已交付</t-button
+                    >
+                    <span style="cursor: pointer" @click="clickDetail(item.id)"
+                      >订单详情</span
+                    >
+                  </div>
                 </div>
               </t-col>
             </t-row>
@@ -405,8 +364,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -864,7 +826,7 @@ onMounted(() => {
     }
 
     .order {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .cardContent {
@@ -887,23 +849,54 @@ onMounted(() => {
         }
       }
 
+      .orderCard {
+        width: 100%;
+        margin-bottom: 12px;
+        background-color: #fff;
+        border: 1px solid #e5e8ef;
+        border-radius: 2px;
+      }
+
       .grid-contentled {
         display: flex;
-        justify-content: left;
-        width: 98%;
-        height: 50px;
-        margin: 0 auto;
+        align-items: center;
+        height: 40px;
+        margin-left: 12px;
+        padding-left: 4px;
         color: #4e5969;
         font-weight: 400;
         font-size: 12px;
-        font-family: 'PingFang SC';
-        font-style: normal;
-        line-height: 50px;
-        background-color: #fff;
+        line-height: 20px; /* 166.667% */
         border-bottom: 1px solid #e5e8ef;
 
+        // display: flex;
+        // justify-content: left;
+        // width: 98%;
+        // height: 40px;
+        // // margin: 0 auto;
+        // color: #4e5969;
+        // font-weight: 400;
+        // font-size: 12px;
+        // font-family: 'PingFang SC';
+        // font-style: normal;
+        // line-height: 50px;
+        // background-color: #fff;
+        // border-bottom: 1px solid #e5e8ef;
         .grid-content-list {
-          margin-right: 10px;
+          display: flex;
+          align-items: center;
+          margin-right: 24px;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 20px; /* 166.667% */
+
+          span:first-child {
+            color: #86909c;
+          }
+
+          span:last-child {
+            color: #4e5969;
+          }
         }
       }
 
@@ -914,10 +907,9 @@ onMounted(() => {
 
       .row-titlelrd {
         width: 100%;
-        margin-bottom: 6px;
-        padding-top: 10px !important;
-        border-radius: 2px;
-
+        // margin-bottom: 6px;
+        padding-top: 12px;
+        // border-radius: 2px;
         .grid-content {
           height: 20px;
           // padding: 13px 0 0 10px;
@@ -929,7 +921,53 @@ onMounted(() => {
           line-height: 20px;
           background-color: #fff;
 
+          .desc {
+            margin-top: 8px;
+
+            &.payStatus {
+              > div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                img {
+                  width: 12px;
+                  height: 12px;
+                  margin-right: 4px;
+                }
+              }
+            }
+
+            .top {
+              display: inline-block;
+              margin-bottom: 4px;
+            }
+
+            .bottom {
+              color: #86909c;
+              line-height: 20px;
+            }
+          }
+
           .imgs {
+            float: left;
+            // width: 100px;
+            margin: 0 10px 12px 12px;
+
+            img {
+              width: 80px;
+              height: 80px;
+              border-radius: 2px;
+            }
+          }
+
+          .title {
+            float: left;
+            margin-top: 8px;
+            color: #1d2129;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 20px;
           }
         }
       }

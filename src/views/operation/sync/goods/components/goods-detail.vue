@@ -111,10 +111,10 @@
                           width="100px"
                           height="100px"
                           fit="cover"
-                          :src="`/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`"
+                          :src="`/inventory/web/file/download?name=${formModel.logo}&productId=${formModel.id}`"
                           :preview-visible="imageVisible[`${formModel.logo}`]"
                           :preview-props="{
-                            src: `/server/web/file/download?name=${formModel.logo}&productId=${formModel.id}`,
+                            src: `/inventory/web/file/download?name=${formModel.logo}&productId=${formModel.id}`,
                           }"
                           @preview-visible-change="
                             () => (imageVisible[`${formModel.logo}`] = false)
@@ -153,10 +153,10 @@
                           width="100px"
                           height="100px"
                           fit="cover"
-                          :src="`/server/web/file/download?name=${url}&productId=${formModel.id}`"
+                          :src="`/inventory/web/file/download?name=${url}&productId=${formModel.id}`"
                           :preview-visible="imageVisible[`${url}`]"
                           :preview-props="{
-                            src: `/server/web/file/download?name=${url}&productId=${formModel.id}`,
+                            src: `/inventory/web/file/download?name=${url}&productId=${formModel.id}`,
                           }"
                           @preview-visible-change="
                             () => (imageVisible[`${url}`] = false)
