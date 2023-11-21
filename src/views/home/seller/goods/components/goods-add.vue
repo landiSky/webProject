@@ -145,7 +145,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
