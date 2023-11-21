@@ -351,7 +351,6 @@
               <div
                 v-if="copyModal.length > 1"
                 class="body-title-right"
-                style="cursor: pointer"
                 @click="deleteSaleCopy(index)"
                 >删除</div
               >
@@ -1426,6 +1425,7 @@ const clickUp = async () => {
       color: #4e5969;
       font-size: 12px;
       line-height: 20px;
+      cursor: pointer;
     }
   }
 
