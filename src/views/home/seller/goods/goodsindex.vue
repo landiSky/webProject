@@ -275,7 +275,7 @@ const columns = [
     slotName: 'productTypeId',
     width: 180,
     filterable: {
-      filters: classList.value,
+      filters: classList,
     },
   },
   {
@@ -552,8 +552,8 @@ const reBuildClassList = (data: any[]) => {
 
 const getClassList = () => {
   fetchClassList().then((res: any) => {
-    if (res && res.data) {
-      reBuildClassList(res.data);
+    if (res) {
+      reBuildClassList(res);
     }
   });
 };
