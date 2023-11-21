@@ -19,7 +19,6 @@
         v-model="form.moduleName"
         placeholder="请输入模块标题"
         :max-length="{ length: 10, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -55,7 +54,6 @@
           v-model="item.name"
           placeholder="请输入区块标题"
           :max-length="{ length: 15, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -75,7 +73,6 @@
           v-model="item.desc"
           placeholder="请输入区块简介"
           :max-length="{ length: 150, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -113,7 +110,7 @@
           </t-upload>
           <span class="uploadTips">
             建议图片尺寸：200px *
-            200px，支持jpg、png、bmp、tif、gif、jpeg文件格式，文件大小限制10M以内。
+            200px，支持jpg、png、bmp、gif、jpeg文件格式，文件大小限制10M以内。
           </span>
         </div>
       </t-form-item>

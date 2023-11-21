@@ -16,7 +16,6 @@
             length: 10,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
         />
         <!-- <t-select
@@ -60,7 +59,6 @@
         <t-input
           v-model="state.formModel.phone"
           placeholder="请输入"
-          allow-clear
           show-word-limit
         />
       </t-form-item>

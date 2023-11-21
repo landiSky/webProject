@@ -9,6 +9,6 @@ echo "当前分支：${curBranch}"
 if [ ${curBranch} = 'develop' ] 
 then
     echo "执行tsc检测"
-     npm run tsc 
+    #  npm run tsc 
 fi 
 

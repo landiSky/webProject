@@ -99,7 +99,7 @@ const safeFormRules = {
       },
     },
   ],
-  code: [
+  captcha: [
     {
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入验证码');

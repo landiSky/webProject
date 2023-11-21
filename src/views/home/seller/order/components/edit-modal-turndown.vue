@@ -38,7 +38,6 @@
           v-model="state.formModel.rejectReasonDetail"
           placeholder="请输入"
           :max-length="500"
-          allow-clear
           show-word-limit
         />
       </t-form-item>

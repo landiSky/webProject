@@ -16,7 +16,7 @@
           >￥{{ state.formModel.currentamount }}</p
         >
       </t-form-item>
-      <t-form-item field="amount" label="修改金额">
+      <t-form-item field="amount" label="修改优惠金额">
         <t-input-number
           v-model="state.formModel.amount"
           placeholder="请输入"
@@ -64,7 +64,7 @@ const formRules = {
   amount: [
     {
       required: true,
-      message: '请输入金额',
+      message: '请输入优惠金额',
     },
     {
       match: /^\d+(.\d{1,2})?$/,
@@ -101,7 +101,7 @@ onMounted(() => {
   // 一是编辑信息从列表传入
   // const { roleName, roleDesc, amount } = props.data;
   // { roleName, roleDesc, amount };
-  console.log(props.data, 'props.data');
+  // console.log(props.data, 'props.data');
   const { currentamount, id, amount, orderid } = props.data;
   console.log(currentamount, id);
 

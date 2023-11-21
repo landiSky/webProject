@@ -22,7 +22,6 @@
             length: 50,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -35,7 +34,6 @@
             length: 100,
             errorOnly: true,
           }"
-          allow-clear
           show-word-limit
           :auto-size="{
             minRows: 2,

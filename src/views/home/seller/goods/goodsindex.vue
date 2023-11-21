@@ -248,7 +248,7 @@ const StatusList = [
 const classList = ref([
   {
     text: '全部',
-    value: null,
+    value: ' ',
   },
 ]);
 
@@ -275,7 +275,7 @@ const columns = [
     slotName: 'productTypeId',
     width: 180,
     filterable: {
-      filters: classList.value,
+      filters: classList,
     },
   },
   {
@@ -349,12 +349,6 @@ function fetchData() {
     });
 }
 
-const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  const f = filteredValues[0];
-  state.formModel[`${dataIndex}`] = f;
-  fetchData();
-};
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
@@ -369,6 +363,16 @@ const onPageChange = (current: number) => {
 };
 
 const clickSearchBtn = () => {
+  onPageChange(1);
+};
+
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  const f = filteredValues[0];
+  if (typeof f === 'boolean') {
+    state.formModel[`${dataIndex}`] = null;
+  } else {
+    state.formModel[`${dataIndex}`] = f;
+  }
   onPageChange(1);
 };
 
@@ -537,7 +541,7 @@ const reBuildClassList = (data: any[]) => {
   classList.value = [
     {
       text: '全部',
-      value: null,
+      value: ' ',
     },
   ];
   for (const fc of data) {
@@ -552,8 +556,8 @@ const reBuildClassList = (data: any[]) => {
 
 const getClassList = () => {
   fetchClassList().then((res: any) => {
-    if (res && res.data) {
-      reBuildClassList(res.data);
+    if (res) {
+      reBuildClassList(res);
     }
   });
 };

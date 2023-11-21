@@ -24,7 +24,7 @@
         <div class="tbody">
           <span>
             <img
-              :src="`/server/web/file/download?name=${createOrderInfo?.logo}`"
+              :src="`/server/web/file/download?name=${createOrderInfo?.logo}&productId=${createOrderInfo.productId}`"
             />
             <span>{{ createOrderInfo?.name }}</span>
           </span>

@@ -54,7 +54,6 @@
               length: 50,
               errorOnly: true,
             }"
-            allow-clear
             show-word-limit
             placeholder="请输入"
           >
@@ -67,7 +66,6 @@
               length: 20,
               errorOnly: true,
             }"
-            allow-clear
             show-word-limit
             placeholder="请输入"
           >
@@ -80,7 +78,6 @@
               length: 10,
               errorOnly: true,
             }"
-            allow-clear
             show-word-limit
             placeholder="请输入"
           >
@@ -164,7 +161,6 @@
               length: 10,
               errorOnly: true,
             }"
-            allow-clear
             show-word-limit
             placeholder="请输入"
           >
@@ -177,7 +173,6 @@
               length: 18,
               errorOnly: true,
             }"
-            allow-clear
             show-word-limit
             placeholder="请输入"
           >

@@ -23,7 +23,7 @@
           :headers="uploadHeaders"
           action="/server/web/file/orderUpload"
           :limit="5"
-          accept=".jpg,.png,.bmp,.tif,.gif,.jpeg"
+          accept=".jpg,.png,.bmp,.gif,.jpeg"
           image-preview
           class="uploadimg"
           @before-upload="beforeUpload"
@@ -206,13 +206,11 @@ onMounted(() => {
 <style scoped lang="less">
 .uploadimg {
   :deep(.tele-upload-list) {
-    height: 100px;
-
+    // height: 100px;
     .tele-upload-list-picture {
       width: 100px;
       height: 100px;
-      margin-bottom: 0;
-
+      // margin-bottom: 0;
       &:nth-child(5) {
         margin-right: 0;
       }

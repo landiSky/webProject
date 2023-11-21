@@ -6,7 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @back="clickCancel"
+      @back="emit('cancel')"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -51,7 +51,6 @@
           <t-form-item label="商品名称" field="name">
             <t-input
               v-model.trim="formModel.name"
-              allow-clear
               show-word-limit
               :max-length="{
                 length: 20,
@@ -115,7 +114,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               :show-file-list="false"
               @before-upload="beforeUpload"
               @success="uploadSuccess"
@@ -204,7 +203,7 @@
               :show-file-list="false"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
               @before-upload="beforeUpload"
               @success="uploadDetailSuccess"
               @progress="uploadDetailProgress"
@@ -256,7 +255,6 @@
                 length: 300,
                 errorOnly: true,
               }"
-              allow-clear
               show-word-limit
               :auto-size="{
                 minRows: 2,
@@ -351,7 +349,6 @@
               <div
                 v-if="copyModal.length > 1"
                 class="body-title-right"
-                style="cursor: pointer"
                 @click="deleteSaleCopy(index)"
                 >删除</div
               >
@@ -364,7 +361,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -385,7 +381,6 @@
                     length: 50,
                     errorOnly: true,
                   }"
-                  allow-clear
                   show-word-limit
                   :auto-size="{
                     minRows: 2,
@@ -488,7 +483,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal2[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -509,7 +503,6 @@
                     length: 50,
                     errorOnly: true,
                   }"
-                  allow-clear
                   show-word-limit
                   :auto-size="{
                     minRows: 2,
@@ -518,7 +511,7 @@
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
-                <t-input v-model.trim="copyModal2[index].onePiece" allow-clear
+                <t-input v-model.trim="copyModal2[index].onePiece"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -547,7 +540,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal3[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -841,15 +833,6 @@ const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
 
-const setFileOverLimit = (filed: string) => {
-  formRef.value.setFields({
-    [filed]: {
-      status: 'error',
-      message: `允许上传的文件最大数量不超过${filed === 'logo' ? 1 : 5}个`,
-    },
-  });
-};
-
 const logoUploading = ref(false);
 
 const uploadError = (fileItem: FileItem) => {
@@ -1120,13 +1103,18 @@ const getDetail = (id: any) => {
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
       const list = res.productDeliverySetList;
+      console.log(list);
+
       if (list && list.length > 0) {
         for (const one of list) {
           const list1: any[] = [];
           const pList = one.accountNumList;
+          let onePiece;
           if (pList && pList.length > 0) {
             for (const two of pList) {
-              list1.push({ price: two.price });
+              onePiece = parseInt(two.price, 10);
+              list1.push({ price: onePiece });
+              break;
             }
           } else {
             list1.push({ price: '' });
@@ -1135,6 +1123,7 @@ const getDetail = (id: any) => {
             name: one.name,
             url: one.url,
             productDeliverySetInfoList: list1,
+            onePiece,
           });
         }
       } else {
@@ -1233,6 +1222,7 @@ const doSave = async () => {
   let res;
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
       return false;
@@ -1299,6 +1289,7 @@ const clickSave = async () => {
 // 下一步
 const clickNext = async () => {
   formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
     return;
@@ -1418,6 +1409,7 @@ const clickUp = async () => {
       color: #4e5969;
       font-size: 12px;
       line-height: 20px;
+      cursor: pointer;
     }
   }
 

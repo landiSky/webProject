@@ -20,7 +20,6 @@
             minRows: 10,
             maxRows: 10,
           }"
-          allow-clear
           show-word-limit
           @input="changed"
         />
