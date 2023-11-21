@@ -9,31 +9,12 @@
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
       <t-form-item label="订单号">
         <span>{{ state.formModel.orderid }}</span>
-        <!-- <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
-          :max-length="{
-            length: 50,
-            errorOnly: true,
-          }"
-          allow-clear
-          show-word-limit 
-        /> -->
       </t-form-item>
 
       <t-form-item label="当前价格">
         <p style="font-weight: 500; font-size: 14px"
           >￥{{ state.formModel.currentamount }}</p
         >
-        <!-- <t-select
-          v-model="state.formModel.roleDesc"
-          placeholder="请选择"
-          multiple
-        >
-          <t-option v-for="(item, index) in roleSelect" :key="index">{{
-            item.name
-          }}</t-option>
-        </t-select> -->
       </t-form-item>
       <t-form-item field="amount" label="修改优惠金额">
         <t-input-number

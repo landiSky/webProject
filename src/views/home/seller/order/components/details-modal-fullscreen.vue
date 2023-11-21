@@ -107,9 +107,18 @@
                 <div class="order-item-deploy">
                   <t-space>
                     <div class="order-item-left">驳回原因</div>
-                    <div class="order-item-right">{{
+                    <!-- <div class="order-item-right">{{
                       dataList.rejectReasonDetail
-                    }}</div>
+                    }}</div> -->
+                    <t-typography-paragraph
+                      style="float: right; margin-bottom: 0"
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                    >
+                      {{ dataList.rejectReasonDetail }}
+                    </t-typography-paragraph>
                   </t-space>
                 </div>
                 <div class="order-item-due-date">
@@ -287,7 +296,13 @@
                 <t-col :span="2">
                   <div class="grid-content">购买时长</div>
                 </t-col>
-                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
+                <t-col
+                  :span="
+                    dataList.orderStatus === 0 || dataList.orderStatus === 4
+                      ? 3
+                      : 5
+                  "
+                >
                   <div class="grid-content">实付金额</div>
                 </t-col>
                 <t-col
@@ -368,7 +383,13 @@
                     }}</div
                   >
                 </t-col>
-                <t-col :span="dataList.orderStatus !== 0 ? 5 : 3">
+                <t-col
+                  :span="
+                    dataList.orderStatus === 0 || dataList.orderStatus === 4
+                      ? 3
+                      : 5
+                  "
+                >
                   <div v-if="dataList.saleType !== 2" class="grid-content">
                     ¥{{ dataList.realityPrice }}
                     <!-- {{
