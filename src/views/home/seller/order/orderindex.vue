@@ -550,9 +550,13 @@ const clickNav = (value: string | null, ins: number) => {
   formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [
+      // {
+      //   label: '待交付',
+      //   value: '2',
+      // },
       {
-        label: '待交付',
-        value: '2',
+        label: '待支付',
+        value: '0',
       },
       {
         label: ' 已驳回',
