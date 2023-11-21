@@ -6,7 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
-      @back="clickCancel"
+      @back="emit('cancel')"
     >
       <template #title>
         <div> {{ props.data?.id ? '编辑' : '新建' }}商品 </div>
@@ -1284,6 +1284,18 @@ const clickCancel = () => {
     visible.value = false;
     emit('cancel');
   }
+};
+
+const beforeClose = () => {
+  if (step.value === 1) {
+    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  }
+  const nowString = getModalJson();
+  if (nowString !== modalJsonString.value) {
+    clickCancel();
+    return false;
+  }
+  return true;
 };
 
 // 保存

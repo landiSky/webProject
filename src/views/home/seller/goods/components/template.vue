@@ -48,7 +48,7 @@
         <t-step>编辑模板内容</t-step>
       </t-steps>
     </div>
-    <div v-if="currentStep === 1" class="template">
+    <div v-show="currentStep === 1" class="template">
       <div class="btnList">
         <t-button
           v-for="(item, index) in ['一', '二', '三', '四', '五', '六']"
@@ -65,7 +65,7 @@
         <img :src="tempateImgList[selectTempIndex]" alt="模板" />
       </div>
     </div>
-    <div v-else class="formWrapper">
+    <div v-show="currentStep !== 1" class="formWrapper">
       <component
         :is="dynaticComponent"
         ref="formWrapRef"
@@ -73,7 +73,6 @@
       ></component>
     </div>
   </t-drawer>
-  <!-- </div> -->
 </template>
 
 <script lang="ts" setup>
