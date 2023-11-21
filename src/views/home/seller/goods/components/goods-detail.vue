@@ -302,13 +302,13 @@
               >
                 {{ st.accountNumList[0].price }} 元
               </t-descriptions-item>
-              <t-descriptions-item label="应用秘钥">
+              <t-descriptions-item label="应用密钥">
                 <a
                   :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
                     st.appSecret
                   )}`"
                   download
-                  >下载秘钥文件</a
+                  >下载密钥文件</a
                 >
               </t-descriptions-item>
             </t-descriptions>
