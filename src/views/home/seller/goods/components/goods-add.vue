@@ -51,7 +51,6 @@
           <t-form-item label="商品名称" field="name">
             <t-input
               v-model.trim="formModel.name"
-              allow-clear
               show-word-limit
               :max-length="{
                 length: 20,
@@ -256,7 +255,6 @@
                 length: 300,
                 errorOnly: true,
               }"
-              allow-clear
               show-word-limit
               :auto-size="{
                 minRows: 2,
@@ -363,7 +361,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -384,7 +381,6 @@
                     length: 50,
                     errorOnly: true,
                   }"
-                  allow-clear
                   show-word-limit
                   :auto-size="{
                     minRows: 2,
@@ -487,7 +483,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal2[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -508,7 +503,6 @@
                     length: 50,
                     errorOnly: true,
                   }"
-                  allow-clear
                   show-word-limit
                   :auto-size="{
                     minRows: 2,
@@ -517,7 +511,7 @@
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
-                <t-input v-model.trim="copyModal2[index].onePiece" allow-clear
+                <t-input v-model.trim="copyModal2[index].onePiece"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -546,7 +540,6 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal3[index].name"
-                  allow-clear
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -839,14 +832,6 @@ const modalJsonString = ref('');
 const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
-const setFileOverLimit = (filed: string) => {
-  formRef.value.setFields({
-    [filed]: {
-      status: 'error',
-      message: `允许上传的文件最大数量不超过${filed === 'logo' ? 1 : 5}个`,
-    },
-  });
-};
 
 const logoUploading = ref(false);
 

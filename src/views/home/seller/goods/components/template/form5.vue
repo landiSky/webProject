@@ -19,7 +19,6 @@
         v-model="form.moduleName"
         placeholder="请输入模块标题"
         :max-length="{ length: 10, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -54,7 +53,6 @@
           v-model="item.name1"
           placeholder="请输入标题一"
           :max-length="{ length: 15, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -73,7 +71,6 @@
           v-model="item.desc1"
           placeholder="请输入简介一"
           :max-length="{ length: 40, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -92,7 +89,6 @@
           v-model="item.name2"
           placeholder="请输入标题二"
           :max-length="{ length: 15, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -111,7 +107,6 @@
           v-model="item.desc2"
           placeholder="请输入简介二"
           :max-length="{ length: 40, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -130,7 +125,6 @@
           v-model="item.name3"
           placeholder="请输入标题三"
           :max-length="{ length: 15, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -149,7 +143,6 @@
           v-model="item.desc3"
           placeholder="请输入简介三"
           :max-length="{ length: 40, errorOnly: true }"
-          allow-clear
           show-word-limit
         />
       </t-form-item>

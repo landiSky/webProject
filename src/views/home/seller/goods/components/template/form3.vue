@@ -19,7 +19,6 @@
         v-model="form.moduleName"
         placeholder="请输入模块标题"
         :max-length="{ length: 10, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -78,7 +77,6 @@
         v-model="form.blockList[0].name"
         placeholder="请输入区块标题"
         :max-length="{ length: 20, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -97,7 +95,6 @@
         v-model="form.blockList[0].desc"
         placeholder="请输入区块简介"
         :max-length="{ length: 64, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -118,7 +115,6 @@
         v-model="form.blockList[1].name"
         placeholder="请输入区块标题"
         :max-length="{ length: 20, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -137,7 +133,6 @@
         v-model="form.blockList[1].desc1"
         placeholder="请输入简介1"
         :max-length="{ length: 50, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -156,7 +151,6 @@
         v-model="form.blockList[1].desc2"
         placeholder="请输入简介2"
         :max-length="{ length: 50, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
@@ -175,7 +169,6 @@
         v-model="form.blockList[1].desc3"
         placeholder="请输入简介3"
         :max-length="{ length: 50, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
