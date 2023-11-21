@@ -146,7 +146,7 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ formModel.nam || '-' }}
+                {{ formModel.name || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
                 {{ formModel.id || '-' }}
