@@ -15,7 +15,6 @@
         <t-input
           v-model="state.formModel.accessAddress"
           placeholder="请输入"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -28,7 +27,6 @@
         <t-input
           v-model="state.formModel.account"
           placeholder="请输入"
-          allow-clear
           show-word-limit
         />
       </t-form-item>
@@ -36,7 +34,6 @@
         <t-input-password
           v-model="state.formModel.password"
           placeholder="请输入"
-          allow-clear
           show-word-limit
         />
       </t-form-item>

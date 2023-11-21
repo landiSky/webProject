@@ -19,7 +19,6 @@
         v-model="form.moduleName"
         placeholder="请输入模块标题"
         :max-length="{ length: 10, errorOnly: true }"
-        allow-clear
         show-word-limit
       />
     </t-form-item>
