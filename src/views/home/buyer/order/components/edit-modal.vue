@@ -208,13 +208,11 @@ onMounted(() => {
 <style scoped lang="less">
 .uploadimg {
   :deep(.tele-upload-list) {
-    height: 100px;
-
+    // height: 100px;
     .tele-upload-list-picture {
       width: 100px;
       height: 100px;
-      margin-bottom: 0;
-
+      // margin-bottom: 0;
       &:nth-child(5) {
         margin-right: 0;
       }
