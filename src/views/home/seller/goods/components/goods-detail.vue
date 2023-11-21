@@ -148,7 +148,8 @@
                 />
               </t-descriptions-item>
               <t-descriptions-item label="商品分类">
-                {{ classDes }}
+                {{ dataInfo.productTypeParentName }} /
+                {{ dataInfo.productTypeName }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
                 {{ '-' }}
