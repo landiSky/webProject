@@ -61,8 +61,11 @@ import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const props = defineProps({
   data: {
