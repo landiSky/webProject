@@ -306,7 +306,11 @@ const formModel = ref<Record<string, any>>({});
 const detailImageList = ref<string[]>([]);
 
 const refreshData = async () => {
-  formModel.value = await goodsDetail(props.data?.id);
+  goodsDetail(props.data?.id).then((res) => {
+    if (res.code === 200) {
+      formModel.value = res.data;
+    }
+  });
 };
 
 onMounted(() => {
@@ -322,7 +326,7 @@ const doStop = (id: any) => {
   });
 };
 // 停止
-const stop = (record: any) => {
+const stop = () => {
   Modal.warning({
     title: '确定停止同步该商品吗？',
     titleAlign: 'start',
@@ -333,7 +337,7 @@ const stop = (record: any) => {
       status: 'danger',
     },
     onOk: () => {
-      doStop(record.id);
+      doStop(props.data?.id);
     },
   });
 };
@@ -347,7 +351,7 @@ const doStart = (id: any) => {
   });
 };
 // 开启同步
-const start = (record: any) => {
+const start = () => {
   Modal.warning({
     title: '确定开启同步该商品吗？',
     titleAlign: 'start',
@@ -355,7 +359,7 @@ const start = (record: any) => {
     okText: '开启同步',
     hideCancel: false,
     onOk: () => {
-      doStart(record.id);
+      doStart(props.data?.id);
     },
   });
 };
