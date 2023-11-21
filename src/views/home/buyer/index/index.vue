@@ -270,7 +270,7 @@
         >
           <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+              :src="`/server/web/file/download?name=${item.productId}`"
               alt=""
               style="width: 102px; height: 102px"
             />
@@ -283,20 +283,8 @@
                 class="to-container"
                 @click="togo(item.id, item.dueDate)"
               >
-                前往 》</span
-              ></div
-            >
-            <div
-              style="
-                margin-bottom: 26px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-              "
-              class="purchased-content"
-              title="asdasdasd"
-              >{{ item.introduction }}
-            </div>
+                前往 <span class="to-img"></span></span
+            ></div>
             <t-typography-paragraph
               style="float: left"
               :ellipsis="{
