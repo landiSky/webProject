@@ -88,7 +88,7 @@
         >
           上架
         </t-link>
-        <t-dropdown position="bl">
+        <t-dropdown position="br">
           <t-link>
             <icon-more />
           </t-link>
