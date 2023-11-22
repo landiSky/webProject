@@ -382,7 +382,7 @@ onMounted(() => {
 
 .content {
   width: 1176px;
-  margin: 0 auto 120px auto;
+  margin: -30px auto 120px auto;
 
   .search {
     display: flex;

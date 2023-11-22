@@ -372,8 +372,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -1002,6 +1005,7 @@ const ondeliveryModalConfirm = () => {
             img {
               width: 80px;
               height: 80px;
+              border: 1px #e5e8ef;
               border-radius: 2px;
             }
           }
