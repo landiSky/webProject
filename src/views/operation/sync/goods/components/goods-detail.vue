@@ -469,17 +469,12 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: 62px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
 
   .seprator-line {
-    // margin: 0 8px;
-    color: var(--f-71-d-2129, #1d2129);
-    font-weight: 500;
-    font-size: 14px;
-
-    /* CN/标题/14-Medium-迷你 */
-    font-family: PingFang SC;
-    font-style: normal;
-    line-height: 22px;
+    color: #1d2129;
   }
 }
 

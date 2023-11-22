@@ -540,6 +540,8 @@ const toAnchor = (link: string) => {
   align-items: center;
   justify-content: center;
   padding: 20px 24px;
+  font-weight: 500;
+  font-size: 14px;
   line-height: 22px;
 }
 
