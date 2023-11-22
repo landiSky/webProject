@@ -232,6 +232,8 @@ defineExpose({
 }
 
 .uploadTips {
+  display: inline-block;
+  margin-top: 8px;
   color: #86909c;
 }
 

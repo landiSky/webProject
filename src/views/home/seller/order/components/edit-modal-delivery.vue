@@ -87,18 +87,20 @@ const state = reactive({
 const formRules = {
   accessAddress: [
     { required: true, message: '请输入访问地址' },
-    {
-      match: /^((ht|f)tps?:\/\/)?[\w-]+(\.[\w-]+)+:\d{1,5}\/?$/,
-      message: '请输入正确地址',
-    },
+    { required: true, maxLength: 300, message: '最大长度不得超出3百字符' },
+    // {
+    //   match: /^((ht|f)tps?:\/\/)?[\w-]+(\.[\w-]+)+:\d{1,5}\/?$/,
+    //   message: '请输入正确地址',
+    // },
   ],
   account: [{ required: true, message: '请输入账号' }],
   password: [
     { required: true, message: '请输入密码' },
-    {
-      match: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
-      message: '密码要有大小写不低于6位不大于16位',
-    },
+    { required: true, maxLength: 16, message: '最大长度不得超出16位' },
+    // {
+    //   match: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/,
+    //   message: '密码要有大小写不低于6位不大于16位',
+    // },
   ],
   remarks: [{ required: true, message: '请输入备注' }],
 };

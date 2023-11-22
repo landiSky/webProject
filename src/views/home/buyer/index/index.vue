@@ -2,20 +2,20 @@
   <div class="cverbox">
     <!-- 买家中心概览 头部 -->
     <div class="headers">
-      <div style="margin: 0 2% 0 2%">
+      <div style="margin: 0 24px">
         <!-- 用户信息 -->
         <div class="tops">
           <div class="imgs">
             <img :src="avatar" alt="" />
           </div>
           <div class="rights">
-            <p
-              style="float: left; width: 300px; margin-top: 16px"
-              class="name"
-              >{{ userInfoByCompany?.username || userInfo?.mobile }}</p
-            >
+            <!-- style="float: left; width: 300px; margin-top: 16px" -->
+            <p class="name">{{
+              userInfoByCompany?.username || userInfo?.mobile
+            }}</p>
 
-            <div class="inofs" style="float: left; margin-top: 25px">
+            <div class="inofs" style="float: left">
+              <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
               <div class="inofslist" style="float: left">
                 <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
@@ -51,13 +51,13 @@
         <div class="direction">
           <div class="dirleft">
             <div class="titleleft">
-              <h3 style="margin: 20px 0 24px 0">使用指导 </h3>
+              <h3 style="margin-bottom: 24px">使用引导 </h3>
               <div class="dirlist">
                 <div>
                   <img :src="group1" alt="" />
-                  <span style="float: left; margin-top: 3px">完成企业认证</span>
+                  <span class="dirlist-step">完成企业认证</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 确认企业身份</p>
+                    <p style="margin: 10px 0 12px"> 确定企业身份</p>
                     <t-button
                       v-if="
                         !userInfoByCompany.companyId ||
@@ -108,9 +108,11 @@
                 <div>
                   <p class="ition"></p>
                   <img :src="group2" alt="" />
-                  <span style="float: left; margin-top: 3px">企业成员管理</span>
+                  <span class="dirlist-step">企业成员管理</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 管理企业组织架构&成员权限</p>
+                    <p style="margin: 10px 0 12px">
+                      管理企业组织架构&成员权限</p
+                    >
                     <t-button
                       v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
@@ -125,9 +127,9 @@
                 <div>
                   <p class="ition"></p>
                   <img :src="group3" alt="" />
-                  <span style="float: left; margin-top: 3px">浏览开通应用</span>
+                  <span class="dirlist-step">浏览开通应用</span>
                   <div class="btns">
-                    <p style="margin: 10px 0"> 搜索购买开通应用</p>
+                    <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
                     <t-button type="text" @click="tomall">去应用商城 </t-button>
                     <!-- <p> 去应用商城</p> -->
                   </div>
@@ -135,7 +137,7 @@
                 <div>
                   <p class="ition"></p>
                   <img :src="group4" alt="" />
-                  <span style="float: left">企业成员管理</span>
+                  <span class="dirlist-step">企业成员管理</span>
                   <div class="btns">
                     <p style="margin: 10px 0"> 应用配置，使用应用</p>
                   </div>
@@ -145,17 +147,9 @@
           </div>
           <div class="firmright">
             <div class="firm">
-              <div
-                style="
-                  float: left;
-                  margin-right: 6px;
-                  color: #4e5969;
-                  font-weight: 500;
-                  font-size: 20px;
-                "
-                >企业节点认证</div
+              <div class="firm-title">企业节点认证</div
               ><span
-                style="padding: 4px 8px; line-height: 22px"
+                style="padding: 1px 8px; line-height: 22px"
                 :class="nodeStateClass[userInfoByCompany.nodeStatus]"
                 >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</span
               >
@@ -164,9 +158,9 @@
               class="fimelist"
               style="float: left; width: 90%; font-size: 12px"
             >
-              <p style="margin: 15px 0 5px 0">开通权益:</p>
+              <p style="margin: 12px 0 0 0">开通权益:</p>
               <ul style="margin-left: 10px">
-                <li style="display: inline-block; width: 100%">
+                <li style="width: 100%">
                   <span></span><span style="float: left">免费使用热门应用</span>
                 </li>
                 <li style="width: 100%">
@@ -274,34 +268,32 @@
           :key="index"
           class="purchasedlist"
         >
-          <div style="width: 20%">
+          <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}`"
+              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
               alt=""
-              style="width: 100%; height: 100%"
+              style="width: 102px; height: 102px"
             />
           </div>
           <div class="leftcont">
-            <div class="tophead" style="margin-bottom: 20px"
+            <div class="tophead-to"
               ><span>{{ item.productName }}</span
               ><span
                 style="color: #1664ff; cursor: pointer"
-                @click="togo(item.deliveryId, item.dueDate)"
+                class="to-container"
+                @click="togo(item.id, item.dueDate)"
               >
-                前往 》</span
-              ></div
+                前往 <span class="to-img"></span></span
+            ></div>
+            <t-typography-paragraph
+              style="float: left"
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
             >
-            <div
-              style="
-                height: 50px;
-                margin-bottom: 20px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-              "
-              title="asdasdasd"
-              >{{ item.introduction }}
-            </div>
+              {{ item.introduction }}
+            </t-typography-paragraph>
             <div class="tophead"
               ><span
                 v-if="userInfoByCompany.primary === AccountType?.MAIN"
@@ -386,7 +378,7 @@
     <div class="views">
       <div class="tooplist">
         <h3>订单概览</h3>
-        <p style="color: #1664ff; cursor: pointer" @click="multiples">更多</p>
+        <p style="color: #3975fb; cursor: pointer" @click="multiples">更多</p>
       </div>
       <div class="overlist">
         <div
@@ -395,17 +387,10 @@
           class="overlistdata"
         >
           <div>
-            <span
-              style="
-                display: block;
-                width: 100%;
-                margin-bottom: 15px;
-                color: #86909c;
-                font-size: 14px;
-              "
-              >{{ item.title }}</span
-            >
-            <span style="font-size: 30px">{{
+            <span style="display: block" class="overlist-title">{{
+              item.title
+            }}</span>
+            <span class="overlist-num" style="font-size: 30px">{{
               (orderlist[item.field] || '').toLocaleString() || 0
             }}</span>
           </div>
@@ -501,8 +486,11 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -677,18 +665,36 @@ const distributionrole = () => {
 const tomall = () => {
   router.push('/wow/mall');
 };
-// 前往
-const togo = (id: string, dueDate: string) => {
-  console.log('index.vue:685===点击前往', id, dueDate);
-  // if (dueDate) {   // TODO 过期时间判断
-  orderGo({ deliveryId: id }).then((res: any) => {
-    console.log('获取应用访问地址====', res);
-    window.open(res, '_blank');
-    // window.location.href=
-  });
-  // window.open(urldata);
-  // }
+const compareDate = (dateTime1: string, dateTime2: string) => {
+  const formatDate1 = new Date(dateTime1);
+  const formatDate2 = new Date(dateTime2);
+  if (formatDate1 > formatDate2) {
+    return true;
+  }
+  return false;
 };
+// 前往
+const togo = (idd: string, dueDate: string) => {
+  console.log('index.vue:685===点击前往', idd, dueDate);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = `0${now.getMonth() + 1}`.slice(-2);
+  const day = `0${now.getDate()}`.slice(-2);
+  const hours = `0${now.getHours()}`.slice(-2);
+  const minutes = `0${now.getMinutes()}`.slice(-2);
+  const seconds = `0${now.getSeconds()}`.slice(-2);
+  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  if (!dueDate || compareDate(dueDate, formattedTime)) {
+    // TODO 过期时间判断
+    orderGo({ id: idd }).then((res: any) => {
+      console.log('获取应用访问地址====', res);
+      window.open(res, '_blank');
+      // window.location.href=
+    });
+    // window.open(urldata);
+  }
+};
+
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProduct.value = item; // 配置的应用 id
@@ -698,19 +704,31 @@ const configurationapp = (item: Record<string, any>) => {
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
+const filetype = (val: any) => {
+  if (val === 'doc') {
+    return 'application/msword;charset=utf-8';
+  }
+  if (val === 'docx') {
+    return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8';
+  }
+  return 'application/pdf;charset=utf-8';
+};
 // 使用说明
 const instructionsuse = (fileurl: string, prodtId: string) => {
   console.log(fileurl, prodtId, 'prodtId');
-
+  const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
+  console.log(type, 'type----');
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
     // console.log(res);
     // console.log(res, '导出数据');
+
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
     const blogw = new Blob([res], {
       // type: 'application/x-abiword;charset=utf-8'
       // type: 'application/msword;charset=utf-8',
-      type: 'application/pdf;charset=utf-8',
+      // type: 'application/pdf;charset=utf-8',
+      type: filetype(type),
     });
     const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
     link.href = objectUrl;
@@ -735,6 +753,7 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
   //   pdf.save('kexincunzheng.pdf');
   // });
 };
+
 // 更多
 const multiples = () => {
   router.push('/buyer/order');
@@ -790,17 +809,18 @@ onMounted(() => {
   width: 100%;
 
   .headers {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
     // background-color: pink;
     // height: 300px;
     background-image: url('./image/header.png');
+    background-size: cover;
 
     .tops {
       //   margin: 2%;
       float: left;
       width: 100%;
       height: 80px;
-      margin: 30px 0 20px 0;
+      margin: 24px 0;
       background-color: #fff;
       border-radius: 4px;
 
@@ -808,21 +828,31 @@ onMounted(() => {
         float: left;
         width: 44px;
         height: 44px;
-        margin: 18px 0 0 20px;
+        margin: 14px 0 0 24px;
       }
 
       .rights {
         float: left;
         width: 300px;
         height: 44px;
-        margin: 5px 0 0 10px;
+        margin: 10px 0 0 12px;
 
         .name {
-          height: 0;
+          // height: 0;
+          color: #223354;
+          font-weight: 600;
+          font-size: 15px;
+          font-style: normal;
+          line-height: 34px;
         }
 
         .inofs {
           .inofslist {
+            margin-top: 2px;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 20px;
+
             p {
               float: left;
             }
@@ -860,7 +890,7 @@ onMounted(() => {
           .statuslist {
             float: left;
             width: 52px;
-            margin-top: -3px;
+            // margin-top: -3px;
             padding: 1px 8px;
             font-weight: 400;
             font-size: 12px;
@@ -894,18 +924,24 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 220px;
+      height: 240px;
 
       .dirleft {
         width: 78%;
         height: 100%;
+        padding: 16px 24px;
         background-color: #fff;
         border: 1px solid #e5e8ef;
         border-radius: 4px;
 
-        .titleleft {
-          padding: 0 0 0 20px;
+        h3 {
+          color: #223354;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 34px;
+        }
 
+        .titleleft {
           .dirlist {
             display: flex;
             justify-content: space-between;
@@ -916,24 +952,60 @@ onMounted(() => {
               padding: 0;
             }
 
+            .dirlist-step {
+              display: inline-block;
+              margin-top: 2px;
+              color: #1d2129;
+              font-weight: 500;
+              font-size: 16px;
+              line-height: 24px;
+            }
+
+            img {
+              float: left;
+              width: 28px;
+              height: 28px;
+              margin-right: 8px;
+            }
+
+            .ition {
+              width: 80px;
+              height: 1px;
+              margin-top: 13px;
+              background-color: #4e5969;
+            }
+
+            .btns {
+              margin-left: 36px;
+
+              p {
+                color: #9098a9;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 20px;
+              }
+            }
+
             div:nth-child(1) {
               width: 20%;
 
-              img {
-                float: left;
-                width: 20px;
-                height: 20px;
-                margin-right: 7px;
-              }
-
+              // img {
+              //   float: left;
+              //   width: 20px;
+              //   height: 20px;
+              //   margin-right: 7px;
+              // }
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 27px;
+                // margin-left: 27px;
 
-                p:nth-child(1) {
-                  color: #9098a9;
-                }
+                // p:nth-child(1) {
+                //   color: #9098a9;
+                //   font-size: 14px;
+                //   font-weight: 400;
+                //   line-height: 20px;
+                // }
 
                 // p:nth-child(2) {
                 //   color: #1664ff;
@@ -968,23 +1040,23 @@ onMounted(() => {
 
               img {
                 float: left;
-                width: 20px;
-                height: 20px;
-                margin-right: 7px;
+                // width: 20px;
+                // height: 20px;
+                // margin-right: 7px;
               }
 
               .ition {
                 float: left;
-                width: 35%;
-                height: 1px;
-                margin-top: 10px;
-                background-color: #4e5969;
+                // width: 35%;
+                // height: 1px;
+                // margin-top: 13px;
+                // background-color: #4e5969;
               }
 
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 45%;
+                margin-left: 116px;
 
                 p:nth-child(1) {
                   color: #9098a9;
@@ -1001,23 +1073,23 @@ onMounted(() => {
 
               img {
                 float: left;
-                width: 20px;
-                height: 20px;
-                margin-right: 7px;
+                // width: 20px;
+                // height: 20px;
+                // margin-right: 7px;
               }
 
               .ition {
                 float: left;
-                width: 35%;
-                height: 1px;
-                margin-top: 10px;
-                background-color: #4e5969;
+                // width: 35%;
+                // height: 1px;
+                // margin-top: 10px;
+                // background-color: #4e5969;
               }
 
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 45%;
+                margin-left: 116px;
 
                 p:nth-child(1) {
                   color: #9098a9;
@@ -1034,23 +1106,23 @@ onMounted(() => {
 
               img {
                 float: left;
-                width: 20px;
-                height: 20px;
-                margin-right: 7px;
+                // width: 20px;
+                // height: 20px;
+                // margin-right: 7px;
               }
 
               .ition {
                 float: left;
-                width: 35%;
-                height: 1px;
-                margin-top: 10px;
-                background-color: #4e5969;
+                // width: 35%;
+                // height: 1px;
+                // margin-top: 10px;
+                // background-color: #4e5969;
               }
 
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 45%;
+                margin-left: 116px;
 
                 p:nth-child(1) {
                   color: #9098a9;
@@ -1067,14 +1139,25 @@ onMounted(() => {
       .firmright {
         width: 20%;
         height: 100%;
-        padding: 15px 0 0 30px;
+        padding: 16px 0 0 24px;
         background-image: url('./image/backgroup.png');
         // background-color: #fff;
         background-size: cover;
         border-radius: 4px;
 
         .firm {
+          display: flex;
+          align-items: center;
           width: 100%;
+
+          .firm-title {
+            display: inline-block;
+            margin-right: 8px;
+            color: #223354;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 34px;
+          }
 
           span {
             font-size: 12px;
@@ -1102,15 +1185,22 @@ onMounted(() => {
         }
 
         .fimelist {
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 20px;
+
           ul {
             li {
-              margin-top: 5px;
+              // margin-top: 5px;
+              display: flex;
+              align-items: center;
+              color: #4e5969;
 
               span:nth-child(1) {
                 float: left;
                 width: 6px;
                 height: 6px;
-                margin: 5px 8px 0 0;
+                margin-right: 8px;
                 background-color: #4e5969;
                 border-radius: 6px;
               }
@@ -1265,11 +1355,18 @@ onMounted(() => {
   }
 
   .purchased {
-    width: 96%;
-    margin: 0 2% 30px 2%;
-    padding: 7px 20px 20px 20px;
+    // width: 96%;
+    margin: 0 24px 24px;
+    padding: 16px 24px 27px;
     border: 1px solid #e5e8ef;
     border-radius: 4px;
+
+    h3 {
+      color: #223354;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 34px;
+    }
 
     .Applysd {
       //   height: 500px;
@@ -1283,9 +1380,9 @@ onMounted(() => {
         display: flex;
         justify-content: space-between;
         width: 47%;
-        height: 150px;
-        margin-top: 15px;
-        padding: 20px;
+        height: 138px;
+        margin-top: 24px;
+        padding: 16px;
         // flex-shrink: 0;
         background-color: #fff;
         border: 1px solid #e5e8ef;
@@ -1296,10 +1393,43 @@ onMounted(() => {
           flex-direction: column;
           width: 77%;
           // align-items: flex-end;
+          .tophead-to {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 24px;
+
+            .to-container {
+              display: flex;
+              align-items: center;
+            }
+
+            .to-img {
+              display: inline-block;
+              width: 16px;
+              height: 16px;
+              margin-left: 4px;
+              background: url('./image/togo.svg');
+            }
+          }
+
           .tophead {
             display: flex;
             justify-content: space-between;
             width: 100%;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px;
+          }
+
+          .purchased-content {
+            color: #4e5969;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px;
           }
         }
       }
@@ -1307,17 +1437,32 @@ onMounted(() => {
   }
 
   .views {
-    width: 96%;
-    margin: 0 2% 30px 2%;
-    padding: 7px 20px 20px 20px;
+    // width: 96%;
+    margin: 0 24px 24px;
+    padding: 16px 24px;
     background-image: url('./image/btn.png');
+    background-size: cover;
     border: 1px solid #e5e8ef;
     border-radius: 4px;
 
     .tooplist {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      margin: 10px 0;
+      margin-bottom: 24px;
+
+      h3 {
+        color: #223354;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 34px;
+      }
+
+      p {
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+      }
     }
 
     .overlist {
@@ -1328,8 +1473,22 @@ onMounted(() => {
       .overlistdata {
         width: 15%;
         height: 100px;
-        padding: 20px;
-        background-color: #fff;
+        padding: 16px 16px 22px;
+        background: rgba(255, 255, 255, 0.4);
+
+        .overlist-title {
+          color: #86909c;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 22px;
+        }
+
+        .overlist-num {
+          color: #1d2129;
+          font-weight: 700;
+          font-size: 30px;
+          line-height: 38px;
+        }
       }
     }
   }

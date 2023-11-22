@@ -171,10 +171,7 @@
                 <div class="grid-content bg-purple-light">
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
-                    <p
-                      v-if="item.saleType === 0"
-                      class="bottom"
-                      style="color: #86909c"
+                    <p v-if="item.saleType === 0" class="bottom"
                       >({{ item.accountCount }}个账号{{
                         item.buyDuration
                       }}个月)</p
@@ -195,9 +192,7 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
-                    <p class="bottom" style="color: #86909c"
-                      >(已优惠:{{ item.couponMoney }}元)</p
-                    >
+                    <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p>
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
@@ -246,7 +241,10 @@
                   <div class="desc">
                     <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
                     <t-button
-                      v-if="item.orderStatus === 0 && item.saleType !== 2"
+                      v-if="
+                        (item.orderStatus === 0 && item.saleType !== 2) ||
+                        item.orderStatus === 4
+                      "
                       type="text"
                       style="width: 100%"
                       @click="
@@ -267,7 +265,7 @@
                     >
                     <!-- v-if="item.orderStatus === 5" -->
                     <t-button
-                      v-if="item.orderStatus === 5"
+                      v-if="item.orderStatus === 2"
                       type="text"
                       style="width: 100%"
                       @click="delivery(item.deliveryType, item.id)"
@@ -314,7 +312,7 @@
             @pagination="getTableDataOne"
           ></Pagination>
         </div> -->
-        <div style="float: right; margin-top: 10px">
+        <div class="pageWraper">
           <t-pagination
             v-if="formInline.total > 10"
             :total="formInline.total"
@@ -550,9 +548,13 @@ const clickNav = (value: string | null, ins: number) => {
   formInline.tabstatus = value;
   if (ins === 1) {
     orderStatusSelect.value = [
+      // {
+      //   label: '待交付',
+      //   value: '2',
+      // },
       {
-        label: '待交付',
-        value: '2',
+        label: '待支付',
+        value: '0',
       },
       {
         label: ' 已驳回',
@@ -678,6 +680,7 @@ const clearSearchles = () => {
 // 分页 页码发生改变
 const getTableDataOne = (current: number) => {
   formInline.pageNum = current;
+  init();
 };
 // 分页 每页条数
 const pagesizechange = (pageSize: number) => {
@@ -862,6 +865,16 @@ const ondeliveryModalConfirm = () => {
     .cardContent {
       margin-bottom: -20px;
 
+      .pageWraper {
+        display: flex;
+        justify-content: end;
+        margin-top: 4px;
+
+        :deep(.tele-pagination) {
+          margin-bottom: 32px;
+        }
+      }
+
       .row-title {
         width: 100%;
         margin-bottom: 12px;
@@ -968,6 +981,11 @@ const ondeliveryModalConfirm = () => {
               display: inline-block;
               margin-bottom: 4px;
             }
+
+            .bottom {
+              color: #86909c;
+              line-height: 20px;
+            }
           }
 
           .imgs {
@@ -989,10 +1007,6 @@ const ondeliveryModalConfirm = () => {
             font-weight: 400;
             font-size: 12px;
             line-height: 20px;
-            // width: 50%;
-            // margin-top: 5px;
-            // line-height: 20px;
-            // text-align: left;
           }
         }
       }

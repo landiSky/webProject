@@ -443,6 +443,9 @@ const onUploadChange = (fileList: any, field: string) => {
     const { code, data } = item.response || {};
     if (code === 200) {
       formModel.value[field] = data;
+      formRef.value.validateField(
+        field === 'businessLicense' ? 'businessLicense' : 'contactidcard'
+      );
     }
   });
 };
