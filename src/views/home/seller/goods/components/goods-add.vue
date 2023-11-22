@@ -126,7 +126,7 @@
                   <div :class="`tele-upload-list-item`">
                     <div class="tele-upload-picture-card">
                       <div class="tele-upload-picture-card-text">
-                        <IconPlus size="16" />
+                        <IconPlus size="16" stroke-width="6" />
                         <div
                           style="
                             margin-top: 8px;
@@ -214,7 +214,7 @@
                   <div :class="`tele-upload-list-item`">
                     <div class="tele-upload-picture-card">
                       <div class="tele-upload-picture-card-text">
-                        <IconPlus size="16" />
+                        <IconPlus size="16" stroke-width="6" />
                         <div
                           style="
                             margin-top: 8px;
