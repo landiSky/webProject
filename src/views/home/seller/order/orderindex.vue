@@ -181,7 +181,7 @@
               </t-col>
               <t-col :span="3">
                 <div v-if="item.saleType !== 2" class="grid-content">
-                  <div class="desc">¥{{ item.productPrice }}</div>
+                  <div class="desc"> ¥{{ item.productPrice }}</div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
                   <div class="desc">面议</div>
@@ -372,8 +372,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
