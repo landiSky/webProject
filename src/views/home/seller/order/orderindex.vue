@@ -1005,6 +1005,7 @@ const ondeliveryModalConfirm = () => {
             img {
               width: 80px;
               height: 80px;
+              border: 1px #e5e8ef;
               border-radius: 2px;
             }
           }
