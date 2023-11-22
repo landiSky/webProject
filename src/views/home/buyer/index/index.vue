@@ -945,7 +945,10 @@ onMounted(() => {
           .dirlist {
             display: flex;
             justify-content: space-between;
-            width: 90%;
+            // width: 90%;
+            > div {
+              width: 25%;
+            }
 
             :deep(.tele-btn-size-medium) {
               height: 0;
@@ -972,6 +975,7 @@ onMounted(() => {
               width: 80px;
               height: 1px;
               margin-top: 13px;
+              margin-left: -80px;
               background-color: #4e5969;
             }
 
@@ -987,7 +991,7 @@ onMounted(() => {
             }
 
             div:nth-child(1) {
-              width: 20%;
+              // width: 20%;
 
               // img {
               //   float: left;
@@ -1036,8 +1040,7 @@ onMounted(() => {
             }
 
             div:nth-child(2) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1056,8 +1059,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1069,8 +1071,7 @@ onMounted(() => {
             }
 
             div:nth-child(3) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1089,8 +1090,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1102,8 +1102,7 @@ onMounted(() => {
             }
 
             div:nth-child(4) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1122,8 +1121,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1471,10 +1469,21 @@ onMounted(() => {
       width: 100%;
 
       .overlistdata {
-        width: 15%;
+        width: 20%;
         height: 100px;
+        margin-right: 16px;
         padding: 16px 16px 22px;
         background: rgba(255, 255, 255, 0.4);
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        &:hover {
+          background-image: url('./image/overdata-bg.jpg');
+          background-size: auto 100%;
+          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+        }
 
         .overlist-title {
           color: #86909c;
