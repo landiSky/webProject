@@ -691,7 +691,7 @@ onMounted(() => {
   .toperror {
     float: left;
     width: 100%;
-    height: 110px;
+    // height: 110px;
     background-color: #f2f3f8;
   }
 }

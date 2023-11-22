@@ -181,7 +181,7 @@
               </t-col>
               <t-col :span="3">
                 <div v-if="item.saleType !== 2" class="grid-content">
-                  <div class="desc">¥{{ item.productPrice }}</div>
+                  <div class="desc"> ¥{{ item.productPrice }}</div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
                   <div class="desc">面议</div>
