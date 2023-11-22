@@ -243,6 +243,4 @@ onMounted(() => {
 :deep(.tele-col-19) {
   flex: 1;
 }
-
-// }
 </style>
