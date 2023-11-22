@@ -6,6 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
+      :on-before-back="onBack"
       @back="emit('cancel')"
     >
       <template #title>
@@ -26,7 +27,7 @@
           >
           <t-button
             :style="{
-              marginRight: step == 1 ? '134px' : '120px',
+              marginRight: step == 1 ? '166px' : '152px',
               fontSize: '14px',
               width: '76px',
             }"
@@ -1297,7 +1298,7 @@ const doSave = async () => {
 };
 
 // 取消
-const clickCancel = () => {
+const clickCancel = (done: (closed: boolean) => void) => {
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
   }
@@ -1324,10 +1325,16 @@ const clickCancel = () => {
         emit('cancel');
       },
     });
+    done(false);
   } else {
     visible.value = false;
     emit('cancel');
+    done(true);
   }
+};
+
+const onBack = (done: (closed: boolean) => void) => {
+  clickCancel(done);
 };
 
 // 保存
@@ -1474,7 +1481,7 @@ const validateAP = (index: number, key: string) => {
 
 .add-goods-container {
   .center-body {
-    width: 600px;
+    width: 632px;
     margin: 0 auto;
   }
 
@@ -1563,7 +1570,7 @@ const validateAP = (index: number, key: string) => {
 }
 
 :deep(.tele-form-item-wrapper-col) {
-  max-width: 600px;
+  max-width: 100%;
 }
 
 :deep(.tele-tag-checked) {
@@ -1625,7 +1632,10 @@ const validateAP = (index: number, key: string) => {
   width: 100px;
   height: 100px;
   margin-right: 8px;
-  margin-bottom: 8px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   .file-image {
     position: relative;
