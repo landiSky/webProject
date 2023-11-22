@@ -83,7 +83,10 @@
           下架
         </t-link>
         <t-link
-          v-if="record.status === StatusEnum.WSJ"
+          v-if="record.status !== StatusEnum.YSJ"
+          :style="{
+            color: record.status === StatusEnum.WSJ ? '#1664FF' : '#C9CDD4',
+          }"
           @click="clickUpBtn(record)"
         >
           上架
@@ -432,6 +435,9 @@ const doUp = (id: any) => {
 };
 // 上架
 const clickUpBtn = async (record: any) => {
+  if (record.status !== StatusEnum.WSJ) {
+    return;
+  }
   const r = await preUp(record.id);
   if (r) {
     Modal.warning({
