@@ -312,7 +312,7 @@
             @pagination="getTableDataOne"
           ></Pagination>
         </div> -->
-        <div style="float: right; margin-top: 10px">
+        <div class="pageWraper">
           <t-pagination
             v-if="formInline.total > 10"
             :total="formInline.total"
@@ -372,8 +372,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -861,6 +864,16 @@ const ondeliveryModalConfirm = () => {
 
     .cardContent {
       margin-bottom: -20px;
+
+      .pageWraper {
+        display: flex;
+        justify-content: end;
+        margin-top: 4px;
+
+        :deep(.tele-pagination) {
+          margin-bottom: 32px;
+        }
+      }
 
       .row-title {
         width: 100%;
