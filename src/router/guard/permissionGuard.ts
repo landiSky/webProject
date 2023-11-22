@@ -30,10 +30,8 @@ export function createPermissionGuard(router: Router) {
 
     if (getToken()) {
       if (!userStore.userInfo) {
-        const userInfo: Record<
-          string,
-          any
-        > = await userStore.getUserBasicInfo();
+        const userInfo: Record<string, any> =
+          await userStore.getUserBasicInfo();
 
         if (userInfo?.userId) {
           if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
