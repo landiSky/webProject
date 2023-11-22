@@ -26,6 +26,7 @@
           accept=".jpg,.png,.bmp,.gif,.jpeg"
           image-preview
           class="uploadimg"
+          multiple
           @before-upload="beforeUpload"
           @change="changeclick"
         >
@@ -74,12 +75,14 @@ const updataimg = ref([
   {
     uid: '-2',
     name: '20200717-103937.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
   {
     uid: '-1',
     name: 'hahhahahahaha.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
+    url:
+      'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
   },
 ]);
 const visible = ref(true);
@@ -210,6 +213,10 @@ onMounted(() => {
     .tele-upload-list-picture {
       width: 100px;
       height: 100px;
+
+      img {
+        border: 1px solid #e5e8ef;
+      }
       // margin-bottom: 0;
       &:nth-child(5) {
         margin-right: 0;
