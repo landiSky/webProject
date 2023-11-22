@@ -1,15 +1,6 @@
-import axios, {
-  Axios,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from 'axios';
+import axios, { Axios, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { Message } from '@tele-design/web-vue';
 import { getToken, clearToken } from '@/utils/auth';
-
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 const $http: AxiosInstance = axios.create({
   timeout: 60 * 1000,

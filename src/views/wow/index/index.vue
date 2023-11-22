@@ -142,13 +142,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Modal, Message } from '@tele-design/web-vue';
+import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { NodeAuthStatus } from '@/enums/common';
-import carouse1 from '@/assets/images/wow/index/carouse1.png';
 import carouse2 from '@/assets/images/wow/index/carouse2.png';
 import carouse3 from '@/assets/images/wow/index/carouse3.png';
 import carouse4 from '@/assets/images/wow/index/carouse4.png';
@@ -396,46 +395,6 @@ const columns = [
     },
   },
 ];
-
-const clickApplyIdService = () => {
-  if (!userInfo.value?.userId) {
-    // userStore.jumpToLogin();
-    Message.warning('暂未登录，请先登录后使用');
-  } else if (!userInfoByCompany?.companyId) {
-    Modal.info({
-      title: '使用提醒',
-      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不开通',
-      okText: '去开通',
-      onOk: () => {
-        router.push({
-          path: '/buyer/index',
-        });
-      },
-    });
-  } else {
-    const { nodeStatus, idPointer } = userInfoByCompany || {};
-    if (nodeStatus !== NodeAuthStatus.AUTHED) {
-      Modal.info({
-        title: '使用提醒',
-        content: '企业节点完成认证后，方可使用。',
-        titleAlign: 'start',
-        hideCancel: false,
-        cancelText: '取消',
-        okText: '去查看',
-        onOk: () => {
-          router.push({
-            path: '/buyer/index',
-          });
-        },
-      });
-    } else {
-      window.open(idPointer, '_blank');
-    }
-  }
-};
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {

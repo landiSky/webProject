@@ -26,7 +26,7 @@
           >
           <t-button
             :style="{
-              marginRight: step == 1 ? '134px' : '120px',
+              marginRight: step == 1 ? '166px' : '152px',
               fontSize: '14px',
               width: '76px',
             }"
@@ -1474,7 +1474,7 @@ const validateAP = (index: number, key: string) => {
 
 .add-goods-container {
   .center-body {
-    width: 600px;
+    width: 632px;
     margin: 0 auto;
   }
 
@@ -1563,7 +1563,7 @@ const validateAP = (index: number, key: string) => {
 }
 
 :deep(.tele-form-item-wrapper-col) {
-  max-width: 600px;
+  max-width: 100%;
 }
 
 :deep(.tele-tag-checked) {
@@ -1625,7 +1625,10 @@ const validateAP = (index: number, key: string) => {
   width: 100px;
   height: 100px;
   margin-right: 8px;
-  margin-bottom: 8px;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   .file-image {
     position: relative;
