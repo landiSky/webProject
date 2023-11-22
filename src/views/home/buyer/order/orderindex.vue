@@ -165,9 +165,7 @@
                       alt=""
                     />
                   </div>
-                  <div class="title">
-                    {{ item.productName }}
-                  </div>
+                  <div class="title"> {{ item.productName }} </div>
                 </div>
               </t-col>
               <t-col :span="3">
@@ -364,8 +362,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -973,6 +974,7 @@ onMounted(() => {
             img {
               width: 80px;
               height: 80px;
+              border: 1px #e5e8ef;
               border-radius: 2px;
             }
           }
