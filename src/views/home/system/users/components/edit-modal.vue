@@ -148,16 +148,8 @@ const formRules = {
     {
       validator: (value: any, cb: any) => {
         return new Promise((resolve: any) => {
-          // if (value.length === 11) {
-          //   console.log('name must be admin');
-          //   cb('name must be admin');
-          // }
-          // resolve();
-          console.log(rolePhones.value, state.formModel.phone);
-
           if (rolePhones.value === state.formModel.phone) {
             resolve();
-            console.log(rolePhones.value, state.formModel.phone);
           } else if (value.length === 11) {
             memberPhone({
               type: '0',
@@ -167,40 +159,20 @@ const formRules = {
               if (res.data.code === 200) {
                 // console.log('====1999');
               } else {
-                // console.log('该手机号尚未在平台注册');
                 cb(res.data.message);
               }
               resolve();
             });
           }
-
-          // window.setTimeout(() => {
-
-          // }, 2000);
         });
       },
     },
   ],
 };
-const init = () => {
-  rolelist({
-    pageSize: 1000,
-    pageNum: 1,
-    companyId: userInfoByCompany.value.companyId,
-  })
-    .then((res: any) => {
-      console.log(res);
-      roleSelect.value = res.records;
-    })
-    .catch((err) => {});
-};
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
-    console.log('111', errors);
     if (!errors) {
-      console.log(errors);
-      console.log(state.formModel);
       menberAdd({
         id: state.formModel.id,
         memberId: state.formModel.memberId,
@@ -219,21 +191,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
         });
     } else {
       done(false);
-      console.log(state.formModel);
     }
   });
 };
 
-// };
-// 获取已注册用户
-// const getName = () => {};
-// 查询角色
-// const roleName = () => {};
-// 查找手机号是否注册
-// const resPhone = () => {};
-// const applist = (a: any) => {
-//   console.log(a, 'a, b, c');
-// };
 onMounted(() => {
   rolelist({
     pageSize: 1000,
@@ -242,10 +203,8 @@ onMounted(() => {
     type: 1,
   })
     .then((res: any) => {
-      console.log(res);
       roleSelect.value = res.records;
       if (isEdit.value) {
-        console.log(props.data, '编辑');
         const {
           id,
           userId,
@@ -269,13 +228,9 @@ onMounted(() => {
           roleName,
         };
         rolePhones.value = phone;
-      } else {
-        // 新增
-        console.log(props.data, '新增');
       }
     })
     .catch((err) => {});
-  // init();
 });
 </script>
 

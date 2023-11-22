@@ -64,10 +64,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { Modal, Message } from '@tele-design/web-vue';
+import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
 
@@ -80,7 +79,7 @@ const handleLogout = async () => {
   try {
     await userStore.logout();
   } catch (e) {
-    console.log('index.vue:67====handleLogout', e);
+    console.log('登出异常:', e);
   }
 
   // router.push({ path: '/wow' });
@@ -130,7 +129,6 @@ const goWow = () => {
 };
 
 const onChangeCompany = async (companyId: string) => {
-  console.log('===切换了企业，发送消息，刷新到买家概览页', companyId);
   const resultList = userInfo.value?.companyList?.filter(
     (company: Record<string, any>) => company.companyId === companyId
   );
@@ -145,10 +143,6 @@ const onChangeCompany = async (companyId: string) => {
 
   // 要在 app.vue 中监听 userstore.的变化
 };
-
-onMounted(() => {
-  console.log('index.vue:153', selectCompany.value);
-});
 </script>
 
 <style lang="less" scoped>

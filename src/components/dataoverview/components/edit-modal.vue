@@ -333,16 +333,7 @@ const onAuthModalConfirm = () => {
   authModalVisible.value = false;
   emit('cancel');
 };
-const init = () => {
-  authentication({ companyId: String(userInfoByCompany.value?.companyId) })
-    .then((res) => {
-      console.log(res, 'res');
-      // stateles.value = res.data === undefined ? {} : res.data;
-      // @ts-ignore
-      stateles.value = res;
-    })
-    .catch((err) => {});
-};
+
 // 企业认证   去认证
 const viewdetails = () => {
   emit('confirm');
@@ -359,17 +350,6 @@ const viewdetailsnode = () => {
 const nodegotoverify = () => {
   authModalVisible.value = true;
 };
-onMounted(() => {
-  // if (isEdit.value) {
-  //   // 这里分两种情况
-  //   // 一是编辑信息从列表传入
-  //   const { roleName, roleDesc, phone } = props.data;
-  //   state.formModel = { roleName, roleDesc, phone };
-  //   // 二是从接口获取
-  //   // getDetail();
-  // }
-  // init();
-});
 </script>
 
 <style scoped lang="less">

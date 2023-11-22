@@ -28,14 +28,6 @@ export function createPermissionGuard(router: Router) {
     const userStore = useUserStore();
     // const menuStore = useMenuStore();
 
-    console.log(
-      'permissionGuard.ts:28',
-      to.path,
-      from.path,
-      getToken(),
-      userStore?.userInfo
-    );
-
     if (getToken()) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
@@ -48,49 +40,23 @@ export function createPermissionGuard(router: Router) {
 
         if (userInfo?.userId) {
           if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
-            console.log(
-              'permissionGuard.ts==跳到安全校验，第一次获取 userinfo',
-              to.fullPath,
-              from.fullPath
-            );
             // 跳转到绑定页面，进行手机号绑定和安全校验
             next('/safetycheck');
             // return;
           }
           // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
           if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
-            console.log(
-              'permissionGuard.ts:60===跳到运营首页',
-              to.fullPath,
-              from.fullPath
-            );
             next('/goods');
           } else {
-            console.log(
-              'permissionGuard.ts:69===跳到，继续',
-              to.fullPath,
-              from.fullPath
-            );
-
             next();
           }
         } else {
-          console.log(
-            'permissionGuard.ts:78===跳到前台首页',
-            to.fullPath,
-            from.fullPath
-          );
           next('/wow/index');
         }
       } else if (
         userStore.userInfo?.bindStatus === 1 ||
         userStore.userInfo?.safeCheck
       ) {
-        console.log(
-          'permissionGuard.ts:89=== 已有用户信息，跳到安全校验',
-          to.fullPath,
-          from.fullPath
-        );
         if (to.fullPath === '/safetycheck' || to.fullPath.startsWith('/wow/')) {
           next();
         } else {
@@ -98,24 +64,12 @@ export function createPermissionGuard(router: Router) {
         }
         // 跳转到绑定页面，进行手机号绑定和安全校验
       } else if (to.matched.length === 0) {
-        console.log(
-          'permissionGuard.ts:97=== 没有匹配到路由，跳首页',
-          to.fullPath,
-          from.fullPath
-        );
         const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
         next(indexUrl);
       } else {
-        console.log(
-          'permissionGuard.ts:105=== 有用户信息，继续往下 next()',
-          to.fullPath,
-          from.fullPath
-        );
         next();
       }
     } else if (window.location.search.includes('code=')) {
-      console.log('permissionGuard.ts:52', window.location.search);
-
       const { search } = window.location;
       const codeIndex = search.indexOf('code=');
       const code = search.slice(codeIndex + 5, codeIndex + 12);
@@ -139,13 +93,12 @@ export function createPermissionGuard(router: Router) {
         import.meta.env.DEV
           ? `${import.meta.env.VITE_APP_DEV_HOST}`
           : redirectUri
-      ); // TODO 只做本地测试这样写，上线
+      );
       formData.append('client_id', clientId);
       formData.append('client_secret', clientSecret);
 
       apiLoginToken(formData)
         .then((data: Record<string, any>) => {
-          console.log('permissionGuard.ts:60', data.accessToken);
           setToken(data.accessToken);
 
           // 这时候还拿不到userInfo
@@ -157,19 +110,13 @@ export function createPermissionGuard(router: Router) {
             `${window.location.protocol}//${window.location.host}/#${uriHash}`
           );
         })
-        .catch((err: any) => {
-          console.log('permissionGuard.ts:89==获取 token 异常', err);
+        .catch(() => {
           window.location.href = `${window.location.protocol}//${window.location.host}/#/wow`;
         });
     } else if (
       whiteList.indexOf(to.path) !== -1 ||
       to.path.startsWith('/wow/mall/detail/')
     ) {
-      console.log(
-        'permissionGuard.ts:164=== 最后，next()',
-        to.fullPath,
-        from.fullPath
-      );
       next();
     } else {
       // next('/login');

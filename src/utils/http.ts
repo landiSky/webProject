@@ -50,17 +50,13 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
     orgRequest
       .call(this, reqConfig)
       .then((response: any) => {
-        //  status = 2xx 范围内的状态码都会触发该函数。
-
         // ==============预处理start response========
         // data:存储的是后端实际返回的 json 数据
         const { data } = response;
         const { url, customFields } = reqConfig;
 
-        // console.log('===http', url, customFields, customFields?.returnRawResponse)
         // s0: 调用方需要自行处理原始response
         if (customFields?.returnRawResponse) {
-          // console.log('====http2', url)
           return resolve(response);
         }
 
@@ -110,13 +106,8 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
             window.location.reload();
           }
 
-          // window.location.reload();
-          // console.log('http.ts:89===code==101004 跳转到前台首页');
-          // clearToken();
-          // router.push('/wow/index');
           return reject(data);
         }
-        console.log('http.ts:91');
         const errorMsg =
           message || `接口异常：没有异常 message 提示,code: ${code}`;
 
@@ -127,7 +118,6 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
         // ==============预处理start response========
       })
       .catch((e: any) => {
-        console.log('http.ts:101', Object.keys(e));
         const { status } = e.response || {};
 
         if (status === 500) {

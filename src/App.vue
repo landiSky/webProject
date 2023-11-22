@@ -71,7 +71,7 @@ onMounted(() => {
           Message.error('资源加载失败，请尝试刷新浏览器。');
         }
       } catch (e) {
-        console.log("window addEventListener('error')");
+        console.log('error 监听异常:', e);
       }
     },
     true

@@ -108,7 +108,6 @@ const formRules = {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel);
       merchantSub({
         id: state.formModel.id,
         accessAddress: state.formModel.accessAddress,
@@ -119,23 +118,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
         .then((res) => {
           Message.success('交付成功');
           emit('confirm');
-          console.log(res);
         })
         .catch(() => {
           done(false);
         });
-      // state.formModel.address = '111';
-
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
     } else {
       done(false);
     }
@@ -146,7 +132,6 @@ onMounted(() => {
   const { id } = props.data;
 
   state.formModel.id = id;
-  console.log(state.formModel, 'state.formModel');
 });
 </script>
 
