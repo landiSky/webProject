@@ -44,7 +44,7 @@
           >
         </span>
       </span>
-      <span class="item">
+      <span class="item goods-price">
         <span class="label">商品价格:</span>
         <span class="value">
           <span
@@ -160,29 +160,31 @@
               />
             </span>
             <span class="right">
-              <span class="name" @click="() => goMallDetail(item.id)">{{
-                item.name
-              }}</span>
-              <span class="companyName">{{ item.companyName }}</span>
+              <span class="right-top">
+                <span class="name" @click="() => goMallDetail(item.id)">{{
+                  item.name
+                }}</span>
+                <span class="companyName">{{ item.companyName }}</span>
 
-              <span class="tag">
-                <t-tag color="#E8F4FF">{{
-                  DeliverTypeDesc[item.deliveryType]
-                }}</t-tag>
-              </span>
-              <span class="desc">
-                <t-typography-paragraph
-                  :ellipsis="{
-                    rows: 2,
-                    showTooltip: {
-                      type: 'tooltip',
-                      props: {
-                        isBright: true,
+                <span class="tag">
+                  <t-tag color="#E8F4FF">{{
+                    DeliverTypeDesc[item.deliveryType]
+                  }}</t-tag>
+                </span>
+                <span class="desc">
+                  <t-typography-paragraph
+                    :ellipsis="{
+                      rows: 2,
+                      showTooltip: {
+                        type: 'tooltip',
+                        props: {
+                          isBright: true,
+                        },
                       },
-                    },
-                  }"
-                  >{{ item.introduction }}
-                </t-typography-paragraph>
+                    }"
+                    >{{ item.introduction }}
+                  </t-typography-paragraph>
+                </span>
               </span>
               <span class="price">
                 <template v-if="item.lowPrice !== '-1.00'">
@@ -314,7 +316,6 @@ const onPageSizeChange = (size: number) => {
 };
 
 const goMallDetail = (id: string) => {
-  console.log('index.vue:276===商品 id', id);
   router.push({
     name: 'wowMallDetail',
     params: { id },
@@ -382,7 +383,7 @@ onMounted(() => {
 
 .content {
   width: 1176px;
-  margin: 0 auto 120px auto;
+  margin: -30px auto 120px auto;
 
   .search {
     display: flex;
@@ -393,6 +394,11 @@ onMounted(() => {
 
     span:last-child {
       text-align: right;
+    }
+
+    .goods-price {
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e5e8ef;
     }
 
     .item {
@@ -533,6 +539,13 @@ onMounted(() => {
           flex-direction: column;
           // justify-content: start;
           align-items: start;
+
+          .right-top {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: start;
+          }
 
           .name {
             margin-bottom: 4px;

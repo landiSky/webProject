@@ -15,9 +15,6 @@
         :hide-label="true"
         style="margin-bottom: 10px"
       >
-        <!-- :file-list="fileList ? fileList : []" -->
-        <!-- @success="uploadSuccess" -->
-
         <t-upload
           list-type="picture-card"
           :headers="uploadHeaders"
@@ -26,6 +23,7 @@
           accept=".jpg,.png,.bmp,.gif,.jpeg"
           image-preview
           class="uploadimg"
+          multiple
           @before-upload="beforeUpload"
           @change="changeclick"
         >
@@ -70,18 +68,7 @@ const uploadHeaders = {
   Authorization: `Bearer ${getToken()}`,
 };
 const formRef = ref();
-const updataimg = ref([
-  {
-    uid: '-2',
-    name: '20200717-103937.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
-  },
-  {
-    uid: '-1',
-    name: 'hahhahahahaha.png',
-    url: 'https://img2.baidu.com/it/u=913976134,4048569300&fm=253&fmt=auto&app=138&f=JPEG?w=745&h=500',
-  },
-]);
+
 const visible = ref(true);
 const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
 const state = reactive({
@@ -98,14 +85,12 @@ const formRules = {
       required: true,
       message: '至少上传一张',
       validator: (value: any, cb: any) => {
-        console.log('至少上传一张111', currentamount.value);
         if (
           Array.isArray(currentamountnum.value) &&
           currentamountnum.value.length
         ) {
           cb();
         } else {
-          console.log('至少上传一张', currentamountnum.value);
           return cb('至少上传一张');
         }
         return cb();
@@ -116,10 +101,8 @@ const formRules = {
 
 // FileItem
 const changeclick = (fileList: any[]) => {
-  console.log(fileList, 'fileList');
   const urlList = fileList.map((item: Record<string, any>) => {
     const { uid, name, response, url } = item;
-    console.log(response);
 
     return response?.data;
   });
@@ -132,9 +115,7 @@ const beforeUpload = (file: File) => {
       file?.name.lastIndexOf('.') + 1,
       file?.name.length
     );
-    console.log(type, 'http://10.14.148.103:9191');
     const isLt5M: boolean = file.size / 1024 / 1024 < 4.8;
-    console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
@@ -152,12 +133,10 @@ const beforeUpload = (file: File) => {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel, currentamountnum.value);
       submitImg({
         id: state.formModel.id,
         attachmentAddressArr: currentamountnum.value,
       }).then((res) => {
-        console.log(res, 'res');
         currentamount.value = [];
         // Message.success('上传支付凭证成功');
         emit('confirm');
@@ -178,28 +157,9 @@ onMounted(() => {
   // 一是编辑信息从列表传入
 
   const { id, currentamount } = props.data;
-  console.log(id);
 
   state.formModel = { id };
   currentamount.value = currentamount;
-
-  // fileList.value = currentamount?.value.map((pathName: string) => {
-  //   return { url: `/web/file/orderDownload?name=${pathName}` };
-  // });
-
-  // state.formModel.currentamount = currentamount.map((item: string) => {
-  //   return state.formModel.currentamount.push({ url: item });
-  // });
-  // console.log(state.formModel.currentamount);
-
-  // setTimeout(() => {
-  //   console.log(formRef, 'formRef');
-  //   formRef.value.setFields({
-  //     currentamount: {
-  //       value: currentamount,
-  //     },
-  //   });
-  // }, 3000);
 });
 </script>
 
@@ -210,6 +170,10 @@ onMounted(() => {
     .tele-upload-list-picture {
       width: 100px;
       height: 100px;
+
+      img {
+        border: 1px solid #e5e8ef;
+      }
       // margin-bottom: 0;
       &:nth-child(5) {
         margin-right: 0;
@@ -221,19 +185,5 @@ onMounted(() => {
       height: 100px;
     }
   }
-  // :deep(.tele-upload-list-picture) {
-  //   width: 100px;
-  //   height: 100px;
-  //   margin-bottom: 0;
-
-  //   &:nth-child(5) {
-  //     margin-right: 0;
-  //   }
-  // }
-
-  // :deep(.tele-upload-picture-card) {
-  //   width: 100px;
-  //   height: 100px;
-  // }
 }
 </style>

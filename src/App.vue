@@ -7,6 +7,7 @@ import { onMounted, watch } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
+import { clearToken } from './utils/auth';
 
 const userStore = useUserStore();
 
@@ -70,11 +71,18 @@ onMounted(() => {
           Message.error('资源加载失败，请尝试刷新浏览器。');
         }
       } catch (e) {
-        console.log("window addEventListener('error')");
+        console.log('error 监听异常:', e);
       }
     },
     true
   );
+
+  window.addEventListener('beforeunload', () => {
+    // 页面卸载前清除 token，其实是在安全校验页面回退时清空 token
+    if (window.location.hash === '#/safetycheck') {
+      clearToken();
+    }
+  });
 });
 </script>
 

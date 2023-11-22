@@ -116,8 +116,6 @@ const clickCreateOrder = () => {
   submitLoading.value = true;
   apiCreateOrder(params)
     .then((data) => {
-      console.log('index.vue:61==订单创建成功', data);
-
       router.push({
         name: 'buyerOrderDetail',
         params: {

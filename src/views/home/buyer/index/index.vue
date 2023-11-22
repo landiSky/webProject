@@ -65,6 +65,7 @@
                           CompanyAuthStatus.UNAUTH
                       "
                       type="text"
+                      class="dirlist-btn"
                       @click="authentication"
                       >去认证</t-button
                     >
@@ -116,6 +117,7 @@
                     <t-button
                       v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
+                      class="dirlist-btn"
                       @click="distributionrole"
                     >
                       邀请成员/分配权限</t-button
@@ -130,7 +132,9 @@
                   <span class="dirlist-step">浏览开通应用</span>
                   <div class="btns">
                     <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
-                    <t-button type="text" @click="tomall">去应用商城 </t-button>
+                    <t-button type="text" class="dirlist-btn" @click="tomall"
+                      >去应用商城
+                    </t-button>
                     <!-- <p> 去应用商城</p> -->
                   </div>
                 </div>
@@ -572,26 +576,21 @@ const orderOverall = [
 
 // 订单概览 接口
 const orderlistdata = () => {
-  console.log('index.vue:648===获取订单概览接口', userInfoByCompany.value);
   orderOver({
     userCompanyId: String(userInfoByCompany.value?.companyId),
     flag: '0',
   }).then((res) => {
-    console.log(res, '订单概览 接口');
     // @ts-ignore
     orderlist.value = res;
   });
 };
 // 已购应用
 const authDialog = () => {
-  console.log(userInfoByCompany.value, '---');
-
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
     companyId: userInfoByCompany.value?.companyId,
     userId: userInfo.value?.userId, // userInfoByCompany.value?.id || '',
   }).then((res) => {
-    console.log(res);
     authDialogVisible.value = res || [];
   });
 };
@@ -609,7 +608,6 @@ const onAuthModalConfirm = () => {
 };
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
-  // console.log(gotoverifys.value);
   gotoverifys.value = true;
   editModalVisible.value = false;
 };
@@ -617,7 +615,6 @@ const onEditModalConfirm = () => {
 const hasdflags = () => {
   editModalVisible.value = false;
   detailflag.value = true;
-  console.log(detailflag.value);
 };
 // 查看详情
 const viewdetails = () => {
@@ -672,7 +669,6 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
 };
 // 前往
 const togo = (idd: string, dueDate: string) => {
-  console.log('index.vue:685===点击前往', idd, dueDate);
   const now = new Date();
   const year = now.getFullYear();
   const month = `0${now.getMonth() + 1}`.slice(-2);
@@ -684,11 +680,8 @@ const togo = (idd: string, dueDate: string) => {
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
     orderGo({ id: idd }).then((res: any) => {
-      console.log('获取应用访问地址====', res);
       window.open(res, '_blank');
-      // window.location.href=
     });
-    // window.open(urldata);
   }
 };
 
@@ -712,13 +705,8 @@ const filetype = (val: any) => {
 };
 // 使用说明
 const instructionsuse = (fileurl: string, prodtId: string) => {
-  console.log(fileurl, prodtId, 'prodtId');
   const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
-  console.log(type, 'type----');
   fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
-    // console.log(res);
-    // console.log(res, '导出数据');
-
     const link = document.createElement('a');
     //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
     const blogw = new Blob([res], {
@@ -729,26 +717,11 @@ const instructionsuse = (fileurl: string, prodtId: string) => {
     });
     const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
     link.href = objectUrl;
-    // let file_name = `${moment().format(
-    //   'YYYY-MM-DD HH:mm:ss'
-    // )}的${list_name}列表.xlsx`;
     const fileName = '使用说明';
     link.download = fileName; //  下载的时候自定义的文件名
     link.click();
     window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
   });
-
-  // const url = `http://mozilla.github.io/pdf.js/web/compressed.tracemonkey-pldi-09.pdf`;
-  // window.open(url, '_blank');
-  // const input: any = document.getElementById('page');
-  // html2canvas(input).then((canvas: any) => {
-  //   const imgData = canvas.toDataURL('image/png');
-  //   const pdf = new JsPDF('p', 'pt', 'a4');
-  //   const width = pdf.internal.pageSize.getWidth();
-  //   const height = pdf.internal.pageSize.getHeight();
-  //   pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-  //   pdf.save('kexincunzheng.pdf');
-  // });
 };
 
 // 更多
@@ -804,6 +777,8 @@ onMounted(() => {
 // }
 .cverbox {
   width: 100%;
+  height: 100%;
+  background-color: #f2f3f8;
 
   .headers {
     margin-bottom: 24px;
@@ -942,7 +917,10 @@ onMounted(() => {
           .dirlist {
             display: flex;
             justify-content: space-between;
-            width: 90%;
+            // width: 90%;
+            > div {
+              width: 25%;
+            }
 
             :deep(.tele-btn-size-medium) {
               height: 0;
@@ -969,6 +947,7 @@ onMounted(() => {
               width: 80px;
               height: 1px;
               margin-top: 13px;
+              margin-left: -80px;
               background-color: #4e5969;
             }
 
@@ -981,10 +960,14 @@ onMounted(() => {
                 font-size: 14px;
                 line-height: 20px;
               }
+
+              .dirlist-btn {
+                font-size: 14px;
+              }
             }
 
             div:nth-child(1) {
-              width: 20%;
+              // width: 20%;
 
               // img {
               //   float: left;
@@ -1033,8 +1016,7 @@ onMounted(() => {
             }
 
             div:nth-child(2) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1053,8 +1035,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1066,8 +1047,7 @@ onMounted(() => {
             }
 
             div:nth-child(3) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1086,8 +1066,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1099,8 +1078,7 @@ onMounted(() => {
             }
 
             div:nth-child(4) {
-              width: 35%;
-
+              // width: 35%;
               img {
                 float: left;
                 // width: 20px;
@@ -1119,8 +1097,7 @@ onMounted(() => {
               .btns {
                 float: left;
                 width: 100%;
-                margin-left: 116px;
-
+                // margin-left: 116px;
                 p:nth-child(1) {
                   color: #9098a9;
                 }
@@ -1468,10 +1445,21 @@ onMounted(() => {
       width: 100%;
 
       .overlistdata {
-        width: 15%;
+        width: 20%;
         height: 100px;
+        margin-right: 16px;
         padding: 16px 16px 22px;
         background: rgba(255, 255, 255, 0.4);
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        &:hover {
+          background-image: url('./image/overdata-bg.jpg');
+          background-size: auto 100%;
+          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+        }
 
         .overlist-title {
           color: #86909c;

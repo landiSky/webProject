@@ -235,7 +235,6 @@ const getUserDetail = () => {
   // 调后端接口
   authDetails({ companyId: String(userInfoByCompany.value?.companyId) }).then(
     (res) => {
-      console.log(res);
       // @ts-ignore
       detaillist.value = res;
     }
@@ -247,7 +246,6 @@ const editmessage = () => {
 };
 
 onMounted(() => {
-  console.log('111');
   // if (props.data?.id) {
   getUserDetail();
   // }

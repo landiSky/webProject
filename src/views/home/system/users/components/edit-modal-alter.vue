@@ -178,7 +178,7 @@ const handleLogout = async () => {
   try {
     await userStore.logout();
   } catch (e) {
-    console.log('index.vue:67====handleLogout', e);
+    console.log('登出异常:', e);
   }
 
   router.push({ path: '/wow' });
@@ -186,7 +186,6 @@ const handleLogout = async () => {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel);
       menberChangeAdmin({
         newAdminMemberId: state.formModel.roleDesc,
         code: state.formModel.verification,
@@ -241,8 +240,6 @@ const administratorled = () => {
   // },
   menberGetadmin({ companyId: userInfoByCompany.value?.companyId }).then(
     (res) => {
-      console.log(res, 'res');
-
       state.formModel.roleName = res.username;
       state.formModel.phone = res.phone;
     }
@@ -252,37 +249,14 @@ const administratorled = () => {
 const userNamelist = () => {
   menberNormal({ companyId: userInfoByCompany.value?.companyId }).then(
     (res) => {
-      console.log(res);
-
       inputSelect.value = res;
-      //   [
-      //   {
-      //     userName: 'kw', // 用户名
-      //     phone: '18839014161', // 手机号
-      //     memberId: 1, // 成员id
-      //   },
-      //   {
-      //     userName: 'zh', // 用户名
-      //     phone: '18839014163', // 手机号
-      //     memberId: 1717072245149118500, // 成员id
-      //   },
-      // ];
     }
   );
 };
 onMounted(() => {
   administratorled();
   userNamelist();
-  console.log(props.data);
-  //  id,
-  //   userId,
-  //   userName,
-  //   phone,
-  //   companyId,
-  //   memberId,
-  //   status,
-  //   roleList,
-  //   roleName,
+
   const { memberId } = props.data;
   state.formModel.memberId = memberId;
 });

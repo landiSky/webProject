@@ -14,6 +14,7 @@
           :style="{
             height: '100%',
             width: '100%',
+            objectFit: 'cover',
           }"
           alt="加载异常..."
           @click="clickCarousel(item.link)"
@@ -561,6 +562,11 @@ onMounted(() => {
   :deep(.tele-tabs-pane) {
     display: flex;
     align-items: center;
+    justify-content: center;
+  }
+
+  :deep(.tele-tabs-content-item-active) {
+    overflow: visible;
   }
 
   .tabDesc {
@@ -596,8 +602,7 @@ onMounted(() => {
 
   .cardList {
     display: flex;
-    flex: 1;
-
+    // flex: 1;
     .card {
       display: flex;
       flex-direction: column;

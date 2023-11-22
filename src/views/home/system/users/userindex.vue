@@ -317,14 +317,10 @@ function fetchData() {
     username: state.formModel.name,
     companyId: userInfoByCompany.value?.companyId,
   }).then((res) => {
-    console.log(res);
     state.tableData = res.records || [];
     pagination.total = res.total;
   });
 }
-
-// state.tableData = data.content || [];
-// pagination.total = data.totalCount;
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
@@ -340,7 +336,6 @@ const onPageChange = (current: number) => {
 };
 
 const clickSearchBtn = () => {
-  // console.log(state.formModel.name);
   onPageChange(1);
   noDatalist.value = true;
 };
@@ -360,7 +355,6 @@ const clearSearchles = () => {
 
 // 点击编辑按钮
 const clickEditBtn = (data: any) => {
-  console.log(data);
   state.editData = data;
   editModalVisible.value = true;
 };
@@ -392,21 +386,6 @@ const onEditModalConfirm = () => {
 
 // modal类删除 离职
 const clickDelBtn = (row: Record<string, any>) => {
-  console.log(row);
-
-  // // 前端判断无法删除时的弹窗情况
-  // if (row?.binded === BindHdlStatusEnum.YES) {
-  //   // 以前端请求数据为准，可能存在数据与实际不一致请求
-  //   Modal.warning({
-  //     title: '该用户已绑定标识身份，暂无法删除。',
-  //     content: '如需删除，请先将该系统用户与标识身份解绑。',
-  //     titleAlign: 'start',
-  //     okText: '好的',
-  //     hideCancel: true,
-  //   });
-  //   return;
-  // }
-
   Modal.warning({
     title: '确定为该企业成员办理离职吗?',
     content: '离职后该成员将无法继续参与平台管理或项目开发。',
@@ -419,7 +398,6 @@ const clickDelBtn = (row: Record<string, any>) => {
     onOk: () => {
       // deleteUsers(params);
       menberResign({ memberId: row.memberId }).then((res) => {
-        console.log(res, '离职');
         fetchData();
       });
     },
@@ -427,7 +405,6 @@ const clickDelBtn = (row: Record<string, any>) => {
 };
 // 变更管理员
 const clickDetailBtn = (data: any) => {
-  console.log(data, 'data');
   state.editData = data;
   editModalVisiblealter.value = true;
 };

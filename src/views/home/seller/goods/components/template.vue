@@ -1,15 +1,25 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <div
       v-for="(item, index) in templateList"
       :key="index"
       class="templateItem"
     >
-      <span> 模块{{ number2local[index] }}: {{ item.moduleName }} </span>
-      <span>
-        <t-button type="text" @click="editTemplate(index)">编辑</t-button>
-        <t-button type="text" @click="delTemplate(index)">删除</t-button>
-      </span>
+      <div style="display: flex">
+        <div>模块{{ number2local[index] }}: </div
+        ><div style="color: #1d2129">{{ item.moduleName }} </div>
+      </div>
+      <div>
+        <t-button type="text" style="padding: 0" @click="editTemplate(index)"
+          >编辑</t-button
+        >
+        <t-button
+          type="text"
+          style="margin-left: 16px; padding: 0; color: #4e5969"
+          @click="delTemplate(index)"
+          >删除</t-button
+        >
+      </div>
     </div>
     <div v-if="templateList?.length < 6" class="templateAdd">
       <iconpark-icon
@@ -76,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineProps, provide } from 'vue';
+import { ref, computed, defineProps, provide, defineEmits } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import template1 from '@/assets/images/home/goods/template1.png';
 import template2 from '@/assets/images/home/goods/template2.png';
@@ -95,6 +105,7 @@ import { TemplateEnum } from '../constant';
 
 const currentIndex = ref<number>(-1); // 如果为-1代表新增，如果>=0 代表编辑
 const drawerVisible = ref(false);
+const emit = defineEmits(['confirm']);
 
 const number2local: string[] = ['一', '二', '三', '四', '五', '六', '七'];
 const tempateImgList = [
@@ -139,7 +150,6 @@ const initDrawer = () => {
 };
 
 const handleCancel = () => {
-  console.log('template.vue:143', props.templateData);
   if (props.templateData?.length) {
     Modal.warning({
       title: '已编辑信息尚未保存，取消后将清空',
@@ -173,14 +183,12 @@ const saveTemplate = () => {
       }
       drawerVisible.value = false;
       initDrawer();
-    } else {
-      console.log('======表单校验未通过:', errors);
+      emit('confirm');
     }
   });
 };
 
 const addTemplate = () => {
-  console.log('template.vue:158==addTemplate');
   drawerVisible.value = true;
   currentIndex.value = -1;
 };
@@ -204,24 +212,19 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 502px;
   height: 44px;
   margin-bottom: 4px;
   padding: 12px 16px;
+  color: #4e5969;
   font-size: 12px;
   font-family: PingFang SC;
   border: 1px solid #e5e8ef;
   border-radius: 2px;
-
-  span {
-    color: #1d2129;
-  }
 }
 
 .templateAdd {
   display: flex;
   align-items: center;
-  width: 502px;
   padding: 12px 16px;
   background: #f6f7fb;
   border: 1px solid #e5e8ef;

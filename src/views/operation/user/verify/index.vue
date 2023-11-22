@@ -329,15 +329,15 @@ const onPageChange = (current: number) => {
 const sorterChanged = (dataIndex: string, direction: string) => {
   if (direction === 'descend') {
     if (dataIndex === 'memberCount') {
-      state.formModel.member = 1;
-    } else {
-      state.formModel.product = 1;
-    }
-  } else if (direction === 'ascend') {
-    if (dataIndex === 'memberCount') {
       state.formModel.member = 0;
     } else {
       state.formModel.product = 0;
+    }
+  } else if (direction === 'ascend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 1;
+    } else {
+      state.formModel.product = 1;
     }
   } else if (dataIndex === 'memberCount') {
     state.formModel.member = null;
@@ -348,14 +348,12 @@ const sorterChanged = (dataIndex: string, direction: string) => {
 };
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
   const f = filteredValues[0];
   if (typeof f === 'boolean') {
     state.formModel[`${dataIndex}`] = null;
   } else {
     state.formModel[`${dataIndex}`] = f;
   }
-  console.log(state.formModel);
   onPageChange(1);
 };
 

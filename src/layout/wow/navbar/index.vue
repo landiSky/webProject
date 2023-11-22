@@ -150,7 +150,6 @@ const goLogin = () => {
 };
 
 const onSearch = () => {
-  console.log('index.vue:144', searchContent.value);
   router.push({
     name: 'wowMall',
     query: {

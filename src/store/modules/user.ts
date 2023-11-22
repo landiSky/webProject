@@ -46,25 +46,8 @@ export const useUserStore = defineStore({
     getUserByCompany() {
       const { companyId, memberId } = this.selectCompany || {};
 
-      // this.userInfoByCompany = {
-      //   id: 1, // memberId
-      //   username: '谢珍', // 用户名称
-      //   companyId: 1, // 机构id
-      //   companyName: 'kw企业', // 机构名称
-      //   certificateStatus: 3, // 机构认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-      //   nodeStatus: 3, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-      //   primary: true, // 主账号 true 子账号 false
-      //   roleNames: null, // 角色名称
-      //   menuCodes: [
-      //     'ROUTE_BUYER',
-      //     'ROUTE_BUYER_ORDER',
-      //     'ROUTE_SELLER',
-      //     'ROUTE_SELLER_GOODS',
-      //   ], // 菜单code
-      // };
       return apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
-          console.log('===获取用户企业信息===apiUserProfile', data);
           this.userInfoByCompany = data || {
             certificateStatus: CompanyAuthStatus.UNAUTH,
             nodeStatus: NodeAuthStatus.UNAUTH,
@@ -74,12 +57,9 @@ export const useUserStore = defineStore({
     },
 
     async changeSelectCompany(data: Record<string, any>) {
-      console.log('user.ts:70===给selectCompany赋值', data);
       this.selectCompany = data;
       await this.getUserByCompany();
-      console.log('user.ts:79===获取用户企业信息结束==');
       this.updateMenu = !this.updateMenu;
-      // useMenuStore().genLeftMenu(this.userInfoByCompany?.menuCodes);
     },
     /**
      * 初始化信息：判断需不需要加载侧边栏，获取topmenu之后，对比当前的route path和id，从server获取sidemenu
@@ -89,33 +69,9 @@ export const useUserStore = defineStore({
       try {
         const userInfo = await apiUsersInfo();
 
-        // console.log('user.ts:138==去更新 usecompany');
-
-        // const userInfo = {
-        //   userId: 1,
-        //   mobile: '15210602855',
-        //   username: 'super',
-        //   nickName: '超级管理员',
-        //   companyList: [
-        //     {
-        //       memberId: 12, // 成员id
-        //       memberType: 1, // 成员类型 0:普通成员 1:管理员
-        //       companyId: 1, // 企业id 必传
-        //       companyName: '泰尔英福巴拉巴拉1', // 企业名称
-        //     },
-        //     {
-        //       memberId: 13, // 成员id
-        //       memberType: 0, // 成员类型 0:普通成员 1:管理员
-        //       companyId: 2, // 企业id 必传
-        //       companyName: '泰尔英福巴拉巴拉2', // 企业名称
-        //     },
-        //   ],
-        // };
-
         this.userInfo = userInfo as any;
 
         const { companyId, companyList, isAdmin } = userInfo;
-        // const { companyList } = userInfo;
 
         //   {
         //     "memberId": 1717495373822156800, //成员id
@@ -138,27 +94,16 @@ export const useUserStore = defineStore({
             Array.isArray(resultList) && resultList.length
               ? resultList[0]
               : null;
-          console.log(
-            'user.ts:122====有多个企业',
-            adminCompany,
-            companyList[0]
-          );
+
           await this.changeSelectCompany(adminCompany || companyList[0]);
         } else {
-          console.log('user.ts:139==去更新 usecompany');
           await this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
-          // useMenuStore().genLeftMenu([]);
         }
 
         return userInfo;
       } catch (error: any) {
-        console.log('user.ts:63==获取用户信息失败', Object.keys(error));
-
-        // if (error?.code === 502) {
-        // 已登录下，服务端不可用，避免无限重定向
         clearToken();
-        // }
         return {};
       }
     },
@@ -169,9 +114,8 @@ export const useUserStore = defineStore({
         const configInfo = await apiConfigInfo();
         this.configInfo = configInfo;
         localStorage.setItem('configInfo', JSON.stringify(configInfo));
-        console.log('user.ts:73====apiConfigInfo', this.configInfo);
       } catch (error: any) {
-        console.log('user.ts:58==获取配置信息异常', error);
+        console.log('获取配置信息异常:', error);
       }
     },
     /**

@@ -16,23 +16,60 @@
           <t-button
             v-if="step === 2"
             style="margin-right: 8px"
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '160px',
+            }"
             @click="clickPrevious"
             >上一步：基本信息</t-button
           >
-          <t-button style="margin-right: 120px" @click="clickCancel"
+          <t-button
+            :style="{
+              marginRight: step == 1 ? '134px' : '120px',
+              fontSize: '14px',
+              width: '76px',
+            }"
+            @click="clickCancel"
             >取消</t-button
           >
-          <t-button style="margin-right: 8px" @click="clickSave">保存</t-button>
           <t-button
-            style="margin-right: 8px"
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '76px',
+            }"
+            @click="clickSave"
+            >保存</t-button
+          >
+          <t-button
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '76px',
+            }"
             type="outline"
             @click="clickPreview"
             >预览</t-button
           >
-          <t-button v-if="step === 1" type="primary" @click="clickNext"
+          <t-button
+            v-if="step === 1"
+            :style="{
+              fontSize: '14px',
+              width: '222px',
+            }"
+            type="primary"
+            @click="clickNext"
             >下一步：售卖设置与交付版本</t-button
           >
-          <t-button v-if="step === 2" type="primary" @click="clickUp"
+          <t-button
+            v-if="step === 2"
+            :style="{
+              fontSize: '14px',
+              width: '68px',
+            }"
+            type="primary"
+            @click="clickUp"
             >上架</t-button
           >
         </div>
@@ -56,7 +93,7 @@
                 length: 20,
                 errorOnly: true,
               }"
-              @input="validate(formModel, 'name')"
+              @input="validate(formRef, 'name')"
             >
             </t-input>
           </t-form-item>
@@ -261,7 +298,7 @@
                 minRows: 2,
                 maxRows: 5,
               }"
-              @input="validate(formModel, 'introduction')"
+              @input="validate(formRef, 'introduction')"
             />
           </t-form-item>
           <t-form-item
@@ -289,7 +326,10 @@
             <div class="hint">文件大小限制2M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
-            <TemplateDrawer ref="templateRef"></TemplateDrawer>
+            <TemplateDrawer
+              ref="templateRef"
+              @confirm="templateChanged"
+            ></TemplateDrawer>
           </t-form-item>
         </t-form>
       </div>
@@ -842,6 +882,7 @@ const uploadError = (fileItem: FileItem) => {
   } else {
     Message.error(`上传失败，请检查网络`);
   }
+  formRef.value.validateField('logo');
 };
 
 const uploadProgress = () => {
@@ -857,6 +898,7 @@ const uploadSuccess = (fileItem: FileItem) => {
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
   }
+  formRef.value.validateField('logo');
 };
 
 const detailUploading = ref(false);
@@ -873,6 +915,7 @@ const uploadDetailError = (fileItem: FileItem) => {
   } else {
     Message.error(`上传失败，请检查网络`);
   }
+  formRef.value.validateField('detailImg');
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
@@ -885,6 +928,7 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
   }
+  formRef.value.validateField('detailImg');
 };
 
 const uploadExpError = (fileItem: FileItem) => {
@@ -1106,7 +1150,6 @@ const getDetail = (id: any) => {
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
       const list = res.productDeliverySetList;
-      console.log(list);
 
       if (list && list.length > 0) {
         for (const one of list) {
@@ -1186,7 +1229,6 @@ function cancelUploadingFiles() {
 const online = ref(true);
 
 const beforeUpload = (file: File) => {
-  // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const over2 = file.size > 1024 * 1024 * 2;
     if (over2) {
@@ -1220,6 +1262,11 @@ onMounted(() => {
     getGoodsId();
   }
 });
+
+const templateChanged = () => {
+  formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  formRef.value.validateField('detail');
+};
 
 const doSave = async () => {
   let res;
@@ -1368,7 +1415,7 @@ const clickUp = async () => {
 
 const validate = (ref: any, key: string) => {
   nextTick(() => {
-    ref.value.validateField(key);
+    ref.validateField(key);
   });
 };
 
@@ -1423,7 +1470,7 @@ const validateAP = (index: number, key: string) => {
 
 .add-goods-container {
   .center-body {
-    width: 718px;
+    width: 600px;
     margin: 0 auto;
   }
 
@@ -1741,5 +1788,14 @@ const validateAP = (index: number, key: string) => {
 .yuan {
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-col-5) {
+  flex: none;
+  width: 100px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
 }
 </style>

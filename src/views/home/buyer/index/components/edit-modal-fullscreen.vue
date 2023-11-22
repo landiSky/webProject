@@ -421,42 +421,23 @@ const formRules: any = {
 
 const goback = () => {
   // showModal.value = false;
-  console.log('cancel');
   emit('cancel', formModel.value.type);
 };
 const getUserDetail = () => {
   // userInfo.value?.companyId
   authDetails({ companyId: 2 })
     .then((res) => {
-      console.log(res);
       // @ts-ignore
       formModel.value = res;
       formModel.value.type = 1;
-      console.log(formModel.value);
     })
-    .catch((error) => {});
-  // 调后端接口
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
+    .catch(() => {});
 };
 // @ts-ignore
 const uploadSuccess = (fileItem: FileItem) => {
-  console.log(fileItem);
   const res = fileItem.response;
   if (res?.code === 200) {
-    console.log(fileItem.response.data);
     formModel.value.businessLicense = fileItem.response.data;
-    console.log(formModel.value.businessLicense);
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
@@ -464,7 +445,6 @@ const uploadSuccess = (fileItem: FileItem) => {
 };
 // @ts-ignore
 const uploadSuccessz = (fileItem: FileItem) => {
-  console.log(fileItem);
   const res = fileItem.response;
   if (res?.code === 200) {
     formModel.value.idCardz = fileItem.response.data;
@@ -486,10 +466,8 @@ const uploadSuccessf = (fileItem: FileItem) => {
   }
 };
 const beforeUpload = (file: File) => {
-  // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const isLt5M: boolean = file.size / 1024 / 1024 < 5;
-    console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
@@ -504,13 +482,11 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       // setFields;
-      console.log(formModel.value, 'closed');
       authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
           if (res.data.code === 200) {
             authSubmit(formModel.value)
               .then((res) => {
-                console.log(res);
                 emit('confirm');
                 done(true);
                 Message.success('认证已提交');
@@ -535,37 +511,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 // 取消
 const canceldes = () => {
-  console.log('cancel');
-
   emit('cancel', formModel.value.type);
 };
 
 onMounted(() => {
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
-    console.log(props.data?.statusled);
-
     getUserDetail();
   }
 });
-// const qqq = () =>
-//   Modal.warning({
-//     title: '企业认证重复',
-//     content:
-//       '该企业已完成「企业认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
-//     titleAlign: 'start',
-//     okText: '好的',
-//     hideCancel: true,
-//   });
-//   Modal.warning({
-//     title: '企业节点认证重复',
-//     content:
-//       '该企业已完成「企业节点认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
-//     titleAlign: 'start',
-//     okText: '好的',
-//     hideCancel: true,
-//   });
-// };
 </script>
 
 <style lang="less" scoped>
