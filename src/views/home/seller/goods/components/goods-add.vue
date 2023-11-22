@@ -409,7 +409,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -430,7 +430,7 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index], 'url')"
+                  @input="validate(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item
@@ -535,7 +535,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -556,13 +556,13 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index], 'url')"
+                  @input="validate(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
                 <t-input
                   v-model.trim="copyModal2[index].onePiece"
-                  @input="validate(copyFormRef[index], 'onePiece')"
+                  @input="validate(copyFormRef[index].value, 'onePiece')"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -596,7 +596,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -1124,7 +1124,10 @@ const getDetail = (id: any) => {
           const pList = one.accountNumList;
           if (pList && pList.length > 0) {
             for (const two of pList) {
-              list1.push({ accountNum: two.accountNum, price: two.price });
+              list1.push({
+                accountNum: two.accountNum,
+                price: parseInt(two.price, 10),
+              });
             }
           } else {
             list1.push({ accountNum: '', price: '' });
