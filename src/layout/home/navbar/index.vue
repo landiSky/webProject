@@ -208,6 +208,7 @@ const onChangeCompany = async (companyId: string) => {
     .title {
       color: #fff;
       font-weight: 500;
+      font-size: 14px;
       line-height: 22px;
     }
   }
