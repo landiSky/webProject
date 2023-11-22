@@ -1,9 +1,9 @@
 <template>
   <div>
-    <t-page-header flex title="角色管理" :show-back="false">
+    <t-page-header flex title="企业成员管理" :show-back="false">
       <!-- <template #breadcrumb>
-      <Breadcrumb :items="['组织架构', '角色管理']" />
-    </template> -->
+        <Breadcrumb :items="['组织架构', '角色管理']" />
+      </template> -->
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
@@ -46,6 +46,7 @@
         :loading="state.tableLoading"
         :columns="columns"
         :data="state.tableData"
+        :empty="false"
         :pagination="{
           'show-total': true,
           'show-jumper': true,
@@ -100,8 +101,25 @@
             >--</span
           >
         </template>
+        <template #empty> </template>
       </t-table>
     </t-page-header>
+    <div v-if="pagination.total === 0 && noDatalist === true" class="noClass">
+      <div>
+        <img :src="noSearch" alt="" />
+        <div>
+          <span class="zwjg">暂无查询结果</span>
+
+          <span class="qkclass" @click="clearSearchles()">清空查询项</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="pagination.total === 0 && noDatalist === false" class="noClass">
+      <div>
+        <img :src="noData" alt="" />
+        <div class="zwclass">暂无数据</div>
+      </div>
+    </div>
 
     <EditModal
       v-if="editModalVisible"
@@ -137,6 +155,8 @@ import { storeToRefs } from 'pinia';
 
 import { memberList, menberResign } from '@/api/system/member';
 import { rolestatusled } from '@/enums/common';
+import noSearch from '@/assets/images/noSearch.png';
+import noData from '@/assets/images/noData.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalAlter from './components/edit-modal-alter.vue';
 
@@ -150,6 +170,7 @@ const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 //   startTime: undefined,
 //   endTime: undefined,
 // };
+const noDatalist = ref(false);
 const state = reactive<{
   tableLoading: boolean;
   editData: {
@@ -321,6 +342,7 @@ const onPageChange = (current: number) => {
 const clickSearchBtn = () => {
   // console.log(state.formModel.name);
   onPageChange(1);
+  noDatalist.value = true;
 };
 
 // 重置后，触发一次查询
@@ -328,6 +350,12 @@ const handleReset = () => {
   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
   state.formModel.name = '';
   clickSearchBtn();
+};
+// 清空查询项
+const clearSearchles = () => {
+  state.formModel.name = '';
+  onPageChange(1);
+  noDatalist.value = false;
 };
 
 // 点击编辑按钮
@@ -428,4 +456,49 @@ onMounted(() => {
 });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.noClass {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  color: #86909c;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  line-height: 20px;
+  text-align: center;
+
+  .zwclass {
+    color: #86909c;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+    text-align: center;
+  }
+
+  .qkclass {
+    margin-left: 4px;
+    color: #1664ff;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  .zwjg {
+    color: #86909c;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+  }
+}
+</style>

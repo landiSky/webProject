@@ -82,16 +82,18 @@
                   <div class="order-success-text"
                     >待审核：买家已提交支付凭证，请进行审核。
                   </div>
-                  <t-button
-                    type="primary"
-                    status="danger"
-                    style="margin-right: 10px"
-                    @click="turndownsyhn"
-                    >驳回</t-button
-                  >
-                  <t-button type="primary" @click="passok(dataList.id)"
-                    >通过</t-button
-                  >
+                  <div class="return-ok">
+                    <t-button
+                      type="primary"
+                      status="danger"
+                      style="margin-right: 10px"
+                      @click="turndownsyhn"
+                      >驳回</t-button
+                    >
+                    <t-button type="primary" @click="passok(dataList.id)"
+                      >通过</t-button
+                    >
+                  </div>
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 4">
@@ -863,6 +865,10 @@ onMounted(() => {
     font-size: 14px;
     font-style: normal;
     line-height: 22px;
+
+    .return-ok {
+      width: 100%;
+    }
   }
 }
 

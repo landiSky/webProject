@@ -1,9 +1,9 @@
 <template>
   <div>
-    <t-page-header flex title="角色管理" :show-back="false">
-      <template #breadcrumb>
+    <t-page-header flex title="企业角色管理" :show-back="false">
+      <!-- <template #breadcrumb>
         <Breadcrumb :items="['组织架构', '角色管理']" />
-      </template>
+      </template> -->
       <t-row :wrap="false">
         <t-col flex="auto">
           <t-button
@@ -63,6 +63,7 @@
           <span v-else class="circle green"></span>
           {{ record.enabled === UserStatusEnum.UNUSED ? '停用' : '正常' }}
         </template>
+        <template #empty> </template>
         <template #operations="{ record }">
           <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
           <t-link
@@ -102,12 +103,22 @@
         </template>
       </t-table>
     </t-page-header>
-    <!-- <DetailDrawer
-    v-if="detailDrawerVisible"
-    :data="state.detailData"
-    @cancel="detailDrawerVisible = false"
-    @edit="onDetailEdit"
-  ></DetailDrawer> -->
+    <div v-if="pagination.total === 0 && noDatalist === true" class="noClass">
+      <div>
+        <img :src="noSearch" alt="" />
+        <div>
+          <span class="zwjg">暂无查询结果</span>
+
+          <span class="qkclass" @click="clearSearchles()">清空查询项</span>
+        </div>
+      </div>
+    </div>
+    <div v-if="pagination.total === 0 && noDatalist === false" class="noClass">
+      <div>
+        <img :src="noData" alt="" />
+        <div class="zwclass">暂无数据</div>
+      </div>
+    </div>
 
     <EditModal
       v-if="editModalVisible"
@@ -136,6 +147,10 @@ import { storeToRefs } from 'pinia';
 import { rolelist, apiRoleDelete, apiRoleDetails } from '@/api/system/role';
 import { rolestatusled } from '@/enums/common';
 
+import noSearch from '@/assets/images/noSearch.png';
+
+import noData from '@/assets/images/noData.png';
+
 import EditModal from './components/edit-modal.vue';
 
 import TreeModalsles from './components/tree-modals.vue';
@@ -151,7 +166,7 @@ const defaultFormModel: Record<string, string | number | undefined> = {
   startTime: undefined,
   endTime: undefined,
 };
-
+const noDatalist = ref(false);
 const state = reactive<{
   tableLoading: boolean;
   formModel: Record<string, any>;
@@ -239,7 +254,6 @@ function fetchData() {
 
   // mock数据
   state.tableLoading = false;
-
   rolelist({
     pageSize: pagination.pageSize,
     pageNum: pagination.current,
@@ -264,16 +278,21 @@ const onPageSizeChange = (size: number) => {
 
 // 页码发生变化
 const onPageChange = (current: number) => {
-  state.formModel.name = '';
   pagination.current = current;
   fetchData();
 };
 // 查询
 const clickSearchBtn = () => {
   console.log(state.formModel.name, ' state.formModel.name');
-  // onPageChange(1);
-  pagination.current = 1;
+  onPageChange(1);
+  noDatalist.value = true;
   fetchData();
+};
+// 清空查询项
+const clearSearchles = () => {
+  state.formModel.name = '';
+  onPageChange(1);
+  noDatalist.value = false;
 };
 
 // 重置后，触发一次查询
@@ -364,4 +383,49 @@ onMounted(() => {
 });
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.noClass {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 500px;
+  color: #86909c;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  line-height: 20px;
+  text-align: center;
+
+  .zwclass {
+    color: #86909c;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+    text-align: center;
+  }
+
+  .qkclass {
+    margin-left: 4px;
+    color: #1664ff;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+    cursor: pointer;
+  }
+
+  .zwjg {
+    color: #86909c;
+    font-weight: 400;
+    font-size: 12px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    line-height: 20px;
+  }
+}
+</style>
