@@ -81,11 +81,8 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -243,6 +240,4 @@ onMounted(() => {
 :deep(.tele-col-19) {
   flex: 1;
 }
-
-// }
 </style>

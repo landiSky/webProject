@@ -16,23 +16,60 @@
           <t-button
             v-if="step === 2"
             style="margin-right: 8px"
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '160px',
+            }"
             @click="clickPrevious"
             >上一步：基本信息</t-button
           >
-          <t-button style="margin-right: 120px" @click="clickCancel"
+          <t-button
+            :style="{
+              marginRight: step == 1 ? '134px' : '120px',
+              fontSize: '14px',
+              width: '76px',
+            }"
+            @click="clickCancel"
             >取消</t-button
           >
-          <t-button style="margin-right: 8px" @click="clickSave">保存</t-button>
           <t-button
-            style="margin-right: 8px"
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '76px',
+            }"
+            @click="clickSave"
+            >保存</t-button
+          >
+          <t-button
+            :style="{
+              marginRight: '8px',
+              fontSize: '14px',
+              width: '76px',
+            }"
             type="outline"
             @click="clickPreview"
             >预览</t-button
           >
-          <t-button v-if="step === 1" type="primary" @click="clickNext"
+          <t-button
+            v-if="step === 1"
+            :style="{
+              fontSize: '14px',
+              width: '222px',
+            }"
+            type="primary"
+            @click="clickNext"
             >下一步：售卖设置与交付版本</t-button
           >
-          <t-button v-if="step === 2" type="primary" @click="clickUp"
+          <t-button
+            v-if="step === 2"
+            :style="{
+              fontSize: '14px',
+              width: '68px',
+            }"
+            type="primary"
+            @click="clickUp"
             >上架</t-button
           >
         </div>
@@ -1433,7 +1470,7 @@ const validateAP = (index: number, key: string) => {
 
 .add-goods-container {
   .center-body {
-    width: 718px;
+    width: 600px;
     margin: 0 auto;
   }
 
@@ -1751,5 +1788,14 @@ const validateAP = (index: number, key: string) => {
 .yuan {
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-col-5) {
+  flex: none;
+  width: 100px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
 }
 </style>

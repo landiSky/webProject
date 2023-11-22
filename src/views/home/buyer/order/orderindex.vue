@@ -362,11 +362,8 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 

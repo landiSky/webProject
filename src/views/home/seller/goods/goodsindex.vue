@@ -267,7 +267,6 @@ const columns = [
     ellipsis: true,
     tooltip: true,
     width: 200,
-    fixed: 'left',
   },
   {
     title: '所属分类（一级、二级）',

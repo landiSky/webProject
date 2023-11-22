@@ -1,48 +1,47 @@
 <template>
-  <t-modal
-    v-model:visible="visible"
-    :width="642"
-    :height="378"
-    :on-before-ok="onConfirm"
-    :ok-text="isEdit ? '完成' : '完成'"
-    @cancel="onConfirmflag"
-  >
-    <!-- "下一步:角色授权" -->
-    <template #title>
-      {{ isEdit ? '编辑' : '新增' }}角色{{
-        isEdit ? '' : ':基本信息 '
-      }}</template
+  <div>
+    <t-modal
+      v-model:visible="visible"
+      :on-before-ok="onConfirm"
+      :ok-text="isEdit ? '完成' : '完成'"
+      @cancel="onConfirmflag"
     >
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="roleName" label="角色名称" validate-trigger="blur">
-        <t-input
-          v-model="state.formModel.roleName"
-          placeholder="请输入"
-          :max-length="{
-            length: 50,
-            errorOnly: true,
-          }"
-          show-word-limit
-        />
-      </t-form-item>
+      <!-- "下一步:角色授权" -->
+      <template #title>
+        {{ isEdit ? '编辑' : '新增' }}角色{{
+          isEdit ? '' : ':基本信息 '
+        }}</template
+      >
+      <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+        <t-form-item field="roleName" label="角色名称" validate-trigger="blur">
+          <t-input
+            v-model="state.formModel.roleName"
+            placeholder="请输入"
+            :max-length="{
+              length: 50,
+              errorOnly: true,
+            }"
+            show-word-limit
+          />
+        </t-form-item>
 
-      <t-form-item field="remark" label="角色描述">
-        <t-textarea
-          v-model="state.formModel.remark"
-          placeholder="请输入"
-          :max-length="{
-            length: 100,
-            errorOnly: true,
-          }"
-          show-word-limit
-          :auto-size="{
-            minRows: 2,
-            maxRows: 5,
-          }"
-        />
-      </t-form-item>
-    </t-form>
-  </t-modal>
+        <t-form-item field="remark" label="角色描述">
+          <t-textarea
+            v-model="state.formModel.remark"
+            placeholder="请输入"
+            :max-length="{
+              length: 100,
+              errorOnly: true,
+            }"
+            show-word-limit
+            :auto-size="{
+              minRows: 2,
+              maxRows: 5,
+            }"
+          />
+        </t-form-item>
+      </t-form> </t-modal
+  ></div>
 </template>
 
 <script lang="ts" setup>
@@ -61,11 +60,8 @@ import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -177,4 +173,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.tele-col-5) {
+  flex: none;
+  width: 76px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
+}
+</style>
