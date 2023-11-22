@@ -283,20 +283,8 @@
                 class="to-container"
                 @click="togo(item.id, item.dueDate)"
               >
-                前往 》</span
-              ></div
-            >
-            <div
-              style="
-                margin-bottom: 26px;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-              "
-              class="purchased-content"
-              title="asdasdasd"
-              >{{ item.introduction }}
-            </div>
+                前往 <span class="to-img"></span></span
+            ></div>
             <t-typography-paragraph
               style="float: left"
               :ellipsis="{
@@ -674,18 +662,36 @@ const distributionrole = () => {
 const tomall = () => {
   router.push('/wow/mall');
 };
+const compareDate = (dateTime1: string, dateTime2: string) => {
+  const formatDate1 = new Date(dateTime1);
+  const formatDate2 = new Date(dateTime2);
+  if (formatDate1 > formatDate2) {
+    return true;
+  }
+  return false;
+};
 // 前往
 const togo = (idd: string, dueDate: string) => {
   console.log('index.vue:685===点击前往', idd, dueDate);
-  // if (dueDate) {   // TODO 过期时间判断
-  orderGo({ id: idd }).then((res: any) => {
-    console.log('获取应用访问地址====', res);
-    window.open(res, '_blank');
-    // window.location.href=
-  });
-  // window.open(urldata);
-  // }
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = `0${now.getMonth() + 1}`.slice(-2);
+  const day = `0${now.getDate()}`.slice(-2);
+  const hours = `0${now.getHours()}`.slice(-2);
+  const minutes = `0${now.getMinutes()}`.slice(-2);
+  const seconds = `0${now.getSeconds()}`.slice(-2);
+  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  if (!dueDate || compareDate(dueDate, formattedTime)) {
+    // TODO 过期时间判断
+    orderGo({ id: idd }).then((res: any) => {
+      console.log('获取应用访问地址====', res);
+      window.open(res, '_blank');
+      // window.location.href=
+    });
+    // window.open(urldata);
+  }
 };
+
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProduct.value = item; // 配置的应用 id

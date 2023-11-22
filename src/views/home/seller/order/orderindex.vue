@@ -312,7 +312,7 @@
             @pagination="getTableDataOne"
           ></Pagination>
         </div> -->
-        <div style="float: right; margin-top: 10px">
+        <div class="pageWraper">
           <t-pagination
             v-if="formInline.total > 10"
             :total="formInline.total"
@@ -870,6 +870,16 @@ const ondeliveryModalConfirm = () => {
 
     .cardContent {
       margin-bottom: -20px;
+
+      .pageWraper {
+        display: flex;
+        justify-content: end;
+        margin-top: 4px;
+
+        :deep(.tele-pagination) {
+          margin-bottom: 32px;
+        }
+      }
 
       .row-title {
         width: 100%;

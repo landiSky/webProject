@@ -32,7 +32,7 @@
           <template #upload-button>
             <div class="tele-upload-picture-card">
               <div class="tele-upload-picture-card-text">
-                <IconPlus />
+                <IconPlus size="16" stroke-width="6" />
                 <div style="margin-top: 10px; font-weight: 600">点击上传</div>
               </div>
             </div>
