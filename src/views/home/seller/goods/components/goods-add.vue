@@ -1106,7 +1106,6 @@ const getDetail = (id: any) => {
     } else if (formModel2.value.saleType === 1) {
       copyModal2.value = [];
       const list = res.productDeliverySetList;
-      console.log(list);
 
       if (list && list.length > 0) {
         for (const one of list) {
@@ -1186,7 +1185,6 @@ function cancelUploadingFiles() {
 const online = ref(true);
 
 const beforeUpload = (file: File) => {
-  // console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const over2 = file.size > 1024 * 1024 * 2;
     if (over2) {

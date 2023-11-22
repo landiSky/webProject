@@ -314,7 +314,6 @@ const onPageSizeChange = (size: number) => {
 };
 
 const goMallDetail = (id: string) => {
-  console.log('index.vue:276===商品 id', id);
   router.push({
     name: 'wowMallDetail',
     params: { id },

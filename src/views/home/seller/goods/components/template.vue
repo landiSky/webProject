@@ -149,7 +149,6 @@ const initDrawer = () => {
 };
 
 const handleCancel = () => {
-  console.log('template.vue:143', props.templateData);
   if (props.templateData?.length) {
     Modal.warning({
       title: '已编辑信息尚未保存，取消后将清空',
@@ -183,14 +182,11 @@ const saveTemplate = () => {
       }
       drawerVisible.value = false;
       initDrawer();
-    } else {
-      console.log('======表单校验未通过:', errors);
     }
   });
 };
 
 const addTemplate = () => {
-  console.log('template.vue:158==addTemplate');
   drawerVisible.value = true;
   currentIndex.value = -1;
 };

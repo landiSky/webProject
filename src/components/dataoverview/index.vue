@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, defineProps } from 'vue';
+import { ref, reactive, defineProps } from 'vue';
 import empty from '@/assets/images/home/empty.png';
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
@@ -62,9 +62,7 @@ const state = reactive({
     statusled: 0,
   },
 });
-onMounted(() => {
-  console.log(props.title);
-});
+
 // 立即认证弹窗
 const editModalVisible = ref(false);
 // 去认证弹窗
@@ -73,7 +71,6 @@ const gotoverifys = ref(false);
 const detailflag = ref(false);
 // 立即认证
 const authentications = () => {
-  console.log(editModalVisible.value);
   editModalVisible.value = true;
 };
 // 认证弹窗去认证事件
@@ -85,7 +82,6 @@ const onEditModalConfirm = () => {
 const hasdflags = () => {
   editModalVisible.value = false;
   detailflag.value = true;
-  console.log(detailflag.value);
 };
 // 认证填写完成
 const onEditModalConfirmcode = () => {
@@ -93,8 +89,6 @@ const onEditModalConfirmcode = () => {
   gotoverifys.value = false;
 };
 const cancelgotoverifys = (status: number) => {
-  console.log(status, 'status');
-
   if (status === 1) {
     detailflag.value = true;
     gotoverifys.value = false;

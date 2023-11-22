@@ -528,7 +528,6 @@ const clickView = () => {
 };
 
 const toAnchor = (link: string) => {
-  console.log(link);
   const ele = document.getElementById(link);
   ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
