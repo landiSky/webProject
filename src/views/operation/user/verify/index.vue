@@ -329,15 +329,15 @@ const onPageChange = (current: number) => {
 const sorterChanged = (dataIndex: string, direction: string) => {
   if (direction === 'descend') {
     if (dataIndex === 'memberCount') {
-      state.formModel.member = 1;
-    } else {
-      state.formModel.product = 1;
-    }
-  } else if (direction === 'ascend') {
-    if (dataIndex === 'memberCount') {
       state.formModel.member = 0;
     } else {
       state.formModel.product = 0;
+    }
+  } else if (direction === 'ascend') {
+    if (dataIndex === 'memberCount') {
+      state.formModel.member = 1;
+    } else {
+      state.formModel.product = 1;
     }
   } else if (dataIndex === 'memberCount') {
     state.formModel.member = null;
