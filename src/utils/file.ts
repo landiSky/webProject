@@ -48,7 +48,6 @@ export function downloadFile(url: string, data: any) {
         resolve(true);
       })
       .catch((err) => {
-        console.log(83, err);
         reject(err);
       });
   });

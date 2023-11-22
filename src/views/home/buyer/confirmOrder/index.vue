@@ -81,8 +81,9 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();
-const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
-  storeToRefs(orderStore);
+const {
+  createOrderInfo,
+}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
 const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);
@@ -116,8 +117,6 @@ const clickCreateOrder = () => {
   submitLoading.value = true;
   apiCreateOrder(params)
     .then((data) => {
-      console.log('index.vue:61==订单创建成功', data);
-
       router.push({
         name: 'buyerOrderDetail',
         params: {

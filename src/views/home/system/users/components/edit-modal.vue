@@ -1,24 +1,23 @@
 <template>
-  <t-modal
-    v-model:visible="visible"
-    :width="642"
-    :height="400"
-    :on-before-ok="onConfirm"
-    @cancel="emit('cancel')"
-  >
-    <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="username" label="成员姓名" validate-trigger="blur">
-        <t-input
-          v-model="state.formModel.username"
-          placeholder="请输入"
-          :max-length="{
-            length: 10,
-            errorOnly: true,
-          }"
-          show-word-limit
-        />
-        <!-- <t-select
+  <div>
+    <t-modal
+      v-model:visible="visible"
+      :on-before-ok="onConfirm"
+      @cancel="emit('cancel')"
+    >
+      <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
+      <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+        <t-form-item field="username" label="成员姓名" validate-trigger="blur">
+          <t-input
+            v-model="state.formModel.username"
+            placeholder="请输入"
+            :max-length="{
+              length: 10,
+              errorOnly: true,
+            }"
+            show-word-limit
+          />
+          <!-- <t-select
           v-model="state.formModel.userName"
           placeholder="请输入新管理员账号"
           allow-search
@@ -39,31 +38,32 @@
             >{{ item.username }}</t-option
           >
         </t-select> -->
-      </t-form-item>
+        </t-form-item>
 
-      <t-form-item field="roleList" label="成员角色" validate-trigger="blur">
-        <t-select
-          v-model="state.formModel.roleList"
-          placeholder="请选择"
-          multiple
-        >
-          <t-option
-            v-for="item in roleSelect"
-            :key="item.id"
-            :value="item.id"
-            >{{ item.roleName }}</t-option
+        <t-form-item field="roleList" label="成员角色" validate-trigger="blur">
+          <t-select
+            v-model="state.formModel.roleList"
+            placeholder="请选择"
+            multiple
           >
-        </t-select>
-      </t-form-item>
-      <t-form-item field="phone" label="手机号" validate-trigger="blur">
-        <t-input
-          v-model="state.formModel.phone"
-          placeholder="请输入"
-          show-word-limit
-        />
-      </t-form-item>
-    </t-form>
-  </t-modal>
+            <t-option
+              v-for="item in roleSelect"
+              :key="item.id"
+              :value="item.id"
+              >{{ item.roleName }}</t-option
+            >
+          </t-select>
+        </t-form-item>
+        <t-form-item field="phone" label="手机号" validate-trigger="blur">
+          <t-input
+            v-model="state.formModel.phone"
+            placeholder="请输入"
+            show-word-limit
+          />
+        </t-form-item>
+      </t-form>
+    </t-modal>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -81,8 +81,11 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -145,16 +148,8 @@ const formRules = {
     {
       validator: (value: any, cb: any) => {
         return new Promise((resolve: any) => {
-          // if (value.length === 11) {
-          //   console.log('name must be admin');
-          //   cb('name must be admin');
-          // }
-          // resolve();
-          console.log(rolePhones.value, state.formModel.phone);
-
           if (rolePhones.value === state.formModel.phone) {
             resolve();
-            console.log(rolePhones.value, state.formModel.phone);
           } else if (value.length === 11) {
             memberPhone({
               type: '0',
@@ -164,40 +159,20 @@ const formRules = {
               if (res.data.code === 200) {
                 // console.log('====1999');
               } else {
-                // console.log('该手机号尚未在平台注册');
                 cb(res.data.message);
               }
               resolve();
             });
           }
-
-          // window.setTimeout(() => {
-
-          // }, 2000);
         });
       },
     },
   ],
 };
-const init = () => {
-  rolelist({
-    pageSize: 1000,
-    pageNum: 1,
-    companyId: userInfoByCompany.value.companyId,
-  })
-    .then((res: any) => {
-      console.log(res);
-      roleSelect.value = res.records;
-    })
-    .catch((err) => {});
-};
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
-    console.log('111', errors);
     if (!errors) {
-      console.log(errors);
-      console.log(state.formModel);
       menberAdd({
         id: state.formModel.id,
         memberId: state.formModel.memberId,
@@ -216,21 +191,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
         });
     } else {
       done(false);
-      console.log(state.formModel);
     }
   });
 };
 
-// };
-// 获取已注册用户
-// const getName = () => {};
-// 查询角色
-// const roleName = () => {};
-// 查找手机号是否注册
-// const resPhone = () => {};
-// const applist = (a: any) => {
-//   console.log(a, 'a, b, c');
-// };
 onMounted(() => {
   rolelist({
     pageSize: 1000,
@@ -239,10 +203,8 @@ onMounted(() => {
     type: 1,
   })
     .then((res: any) => {
-      console.log(res);
       roleSelect.value = res.records;
       if (isEdit.value) {
-        console.log(props.data, '编辑');
         const {
           id,
           userId,
@@ -266,14 +228,21 @@ onMounted(() => {
           roleName,
         };
         rolePhones.value = phone;
-      } else {
-        // 新增
-        console.log(props.data, '新增');
       }
     })
     .catch((err) => {});
-  // init();
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.tele-col-5) {
+  flex: none;
+  width: 76px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
+}
+
+// }
+</style>

@@ -86,7 +86,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, defineProps, provide } from 'vue';
+import { ref, computed, defineProps, provide, defineEmits } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import template1 from '@/assets/images/home/goods/template1.png';
 import template2 from '@/assets/images/home/goods/template2.png';
@@ -105,6 +105,7 @@ import { TemplateEnum } from '../constant';
 
 const currentIndex = ref<number>(-1); // 如果为-1代表新增，如果>=0 代表编辑
 const drawerVisible = ref(false);
+const emit = defineEmits(['confirm']);
 
 const number2local: string[] = ['一', '二', '三', '四', '五', '六', '七'];
 const tempateImgList = [
@@ -149,7 +150,6 @@ const initDrawer = () => {
 };
 
 const handleCancel = () => {
-  console.log('template.vue:143', props.templateData);
   if (props.templateData?.length) {
     Modal.warning({
       title: '已编辑信息尚未保存，取消后将清空',
@@ -183,14 +183,12 @@ const saveTemplate = () => {
       }
       drawerVisible.value = false;
       initDrawer();
-    } else {
-      console.log('======表单校验未通过:', errors);
+      emit('confirm');
     }
   });
 };
 
 const addTemplate = () => {
-  console.log('template.vue:158==addTemplate');
   drawerVisible.value = true;
   currentIndex.value = -1;
 };

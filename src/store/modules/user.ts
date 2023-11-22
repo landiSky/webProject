@@ -115,7 +115,7 @@ export const useUserStore = defineStore({
         this.configInfo = configInfo;
         localStorage.setItem('configInfo', JSON.stringify(configInfo));
       } catch (error: any) {
-        console.log('user.ts:119', error);
+        console.log('获取配置信息异常:', error);
       }
     },
     /**

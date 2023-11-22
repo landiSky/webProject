@@ -492,7 +492,6 @@ const goback = () => {
 const init = () => {
   // 调后端接口
   buyerOrderDetail({ id: props.orderId }).then((res) => {
-    console.log(res, 'res');
     // @ts-ignore
     dataList.value = res;
   });
@@ -526,9 +525,7 @@ const anewupload = () => {
 };
 // 确认已交付
 const delivery = (id: string) => {
-  console.log(id);
   buyerDeployed({ id }).then((res) => {
-    console.log(res);
     init();
   });
 };
@@ -537,38 +534,6 @@ onMounted(() => {
     init();
   }
 });
-
-// 完成
-// const onConfirm = (done: (closed: boolean) => void) => {
-//   formRef.value.validate((errors: any) => {
-//     if (!errors) {
-//       emit('confirm');
-//       // 调后端接口
-//       // const api = props.data.id ? usersUpdate : usersAdd;
-//       // api(formModel.value)
-//       //   .then(() => {
-//       //     emit('confirm');
-//       //     Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-//       //     done(true);
-//       //   })
-//       //   .catch(() => {
-//       //     done(false);
-//       //   });
-
-//       // mock数据
-//       Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-//       done(true);
-//     } else {
-//       done(false);
-//     }
-//   });
-// };
-// 取消
-// const canceldes = () => {
-//   // console.log('cancel');
-
-//   emit('cancel');
-// };
 </script>
 
 <style lang="less" scoped>

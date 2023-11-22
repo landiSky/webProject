@@ -348,14 +348,12 @@ const sorterChanged = (dataIndex: string, direction: string) => {
 };
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
-  console.log(dataIndex, filteredValues);
   const f = filteredValues[0];
   if (typeof f === 'boolean') {
     state.formModel[`${dataIndex}`] = null;
   } else {
     state.formModel[`${dataIndex}`] = f;
   }
-  console.log(state.formModel);
   onPageChange(1);
 };
 

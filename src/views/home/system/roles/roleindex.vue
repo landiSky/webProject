@@ -141,8 +141,11 @@ import EditModal from './components/edit-modal.vue';
 import TreeModalsles from './components/tree-modals.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -235,7 +238,6 @@ const flagModalTree = ref(false);
 function fetchData() {
   // @ts-ignore
   const { current, pageSize } = pagination;
-  console.log(current, pageSize);
 
   // mock数据
   state.tableLoading = false;
@@ -248,7 +250,6 @@ function fetchData() {
     type: 0,
   })
     .then((res: any) => {
-      console.log(res);
       state.tableData = res.records;
       pagination.total = res.total;
     })
@@ -270,7 +271,6 @@ const onPageChange = (current: number) => {
 };
 // 查询
 const clickSearchBtn = () => {
-  console.log(state.formModel.name, ' state.formModel.name');
   // onPageChange(1);
   pagination.current = 1;
   fetchData();
@@ -287,7 +287,6 @@ const handleReset = () => {
 
 // 点击编辑按钮
 const clickEditBtn = (data: any) => {
-  console.log(data);
   state.editData = data;
   editModalVisible.value = true;
 };
@@ -298,8 +297,6 @@ const clickAddBtn = () => {
 };
 // 新增编辑弹窗确定后的回调
 const onEditModalConfirm = () => {
-  console.log('e');
-
   editModalVisible.value = false;
 
   fetchData();
@@ -307,7 +304,6 @@ const onEditModalConfirm = () => {
 const delectdata = () => {};
 // 删除
 const delectlist = (id: number, memberCount: number) => {
-  console.log(id);
   if (memberCount === 0) {
     Modal.warning({
       title: '确定删除该角色吗？',
@@ -320,8 +316,6 @@ const delectlist = (id: number, memberCount: number) => {
       },
       onOk: () => {
         apiRoleDelete({ roleId: id }).then((res) => {
-          console.log(res);
-
           if (res.data.code === 200) {
             fetchData();
             Message.success('删除成功');
@@ -359,7 +353,6 @@ const onEditTreeCancelsld = () => {
 };
 
 onMounted(() => {
-  console.log(userInfo.value);
   fetchData();
 });
 </script>

@@ -27,7 +27,6 @@ export function uploadFile(data: any) {
 
 // 下载文件
 export function downloadFile(params: any) {
-  console.log(params);
   return $http.get('/server/web/file/download', { params });
 }
 

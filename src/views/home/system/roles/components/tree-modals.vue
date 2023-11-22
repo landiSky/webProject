@@ -162,36 +162,25 @@ const treeState: Record<string, any> = {
   check: [],
   halfCheck: [],
 };
-console.log(roleid);
 const init = () => {
   apiMemberlist({}).then((res: any) => {
-    console.log(res, 'res');
     treeData.value = res;
-    console.log(state.formModel.menuList, 'state.formModel.menuList');
   });
 };
-// 点击树节点时触发
-const setSelecteds = (agfs: any, jashd: any) => {
-  console.log(agfs, jashd, '点击树节点时触发');
-};
+
 // 点击树节点复选框时触发
 const checkds = (checkList: number[], obj: Record<string, any>) => {
   treeState.check = checkList;
   treeState.halfCheck = obj.halfCheckedKeys;
-  // console.log(agfs, jashd.halfCheckedKeys, '点击树节点复选框时触发');
   // roleid.value = agfs;
   // state.formModel.menuList = agfs;
   state.formModel.menuList = checkList;
-  console.log(state.formModel.menuList);
 };
 
 // 展开/关闭
-const expands = (agfs: any, jashd: any) => {
-  console.log(agfs, jashd, '展开/关闭');
-};
+const expands = (agfs: any, jashd: any) => {};
 
 const onConfirm = (done: (closed: boolean) => void) => {
-  console.log(state.formModel, roleid.value, '完成');
   if (state.formModel.menuList.length === 0) {
     Message.error('角色最少配置一个权限点');
     done(false);
@@ -204,7 +193,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
       .then((res) => {
         emit('confirm');
         done(true);
-        console.log(res, 'res');
         Message.success('授权成功');
       })
       .catch((err) => {
@@ -219,7 +207,6 @@ onMounted(() => {
     // 一是编辑信息从列表传入
     // menuList
     const { id, menuList } = props.data;
-    console.log(id);
 
     const firstMenuList = treeData.value.map((item) => {
       return item.id;

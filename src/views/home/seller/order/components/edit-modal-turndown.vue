@@ -80,7 +80,6 @@ const radiotext = ref('');
 
 // 单选框
 const radioChange = (value: string) => {
-  console.log(value);
   radiotext.value = value;
   if (value === '3') {
     radiofalg.value = true;
@@ -92,20 +91,17 @@ const formRules = {
   rejectReasonDetail: [{ required: true, message: '请输入驳回原因' }],
 };
 const onConfirm = (done: (closed: boolean) => void) => {
-  console.log(radiotext.value);
   if (radiotext.value === '') {
     Message.error('至少选一项');
     done(false);
   } else {
     formRef.value.validate((errors: any) => {
-      console.log(state.formModel, 'state.formModel');
       if (!errors) {
         sellerTurndown({
           id: state.formModel.id,
           rejectType: state.formModel.rejectType,
           rejectReasonDetail: state.formModel.rejectReasonDetail,
-        }).then((res) => {
-          console.log(state.formModel);
+        }).then(() => {
           emit('confirm');
           done(true);
         });
@@ -115,16 +111,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
     });
   }
 };
-
-// const getDetail = () => {
-
-//   usersDetail({ id: props.data?.id })
-//     .then((res: Record<string, any>) => {
-//       const { roleName, roleDesc } = res || {};
-//       state.formModel = { roleName, roleDesc };
-//     })
-//     .catch(() => {});
-// };
 
 onMounted(() => {
   // if (isEdit.value) {
