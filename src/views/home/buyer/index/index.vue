@@ -65,6 +65,7 @@
                           CompanyAuthStatus.UNAUTH
                       "
                       type="text"
+                      class="dirlist-btn"
                       @click="authentication"
                       >去认证</t-button
                     >
@@ -116,6 +117,7 @@
                     <t-button
                       v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
+                      class="dirlist-btn"
                       @click="distributionrole"
                     >
                       邀请成员/分配权限</t-button
@@ -130,7 +132,9 @@
                   <span class="dirlist-step">浏览开通应用</span>
                   <div class="btns">
                     <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
-                    <t-button type="text" @click="tomall">去应用商城 </t-button>
+                    <t-button type="text" class="dirlist-btn" @click="tomall"
+                      >去应用商城
+                    </t-button>
                     <!-- <p> 去应用商城</p> -->
                   </div>
                 </div>
@@ -486,8 +490,11 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -984,6 +991,10 @@ onMounted(() => {
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 20px;
+              }
+
+              .dirlist-btn {
+                font-size: 14px;
               }
             }
 
