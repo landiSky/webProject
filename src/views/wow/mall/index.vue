@@ -160,29 +160,31 @@
               />
             </span>
             <span class="right">
-              <span class="name" @click="() => goMallDetail(item.id)">{{
-                item.name
-              }}</span>
-              <span class="companyName">{{ item.companyName }}</span>
+              <span class="right-top">
+                <span class="name" @click="() => goMallDetail(item.id)">{{
+                  item.name
+                }}</span>
+                <span class="companyName">{{ item.companyName }}</span>
 
-              <span class="tag">
-                <t-tag color="#E8F4FF">{{
-                  DeliverTypeDesc[item.deliveryType]
-                }}</t-tag>
-              </span>
-              <span class="desc">
-                <t-typography-paragraph
-                  :ellipsis="{
-                    rows: 2,
-                    showTooltip: {
-                      type: 'tooltip',
-                      props: {
-                        isBright: true,
+                <span class="tag">
+                  <t-tag color="#E8F4FF">{{
+                    DeliverTypeDesc[item.deliveryType]
+                  }}</t-tag>
+                </span>
+                <span class="desc">
+                  <t-typography-paragraph
+                    :ellipsis="{
+                      rows: 2,
+                      showTooltip: {
+                        type: 'tooltip',
+                        props: {
+                          isBright: true,
+                        },
                       },
-                    },
-                  }"
-                  >{{ item.introduction }}
-                </t-typography-paragraph>
+                    }"
+                    >{{ item.introduction }}
+                  </t-typography-paragraph>
+                </span>
               </span>
               <span class="price">
                 <template v-if="item.lowPrice !== '-1.00'">
@@ -538,6 +540,13 @@ onMounted(() => {
           flex-direction: column;
           // justify-content: start;
           align-items: start;
+
+          .right-top {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            align-items: start;
+          }
 
           .name {
             margin-bottom: 4px;
