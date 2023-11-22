@@ -3,14 +3,14 @@
     <t-modal
       v-model:visible="showModal"
       fullscreen
-      title-align="start"
+      title-align="center"
       :closable="false"
       :footer="null"
       popup-container="#modalWrapId"
       @back="goback"
     >
       <template #title>
-        <span style="margin-left: 42%"> 订单详情 </span>
+        <span> 订单详情 </span>
       </template>
 
       <div class="modal-body">
@@ -243,6 +243,7 @@
                     <img
                       v-for="(item, index) in dataList.attachmentAddressArr"
                       :key="index"
+                      class="pay-img"
                       style="width: 70px; height: 70px; margin-right: 10px"
                       :src="`/server/web/file/orderDownload?name=${item}`"
                       alt=""
@@ -612,18 +613,23 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 74%;
+    width: 1000px;
     height: 100%;
-    margin-left: 13%;
+    margin: 0 auto;
 
     .asjhdg {
       width: 100%;
       height: 100%;
-      margin: 15px auto;
+      margin: 36px auto;
       // margin-top: 15px;
       .information {
         .informationlist {
           margin-bottom: 12px;
+
+          .pay-img {
+            border: 1px solid #e5e8ef;
+            border-radius: 2px;
+          }
 
           :deep(.tele-space-item) {
             &:first-child {
@@ -702,7 +708,7 @@ onMounted(() => {
   .toperror {
     float: left;
     width: 100%;
-    height: 90px;
+    height: 110px;
     background-color: #f2f3f8;
   }
 }
