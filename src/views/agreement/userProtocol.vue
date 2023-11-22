@@ -208,7 +208,8 @@
 
 .single-page {
   position: relative;
-  // padding-bottom: $footer-height;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .protocol-title {
@@ -245,6 +246,7 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  align-items: center;
   height: 40px;
   margin: 0;
   padding: 0 20px;
