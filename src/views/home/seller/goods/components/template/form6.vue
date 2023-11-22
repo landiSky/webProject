@@ -124,7 +124,6 @@ const itemValid = (
 ) => {
   const item: { url: string }[] = form.value.blockList[index];
 
-  console.log('form6.vue:126', index, item, form.value.blockList);
   if (!item) {
     return cb(msg);
   }
@@ -155,7 +154,6 @@ const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
       });
       reject();
     } else {
-      console.log('form6.vue:158==before done');
       resolve(true);
     }
   });

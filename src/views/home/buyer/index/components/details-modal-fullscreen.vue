@@ -262,22 +262,9 @@ const goback = () => {
 const getUserDetail = () => {
   // 调后端接口
   authDetails({ companyId: 2 }).then((res) => {
-    console.log(res);
     // @ts-ignore
     detaillist.value = res;
   });
-  // loading.value = true;
-  // usersDetail({ id: props.data?.id })
-  //   .then((res) => {
-  //     formModel.value = res || {};
-  //     formModel.value.roleIds = res?.roles.map(
-  //       (item: { [name: string]: any }) => item.id
-  //     );
-  //   })
-  //   .catch(() => {})
-  //   .finally(() => {
-  //     loading.value = false;
-  //   });
 };
 // 修改认证信息
 const editmessage = () => {
@@ -285,42 +272,10 @@ const editmessage = () => {
 };
 
 onMounted(() => {
-  console.log('111');
   // if (props.data?.id) {
   getUserDetail();
   // }
 });
-// 完成
-// const onConfirm = (done: (closed: boolean) => void) => {
-//   formRef.value.validate((errors: any) => {
-//     if (!errors) {
-//       emit('confirm');
-//       // 调后端接口
-//       // const api = props.data.id ? usersUpdate : usersAdd;
-//       // api(formModel.value)
-//       //   .then(() => {
-//       //     emit('confirm');
-//       //     Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-//       //     done(true);
-//       //   })
-//       //   .catch(() => {
-//       //     done(false);
-//       //   });
-
-//       // mock数据
-//       Message.success(`${props.data.id ? '编辑' : '新增'}用户成功`);
-//       done(true);
-//     } else {
-//       done(false);
-//     }
-//   });
-// };
-// 取消
-// const canceldes = () => {
-//   // console.log('cancel');
-
-//   emit('cancel');
-// };
 </script>
 
 <style lang="less" scoped>

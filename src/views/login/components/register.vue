@@ -222,7 +222,6 @@ const realSendRequest = () => {
   sendBtnLoading.value = true;
   apiSendCaptcha({ phone: form.value.phone, type: 2 })
     .then((res) => {
-      console.log('register.vue:190', res);
       if (res.code === 200) {
         Message.success('验证码已发送，注意查收');
         countDownTime.value = 120; // 2分钟

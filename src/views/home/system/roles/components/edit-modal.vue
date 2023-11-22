@@ -61,8 +61,11 @@ import { apiRoleAdd } from '@/api/system/role';
 import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -120,7 +123,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
             emit('confirm');
 
             done(true);
-            console.log(res, 'res');
           })
           .catch((err) => {
             done(false);
@@ -154,18 +156,12 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 const onConfirmflag = () => {
   emit('cancel');
-  // state.formModel = {
-  //   roleName: undefined,
-  //   remark: undefined,
-  //   id: undefined,
-  // };
 };
 
 onMounted(() => {
   if (isEdit.value) {
     // 这里分两种情况
     // 一是编辑信息从列表传入
-    console.log(props.data);
     const { roleName, remark, id } = props?.data
       ? props.data
       : { roleName: '', remark: '', id: '' };

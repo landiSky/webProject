@@ -295,8 +295,11 @@ import {
 } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 const props = defineProps({
   data: {
@@ -337,18 +340,7 @@ const formModel = ref<Record<string, any>>({
   type: 0,
   companyCerPath: '',
 });
-// const fileList = [
-//   {
-//     uid: '-2',
-//     name: '20200717-103937.png',
-//     url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a8c8cdb109cb051163646151a4a5083b.png~tplv-uwbnlip3yd-webp.webp',
-//   },
-//   {
-//     uid: '-1',
-//     name: 'hahhahahahaha.png',
-//     url: '//p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/e278888093bef8910e829486fb45dd69.png~tplv-uwbnlip3yd-webp.webp',
-//   },
-// ];
+
 const formRules: any = {
   companyName: [
     { required: true, message: '请输入企业名称' },
@@ -370,10 +362,6 @@ const formRules: any = {
       required: true,
       message: '请上传营业执照',
       validator: (value: any, cb: any) => {
-        console.log(
-          'edit-modal-fullscreen.vue:387',
-          formModel.value.businessLicense
-        );
         if (!formModel.value.businessLicense) {
           return cb('请上传营业执照');
         }
@@ -389,8 +377,7 @@ const formRules: any = {
     { required: true, message: '请输入联系人身份证号' },
     { maxLength: 18, message: '长度不超过18个字符' },
     {
-      match:
-        /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
+      match: /^\d{6}((((((19|20)\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|(((19|20)\d{2})(0[13578]|1[02])31)|((19|20)\d{2})02(0[1-9]|1\d|2[0-8])|((((19|20)([13579][26]|[2468][048]|0[48]))|(2000))0229))\d{3})|((((\d{2})(0[13-9]|1[012])(0[1-9]|[12]\d|30))|((\d{2})(0[13578]|1[02])31)|((\d{2})02(0[1-9]|1\d|2[0-8]))|(([13579][26]|[2468][048]|0[048])0229))\d{2}))(\d|X|x)$/,
       message: '请输入正确的身份证号',
     },
   ],
@@ -415,23 +402,19 @@ const formRules: any = {
 
 const goback = () => {
   // showModal.value = false;
-  console.log('cancel');
   emit('cancel', formModel.value.type);
 };
 const getUserDetail = () => {
   // userInfo.value?.companyId
   authDetails({ companyId: String(userInfoByCompany.value?.companyId) })
     .then((res) => {
-      console.log(res);
       //  @ts-ignore
       formModel.value = res;
       formModel.value.type = 1;
-      console.log(formModel.value);
     })
     .catch((error) => {});
 };
 const changeclick = (fileList: any, fileItem: any) => {
-  console.log(fileList, fileItem, 'fileItem');
   formModel.value.businessLicense = fileList[0]?.name || '';
 };
 
@@ -458,50 +441,9 @@ const onBusUploadChange = (fileList: any) => {
   });
 };
 
-// // @ts-ignore 营业执照
-// const uploadSuccess = (fileItem: FileItem) => {
-//   console.log('=====uploadSuccess', fileItem);
-//   const res = fileItem.response;
-//   // if (res?.code === 200) {
-//   //   console.log(fileItem.response.data);
-
-//   //   formModel.value.businessLicense = fileItem.response.data;
-//   //   Message.success(`上传 ${fileItem.name} 成功`);
-//   // } else {
-//   //   Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-//   // }
-// };
-// 营业执照
-
-// @ts-ignore
-const uploadSuccessz = (fileItem: FileItem) => {
-  console.log('edit-modal-fullscreen.vue:490====uploadSuccessz');
-  console.log(fileItem);
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    formModel.value.idCardz = fileItem.response.data;
-
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-};
-// @ts-ignore
-const uploadSuccessf = (fileItem: FileItem) => {
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    formModel.value.idCardf = fileItem.response.data;
-
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-};
 const beforeUpload = (file: File) => {
-  console.log(file, 'file');
   return new Promise<void>((resolve, reject) => {
     const isLt5M: boolean = file.size / 1024 / 1024 < 10;
-    console.log('====beforeUpload', isLt5M);
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在10MB以内');
       // return false;
@@ -513,16 +455,12 @@ const beforeUpload = (file: File) => {
 };
 // 完成
 const onConfirm = (done: (closed: boolean) => void) => {
-  console.log('edit-modal-fullscreen.vue:504', formModel.value.businessLicense);
   formRef.value.validate((errors: any) => {
-    console.log('edit-modal-fullscreen.vue:503', errors);
     if (!errors) {
       // setFields;
-      console.log(formModel.value, 'closed');
       authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
           if (res.data.code === 200) {
-            console.log('edit-modal-fullscreen.vue:504', formModel.value);
             authSubmit(formModel.value)
               .then((res) => {
                 Message.success('认证已提交');
@@ -545,38 +483,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
 };
 // 取消
 const canceldes = () => {
-  console.log('cancel');
-
   emit('cancel', formModel.value.type);
 };
 
 onMounted(() => {
-  console.log('edit-modal-fullscreen.vue:537', props.data?.statusled);
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
-    console.log(props.data?.statusled);
-
     getUserDetail();
   }
 });
-// const qqq = () =>
-//   Modal.warning({
-//     title: '企业认证重复',
-//     content:
-//       '该企业已完成「企业认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
-//     titleAlign: 'start',
-//     okText: '好的',
-//     hideCancel: true,
-//   });
-//   Modal.warning({
-//     title: '企业节点认证重复',
-//     content:
-//       '该企业已完成「企业节点认证」，如需申请加入企业，请咨询企业联系人，联系方式：13233332222。',
-//     titleAlign: 'start',
-//     okText: '好的',
-//     hideCancel: true,
-//   });
-// };
 </script>
 
 <style lang="less" scoped>

@@ -98,21 +98,6 @@ const formRules = {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
-      console.log(state.formModel);
-
-      //   const api = isEdit.value ? roleUpdata : roleAdd; // 这里是新增、编辑不是一个接口
-      //   api(state.formModel)
-      //     .then(() => {
-      //       emit('confirm');
-      //       Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
-      //       done(true);
-      //     })
-      //     .catch(() => {
-      //       done(false);
-      //     });
-      // flagText.value = true;
-      // counts.value = 60;
-      // clearInterval(times.value);
       emit('confirm');
     } else {
       done(false);
@@ -147,7 +132,6 @@ onMounted(() => {
   // if (isEdit.value) {
   //   // 这里分两种情况
   //   // 一是编辑信息从列表传入
-  console.log(props.data);
   const { starlist } = props.data;
   state.formModel.roleDesc = starlist;
   //   // 二是从接口获取
