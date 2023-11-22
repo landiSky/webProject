@@ -3,14 +3,14 @@
     <t-modal
       v-model:visible="showModal"
       fullscreen
-      title-align="start"
+      title-align="center"
       :closable="false"
       :footer="null"
       popup-container="#modalWrapIds"
       @back="goback"
     >
       <template #title>
-        <span style="margin-left: 42%"> 订单详情 </span>
+        <span> 订单详情 </span>
       </template>
 
       <div class="modal-body">
@@ -251,7 +251,8 @@
                     <img
                       v-for="(item, index) in dataList.attachmentAddressArr"
                       :key="index"
-                      style="width: 70px; height: 70px; margin-right: 10px"
+                      class="pay-img"
+                      style="width: 100px; height: 100px; margin-right: 10px"
                       :src="`/server/web/file/orderDownload?name=${item}`"
                       alt=""
                     />
@@ -322,12 +323,13 @@
                   <div class="grid-content">
                     <div
                       class="imgs"
-                      style="float: left; width: 100px; margin: 0 10px 0 16px"
+                      style="float: left; width: 80px; margin: 0 12px"
                     >
                       <!-- dataList.productLogo -->
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
-                        style="width: 100px; height: 100px"
+                        class="pay-img"
+                        style="width: 80px; height: 80px"
                         :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
                         alt=""
                       />
@@ -335,8 +337,8 @@
                     <div
                       style="
                         float: left;
-                        width: 50%;
-                        margin-top: 5px;
+                        width: calc(100% - 104px);
+                        margin-top: 10px;
                         line-height: 20px;
                         text-align: left;
                       "
@@ -693,14 +695,19 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 74%;
+    width: 1000px;
     height: 100%;
-    margin-left: 13%;
+    margin: 0 auto;
 
     .asjhdg {
       width: 100%;
       height: 100%;
       margin: 36px auto;
+
+      .pay-img {
+        border: 1px solid #e5e8ef;
+        border-radius: 2px;
+      }
 
       .information {
         .informationlist {
@@ -758,7 +765,8 @@ onMounted(() => {
           border-radius: 2px;
 
           .grid-content {
-            padding: 10px 0 0 0;
+            padding: 12px 0;
+            // padding: 10px 0 0 0;
             // height: 20px;
             color: #1d2129;
             font-weight: 400;
@@ -767,6 +775,17 @@ onMounted(() => {
             font-style: normal;
             line-height: 20px;
             // background-color: #fff;
+            &::after {
+              display: block;
+              clear: both;
+              height: 0;
+              visibility: hidden;
+              content: '';
+            }
+
+            .imgs {
+              height: 80px;
+            }
           }
         }
 
