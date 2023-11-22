@@ -7,6 +7,7 @@ import { onMounted, watch } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
+import { clearToken } from './utils/auth';
 
 const userStore = useUserStore();
 
@@ -75,6 +76,13 @@ onMounted(() => {
     },
     true
   );
+
+  window.addEventListener('beforeunload', () => {
+    // 页面卸载前清除 token，其实是在安全校验页面回退时清空 token
+    if (window.location.hash === '#/safetycheck') {
+      clearToken();
+    }
+  });
 });
 </script>
 

@@ -28,38 +28,89 @@ export function createPermissionGuard(router: Router) {
     const userStore = useUserStore();
     // const menuStore = useMenuStore();
 
-    // console.log('permissionGuard.ts:28', to, from.path);
+    console.log(
+      'permissionGuard.ts:28',
+      to.path,
+      from.path,
+      getToken(),
+      userStore?.userInfo
+    );
 
     if (getToken()) {
       if (!userStore.userInfo) {
         // const userInfo: Record<string, any> =
         // console.log('permissionGuard.ts:35', userStore.userInfo);
-        const userInfo: Record<string, any> =
-          await userStore.getUserBasicInfo();
+        const userInfo: Record<
+          string,
+          any
+        > = await userStore.getUserBasicInfo();
         // console.log('permissionGuard.ts:36', userInfo);
 
         if (userInfo?.userId) {
           if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
+            console.log(
+              'permissionGuard.ts==跳到安全校验，第一次获取 userinfo',
+              to.fullPath,
+              from.fullPath
+            );
             // 跳转到绑定页面，进行手机号绑定和安全校验
             next('/safetycheck');
+            // return;
           }
-          console.log('permissionGuard.ts:43', userInfo?.isAdmin, to.fullPath);
           // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
           if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
+            console.log(
+              'permissionGuard.ts:60===跳到运营首页',
+              to.fullPath,
+              from.fullPath
+            );
             next('/goods');
           } else {
+            console.log(
+              'permissionGuard.ts:69===跳到，继续',
+              to.fullPath,
+              from.fullPath
+            );
+
             next();
           }
         } else {
-          console.log('permissionGuard.ts:46', to.fullPath);
+          console.log(
+            'permissionGuard.ts:78===跳到前台首页',
+            to.fullPath,
+            from.fullPath
+          );
           next('/wow/index');
         }
+      } else if (
+        userStore.userInfo?.bindStatus === 1 ||
+        userStore.userInfo?.safeCheck
+      ) {
+        console.log(
+          'permissionGuard.ts:89=== 已有用户信息，跳到安全校验',
+          to.fullPath,
+          from.fullPath
+        );
+        if (to.fullPath === '/safetycheck' || to.fullPath.startsWith('/wow/')) {
+          next();
+        } else {
+          next('/safetycheck');
+        }
+        // 跳转到绑定页面，进行手机号绑定和安全校验
       } else if (to.matched.length === 0) {
-        console.log('permissionGuard.ts:55', to.fullPath);
+        console.log(
+          'permissionGuard.ts:97=== 没有匹配到路由，跳首页',
+          to.fullPath,
+          from.fullPath
+        );
         const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
         next(indexUrl);
       } else {
-        console.log('permissionGuard.ts:58', to.fullPath);
+        console.log(
+          'permissionGuard.ts:105=== 有用户信息，继续往下 next()',
+          to.fullPath,
+          from.fullPath
+        );
         next();
       }
     } else if (window.location.search.includes('code=')) {
@@ -114,7 +165,11 @@ export function createPermissionGuard(router: Router) {
       whiteList.indexOf(to.path) !== -1 ||
       to.path.startsWith('/wow/mall/detail/')
     ) {
-      console.log('permissionGuard.ts:113', to.fullPath);
+      console.log(
+        'permissionGuard.ts:164=== 最后，next()',
+        to.fullPath,
+        from.fullPath
+      );
       next();
     } else {
       // next('/login');
