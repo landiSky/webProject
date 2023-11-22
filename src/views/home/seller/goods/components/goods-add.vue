@@ -191,7 +191,7 @@
             class="pic-item"
             validate-trigger="blur"
           >
-            <div v-if="imageList.length > 0" class="file-list">
+            <div class="file-list">
               <div v-for="url of imageList" :key="url" class="file-container">
                 <div class="file-image">
                   <div class="image-div">
@@ -232,41 +232,42 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <t-upload
-              v-if="imageList.length < 5"
-              :ref="detailImageRef"
-              :file-list="detailList"
-              :show-cancel-button="false"
-              :show-file-list="false"
-              :headers="uploadHeaders"
-              action="/server/web/file/upload"
-              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
-              @before-upload="beforeUpload"
-              @success="uploadDetailSuccess"
-              @progress="uploadDetailProgress"
-              @error="uploadDetailError"
-            >
-              <template #upload-button>
-                <t-spin size="24" :loading="detailUploading">
-                  <div :class="`tele-upload-list-item`">
-                    <div class="tele-upload-picture-card">
-                      <div class="tele-upload-picture-card-text">
-                        <IconPlus size="16" stroke-width="6" />
-                        <div
-                          style="
-                            margin-top: 8px;
-                            font-weight: 500;
-                            font-size: 12px;
-                          "
-                          >点击上传</div
-                        >
+
+              <t-upload
+                v-if="imageList.length < 5"
+                :ref="detailImageRef"
+                :file-list="detailList"
+                :show-cancel-button="false"
+                :show-file-list="false"
+                :headers="uploadHeaders"
+                action="/server/web/file/upload"
+                accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+                @before-upload="beforeUpload"
+                @success="uploadDetailSuccess"
+                @progress="uploadDetailProgress"
+                @error="uploadDetailError"
+              >
+                <template #upload-button>
+                  <t-spin size="24" :loading="detailUploading">
+                    <div :class="`tele-upload-list-item`">
+                      <div class="tele-upload-picture-card">
+                        <div class="tele-upload-picture-card-text">
+                          <IconPlus size="16" stroke-width="6" />
+                          <div
+                            style="
+                              margin-top: 8px;
+                              font-weight: 500;
+                              font-size: 12px;
+                            "
+                            >点击上传</div
+                          >
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </t-spin>
-              </template>
-            </t-upload>
+                  </t-spin>
+                </template>
+              </t-upload>
+            </div>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -1621,6 +1622,7 @@ const validateAP = (index: number, key: string) => {
   width: 100px;
   height: 100px;
   margin-right: 8px;
+  margin-bottom: 8px;
 
   .file-image {
     position: relative;
