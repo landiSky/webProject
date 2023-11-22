@@ -142,13 +142,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Modal, Message } from '@tele-design/web-vue';
+import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { NodeAuthStatus } from '@/enums/common';
-import carouse1 from '@/assets/images/wow/index/carouse1.png';
 import carouse2 from '@/assets/images/wow/index/carouse2.png';
 import carouse3 from '@/assets/images/wow/index/carouse3.png';
 import carouse4 from '@/assets/images/wow/index/carouse4.png';
@@ -171,8 +170,9 @@ import WowFooter from '../components/wowFooter/index.vue';
 const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
+  userStore
+);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -280,7 +280,8 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -301,7 +302,8 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -322,7 +324,8 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -343,7 +346,8 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc: '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
+    desc:
+      '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
         name: '',
@@ -396,46 +400,6 @@ const columns = [
     },
   },
 ];
-
-const clickApplyIdService = () => {
-  if (!userInfo.value?.userId) {
-    // userStore.jumpToLogin();
-    Message.warning('暂未登录，请先登录后使用');
-  } else if (!userInfoByCompany?.companyId) {
-    Modal.info({
-      title: '使用提醒',
-      content: '需申请企业节点后使用，请先开通或绑定企业节点。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不开通',
-      okText: '去开通',
-      onOk: () => {
-        router.push({
-          path: '/buyer/index',
-        });
-      },
-    });
-  } else {
-    const { nodeStatus, idPointer } = userInfoByCompany || {};
-    if (nodeStatus !== NodeAuthStatus.AUTHED) {
-      Modal.info({
-        title: '使用提醒',
-        content: '企业节点完成认证后，方可使用。',
-        titleAlign: 'start',
-        hideCancel: false,
-        cancelText: '取消',
-        okText: '去查看',
-        onOk: () => {
-          router.push({
-            path: '/buyer/index',
-          });
-        },
-      });
-    } else {
-      window.open(idPointer, '_blank');
-    }
-  }
-};
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {

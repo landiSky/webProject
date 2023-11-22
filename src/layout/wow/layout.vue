@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
 import NavBar from './navbar/index.vue';
 import PageMain from './main/index.vue';
 </script>

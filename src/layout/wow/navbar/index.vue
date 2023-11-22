@@ -95,8 +95,11 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,

@@ -63,7 +63,7 @@
             </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -71,15 +71,17 @@
                   <div class="order-success-text">
                     待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
                   </div>
+                </t-space>
+                <div>
                   <t-button
                     type="primary"
                     @click="modificationamount(dataList.id)"
                     >上传凭证</t-button
                   >
-                </t-space>
+                </div>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -89,7 +91,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -99,7 +101,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 3">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon">
                     <icon-check-circle-fill />
                   </div>
@@ -127,7 +129,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 4">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-danger">
                     <icon-close-circle-fill />
                   </div>
@@ -161,12 +163,16 @@
                     }}</div>
                   </t-space>
                 </div>
-                <t-button type="primary" anew @click="anewupload"
+                <t-button
+                  class="button-top"
+                  type="primary"
+                  anew
+                  @click="anewupload"
                   >重新上传凭证</t-button
                 >
               </div>
               <div v-if="dataList.orderStatus === 5">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -723,5 +729,57 @@ onMounted(() => {
     font-style: normal;
     line-height: 22px;
   }
+}
+
+:deep(.tele-space-item) {
+  margin-right: 12px !important;
+}
+
+.spacing {
+  :deep(.tele-space-item) {
+    margin-right: 8px !important;
+  }
+}
+
+.order-success {
+  margin-bottom: 16px;
+  color: var(--t-41-d-2129, #1d2129);
+  font-weight: 500;
+  font-size: 14px;
+
+  /* CN/标题/14-Medium-迷你 */
+  font-family: PingFang SC;
+  font-style: normal;
+  line-height: 22px; /* 157.143% */
+}
+
+.order-item-due-date,
+.order-item-deploy {
+  margin-bottom: 12px;
+}
+
+.order-item-left {
+  color: var(--f-64-e-5969, #4e5969);
+  font-weight: 400;
+  font-size: 12px;
+  font-family: PingFang SC;
+  font-style: normal;
+  line-height: 20px; /* 166.667% */
+  text-align: right;
+}
+
+.order-item-right {
+  color: var(--f-71-d-2129, #1d2129);
+  font-weight: 400;
+  font-size: 12px;
+
+  /* 12/CN-Regular-pingfang */
+  font-family: PingFang SC;
+  font-style: normal;
+  line-height: 20px; /* 166.667% */
+}
+
+.button-top {
+  margin-top: 4px;
 }
 </style>
