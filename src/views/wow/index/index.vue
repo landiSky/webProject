@@ -563,6 +563,10 @@ onMounted(() => {
     align-items: center;
   }
 
+  :deep(.tele-tabs-content-item-active) {
+    overflow: visible;
+  }
+
   .tabDesc {
     display: flex;
     flex-direction: column;

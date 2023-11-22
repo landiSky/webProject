@@ -97,8 +97,6 @@ export function JumpToLogin() {
 
 // 全部左侧menu，在store中根据permission动态生成左侧菜单
 export const appMenus = (authsList: Array<string> = []) => {
-  console.log('router.js=====index.ts:94', authsList);
-
   const { isAdmin } = useUserStore().userInfo || {};
 
   // TODO 优化迭代逻辑
