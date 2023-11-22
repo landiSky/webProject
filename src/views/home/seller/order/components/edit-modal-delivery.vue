@@ -1,12 +1,17 @@
 <template>
   <t-modal
     v-model:visible="visible"
-    :width="642"
+    :width="520"
     :on-before-ok="onConfirm"
     @cancel="emit('cancel')"
   >
     <template #title> 填写交付信息 </template>
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+    <t-form
+      ref="formRef"
+      :model="state.formModel"
+      :rules="formRules"
+      :label-col-props="{ span: 4, offset: 0 }"
+    >
       <t-form-item field="accessAddress" label="访问地址">
         <!-- :max-length="{
             length: 50,
