@@ -81,9 +81,8 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();
-const {
-  createOrderInfo,
-}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
+const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
+  storeToRefs(orderStore);
 const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);
