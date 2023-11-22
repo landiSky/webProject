@@ -252,10 +252,10 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[dataInfo.deliveryType] }}
+                {{ DeliveryTypeEnum[dataInfo.deliveryType ?? 0] }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[dataInfo.saleType] }}
+                {{ PriceTypeEnum[dataInfo.saleType ?? 0] }}
               </t-descriptions-item>
             </t-descriptions>
             <div class="line"></div>
@@ -540,6 +540,8 @@ const toAnchor = (link: string) => {
   align-items: center;
   justify-content: center;
   padding: 20px 24px;
+  font-weight: 500;
+  font-size: 14px;
   line-height: 22px;
 }
 
