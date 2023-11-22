@@ -193,11 +193,8 @@ import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 
