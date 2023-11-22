@@ -1,24 +1,23 @@
 <template>
-  <t-modal
-    v-model:visible="visible"
-    :width="642"
-    :height="400"
-    :on-before-ok="onConfirm"
-    @cancel="emit('cancel')"
-  >
-    <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item field="username" label="成员姓名" validate-trigger="blur">
-        <t-input
-          v-model="state.formModel.username"
-          placeholder="请输入"
-          :max-length="{
-            length: 10,
-            errorOnly: true,
-          }"
-          show-word-limit
-        />
-        <!-- <t-select
+  <div>
+    <t-modal
+      v-model:visible="visible"
+      :on-before-ok="onConfirm"
+      @cancel="emit('cancel')"
+    >
+      <template #title> {{ isEdit ? '编辑' : '新增' }}企业成员 </template>
+      <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+        <t-form-item field="username" label="成员姓名" validate-trigger="blur">
+          <t-input
+            v-model="state.formModel.username"
+            placeholder="请输入"
+            :max-length="{
+              length: 10,
+              errorOnly: true,
+            }"
+            show-word-limit
+          />
+          <!-- <t-select
           v-model="state.formModel.userName"
           placeholder="请输入新管理员账号"
           allow-search
@@ -39,31 +38,32 @@
             >{{ item.username }}</t-option
           >
         </t-select> -->
-      </t-form-item>
+        </t-form-item>
 
-      <t-form-item field="roleList" label="成员角色" validate-trigger="blur">
-        <t-select
-          v-model="state.formModel.roleList"
-          placeholder="请选择"
-          multiple
-        >
-          <t-option
-            v-for="item in roleSelect"
-            :key="item.id"
-            :value="item.id"
-            >{{ item.roleName }}</t-option
+        <t-form-item field="roleList" label="成员角色" validate-trigger="blur">
+          <t-select
+            v-model="state.formModel.roleList"
+            placeholder="请选择"
+            multiple
           >
-        </t-select>
-      </t-form-item>
-      <t-form-item field="phone" label="手机号" validate-trigger="blur">
-        <t-input
-          v-model="state.formModel.phone"
-          placeholder="请输入"
-          show-word-limit
-        />
-      </t-form-item>
-    </t-form>
-  </t-modal>
+            <t-option
+              v-for="item in roleSelect"
+              :key="item.id"
+              :value="item.id"
+              >{{ item.roleName }}</t-option
+            >
+          </t-select>
+        </t-form-item>
+        <t-form-item field="phone" label="手机号" validate-trigger="blur">
+          <t-input
+            v-model="state.formModel.phone"
+            placeholder="请输入"
+            show-word-limit
+          />
+        </t-form-item>
+      </t-form>
+    </t-modal>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -81,8 +81,11 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import { Message } from '@tele-design/web-vue';
 
 const props = defineProps({
@@ -276,4 +279,15 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.tele-col-5) {
+  flex: none;
+  width: 76px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
+}
+
+// }
+</style>
