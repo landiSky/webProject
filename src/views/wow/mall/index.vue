@@ -44,7 +44,7 @@
           >
         </span>
       </span>
-      <span class="item">
+      <span class="item goods-price">
         <span class="label">商品价格:</span>
         <span class="value">
           <span
@@ -382,7 +382,7 @@ onMounted(() => {
 
 .content {
   width: 1176px;
-  margin: 0 auto 120px auto;
+  margin: -30px auto 120px auto;
 
   .search {
     display: flex;
@@ -393,6 +393,11 @@ onMounted(() => {
 
     span:last-child {
       text-align: right;
+    }
+
+    .goods-price {
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e5e8ef;
     }
 
     .item {
