@@ -3,14 +3,14 @@
     <t-modal
       v-model:visible="showModal"
       fullscreen
-      title-align="start"
+      title-align="center"
       :closable="false"
       :footer="null"
       popup-container="#modalWrapIds"
       @back="goback"
     >
       <template #title>
-        <span style="margin-left: 42%"> 订单详情 </span>
+        <span> 订单详情 </span>
       </template>
 
       <div class="modal-body">
@@ -63,7 +63,7 @@
             </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -74,7 +74,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -82,22 +82,22 @@
                   <div class="order-success-text"
                     >待审核：买家已提交支付凭证，请进行审核。
                   </div>
-                  <div class="return-ok">
-                    <t-button
-                      type="primary"
-                      status="danger"
-                      style="margin-right: 10px"
-                      @click="turndownsyhn"
-                      >驳回</t-button
-                    >
-                    <t-button type="primary" @click="passok(dataList.id)"
-                      >通过</t-button
-                    >
-                  </div>
                 </t-space>
+                <div class="return-ok">
+                  <t-button
+                    type="primary"
+                    status="danger"
+                    style="margin-right: 10px"
+                    @click="turndownsyhn"
+                    >驳回</t-button
+                  >
+                  <t-button type="primary" @click="passok(dataList.id)"
+                    >通过</t-button
+                  >
+                </div>
               </div>
               <div v-if="dataList.orderStatus === 4">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-danger">
                     <icon-close-circle-fill />
                   </div>
@@ -133,7 +133,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -141,11 +141,13 @@
                   <div class="order-success-text">
                     待交付：已确认收款，请完成订单交付。
                   </div>
-                  <t-button type="primary" @click="delivery">立即交付</t-button>
                 </t-space>
+                <div>
+                  <t-button type="primary" @click="delivery">立即交付</t-button>
+                </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -156,7 +158,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 3">
-                <t-space class="order-success">
+                <t-space class="order-success spacing">
                   <div class="order-success-icon">
                     <icon-check-circle-fill />
                   </div>
@@ -251,7 +253,8 @@
                     <img
                       v-for="(item, index) in dataList.attachmentAddressArr"
                       :key="index"
-                      style="width: 70px; height: 70px; margin-right: 10px"
+                      class="pay-img"
+                      style="width: 100px; height: 100px; margin-right: 10px"
                       :src="`/server/web/file/orderDownload?name=${item}`"
                       alt=""
                     />
@@ -322,12 +325,13 @@
                   <div class="grid-content">
                     <div
                       class="imgs"
-                      style="float: left; width: 100px; margin: 0 10px 0 16px"
+                      style="float: left; width: 80px; margin: 0 12px"
                     >
                       <!-- dataList.productLogo -->
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
                       <img
-                        style="width: 100px; height: 100px"
+                        class="pay-img"
+                        style="width: 80px; height: 80px"
                         :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
                         alt=""
                       />
@@ -335,8 +339,8 @@
                     <div
                       style="
                         float: left;
-                        width: 50%;
-                        margin-top: 5px;
+                        width: calc(100% - 104px);
+                        margin-top: 10px;
                         line-height: 20px;
                         text-align: left;
                       "
@@ -693,14 +697,19 @@ onMounted(() => {
 
   .centers {
     display: flex;
-    width: 74%;
+    width: 1000px;
     height: 100%;
-    margin-left: 13%;
+    margin: 0 auto;
 
     .asjhdg {
       width: 100%;
       height: 100%;
       margin: 36px auto;
+
+      .pay-img {
+        border: 1px solid #e5e8ef;
+        border-radius: 2px;
+      }
 
       .information {
         .informationlist {
@@ -758,7 +767,8 @@ onMounted(() => {
           border-radius: 2px;
 
           .grid-content {
-            padding: 10px 0 0 0;
+            padding: 12px 0;
+            // padding: 10px 0 0 0;
             // height: 20px;
             color: #1d2129;
             font-weight: 400;
@@ -767,6 +777,17 @@ onMounted(() => {
             font-style: normal;
             line-height: 20px;
             // background-color: #fff;
+            &::after {
+              display: block;
+              clear: both;
+              height: 0;
+              visibility: hidden;
+              content: '';
+            }
+
+            .imgs {
+              height: 80px;
+            }
           }
         }
 
@@ -827,29 +848,55 @@ onMounted(() => {
   }
 }
 
-.order-item-deploy {
-  margin-top: 16px;
+:deep(.tele-space-item) {
+  margin-right: 12px !important;
 }
 
-.order-item-due-date {
-  margin-top: 12px;
+.spacing {
+  :deep(.tele-space-item) {
+    margin-right: 8px !important;
+  }
+}
+
+.order-success {
+  margin-bottom: 16px;
+  color: var(--t-41-d-2129, #1d2129);
+  font-weight: 500;
+  font-size: 14px;
+
+  /* CN/标题/14-Medium-迷你 */
+  font-family: PingFang SC;
+  font-style: normal;
+  line-height: 22px; /* 157.143% */
+}
+
+.order-item-due-date,
+.order-item-deploy {
+  margin-bottom: 12px;
 }
 
 .order-item-left {
-  margin-right: 12px;
-  color: #4e5969;
+  color: var(--f-64-e-5969, #4e5969);
   font-weight: 400;
   font-size: 12px;
+  font-family: PingFang SC;
   font-style: normal;
-  line-height: 20px;
+  line-height: 20px; /* 166.667% */
   text-align: right;
 }
 
 .order-item-right {
-  color: #1d2129;
+  color: var(--f-71-d-2129, #1d2129);
   font-weight: 400;
   font-size: 12px;
+
+  /* 12/CN-Regular-pingfang */
+  font-family: PingFang SC;
   font-style: normal;
-  line-height: 20px;
+  line-height: 20px; /* 166.667% */
+}
+
+.button-top {
+  margin-top: 4px;
 }
 </style>
