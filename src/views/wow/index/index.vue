@@ -561,6 +561,7 @@ onMounted(() => {
   :deep(.tele-tabs-pane) {
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   :deep(.tele-tabs-content-item-active) {
@@ -600,8 +601,7 @@ onMounted(() => {
 
   .cardList {
     display: flex;
-    flex: 1;
-
+    // flex: 1;
     .card {
       display: flex;
       flex-direction: column;
