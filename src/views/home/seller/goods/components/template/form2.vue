@@ -99,7 +99,7 @@
               Authorization: `Bearer ${getToken()}`,
             }"
             action="/server/web/file/upload"
-            accept=".jpg,.png,.bmp,.gif,jpeg"
+            accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
             :limit="1"
             tip="点击上传"
             image-preview
@@ -110,7 +110,7 @@
           </t-upload>
           <span class="uploadTips">
             建议图片尺寸：200px *
-            200px，支持jpg、png、bmp、gif、jpeg文件格式，文件大小限制10M以内。
+            200px，支持jpg、png、bmp、gif、jpeg、tif文件格式，文件大小限制10M以内。
           </span>
         </div>
       </t-form-item>
