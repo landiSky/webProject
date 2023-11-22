@@ -3,7 +3,6 @@ import { whiteList } from '@/router';
 import { getToken, setToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 
-// import { useMenuStore } from '@/store/modules/menu';
 import { apiLoginToken } from '@/api/login';
 
 /**
@@ -11,47 +10,40 @@ import { apiLoginToken } from '@/api/login';
  * @param router 路由
  */
 export function createPermissionGuard(router: Router) {
-  router.beforeEach(async (to, from, next) => {
-    /** 判断token是否有效
-      -token有效
-      --判断to页面是否登录页
-      ---登录页，跳转home
-      ---直接跳转
-      --判断用户信息是否存在
-      ---用户信息不存在，获取用户信息，再跳转页面
-      -token无效
-      --判断to页面是否需要登录
-      ---不需要登录直接跳转
-      ---需要跳转登录
-    */
-
+  router.beforeEach((to, from, next) => {
     const userStore = useUserStore();
-    // const menuStore = useMenuStore();
 
+    // s1: 有 token， 已登录态
     if (getToken()) {
+      // s1-1: 没有用户信息
       if (!userStore.userInfo) {
-        const userInfo: Record<string, any> =
-          await userStore.getUserBasicInfo();
-
-        if (userInfo?.userId) {
-          if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
-            // 跳转到绑定页面，进行手机号绑定和安全校验
-            next('/safetycheck');
-            // return;
-          }
-          // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
-          if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
-            next('/goods');
-          } else {
-            next();
-          }
-        } else {
-          next('/wow/index');
-        }
+        // async 形式的控制台总报 invalid guard 问题
+        userStore
+          .getUserBasicInfo()
+          .then((res) => {
+            const userInfo: Record<string, any> = res;
+            if (userInfo?.userId) {
+              if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
+                // 跳转到绑定页面，进行手机号绑定和安全校验
+                next('/safetycheck');
+                // return;
+              }
+              // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
+              if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
+                next('/goods');
+              } else {
+                next();
+              }
+            } else {
+              next('/wow/index');
+            }
+          })
+          .catch(() => next());
       } else if (
         userStore.userInfo?.bindStatus === 1 ||
         userStore.userInfo?.safeCheck
       ) {
+        // s1-2: 有用户信息，且需要做绑定验证
         if (to.fullPath === '/safetycheck' || to.fullPath.startsWith('/wow/')) {
           next();
         } else {
@@ -59,12 +51,14 @@ export function createPermissionGuard(router: Router) {
         }
         // 跳转到绑定页面，进行手机号绑定和安全校验
       } else if (to.matched.length === 0) {
+        // s1-3: 有用户信息，路由均不匹配，跳到首页，运营跳运营，前台跳前台
         const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
         next(indexUrl);
       } else {
         next();
       }
     } else if (window.location.search.includes('code=')) {
+      // s2: 没有 token, url 上有 code, 代表登录要成功了，去获取 token
       const { search } = window.location;
       const codeIndex = search.indexOf('code=');
       const code = search.slice(codeIndex + 5, codeIndex + 12);
@@ -97,8 +91,7 @@ export function createPermissionGuard(router: Router) {
           setToken(data.accessToken);
 
           // 这时候还拿不到userInfo
-          // const indexUrl = userStore.userInfo?.isAdmin ? '#/goods' : '#/buyer';
-          // 从商品详情页跳转登录，成功后返回
+          // 从商品详情页跳转登录，成功后也返回到商品详情页，详情路径存放在sessionstorage 中
           const mallDetailPath = sessionStorage.getItem('mallDetailPath');
           const uriHash = mallDetailPath || '/buyer/index';
           window.location.replace(
@@ -112,9 +105,10 @@ export function createPermissionGuard(router: Router) {
       whiteList.indexOf(to.path) !== -1 ||
       to.path.startsWith('/wow/mall/detail/')
     ) {
+      // s3: 路由在白名单里，不需要做鉴权，商城的商品详情页也不需要鉴权
       next();
     } else {
-      // next('/login');
+      // s4: 没有 token，需要鉴权，去登录页
       userStore.jumpToLogin();
     }
   });
