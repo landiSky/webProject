@@ -251,7 +251,7 @@
                         modificationamount(
                           item.id,
                           item.orderNum,
-                          item.productPrice
+                          item.realityPrice
                         )
                       "
                       >修改优惠金额</t-button
@@ -372,11 +372,8 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -544,8 +541,17 @@ const init = () => {
 const clickNav = (value: string | null, ins: number) => {
   console.log(value, ins);
   activeIndex.value = ins;
+  formInline.pageNum = 1;
   // @ts-ignore
   formInline.tabstatus = value;
+  formInline.deliveryType = null;
+  formInline.commodityName = '';
+  formInline.time = [];
+  formInline.startTime = '';
+  formInline.endTime = '';
+  formInline.orderStatus = null;
+  formInline.pageNum = 1;
+  noDatalist.value = false;
   if (ins === 1) {
     orderStatusSelect.value = [
       // {

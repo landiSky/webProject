@@ -562,7 +562,7 @@ const clickCopy = (Num: string) => {
 // 修改金额 弹窗
 const modificationamount = () => {
   state.updataamount.id = dataList.value.id;
-  state.updataamount.currentamount = dataList.value.productPrice;
+  state.updataamount.currentamount = dataList.value.realityPrice;
   state.updataamount.orderid = dataList.value.orderNum;
   editModalVisible.value = true;
 };
