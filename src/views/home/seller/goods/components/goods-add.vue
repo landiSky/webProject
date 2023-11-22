@@ -191,7 +191,7 @@
             class="pic-item"
             validate-trigger="blur"
           >
-            <div v-if="imageList.length > 0" class="file-list">
+            <div class="file-list">
               <div v-for="url of imageList" :key="url" class="file-container">
                 <div class="file-image">
                   <div class="image-div">
@@ -232,41 +232,42 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <t-upload
-              v-if="imageList.length < 5"
-              :ref="detailImageRef"
-              :file-list="detailList"
-              :show-cancel-button="false"
-              :show-file-list="false"
-              :headers="uploadHeaders"
-              action="/server/web/file/upload"
-              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
-              @before-upload="beforeUpload"
-              @success="uploadDetailSuccess"
-              @progress="uploadDetailProgress"
-              @error="uploadDetailError"
-            >
-              <template #upload-button>
-                <t-spin size="24" :loading="detailUploading">
-                  <div :class="`tele-upload-list-item`">
-                    <div class="tele-upload-picture-card">
-                      <div class="tele-upload-picture-card-text">
-                        <IconPlus size="16" stroke-width="6" />
-                        <div
-                          style="
-                            margin-top: 8px;
-                            font-weight: 500;
-                            font-size: 12px;
-                          "
-                          >点击上传</div
-                        >
+
+              <t-upload
+                v-if="imageList.length < 5"
+                :ref="detailImageRef"
+                :file-list="detailList"
+                :show-cancel-button="false"
+                :show-file-list="false"
+                :headers="uploadHeaders"
+                action="/server/web/file/upload"
+                accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+                @before-upload="beforeUpload"
+                @success="uploadDetailSuccess"
+                @progress="uploadDetailProgress"
+                @error="uploadDetailError"
+              >
+                <template #upload-button>
+                  <t-spin size="24" :loading="detailUploading">
+                    <div :class="`tele-upload-list-item`">
+                      <div class="tele-upload-picture-card">
+                        <div class="tele-upload-picture-card-text">
+                          <IconPlus size="16" stroke-width="6" />
+                          <div
+                            style="
+                              margin-top: 8px;
+                              font-weight: 500;
+                              font-size: 12px;
+                            "
+                            >点击上传</div
+                          >
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </t-spin>
-              </template>
-            </t-upload>
+                  </t-spin>
+                </template>
+              </t-upload>
+            </div>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -408,7 +409,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -429,7 +430,7 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index], 'url')"
+                  @input="validate(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item
@@ -534,7 +535,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -555,13 +556,13 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index], 'url')"
+                  @input="validate(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
                 <t-input
                   v-model.trim="copyModal2[index].onePiece"
-                  @input="validate(copyFormRef[index], 'onePiece')"
+                  @input="validate(copyFormRef[index].value, 'onePiece')"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -595,7 +596,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index], 'name')"
+                  @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -1123,7 +1124,10 @@ const getDetail = (id: any) => {
           const pList = one.accountNumList;
           if (pList && pList.length > 0) {
             for (const two of pList) {
-              list1.push({ accountNum: two.accountNum, price: two.price });
+              list1.push({
+                accountNum: two.accountNum,
+                price: parseInt(two.price, 10),
+              });
             }
           } else {
             list1.push({ accountNum: '', price: '' });
@@ -1621,6 +1625,7 @@ const validateAP = (index: number, key: string) => {
   width: 100px;
   height: 100px;
   margin-right: 8px;
+  margin-bottom: 8px;
 
   .file-image {
     position: relative;
