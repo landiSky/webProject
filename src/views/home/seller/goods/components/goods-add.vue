@@ -56,7 +56,7 @@
                 length: 20,
                 errorOnly: true,
               }"
-              @input="validate(formModel, 'name')"
+              @input="validate(formRef, 'name')"
             >
             </t-input>
           </t-form-item>
@@ -261,7 +261,7 @@
                 minRows: 2,
                 maxRows: 5,
               }"
-              @input="validate(formModel, 'introduction')"
+              @input="validate(formRef, 'introduction')"
             />
           </t-form-item>
           <t-form-item
@@ -289,7 +289,10 @@
             <div class="hint">文件大小限制2M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
-            <TemplateDrawer ref="templateRef"></TemplateDrawer>
+            <TemplateDrawer
+              ref="templateRef"
+              @confirm="templateChanged"
+            ></TemplateDrawer>
           </t-form-item>
         </t-form>
       </div>
@@ -842,6 +845,7 @@ const uploadError = (fileItem: FileItem) => {
   } else {
     Message.error(`上传失败，请检查网络`);
   }
+  formRef.value.validateField('logo');
 };
 
 const uploadProgress = () => {
@@ -857,6 +861,7 @@ const uploadSuccess = (fileItem: FileItem) => {
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
   }
+  formRef.value.validateField('logo');
 };
 
 const detailUploading = ref(false);
@@ -873,6 +878,7 @@ const uploadDetailError = (fileItem: FileItem) => {
   } else {
     Message.error(`上传失败，请检查网络`);
   }
+  formRef.value.validateField('detailImg');
 };
 
 const uploadDetailSuccess = (fileItem: FileItem) => {
@@ -885,6 +891,7 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
   }
+  formRef.value.validateField('detailImg');
 };
 
 const uploadExpError = (fileItem: FileItem) => {
@@ -1221,6 +1228,11 @@ onMounted(() => {
   }
 });
 
+const templateChanged = () => {
+  formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  formRef.value.validateField('detail');
+};
+
 const doSave = async () => {
   let res;
   if (step.value === 1) {
@@ -1368,7 +1380,7 @@ const clickUp = async () => {
 
 const validate = (ref: any, key: string) => {
   nextTick(() => {
-    ref.value.validateField(key);
+    ref.validateField(key);
   });
 };
 
