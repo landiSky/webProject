@@ -56,6 +56,7 @@
                 length: 20,
                 errorOnly: true,
               }"
+              @input="validate(formModel, 'name')"
             >
             </t-input>
           </t-form-item>
@@ -260,6 +261,7 @@
                 minRows: 2,
                 maxRows: 5,
               }"
+              @input="validate(formModel, 'introduction')"
             />
           </t-form-item>
           <t-form-item
@@ -366,6 +368,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
+                  @input="validate(copyFormRef[index], 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -386,6 +389,7 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
+                  @input="validate(copyFormRef[index], 'url')"
                 />
               </t-form-item>
               <t-form-item
@@ -405,6 +409,7 @@
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .accountNum
                         "
+                        @input="validateAP(index, 'account')"
                         ><template #prefix>账号数：</template
                         ><template #suffix>个</template></t-input
                       ></div
@@ -415,6 +420,7 @@
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .price
                         "
+                        @input="validateAP(index, 'price')"
                         ><template #prefix>账号单价：</template
                         ><template #suffix>元</template></t-input
                       ></div
@@ -488,6 +494,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
+                  @input="validate(copyFormRef[index], 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -508,10 +515,13 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
+                  @input="validate(copyFormRef[index], 'url')"
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
-                <t-input v-model.trim="copyModal2[index].onePiece"
+                <t-input
+                  v-model.trim="copyModal2[index].onePiece"
+                  @input="validate(copyFormRef[index], 'onePiece')"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -545,6 +555,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
+                  @input="validate(copyFormRef[index], 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -626,20 +637,7 @@ const deletedetailImg = (file: string) => {
 const logoRef = ref();
 const logoVisible = ref(false);
 
-interface FormInterface {
-  id: string;
-  name: string;
-  type: number;
-  productTypeId: string;
-  logo: string;
-  detailImg: string;
-  useExplain: string;
-  introduction: string;
-  detail: string;
-  companyId: string;
-}
-
-const formModel = ref<FormInterface>({
+const formModel = ref<Record<string, any>>({
   id: '',
   name: '',
   type: 0,
@@ -943,37 +941,7 @@ const showAddCopy = computed(() => {
   return copyModal3.value.length < 3;
 });
 
-const buildForm2 = async () => {
-  const result = await formRef2.value.validate();
-  if (result) {
-    return false;
-  }
-  let length = 0;
-  if (formModel2.value.saleType === 0) {
-    length = copyModal.value.length;
-  } else if (formModel2.value.saleType === 1) {
-    length = copyModal2.value.length;
-  } else {
-    length = copyModal3.value.length;
-  }
-  if (length > 0) {
-    const result2 = await copyFormRef[0].value.validate();
-    if (result2) {
-      return false;
-    }
-  }
-  if (length > 1) {
-    const result2 = await copyFormRef[1].value.validate();
-    if (result2) {
-      return false;
-    }
-  }
-  if (length > 2) {
-    const result2 = await copyFormRef[2].value.validate();
-    if (result2) {
-      return false;
-    }
-  }
+const validateAccountPrice = () => {
   let failed = false;
   if (formModel2.value.saleType === 0) {
     for (let index = 0; index < copyModal.value.length; index += 1) {
@@ -1012,8 +980,43 @@ const buildForm2 = async () => {
       }
     }
   }
-  if (failed) {
-    return false;
+  return failed;
+};
+
+const buildForm2 = async () => {
+  let pass = true;
+  const result = await formRef2.value.validate();
+  if (result) {
+    pass = false;
+  }
+  let length = 0;
+  if (formModel2.value.saleType === 0) {
+    length = copyModal.value.length;
+  } else if (formModel2.value.saleType === 1) {
+    length = copyModal2.value.length;
+  } else {
+    length = copyModal3.value.length;
+  }
+  if (length > 0) {
+    const result2 = await copyFormRef[0].value.validate();
+    if (result2) {
+      pass = false;
+    }
+  }
+  if (length > 1) {
+    const result2 = await copyFormRef[1].value.validate();
+    if (result2) {
+      pass = false;
+    }
+  }
+  if (length > 2) {
+    const result2 = await copyFormRef[2].value.validate();
+    if (result2) {
+      pass = false;
+    }
+  }
+  if (validateAccountPrice()) {
+    pass = false;
   }
   let modalList;
   if (formModel2.value.saleType === 0) {
@@ -1033,7 +1036,7 @@ const buildForm2 = async () => {
     modalList = copyModal3.value;
   }
   formModel2.value.productDeliveryList = modalList;
-  return true;
+  return pass;
 };
 
 const getModalJson = () => {
@@ -1361,6 +1364,51 @@ const clickUp = async () => {
       },
     });
   }
+};
+
+const validate = (ref: any, key: string) => {
+  nextTick(() => {
+    ref.value.validateField(key);
+  });
+};
+
+const validateAPT = (isAccount: boolean, index: number) => {
+  const m = copyModal.value[index];
+  let pass = true;
+  for (const p of m.productDeliverySetInfoList) {
+    if ((!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) && !isAccount) {
+      copyFormRef[index].value.setFields({
+        productDeliverySetInfoList: {
+          status: 'error',
+          message: `价格请填写10位以内整数`,
+        },
+      });
+      pass = false;
+      break;
+    }
+    if (
+      (!/^[1-9]\d*$/.test(p.accountNum) || p.accountNum.length > 10) &&
+      isAccount
+    ) {
+      copyFormRef[index].value.setFields({
+        productDeliverySetInfoList: {
+          status: 'error',
+          message: `账号数量请填写10位以内整数`,
+        },
+      });
+      pass = false;
+      break;
+    }
+  }
+  if (pass) {
+    copyFormRef[index].value.clearValidate();
+  }
+};
+
+const validateAP = (index: number, key: string) => {
+  nextTick(() => {
+    validateAPT(key === 'account', index);
+  });
 };
 </script>
 
