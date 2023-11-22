@@ -6,6 +6,7 @@
       has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
+      :on-before-back="onBack"
       @back="emit('cancel')"
     >
       <template #title>
@@ -1297,7 +1298,7 @@ const doSave = async () => {
 };
 
 // 取消
-const clickCancel = () => {
+const clickCancel = (done: (closed: boolean) => void) => {
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
   }
@@ -1324,10 +1325,16 @@ const clickCancel = () => {
         emit('cancel');
       },
     });
+    done(false);
   } else {
     visible.value = false;
     emit('cancel');
+    done(true);
   }
+};
+
+const onBack = (done: (closed: boolean) => void) => {
+  clickCancel(done);
 };
 
 // 保存
