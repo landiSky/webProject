@@ -2,7 +2,7 @@
   <div class="cverbox">
     <!-- 买家中心概览 头部 -->
     <div class="headers">
-      <div style="margin: 0 24px">
+      <div style="width: 1200px; margin: 0 auto">
         <!-- 用户信息 -->
         <div class="tops">
           <div class="imgs">
@@ -780,16 +780,18 @@ onMounted(() => {
 // }
 .cverbox {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   background-color: #f2f3f8;
+  background-image: url('./image/header.png');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 
   .headers {
     margin-bottom: 24px;
     // background-color: pink;
     // height: 300px;
-    background-image: url('./image/header.png');
-    background-size: cover;
-
+    // background-image: url('./image/header.png');
+    // background-size: cover;
     .tops {
       //   margin: 2%;
       float: left;
@@ -1333,8 +1335,10 @@ onMounted(() => {
 
   .purchased {
     // width: 96%;
-    margin: 0 24px 24px;
+    width: 1200px;
+    margin: 0 auto 24px;
     padding: 16px 24px 27px;
+    background-color: #fff;
     border: 1px solid #e5e8ef;
     border-radius: 4px;
 
@@ -1415,7 +1419,8 @@ onMounted(() => {
 
   .views {
     // width: 96%;
-    margin: 0 24px 24px;
+    width: 1200px;
+    margin: 0 auto 24px;
     padding: 16px 24px;
     background-image: url('./image/btn.png');
     background-size: cover;
