@@ -404,7 +404,7 @@ const deliveryType = reactive([
   },
   {
     value: '0',
-    label: 'SAAS',
+    label: 'SaaS',
   },
   {
     value: '1',

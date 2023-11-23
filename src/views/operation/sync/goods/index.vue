@@ -179,7 +179,7 @@ const AppTypeList = [
 const SaleTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
-  0: 'SAAS',
+  0: 'SaaS',
   1: '独立部署',
 };
 
@@ -189,7 +189,7 @@ const SaleTypeList = [
     value: null,
   },
   {
-    text: 'SAAS',
+    text: 'SaaS',
     value: 0,
   },
   {

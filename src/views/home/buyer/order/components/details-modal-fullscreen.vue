@@ -339,7 +339,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
+                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <p v-if="dataList.accountCount" style="color: #86909c"
                       >({{ dataList.accountCount }}个账号{{
                         dataList.buyDuration
@@ -458,7 +458,7 @@ const dataList: Record<string, any> = ref({
   productLogo:
     'https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
-  deliveryTypeName: 'SAAS', // 交付类型名称
+  deliveryTypeName: 'SaaS', // 交付类型名称
   deliveryType: 1, // 交付类型
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量

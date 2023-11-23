@@ -353,7 +353,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
+                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -500,7 +500,7 @@ const dataList = ref({
   customerName: '硕', // 买家名称
   productLogo: '', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
-  deliveryTypeName: 'SAAS', // 交付类型名称
+  deliveryTypeName: 'SaaS', // 交付类型名称
   deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量
