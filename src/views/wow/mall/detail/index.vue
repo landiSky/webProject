@@ -32,7 +32,17 @@
             <span class="productName">{{ prodDetail.name }}</span>
             <!-- <span class="tag">标签一</span> -->
           </div>
-          <div class="description">{{ prodDetail.introduction }}</div>
+          <div class="description">
+            <t-typography-paragraph
+              style="margin-bottom: 0"
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+            >
+              {{ prodDetail.introduction }}
+            </t-typography-paragraph>
+          </div>
           <div class="price">
             <span>产品价格:</span>
             <span v-if="computing">计算中...</span>

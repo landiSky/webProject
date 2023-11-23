@@ -1,30 +1,33 @@
 <template>
-  <t-modal
-    v-model:visible="visible"
-    :width="520"
-    :on-before-ok="onConfirm"
-    @cancel="emit('cancel')"
-  >
-    <template #title> 修改订单价格 </template>
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item label="订单号">
-        <span>{{ state.formModel.orderid }}</span>
-      </t-form-item>
+  <div id="modalPrice" class="modalPrices">
+    <t-modal
+      v-model:visible="visible"
+      :width="520"
+      :on-before-ok="onConfirm"
+      popup-container="#modalPrice"
+      @cancel="emit('cancel')"
+    >
+      <template #title> 修改优惠金额 </template>
+      <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+        <t-form-item label="订单号">
+          <span>{{ state.formModel.orderid }}</span>
+        </t-form-item>
 
-      <t-form-item label="当前价格">
-        <p style="font-weight: 500; font-size: 14px"
-          >￥{{ state.formModel.currentamount }}</p
-        >
-      </t-form-item>
-      <t-form-item field="amount" label="修改优惠金额">
-        <t-input-number
-          v-model="state.formModel.amount"
-          placeholder="请输入"
-          :min="1"
-        />
-      </t-form-item>
-    </t-form>
-  </t-modal>
+        <t-form-item label="当前价格">
+          <p style="font-weight: 500; font-size: 14px"
+            >￥{{ state.formModel.currentamount }}</p
+          >
+        </t-form-item>
+        <t-form-item field="amount" label="修改优惠金额">
+          <t-input-number
+            v-model="state.formModel.amount"
+            placeholder="请输入"
+            :min="1"
+          />
+        </t-form-item>
+      </t-form>
+    </t-modal>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -110,4 +113,10 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.modalPrices {
+  :deep(.tele-input-number-step) {
+    display: none;
+  }
+}
+</style>

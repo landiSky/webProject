@@ -1,15 +1,15 @@
 <template>
+  <!-- :height="500" -->
   <t-modal
     v-model:visible="visible"
     :width="520"
-    :height="500"
     :on-before-ok="onConfirm"
     @cancel="emit('cancel')"
   >
     <template #title> 驳回凭证 </template>
 
     <t-form ref="formRef" :model="state.formModel" :rules="formRules">
-      <t-form-item :hide-label="true">
+      <t-form-item :hide-label="true" class="spacing">
         <div>请选择驳回原因</div>
       </t-form-item>
       <t-form-item :hide-label="true" field="rejectType">
@@ -125,4 +125,10 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+// .spacing {
+:deep(.tele-form-item) {
+  margin-bottom: 0 !important;
+}
+// }
+</style>
