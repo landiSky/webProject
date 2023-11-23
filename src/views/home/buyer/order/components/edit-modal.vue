@@ -172,6 +172,7 @@ onMounted(() => {
       height: 100px;
 
       img {
+        object-fit: cover;
         border: 1px solid #e5e8ef;
       }
       // margin-bottom: 0;
