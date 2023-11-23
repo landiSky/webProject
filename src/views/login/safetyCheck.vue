@@ -161,9 +161,16 @@ const clickCheckBtn = () => {
         captcha,
       })
         .then(() => {
-          router.push('/buyer/index');
+          router.push({
+            name: 'buyerIndex',
+            query: {
+              // 目的时校验成功后，能进入买家首页而不是停留在校验页
+              safeCheck: 'true',
+            },
+          });
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log('safetyCheck.vue:163===返回失败', err);
           clearInterval(timerId.value);
           countDownTime.value = 0;
         })
@@ -184,7 +191,7 @@ onUnmounted(() => {
   position: relative;
   height: 100%;
   overflow: auto;
-  background: url('@/assets/images/login-bg.svg') no-repeat center center;
+  background: url('@/assets/images/login-bg.jpg') no-repeat center center;
   background-size: 100%;
 
   .container-title {
