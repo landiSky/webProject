@@ -285,7 +285,7 @@
               ><span
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
-                @click="togo(item.id, item.dueDate)"
+                @click="togo(item)"
               >
                 前往 <span class="to-img"></span></span
             ></div>
@@ -412,6 +412,7 @@
       v-if="editModalVisiblealter"
       :product-id="selectProduct.productId"
       :delivery-set-id="selectProduct.deliveryId"
+      :account-count="selectProduct.accountCount"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
     >
@@ -453,7 +454,8 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch } from 'vue';
-import type { Ref } from 'vue';
+import { Modal } from '@tele-design/web-vue';
+
 import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
 // 头像
@@ -470,6 +472,7 @@ import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
 import {
+  AppType,
   AccountType,
   AccountTypeDesc,
   CompanyAuthStatus,
@@ -677,7 +680,28 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
   return false;
 };
 // 前往
-const togo = (idd: string, dueDate: string) => {
+const togo = (detailData: Record<string, any>) => {
+  const { id, dueDate, type } = detailData;
+
+  // 标识类应用需要申请开通企业节点
+  if (
+    AppType.IDAPP === type &&
+    userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
+  ) {
+    Modal.info({
+      title: '使用提醒',
+      content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        authModalVisible.value = true;
+      },
+    });
+    return;
+  }
+
   const now = new Date();
   const year = now.getFullYear();
   const month = `0${now.getMonth() + 1}`.slice(-2);
@@ -688,7 +712,7 @@ const togo = (idd: string, dueDate: string) => {
   const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
-    orderGo({ id: idd }).then((res: any) => {
+    orderGo({ id }).then((res: any) => {
       window.open(res, '_blank');
     });
   }
