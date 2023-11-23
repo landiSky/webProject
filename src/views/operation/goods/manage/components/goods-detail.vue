@@ -314,7 +314,15 @@
                 v-if="formModel.saleType === 0"
                 label="套餐定价设置"
               >
-                <div v-for="(p, pIndex) of st.accountNumList" :key="p">
+                <div
+                  v-for="(p, pIndex) of st.accountNumList"
+                  :key="p"
+                  class="ap"
+                  :style="{
+                    marginBottom:
+                      pIndex == st.accountNumList.length - 1 ? '0' : '8px',
+                  }"
+                >
                   套餐{{ pIndex + 1 }}：账号数 {{ p.accountNum }} 个，账号单价
                   {{ p.price }} 元</div
                 >
@@ -680,5 +688,11 @@ const clickDeleteBtn = () => {
       }
     }
   }
+}
+
+.ap {
+  color: #1d2129;
+  font-size: 12px;
+  line-height: 20px;
 }
 </style>
