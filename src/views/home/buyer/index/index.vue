@@ -306,7 +306,13 @@
                 >配置应用</span
               ><span
                 style="margin-left: auto; color: #86909c; cursor: pointer"
-                @click="instructionsuse(item.useExplain, item.productId)"
+                @click="
+                  instructionsuse(
+                    item.useExplain,
+                    item.orderSource,
+                    item.productServerId
+                  )
+                "
               >
                 使用说明</span
               ></div
@@ -472,7 +478,7 @@ import {
   NodeAuthStatusDESC,
 } from '@/enums/common';
 
-import { fileDownload } from '@/api/file';
+import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
@@ -707,24 +713,32 @@ const filetype = (val: any) => {
   return 'application/pdf;charset=utf-8';
 };
 // 使用说明
-const instructionsuse = (fileurl: string, prodtId: string) => {
-  const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
-  fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
-    const link = document.createElement('a');
-    //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
-    const blogw = new Blob([res], {
-      // type: 'application/x-abiword;charset=utf-8'
-      // type: 'application/msword;charset=utf-8',
-      // type: 'application/pdf;charset=utf-8',
-      type: filetype(type),
-    });
-    const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
-    link.href = objectUrl;
-    const fileName = '使用说明';
-    link.download = fileName; //  下载的时候自定义的文件名
-    link.click();
-    window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
-  });
+const instructionsuse = (
+  fileurl: string,
+  orderSource: string,
+  productServerId: string
+) => {
+  // const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
+  // fileDownloadto2({
+  //   name: fileurl,
+  //   source,
+  //   serverId: productServerId,
+  // }).then((res: any) => {
+  const link = document.createElement('a');
+  //   //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
+  //   const blogw = new Blob([res], {
+  //     // type: 'application/x-abiword;charset=utf-8'
+  //     // type: 'application/msword;charset=utf-8',
+  //     // type: 'application/pdf;charset=utf-8',
+  //     type: filetype(type),
+  //   });
+  const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
+  link.href = objectUrl;
+  const fileName = '使用说明';
+  link.download = fileName; //  下载的时候自定义的文件名
+  link.click();
+  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
+  // });
 };
 
 // 更多
