@@ -170,7 +170,6 @@ const clickCheckBtn = () => {
           });
         })
         .catch((err) => {
-          console.log('safetyCheck.vue:163===返回失败', err);
           clearInterval(timerId.value);
           countDownTime.value = 0;
         })
