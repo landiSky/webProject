@@ -782,14 +782,16 @@ onMounted(() => {
   width: 100%;
   // height: 100%;
   background-color: #f2f3f8;
+  background-image: url('./image/header.png');
+  background-repeat: no-repeat;
+  background-size: 100% auto;
 
   .headers {
     margin-bottom: 24px;
     // background-color: pink;
     // height: 300px;
-    background-image: url('./image/header.png');
-    background-size: cover;
-
+    // background-image: url('./image/header.png');
+    // background-size: cover;
     .tops {
       //   margin: 2%;
       float: left;
