@@ -274,7 +274,7 @@
         >
           <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+              :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
               alt=""
               style="width: 102px; height: 102px"
             />

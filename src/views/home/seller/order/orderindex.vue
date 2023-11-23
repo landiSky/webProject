@@ -157,8 +157,9 @@
               <t-col :span="7">
                 <div class="grid-content">
                   <div class="imgs">
+                    <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -726,10 +727,12 @@ const ondeliveryModalConfirm = () => {
       padding: 24px 0 0 24px;
       color: #1d2129;
       font-weight: 600;
-      font-size: 14px;
+      font-weight: 500;
+      font-size: 16px;
       font-family: 'PingFang SC';
       font-style: normal;
       line-height: 24px;
+      line-height: 24px; /* 150% */
     }
 
     .cardclass {

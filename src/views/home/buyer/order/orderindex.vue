@@ -160,8 +160,9 @@
               <t-col :span="7">
                 <div class="grid-content">
                   <div class="imgs">
+                    <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -362,8 +363,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
