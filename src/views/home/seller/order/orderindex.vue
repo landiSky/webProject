@@ -373,8 +373,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -726,13 +729,11 @@ const ondeliveryModalConfirm = () => {
     .heard-name {
       padding: 24px 0 0 24px;
       color: #1d2129;
-      font-weight: 600;
       font-weight: 500;
       font-size: 16px;
       font-family: 'PingFang SC';
       font-style: normal;
       line-height: 24px;
-      line-height: 24px; /* 150% */
     }
 
     .cardclass {
@@ -961,7 +962,7 @@ const ondeliveryModalConfirm = () => {
             img {
               width: 80px;
               height: 80px;
-              border: 1px #e5e8ef;
+              border: 1px solid #e5e8ef;
               border-radius: 2px;
             }
           }

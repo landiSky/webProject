@@ -697,9 +697,10 @@ onMounted(() => {
     .heard-name {
       padding: 24px 0 0 24px;
       color: #1d2129;
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 500;
+      font-size: 16px;
       font-family: 'PingFang SC';
+      font-style: normal;
       font-style: normal;
       line-height: 24px;
     }
@@ -932,7 +933,7 @@ onMounted(() => {
             img {
               width: 80px;
               height: 80px;
-              border: 1px #e5e8ef;
+              border: 1px solid #e5e8ef;
               border-radius: 2px;
             }
           }

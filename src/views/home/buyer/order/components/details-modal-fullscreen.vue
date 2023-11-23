@@ -81,7 +81,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -91,7 +91,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -117,7 +117,7 @@
                     }}</div>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
@@ -753,6 +753,10 @@ onMounted(() => {
   font-family: PingFang SC;
   font-style: normal;
   line-height: 22px; /* 157.143% */
+}
+
+.remove-margin {
+  margin-bottom: 0 !important;
 }
 
 .order-item-due-date,
