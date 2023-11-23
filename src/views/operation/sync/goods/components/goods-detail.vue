@@ -537,6 +537,10 @@ onMounted(() => {
   height: 100px;
   margin-right: 8px;
 
+  &:last-child {
+    margin-right: 0;
+  }
+
   .file-image {
     position: relative;
     width: 100px;
