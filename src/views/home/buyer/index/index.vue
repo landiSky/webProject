@@ -481,7 +481,7 @@ import {
   NodeAuthStatusDESC,
 } from '@/enums/common';
 
-import { fileDownloadto2 } from '@/api/file';
+// import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
