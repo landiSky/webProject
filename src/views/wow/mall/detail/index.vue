@@ -260,7 +260,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     const durationItem = durationList.find(
       (item: Record<string, any>) => item.id === durationId
     );
-    accountDesc = `${accountItem.accountNum}个账号`;
+    accountDesc = `${accountItem.accountNum}个`;
     durationDesc =
       durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
