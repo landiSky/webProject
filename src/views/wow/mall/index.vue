@@ -225,7 +225,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiProductList } from '@/api/wow/mall';
 import { apiProductType } from '@/api/common';
@@ -366,6 +366,14 @@ const clickAllSort = () => {
   pagination.page = 1;
   getProductList();
 };
+
+watch(
+  () => route.query.goodsName,
+  (newV) => {
+    apiParams.value.name = newV;
+    getProductList();
+  }
+);
 
 onMounted(() => {
   getProductType();
