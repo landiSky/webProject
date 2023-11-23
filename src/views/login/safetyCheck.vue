@@ -1,59 +1,77 @@
 <template>
   <div class="container">
-    <div class="loginWrapper">
-      <span class="title">请绑定手机号/安全验证</span>
-      <t-form
-        ref="safeFormRef"
-        :model="safeForm"
-        :rules="safeFormRules"
-        layout="vertical"
-      >
-        <t-form-item field="phone" :validate-trigger="['change', 'blur']">
-          <t-input
-            v-model="safeForm.phone"
-            placeholder="请输入手机号"
-            size="large"
-            ><template #prefix>
-              <iconpark-icon name="mobile"></iconpark-icon>
-            </template>
-          </t-input>
-        </t-form-item>
-        <t-form-item field="captcha" :validate-trigger="['change', 'blur']">
-          <t-input
-            v-model.trim="safeForm.captcha"
-            placeholder="短信验证码"
-            size="large"
-            class="captcha"
-          >
-            <template #prefix>
-              <iconpark-icon name="safe"></iconpark-icon>
-            </template>
-          </t-input>
-          <t-button
-            :loading="sendBtnLoading"
-            class="textBtn"
-            type="primary"
-            size="large"
-            @click="clickSendBtn"
-            >{{
-              countDownTime === 0 ? '获取短信验证码' : `${countDownTime}s`
-            }}</t-button
-          >
-        </t-form-item>
-        <t-form-item>
-          <t-button
-            class="btn"
-            type="primary"
-            html-type="submit"
-            :loading="checkBtnLoading"
-            size="large"
-            long
-            :disabled="btnDisabled"
-            @click="clickCheckBtn"
-            >验证</t-button
-          >
-        </t-form-item>
-      </t-form>
+    <div class="overflowWrap">
+      <picture>
+        <!-- 可能是一些对兼容性有要求的，但是性能表现更好的现代图片格式-->
+        <source
+          class="container-bg-img"
+          :srcset="getImgPath('avif')"
+          type="image/avif"
+        />
+        <source
+          class="container-bg-img"
+          :srcset="getImgPath('webp')"
+          type="image/webp"
+        />
+
+        <!-- 最终的兜底方案-->
+        <img class="container-bg-img" :src="getImgPath('jpg')" />
+      </picture>
+      <div class="loginWrapper">
+        <span class="title">请绑定手机号/安全验证</span>
+        <t-form
+          ref="safeFormRef"
+          :model="safeForm"
+          :rules="safeFormRules"
+          layout="vertical"
+        >
+          <t-form-item field="phone" :validate-trigger="['change', 'blur']">
+            <t-input
+              v-model="safeForm.phone"
+              placeholder="请输入手机号"
+              size="large"
+              ><template #prefix>
+                <iconpark-icon name="mobile"></iconpark-icon>
+              </template>
+            </t-input>
+          </t-form-item>
+          <t-form-item field="captcha" :validate-trigger="['change', 'blur']">
+            <t-input
+              v-model.trim="safeForm.captcha"
+              placeholder="短信验证码"
+              size="large"
+              class="captcha"
+            >
+              <template #prefix>
+                <iconpark-icon name="safe"></iconpark-icon>
+              </template>
+            </t-input>
+            <t-button
+              :loading="sendBtnLoading"
+              class="textBtn"
+              type="primary"
+              size="large"
+              @click="clickSendBtn"
+              >{{
+                countDownTime === 0 ? '获取短信验证码' : `${countDownTime}s`
+              }}</t-button
+            >
+          </t-form-item>
+          <t-form-item>
+            <t-button
+              class="btn"
+              type="primary"
+              html-type="submit"
+              :loading="checkBtnLoading"
+              size="large"
+              long
+              :disabled="btnDisabled"
+              @click="clickCheckBtn"
+              >验证</t-button
+            >
+          </t-form-item>
+        </t-form>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +83,10 @@ import { useRouter } from 'vue-router';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { apiBindPhone, apiSendCaptcha } from '@/api/login';
+
+import loginBgJpg from '@/assets/images/login-bg.jpg';
+import loginBgWebp from '@/assets/images/login-bg.webp';
+import loginBgAvif from '@/assets/images/login-bg.avif';
 
 const countDownTime = ref(0); // 倒计时2分钟
 
@@ -112,6 +134,14 @@ const safeFormRules = {
   ],
 };
 
+const getImgPath = (type: string) => {
+  const imgObj: Record<string, any> = {
+    jpg: loginBgJpg,
+    webp: loginBgWebp,
+    avif: loginBgAvif,
+  };
+  return imgObj[type];
+};
 const clickSendBtn = () => {
   if (!safeForm.value.phone) {
     safeFormRef.value.setFields({
@@ -187,11 +217,27 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .container {
-  position: relative;
-  height: 100%;
-  overflow: auto;
-  background: url('@/assets/images/login-bg.jpg') no-repeat center center;
-  background-size: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .overflowWrap {
+    min-height: 1080px;
+  }
+
+  .container-bg-img {
+    width: 100%;
+    min-width: 1920px;
+    height: auto;
+  }
 
   .container-title {
     padding-bottom: 18px;
