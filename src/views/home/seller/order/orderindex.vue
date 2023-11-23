@@ -157,8 +157,9 @@
               <t-col :span="7">
                 <div class="grid-content">
                   <div class="imgs">
+                    <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -409,7 +410,7 @@ const deliveryType = reactive([
   },
   {
     value: '0',
-    label: 'SAAS',
+    label: 'SaaS',
   },
   {
     value: '1',
@@ -958,7 +959,7 @@ const ondeliveryModalConfirm = () => {
             img {
               width: 80px;
               height: 80px;
-              border: 1px #e5e8ef;
+              border: 1px solid #e5e8ef;
               border-radius: 2px;
             }
           }

@@ -81,7 +81,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 1">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-warning">
                     <icon-clock-circle-fill />
                   </div>
@@ -91,7 +91,7 @@
                 </t-space>
               </div>
               <div v-if="dataList.orderStatus === 2">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -117,7 +117,7 @@
                     }}</div>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
@@ -315,10 +315,11 @@
                     >
                       <!-- dataList.productLogo -->
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
+                      <!-- :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`" -->
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
-                        :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
+                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"
                         alt=""
                       />
                     </div>
@@ -338,7 +339,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
+                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <p v-if="dataList.accountCount" style="color: #86909c"
                       >({{ dataList.accountCount }}个账号{{
                         dataList.buyDuration
@@ -449,42 +450,7 @@ const state = reactive({
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
-const dataList: Record<string, any> = ref({
-  id: '1', // 订单id
-  orderNum: '1', // 订单号
-  productName: '双皮奶', // 商品名称
-  customerName: '硕', // 买家名称
-  productLogo:
-    'https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702', // 商品logo
-  merchantName: '商品所属商家名称', // 卖家名称
-  deliveryTypeName: 'SAAS', // 交付类型名称
-  deliveryType: 1, // 交付类型
-  productPrice: 10000, // 商品价格
-  accountCount: '10个账号', // 账号数量
-  buyDuration: '5个月', // 购买时长
-  realityPrice: 10000, // 实付金额
-  orderStatus: 4, // 订单状态code 0-待支付,1-待审核,2-待交付,3-已完成,4-已驳回,5-卖家交付
-  orderStatusName: '已完成', // 状态名称
-  orderStatusInfo: null, // 订单当前所属状态信息(显示内容)
-  orderSteps: 5, // 订单步骤
-  rejectType: null, // 拒绝类型
-  rejectReasonDetail: '未收到支付款；支付金额有误', // 支付凭证审核失败，展示驳回原因
-  deploymentStatusName: '已部署', // 交付类型为「部署类」部署完成显示该状态
-  deploymentStatusCode: null, // 交付类型为「部署类」部署完成显示该状态 code
-  couponMoney: null, // 优惠金额
-  userMobile: '15663872182', // 联系方式
-  orderSource: 0, // 订单来源：0-本平台，1-跨平台
-  effectTime: null, // 成交时间
-  createTime: '2023-10-23 16:24:32', // 创建时间
-  dueDate: '2023-10-23 18:20:00', // 到期日期
-  voucherRejectTime: '2023-10-23 18:24:34', // 驳回时间
-  payCompleteTime: null, // 支付完成时间
-  voucherSubmitTime: '2023-10-23 18:20:00', // 提交凭证时间&买家支付时间
-  confirmDeployedTime: '2023-10-24 10:36:56', // 确认部署时间
-  merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
-  attachmentAddressArr: [], // 支付凭证
-  productId: '', // 商品id
-});
+const dataList: Record<string, any> = ref({});
 
 // 上传凭证 弹窗 开关
 const editModalVisible = ref(false);
@@ -751,6 +717,10 @@ onMounted(() => {
   font-family: PingFang SC;
   font-style: normal;
   line-height: 22px; /* 157.143% */
+}
+
+.remove-margin {
+  margin-bottom: 0 !important;
 }
 
 .order-item-due-date,

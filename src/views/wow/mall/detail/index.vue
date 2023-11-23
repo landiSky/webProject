@@ -260,7 +260,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     const durationItem = durationList.find(
       (item: Record<string, any>) => item.id === durationId
     );
-    accountDesc = `${accountItem.accountNum}个账号`;
+    accountDesc = `${accountItem.accountNum}个`;
     durationDesc =
       durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
@@ -355,7 +355,7 @@ const clickAddCart = (): void => {
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {
     Modal.info({
       title: '使用提醒',
-      content: '需申请企业认证后使用，请先进行企业节点认证。',
+      content: '需申请企业认证后使用，请先进行企业认证。',
       titleAlign: 'start',
       hideCancel: false,
       cancelText: '暂不认证',

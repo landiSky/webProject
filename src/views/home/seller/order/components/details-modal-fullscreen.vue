@@ -63,7 +63,7 @@
             </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -123,7 +123,7 @@
                     </t-typography-paragraph>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">驳回时间</div>
                     <div class="order-item-right">{{
@@ -147,7 +147,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -174,7 +174,7 @@
                     }}</div>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
@@ -329,10 +329,11 @@
                     >
                       <!-- dataList.productLogo -->
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
+                      <!-- :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`" -->
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
-                        :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
+                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"
                         alt=""
                       />
                     </div>
@@ -352,7 +353,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
+                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -499,7 +500,7 @@ const dataList = ref({
   customerName: '硕', // 买家名称
   productLogo: '', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
-  deliveryTypeName: 'SAAS', // 交付类型名称
+  deliveryTypeName: 'SaaS', // 交付类型名称
   deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量
@@ -527,6 +528,7 @@ const dataList = ref({
   saleType: 0, // 1-一口价定价,2-面议
   attachmentAddressArr: [], // 支付凭证
   productId: '', // 商品id
+  productServerId: '',
 });
 // 修改金额 弹窗 开关
 const editModalVisible = ref(false);
@@ -868,6 +870,10 @@ onMounted(() => {
   font-family: PingFang SC;
   font-style: normal;
   line-height: 22px; /* 157.143% */
+}
+
+.remove-margin {
+  margin-bottom: 0 !important;
 }
 
 .order-item-due-date,
