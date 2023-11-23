@@ -274,7 +274,7 @@
         >
           <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+              :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
               alt=""
               style="width: 102px; height: 102px"
             />
@@ -490,8 +490,11 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});

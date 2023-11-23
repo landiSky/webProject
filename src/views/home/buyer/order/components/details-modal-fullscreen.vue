@@ -315,10 +315,11 @@
                     >
                       <!-- dataList.productLogo -->
                       <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
+                      <!-- :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`" -->
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
-                        :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`"
+                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"
                         alt=""
                       />
                     </div>
@@ -484,6 +485,7 @@ const dataList: Record<string, any> = ref({
   merchantDeliverTime: '2023-09-24 10:23:45', // 服务商交付时间
   attachmentAddressArr: [], // 支付凭证
   productId: '', // 商品id
+  serverId: '',
 });
 
 // 上传凭证 弹窗 开关
