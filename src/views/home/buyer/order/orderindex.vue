@@ -694,7 +694,7 @@ onMounted(() => {
       padding: 24px 0 0 24px;
       color: #1d2129;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 16px;
       font-family: 'PingFang SC';
       font-style: normal;
       line-height: 24px;
