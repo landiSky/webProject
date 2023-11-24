@@ -38,7 +38,7 @@
         </t-upload>
       </t-form-item>
       <div style="color: #86909c">
-        支持jpg、png、bmp、tif、gif、jpeg文件格式,文件大小限制5M以内,最多可上传5张。
+        支持jpg、png、bmp、gif、jpeg文件格式,文件大小限制5M以内,最多可上传5张。
       </div>
     </t-form>
   </t-modal>
