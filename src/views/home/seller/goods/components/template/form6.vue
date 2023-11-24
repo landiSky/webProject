@@ -74,7 +74,7 @@
     </template>
   </t-form>
   <t-divider />
-  <div v-show="form.blockList.length < 3" class="extraOpt">
+  <div v-show="form.blockList.length < 2" class="extraOpt">
     <iconpark-icon
       class="plusIcon"
       name="squarePlus"
