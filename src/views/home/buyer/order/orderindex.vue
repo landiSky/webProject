@@ -363,11 +363,8 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -697,7 +694,7 @@ onMounted(() => {
     .heard-name {
       padding: 24px 0 0 24px;
       color: #1d2129;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 16px;
       font-family: 'PingFang SC';
       font-style: normal;

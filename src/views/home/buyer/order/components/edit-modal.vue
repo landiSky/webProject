@@ -9,7 +9,12 @@
     @cancel="emitflag"
   >
     <template #title> 上传支付凭证 </template>
-    <t-form ref="formRef" :model="state.formModel" :rules="formRules">
+    <t-form
+      ref="formRef"
+      class="form-list"
+      :model="state.formModel"
+      :rules="formRules"
+    >
       <t-form-item
         field="currentamountlist"
         :hide-label="true"
@@ -37,7 +42,7 @@
           </template>
         </t-upload>
       </t-form-item>
-      <div style="color: #86909c">
+      <div class="img-title">
         支持jpg、png、bmp、gif、jpeg文件格式,文件大小限制5M以内,最多可上传5张。
       </div>
     </t-form>
@@ -120,7 +125,15 @@ const beforeUpload = (file: File) => {
       Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
       reject();
-    } else if (type === 'pdf' || type === 'xlsx') {
+      // jpg、png、bmp、gif、jpeg
+    } else if (
+      type !== 'jpg' &&
+      type !== 'png' &&
+      type !== 'bmp' &&
+      type !== 'gif' &&
+      type !== 'jpeg'
+    ) {
+      console.log(type, 'type');
       Message.warning('请上传正确的文件格式');
       // return false;
       reject();
@@ -165,8 +178,11 @@ onMounted(() => {
 
 <style scoped lang="less">
 .uploadimg {
+  // :deep(.tele-upload-list)
   :deep(.tele-upload-list) {
     // height: 100px;
+    transition: none;
+
     .tele-upload-list-picture {
       width: 100px;
       height: 100px;
@@ -185,6 +201,17 @@ onMounted(() => {
       width: 100px;
       height: 100px;
     }
+  }
+}
+
+.form-list {
+  position: relative;
+
+  .img-title {
+    position: absolute;
+    top: 110px;
+    left: 0;
+    color: #86909c;
   }
 }
 </style>

@@ -441,9 +441,23 @@ const onBusUploadChange = (fileList: any) => {
 
 const beforeUpload = (file: File) => {
   return new Promise<void>((resolve, reject) => {
+    const type = file?.name.substr(
+      file?.name.lastIndexOf('.') + 1,
+      file?.name.length
+    );
     const isLt5M: boolean = file.size / 1024 / 1024 < 10;
     if (!isLt5M) {
       Message.warning('上传图片大小必须限制在10MB以内');
+      // return false;
+      reject();
+      // jpg,.png,.bmp,.jpeg
+    } else if (
+      type !== 'jpg' &&
+      type !== 'png' &&
+      type !== 'bmp' &&
+      type !== 'jpeg'
+    ) {
+      Message.warning('请上传正确的文件格式');
       // return false;
       reject();
     }

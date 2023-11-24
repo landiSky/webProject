@@ -93,13 +93,13 @@
                           ].includes(userInfoByCompany.certificateStatus)
                         "
                         style="font-size: 12px"
-                        ><t-button type="text" @click="viewdetails"
+                        ><t-button
+                          type="text"
+                          class="dirlist-btn"
+                          @click="viewdetails"
                           >查看详情</t-button
                         ></span
                       >
-                      <!-- <t-button type="text" @click="authentication"
-                        >去认证</t-button
-                      > -->
                     </div>
                     <!-- <t-button type="text" @click="authentication"
                       >去认证</t-button
@@ -115,10 +115,9 @@
                       管理企业组织架构&成员权限</p
                     >
                     <t-button
-                      v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
                       class="dirlist-btn"
-                      @click="distributionrole"
+                      @click="distributionrole(userInfoByCompany.primary)"
                     >
                       邀请成员/分配权限</t-button
                     >
@@ -291,7 +290,7 @@
             ></div>
             <div class="tophead-intro">
               <t-typography-paragraph
-                style="float: left"
+                style="width: 100%"
                 :ellipsis="{
                   rows: 1,
                   showTooltip: true,
@@ -456,7 +455,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch } from 'vue';
-import { Modal } from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 
 import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
@@ -501,11 +500,8 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -666,8 +662,12 @@ const detailflagclick = () => {
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
-const distributionrole = () => {
-  router.push('/system/users');
+const distributionrole = (primary: any) => {
+  if (primary === AccountType?.MAIN) {
+    router.push('/system/users');
+  } else {
+    Message.error('请先完成企业认证');
+  }
 };
 // 去商城
 const tomall = () => {
@@ -1007,7 +1007,13 @@ onMounted(() => {
               }
 
               .dirlist-btn {
+                height: 20px;
+                color: var(--b-161664-ff, #1664ff);
+                font-weight: 400;
                 font-size: 14px;
+                font-family: PingFang SC;
+                font-style: normal;
+                line-height: normal;
               }
             }
 

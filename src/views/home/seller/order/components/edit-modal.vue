@@ -76,12 +76,12 @@ const formRules = {
     },
     {
       match: /^\d+(.\d{1,2})?$/,
-      message: '只可输入小数点后两位',
+      message: '只可输入小数点后两位或大于0的整数',
     },
     {
       validator: (value: any, cb: any) => {
-        if (state.formModel.amount < 1) {
-          return cb('输入数据最小为1,否则不生效');
+        if (state.formModel.amount <= 0) {
+          return cb('输入金额不能为0');
         }
         return cb();
       },
