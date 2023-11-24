@@ -33,7 +33,7 @@
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
               面议
             </template>
-            <template v-else>¥{{ createOrderInfo?.price || '-' }} 元</template>
+            <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
           </span>
           <span>{{ createOrderInfo?.accountDesc }}</span>
 
@@ -44,9 +44,7 @@
               <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
                 面议
               </template>
-              <template v-else
-                >¥{{ createOrderInfo?.price || '-' }} 元</template
-              >
+              <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
             </span>
 
             <!-- <span>(含减优惠券: 500元)</span> -->
@@ -81,8 +79,9 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();
-const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
-  storeToRefs(orderStore);
+const {
+  createOrderInfo,
+}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
 const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);

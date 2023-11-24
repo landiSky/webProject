@@ -274,7 +274,7 @@
         >
           <div style="width: 102px">
             <img
-              :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+              :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
               alt=""
               style="width: 102px; height: 102px"
             />
@@ -285,19 +285,21 @@
               ><span
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
-                @click="togo(item.id, item.dueDate)"
+                @click="togo(item)"
               >
                 前往 <span class="to-img"></span></span
             ></div>
-            <t-typography-paragraph
-              style="float: left"
-              :ellipsis="{
-                rows: 1,
-                showTooltip: true,
-              }"
-            >
-              {{ item.introduction }}
-            </t-typography-paragraph>
+            <div class="tophead-intro">
+              <t-typography-paragraph
+                style="float: left"
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ item.introduction }}
+              </t-typography-paragraph>
+            </div>
             <div class="tophead"
               ><span
                 v-if="userInfoByCompany.primary === AccountType?.MAIN"
@@ -306,7 +308,13 @@
                 >配置应用</span
               ><span
                 style="margin-left: auto; color: #86909c; cursor: pointer"
-                @click="instructionsuse(item.useExplain, item.productId)"
+                @click="
+                  instructionsuse(
+                    item.useExplain,
+                    item.orderSource,
+                    item.productServerId
+                  )
+                "
               >
                 使用说明</span
               ></div
@@ -406,6 +414,7 @@
       v-if="editModalVisiblealter"
       :product-id="selectProduct.productId"
       :delivery-set-id="selectProduct.deliveryId"
+      :account-count="selectProduct.accountCount"
       @confirm="onEditModalConfirmAlter"
       @cancel="editModalVisiblealter = false"
     >
@@ -447,7 +456,8 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch } from 'vue';
-import type { Ref } from 'vue';
+import { Modal } from '@tele-design/web-vue';
+
 import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
 // 头像
@@ -464,6 +474,7 @@ import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
 import {
+  AppType,
   AccountType,
   AccountTypeDesc,
   CompanyAuthStatus,
@@ -472,7 +483,7 @@ import {
   NodeAuthStatusDESC,
 } from '@/enums/common';
 
-import { fileDownload } from '@/api/file';
+// import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import avatar from './image/avatar.png';
@@ -671,7 +682,28 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
   return false;
 };
 // 前往
-const togo = (idd: string, dueDate: string) => {
+const togo = (detailData: Record<string, any>) => {
+  const { id, dueDate, type } = detailData;
+
+  // 标识类应用需要申请开通企业节点
+  if (
+    AppType.IDAPP === type &&
+    userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
+  ) {
+    Modal.info({
+      title: '使用提醒',
+      content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        authModalVisible.value = true;
+      },
+    });
+    return;
+  }
+
   const now = new Date();
   const year = now.getFullYear();
   const month = `0${now.getMonth() + 1}`.slice(-2);
@@ -682,7 +714,7 @@ const togo = (idd: string, dueDate: string) => {
   const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
-    orderGo({ id: idd }).then((res: any) => {
+    orderGo({ id }).then((res: any) => {
       window.open(res, '_blank');
     });
   }
@@ -707,24 +739,32 @@ const filetype = (val: any) => {
   return 'application/pdf;charset=utf-8';
 };
 // 使用说明
-const instructionsuse = (fileurl: string, prodtId: string) => {
-  const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
-  fileDownload({ name: fileurl, roductId: prodtId }).then((res: any) => {
-    const link = document.createElement('a');
-    //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
-    const blogw = new Blob([res], {
-      // type: 'application/x-abiword;charset=utf-8'
-      // type: 'application/msword;charset=utf-8',
-      // type: 'application/pdf;charset=utf-8',
-      type: filetype(type),
-    });
-    const objectUrl = window.URL.createObjectURL(blogw); // 创建一个新的url对象
-    link.href = objectUrl;
-    const fileName = '使用说明';
-    link.download = fileName; //  下载的时候自定义的文件名
-    link.click();
-    window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
-  });
+const instructionsuse = (
+  fileurl: string,
+  orderSource: string,
+  productServerId: string
+) => {
+  // const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
+  // fileDownloadto2({
+  //   name: fileurl,
+  //   source,
+  //   serverId: productServerId,
+  // }).then((res: any) => {
+  const link = document.createElement('a');
+  //   //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
+  //   const blogw = new Blob([res], {
+  //     // type: 'application/x-abiword;charset=utf-8'
+  //     // type: 'application/msword;charset=utf-8',
+  //     // type: 'application/pdf;charset=utf-8',
+  //     type: filetype(type),
+  //   });
+  const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
+  link.href = objectUrl;
+  const fileName = '使用说明';
+  link.download = fileName; //  下载的时候自定义的文件名
+  link.click();
+  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
+  // });
 };
 
 // 更多
@@ -1374,6 +1414,10 @@ onMounted(() => {
           flex-direction: column;
           width: 77%;
           // align-items: flex-end;
+          .tophead-intro {
+            word-break: break-all;
+          }
+
           .tophead-to {
             display: flex;
             justify-content: space-between;

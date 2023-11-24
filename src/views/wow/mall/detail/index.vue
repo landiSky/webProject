@@ -36,8 +36,13 @@
             <t-typography-paragraph
               style="margin-bottom: 0"
               :ellipsis="{
-                rows: 1,
-                showTooltip: true,
+                rows: 7,
+                showTooltip: {
+                  type: 'tooltip',
+                  props: {
+                    isBright: true,
+                  },
+                },
               }"
             >
               {{ prodDetail.introduction }}
@@ -180,7 +185,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
-import { SaleType, AccountType, AppType, NodeAuthStatus } from '@/enums/common';
+import { SaleType, AccountType } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
@@ -260,13 +265,13 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     const durationItem = durationList.find(
       (item: Record<string, any>) => item.id === durationId
     );
-    accountDesc = `${accountItem.accountNum}个账号`;
+    accountDesc = `${accountItem.accountNum}个`;
     durationDesc =
       durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
   }
 
   if (
-    !Number.isNaN(accountItem?.accountNum) &&
+    (accountItem?.accountNum || 0) > 0 &&
     memberIdList?.length > accountItem?.accountNum - 1
   ) {
     Message.warning('已超出购买账号数');
@@ -355,7 +360,7 @@ const clickAddCart = (): void => {
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {
     Modal.info({
       title: '使用提醒',
-      content: '需申请企业认证后使用，请先进行企业节点认证。',
+      content: '需申请企业认证后使用，请先进行企业认证。',
       titleAlign: 'start',
       hideCancel: false,
       cancelText: '暂不认证',
@@ -516,6 +521,7 @@ onMounted(() => {
           margin-bottom: 42px;
           color: #1d2129;
           line-height: 22px; /* 157.143% */
+          word-break: break-all;
         }
 
         .price {

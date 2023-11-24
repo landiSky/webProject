@@ -49,6 +49,7 @@ const { userInfo, selectCompany } = storeToRefs(store);
 const props = defineProps({
   productId: String,
   deliverySetId: String,
+  accountCount: Number,
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const visible = ref(true);
@@ -61,6 +62,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
     done(false);
     return Message.warning(' 请选择要邀请的成员');
   }
+
+  if (
+    (props.accountCount || 0) > 0 &&
+    selectMemList.value.length > (props.accountCount || 0) - 1
+  ) {
+    done(false);
+    return Message.warning('已超出购买账号数');
+  }
+
   apiAuthMember({
     memberId: selectCompany.value?.memberId,
     productId: props.productId,

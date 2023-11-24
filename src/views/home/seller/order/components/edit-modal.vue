@@ -22,8 +22,13 @@
           <t-input-number
             v-model="state.formModel.amount"
             placeholder="请输入"
-            :min="1"
+            class="input-demo"
           />
+          <!-- <t-input-number
+            v-model="state.formModel.amount"
+            placeholder="请输入"
+            :min="1"
+          /> -->
         </t-form-item>
       </t-form>
     </t-modal>
@@ -58,7 +63,7 @@ const state = reactive({
   formModel: {
     id: '',
     currentamount: '',
-    amount: '',
+    amount: '' || 0,
     orderid: '',
   },
 });
@@ -72,6 +77,14 @@ const formRules = {
     {
       match: /^\d+(.\d{1,2})?$/,
       message: '只可输入小数点后两位',
+    },
+    {
+      validator: (value: any, cb: any) => {
+        if (state.formModel.amount < 1) {
+          return cb('输入数据最小为1,否则不生效');
+        }
+        return cb();
+      },
     },
   ],
 };

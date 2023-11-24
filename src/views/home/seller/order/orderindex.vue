@@ -157,8 +157,9 @@
               <t-col :span="7">
                 <div class="grid-content">
                   <div class="imgs">
+                    <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -372,8 +373,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -409,7 +413,7 @@ const deliveryType = reactive([
   },
   {
     value: '0',
-    label: 'SAAS',
+    label: 'SaaS',
   },
   {
     value: '1',
@@ -725,8 +729,8 @@ const ondeliveryModalConfirm = () => {
     .heard-name {
       padding: 24px 0 0 24px;
       color: #1d2129;
-      font-weight: 600;
-      font-size: 14px;
+      font-weight: 500;
+      font-size: 16px;
       font-family: 'PingFang SC';
       font-style: normal;
       line-height: 24px;
@@ -958,7 +962,7 @@ const ondeliveryModalConfirm = () => {
             img {
               width: 80px;
               height: 80px;
-              border: 1px #e5e8ef;
+              border: 1px solid #e5e8ef;
               border-radius: 2px;
             }
           }

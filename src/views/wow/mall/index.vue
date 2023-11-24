@@ -370,6 +370,7 @@ const clickAllSort = () => {
 watch(
   () => route.query.goodsName,
   (newV) => {
+    pagination.page = 1;
     apiParams.value.name = newV;
     getProductList();
   }
