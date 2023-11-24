@@ -396,7 +396,7 @@ const statusColor = computed(() => {
 const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
-  0: 'SAAS',
+  0: 'SaaS',
   1: '独立部署',
 };
 // 应用分类

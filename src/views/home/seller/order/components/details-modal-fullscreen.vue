@@ -63,7 +63,7 @@
             </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -123,7 +123,7 @@
                     </t-typography-paragraph>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">驳回时间</div>
                     <div class="order-item-right">{{
@@ -147,7 +147,7 @@
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
-                <t-space class="order-success spacing">
+                <t-space class="order-success spacing remove-margin">
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
@@ -174,7 +174,7 @@
                     }}</div>
                   </t-space>
                 </div>
-                <div class="order-item-due-date">
+                <div class="order-item-due-date remove-margin">
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
@@ -243,15 +243,15 @@
                 <t-space align="start">
                   <div>支付凭证</div>
 
-                  <div v-if="dataList.attachmentAddressArr.length === 0"
+                  <div v-if="dataList?.attachmentAddressArr?.length === 0"
                     >待上传</div
                   >
                   <div
-                    v-if="dataList.attachmentAddressArr.length !== 0"
+                    v-if="dataList?.attachmentAddressArr?.length !== 0"
                     style="float: left"
                   >
                     <img
-                      v-for="(item, index) in dataList.attachmentAddressArr"
+                      v-for="(item, index) in dataList?.attachmentAddressArr"
                       :key="index"
                       class="pay-img"
                       style="width: 100px; height: 100px; margin-right: 10px"
@@ -353,7 +353,7 @@
                 </t-col>
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SAAS' : '独立部署' }}
+                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -500,7 +500,7 @@ const dataList = ref({
   customerName: '硕', // 买家名称
   productLogo: '', // 商品logo
   merchantName: '商品所属商家名称', // 卖家名称
-  deliveryTypeName: 'SAAS', // 交付类型名称
+  deliveryTypeName: 'SaaS', // 交付类型名称
   deliveryType: 1, // 交付类型:0-saas类,1-独立部署类
   productPrice: 10000, // 商品价格
   accountCount: '10个账号', // 账号数量
@@ -870,6 +870,10 @@ onMounted(() => {
   font-family: PingFang SC;
   font-style: normal;
   line-height: 22px; /* 157.143% */
+}
+
+.remove-margin {
+  margin-bottom: 0 !important;
 }
 
 .order-item-due-date,

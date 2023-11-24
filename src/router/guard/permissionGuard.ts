@@ -46,6 +46,9 @@ export function createPermissionGuard(router: Router) {
         // s1-2: 有用户信息，且需要做绑定验证
         if (to.fullPath === '/safetycheck' || to.fullPath.startsWith('/wow/')) {
           next();
+        } else if (to.query.safeCheck) {
+          // 安全校验成功后，而不是停留在校验页面，能继续往后走
+          next();
         } else {
           next('/safetycheck');
         }

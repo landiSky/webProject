@@ -153,7 +153,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif"
               :show-file-list="false"
               @before-upload="beforeUpload"
               @success="uploadSuccess"
@@ -183,7 +183,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -242,7 +242,7 @@
                 :show-file-list="false"
                 :headers="uploadHeaders"
                 action="/server/web/file/upload"
-                accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+                accept=".png,.jpg,.bmp,.jpeg,.gif"
                 @before-upload="beforeUpload"
                 @success="uploadDetailSuccess"
                 @progress="uploadDetailProgress"
@@ -272,7 +272,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item label="商品分类" field="productTypeId">
@@ -353,7 +353,7 @@
               >
               </t-radio-group>
               <t-link v-if="formModel2.deliveryType === 0"
-                >《SAAS类应用对接指南》</t-link
+                >《SaaS类应用对接指南》</t-link
               >
             </t-form-item>
             <t-form-item label="商品定价方式">
@@ -697,7 +697,7 @@ const detailList = ref<any[]>([]);
 const expList = ref<any[]>([]);
 
 const deliveryTypeList = ref([
-  { label: 'SAAS类', value: 0 },
+  { label: 'SaaS类', value: 0 },
   { label: '独立部署类', value: 1 },
 ]);
 const priceTypeList = ref([
