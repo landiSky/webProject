@@ -117,7 +117,7 @@
                     <t-button
                       type="text"
                       class="dirlist-btn"
-                      @click="distributionrole"
+                      @click="distributionrole(userInfoByCompany.primary)"
                     >
                       邀请成员/分配权限</t-button
                     >
@@ -665,8 +665,8 @@ const detailflagclick = () => {
 // 企业节点查看详情
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
-const distributionrole = () => {
-  if (userInfoByCompany.primary === AccountType?.MAIN) {
+const distributionrole = (primary: any) => {
+  if (primary === AccountType?.MAIN) {
     router.push('/system/users');
   } else {
     Message.error('请先完成企业认证');
