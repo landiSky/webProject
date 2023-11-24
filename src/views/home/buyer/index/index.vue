@@ -93,7 +93,10 @@
                           ].includes(userInfoByCompany.certificateStatus)
                         "
                         style="font-size: 12px"
-                        ><t-button type="text" @click="viewdetails"
+                        ><t-button
+                          type="text"
+                          class="dirlist-btn"
+                          @click="viewdetails"
                           >查看详情</t-button
                         ></span
                       >
