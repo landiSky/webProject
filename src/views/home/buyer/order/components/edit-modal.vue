@@ -123,6 +123,7 @@ const beforeUpload = (file: File) => {
       // jpg、png、bmp、gif、jpeg
     } else if (
       type !== 'jpg' ||
+      // @ts-ignore
       type !== 'png' ||
       type !== 'bmp' ||
       type !== 'gif' ||
