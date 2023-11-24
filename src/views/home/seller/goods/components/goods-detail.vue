@@ -77,7 +77,7 @@
           name="wait"
         ></iconpark-icon>
         <div style="margin-left: 8px">
-          商品状态：{{ StatusEnum[dataInfo.status] }}。
+          商品状态：{{ StatusEnum[dataInfo.status] || '-' }}
         </div>
         <div v-if="dataInfo.status === StatusEnum.DSH">
           通过审核后，将同时在本平台和标识网络其他平台同步上架。</div
@@ -124,10 +124,10 @@
               :column="1"
             >
               <t-descriptions-item label="商品名称">
-                {{ dataInfo.name }}
+                {{ dataInfo.name || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品ID">
-                {{ dataInfo.id }}
+                {{ dataInfo.id || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品Logo">
                 <div class="file-list">
@@ -215,10 +215,10 @@
                 {{ '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
-                {{ TypeEnum[dataInfo.type] }}
+                {{ TypeEnum[dataInfo.type] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品简介">
-                {{ dataInfo.introduction }}
+                {{ dataInfo.introduction || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
@@ -579,6 +579,10 @@ const toAnchor = (link: string) => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      a {
+        text-decoration: none;
+      }
     }
   }
 }

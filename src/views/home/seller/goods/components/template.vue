@@ -6,7 +6,7 @@
       class="templateItem"
     >
       <div style="display: flex">
-        <div>模块{{ number2local[index] }}: </div
+        <div>模块{{ number2local[index] }}： </div
         ><div style="color: #1d2129">{{ item.moduleName }} </div>
       </div>
       <div>
@@ -72,7 +72,11 @@
       <div class="preview">
         <span>{{ TemplateEnum?.[selectTempIndex].desc }}</span>
         <span>{{ TemplateEnum?.[selectTempIndex].tips }}</span>
-        <img :src="tempateImgList[selectTempIndex]" alt="模板" />
+        <t-image
+          class="temp-img"
+          width="640px"
+          :src="tempateImgList[selectTempIndex]"
+        />
       </div>
     </div>
     <div v-show="currentStep !== 1" class="formWrapper">
@@ -311,8 +315,9 @@ defineExpose({
       line-height: 20px; /* 166.667% */
     }
 
-    img {
+    .temp-img {
       width: 640px;
+      min-height: 150px;
       margin-top: 12px;
     }
   }
