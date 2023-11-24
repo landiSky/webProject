@@ -36,8 +36,13 @@
             <t-typography-paragraph
               style="margin-bottom: 0"
               :ellipsis="{
-                rows: 1,
-                showTooltip: true,
+                rows: 7,
+                showTooltip: {
+                  type: 'tooltip',
+                  props: {
+                    isBright: true,
+                  },
+                },
               }"
             >
               {{ prodDetail.introduction }}
@@ -180,7 +185,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
 import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
-import { SaleType, AccountType, AppType, NodeAuthStatus } from '@/enums/common';
+import { SaleType, AccountType } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
@@ -266,7 +271,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
   }
 
   if (
-    !Number.isNaN(accountItem?.accountNum) &&
+    (accountItem?.accountNum || 0) > 0 &&
     memberIdList?.length > accountItem?.accountNum - 1
   ) {
     Message.warning('已超出购买账号数');
@@ -516,6 +521,7 @@ onMounted(() => {
           margin-bottom: 42px;
           color: #1d2129;
           line-height: 22px; /* 157.143% */
+          word-break: break-all;
         }
 
         .price {

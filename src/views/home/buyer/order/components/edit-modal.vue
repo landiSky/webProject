@@ -38,7 +38,7 @@
         </t-upload>
       </t-form-item>
       <div style="color: #86909c">
-        支持jpg、png、bmp、tif、gif、jpeg文件格式,文件大小限制5M以内,最多可上传5张。
+        支持jpg、png、bmp、gif、jpeg文件格式,文件大小限制5M以内,最多可上传5张。
       </div>
     </t-form>
   </t-modal>
@@ -120,7 +120,14 @@ const beforeUpload = (file: File) => {
       Message.warning('上传图片大小必须限制在5MB以内');
       // return false;
       reject();
-    } else if (type === 'pdf' || type === 'xlsx') {
+      // jpg、png、bmp、gif、jpeg
+    } else if (
+      type !== 'jpg' ||
+      type !== 'png' ||
+      type !== 'bmp' ||
+      type !== 'gif' ||
+      type !== 'jpeg'
+    ) {
       Message.warning('请上传正确的文件格式');
       // return false;
       reject();
