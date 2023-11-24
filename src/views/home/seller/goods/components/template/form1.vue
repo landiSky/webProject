@@ -224,6 +224,7 @@ onMounted(() => {
 defineExpose({
   form,
   formRef,
+  initForm,
 });
 </script>
 

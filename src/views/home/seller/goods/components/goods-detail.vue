@@ -80,10 +80,10 @@
           商品状态：{{ StatusEnum[dataInfo.status] || '-' }}
         </div>
         <div v-if="dataInfo.status === StatusEnum.DSH">
-          通过审核后，将同时在本平台和标识网络其他平台同步上架。</div
+          ，通过审核后，将同时在本平台和标识网络其他平台同步上架。</div
         >
         <div v-if="dataInfo.status === StatusEnum.YBH">
-          驳回原因：{{ dataInfo.rejectReason }}</div
+          ，驳回原因：{{ dataInfo.rejectReason }}</div
         >
       </div>
 
@@ -359,8 +359,8 @@ const StatusEnum: { [name: string]: any } = {
   YBH: 2,
   YSJ: 1,
   3: '未上架',
-  0: '待审核',
-  2: '已驳回',
+  0: '上架审核中',
+  2: '上架已驳回',
   1: '已上架',
 };
 

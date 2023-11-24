@@ -599,7 +599,7 @@ const authDialog = () => {
   // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
   authDialogdata({
     companyId: userInfoByCompany.value?.companyId,
-    userId: userInfo.value?.userId, // userInfoByCompany.value?.id || '',
+    userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.userId, // userInfoByCompany.value?.id || '',
   }).then((res) => {
     authDialogVisible.value = res || [];
   });
