@@ -116,7 +116,7 @@
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">营业执照</p>
-                <div style="width: 170px; height: 100px">
+                <div style="display: flex; width: 170px; height: 100px">
                   <img
                     style="width: 100%; height: 100%"
                     :src="`/server/web/file/download?name=${detaillist.businessLicense}`"
@@ -158,7 +158,30 @@
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">联系人身份证</p>
-                <img
+                <div style="display: flex">
+                  <div
+                    style="
+                      display: flex;
+                      width: 170px;
+                      height: 100px;
+                      margin-right: 10px;
+                    "
+                  >
+                    <img
+                      style="width: 100%; height: 100%"
+                      :src="`/server/web/file/download?name=${detaillist.idCardz}`"
+                      alt=""
+                    />
+                  </div>
+                  <div style="display: flex; width: 170px; height: 100px">
+                    <img
+                      style="width: 100%; height: 100%"
+                      :src="`/server/web/file/download?name=${detaillist.idCardf}`"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <!-- <img
                   style="width: 170px; height: 100px; margin-right: 10px"
                   :src="`/server/web/file/download?name=${detaillist.idCardz}`"
                   alt=""
@@ -167,7 +190,7 @@
                   style="width: 170px; height: 100px"
                   :src="`/server/web/file/download?name=${detaillist.idCardf}`"
                   alt=""
-                />
+                /> -->
               </div>
             </div>
           </div>
