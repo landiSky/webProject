@@ -154,22 +154,40 @@ const initDrawer = () => {
 };
 
 const handleCancel = () => {
-  if (props.templateData?.length) {
-    Modal.warning({
-      title: '已编辑信息尚未保存，取消后将清空',
-      titleAlign: 'start',
-      content: '',
-      okText: '确定',
-      hideCancel: false,
-      onOk: () => {
-        drawerVisible.value = false;
-        initDrawer();
-      },
-      onCancel: () => {
-        return false;
-      },
-    });
-  } else {
+  try {
+    let isConfirm = false;
+    let newData;
+    let oldData;
+    const { form, initForm } = formWrapRef.value;
+    if (currentIndex.value === -1) {
+      newData = JSON.stringify(form);
+      oldData = JSON.stringify(initForm());
+    } else if (props.templateData?.length) {
+      oldData = JSON.stringify(props.templateData[currentIndex.value]);
+      newData = JSON.stringify(form);
+    }
+    isConfirm = newData !== oldData;
+
+    if (isConfirm) {
+      Modal.warning({
+        title: '已编辑信息尚未保存，取消后将清空',
+        titleAlign: 'start',
+        content: '',
+        okText: '确定',
+        hideCancel: false,
+        onOk: () => {
+          drawerVisible.value = false;
+          initDrawer();
+        },
+        onCancel: () => {
+          return false;
+        },
+      });
+    } else {
+      drawerVisible.value = false;
+      initDrawer();
+    }
+  } catch (e) {
     drawerVisible.value = false;
     initDrawer();
   }
