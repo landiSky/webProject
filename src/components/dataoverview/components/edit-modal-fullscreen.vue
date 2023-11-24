@@ -452,10 +452,9 @@ const beforeUpload = (file: File) => {
       reject();
       // jpg,.png,.bmp,.jpeg
     } else if (
-      type !== 'jpg' ||
-      // @ts-ignore
-      type !== 'png' ||
-      type !== 'bmp' ||
+      type !== 'jpg' &&
+      type !== 'png' &&
+      type !== 'bmp' &&
       type !== 'jpeg'
     ) {
       Message.warning('请上传正确的文件格式');

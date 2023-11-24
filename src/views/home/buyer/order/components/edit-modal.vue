@@ -122,13 +122,13 @@ const beforeUpload = (file: File) => {
       reject();
       // jpg、png、bmp、gif、jpeg
     } else if (
-      type !== 'jpg' ||
-      // @ts-ignore
-      type !== 'png' ||
-      type !== 'bmp' ||
-      type !== 'gif' ||
+      type !== 'jpg' &&
+      type !== 'png' &&
+      type !== 'bmp' &&
+      type !== 'gif' &&
       type !== 'jpeg'
     ) {
+      console.log(type, 'type');
       Message.warning('请上传正确的文件格式');
       // return false;
       reject();
