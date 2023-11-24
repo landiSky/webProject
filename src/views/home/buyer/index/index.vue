@@ -289,15 +289,17 @@
               >
                 前往 <span class="to-img"></span></span
             ></div>
-            <t-typography-paragraph
-              style="float: left"
-              :ellipsis="{
-                rows: 1,
-                showTooltip: true,
-              }"
-            >
-              {{ item.introduction }}
-            </t-typography-paragraph>
+            <div class="tophead-intro">
+              <t-typography-paragraph
+                style="float: left"
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ item.introduction }}
+              </t-typography-paragraph>
+            </div>
             <div class="tophead"
               ><span
                 v-if="userInfoByCompany.primary === AccountType?.MAIN"
@@ -1409,6 +1411,10 @@ onMounted(() => {
           flex-direction: column;
           width: 77%;
           // align-items: flex-end;
+          .tophead-intro {
+            word-break: break-all;
+          }
+
           .tophead-to {
             display: flex;
             justify-content: space-between;

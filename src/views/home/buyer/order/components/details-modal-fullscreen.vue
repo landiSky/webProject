@@ -239,15 +239,15 @@
                 <t-space align="start">
                   <div>支付凭证</div>
 
-                  <div v-if="dataList.attachmentAddressArr.length === 0"
+                  <div v-if="dataList?.attachmentAddressArr?.length === 0"
                     >待上传</div
                   >
                   <div
-                    v-if="dataList.attachmentAddressArr.length !== 0"
+                    v-if="dataList?.attachmentAddressArr?.length !== 0"
                     style="float: left"
                   >
                     <img
-                      v-for="(item, index) in dataList.attachmentAddressArr"
+                      v-for="(item, index) in dataList?.attachmentAddressArr"
                       :key="index"
                       class="pay-img"
                       style="width: 100px; height: 100px; margin-right: 10px"

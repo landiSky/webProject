@@ -153,7 +153,7 @@
               :headers="uploadHeaders"
               action="/server/web/file/upload"
               :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+              accept=".png,.jpg,.bmp,.jpeg,.gif"
               :show-file-list="false"
               @before-upload="beforeUpload"
               @success="uploadSuccess"
@@ -183,7 +183,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -242,7 +242,7 @@
                 :show-file-list="false"
                 :headers="uploadHeaders"
                 action="/server/web/file/upload"
-                accept=".png,.jpg,.bmp,.jpeg,.gif,.tif"
+                accept=".png,.jpg,.bmp,.jpeg,.gif"
                 @before-upload="beforeUpload"
                 @success="uploadDetailSuccess"
                 @progress="uploadDetailProgress"
@@ -272,7 +272,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、tif、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
             >
           </t-form-item>
           <t-form-item label="商品分类" field="productTypeId">
