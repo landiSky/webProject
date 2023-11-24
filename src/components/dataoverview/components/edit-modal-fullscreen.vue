@@ -542,5 +542,8 @@ onMounted(() => {
     width: 150px;
     height: 100px;
   }
+  // :deep(.tele-upload-list-picture) {
+  //   transition: none;
+  // }
 }
 </style>

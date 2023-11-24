@@ -178,7 +178,9 @@ onMounted(() => {
 
 <style scoped lang="less">
 .uploadimg {
-  // :deep(.tele-upload-list)
+  // :deep(.tele-upload-list-picture) {
+  //   transition: none;
+  // }
   :deep(.tele-upload-list) {
     // height: 100px;
     transition: none;
