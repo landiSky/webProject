@@ -290,7 +290,7 @@
             ></div>
             <div class="tophead-intro">
               <t-typography-paragraph
-                style="float: left"
+                style="width: 100%"
                 :ellipsis="{
                   rows: 1,
                   showTooltip: true,
