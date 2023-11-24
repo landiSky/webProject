@@ -47,7 +47,7 @@
         @search="onSearch"
       />
       <t-space v-if="userInfo?.userId">
-        <t-link @click="goBuyer">控制台</t-link>
+        <t-link class="controller" @click="goBuyer">控制台</t-link>
         <span class="username">{{
           selectCompany.companyName || userInfo.mobile
         }}</span>
@@ -95,8 +95,11 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -294,6 +297,10 @@ onMounted(() => {
         background-color: #f2f3f8;
         cursor: pointer;
       }
+    }
+
+    .controller {
+      font-size: 12px;
     }
 
     .username {
