@@ -115,7 +115,6 @@
                       管理企业组织架构&成员权限</p
                     >
                     <t-button
-                      v-if="userInfoByCompany.primary === AccountType?.MAIN"
                       type="text"
                       class="dirlist-btn"
                       @click="distributionrole"
@@ -456,7 +455,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch } from 'vue';
-import { Modal } from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 
 import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
 
@@ -667,7 +666,11 @@ const detailflagclick = () => {
 const viewdetailsredf = () => [];
 // 邀请成员/分配权限
 const distributionrole = () => {
-  router.push('/system/users');
+  if (userInfoByCompany.primary === AccountType?.MAIN) {
+    router.push('/system/users');
+  } else {
+    Message.error('请先完成企业认证');
+  }
 };
 // 去商城
 const tomall = () => {
@@ -1007,7 +1010,13 @@ onMounted(() => {
               }
 
               .dirlist-btn {
+                height: 20px;
+                color: var(--b-161664-ff, #1664ff);
+                font-weight: 400;
                 font-size: 14px;
+                font-family: PingFang SC;
+                font-style: normal;
+                line-height: normal;
               }
             }
 
