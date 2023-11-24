@@ -319,13 +319,13 @@
               :show-cancel-button="false"
               accept=".pdf,.doc,.docx"
               tip-position="bottom"
-              @before-upload="beforeUpload"
+              @before-upload="beforeUpload10"
               @success="uploadExpSuccess"
               @error="uploadExpError"
             ></t-upload>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
-            <div class="hint">文件大小限制2M以内，支持PDF格式、Word格式。</div>
+            <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer
@@ -1238,6 +1238,22 @@ const beforeUpload = (file: File) => {
     const over2 = file.size > 1024 * 1024 * 2;
     if (over2) {
       Message.warning(`上传失败，文件大小不要超过2M`);
+      reject();
+    }
+    if (!online.value) {
+      Message.warning('网络异常，暂时无法上传，请检查网络');
+      reject();
+    }
+    // @ts-ignore
+    resolve(true);
+  });
+};
+
+const beforeUpload10 = (file: File) => {
+  return new Promise<void>((resolve, reject) => {
+    const over2 = file.size > 1024 * 1024 * 10;
+    if (over2) {
+      Message.warning(`上传失败，文件大小不要超过10M`);
       reject();
     }
     if (!online.value) {
