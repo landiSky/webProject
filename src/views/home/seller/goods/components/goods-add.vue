@@ -84,7 +84,7 @@
             </div>
           </div>
           <t-form-item label="商品ID" field="">
-            {{ formModel.id }}
+            {{ formModel.id || '-' }}
           </t-form-item>
           <t-form-item label="商品名称" field="name">
             <t-input
