@@ -100,7 +100,7 @@ const formRules = {
         return cb();
       },
     },
-    { maxLength: 20, message: '长度不超过50个字符' },
+    { maxLength: 50, message: '长度不超过50个字符' },
   ],
   remark: [{ maxLength: 100, message: '长度不超过100个字符' }],
 };
