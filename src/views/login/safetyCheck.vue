@@ -191,6 +191,8 @@ const clickCheckBtn = () => {
         captcha,
       })
         .then(() => {
+          // 目的是绑定手机号后，更新用户信息
+          userStore.getUserBasicInfo();
           router.push({
             name: 'buyerIndex',
             query: {
