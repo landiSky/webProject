@@ -232,6 +232,7 @@ const delBlock = (index: number) => {
 defineExpose({
   form,
   formRef,
+  initForm,
 });
 </script>
 

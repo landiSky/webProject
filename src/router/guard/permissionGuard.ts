@@ -39,10 +39,8 @@ export function createPermissionGuard(router: Router) {
             }
           })
           .catch(() => next());
-      } else if (
-        userStore.userInfo?.bindStatus === 1 ||
-        userStore.userInfo?.safeCheck
-      ) {
+      } else if (userStore.userInfo?.bindStatus === 1) {
+        // safecheck 会一直为 true，如果开启的话
         // s1-2: 有用户信息，且需要做绑定验证
         if (to.fullPath === '/safetycheck' || to.fullPath.startsWith('/wow/')) {
           next();

@@ -116,11 +116,13 @@
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">营业执照</p>
-                <img
-                  style="width: 170px; height: 100px"
-                  :src="`/server/web/file/download?name=${detaillist.businessLicense}`"
-                  alt=""
-                />
+                <div style="display: flex; width: 170px; height: 100px">
+                  <img
+                    style="width: 100%; height: 100%"
+                    :src="`/server/web/file/download?name=${detaillist.businessLicense}`"
+                    alt=""
+                  />
+                </div>
               </div>
             </div>
 
@@ -156,7 +158,30 @@
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">联系人身份证</p>
-                <img
+                <div style="display: flex">
+                  <div
+                    style="
+                      display: flex;
+                      width: 170px;
+                      height: 100px;
+                      margin-right: 10px;
+                    "
+                  >
+                    <img
+                      style="width: 100%; height: 100%"
+                      :src="`/server/web/file/download?name=${detaillist.idCardz}`"
+                      alt=""
+                    />
+                  </div>
+                  <div style="display: flex; width: 170px; height: 100px">
+                    <img
+                      style="width: 100%; height: 100%"
+                      :src="`/server/web/file/download?name=${detaillist.idCardf}`"
+                      alt=""
+                    />
+                  </div>
+                </div>
+                <!-- <img
                   style="width: 170px; height: 100px; margin-right: 10px"
                   :src="`/server/web/file/download?name=${detaillist.idCardz}`"
                   alt=""
@@ -165,7 +190,7 @@
                   style="width: 170px; height: 100px"
                   :src="`/server/web/file/download?name=${detaillist.idCardf}`"
                   alt=""
-                />
+                /> -->
               </div>
             </div>
           </div>
@@ -193,8 +218,11 @@ import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 // import { PropertyDescriptorParsingType } from 'html2canvas/dist/types/css/IPropertyDescriptor';
 
