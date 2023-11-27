@@ -1,8 +1,7 @@
 <template>
   <t-tooltip
-    effect="dark"
     :content="props.tooltipContent ? props.tooltipContent : props.content"
-    placement="top"
+    position="top"
     :disabled="isShow"
   >
     <template #content>
