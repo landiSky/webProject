@@ -342,7 +342,7 @@ const firmgotoverify = () => {
 const viewdetailsnode = () => {
   // console.log('aaa');
   const { snmsUrls } = userInfo.value || {};
-  window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级企业节点认证页面
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 企业节点认证  去认证
 const nodegotoverify = () => {

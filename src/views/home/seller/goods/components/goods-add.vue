@@ -1056,6 +1056,7 @@ const buildForm2 = () => {
 };
 
 const validForm2 = async () => {
+  buildForm2();
   let pass = true;
   const result = await formRef2.value.validate();
   if (result) {
@@ -1304,17 +1305,20 @@ const doSave = async () => {
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     formModel.value.detailImg = imageList.value.join(',');
-    // const result = await formRef.value.validate();
-    // if (result) {
-    //   return false;
-    // }
+    const result = await formRef.value.validate();
+    if (result) {
+      return false;
+    }
     if (props.data?.id) {
       res = await updateGoods1(formModel.value);
     } else {
       res = await saveGoods1(formModel.value);
     }
   } else {
-    buildForm2();
+    const r = await validForm2();
+    if (!r) {
+      return false;
+    }
     res = await saveGoods2(formModel2.value);
   }
   return res;
@@ -1427,7 +1431,6 @@ const clickPreview = () => {
 
 // 上架
 const clickUp = async () => {
-  buildForm2();
   const r = await validForm2();
   if (r) {
     Modal.warning({

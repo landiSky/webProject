@@ -16,7 +16,15 @@
 
             <div class="inofs" style="float: left">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
-              <div class="inofslist" style="float: left">
+              <div
+                v-if="
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED
+                "
+                class="inofslist"
+                style="float: left"
+              >
                 <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
                 ><p>{{
@@ -658,12 +666,21 @@ const detailflagclick = () => {
 const viewdetailsredf = () => {
   const { snmsUrls } = userInfo.value || {};
 
-  window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级企业节点认证页面
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 邀请成员/分配权限
 const distributionrole = (primary: any) => {
   if (primary === AccountType?.MAIN) {
-    router.push('/system/users');
+    const start = userInfoByCompany.value?.menuCodes.findIndex(
+      (item: string, index: number) => {
+        return item === 'ROUTE_SYSTEM_USERS';
+      }
+    );
+    if (start !== -1) {
+      router.push('/system/users');
+    } else {
+      Message.error('未分配企业管理权限，请联系企业管理员');
+    }
   } else {
     Message.error('请先完成企业认证');
   }
@@ -768,7 +785,16 @@ const instructionsuse = (
 
 // 更多
 const multiples = () => {
-  router.push('/buyer/order');
+  const start = userInfoByCompany.value?.menuCodes.findIndex(
+    (item: string, index: number) => {
+      return item === 'ROUTE_BUYER_ORDER';
+    }
+  );
+  if (start !== -1) {
+    router.push('/buyer/order');
+  } else {
+    Message.error('未分配订单管理权限,请联系企业管理员查看订单,13811112222');
+  }
 };
 
 const initOpt = () => {
