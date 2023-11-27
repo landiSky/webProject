@@ -679,7 +679,7 @@ const distributionrole = (primary: any) => {
     if (start !== -1) {
       router.push('/system/users');
     } else {
-      Message.error('请联系管理员');
+      Message.error('未分配企业管理权限，请联系企业管理员');
     }
   } else {
     Message.error('请先完成企业认证');
@@ -793,7 +793,7 @@ const multiples = () => {
   if (start !== -1) {
     router.push('/buyer/order');
   } else {
-    Message.error('请联系管理员');
+    Message.error('未分配订单管理权限,请联系企业管理员查看订单,13811112222');
   }
 };
 
