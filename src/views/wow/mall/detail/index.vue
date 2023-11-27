@@ -164,7 +164,9 @@
         <div class="consult">
           <span class="title">服务商资质</span>
           <span class="header">服务商名称：北京泰尔英福科技有限公司</span>
-          <t-button type="primary" size="large">购买咨询</t-button>
+          <t-button type="primary" size="large" @click="buyConsult"
+            >购买咨询</t-button
+          >
         </div>
       </div>
     </div>
@@ -409,6 +411,10 @@ const onRadioChange = () => {
 
 const clickNav = (index: number) => {
   navRef.value[index].scrollIntoView(true);
+};
+
+const buyConsult = () => {
+  window.open('https://www.wjx.cn/vm/YDs2uey.aspx#', '_blank');
 };
 
 onMounted(() => {
