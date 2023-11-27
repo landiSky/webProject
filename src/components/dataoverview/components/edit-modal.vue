@@ -281,7 +281,8 @@ import right03 from '@/assets/images/home/right03.png';
 import rightlog from '@/assets/images/home/rightlog.png';
 
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfoByCompany, userInfo }: Record<string, any> =
+  storeToRefs(userStore);
 
 const authModalVisible = ref(false);
 const nodeState2class = {
@@ -340,6 +341,8 @@ const firmgotoverify = () => {
 // 企业节点认证 查看详情
 const viewdetailsnode = () => {
   // console.log('aaa');
+  const { snmsUrls } = userInfo.value || {};
+  window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 企业节点认证  去认证
 const nodegotoverify = () => {

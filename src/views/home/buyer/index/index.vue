@@ -47,8 +47,11 @@
             </div>
           </div>
         </div>
-        <!-- 使用指导 -->
-        <div class="direction">
+        <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
+        <div
+          v-if="userInfoByCompany.nodeStatus !== NodeAuthStatus.AUTHED"
+          class="direction"
+        >
           <div class="dirleft">
             <div class="titleleft">
               <h3 style="margin-bottom: 24px">使用引导 </h3>
@@ -101,9 +104,6 @@
                         ></span
                       >
                     </div>
-                    <!-- <t-button type="text" @click="authentication"
-                      >去认证</t-button
-                    > -->
                   </div>
                 </div>
                 <div>
@@ -121,7 +121,6 @@
                     >
                       邀请成员/分配权限</t-button
                     >
-                    <!-- <p></p> -->
                   </div></div
                 >
 
@@ -134,7 +133,6 @@
                     <t-button type="text" class="dirlist-btn" @click="tomall"
                       >去应用商城
                     </t-button>
-                    <!-- <p> 去应用商城</p> -->
                   </div>
                 </div>
                 <div>
@@ -183,7 +181,7 @@
                   @click="nodeAuth"
                   >去认证</t-button
                 >
-                <!-- v-else  -->
+
                 <div v-else class="states">
                   <p
                     style="
@@ -656,7 +654,11 @@ const detailflagclick = () => {
 };
 
 // 企业节点查看详情
-const viewdetailsredf = () => [];
+const viewdetailsredf = () => {
+  const { snmsUrls } = userInfo.value || {};
+
+  window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级企业节点认证页面
+};
 // 邀请成员/分配权限
 const distributionrole = (primary: any) => {
   if (primary === AccountType?.MAIN) {
@@ -1477,6 +1479,7 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
       margin-bottom: 24px;
 
       h3 {
