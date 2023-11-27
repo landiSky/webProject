@@ -144,15 +144,14 @@
                     <!-- <div class="order-item-right">{{
                       dataList.rejectReasonDetail
                     }}</div> -->
-                    <t-typography-paragraph
-                      style="float: right; margin-bottom: 0"
-                      :ellipsis="{
-                        rows: 1,
-                        showTooltip: true,
-                      }"
-                    >
-                      {{ dataList.rejectReasonDetail }}
-                    </t-typography-paragraph>
+                    <ShowTooltip width="300px">
+                      <template #tooltipContent>
+                        <span>{{ dataList.rejectReasonDetail }}</span>
+                      </template>
+                      <template #content>
+                        <span>{{ dataList.rejectReasonDetail }}</span>
+                      </template>
+                    </ShowTooltip>
                   </t-space>
                 </div>
                 <div class="order-item-due-date">
@@ -423,6 +422,7 @@
 
 <script lang="ts" setup>
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
+import ShowTooltip from '@/components/tip/tip.vue';
 import { utilsCopy } from '@/utils/tools';
 import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
