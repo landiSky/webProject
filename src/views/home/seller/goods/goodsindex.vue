@@ -54,7 +54,7 @@
         {{ TypeEnum[record.type] }}
       </template>
       <template #deliveryType="{ record }">
-        {{ DeliveryTypeEnum[record.deliveryType] }}
+        {{ DeliveryTypeEnum[record.deliveryType] || '-' }}
       </template>
       <template #status="{ record }">
         <span
