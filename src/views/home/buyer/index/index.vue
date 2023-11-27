@@ -666,7 +666,7 @@ const detailflagclick = () => {
 const viewdetailsredf = () => {
   const { snmsUrls } = userInfo.value || {};
 
-  window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级企业节点认证页面
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 邀请成员/分配权限
 const distributionrole = (primary: any) => {
