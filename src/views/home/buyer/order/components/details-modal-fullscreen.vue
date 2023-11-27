@@ -144,7 +144,7 @@
                     <!-- <div class="order-item-right">{{
                       dataList.rejectReasonDetail
                     }}</div> -->
-                    <ShowTooltip width="300px">
+                    <ShowTooltip width="886px">
                       <template #tooltipContent>
                         <span>{{ dataList.rejectReasonDetail }}</span>
                       </template>

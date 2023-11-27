@@ -16,7 +16,15 @@
 
             <div class="inofs" style="float: left">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
-              <div class="inofslist" style="float: left">
+              <div
+                v-if="
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED
+                "
+                class="inofslist"
+                style="float: left"
+              >
                 <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
                 ><p>|</p
                 ><p>{{
@@ -47,8 +55,11 @@
             </div>
           </div>
         </div>
-        <!-- 使用指导 -->
-        <div class="direction">
+        <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
+        <div
+          v-if="userInfoByCompany.nodeStatus !== NodeAuthStatus.AUTHED"
+          class="direction"
+        >
           <div class="dirleft">
             <div class="titleleft">
               <h3 style="margin-bottom: 24px">使用引导 </h3>
@@ -101,9 +112,6 @@
                         ></span
                       >
                     </div>
-                    <!-- <t-button type="text" @click="authentication"
-                      >去认证</t-button
-                    > -->
                   </div>
                 </div>
                 <div>
@@ -121,7 +129,6 @@
                     >
                       邀请成员/分配权限</t-button
                     >
-                    <!-- <p></p> -->
                   </div></div
                 >
 
@@ -134,7 +141,6 @@
                     <t-button type="text" class="dirlist-btn" @click="tomall"
                       >去应用商城
                     </t-button>
-                    <!-- <p> 去应用商城</p> -->
                   </div>
                 </div>
                 <div>
@@ -183,12 +189,12 @@
                   @click="nodeAuth"
                   >去认证</t-button
                 >
-                <!-- v-else  -->
+
                 <div v-else class="states">
                   <p
                     style="
                       width: 50px;
-                      margin: 10px auto 0;
+                      margin: 4px auto 0;
                       padding: 5px;
                       text-align: center;
                     "
@@ -203,10 +209,11 @@
                       )
                     "
                     style="width: 80px; margin: 0 auto; font-size: 12px"
-                    ><t-button type="text" @click="viewdetailsredf"
-                      >查看详情</t-button
-                    ></p
                   >
+                    <t-button type="text" @click="viewdetailsredf"
+                      >查看详情</t-button
+                    >
+                  </p>
                 </div>
               </div>
             </div>
@@ -656,11 +663,24 @@ const detailflagclick = () => {
 };
 
 // 企业节点查看详情
-const viewdetailsredf = () => [];
+const viewdetailsredf = () => {
+  const { snmsUrls } = userInfo.value || {};
+
+  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
+};
 // 邀请成员/分配权限
 const distributionrole = (primary: any) => {
   if (primary === AccountType?.MAIN) {
-    router.push('/system/users');
+    const start = userInfoByCompany.value?.menuCodes.findIndex(
+      (item: string, index: number) => {
+        return item === 'ROUTE_SYSTEM_USERS';
+      }
+    );
+    if (start !== -1) {
+      router.push('/system/users');
+    } else {
+      Message.error('未分配企业管理权限，请联系企业管理员');
+    }
   } else {
     Message.error('请先完成企业认证');
   }
@@ -765,7 +785,16 @@ const instructionsuse = (
 
 // 更多
 const multiples = () => {
-  router.push('/buyer/order');
+  const start = userInfoByCompany.value?.menuCodes.findIndex(
+    (item: string, index: number) => {
+      return item === 'ROUTE_BUYER_ORDER';
+    }
+  );
+  if (start !== -1) {
+    router.push('/buyer/order');
+  } else {
+    Message.error('未分配订单管理权限,请联系企业管理员查看订单,13811112222');
+  }
 };
 
 const initOpt = () => {
@@ -1477,6 +1506,7 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
       margin-bottom: 24px;
 
       h3 {
