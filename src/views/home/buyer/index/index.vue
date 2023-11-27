@@ -186,7 +186,7 @@
                   <p
                     style="
                       width: 50px;
-                      margin: 10px auto 0;
+                      margin: 4px auto 0;
                       padding: 5px;
                       text-align: center;
                     "
@@ -201,10 +201,11 @@
                       )
                     "
                     style="width: 80px; margin: 0 auto; font-size: 12px"
-                    ><t-button type="text" @click="viewdetailsredf"
-                      >查看详情</t-button
-                    ></p
                   >
+                    <t-button type="text" @click="viewdetailsredf"
+                      >查看详情</t-button
+                    >
+                  </p>
                 </div>
               </div>
             </div>
