@@ -252,10 +252,10 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[dataInfo.deliveryType ?? 0] }}
+                {{ DeliveryTypeEnum[dataInfo.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[dataInfo.saleType ?? 0] }}
+                {{ PriceTypeEnum[dataInfo.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <div class="line"></div>

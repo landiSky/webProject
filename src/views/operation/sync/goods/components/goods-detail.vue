@@ -225,10 +225,10 @@
               :column="1"
             >
               <t-descriptions-item label="服务交付类型">
-                {{ DeliveryTypeEnum[formModel.deliveryType] }}
+                {{ DeliveryTypeEnum[formModel.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[formModel.saleType] }}
+                {{ PriceTypeEnum[formModel.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions

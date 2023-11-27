@@ -630,7 +630,7 @@ const onAuthModalConfirm = () => {
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
   gotoverifys.value = true;
-  editModalVisible.value = false;
+  // editModalVisible.value = false;
 };
 // 查看详情
 const hasdflags = () => {

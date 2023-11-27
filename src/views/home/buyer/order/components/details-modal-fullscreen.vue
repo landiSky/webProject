@@ -139,19 +139,14 @@
                   </div>
                 </t-space>
                 <div class="order-item-deploy">
-                  <t-space>
+                  <t-space align="start">
                     <div class="order-item-left">驳回原因</div>
                     <!-- <div class="order-item-right">{{
                       dataList.rejectReasonDetail
                     }}</div> -->
-                    <ShowTooltip width="886px">
-                      <template #tooltipContent>
-                        <span>{{ dataList.rejectReasonDetail }}</span>
-                      </template>
-                      <template #content>
-                        <span>{{ dataList.rejectReasonDetail }}</span>
-                      </template>
-                    </ShowTooltip>
+                    <div class="text-wrap">
+                      {{ dataList.rejectReasonDetail }}
+                    </div>
                   </t-space>
                 </div>
                 <div class="order-item-due-date">
@@ -422,7 +417,7 @@
 
 <script lang="ts" setup>
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
-import ShowTooltip from '@/components/tip/tip.vue';
+
 import { utilsCopy } from '@/utils/tools';
 import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
@@ -747,6 +742,12 @@ onMounted(() => {
   font-family: PingFang SC;
   font-style: normal;
   line-height: 20px; /* 166.667% */
+}
+
+.text-wrap {
+  width: 886px;
+  word-wrap: break-word;
+  word-break: normal;
 }
 
 .button-top {
