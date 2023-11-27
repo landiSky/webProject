@@ -352,7 +352,9 @@
                 type="button"
               >
               </t-radio-group>
-              <t-link v-if="formModel2.deliveryType === 0"
+              <t-link
+                v-if="formModel2.deliveryType === 0"
+                @click="Message.warning('开发中')"
                 >《SaaS类应用对接指南》</t-link
               >
             </t-form-item>
@@ -1029,7 +1031,28 @@ const validateAccountPrice = () => {
   return failed;
 };
 
-const buildForm2 = async () => {
+const buildForm2 = () => {
+  let modalList;
+  if (formModel2.value.saleType === 0) {
+    modalList = copyModal.value;
+  } else if (formModel2.value.saleType === 1) {
+    let tempList = deepClone(copyModal2.value);
+    for (let index = 0; index < tempList.length; index += 1) {
+      tempList[index].productDeliverySetInfoList[0].price = parseInt(
+        tempList[index].onePiece,
+        10
+      );
+      tempList[index].onePiece = null;
+      tempList = JSON.parse(JSON.stringify(tempList));
+    }
+    modalList = tempList;
+  } else {
+    modalList = copyModal3.value;
+  }
+  formModel2.value.productDeliveryList = modalList;
+};
+
+const validForm2 = async () => {
   let pass = true;
   const result = await formRef2.value.validate();
   if (result) {
@@ -1064,24 +1087,7 @@ const buildForm2 = async () => {
   if (validateAccountPrice()) {
     pass = false;
   }
-  let modalList;
-  if (formModel2.value.saleType === 0) {
-    modalList = copyModal.value;
-  } else if (formModel2.value.saleType === 1) {
-    let tempList = deepClone(copyModal2.value);
-    for (let index = 0; index < tempList.length; index += 1) {
-      tempList[index].productDeliverySetInfoList[0].price = parseInt(
-        tempList[index].onePiece,
-        10
-      );
-      tempList[index].onePiece = null;
-      tempList = JSON.parse(JSON.stringify(tempList));
-    }
-    modalList = tempList;
-  } else {
-    modalList = copyModal3.value;
-  }
-  formModel2.value.productDeliveryList = modalList;
+
   return pass;
 };
 
@@ -1294,20 +1300,17 @@ const doSave = async () => {
   if (step.value === 1) {
     formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     formModel.value.detailImg = imageList.value.join(',');
-    const result = await formRef.value.validate();
-    if (result) {
-      return false;
-    }
+    // const result = await formRef.value.validate();
+    // if (result) {
+    //   return false;
+    // }
     if (props.data?.id) {
       res = await updateGoods1(formModel.value);
     } else {
       res = await saveGoods1(formModel.value);
     }
   } else {
-    const r = await buildForm2();
-    if (r === false) {
-      return false;
-    }
+    buildForm2();
     res = await saveGoods2(formModel2.value);
   }
   return res;
@@ -1420,7 +1423,8 @@ const clickPreview = () => {
 
 // 上架
 const clickUp = async () => {
-  const r = await buildForm2();
+  buildForm2();
+  const r = await validForm2();
   if (r) {
     Modal.warning({
       title: '确定上架该商品吗？',
