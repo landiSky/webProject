@@ -52,6 +52,12 @@
                     : '未认证'
                 }}</p
               >
+              <!-- <div
+                v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED"
+                class="suffix"
+              >
+                <p>|</p> <p>11111</p>
+              </div> -->
             </div>
           </div>
         </div>
@@ -96,6 +102,7 @@
                           ]
                         }}</p
                       >
+
                       <span
                         v-if="
                           [
@@ -610,7 +617,8 @@ const authDialog = () => {
 
 // 去认证
 const authentication = () => {
-  editModalVisible.value = true; //  本平台进行企业认证
+  // editModalVisible.value = true; //  本平台进行企业认证
+  gotoverifys.value = true;
 };
 
 const nodeAuth = () => {
@@ -626,13 +634,13 @@ const onEditModalConfirm = () => {
 };
 // 查看详情
 const hasdflags = () => {
-  editModalVisible.value = false;
+  // editModalVisible.value = false;
   detailflag.value = true;
 };
 // 查看详情
 const viewdetails = () => {
-  editModalVisible.value = true;
-  // detailflag.value = true;
+  // editModalVisible.value = true;
+  detailflag.value = true;
 };
 // 认证填写完成
 const onEditModalConfirmcode = () => {
@@ -645,7 +653,7 @@ const cancelgotoverifys = (status: number) => {
     detailflag.value = true;
     gotoverifys.value = false;
   } else {
-    editModalVisible.value = true;
+    // editModalVisible.value = true;
     gotoverifys.value = false;
   }
   state.editData.statusled = 0;
@@ -659,7 +667,7 @@ const onEditModalConfirmflag = () => {
 // 查看详情 取消
 const detailflagclick = () => {
   detailflag.value = false;
-  editModalVisible.value = true;
+  // editModalVisible.value = true;
 };
 
 // 企业节点查看详情
@@ -793,7 +801,7 @@ const multiples = () => {
   if (start !== -1) {
     router.push('/buyer/order');
   } else {
-    Message.error('未分配订单管理权限,请联系企业管理员查看订单,13811112222');
+    Message.error('未分配订单管理权限,请联系企业管理员查看订单');
   }
 };
 
@@ -932,11 +940,23 @@ onMounted(() => {
           .statuslist {
             float: left;
             width: 52px;
+            margin-right: 9px;
             // margin-top: -3px;
             padding: 1px 8px;
             font-weight: 400;
             font-size: 12px;
             line-height: 22px;
+          }
+
+          .suffix {
+            float: left;
+            margin-top: 2px;
+
+            p {
+              float: left;
+              margin-right: 9px;
+              color: #86909c;
+            }
           }
 
           .authenticated {
