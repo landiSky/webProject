@@ -205,6 +205,8 @@ const columns = [
   {
     title: '角色描述',
     dataIndex: 'remark',
+    ellipsis: true,
+    tooltip: true,
     slotName: 'remark',
     width: '20%',
   },

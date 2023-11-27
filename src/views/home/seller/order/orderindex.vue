@@ -650,6 +650,7 @@ const getTableDataOne = (current: number) => {
 // 分页 每页条数
 const pagesizechange = (pageSize: number) => {
   formInline.pageSize = pageSize;
+  init();
 };
 // 订单详情  凭证审核
 const clickDetail = (id: string) => {

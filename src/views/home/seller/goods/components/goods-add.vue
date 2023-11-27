@@ -330,6 +330,7 @@
           <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer
               ref="templateRef"
+              :template-data="templateDetail"
               @confirm="templateChanged"
             ></TemplateDrawer>
           </t-form-item>
@@ -693,6 +694,8 @@ const formModel = ref<Record<string, any>>({
   detail: '[]',
   companyId: '',
 });
+
+const templateDetail = ref(); // 存放原始的模板详情，为了点击取消时判断是否弹窗
 
 const logoList = ref<any[]>([]);
 const detailList = ref<any[]>([]);
@@ -1115,6 +1118,7 @@ const getDetail = (id: any) => {
     formModel2.value.productId = res.id;
     formModel2.value.deliveryType = res.deliveryType || 0;
     formModel2.value.saleType = res.saleType || 0;
+    templateDetail.value = JSON.parse(res.detail);
     templateRef.value.templateData = JSON.parse(res.detail);
 
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];

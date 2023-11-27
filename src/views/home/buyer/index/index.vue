@@ -179,10 +179,11 @@
                 <t-button
                   v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.UNAUTH"
                   type="primary"
-                  style="display: block; margin: 15px auto 0; padding: 5px 10px"
+                  style="display: block; margin: 4px auto 0; padding: 5px 10px"
                   @click="nodeAuth"
                   >去认证</t-button
                 >
+                <!-- v-else  -->
                 <div v-else class="states">
                   <p
                     style="
@@ -194,19 +195,14 @@
                     :class="nodeStateClass[userInfoByCompany.nodeStatus]"
                     >{{ NodeAuthStatusDESC[userInfoByCompany.nodeStatus] }}</p
                   >
+
                   <p
                     v-if="
                       [NodeAuthStatus.TO_CHECK, NodeAuthStatus.REJECT].includes(
                         userInfoByCompany.nodeStatus
                       )
                     "
-                    style="
-                      width: 80px;
-                      margin: 0 auto;
-                      font-size: 12px;
-
-                      /* padding: 5px; */
-                    "
+                    style="width: 80px; margin: 0 auto; font-size: 12px"
                     ><t-button type="text" @click="viewdetailsredf"
                       >查看详情</t-button
                     ></p
@@ -500,11 +496,8 @@ import group4 from './image/group4.png';
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
