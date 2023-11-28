@@ -21,12 +21,15 @@
         >
       </div>
     </div>
-    <div v-if="templateList?.length < 6" class="templateAdd">
+    <div
+      v-if="templateList?.length < 6"
+      class="templateAdd"
+      @click="addTemplate"
+    >
       <iconpark-icon
         class="plusIcon"
         name="squarePlus"
         size="20px"
-        @click="addTemplate"
       ></iconpark-icon>
       <span>添加详情模块</span>
     </div>
@@ -251,6 +254,7 @@ defineExpose({
   background: #f6f7fb;
   border: 1px solid #e5e8ef;
   border-radius: 2px;
+  cursor: pointer;
 
   .plusIcon {
     margin-right: 8px;
