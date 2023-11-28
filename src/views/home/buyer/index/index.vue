@@ -740,7 +740,7 @@ const togo = (detailData: Record<string, any>) => {
   // 标识类应用需要申请开通企业节点
   if (
     AppType.IDAPP === type &&
-    userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
+    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
   ) {
     Modal.info({
       title: '使用提醒',
