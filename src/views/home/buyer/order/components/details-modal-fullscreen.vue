@@ -208,7 +208,7 @@
               <div class="informationlist">
                 <t-space>
                   <div>订单号</div>
-                  <t-typography-paragraph copyable>
+                  <t-typography-paragraph copyable copy-delay="800">
                     {{ dataList.orderNum }}
                   </t-typography-paragraph>
                 </t-space>
@@ -224,7 +224,7 @@
               <div class="informationlist">
                 <t-space>
                   <div>联系方式</div>
-                  <t-typography-paragraph copyable>
+                  <t-typography-paragraph copyable copy-delay="800">
                     {{ dataList.sellerPhone }}
                   </t-typography-paragraph>
                 </t-space>
