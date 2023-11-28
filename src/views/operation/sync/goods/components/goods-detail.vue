@@ -211,6 +211,7 @@
                 }}
               </t-descriptions-item>
             </t-descriptions>
+            <div class="line"></div>
             <t-descriptions
               id="ssale"
               title="售卖设置"
@@ -513,6 +514,18 @@ onMounted(() => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      a {
+        color: #1664ff;
+        text-decoration: none;
+      }
+
+      .line {
+        width: 100%;
+        height: 1px;
+        margin-bottom: 20px;
+        background: #e5e8ef;
+      }
     }
   }
 }

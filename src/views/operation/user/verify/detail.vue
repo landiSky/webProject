@@ -3,6 +3,7 @@
     <template #title>
       <div class="page-head">
         <iconpark-icon
+          class="back_icon"
           name="back-icon"
           size="24px"
           @click="goBack"
@@ -66,9 +67,15 @@
           {{ currentData.itemInfo.legalPersonName ?? '-' }}
         </t-descriptions-item>
         <t-descriptions-item label="营业执照">
-          <img
+          <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicense}`"
-            style="width: 158px; height: 100px; background-color: #999"
+            style="
+              width: 158px;
+              height: 100px;
+              background-color: #999;
+              border: 2px solid #e5e8ef;
+              border-radius: 2px;
+            "
           />
         </t-descriptions-item>
       </t-descriptions>
@@ -91,14 +98,26 @@
           {{ currentData.itemInfo.contactIdCard ?? '-' }}
         </t-descriptions-item>
         <t-descriptions-item label="联系人身份证">
-          <img
+          <t-image
             class="first-img"
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardz}`"
-            style="width: 158px; height: 100px; background-color: #999"
+            style="
+              width: 158px;
+              height: 100px;
+              background-color: #999;
+              border: 2px solid #e5e8ef;
+              border-radius: 2px;
+            "
           />
-          <img
+          <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardf}`"
-            style="width: 158px; height: 100px; background-color: #999"
+            style="
+              width: 158px;
+              height: 100px;
+              background-color: #999;
+              border: 2px solid #e5e8ef;
+              border-radius: 2px;
+            "
           />
         </t-descriptions-item>
       </t-descriptions>
@@ -216,10 +235,18 @@ onMounted(async () => {
   justify-content: space-between;
 
   .detail-head {
-    padding-right: 12px;
+    padding-left: 8px;
     color: #1d2129;
     font-weight: 500;
     font-size: 16px;
+  }
+
+  .back_icon {
+    cursor: pointer;
+
+    svg:hover {
+      background-color: red;
+    }
   }
 }
 

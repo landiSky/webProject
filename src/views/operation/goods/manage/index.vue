@@ -81,17 +81,22 @@
       </template>
 
       <template #operations="{ record }">
-        <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
-        <t-link @click="clickPreviewBtn(record)"> 预览 </t-link>
+        <t-link class="action-list" @click="clickDetailBtn(record)">
+          详情
+        </t-link>
+        <t-link class="action-list" @click="clickPreviewBtn(record)">
+          预览
+        </t-link>
         <t-link
           v-if="record.status === StatusEnum.DSH"
+          class="action-list"
           @click="clickDetailBtn(record)"
         >
           审核
         </t-link>
         <t-link
           v-if="record.status === StatusEnum.YSJ"
-          class="action-down"
+          class="action-down action-list"
           @click="clickDownBtn(record)"
         >
           下架
@@ -101,6 +106,7 @@
             record.status === StatusEnum.WSJ &&
             record.source === PlatformEnum.OTHER
           "
+          class="action-list"
           @click="clickUpBtn(record)"
         >
           上架
@@ -110,6 +116,7 @@
             record.status === StatusEnum.WSJ &&
             record.source === PlatformEnum.OTHER
           "
+          class="action-list"
           @click="clickDeleteBtn(record)"
         >
           删除
@@ -303,7 +310,9 @@ const columns = [
     title: '所属分类',
     dataIndex: 'productTypeId',
     slotName: 'productTypeId',
-    width: 120,
+    width: 200,
+    ellipsis: true,
+    tooltip: true,
     filterable: {
       filters: TypeList,
     },
@@ -548,5 +557,9 @@ onMounted(() => {
 <style lang="less" scoped>
 .action-down {
   color: #e63f3f;
+}
+
+.action-list {
+  margin-right: 10px;
 }
 </style>

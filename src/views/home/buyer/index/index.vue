@@ -509,6 +509,7 @@ import group4 from './image/group4.png';
 
 const router = useRouter();
 const route = useRoute();
+
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);

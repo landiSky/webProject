@@ -15,7 +15,7 @@
           <span @click="goback" style="margin-left: 7px">返回</span>
         </div>
       </span> -->
-      <span style="margin-left: 42%">
+      <span style="margin-left: 48%">
         {{ data.id ? '企业认证' : '企业认证' }}
       </span>
     </template>
