@@ -601,7 +601,12 @@ const orderlistdata = () => {
     flag: '0',
   }).then((res) => {
     // @ts-ignore
-    orderlist.value = res;
+    const data = {
+      ...res,
+      payCount: res.payCount + res.rejectCount,
+      deliverCount: res.deliverCount + res.servicesDeliverCount,
+    };
+    orderlist.value = data;
   });
 };
 // 已购应用
