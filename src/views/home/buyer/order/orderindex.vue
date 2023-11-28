@@ -146,7 +146,17 @@
                     <span>{{ item.orderNum }}</span>
                   </div>
                   <div class="grid-content-list">
-                    <span>商品来源：</span><span>{{ item.merchantName }}</span>
+                    <span>商品来源：</span
+                    ><span>
+                      <t-typography-paragraph
+                        :ellipsis="{
+                          rows: 1,
+                          showTooltip: true,
+                        }"
+                        class="merchantName"
+                        >{{ item.merchantName }}</t-typography-paragraph
+                      >
+                    </span>
                   </div>
                   <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -363,8 +373,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -868,6 +881,11 @@ onMounted(() => {
           }
 
           span:last-child {
+            color: #4e5969;
+          }
+
+          .merchantName {
+            margin-bottom: 0;
             color: #4e5969;
           }
         }

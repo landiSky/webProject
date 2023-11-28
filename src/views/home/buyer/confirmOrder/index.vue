@@ -14,7 +14,18 @@
       </div>
       <div class="table">
         <div class="thead">
-          <span>商家: {{ createOrderInfo?.companyName || '-' }}</span>
+          <span>
+            <span class="companyLabel">商家:</span>
+            <t-typography-paragraph
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              class="companyname"
+            >
+              {{ createOrderInfo?.companyName || '-' }}
+            </t-typography-paragraph>
+          </span>
           <span>交付类型</span>
           <span>商品金额</span>
           <span>帐号数量</span>
@@ -79,8 +90,9 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const orderStore = useOrderStore();
-const { createOrderInfo }: { createOrderInfo: Record<string, any> } =
-  storeToRefs(orderStore);
+const {
+  createOrderInfo,
+}: { createOrderInfo: Record<string, any> } = storeToRefs(orderStore);
 const submitLoading = ref(false);
 const onGoBack = () => {
   router.go(-1);
@@ -219,6 +231,17 @@ const clickCreateOrder = () => {
         padding-left: 12px;
         color: #4e5969;
         background: #f2f3f8;
+
+        .companyLabel {
+          display: inline-block;
+          width: 36px;
+          color: #86909c;
+        }
+
+        .companyname {
+          margin-bottom: 0;
+          color: #4e5969;
+        }
       }
 
       .tbody {

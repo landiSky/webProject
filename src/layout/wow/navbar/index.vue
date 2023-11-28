@@ -48,9 +48,23 @@
       />
       <t-space v-if="userInfo?.userId">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
-        <span class="username">{{
-          selectCompany.companyName || userInfo.mobile
-        }}</span>
+        <t-typography-paragraph
+          :ellipsis="{
+            rows: 1,
+            showTooltip: {
+              type: 'tooltip',
+              props: {
+                isBright: true,
+              },
+            },
+          }"
+          class="username"
+        >
+          <!-- <span class="username"> -->
+          {{ selectCompany.companyName || userInfo.mobile }}
+          <!-- </span> -->
+        </t-typography-paragraph>
+
         <t-dropdown trigger="click" :popup-container="'.navbar'">
           <div class="click-item">
             <iconpark-icon name="avatar" size="34px"></iconpark-icon>
@@ -95,8 +109,11 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -301,6 +318,8 @@ onMounted(() => {
     }
 
     .username {
+      max-width: 144px;
+      margin-bottom: 0;
       color: #4e5969;
       font-weight: 400;
       font-size: 12px;

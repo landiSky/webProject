@@ -216,7 +216,13 @@
               <div class="informationlist">
                 <t-space>
                   <div>商家信息</div>
-                  <t-typography-paragraph>
+
+                  <t-typography-paragraph
+                    :ellipsis="{
+                      rows: 1,
+                      showTooltip: true,
+                    }"
+                  >
                     {{ dataList.merchantName }}
                   </t-typography-paragraph>
                 </t-space>
