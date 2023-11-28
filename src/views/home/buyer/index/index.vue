@@ -10,9 +10,17 @@
           </div>
           <div class="rights">
             <!-- style="float: left; width: 300px; margin-top: 16px" -->
-            <p class="name">{{
+            <!-- <p class="name">{{
               userInfoByCompany?.username || userInfo?.mobile
-            }}</p>
+            }}</p> -->
+            <t-typography-paragraph
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              class="name"
+              >{{ userInfoByCompany?.username || userInfo?.mobile }}
+            </t-typography-paragraph>
 
             <div class="inofs" style="float: left">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
@@ -25,8 +33,17 @@
                 class="inofslist"
                 style="float: left"
               >
-                <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p
-                ><p>|</p
+                <t-typography-paragraph
+                  :ellipsis="{
+                    rows: 1,
+                    showTooltip: true,
+                  }"
+                  class="companyname"
+                  >{{ userInfoByCompany.companyName || '暂未认证' }}
+                </t-typography-paragraph>
+                <!-- <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p> -->
+
+                <p>|</p
                 ><p>{{
                   userInfoByCompany.companyId
                     ? AccountTypeDesc[userInfoByCompany.primary]
@@ -721,7 +738,7 @@ const togo = (detailData: Record<string, any>) => {
   // 标识类应用需要申请开通企业节点
   if (
     AppType.IDAPP === type &&
-    userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
+    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
   ) {
     Modal.info({
       title: '使用提醒',
@@ -897,6 +914,7 @@ onMounted(() => {
         margin: 10px 0 0 12px;
 
         .name {
+          margin-bottom: 0;
           // height: 0;
           color: #223354;
           font-weight: 600;
@@ -906,7 +924,10 @@ onMounted(() => {
         }
 
         .inofs {
+          display: flex;
+
           .inofslist {
+            display: flex;
             margin-top: 2px;
             font-weight: 400;
             font-size: 12px;
@@ -916,25 +937,30 @@ onMounted(() => {
               float: left;
             }
 
-            p:nth-child(1) {
-              margin-right: 9px;
+            .companyname {
+              margin-right: 12px;
+              margin-bottom: 0;
               color: #86909c;
             }
 
+            // p:nth-child(1) {
+            //   margin-right: 12px;
+            //   color: #86909c;
+            // }
             p:nth-child(2) {
-              margin-right: 9px;
+              margin-right: 12px;
               color: #86909c;
               text-align: center;
               // padding: 3px 10px;
             }
 
             p:nth-child(3) {
-              margin-right: 9px;
+              margin-right: 12px;
               color: #86909c;
             }
 
             p:nth-child(4) {
-              margin-right: 9px;
+              margin-right: 12px;
               color: #86909c;
               // color: #86909c;
               text-align: center;

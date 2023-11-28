@@ -164,8 +164,20 @@
                 <span class="name" @click="() => goMallDetail(item.id)">{{
                   item.name
                 }}</span>
-                <span class="companyName">{{ item.companyName }}</span>
-
+                <t-typography-paragraph
+                  style="width: 100%; text-align: left"
+                  :ellipsis="{
+                    rows: 1,
+                    showTooltip: {
+                      type: 'tooltip',
+                      props: {
+                        isBright: true,
+                      },
+                    },
+                  }"
+                >
+                  <span class="companyName">{{ item.companyName }}</span>
+                </t-typography-paragraph>
                 <span class="tag">
                   <t-tag color="#E8F4FF">{{
                     DeliverTypeDesc[item.deliveryType]
@@ -554,6 +566,7 @@ onMounted(() => {
             flex: 1;
             flex-direction: column;
             align-items: start;
+            width: 100%;
           }
 
           .name {
