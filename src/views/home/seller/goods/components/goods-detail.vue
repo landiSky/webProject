@@ -222,6 +222,7 @@
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
+                  class="link-href"
                   :href="`/server/web/file/download?name=${dataInfo.useExplain}`"
                   download
                   >产品使用说明</a
@@ -258,7 +259,7 @@
                 {{ PriceTypeEnum[dataInfo.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
-            <div class="line"></div>
+            <!-- <div class="line"></div> -->
             <div
               v-for="(st, index) of dataInfo.productDeliverySetList"
               :key="index"
@@ -581,6 +582,7 @@ const toAnchor = (link: string) => {
       width: 632px;
 
       a {
+        color: #1664ff;
         text-decoration: none;
       }
     }
