@@ -132,7 +132,7 @@
                     <t-button
                       type="text"
                       class="dirlist-btn"
-                      @click="distributionrole(userInfoByCompany.primary)"
+                      @click="distributionrole()"
                     >
                       邀请成员/分配权限</t-button
                     >
@@ -677,8 +677,11 @@ const viewdetailsredf = () => {
   window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 邀请成员/分配权限
-const distributionrole = (primary: any) => {
-  if (primary === AccountType?.MAIN) {
+const distributionrole = () => {
+  if (
+    userInfoByCompany.value?.certificateStatus === CompanyAuthStatus?.AUTHED ||
+    userInfoByCompany.value?.nodeStatus === NodeAuthStatus?.AUTHED
+  ) {
     const start = userInfoByCompany.value?.menuCodes.findIndex(
       (item: string, index: number) => {
         return item === 'ROUTE_SYSTEM_USERS';
