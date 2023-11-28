@@ -1246,6 +1246,19 @@ const online = ref(true);
 
 const beforeUpload = (file: File) => {
   return new Promise<void>((resolve, reject) => {
+    const type = file.type as string;
+    if (
+      !(
+        type.endsWith('/jpeg') ||
+        type.endsWith('/jpg') ||
+        type.endsWith('/png') ||
+        type.endsWith('/bmp') ||
+        type.endsWith('/gif')
+      )
+    ) {
+      Message.warning(`上传失败，请检查文件类型`);
+      reject();
+    }
     const over2 = file.size > 1024 * 1024 * 2;
     if (over2) {
       Message.warning(`上传失败，文件大小不要超过2M`);
@@ -1262,6 +1275,18 @@ const beforeUpload = (file: File) => {
 
 const beforeUpload10 = (file: File) => {
   return new Promise<void>((resolve, reject) => {
+    const type = file.type as string;
+    console.log(type);
+    if (
+      !(
+        type.endsWith('/msword') ||
+        type.endsWith('.document') ||
+        type.endsWith('/pdf')
+      )
+    ) {
+      Message.warning(`上传失败，请检查文件类型`);
+      reject();
+    }
     const over2 = file.size > 1024 * 1024 * 10;
     if (over2) {
       Message.warning(`上传失败，文件大小不要超过10M`);
