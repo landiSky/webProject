@@ -56,6 +56,9 @@
       @filter-change="filterChange"
       @sorter-change="sorterChanged"
     >
+      <template #userPhone="{ record }">
+        {{ record.phone || record.userPhone || '-' }}
+      </template>
       <template #entStatus="{ record }">
         <span
           v-if="record.companyStatus === EntStatusEnum.YBH"
@@ -200,6 +203,7 @@ const columns = [
   {
     title: '企业主账号',
     dataIndex: 'phone',
+    slotName: 'userPhone',
     ellipsis: true,
     tooltip: true,
     width: 170,
