@@ -52,6 +52,12 @@
                     : '未认证'
                 }}</p
               >
+              <!-- <div
+                v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED"
+                class="suffix"
+              >
+                <p>|</p> <p>11111</p>
+              </div> -->
             </div>
           </div>
         </div>
@@ -96,6 +102,7 @@
                           ]
                         }}</p
                       >
+
                       <span
                         v-if="
                           [
@@ -125,7 +132,7 @@
                     <t-button
                       type="text"
                       class="dirlist-btn"
-                      @click="distributionrole(userInfoByCompany.primary)"
+                      @click="distributionrole()"
                     >
                       邀请成员/分配权限</t-button
                     >
@@ -594,7 +601,12 @@ const orderlistdata = () => {
     flag: '0',
   }).then((res) => {
     // @ts-ignore
-    orderlist.value = res;
+    const data = {
+      ...res,
+      payCount: res.payCount + res.rejectCount,
+      deliverCount: res.deliverCount + res.servicesDeliverCount,
+    };
+    orderlist.value = data;
   });
 };
 // 已购应用
@@ -610,7 +622,8 @@ const authDialog = () => {
 
 // 去认证
 const authentication = () => {
-  editModalVisible.value = true; //  本平台进行企业认证
+  // editModalVisible.value = true; //  本平台进行企业认证
+  gotoverifys.value = true;
 };
 
 const nodeAuth = () => {
@@ -622,17 +635,17 @@ const onAuthModalConfirm = () => {
 // 认证弹窗去认证事件
 const onEditModalConfirm = () => {
   gotoverifys.value = true;
-  editModalVisible.value = false;
+  // editModalVisible.value = false;
 };
 // 查看详情
 const hasdflags = () => {
-  editModalVisible.value = false;
+  // editModalVisible.value = false;
   detailflag.value = true;
 };
 // 查看详情
 const viewdetails = () => {
-  editModalVisible.value = true;
-  // detailflag.value = true;
+  // editModalVisible.value = true;
+  detailflag.value = true;
 };
 // 认证填写完成
 const onEditModalConfirmcode = () => {
@@ -645,7 +658,7 @@ const cancelgotoverifys = (status: number) => {
     detailflag.value = true;
     gotoverifys.value = false;
   } else {
-    editModalVisible.value = true;
+    // editModalVisible.value = true;
     gotoverifys.value = false;
   }
   state.editData.statusled = 0;
@@ -659,7 +672,7 @@ const onEditModalConfirmflag = () => {
 // 查看详情 取消
 const detailflagclick = () => {
   detailflag.value = false;
-  editModalVisible.value = true;
+  // editModalVisible.value = true;
 };
 
 // 企业节点查看详情
@@ -669,8 +682,11 @@ const viewdetailsredf = () => {
   window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
 };
 // 邀请成员/分配权限
-const distributionrole = (primary: any) => {
-  if (primary === AccountType?.MAIN) {
+const distributionrole = () => {
+  if (
+    userInfoByCompany.value?.certificateStatus === CompanyAuthStatus?.AUTHED ||
+    userInfoByCompany.value?.nodeStatus === NodeAuthStatus?.AUTHED
+  ) {
     const start = userInfoByCompany.value?.menuCodes.findIndex(
       (item: string, index: number) => {
         return item === 'ROUTE_SYSTEM_USERS';
@@ -793,7 +809,7 @@ const multiples = () => {
   if (start !== -1) {
     router.push('/buyer/order');
   } else {
-    Message.error('未分配订单管理权限,请联系企业管理员查看订单,13811112222');
+    Message.error('未分配订单管理权限,请联系企业管理员查看订单');
   }
 };
 
@@ -932,11 +948,23 @@ onMounted(() => {
           .statuslist {
             float: left;
             width: 52px;
+            margin-right: 9px;
             // margin-top: -3px;
             padding: 1px 8px;
             font-weight: 400;
             font-size: 12px;
             line-height: 22px;
+          }
+
+          .suffix {
+            float: left;
+            margin-top: 2px;
+
+            p {
+              float: left;
+              margin-right: 9px;
+              color: #86909c;
+            }
           }
 
           .authenticated {
