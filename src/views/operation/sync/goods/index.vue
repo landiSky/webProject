@@ -265,7 +265,9 @@ const columns = [
     title: '所属分类',
     dataIndex: 'productTypeId',
     slotName: 'productTypeId',
-    width: 160,
+    width: 200,
+    ellipsis: true,
+    tooltip: true,
     filterable: {
       filters: TypeList,
     },
