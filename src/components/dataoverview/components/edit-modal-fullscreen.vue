@@ -273,7 +273,7 @@
       </t-form>
     </div>
     <template #footer>
-      <div style="margin-left: 511px; text-align: left">
+      <div class="footer_button" style="">
         <t-button type="primary" style="margin-right: 20px" @click="onConfirm"
           >完成</t-button
         >
@@ -520,6 +520,11 @@ onMounted(() => {
   :deep(.tele-modal-fullscreen .tele-modal-footer) {
     text-align: left;
   }
+
+  .footer_button {
+    margin-left: 36%;
+    text-align: left;
+  }
 }
 
 :deep(.tele-modal-body .tele-form-item:last-child) {
@@ -542,6 +547,7 @@ onMounted(() => {
     width: 150px;
     height: 100px;
   }
+
   // :deep(.tele-upload-list-picture) {
   //   transition: none;
   // }
