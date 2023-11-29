@@ -5,7 +5,7 @@
     :on-before-ok="onConfirm"
     @cancel="emit('cancel')"
   >
-    <template #title> {{ isEdit ? '编辑' : '新增' }}商品分类 </template>
+    <template #title> {{ isEdit ? '编辑' : '新建' }}商品分类 </template>
     <t-form ref="formRef" :model="formModel" :rules="formRules">
       <t-form-item field="name" label="分类名称">
         <t-input
@@ -111,4 +111,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.tele-col-5) {
+  flex: none;
+  width: 76px;
+}
+
+:deep(.tele-col-19) {
+  flex: 1;
+}
+</style>
