@@ -68,14 +68,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 140px;
             margin-top: 160px;
           "
         >
           <iconpark-icon name="empty-for-search" size="120px"></iconpark-icon>
-          <span>
+          <div>
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
-          </span>
+          </div>
         </div>
       </template>
       <template #userPhone="{ record }">
