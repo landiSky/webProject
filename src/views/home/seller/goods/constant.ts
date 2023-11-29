@@ -4,7 +4,8 @@ export const TemplateEnum = [
     tips: '使用建议：适用于核心特征介绍、提炼信息',
   },
   {
-    desc: '使用说明：左文+右图为一组，不限组数，每增加一组，第二组图文位置左右轮换',
+    desc:
+      '使用说明：左文+右图为一组，不限组数，每增加一组，第二组图文位置左右轮换',
     tips: '使用建议：适用于产品详情介绍',
   },
   {
@@ -23,4 +24,12 @@ export const TemplateEnum = [
     desc: '使用说明：由5张图片组成，可支持展示5张/10张图片',
     tips: '使用建议：适用于展示logo信息',
   },
+];
+
+export const ImgTypeEnum = [
+  'image/jpeg',
+  'image/png',
+  'image/bmp',
+  'image/gif',
+  'image/jpg',
 ];

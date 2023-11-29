@@ -58,11 +58,13 @@
             action="/server/web/file/upload"
             accept=".png,.jpg,.bmp,.jpeg,.gif"
             :limit="5"
+            multiple
             tip="点击上传"
             image-preview
             @before-upload="(file: Record<string, any>) => onBeforeUpload(file, index)"
             @change="(fileList: any, fileItem: any) => onUploadChange(fileList, fileItem, index)"
             @success="onUploadSuccess"
+            @exceed-limit="onExceedLimit"
           >
           </t-upload>
           <span class="uploadTips">
@@ -90,6 +92,7 @@ import { ref, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
 import { Message } from '@tele-design/web-vue';
+import { ImgTypeEnum } from '../../constant';
 
 const formRef = ref();
 const transSeq = ['一', '二', '三'];
@@ -145,6 +148,11 @@ const delBlock = (index: number) => {
 
 const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
   return new Promise((resolve, reject) => {
+    if (!ImgTypeEnum.includes(currentFile.type)) {
+      Message.warning('请上传正确的文件格式');
+      reject();
+      return;
+    }
     if (currentFile.size > 10 * 1024 * 1024) {
       formRef.value.setFields({
         [`blockList.${index}`]: {
@@ -157,6 +165,10 @@ const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
       resolve(true);
     }
   });
+};
+
+const onExceedLimit = () => {
+  Message.warning('最多允许上传 5 张配图');
 };
 
 const onUploadSuccess = (fileItem: any) => {
