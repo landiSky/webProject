@@ -609,6 +609,11 @@ const clickDeleteBtn = () => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      a {
+        color: #1664ff;
+        text-decoration: none;
+      }
     }
   }
 }

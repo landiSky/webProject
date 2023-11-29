@@ -1,5 +1,10 @@
 <template>
-  <t-page-header flex title="认证管理" :show-back="false">
+  <t-page-header
+    class="authentication_manage"
+    flex
+    title="认证管理"
+    :show-back="false"
+  >
     <t-row :wrap="false">
       <t-col flex="auto">
         <t-form :model="state.formModel">
@@ -379,6 +384,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .action {
+  margin-left: 8px;
   color: #1664ff;
   font-weight: 400;
   font-size: 12px;
@@ -386,5 +392,11 @@ onMounted(() => {
   font-style: normal;
   line-height: 20px;
   cursor: pointer;
+}
+
+.authentication_manage {
+  :deep(.tele-form-item) {
+    margin-bottom: 16px;
+  }
 }
 </style>

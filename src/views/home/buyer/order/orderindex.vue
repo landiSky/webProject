@@ -146,7 +146,17 @@
                     <span>{{ item.orderNum }}</span>
                   </div>
                   <div class="grid-content-list">
-                    <span>商品来源：</span><span>{{ item.merchantName }}</span>
+                    <span>商品来源：</span
+                    ><span>
+                      <t-typography-paragraph
+                        :ellipsis="{
+                          rows: 1,
+                          showTooltip: true,
+                        }"
+                        class="merchantName"
+                        >{{ item.merchantName }}</t-typography-paragraph
+                      >
+                    </span>
                   </div>
                   <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -868,6 +878,11 @@ onMounted(() => {
           }
 
           span:last-child {
+            color: #4e5969;
+          }
+
+          .merchantName {
+            margin-bottom: 0;
             color: #4e5969;
           }
         }

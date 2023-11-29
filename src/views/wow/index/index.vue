@@ -51,7 +51,7 @@
   <div class="platform">
     <div class="title">平台产品</div>
     <div>
-      <t-tabs>
+      <t-tabs class="platformTab">
         <t-tab-pane
           v-for="item in platProductsList"
           :key="item.title"
@@ -75,9 +75,8 @@
               <div class="cardContent">
                 <span>{{ card.name }}</span>
                 <span>{{ card.desc }}</span>
+                <img class="hoverVector" :src="hoverVector" alt="" />
               </div>
-              <!-- <span>{{ card.name }}</span>
-              <span>{{ card.desc }}</span> -->
             </div>
           </div>
         </t-tab-pane>
@@ -163,6 +162,7 @@ import tab33 from '@/assets/images/wow/index/tab3-3.png';
 import tab41 from '@/assets/images/wow/index/tab4-1.png';
 import tab42 from '@/assets/images/wow/index/tab4-2.png';
 import tab43 from '@/assets/images/wow/index/tab4-3.png';
+import hoverVector from '@/assets/images/wow/index/hover-vector.png';
 
 import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
@@ -170,8 +170,9 @@ import WowFooter from '../components/wowFooter/index.vue';
 const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
+  userStore
+);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -279,7 +280,8 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -300,7 +302,8 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -321,7 +324,8 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -342,7 +346,8 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc: '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
+    desc:
+      '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
         name: '',
@@ -484,48 +489,51 @@ onMounted(() => {
     background: rgba(255, 255, 255, 0.5);
   }
 
-  :deep(.tele-tabs-nav) {
-    background: rgba(255, 255, 255, 0.5);
+  .platformTab {
+    :deep(.tele-tabs-nav) {
+      background: rgba(255, 255, 255, 0.5);
 
-    &::before {
-      display: none;
-    }
-
-    .tele-tabs-nav-tab {
-      justify-content: center;
-
-      .tele-tabs-nav-ink {
-        height: 3px;
-        background-color: #1664ff;
+      &::before {
+        display: none;
       }
 
-      .tele-tabs-tab {
-        margin: 0 36px;
-        color: #4e5969;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 22px; /* 157.143% */
+      .tele-tabs-nav-tab {
+        justify-content: center;
 
-        &.tele-tabs-tab-active {
-          margin: 7px 52px 12px 16px;
-          padding: 0;
+        .tele-tabs-nav-ink {
+          height: 3px;
+          background-color: #1664ff;
+        }
+
+        .tele-tabs-tab {
+          margin: 0 36px;
+          padding: 12px 0;
+          color: #4e5969;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 22px; /* 157.143% */
+
+          // &.tele-tabs-tab-active {
+          //   margin: 7px 52px 12px 16px;
+          //   padding: 0;
+          // }
         }
       }
     }
-  }
 
-  :deep(.tele-tabs-content) {
-    padding-top: 87px;
-  }
+    :deep(.tele-tabs-content) {
+      padding-top: 87px;
+    }
 
-  :deep(.tele-tabs-pane) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    :deep(.tele-tabs-pane) {
+      display: flex;
+      align-items: start;
+      justify-content: center;
+    }
 
-  :deep(.tele-tabs-content-item-active) {
-    overflow: visible;
+    :deep(.tele-tabs-content-item-active) {
+      overflow: visible;
+    }
   }
 
   .tabDesc {
@@ -533,6 +541,7 @@ onMounted(() => {
     flex-direction: column;
     align-items: start;
     width: 368px;
+    margin-top: 61px;
     margin-right: 86px;
     margin-left: 100px;
 
@@ -570,15 +579,25 @@ onMounted(() => {
       margin-right: 46px;
       color: #435c97;
 
+      .hoverVector {
+        display: none;
+        width: 40px;
+        margin-top: 12px;
+      }
+
       &:hover {
         color: #1664ff;
         transform: translate(0, -20px);
+
+        .hoverVector {
+          display: block;
+        }
       }
 
       .cardContent {
         display: flex;
         flex-direction: column;
-        align-content: center;
+        align-items: center;
         margin-top: -76px;
 
         span {
