@@ -83,8 +83,8 @@
                   font-size: 14px;
                 "
               >
-                <p>上架应用/服务，在整个标识领</p>
-                <span>域推广应用/服务</span>
+                <p>管理组织架构，以企业购买应</p>
+                <span>用，企业内多账号共同使用应用</span>
               </div>
             </div>
             <div class="desdetails">
@@ -161,7 +161,7 @@
                 color: #000;
                 font-size: 14px;
               "
-              >完成企业认证后可进行</div
+              >完成企业节点认证后可进行</div
             >
             <div class="deslist">
               <span style="float: left; width: 40px; height: 40px">
