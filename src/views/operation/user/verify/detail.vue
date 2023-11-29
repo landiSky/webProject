@@ -4,6 +4,7 @@
     :title="breadcrumbLabel"
     :show-back="true"
     :loading="currentData.loading"
+    @back="goBack"
   >
     <template #extra>
       <div v-if="isVerify" class="extra-btn">
