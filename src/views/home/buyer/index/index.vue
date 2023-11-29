@@ -135,12 +135,6 @@
                         ></span
                       >
                     </div>
-                    <t-button
-                      type="text"
-                      class="dirlist-btn"
-                      @click="authentication"
-                      >去认证</t-button
-                    >
                   </div>
                 </div>
                 <div>
