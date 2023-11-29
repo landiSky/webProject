@@ -42,8 +42,6 @@
         </t-form>
       </t-col>
     </t-row>
-    <iconpark-icon name="emptys" size="120px"></iconpark-icon>
-
     <t-table
       ref="tableRef"
       row-key="id"
