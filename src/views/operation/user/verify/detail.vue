@@ -300,4 +300,8 @@ onMounted(async () => {
   display: block;
   height: 100%;
 }
+
+:deep(.tele-descriptions-item-label-block) {
+  width: 108px;
+}
 </style>
