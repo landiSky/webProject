@@ -220,7 +220,12 @@
               <div class="informationlist">
                 <t-space>
                   <div>买家信息</div>
-                  <t-typography-paragraph>
+                  <t-typography-paragraph
+                    :ellipsis="{
+                      rows: 1,
+                      showTooltip: true,
+                    }"
+                  >
                     {{ dataList.customerName }}
                   </t-typography-paragraph>
                 </t-space>
