@@ -46,6 +46,7 @@
       @filter-change="filterChange"
       @sorter-change="sorterChanged"
     >
+      <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
       <template #empty>
         <t-empty
           description=""
