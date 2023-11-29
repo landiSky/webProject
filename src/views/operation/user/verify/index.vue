@@ -71,8 +71,8 @@
             margin-top: 160px;
           "
         >
-          <iconpark-icon name="emptys" size="120px"></iconpark-icon>
-          <div>
+          <img :src="noSearch" alt="" />
+          <div class="nodata">
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
           </div>
@@ -151,8 +151,8 @@
 import { reactive, computed, onMounted, ref } from 'vue';
 import { verifyList } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
-
 import { useRouter } from 'vue-router';
+import noSearch from '@/assets/images/noSearch.png';
 
 const tableRef = ref();
 const router = useRouter();
@@ -417,5 +417,12 @@ onMounted(() => {
   :deep(.tele-form-item) {
     margin-bottom: 16px;
   }
+}
+
+.nodata {
+  color: #86909c;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
 }
 </style>
