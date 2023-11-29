@@ -170,9 +170,8 @@ import WowFooter from '../components/wowFooter/index.vue';
 const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
-  userStore
-);
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -280,8 +279,7 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc:
-      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -302,8 +300,7 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc:
-      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -324,8 +321,7 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc:
-      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -346,8 +342,7 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc:
-      '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
+    desc: '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
         name: '',

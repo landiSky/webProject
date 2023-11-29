@@ -22,7 +22,7 @@
               >{{ userInfoByCompany?.username || userInfo?.mobile }}
             </t-typography-paragraph>
 
-            <div class="inofs" style="float: left">
+            <div class="inofs">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
               <div
                 v-if="
@@ -31,7 +31,6 @@
                     CompanyAuthStatus.AUTHED
                 "
                 class="inofslist"
-                style="float: left"
               >
                 <t-typography-paragraph
                   :ellipsis="{
@@ -887,16 +886,12 @@ onMounted(() => {
 
   .headers {
     margin-bottom: 24px;
-    // background-color: pink;
-    // height: 300px;
-    // background-image: url('./image/header.png');
-    // background-size: cover;
+
     .tops {
-      //   margin: 2%;
-      float: left;
-      width: 100%;
+      display: flex;
       height: 80px;
       margin: 24px 0;
+      padding: 0 24px;
       background-color: #fff;
       border-radius: 4px;
 
@@ -904,12 +899,11 @@ onMounted(() => {
         float: left;
         width: 44px;
         height: 44px;
-        margin: 14px 0 0 24px;
+        margin-top: 14px;
       }
 
       .rights {
-        float: left;
-        width: 300px;
+        flex: 1;
         height: 44px;
         margin: 10px 0 0 12px;
 
@@ -928,6 +922,7 @@ onMounted(() => {
 
           .inofslist {
             display: flex;
+            // flex: 1;
             margin-top: 2px;
             font-weight: 400;
             font-size: 12px;
@@ -938,6 +933,7 @@ onMounted(() => {
             }
 
             .companyname {
+              // flex: 1;
               margin-right: 12px;
               margin-bottom: 0;
               color: #86909c;
