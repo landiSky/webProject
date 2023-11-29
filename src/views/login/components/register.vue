@@ -191,29 +191,30 @@ const goRegister = () => {
             message: '请勾选服务协议',
           },
         });
+      } else {
+        regisLoading.value = true;
+        const { phone, code, password, confirmPassword } = form.value;
+        apiRegisterUser({
+          phone,
+          code,
+          password: sm2(password, userStore.configInfo?.publicKey),
+          confirmPassword: sm2(
+            confirmPassword,
+            userStore.configInfo?.publicKey
+          ),
+        })
+          .then(() => {
+            Message.success('注册成功，去登录！');
+            goLogin(); // 注册成功，跳转到登录
+          })
+          .catch(() => {
+            clearInterval(timerId.value);
+            countDownTime.value = 0;
+          })
+          .finally(() => {
+            regisLoading.value = false;
+          });
       }
-
-      regisLoading.value = true;
-
-      const { phone, code, password, confirmPassword } = form.value;
-
-      apiRegisterUser({
-        phone,
-        code,
-        password: sm2(password, userStore.configInfo?.publicKey),
-        confirmPassword: sm2(confirmPassword, userStore.configInfo?.publicKey),
-      })
-        .then(() => {
-          Message.success('注册成功，去登录！');
-          goLogin(); // 注册成功，跳转到登录
-        })
-        .catch(() => {
-          clearInterval(timerId.value);
-          countDownTime.value = 0;
-        })
-        .finally(() => {
-          regisLoading.value = false;
-        });
     }
   });
 };

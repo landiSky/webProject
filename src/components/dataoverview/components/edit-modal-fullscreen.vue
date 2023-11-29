@@ -273,7 +273,7 @@
       </t-form>
     </div>
     <template #footer>
-      <div style="margin-left: 33%; text-align: left">
+      <div style="margin-left: 511px; text-align: left">
         <t-button type="primary" style="margin-right: 20px" @click="onConfirm"
           >完成</t-button
         >
