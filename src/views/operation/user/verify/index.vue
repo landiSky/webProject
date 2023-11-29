@@ -63,17 +63,15 @@
       @sorter-change="sorterChanged"
     >
       <template #empty>
-        <t-empty
-          description=""
-          :style="{ paddingTop: '80px', paddingBottom: '80px' }"
-        >
-          <template #image>
+        <t-empty>
+          <template #image></template>
+          <div style="display: flex; flex-direction: column">
             <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
-          </template>
-          <span>
-            暂无查询结果
-            <t-link @click="handleReset">清空查询项</t-link>
-          </span>
+            <span>
+              暂无查询结果
+              <t-link @click="handleReset">清空查询项</t-link>
+            </span>
+          </div>
         </t-empty>
       </template>
       <template #userPhone="{ record }">
