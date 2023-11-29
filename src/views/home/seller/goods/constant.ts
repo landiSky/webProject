@@ -24,3 +24,11 @@ export const TemplateEnum = [
     tips: '使用建议：适用于展示logo信息',
   },
 ];
+
+export const ImgTypeEnum = [
+  'image/jpeg',
+  'image/png',
+  'image/bmp',
+  'image/gif',
+  'image/jpg',
+];

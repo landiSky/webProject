@@ -322,6 +322,7 @@
               @before-upload="beforeUpload10"
               @success="uploadExpSuccess"
               @error="uploadExpError"
+              @change="uploadExpChange"
             ></t-upload>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
@@ -958,6 +959,12 @@ const uploadExpSuccess = (fileItem: FileItem) => {
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
+  }
+};
+
+const uploadExpChange = (fileList: FileItem[], fileItem: FileItem) => {
+  if (fileList.length === 0) {
+    formModel.value.useExplain = '';
   }
 };
 

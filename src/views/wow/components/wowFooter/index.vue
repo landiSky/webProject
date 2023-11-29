@@ -66,6 +66,7 @@
   .content {
     padding: 57px 133px 0 133px;
     background-image: url('@/assets/images/wow/index/footer_content_bg.svg');
+    background-size: cover;
 
     .navigator {
       display: flex;

@@ -113,6 +113,7 @@ import { ref, defineProps, inject, onMounted } from 'vue';
 import type { Ref } from 'vue';
 import { getToken } from '@/utils/auth';
 import { Message } from '@tele-design/web-vue';
+import { ImgTypeEnum } from '../../constant';
 
 const formRef = ref();
 const transSeq = ['一', '二', '三'];
@@ -180,6 +181,11 @@ const itemValid = (
 
 const onBeforeUpload = (currentFile: Record<string, any>, index: number) => {
   return new Promise((resolve, reject) => {
+    if (!ImgTypeEnum.includes(currentFile.type)) {
+      Message.warning('请上传正确的文件格式');
+      reject();
+      return;
+    }
     if (currentFile.size > 10 * 1024 * 1024) {
       formRef.value.setFields({
         [`blockList.${index}.picUrl`]: {

@@ -80,7 +80,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
         .then((res) => {
           if (res.code === 200) {
             emit('confirm');
-            Message.success(`${isEdit.value ? '编辑' : '新增'}成功`);
+            Message.success(`${isEdit.value ? '编辑' : '新建'}成功`);
             done(true);
           } else {
             Message.success(res.message);

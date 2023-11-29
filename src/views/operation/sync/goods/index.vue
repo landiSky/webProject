@@ -49,6 +49,7 @@
     </t-row>
 
     <t-table
+      ref="tableRef"
       row-key="id"
       :loading="state.tableLoading"
       :columns="columns"
@@ -66,6 +67,20 @@
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
     >
+      <template #empty>
+        <t-empty
+          description=""
+          :style="{ paddingTop: '80px', paddingBottom: '80px' }"
+        >
+          <template #image>
+            <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
+          </template>
+          <span>
+            暂无查询结果
+            <t-link @click="handleReset">清空查询项</t-link>
+          </span>
+        </t-empty>
+      </template>
       <template #tag="{ record }">
         <div class="tag-div">
           <div v-if="record.tag">
@@ -125,6 +140,7 @@ import {
 } from '@/api/operation/sync-class';
 import Detail from './components/goods-detail.vue';
 
+const tableRef = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
@@ -249,7 +265,9 @@ const columns = [
     title: '所属分类',
     dataIndex: 'productTypeId',
     slotName: 'productTypeId',
-    width: 160,
+    width: 200,
+    ellipsis: true,
+    tooltip: true,
     filterable: {
       filters: TypeList,
     },
@@ -377,6 +395,8 @@ const clickSearchBtn = () => {
 const handleReset = () => {
   // 如果都没有默认项，可以使用state.formModel.resetFields()函数
   state.formModel = { ...defaultFormModel };
+  tableRef.value?.clearFilters();
+  tableRef.value?.clearSorters();
   clickSearchBtn();
 };
 
@@ -478,5 +498,9 @@ onMounted(() => {
   display: flex;
   flex-direction: row;
   gap: 4px 4px;
+}
+
+:deep(.tele-form-item) {
+  margin-bottom: 16px;
 }
 </style>

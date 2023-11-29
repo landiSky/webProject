@@ -44,6 +44,7 @@
     </t-row>
 
     <t-table
+      ref="tableRef"
       row-key="id"
       :loading="state.tableLoading"
       :columns="columns"
@@ -61,6 +62,20 @@
       @filter-change="filterChange"
       @sorter-change="sorterChanged"
     >
+      <template #empty>
+        <t-empty
+          description=""
+          :style="{ paddingTop: '80px', paddingBottom: '80px' }"
+        >
+          <template #image>
+            <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
+          </template>
+          <span>
+            暂无查询结果
+            <t-link @click="handleReset">清空查询项</t-link>
+          </span>
+        </t-empty>
+      </template>
       <template #userPhone="{ record }">
         {{ record.phone || record.userPhone || '-' }}
       </template>
@@ -131,12 +146,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue';
+import { reactive, computed, onMounted, ref } from 'vue';
 import { verifyList } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
 
 import { useRouter } from 'vue-router';
 
+const tableRef = ref();
 const router = useRouter();
 const userStore = useUserStore();
 
@@ -372,8 +388,9 @@ const clickSearchBtn = () => {
 
 // 重置后，触发一次查询
 const handleReset = () => {
-  // 如果都没有默认项，可以使用state.formModel.resetFields()函数
   state.formModel = { ...defaultFormModel };
+  tableRef.value?.clearFilters();
+  tableRef.value?.clearSorters();
   clickSearchBtn();
 };
 
