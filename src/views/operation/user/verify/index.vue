@@ -63,16 +63,20 @@
       @sorter-change="sorterChanged"
     >
       <template #empty>
-        <t-empty>
-          <template #image></template>
-          <div style="display: flex; flex-direction: column">
-            <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
-            <span>
-              暂无查询结果
-              <t-link @click="handleReset">清空查询项</t-link>
-            </span>
-          </div>
-        </t-empty>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 80px;
+          "
+        >
+          <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
+          <span>
+            暂无查询结果
+            <t-link @click="handleReset">清空查询项</t-link>
+          </span>
+        </div>
       </template>
       <template #userPhone="{ record }">
         {{ record.phone || record.userPhone || '-' }}
