@@ -103,7 +103,10 @@ const clickLogout = () => {
 
 const clickIdService = () => {
   const { nodeStatus } = userInfoByCompany.value || {};
-  if (nodeStatus !== NodeAuthStatus.AUTHED) {
+  if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
+    const { snmsUrls } = userInfo.value || {};
+    window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
+  } else {
     Modal.info({
       title: '使用提醒',
       content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
@@ -120,9 +123,6 @@ const clickIdService = () => {
         });
       },
     });
-  } else {
-    const { snmsUrls } = userInfo.value || {};
-    window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
   }
 };
 
