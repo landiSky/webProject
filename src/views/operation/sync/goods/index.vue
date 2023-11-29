@@ -499,4 +499,8 @@ onMounted(() => {
   flex-direction: row;
   gap: 4px 4px;
 }
+
+:deep(.tele-form-item) {
+  margin-bottom: 16px;
+}
 </style>

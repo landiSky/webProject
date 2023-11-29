@@ -579,4 +579,8 @@ onMounted(() => {
 .action-list {
   margin-right: 10px;
 }
+
+:deep(.tele-form-item) {
+  margin-bottom: 16px;
+}
 </style>
