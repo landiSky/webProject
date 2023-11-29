@@ -522,7 +522,7 @@ onMounted(() => {
   }
 
   .footer_button {
-    margin-left: 36%;
+    margin-left: 40%;
     text-align: left;
   }
 }
