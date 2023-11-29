@@ -29,7 +29,9 @@
       >
         <div class="click-item">
           <icon-down style="margin-right: 8px" />
-          <span>{{ selectCompany?.companyName || '-' }}</span>
+          <span class="companyName">{{
+            selectCompany?.companyName || '-'
+          }}</span>
         </div>
 
         <template #content>
@@ -40,7 +42,9 @@
             :class="{ active: selectCompany?.companyId === company.companyId }"
           >
             <t-space fill>
-              <span> {{ company.companyName }} </span>
+              <span class="doptionCompanyName">
+                {{ company.companyName }}
+              </span>
             </t-space>
           </t-doption>
         </template>
@@ -234,6 +238,7 @@ const onChangeCompany = async (companyId: string) => {
 
     .click-item {
       &:first-child {
+        display: flex;
         margin-right: 24px;
       }
       // margin-right: 8px;
@@ -241,6 +246,14 @@ const onChangeCompany = async (companyId: string) => {
       &:hover {
         background-color: #272e3b;
         cursor: pointer;
+      }
+
+      .companyName {
+        display: inline-block;
+        max-width: 144px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
 
@@ -307,6 +320,14 @@ const onChangeCompany = async (companyId: string) => {
 
   .active {
     background-color: #4086ff;
+  }
+
+  .doptionCompanyName {
+    display: inline-block;
+    max-width: 186px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
