@@ -321,7 +321,7 @@ const columns = [
     title: '交付方式',
     dataIndex: 'deliveryType',
     slotName: 'deliveryType',
-    width: 100,
+    width: 102,
     filterable: {
       filters: SaleTypeList,
     },
