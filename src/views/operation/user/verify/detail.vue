@@ -1,16 +1,10 @@
 <template>
-  <t-page-header flex :show-back="false" :loading="currentData.loading">
-    <template #title>
-      <div class="page-head">
-        <iconpark-icon
-          class="back_icon"
-          name="back-icon"
-          size="24px"
-          @click="goBack"
-        ></iconpark-icon>
-        <div class="detail-head"> {{ breadcrumbLabel }} </div>
-      </div>
-    </template>
+  <t-page-header
+    flex
+    :title="breadcrumbLabel"
+    :show-back="true"
+    :loading="currentData.loading"
+  >
     <template #extra>
       <div v-if="isVerify" class="extra-btn">
         <t-button type="primary" @click="clickPass">通过</t-button>
