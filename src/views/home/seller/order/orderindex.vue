@@ -141,7 +141,14 @@
                   </div>
                   <div class="grid-content-list">
                     <span class="dingdclass">买家：</span>
-                    <span>{{ item.customerName }}</span>
+                    <t-typography-paragraph
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                      class="customerName"
+                      >{{ item.customerName }}</t-typography-paragraph
+                    >
                   </div>
                   <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -373,8 +380,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -896,6 +906,11 @@ const ondeliveryModalConfirm = () => {
           }
 
           span:last-child {
+            color: #4e5969;
+          }
+
+          .customerName {
+            margin-bottom: 0;
             color: #4e5969;
           }
         }
