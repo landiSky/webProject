@@ -98,6 +98,7 @@ export function JumpToLogin() {
 // 全部左侧menu，在store中根据permission动态生成左侧菜单
 export const appMenus = (authsList: Array<string> = []) => {
   const { isAdmin } = useUserStore().userInfo || {};
+  const pathList: string[] = [];
 
   // TODO 优化迭代逻辑
   const iterMenu = (list: Array<any>): any => {
@@ -125,6 +126,7 @@ export const appMenus = (authsList: Array<string> = []) => {
         if (children.length) {
           menuItem.children = iterMenu(children);
         }
+        pathList.push(path);
         menuList.push(menuItem);
       }
     }
@@ -132,7 +134,10 @@ export const appMenus = (authsList: Array<string> = []) => {
     return menuList;
   };
 
-  return iterMenu([...homeRoutesList, ...operationRoutesList]);
+  const menuList = iterMenu([...homeRoutesList, ...operationRoutesList]);
+  useUserStore().authPathList = pathList;
+
+  return menuList;
 };
 
 export default router;
