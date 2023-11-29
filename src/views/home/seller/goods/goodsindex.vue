@@ -30,6 +30,7 @@
     </t-row>
 
     <t-table
+      ref="tableRef"
       row-key="id"
       :loading="state.tableLoading"
       :columns="columns"
@@ -47,6 +48,23 @@
       @page-size-change="onPageSizeChange"
       @filter-change="filterChange"
     >
+      <template #empty>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px;
+            margin-top: 160px;
+          "
+        >
+          <img :src="noSearch" alt="" />
+          <div class="nodata">
+            暂无查询结果
+            <t-link @click="handleReset">清空查询项</t-link>
+          </div>
+        </div>
+      </template>
       <template #productTypeId="{ record }">
         {{ record.productTypeParentName }} / {{ record.productTypeName }}
       </template>
@@ -142,9 +160,11 @@ import {
 } from '@/api/goods-manage';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
+import noSearch from '@/assets/images/noSearch.png';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
 
+const tableRef = ref();
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
@@ -366,6 +386,15 @@ const onPageChange = (current: number) => {
 
 const clickSearchBtn = () => {
   onPageChange(1);
+};
+
+// 重置后，触发一次查询
+const handleReset = () => {
+  // 如果都没有默认项，可以使用state.formModel.resetFields()函数
+  state.formModel = { ...defaultFormModel };
+  tableRef.value?.clearFilters();
+  tableRef.value?.clearSorters();
+  clickSearchBtn();
 };
 
 const filterChange = (dataIndex: string, filteredValues: string[]) => {
