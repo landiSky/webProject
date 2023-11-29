@@ -68,10 +68,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: 80px;
+            margin-top: 160px;
           "
         >
-          <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
+          <iconpark-icon name="empty-for-search" size="120px"></iconpark-icon>
           <span>
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
