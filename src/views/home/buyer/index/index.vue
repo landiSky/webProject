@@ -925,7 +925,7 @@ onMounted(() => {
 
           .inofslist {
             display: flex;
-            flex: 1;
+            // flex: 1;
             margin-top: 2px;
             font-weight: 400;
             font-size: 12px;
@@ -936,7 +936,7 @@ onMounted(() => {
             }
 
             .companyname {
-              flex: 1;
+              // flex: 1;
               margin-right: 12px;
               margin-bottom: 0;
               color: #86909c;
