@@ -72,7 +72,7 @@
             margin-top: 160px;
           "
         >
-          <iconpark-icon name="empty-for-search" size="120px"></iconpark-icon>
+          <iconpark-icon name="emptys" size="120px"></iconpark-icon>
           <div>
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
