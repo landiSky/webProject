@@ -5,6 +5,24 @@ import { useUserStore } from '@/store/modules/user';
 
 import { apiLoginToken } from '@/api/login';
 
+// 直接通过 url 访问没有权限的地址，跳到概览页
+const isBackAuthFirstPath = (toPath: string) => {
+  const pathList = useUserStore().authPathList;
+
+  // 如果新增了要权限判断的 path,要再这里添加
+  const needAuth = /^\/(buyer|seller|system)\//.test(toPath);
+
+  if (
+    Array.isArray(pathList) &&
+    pathList.length &&
+    needAuth &&
+    !pathList.includes(toPath)
+  ) {
+    return true;
+  }
+  return false;
+};
+
 /**
  * 创建路由守卫
  * @param router 路由
@@ -31,6 +49,8 @@ export function createPermissionGuard(router: Router) {
               // isadmin 账号能跳转到前台预览页，会走到这里，所以有下面的判断
               if (userInfo?.isAdmin && to.fullPath.startsWith('/buyer')) {
                 next('/goods');
+              } else if (isBackAuthFirstPath(to.fullPath)) {
+                next('/buyer/index');
               } else {
                 next();
               }
@@ -55,6 +75,8 @@ export function createPermissionGuard(router: Router) {
         // s1-3: 有用户信息，路由均不匹配，跳到首页，运营跳运营，前台跳前台
         const indexUrl = userStore.userInfo?.isAdmin ? '/goods' : '/buyer';
         next(indexUrl);
+      } else if (isBackAuthFirstPath(to.fullPath)) {
+        next('/buyer/index');
       } else {
         next();
       }

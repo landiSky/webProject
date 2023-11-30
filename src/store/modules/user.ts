@@ -15,6 +15,7 @@ interface UserState {
   selectCompany: Record<string, any> | null;
   configInfo: Record<string, any> | null;
   updateMenu: boolean;
+  authPathList: string[];
 }
 
 export const useUserStore = defineStore({
@@ -30,6 +31,7 @@ export const useUserStore = defineStore({
     token: null,
     configInfo: {},
     updateMenu: false,
+    authPathList: [], // 存放已有权限的 path 列表
   }),
   getters: {
     // 获取用户信息

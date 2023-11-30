@@ -42,7 +42,6 @@
         </t-form>
       </t-col>
     </t-row>
-
     <t-table
       ref="tableRef"
       row-key="id"
@@ -63,18 +62,21 @@
       @sorter-change="sorterChanged"
     >
       <template #empty>
-        <t-empty
-          description=""
-          :style="{ paddingTop: '80px', paddingBottom: '80px' }"
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px;
+            margin-top: 160px;
+          "
         >
-          <template #image>
-            <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
-          </template>
-          <span>
+          <img :src="noSearch" alt="" />
+          <div class="nodata">
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
-          </span>
-        </t-empty>
+          </div>
+        </div>
       </template>
       <template #userPhone="{ record }">
         {{ record.phone || record.userPhone || '-' }}
@@ -149,8 +151,8 @@
 import { reactive, computed, onMounted, ref } from 'vue';
 import { verifyList } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
-
 import { useRouter } from 'vue-router';
+import noSearch from '@/assets/images/noSearch.png';
 
 const tableRef = ref();
 const router = useRouter();
@@ -415,5 +417,12 @@ onMounted(() => {
   :deep(.tele-form-item) {
     margin-bottom: 16px;
   }
+}
+
+.nodata {
+  color: #86909c;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
 }
 </style>

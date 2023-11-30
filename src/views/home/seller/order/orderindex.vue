@@ -141,7 +141,14 @@
                   </div>
                   <div class="grid-content-list">
                     <span class="dingdclass">买家：</span>
-                    <span>{{ item.customerName }}</span>
+                    <t-typography-paragraph
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                      class="customerName"
+                      >{{ item.customerName }}</t-typography-paragraph
+                    >
                   </div>
                   <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -896,6 +903,11 @@ const ondeliveryModalConfirm = () => {
           }
 
           span:last-child {
+            color: #4e5969;
+          }
+
+          .customerName {
+            margin-bottom: 0;
             color: #4e5969;
           }
         }

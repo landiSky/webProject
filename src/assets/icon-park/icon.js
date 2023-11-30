@@ -29,7 +29,7 @@
     'avatar-gray': 1027780,
     'down': 1027783,
     'zanwushuju': 1031984,
-    'empty-search': 1058991,
+    'emptys': 1058991,
   };
   for (var _i in nm) {
     window.__iconpark__[_i] = obj[nm[_i]];

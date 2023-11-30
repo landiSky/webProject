@@ -21,7 +21,6 @@
               class="name"
               >{{ userInfoByCompany?.username || userInfo?.mobile }}
             </t-typography-paragraph>
-
             <div class="inofs">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
               <div
@@ -33,47 +32,42 @@
                 class="inofslist"
               >
                 <t-typography-paragraph
-                  :ellipsis="{
-                    rows: 1,
-                    showTooltip: true,
-                  }"
-                  class="companyname"
-                  >{{ userInfoByCompany.companyName || '暂未认证' }}
+                  style="pointer-events: none"
+                  ellipsis
+                  copyable
+                >
+                  {{ userInfoByCompany.companyName }}
+                  <template #copy-icon>
+                    <t-space style="width: 142px; margin-left: 10px">
+                      <span>|</span>
+                      <span>{{
+                        userInfoByCompany.companyId
+                          ? AccountTypeDesc[userInfoByCompany.primary]
+                          : '-'
+                      }}</span>
+                      <span>|</span>
+                      <span
+                        class="statuslist"
+                        :class="[
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED ||
+                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                            ? 'authenticated'
+                            : 'notcertified',
+                        ]"
+                      >
+                        {{
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED ||
+                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                            ? '已认证'
+                            : '未认证'
+                        }}
+                      </span>
+                    </t-space>
+                  </template>
                 </t-typography-paragraph>
-                <!-- <p>{{ userInfoByCompany.companyName || '暂未认证' }}</p> -->
-
-                <p>|</p
-                ><p>{{
-                  userInfoByCompany.companyId
-                    ? AccountTypeDesc[userInfoByCompany.primary]
-                    : '-'
-                }}</p
-                ><p>|</p>
               </div>
-
-              <p
-                class="statuslist"
-                :class="[
-                  userInfoByCompany.certificateStatus ===
-                    CompanyAuthStatus.AUTHED ||
-                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                    ? 'authenticated'
-                    : 'notcertified',
-                ]"
-                >{{
-                  userInfoByCompany.certificateStatus ===
-                    CompanyAuthStatus.AUTHED ||
-                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                    ? '已认证'
-                    : '未认证'
-                }}</p
-              >
-              <!-- <div
-                v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED"
-                class="suffix"
-              >
-                <p>|</p> <p>11111</p>
-              </div> -->
             </div>
           </div>
         </div>
@@ -918,15 +912,18 @@ onMounted(() => {
         }
 
         .inofs {
-          display: flex;
-
+          // display: flex;
           .inofslist {
-            display: flex;
+            // display: flex;
             // flex: 1;
             margin-top: 2px;
             font-weight: 400;
             font-size: 12px;
             line-height: 20px;
+
+            :deep(.tele-space-item) {
+              margin-right: 12px !important;
+            }
 
             p {
               float: left;
@@ -963,16 +960,9 @@ onMounted(() => {
             }
           }
 
-          // p:nth-child(5) {
-          //   padding: 5px;
-          //   font-size: 12px;
-          // }
           // 已认证
           .statuslist {
-            float: left;
             width: 52px;
-            margin-right: 9px;
-            // margin-top: -3px;
             padding: 1px 8px;
             font-weight: 400;
             font-size: 12px;

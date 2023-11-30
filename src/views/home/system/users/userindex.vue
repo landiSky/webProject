@@ -412,7 +412,7 @@ const clickDetailBtn = (data: any) => {
 // 变更管理员 提交
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
-  fetchData();
+  // fetchData();
 };
 const editModalVisiblealterflag = () => {
   state.editData = {

@@ -68,18 +68,21 @@
       @filter-change="filterChange"
     >
       <template #empty>
-        <t-empty
-          description=""
-          :style="{ paddingTop: '80px', paddingBottom: '80px' }"
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px;
+            margin-top: 160px;
+          "
         >
-          <template #image>
-            <iconpark-icon name="empty-search" size="120px"></iconpark-icon>
-          </template>
-          <span>
+          <img :src="noSearch" alt="" />
+          <div class="nodata">
             暂无查询结果
             <t-link @click="handleReset">清空查询项</t-link>
-          </span>
-        </t-empty>
+          </div>
+        </div>
       </template>
       <template #tag="{ record }">
         <div class="tag-div">
@@ -138,6 +141,7 @@ import {
   stopSync,
   classList,
 } from '@/api/operation/sync-class';
+import noSearch from '@/assets/images/noSearch.png';
 import Detail from './components/goods-detail.vue';
 
 const tableRef = ref();

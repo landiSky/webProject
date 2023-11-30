@@ -123,6 +123,7 @@ import {
   verificationCode,
   menberChangeAdmin,
 } from '@/api/system/member';
+import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
 
@@ -160,7 +161,7 @@ const inputSelect = ref();
 const formRules = {
   roleName: [
     { required: true, message: '请输入成员姓名' },
-    { maxLength: 10, message: '长度不超过10个字符' },
+    // { maxLength: 10, message: '长度不超过10个字符' },
   ],
   phone: [
     { required: true, message: '请输入手机号' },
@@ -191,9 +192,13 @@ const onConfirm = (done: (closed: boolean) => void) => {
         memberId: state.formModel.memberId,
         phone: state.formModel.phone,
       })
-        .then((res) => {
+        .then(() => {
+          Message.success({
+            content: '请重新登录',
+            duration: 5000,
+          });
           handleLogout();
-          emit('confirm');
+          // emit('confirm');
           // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
           // clearInterval(times.value);
         })

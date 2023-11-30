@@ -145,18 +145,16 @@
                     <span>订单号：</span>
                     <span>{{ item.orderNum }}</span>
                   </div>
-                  <div class="grid-content-list">
-                    <span>商品来源：</span
-                    ><span>
-                      <t-typography-paragraph
-                        :ellipsis="{
-                          rows: 1,
-                          showTooltip: true,
-                        }"
-                        class="merchantName"
-                        >{{ item.merchantName }}</t-typography-paragraph
-                      >
-                    </span>
+                  <div class="grid-content-list" style="flex: 1">
+                    <span>商品来源：</span>
+                    <t-typography-paragraph
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                      class="merchantName"
+                      >{{ item.merchantName }}</t-typography-paragraph
+                    >
                   </div>
                   <!-- <div class="grid-content-list">
                     <span class="dingdclass">订单来源：</span
@@ -882,6 +880,7 @@ onMounted(() => {
           }
 
           .merchantName {
+            flex: 1;
             margin-bottom: 0;
             color: #4e5969;
           }
