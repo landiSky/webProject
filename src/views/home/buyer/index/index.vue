@@ -23,12 +23,7 @@
             </t-typography-paragraph>
             <div class="inofs">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
-              <!-- v-if="
-                          userInfoByCompany.nodeStatus ===
-                            NodeAuthStatus.AUTHED ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED
-                        " -->
+
               <div class="inofslist">
                 <t-typography-paragraph
                   style="pointer-events: none"
@@ -41,10 +36,11 @@
                       userInfoByCompany.certificateStatus ===
                         CompanyAuthStatus.AUTHED
                     "
+                    style="margin-right: 8px"
                     >{{ userInfoByCompany.companyName }}</span
                   >
                   <template #copy-icon>
-                    <t-space style="width: 142px; margin-left: 0">
+                    <t-space>
                       <span
                         v-if="
                           userInfoByCompany.nodeStatus ===
@@ -67,6 +63,26 @@
                             : '-'
                         }}</span
                       >
+                      <span>|</span>
+                      <!-- v-if="
+                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                        " -->
+                      <div>
+                        <span
+                          v-for="(item, index) in suffixlist ? suffixlist : []"
+                          :key="index"
+                        >
+                          {{ index === 1 || index === 0 ? item : null
+                          }}<label>{{ index === 0 ? '、' : '' }}</label>
+                        </span>
+
+                        <!-- <t-tooltip
+                          content="This is a two-line tooltip content.This is a two-line tooltip content."
+                          copyable
+                        >
+                          <t-button>Mouse over to display tooltip</t-button>
+                        </t-tooltip> -->
+                      </div>
                       <span
                         v-if="
                           userInfoByCompany.nodeStatus ===
@@ -558,6 +574,12 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
 
 const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
+const suffixlist = ref([
+  '88.111.3223123',
+  '88.111.3223123',
+  '88.111.3223126',
+  '88.111.3223129',
+]);
 
 const stateClass = {
   [CompanyAuthStatus.TO_CHECK]: 'tobereviewed',
