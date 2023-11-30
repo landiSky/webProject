@@ -26,8 +26,10 @@
 
               <div class="inofslist">
                 <t-typography-paragraph
-                  style="pointer-events: none"
-                  ellipsis
+                  :ellipsis="{
+                    rows: 1,
+                    showTooltip: true,
+                  }"
                   copyable
                 >
                   <span
@@ -1755,5 +1757,9 @@ onMounted(() => {
       }
     }
   }
+}
+
+:deep(.tele-typography-operation-copy) {
+  pointer-events: none;
 }
 </style>

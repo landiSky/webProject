@@ -326,7 +326,10 @@ const showDetail = (
 ) => {
   if (entType === EntTypeEnum.ENTPOINT) {
     const { snmsUrls } = userStore.userInfo || {};
-    window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级的企业节点审核页面
+    window.open(
+      `${snmsUrls.auditNode}&orgCrtCode=${record.creditCode}`,
+      '_blank'
+    ); // 跳转到二级的企业节点审核页面
     return;
   }
   router
