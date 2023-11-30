@@ -31,8 +31,10 @@
                         " -->
               <div class="inofslist">
                 <t-typography-paragraph
-                  style="pointer-events: none"
-                  ellipsis
+                  :ellipsis="{
+                    rows: 1,
+                    showTooltip: true,
+                  }"
                   copyable
                 >
                   <span
@@ -41,7 +43,9 @@
                       userInfoByCompany.certificateStatus ===
                         CompanyAuthStatus.AUTHED
                     "
-                    >{{ userInfoByCompany.companyName }}</span
+                    >{{
+                      userInfoByCompany.companyName
+                    }}asdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasfasdfasdfasdfasf</span
                   >
                   <template #copy-icon>
                     <t-space style="width: 142px; margin-left: 0">
@@ -552,8 +556,11 @@ const router = useRouter();
 const route = useRoute();
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -1733,5 +1740,9 @@ onMounted(() => {
       }
     }
   }
+}
+
+:deep(.tele-typography-operation-copy) {
+  pointer-events: none;
 }
 </style>
