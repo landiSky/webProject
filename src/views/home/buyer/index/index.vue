@@ -23,100 +23,84 @@
             </t-typography-paragraph>
             <div class="inofs">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
+              <div
+                v-if="
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED
+                "
+                class="inofslist"
+              >
+                <div style="max-width: 750px">
+                  <ellipsis
+                    class="companyname"
+                    :copy="false"
+                    :value="userInfoByCompany.companyName || '暂未认证'"
+                  >
+                  </ellipsis>
+                </div>
 
-              <div class="inofslist">
-                <t-typography-paragraph
-                  :ellipsis="{
-                    rows: 1,
-                    showTooltip: true,
-                  }"
-                  copyable
+                <p>|</p
+                ><p>{{
+                  userInfoByCompany.companyId
+                    ? AccountTypeDesc[userInfoByCompany.primary]
+                    : '-'
+                }}</p
+                ><p>|</p>
+                <div
+                  v-if="userInfoByCompany?.entPrefixList?.length"
+                  class="extPrefix"
                 >
                   <span
-                    v-if="
-                      userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
-                      userInfoByCompany.certificateStatus ===
-                        CompanyAuthStatus.AUTHED
-                    "
-                    style="margin-right: 8px"
-                    >{{ userInfoByCompany.companyName }}</span
+                    v-for="(
+                      item, index
+                    ) in userInfoByCompany?.entPrefixList.slice(0, 2)"
+                    :key="index"
                   >
-                  <template #copy-icon>
-                    <t-space>
-                      <span
-                        v-if="
-                          userInfoByCompany.nodeStatus ===
-                            NodeAuthStatus.AUTHED ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED
-                        "
-                        >|</span
-                      >
-                      <span
-                        v-if="
-                          userInfoByCompany.nodeStatus ===
-                            NodeAuthStatus.AUTHED ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED
-                        "
-                        >{{
-                          userInfoByCompany.companyId
-                            ? AccountTypeDesc[userInfoByCompany.primary]
-                            : '-'
-                        }}</span
-                      >
-                      <span>|</span>
-                      <!-- v-if="
-                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                        " -->
-                      <div>
-                        <span
-                          v-for="(item, index) in suffixlist ? suffixlist : []"
-                          :key="index"
-                        >
-                          {{ index === 1 || index === 0 ? item : null
-                          }}<label>{{ index === 0 ? '、' : '' }}</label>
-                        </span>
-
-                        <!-- <t-tooltip
-                          content="This is a two-line tooltip content.This is a two-line tooltip content."
-                          copyable
-                        >
-                          <t-button>Mouse over to display tooltip</t-button>
-                        </t-tooltip> -->
-                      </div>
-                      <span
-                        v-if="
-                          userInfoByCompany.nodeStatus ===
-                            NodeAuthStatus.AUTHED ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED
-                        "
-                        >|</span
-                      >
-
-                      <span
-                        class="statuslist"
-                        :class="[
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED ||
-                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                            ? 'authenticated'
-                            : 'notcertified',
-                        ]"
-                      >
-                        {{
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.AUTHED ||
-                          userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                            ? '已认证'
-                            : '未认证'
-                        }}
-                      </span>
-                    </t-space>
-                  </template>
-                </t-typography-paragraph>
+                    {{ item }}
+                    <span
+                      v-if="
+                        userInfoByCompany?.entPrefixList?.length > 1 &&
+                        index === 0
+                      "
+                      >、</span
+                    >
+                  </span>
+                  <t-tooltip
+                    v-if="entPrefixListSuffix?.length"
+                    :content="entPrefixListSuffix.join(',')"
+                  >
+                    <t-link
+                      >更多前缀 ({{ entPrefixListSuffix?.length }})</t-link
+                    >
+                  </t-tooltip>
+                  <span class="divider">|</span>
+                </div>
               </div>
+
+              <p
+                class="statuslist"
+                :class="[
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                    ? 'authenticated'
+                    : 'notcertified',
+                ]"
+                >{{
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                    ? '已认证'
+                    : '未认证'
+                }}</p
+              >
+              <!-- <div
+                v-if="userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED"
+                class="suffix"
+              >
+                <p>|</p> <p>11111</p>
+              </div> -->
             </div>
           </div>
         </div>
@@ -523,7 +507,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
 
 import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
@@ -554,6 +538,7 @@ import {
 // import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
+import ellipsis from '@/components/ellipsis/index.vue';
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
@@ -570,18 +555,15 @@ const router = useRouter();
 const route = useRoute();
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
-const suffixlist = ref([
-  '88.111.3223123',
-  '88.111.3223123',
-  '88.111.3223126',
-  '88.111.3223129',
-]);
 
 const stateClass = {
   [CompanyAuthStatus.TO_CHECK]: 'tobereviewed',
@@ -608,6 +590,15 @@ const nodeStateClass = {
 //   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
 // });
 
+// 前缀后几个 tooltip 显示
+const entPrefixListSuffix = computed(() => {
+  const arr = userInfoByCompany.value?.entPrefixList;
+  // arr =
+  if (Array.isArray(arr) && arr.length > 2) {
+    return arr.slice(2);
+  }
+  return [];
+});
 const state = reactive({
   editData: {
     id: '1111',
@@ -968,9 +959,10 @@ onMounted(() => {
         }
 
         .inofs {
-          // display: flex;
+          display: flex;
+
           .inofslist {
-            // display: flex;
+            display: flex;
             // flex: 1;
             margin-top: 2px;
             font-weight: 400;
@@ -990,6 +982,17 @@ onMounted(() => {
               margin-right: 12px;
               margin-bottom: 0;
               color: #86909c;
+            }
+
+            .extPrefix {
+              color: #86909c;
+
+              .divider {
+                display: inline-block;
+                margin-right: 12px;
+                margin-left: 8px;
+                color: #8c95a7;
+              }
             }
 
             // p:nth-child(1) {
