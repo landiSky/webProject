@@ -4,6 +4,10 @@
     :width="520"
     :height="360"
     :on-before-ok="onConfirm"
+    :ok-button-props="{
+      status: 'danger',
+    }"
+    ok-text="驳回"
     @cancel="emit('cancel')"
   >
     <template #title> 审核驳回 </template>
@@ -12,6 +16,7 @@
         <t-textarea
           v-model.trim="formModel.reason"
           placeholder="请输入驳回原因"
+          :style="'height: 200px'"
           :max-length="{
             length: 100,
             errorOnly: true,

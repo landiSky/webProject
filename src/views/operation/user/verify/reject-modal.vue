@@ -7,6 +7,7 @@
     :ok-button-props="{
       status: 'danger',
     }"
+    ok-text="驳回"
     @cancel="emit('cancel')"
   >
     <template #title> 审核驳回 </template>
@@ -86,8 +87,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
     }
   });
 };
-
-onMounted(() => {});
 
 const changed = () => {
   formRef.value.clearValidate();
