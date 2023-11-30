@@ -873,6 +873,7 @@ onMounted(() => {
 .cverbox {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
   background-color: #f2f3f8;
   background-image: url('./image/header.png');
   background-repeat: no-repeat;
