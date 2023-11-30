@@ -521,11 +521,8 @@ const router = useRouter();
 const route = useRoute();
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // console.log(userInfoByCompany);
 
 const selectProduct = ref<Record<string, any>>({});
@@ -875,7 +872,8 @@ onMounted(() => {
 // }
 .cverbox {
   width: 100%;
-  // height: 100%;
+  height: 100%;
+  overflow-y: auto;
   background-color: #f2f3f8;
   background-image: url('./image/header.png');
   background-repeat: no-repeat;

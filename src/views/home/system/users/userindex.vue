@@ -245,7 +245,8 @@ const columns = [
   {
     title: '成员姓名',
     dataIndex: 'username',
-
+    // ellipsis: true,
+    // tooltip: true,
     width: 140,
   },
   {
