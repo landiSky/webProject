@@ -19,7 +19,7 @@ export const copy: any = {
     el.copyData = binding.value;
     el.addEventListener('click', handleClick);
   },
-  updated(el: ElType, binding: DirectiveBinding) {
+  updated(el: ElType, binding: any) {
     el.copyData = binding.value;
   },
   beforeUnmount(el: ElType) {
