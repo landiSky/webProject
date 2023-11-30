@@ -140,6 +140,12 @@
                     <span>{{ item.orderNum }}</span>
                   </div>
                   <div class="grid-content-list">
+                    <span class="dingdclass">订单来源：</span
+                    ><span>{{
+                      item.orderSource === 0 ? '本平台' : '跨平台'
+                    }}</span>
+                  </div>
+                  <div class="grid-content-list" style="flex: 1">
                     <span class="dingdclass">买家：</span>
                     <t-typography-paragraph
                       :ellipsis="{
@@ -149,12 +155,6 @@
                       class="customerName"
                       >{{ item.customerName }}</t-typography-paragraph
                     >
-                  </div>
-                  <div class="grid-content-list">
-                    <span class="dingdclass">订单来源：</span
-                    ><span>{{
-                      item.orderSource === 0 ? '本平台' : '跨平台'
-                    }}</span>
                   </div>
                 </div>
               </t-col>
@@ -910,6 +910,7 @@ const ondeliveryModalConfirm = () => {
           }
 
           .customerName {
+            flex: 1;
             margin-bottom: 0;
             color: #4e5969;
           }
