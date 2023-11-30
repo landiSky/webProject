@@ -16,6 +16,7 @@
         <t-textarea
           v-model.trim="formModel.reason"
           placeholder="请输入驳回原因"
+          :style="'height: 200px'"
           :max-length="{
             length: 100,
             errorOnly: true,

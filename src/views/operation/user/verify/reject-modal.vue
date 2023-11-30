@@ -88,8 +88,6 @@ const onConfirm = (done: (closed: boolean) => void) => {
   });
 };
 
-onMounted(() => {});
-
 const changed = () => {
   formRef.value.clearValidate();
 };
