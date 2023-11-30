@@ -23,29 +23,60 @@
             </t-typography-paragraph>
             <div class="inofs">
               <!-- <div class="inofs" style="float: left; margin-top: 25px"> -->
-              <div
-                v-if="
-                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
-                  userInfoByCompany.certificateStatus ===
-                    CompanyAuthStatus.AUTHED
-                "
-                class="inofslist"
-              >
+              <!-- v-if="
+                          userInfoByCompany.nodeStatus ===
+                            NodeAuthStatus.AUTHED ||
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED
+                        " -->
+              <div class="inofslist">
                 <t-typography-paragraph
                   style="pointer-events: none"
                   ellipsis
                   copyable
                 >
-                  {{ userInfoByCompany.companyName }}
+                  <span
+                    v-if="
+                      userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                      userInfoByCompany.certificateStatus ===
+                        CompanyAuthStatus.AUTHED
+                    "
+                    >{{ userInfoByCompany.companyName }}</span
+                  >
                   <template #copy-icon>
-                    <t-space style="width: 142px; margin-left: 10px">
-                      <span>|</span>
-                      <span>{{
-                        userInfoByCompany.companyId
-                          ? AccountTypeDesc[userInfoByCompany.primary]
-                          : '-'
-                      }}</span>
-                      <span>|</span>
+                    <t-space style="width: 142px; margin-left: 0">
+                      <span
+                        v-if="
+                          userInfoByCompany.nodeStatus ===
+                            NodeAuthStatus.AUTHED ||
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED
+                        "
+                        >|</span
+                      >
+                      <span
+                        v-if="
+                          userInfoByCompany.nodeStatus ===
+                            NodeAuthStatus.AUTHED ||
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED
+                        "
+                        >{{
+                          userInfoByCompany.companyId
+                            ? AccountTypeDesc[userInfoByCompany.primary]
+                            : '-'
+                        }}</span
+                      >
+                      <span
+                        v-if="
+                          userInfoByCompany.nodeStatus ===
+                            NodeAuthStatus.AUTHED ||
+                          userInfoByCompany.certificateStatus ===
+                            CompanyAuthStatus.AUTHED
+                        "
+                        >|</span
+                      >
+
                       <span
                         class="statuslist"
                         :class="[
