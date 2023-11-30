@@ -266,6 +266,7 @@
                 {{ formModel.platformOperationCompany || '-' }}
               </t-descriptions-item>
             </t-descriptions>
+            <div class="line"></div>
             <t-descriptions
               id="sale"
               title="售卖设置"
@@ -286,65 +287,70 @@
                 {{ PriceTypeEnum[formModel.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
-            <t-descriptions
+            <div
               v-for="(st, index) of formModel.productDeliverySetList"
-              :id="'st' + index"
               :key="index"
-              :title="'交付版本' + (index + 1)"
-              :title-style="{
-                fontSize: '14px',
-                lineHeight: '22px',
-                marginBottom: '16px',
-              }"
-              :title-divider-style="{ height: '12px' }"
-              :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
-              size="medium"
-              :column="1"
+              style="width: 100%"
             >
-              <t-descriptions-item label="交付版本名称">
-                {{ st.name || '-' }}
-              </t-descriptions-item>
-              <t-descriptions-item
-                v-if="formModel.deliveryType == 0"
-                label="应用服务地址"
+              <div class="line"></div>
+              <t-descriptions
+                :id="'st' + index"
+                :title="'交付版本' + (index + 1)"
+                :title-style="{
+                  fontSize: '14px',
+                  lineHeight: '22px',
+                  marginBottom: '16px',
+                }"
+                :title-divider-style="{ height: '12px' }"
+                :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
+                size="medium"
+                :column="1"
               >
-                {{ st.url || '-' }}
-              </t-descriptions-item>
-              <t-descriptions-item
-                v-if="formModel.saleType === 0"
-                label="套餐定价设置"
-              >
-                <div
-                  v-for="(p, pIndex) of st.accountNumList"
-                  :key="p"
-                  class="ap"
-                  :style="{
-                    marginBottom:
-                      pIndex == st.accountNumList.length - 1 ? '0' : '8px',
-                  }"
+                <t-descriptions-item label="交付版本名称">
+                  {{ st.name || '-' }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.deliveryType == 0"
+                  label="应用服务地址"
                 >
-                  套餐{{ pIndex + 1 }}：账号数 {{ p.accountNum }} 个，账号单价
-                  {{ p.price }} 元</div
+                  {{ st.url || '-' }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.saleType === 0"
+                  label="套餐定价设置"
                 >
-              </t-descriptions-item>
-              <t-descriptions-item
-                v-if="formModel.saleType === 0"
-                label="可选购买时长"
-              >
-                {{ desDeuration(st.durationList) || '-' }}
-              </t-descriptions-item>
-              <t-descriptions-item
-                v-if="formModel.saleType === 1"
-                label="一口价金额"
-              >
-                {{
-                  st.accountNumList && st.accountNumList.length > 0
-                    ? st.accountNumList[0].price
-                    : '-'
-                }}
-                元
-              </t-descriptions-item>
-            </t-descriptions>
+                  <div
+                    v-for="(p, pIndex) of st.accountNumList"
+                    :key="p"
+                    class="ap"
+                    :style="{
+                      marginBottom:
+                        pIndex == st.accountNumList.length - 1 ? '0' : '8px',
+                    }"
+                  >
+                    套餐{{ pIndex + 1 }}：账号数 {{ p.accountNum }} 个，账号单价
+                    {{ p.price }} 元</div
+                  >
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.saleType === 0"
+                  label="可选购买时长"
+                >
+                  {{ desDeuration(st.durationList) || '-' }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.saleType === 1"
+                  label="一口价金额"
+                >
+                  {{
+                    st.accountNumList && st.accountNumList.length > 0
+                      ? st.accountNumList[0].price
+                      : '-'
+                  }}
+                  元
+                </t-descriptions-item>
+              </t-descriptions>
+            </div>
           </div>
         </div>
       </div>
@@ -613,6 +619,14 @@ const clickDeleteBtn = () => {
       a {
         color: #1664ff;
         text-decoration: none;
+      }
+
+      .line {
+        width: 100%;
+        height: 1px;
+        margin-top: 4px;
+        margin-bottom: 20px;
+        background: #e5e8ef;
       }
     }
   }

@@ -265,6 +265,7 @@
               :key="index"
               class="line-width"
             >
+              <div class="line"></div>
               <t-descriptions
                 :id="'st' + index"
                 :title="'交付版本' + (index + 1)"
@@ -677,6 +678,7 @@ const toAnchor = (link: string) => {
 .line {
   width: 100%;
   height: 1px;
+  margin-top: 4px;
   margin-bottom: 20px;
   background: #e5e8ef;
 }
