@@ -149,7 +149,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, ref } from 'vue';
-import { verifyList } from '@/api/operation/user';
+import { verifyList, getCreditCodeByCompany } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
 import { useRouter } from 'vue-router';
 import noSearch from '@/assets/images/noSearch.png';
@@ -326,10 +326,12 @@ const showDetail = (
 ) => {
   if (entType === EntTypeEnum.ENTPOINT) {
     const { snmsUrls } = userStore.userInfo || {};
-    window.open(
-      `${snmsUrls.auditNode}&orgCrtCode=${record.creditCode}`,
-      '_blank'
-    ); // 跳转到二级的企业节点审核页面
+
+    getCreditCodeByCompany(record.companyId).then((creditCode) => {
+      console.log('index.vue:330', creditCode);
+      window.open(`${snmsUrls.auditNode}&orgCrtCode=${creditCode}`, '_blank'); // 跳转到二级的企业节点审核页面
+    });
+
     return;
   }
   router

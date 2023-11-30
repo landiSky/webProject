@@ -14,3 +14,10 @@ export function verifyList(data: any) {
 export function verifyDetail(id: any) {
   return $http.get(`/operation/web/company/info?companyId=${id}`);
 }
+
+// 获取用户企业信息
+export function getCreditCodeByCompany(id: any) {
+  return $http.get(
+    `/server/web/company/getCreditCodeByCompany?companyId=${id}`
+  );
+}
