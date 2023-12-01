@@ -196,7 +196,7 @@
                 <div>
                   <p class="ition"></p>
                   <img :src="group4" alt="" />
-                  <span class="dirlist-step">企业成员管理</span>
+                  <span class="dirlist-step">企业中心使用应用</span>
                   <div class="btns">
                     <p style="margin: 10px 0"> 应用配置，使用应用</p>
                   </div>
