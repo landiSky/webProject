@@ -100,6 +100,7 @@
       justify-content: space-between;
       width: 1176px;
       margin: 24px auto 20px auto;
+      padding-top: 22px;
       color: #1d2129;
       font-size: 12px;
       line-height: 18px;

@@ -54,7 +54,7 @@
                   <span
                     v-for="(
                       item, index
-                    ) in userInfoByCompany?.entPrefixList.slice(0, 2)"
+                    ) in userInfoByCompany?.entPrefixList?.slice(0, 2)"
                     :key="index"
                   >
                     {{ item }}
