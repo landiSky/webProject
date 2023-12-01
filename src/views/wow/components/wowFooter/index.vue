@@ -14,10 +14,17 @@
           <span class="subitem">商务合作：marketing@teleinfo.cn</span>
           <span class="subitem"
             >商务服务：
-            <img
-              class="qrcode"
-              src="@/assets/images/wow/index/teleinfo-qrcode.jpg"
-            />
+            <picture>
+              <!-- 可能是一些对兼容性有要求的，但是性能表现更好的现代图片格式-->
+              <source
+                class="qrcode"
+                :srcset="getImgPath('avif')"
+                type="image/avif"
+              />
+
+              <!-- 最终的兜底方案-->
+              <img class="qrcode" :src="getImgPath('jpg')" />
+            </picture>
           </span>
         </div>
         <div class="item">
@@ -42,7 +49,18 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import qrcodeJpg from '@/assets/images/wow/index/teleinfo-qrcode.jpg';
+import qrcodeAvif from '@/assets/images/wow/index/teleinfo-qrcode.avif';
+
+const getImgPath = (type: string) => {
+  const imgObj: Record<string, any> = {
+    jpg: qrcodeJpg,
+    avif: qrcodeAvif,
+  };
+  return imgObj[type];
+};
+</script>
 
 <style lang="less" scoped>
 .footer {
