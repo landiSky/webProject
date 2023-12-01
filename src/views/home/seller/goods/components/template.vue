@@ -242,7 +242,6 @@ defineExpose({
   padding: 12px 16px;
   color: #4e5969;
   font-size: 12px;
-  font-family: PingFang SC;
   border: 1px solid #e5e8ef;
   border-radius: 2px;
 }

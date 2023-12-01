@@ -525,7 +525,6 @@ const doDown = (id: any) => {
   });
 };
 const clickDownBtn = () => {
-  doDown;
   Modal.warning({
     title: '确定下架该商品吗？',
     titleAlign: 'start',

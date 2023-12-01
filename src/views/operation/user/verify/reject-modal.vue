@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, defineEmits, ref } from 'vue';
 import { verify } from '@/api/operation/user';
 import { Message } from '@tele-design/web-vue';
 

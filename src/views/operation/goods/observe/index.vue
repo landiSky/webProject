@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { observeList, changeObserve } from '@/api/operation/goods';
 

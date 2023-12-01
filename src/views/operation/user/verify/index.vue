@@ -417,8 +417,6 @@ onMounted(() => {
   color: #1664ff;
   font-weight: 400;
   font-size: 12px;
-  font-family: PingFang SC;
-  font-style: normal;
   line-height: 20px;
   cursor: pointer;
 

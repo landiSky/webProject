@@ -962,7 +962,7 @@ const uploadExpSuccess = (fileItem: FileItem) => {
   }
 };
 
-const uploadExpChange = (fileList: FileItem[], fileItem: FileItem) => {
+const uploadExpChange = (fileList: FileItem[]) => {
   if (fileList.length === 0) {
     formModel.value.useExplain = '';
   }
