@@ -131,7 +131,8 @@
           @click="
             showDetail(record, EntTypeEnum.ENTPOINT, ActionTypeEnum.VERIFY)
           "
-          >去审核</span
+        >
+          <t-spin :loading="record.nodeLoading">去审核</t-spin></span
         >
         <span v-else-if="record.nodeStatus === EntStatusEnum.WRZ"></span>
         <span
@@ -140,7 +141,7 @@
           @click="
             showDetail(record, EntTypeEnum.ENTPOINT, ActionTypeEnum.DETAIL)
           "
-          >详情</span
+          ><t-spin :loading="record.nodeLoading">详情</t-spin></span
         >
       </template>
     </t-table>
@@ -149,7 +150,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, onMounted, ref } from 'vue';
-import { verifyList } from '@/api/operation/user';
+import { verifyList, getCreditCodeByCompany } from '@/api/operation/user';
 import { useUserStore } from '@/store/modules/user';
 import { useRouter } from 'vue-router';
 import noSearch from '@/assets/images/noSearch.png';
@@ -320,13 +321,22 @@ function fetchData() {
 }
 
 const showDetail = (
-  record: Record<string, string>,
+  record: Record<string, any>,
   entType: number,
   actionType: number
 ) => {
   if (entType === EntTypeEnum.ENTPOINT) {
     const { snmsUrls } = userStore.userInfo || {};
-    window.open(snmsUrls.auditNode, '_blank'); // 跳转到二级的企业节点审核页面
+
+    record.nodeLoading = true; // nodeLoading是前端添加的，目的是控制按钮的 Loading
+    getCreditCodeByCompany(record.companyId)
+      .then((creditCode) => {
+        window.open(`${snmsUrls.auditNode}&orgCrtCode=${creditCode}`, '_blank'); // 跳转到二级的企业节点审核页面
+      })
+      .finally(() => {
+        record.nodeLoading = false;
+      });
+
     return;
   }
   router
@@ -409,6 +419,11 @@ onMounted(() => {
   font-size: 12px;
   line-height: 20px;
   cursor: pointer;
+
+  :deep(.tele-spin) {
+    display: inline-block;
+    max-width: 32px;
+  }
 }
 
 .authentication_manage {

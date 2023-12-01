@@ -11,8 +11,14 @@
       <div class="navigator">
         <div class="item">
           <span class="title">联系我们</span>
-          <span class="subitem">商务合作：23456789q0wewretrytuyiuo</span>
-          <span class="subitem">商务服务：23456789q0wewretrytuyiuo</span>
+          <span class="subitem">商务合作：marketing@teleinfo.cn</span>
+          <span class="subitem"
+            >商务服务：
+            <img
+              class="qrcode"
+              src="@/assets/images/wow/index/teleinfo-qrcode.jpg"
+            />
+          </span>
         </div>
         <div class="item">
           <span class="title">新手上路</span>
@@ -87,10 +93,16 @@
         }
 
         .subitem {
+          display: flex;
           margin-bottom: 20px;
           color: #4e5969;
           font-size: 14px;
           line-height: 22px;
+
+          .qrcode {
+            width: 64px;
+            height: 64px;
+          }
         }
       }
     }
@@ -100,6 +112,7 @@
       justify-content: space-between;
       width: 1176px;
       margin: 24px auto 20px auto;
+      padding-top: 22px;
       color: #1d2129;
       font-size: 12px;
       line-height: 18px;
