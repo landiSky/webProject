@@ -107,7 +107,7 @@ const formRules = {
     //   message: '密码要有大小写不低于6位不大于16位',
     // },
   ],
-  remarks: [{ required: true, message: '请输入备注' }],
+  // remarks: [{ required: true, message: '请输入备注' }],
 };
 
 const onConfirm = (done: (closed: boolean) => void) => {
