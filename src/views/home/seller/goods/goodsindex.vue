@@ -50,6 +50,22 @@
     >
       <template #empty>
         <div
+          v-if="formModelIsEmpty()"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px;
+            margin-top: 160px;
+          "
+        >
+          <div>
+            <img :src="noData" alt="" />
+            <div class="nodata">暂无数据</div>
+          </div>
+        </div>
+        <div
+          v-else
           style="
             display: flex;
             flex-direction: column;
@@ -161,6 +177,7 @@ import {
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import noSearch from '@/assets/images/noSearch.png';
+import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
 
@@ -168,8 +185,12 @@ const tableRef = ref();
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
-const defaultFormModel: Record<string, string | number | undefined> = {
-  name: undefined,
+const defaultFormModel: Record<string, string | null> = {
+  name: null,
+  productTypeId: null,
+  type: null,
+  deliveryType: null,
+  status: null,
 };
 
 const router = useRouter();
@@ -186,6 +207,16 @@ const state = reactive<{
   tableData: [],
   detailData: {},
 });
+
+const formModelIsEmpty = () => {
+  return !(
+    state.formModel.name ||
+    state.formModel.productTypeId ||
+    state.formModel.type ||
+    state.formModel.deliveryType ||
+    state.formModel.status
+  );
+};
 
 // 应用分类
 const TypeEnum: { [name: string]: any } = {
@@ -425,7 +456,7 @@ const onModalConfirm = () => {
 
 // 下架
 const doDown = (id: any) => {
-  downGoods(id).then((res) => {
+  downGoods(id).then(() => {
     Message.success('商品已下架');
     fetchData();
   });
@@ -457,7 +488,7 @@ const doEdit = (record: any) => {
 };
 
 const doUp = (id: any) => {
-  upGoods(id).then((res) => {
+  upGoods(id).then(() => {
     Message.success('上架成功');
     fetchData();
   });
@@ -519,7 +550,7 @@ const clickEditBtn = (record: any) => {
 
 // 删除操作
 const doDelete = (id: any) => {
-  deleteGoods(id).then((res) => {
+  deleteGoods(id).then(() => {
     Message.success('删除成功');
     fetchData();
   });
@@ -614,5 +645,12 @@ const onAddModalConfirm = () => {
 
 .search-form {
   margin-bottom: 16px;
+}
+
+.nodata {
+  color: #86909c;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
 }
 </style>

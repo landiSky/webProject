@@ -177,14 +177,12 @@ const onEditModalConfirm = () => {
 
 // 删除接口
 const doDelete = (id: any) => {
-  delClass(id)
-    .then((res) => {
-      if (res.code === 200) {
-        Message.success('删除成功');
-        fetchData();
-      }
-    })
-    .catch(() => {});
+  delClass(id).then((res) => {
+    if (res.code === 200) {
+      Message.success('删除成功');
+      fetchData();
+    }
+  });
 };
 
 const childrenIsUse = (record: any) => {

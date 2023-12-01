@@ -48,6 +48,22 @@
     >
       <template #empty>
         <div
+          v-if="formModelIsEmpty()"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 140px;
+            margin-top: 160px;
+          "
+        >
+          <div>
+            <img :src="noData" alt="" />
+            <div class="nodata">暂无数据</div>
+          </div>
+        </div>
+        <div
+          v-else
           style="
             display: flex;
             flex-direction: column;
@@ -162,12 +178,19 @@ import {
 import { classList } from '@/api/operation/sync-class';
 import { useRouter } from 'vue-router';
 import noSearch from '@/assets/images/noSearch.png';
+import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
 
 const router = useRouter();
 const tableRef = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
+  source: undefined,
+  productTypeId: undefined,
+  type: undefined,
+  deliveryType: undefined,
+  status: undefined,
+  upShelfTime: undefined,
 };
 const state = reactive<{
   tableLoading: boolean;
@@ -181,6 +204,17 @@ const state = reactive<{
   detailData: {},
 });
 
+const formModelIsEmpty = () => {
+  return !(
+    state.formModel.name ||
+    state.formModel.source ||
+    state.formModel.productTypeId ||
+    state.formModel.type ||
+    state.formModel.deliveryType ||
+    state.formModel.status ||
+    state.formModel.upShelfTime
+  );
+};
 // 平台
 const PlatformEnum: { [name: string]: any } = {
   SELF: 0, // 本平台
@@ -476,7 +510,6 @@ const clickDetailBtn = (record: Record<string, any>) => {
 
 // 预览
 const clickPreviewBtn = (record: Record<string, any>) => {
-  // TODO 跳转预览页面
   const routeData = router.resolve({
     name: 'wowMallPreview',
     params: { id: record.id },
@@ -494,7 +527,6 @@ const doDown = (id: any) => {
   });
 };
 const clickDownBtn = (record: Record<string, any>) => {
-  doDown;
   Modal.warning({
     title: '确定下架该商品吗？',
     titleAlign: 'start',
@@ -586,5 +618,12 @@ onMounted(() => {
 
 :deep(.tele-form-item) {
   margin-bottom: 16px;
+}
+
+.nodata {
+  color: #86909c;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
 }
 </style>
