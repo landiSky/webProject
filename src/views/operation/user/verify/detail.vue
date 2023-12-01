@@ -67,7 +67,6 @@
             style="
               width: 158px;
               height: 100px;
-              background-color: #999;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
@@ -99,7 +98,6 @@
             style="
               width: 158px;
               height: 100px;
-              background-color: #999;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
@@ -109,7 +107,6 @@
             style="
               width: 158px;
               height: 100px;
-              background-color: #999;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
