@@ -83,7 +83,8 @@ const router = createRouter({
     ...operationRoutesList,
   ],
   scrollBehavior() {
-    return { top: 0 };
+    // 路由切换时，自动滚到页面顶部
+    document.querySelector('#scrollMain')?.scrollTo(0, 0);
   },
 });
 
