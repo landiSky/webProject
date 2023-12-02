@@ -51,7 +51,7 @@ const props = defineProps({
   }
 
   &:not(.hasBg) {
-    background-image: url('@/assets/images/wow/mall/detail_bg.png');
+    background-image: url('@/assets/images/wow/mall/detail_bg.jpg');
   }
 
   .title {

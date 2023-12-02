@@ -57,7 +57,7 @@ const [block1, block2] = props.templateData.blockList;
   }
 
   &:not(.hasBg) {
-    background-image: url('@/assets/images/wow/mall/detail_bg.png');
+    background-image: url('@/assets/images/wow/mall/detail_bg.jpg');
   }
 
   .title {
