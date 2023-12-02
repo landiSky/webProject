@@ -327,26 +327,6 @@ const clickAddCart = (): void => {
   if (userInfoByCompany?.primary === AccountType.MAIN) {
     // 标识应用需要判断是否做过企业节点认证
     authModalVisible.value = true;
-    // if (
-    //   prodDetail.value.type === AppType.IDAPP &&
-    //   userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED
-    // ) {
-    //   Modal.info({
-    //     title: '使用提醒',
-    //     content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
-    //     titleAlign: 'start',
-    //     hideCancel: false,
-    //     cancelText: '暂不开通',
-    //     okText: '去开通',
-    //     onOk: () => {
-    //       router.push({
-    //         path: '/buyer/index',
-    //       });
-    //     },
-    //   });
-    // } else {
-    //   authModalVisible.value = true;
-    // }
 
     return;
   }
@@ -379,8 +359,6 @@ const clickAddCart = (): void => {
     });
   }
 };
-
-// const templateList = JSON.parse(testData);
 
 const getPrice = () => {
   if (prodDetail.value.saleType === SaleType.CONSULT) {
@@ -415,7 +393,7 @@ const onRadioChange = () => {
 
 const clickNav = (index: number) => {
   activeNavIndex.value = index;
-  navRef.value[index].scrollIntoView({ block: 'nearest' });
+  navRef.value[index].scrollIntoView({ block: 'center' });
 };
 
 const buyConsult = () => {
