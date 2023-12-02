@@ -130,16 +130,17 @@
         </div>
       </div>
       <div class="intro">
-        <div class="template">
+        <div ref="introParentRef" class="template">
           <template v-if="templateList.length">
-            <div class="nav">
-              <span
-                v-for="(item, index) in templateList"
-                :key="index"
-                :data-index="index"
-                @click="clickNav(index)"
-                >{{ item.moduleName }}</span
-              >
+            <div class="nav" :class="{ fixed: fixedTop }">
+              <span v-for="(item, index) in templateList" :key="index">
+                <span
+                  :class="{ active: activeNavIndex === index }"
+                  @click="clickNav(index)"
+                >
+                  {{ item.moduleName }}
+                </span>
+              </span>
             </div>
             <div
               v-for="(item, index) in templateList"
@@ -182,7 +183,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -232,6 +233,9 @@ const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
 const isPreview = ref(false);
+const introParentRef = ref();
+const fixedTop = ref(false);
+const activeNavIndex = ref(0);
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -410,11 +414,18 @@ const onRadioChange = () => {
 };
 
 const clickNav = (index: number) => {
-  navRef.value[index].scrollIntoView(true);
+  activeNavIndex.value = index;
+  navRef.value[index].scrollIntoView({ block: 'nearest' });
 };
 
 const buyConsult = () => {
   window.open('https://www.wjx.cn/vm/YDs2uey.aspx#', '_blank');
+};
+
+const onIntroScroll = () => {
+  const { top } = introParentRef.value?.getBoundingClientRect() || {};
+
+  fixedTop.value = Boolean(top < 70);
 };
 
 onMounted(() => {
@@ -461,6 +472,12 @@ onMounted(() => {
       }
     })
     .catch(() => {});
+
+  window.addEventListener('scroll', onIntroScroll, true);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', onIntroScroll);
 });
 </script>
 
@@ -580,7 +597,7 @@ onMounted(() => {
 
       .template {
         flex: 1;
-        width: 100%;
+        width: 900px;
         margin-right: 16px;
 
         .nav {
@@ -588,13 +605,19 @@ onMounted(() => {
           align-content: center;
           padding: 0 24px;
           background-color: #fff;
-          border-bottom: 1px solid #efefef;
+          box-shadow: 0 -1px 0 0 #e5e8ef inset;
+          // border-bottom: 1px solid #efefef;
+          &.fixed {
+            position: fixed;
+            top: 64px;
+            width: 900px;
+          }
 
           // :deep(.tele-link)
-          span {
+          > span {
             display: inline-block;
             flex: 1;
-            padding: 11px 16px 11px 20px;
+            margin: 12px auto;
             color: #4e5969;
             font-weight: 400;
             font-size: 14px;
@@ -602,10 +625,19 @@ onMounted(() => {
             text-align: center;
             cursor: pointer;
 
-            &.active {
+            .active {
+              position: relative;
               color: #1664ff;
               font-weight: 500;
-              border-bottom: 1px solid #1664ff;
+
+              &::after {
+                position: absolute;
+                top: 31px;
+                left: 0;
+                width: 100%;
+                border: 1px solid #1664ff;
+                content: '';
+              }
             }
           }
         }
