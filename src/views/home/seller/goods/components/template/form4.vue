@@ -53,7 +53,7 @@
           {
             required: true,
             validator: (value: string, cb: any) =>
-              itemValid(25, '请输入区块简介', value, cb),
+              itemValid(20, '请输入区块简介', value, cb),
           },
         ]"
         :validate-trigger="['change', 'input']"
@@ -61,7 +61,7 @@
         <t-textarea
           v-model="item.desc"
           placeholder="请输入区块简介"
-          :max-length="{ length: 25, errorOnly: true }"
+          :max-length="{ length: 20, errorOnly: true }"
           show-word-limit
         />
       </t-form-item>

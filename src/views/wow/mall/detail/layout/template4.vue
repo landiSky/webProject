@@ -67,27 +67,28 @@ const props = defineProps({
     .item {
       display: flex;
       align-items: start;
-      width: 200px;
-      margin-right: 12px;
+      width: 204px;
+      margin-right: 10px;
 
       &:last-child {
         margin-right: 0;
       }
 
       img {
-        width: 60px;
-        height: 60px;
-        margin-right: 12px;
+        width: 58px;
+        height: 58px;
+        margin-right: 6px;
       }
 
       .wrap {
         display: flex;
         flex-direction: column;
         align-items: start;
-        max-width: 128px;
+        max-width: 140px;
+        margin-top: -5px;
 
         .subtitle {
-          margin-bottom: 8px;
+          // margin-bottom: 8px;
           color: #1d2129;
           font-weight: 500;
           font-size: 14px;
