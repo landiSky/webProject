@@ -41,15 +41,18 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin-bottom: 20px;
-  padding: 20px;
+  padding: 12px 24px 32px 24px;
 
   &.hasBg {
     background-color: #fff;
   }
 
+  &:not(.hasBg) {
+    background-image: url('@/assets/images/wow/mall/detail_bg.jpg');
+  }
+
   .title {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     padding: 12px 0;
     color: #1d2129;
     font-weight: 500;

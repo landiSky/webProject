@@ -249,11 +249,13 @@
                     v-if="dataList?.attachmentAddressArr?.length !== 0"
                     style="float: left"
                   >
-                    <img
+                    <!-- style="width: 100px; height: 100px; margin-right: 10px" -->
+                    <t-image
                       v-for="(item, index) in dataList?.attachmentAddressArr"
                       :key="index"
                       class="pay-img"
-                      style="width: 100px; height: 100px; margin-right: 10px"
+                      width="100"
+                      height="100"
                       :src="`/server/web/file/orderDownload?name=${item}`"
                       alt=""
                     />
@@ -708,6 +710,7 @@ onMounted(() => {
       margin: 36px auto;
 
       .pay-img {
+        margin-right: 10px;
         border: 1px solid #e5e8ef;
         border-radius: 2px;
       }

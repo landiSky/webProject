@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div id="scrollMain" class="main">
     <router-view v-slot="{ Component, route }">
       <transition>
         <keep-alive v-if="showKeepAlive" :max="1">

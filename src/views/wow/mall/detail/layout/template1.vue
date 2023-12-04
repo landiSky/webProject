@@ -39,10 +39,14 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin-bottom: 20px;
-  // padding: 20px;
+  padding-bottom: 8px;
+
   &.hasBg {
     background-color: #fff;
+  }
+
+  &:not(.hasBg) {
+    background-image: url('@/assets/images/wow/mall/detail_bg.jpg');
   }
 
   .title {
@@ -63,8 +67,12 @@ const props = defineProps({
       flex-direction: column;
       align-items: center;
       width: 290px;
-      margin-right: 8px;
+      margin-right: 15px;
       padding: 20px 24px 40px 24px;
+
+      &:last-child {
+        margin-right: 0;
+      }
 
       img {
         width: 128px;

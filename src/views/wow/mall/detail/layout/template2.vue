@@ -52,15 +52,18 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin-bottom: 20px;
-  padding: 20px;
+  padding-top: 12px;
+  padding-bottom: 12px;
 
   &.hasBg {
     background-color: #fff;
   }
 
+  &:not(.hasBg) {
+    background-image: url('@/assets/images/wow/mall/detail_bg.jpg');
+  }
+
   .title {
-    margin-bottom: 8px;
     padding: 12px 0;
     color: #1d2129;
     font-weight: 500;
@@ -75,29 +78,28 @@ const props = defineProps({
 
     .item {
       display: flex;
-      // flex-direction: column;
       align-items: center;
-      margin-right: 8px;
       padding: 20px 24px 20px 24px;
 
       img {
-        width: 480px;
-        height: 128px;
-        margin-bottom: 12px;
+        width: 450px;
+        height: 225px;
       }
 
       .leftWrap {
         display: flex;
         flex-direction: column;
-        align-items: end;
-        margin-right: 24px;
+        align-items: center;
+        width: 402px;
+        padding-right: 16px;
       }
 
       .rightWrap {
         display: flex;
         flex-direction: column;
-        align-items: start;
-        margin-left: 24px;
+        align-items: center;
+        width: 402px;
+        padding-left: 16px;
       }
 
       .subtitle {
