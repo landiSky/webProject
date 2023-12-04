@@ -52,7 +52,7 @@ const props = defineProps({
   }
 
   .title {
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     padding: 12px 0;
     color: #1d2129;
     font-weight: 500;

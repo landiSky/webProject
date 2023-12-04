@@ -64,6 +64,7 @@ const props = defineProps({
   }
 
   .title {
+    margin-bottom: 12px;
     padding: 12px 0;
     color: #1d2129;
     font-weight: 500;
@@ -78,12 +79,12 @@ const props = defineProps({
 
     .item {
       display: flex;
-      align-items: center;
-      padding: 20px 24px 20px 24px;
+      align-items: start;
+      padding: 8px 24px 20px 24px;
 
       img {
-        width: 450px;
-        height: 225px;
+        width: 460px;
+        height: 300px;
       }
 
       .leftWrap {
@@ -91,7 +92,8 @@ const props = defineProps({
         flex-direction: column;
         align-items: center;
         width: 402px;
-        padding-right: 16px;
+        margin-top: 20px;
+        padding-right: 20px;
       }
 
       .rightWrap {
@@ -99,7 +101,8 @@ const props = defineProps({
         flex-direction: column;
         align-items: center;
         width: 402px;
-        padding-left: 16px;
+        margin-top: 20px;
+        padding-left: 20px;
       }
 
       .subtitle {
