@@ -397,7 +397,7 @@ const clickNav = (index: number) => {
 };
 
 const buyConsult = () => {
-  window.open('https://www.wjx.cn/vm/YDs2uey.aspx#', '_blank');
+  window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
 const onIntroScroll = () => {
