@@ -64,12 +64,10 @@
         <t-descriptions-item label="营业执照">
           <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicense}`"
+            height="100"
+            width="158"
             fit="contain"
-            style="
-              max-height: 100px;
-              border: 2px solid #e5e8ef;
-              border-radius: 2px;
-            "
+            style="border-radius: 2px"
           />
         </t-descriptions-item>
       </t-descriptions>
@@ -95,21 +93,17 @@
           <t-image
             class="first-img"
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardz}`"
+            height="100"
+            width="158"
             fit="contain"
-            style="
-              max-height: 100px;
-              border: 2px solid #e5e8ef;
-              border-radius: 2px;
-            "
+            style="border-radius: 2px"
           />
           <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardf}`"
+            height="100"
+            width="158"
             fit="contain"
-            style="
-              max-height: 100px;
-              border: 2px solid #e5e8ef;
-              border-radius: 2px;
-            "
+            style="border-radius: 2px"
           />
         </t-descriptions-item>
       </t-descriptions>
