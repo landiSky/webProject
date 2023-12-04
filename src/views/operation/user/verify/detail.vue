@@ -64,9 +64,9 @@
         <t-descriptions-item label="营业执照">
           <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicense}`"
+            fit="contain"
             style="
-              width: 158px;
-              height: 100px;
+              max-height: 100px;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
@@ -95,18 +95,18 @@
           <t-image
             class="first-img"
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardz}`"
+            fit="contain"
             style="
-              width: 158px;
-              height: 100px;
+              max-height: 100px;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
           />
           <t-image
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardf}`"
+            fit="contain"
             style="
-              width: 158px;
-              height: 100px;
+              max-height: 100px;
               border: 2px solid #e5e8ef;
               border-radius: 2px;
             "
@@ -295,5 +295,9 @@ onMounted(async () => {
 
 :deep(.tele-descriptions-item-label-block) {
   width: 108px;
+}
+
+:deep(.tele-image-error-alt) {
+  padding: 0;
 }
 </style>
