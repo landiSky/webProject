@@ -70,6 +70,10 @@ const props = defineProps({
       width: 200px;
       margin-right: 12px;
 
+      &:last-child {
+        margin-right: 0;
+      }
+
       img {
         width: 60px;
         height: 60px;
@@ -80,6 +84,7 @@ const props = defineProps({
         display: flex;
         flex-direction: column;
         align-items: start;
+        max-width: 128px;
 
         .subtitle {
           margin-bottom: 8px;
