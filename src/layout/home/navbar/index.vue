@@ -5,7 +5,7 @@
         <!-- <t-space :size="[0]"> -->
         <t-link class="link" @click="goWow">
           <iconpark-icon name="logo-gray" size="28px"></iconpark-icon>
-          <span class="title"> 分布式工业互联网平台 </span>
+          <span class="title"> IDSphere </span>
         </t-link>
         <!-- </t-space> -->
       </div>
