@@ -61,6 +61,7 @@ const [block1, block2] = props.templateData.blockList;
   }
 
   .title {
+    margin-bottom: 20px;
     padding: 12px 0;
     color: #1d2129;
     font-weight: 500;
@@ -71,8 +72,7 @@ const [block1, block2] = props.templateData.blockList;
   .list {
     display: flex;
     justify-content: start;
-    margin-top: 12px;
-
+    // margin-top: 12px;
     img {
       width: 480px;
       //   height: 128px;
