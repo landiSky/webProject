@@ -174,8 +174,8 @@ import {
   downGoods,
   goodsList,
   upGoods,
+  classList,
 } from '@/api/operation/goods';
-import { classList } from '@/api/operation/sync-class';
 import { useRouter } from 'vue-router';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
