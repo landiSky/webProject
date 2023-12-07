@@ -93,7 +93,7 @@ export function createPermissionGuard(router: Router) {
         configInfo = JSON.parse(localStorage.getItem('configInfo') as string);
       }
       // eslint-disable-next-line camelcase
-      const { clientId, clientSecret, redirectUri } = configInfo;
+      const { clientId, clientSecret, redirectUri, basic } = configInfo;
 
       const formData = new FormData();
       formData.append('grant_type', 'authorization_code');
@@ -109,7 +109,7 @@ export function createPermissionGuard(router: Router) {
       formData.append('client_id', clientId);
       formData.append('client_secret', clientSecret);
 
-      apiLoginToken(formData)
+      apiLoginToken(formData, basic)
         .then((data: Record<string, any>) => {
           setToken(data.accessToken);
 

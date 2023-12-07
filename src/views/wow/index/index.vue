@@ -70,7 +70,12 @@
                   @/assets/images/wow/index/${card.bgImg}
                 )`,
               }" -->
-            <div v-for="(card, index) in item.cards" :key="index" class="card">
+            <div
+              v-for="(card, index) in item.cards"
+              :key="index"
+              class="card"
+              @click="goCardDetail(card)"
+            >
               <img :src="card.bgImg" alt="" />
               <div class="cardContent">
                 <span>{{ card.name }}</span>
@@ -164,17 +169,24 @@ import tab42 from '@/assets/images/wow/index/tab4-2.png';
 import tab43 from '@/assets/images/wow/index/tab4-3.png';
 import hoverVector from '@/assets/images/wow/index/hover-vector.png';
 
-import { apiActiveNode, apiNodeOverall } from '@/api/wow/index';
+import {
+  apiActiveNode,
+  apiNodeOverall,
+  apiGetProductId,
+} from '@/api/wow/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
+  userStore
+);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
+
+const accessProductIds = ref<Record<string, any>>({});
 
 // 轮播图图片枚举
 const carouselList = [
@@ -279,85 +291,103 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc:
+      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
         desc: '星火·链网”骨干节点',
         bgImg: tab11,
+        idKey: 'tnaas',
       },
       {
         name: 'IDPoint',
         desc: '标识解析二级节点',
         bgImg: tab12,
+        idKey: 'idpoint',
       },
+
       {
         name: 'IDHub',
         desc: '标识解析二级节点',
         bgImg: tab13,
+        idKey: 'idhub',
       },
     ],
   },
   {
     title: '工业互联网技术服务',
-    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc:
+      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
         desc: '大数据监测平台',
         bgImg: tab21,
+        idKey: 'idmonitor',
       },
       {
         name: 'IDMeta',
         desc: '元数据管理平台',
         bgImg: tab22,
+        idKey: 'idmeta',
       },
       {
         name: 'IDGuard',
         desc: '标识安全卫士',
         bgImg: tab23,
+        idKey: 'idguard',
       },
     ],
   },
   {
     title: '区块链技术服务',
-    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc:
+      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
         desc: '许可公有链',
         bgImg: tab31,
+        idKey: 'tchain',
       },
+
       {
         name: 'TBaas',
         desc: '区块链服务平台',
         bgImg: tab32,
+        idKey: 'tbaas',
       },
       {
         name: 'TPaas',
         desc: '有象账户',
         bgImg: tab33,
+        idKey: 'tpasss',
       },
     ],
   },
   {
     title: '创新服务',
-    desc: '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
+    desc:
+      '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
         name: '',
         desc: '新型产业园区服务',
         bgImg: tab41,
+        idKey: 'industrialPark',
       },
       {
         name: '',
         desc: '“双碳”业务体系',
         bgImg: tab42,
+        idKey: 'intelHardware',
       },
       {
         name: '',
         desc: '工业互联网智能硬件',
         bgImg: tab43,
+        idKey: 'twoCarbon',
       },
     ],
   },
@@ -396,12 +426,27 @@ const columns = [
   },
 ];
 
+const goCardDetail = (item: Record<string, any>) => {
+  const productId = accessProductIds.value[item.idKey];
+  if (!productId) return;
+  router.push({
+    name: 'wowMallDetail',
+    params: {
+      id: productId,
+    },
+  });
+};
+
 onMounted(() => {
   apiActiveNode().then((data: any) => {
     activeNodeList.value = data;
   });
   apiNodeOverall().then((data) => {
     activeOverall.value = data;
+  });
+
+  apiGetProductId().then((data) => {
+    accessProductIds.value = data;
   });
 });
 </script>
@@ -573,6 +618,7 @@ onMounted(() => {
       height: 284px;
       margin-right: 46px;
       color: #435c97;
+      cursor: pointer;
 
       .hoverVector {
         display: none;
