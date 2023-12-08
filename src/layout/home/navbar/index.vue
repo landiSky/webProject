@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -76,6 +76,7 @@ import { NodeAuthStatus } from '@/enums/common';
 
 const userStore = useUserStore();
 const router = useRouter();
+const route = useRoute();
 
 const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 
@@ -115,10 +116,12 @@ const clickIdService = () => {
       cancelText: '暂不开通',
       okText: '去开通',
       onOk: () => {
+        // 变更不同的值，再卖家首页才可以多次点击
+        const curAuthValue = route.query.openAuthModal;
         router.push({
           path: '/buyer/index',
           query: {
-            openAuthModal: 1,
+            openAuthModal: curAuthValue ? Number(curAuthValue) + 1 : 1,
           },
         });
       },
