@@ -36,6 +36,7 @@
           <t-link
             class="subitem"
             href="/智数通（IDSphere）买家使用指导手册20231207.pdf"
+            target="_blank"
             >使用服务</t-link
           >
           <!-- <span class="subitem">使用服务</span> -->
@@ -45,6 +46,7 @@
           <t-link
             class="subitem"
             href="/智数通（IDSphere）卖家使用指导手册20231207.pdf"
+            target="_blank"
             >入驻指南</t-link
           >
           <!-- <span class="subitem">入驻指南</span> -->
