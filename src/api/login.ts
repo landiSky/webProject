@@ -23,14 +23,13 @@ export function apiConfigInfo() {
 }
 
 // 获取 token
-export function apiLoginToken(data: Record<string, any>) {
+export function apiLoginToken(data: Record<string, any>, basic: string) {
   return $http.post('/sso/web/oauth/token', data, {
     customFields: {
       withoutToken: true,
     },
     headers: {
-      Authorization:
-        'Basic c3NvX3BsYXRmb3JtOjhiOWNkNzRlNWE4YzVjMjk3YzM4NTFiYjliY2NiZjVi',
+      Authorization: `Basic ${basic}`,
     },
   });
 }

@@ -1,5 +1,10 @@
 import $http from '@/utils/http';
 
+// 分类列表
+export function classList() {
+  return $http.get('/operation/web/product/type/tree');
+}
+
 // 订阅列表
 export function observeList() {
   return $http.get('/operation/web/subscribe/tree');

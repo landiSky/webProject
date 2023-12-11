@@ -9,3 +9,8 @@ export function apiActiveNode() {
 export function apiNodeOverall() {
   return $http.get('/server/web/company/getSnmsNodeData');
 }
+
+// 平台产品商品 id 跳转
+export function apiGetProductId() {
+  return $http.get('/server/web/reception/home');
+}

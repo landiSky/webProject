@@ -97,8 +97,11 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -124,7 +127,12 @@ const gotoMall = () => {
 };
 
 const goBuyer = () => {
-  router.push({ path: '/buyer/index' });
+  // 运营后台跳转到运营后台首页 s
+  if (userInfo.value?.isAdmin) {
+    router.push({ path: '/goods/manage' });
+  } else {
+    router.push({ path: '/buyer/index' });
+  }
 };
 
 const clickLogout = () => {
