@@ -59,7 +59,11 @@
         >
           <div class="tabDesc">
             <span class="contentTitle">
-              <iconpark-icon name="digitalbase" size="20px"></iconpark-icon>
+              <iconpark-icon
+                :key="item.title"
+                name="digitalbase"
+                size="20px"
+              ></iconpark-icon>
               <span>{{ item.title }}</span>
             </span>
             <span class="contentDesc">{{ item.desc }}</span>
