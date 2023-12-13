@@ -355,6 +355,15 @@
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
+                    <p v-if="dataList.accountCount" style="color: #86909c"
+                      >(
+                      <span>{{ dataList.accountCount }}个账号</span>
+                      <span v-if="dataList.buyDuration !== '0'"
+                        >{{ dataList.buyDuration }}个月</span
+                      >
+                      <span v-else>不限</span>
+                      )</p
+                    >
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -384,12 +393,15 @@
                 </t-col>
                 <t-col :span="2">
                   <div class="grid-content">
-                    {{
-                      dataList.saleType === 0
-                        ? dataList.buyDuration + '个月'
-                        : '不限'
-                    }}</div
-                  >
+                    <span v-if="dataList.saleType === 0">
+                      {{
+                        dataList.buyDuration === '0'
+                          ? '不限'
+                          : dataList.buyDuration + '个月'
+                      }}
+                    </span>
+                    <span v-else>不限</span>
+                  </div>
                 </t-col>
                 <t-col
                   :span="

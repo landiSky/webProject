@@ -341,9 +341,13 @@
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <p v-if="dataList.accountCount" style="color: #86909c"
-                      >({{ dataList.accountCount }}个账号{{
-                        dataList.buyDuration
-                      }}个月)</p
+                      >(
+                      <span>{{ dataList.accountCount }}个账号</span>
+                      <span v-if="dataList.buyDuration !== '0'"
+                        >{{ dataList.buyDuration }}个月</span
+                      >
+                      <span v-else>不限</span>
+                      )</p
                     >
                   </div>
                 </t-col>
