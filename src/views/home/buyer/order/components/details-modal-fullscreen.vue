@@ -372,12 +372,15 @@
                 </t-col>
                 <t-col :span="2">
                   <div class="grid-content">
-                    {{
-                      dataList.saleType === 0
-                        ? dataList.buyDuration + '个月'
-                        : '不限'
-                    }}</div
-                  >
+                    <span v-if="dataList.saleType === 0">
+                      {{
+                        dataList.buyDuration === '0'
+                          ? '不限'
+                          : dataList.buyDuration + '个月'
+                      }}
+                    </span>
+                    <span v-else>不限</span>
+                  </div>
                 </t-col>
                 <t-col :span="5">
                   <div v-if="dataList.saleType !== 2" class="grid-content">
