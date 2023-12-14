@@ -123,7 +123,7 @@
                     <div class="order-item-right">{{
                       dataList.saleType === 2 || dataList.saleType === 1
                         ? '不限'
-                        : dataList.dueDate
+                        : dataList.dueDate || '不限'
                     }}</div>
                   </t-space>
                 </div>
