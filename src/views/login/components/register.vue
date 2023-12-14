@@ -35,6 +35,7 @@
           v-model.trim="form.password"
           placeholder="请输入密码"
           size="large"
+          autocomplete="new-password"
         >
           <template #prefix>
             <iconpark-icon name="lock"></iconpark-icon>
