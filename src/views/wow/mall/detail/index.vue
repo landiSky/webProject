@@ -393,7 +393,13 @@ const onRadioChange = () => {
 
 const clickNav = (index: number) => {
   activeNavIndex.value = index;
-  navRef.value[index].scrollIntoView({ block: 'center' });
+  navRef.value[index].scrollIntoView(true);
+
+  // nav 吸顶后会占用 46 的高度，如果不加，会覆盖一部分 title
+  const topNum = document.querySelector('#scrollMain')?.scrollTop || 0;
+  document.querySelector('#scrollMain')?.scrollTo({
+    top: topNum - 92,
+  });
 };
 
 const buyConsult = () => {
