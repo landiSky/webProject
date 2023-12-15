@@ -319,14 +319,14 @@
               :show-cancel-button="false"
               accept=".pdf,.doc,.docx"
               tip-position="bottom"
-              @before-upload="beforeUpload10"
+              @before-upload="beforeUpload50"
               @success="uploadExpSuccess"
               @error="uploadExpError"
               @change="uploadExpChange"
             ></t-upload>
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
-            <div class="hint">文件大小限制10M以内，支持PDF格式、Word格式。</div>
+            <div class="hint">文件大小限制50M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
             <TemplateDrawer
@@ -943,8 +943,8 @@ const uploadExpError = (fileItem: FileItem) => {
   formModel.value.useExplain = '';
   formRef.value.validateField('useExplain');
   const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
+  if (size > 50 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过50M`);
   } else {
     Message.error(`上传失败，请检查网络`);
   }
@@ -1280,7 +1280,7 @@ const beforeUpload = (file: File) => {
   });
 };
 
-const beforeUpload10 = (file: File) => {
+const beforeUpload50 = (file: File) => {
   return new Promise<void>((resolve, reject) => {
     const type = file.type as string;
     console.log(type);
@@ -1294,9 +1294,9 @@ const beforeUpload10 = (file: File) => {
       Message.warning(`上传失败，请检查文件类型`);
       reject();
     }
-    const over2 = file.size > 1024 * 1024 * 10;
+    const over2 = file.size > 1024 * 1024 * 50;
     if (over2) {
-      Message.warning(`上传失败，文件大小不要超过10M`);
+      Message.warning(`上传失败，文件大小不要超过50M`);
       reject();
     }
     if (!online.value) {
