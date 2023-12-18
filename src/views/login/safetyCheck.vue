@@ -193,8 +193,11 @@ const clickCheckBtn = () => {
         .then(() => {
           // 目的是绑定手机号后，更新用户信息
           userStore.getUserBasicInfo();
+
+          const isAdmin = userStore.userInfo?.isAdmin;
+          const pushName = isAdmin ? 'goodsManage' : 'buyerIndex';
           router.push({
-            name: 'buyerIndex',
+            name: pushName,
             query: {
               // 目的时校验成功后，能进入买家首页而不是停留在校验页
               safeCheck: 'true',
