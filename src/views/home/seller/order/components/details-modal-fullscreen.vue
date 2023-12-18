@@ -334,7 +334,7 @@
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
-                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"
+                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.productSource}&serverId=${dataList.productServerId}`"
                         alt=""
                       />
                     </div>
@@ -506,7 +506,7 @@ const state = reactive({
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
-const dataList = ref({
+const dataList = ref<Record<string, any>>({
   id: '1', // 订单id
   orderNum: '1', // 订单号
   productName: '双皮奶', // 商品名称

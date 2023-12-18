@@ -166,7 +166,7 @@
                   <div class="imgs">
                     <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.productSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -254,8 +254,7 @@
                     <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
                     <t-button
                       v-if="
-                        (item.orderStatus === 0 && item.saleType !== 2) ||
-                        item.orderStatus === 4
+                        item.saleType !== 2 && [0, 4].includes(item.orderStatus)
                       "
                       type="text"
                       style="width: 100%"
