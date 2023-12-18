@@ -430,8 +430,8 @@
                 </t-col>
                 <t-col
                   v-if="
-                    (dataList.orderStatus === 0 && dataList.saleType !== 2) ||
-                    dataList.orderStatus === 4
+                    dataList.saleType !== 2 &&
+                    [0, 4].includes(dataList.orderStatus)
                   "
                   :span="3"
                 >
