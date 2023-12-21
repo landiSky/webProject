@@ -166,7 +166,7 @@
                   <div class="imgs">
                     <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
-                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
+                      :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.productSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
                   </div>
@@ -180,10 +180,14 @@
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
                     <p v-if="item.saleType === 0" class="bottom"
-                      >({{ item.accountCount }}个账号{{
-                        item.buyDuration
-                      }}个月)</p
-                    >
+                      >(
+                      <span>{{ item.accountCount }}个账号</span>
+                      <span v-if="item.buyDuration !== '0'"
+                        >{{ item.buyDuration }}个月</span
+                      >
+                      <span v-else>不限</span>
+                      )
+                    </p>
                   </div>
                 </div>
               </t-col>
@@ -250,8 +254,7 @@
                     <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
                     <t-button
                       v-if="
-                        (item.orderStatus === 0 && item.saleType !== 2) ||
-                        item.orderStatus === 4
+                        item.saleType !== 2 && [0, 4].includes(item.orderStatus)
                       "
                       type="text"
                       style="width: 100%"
@@ -380,8 +383,11 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,

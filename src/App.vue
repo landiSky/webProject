@@ -37,10 +37,12 @@ watch(
     let authList = userStore.userInfoByCompany?.menuCodes || [];
     if (isAdmin) {
       authList = opearationRouteList;
+
+      if (source) {
+        authList = infoRouteList;
+      }
     }
-    if (source) {
-      authList = infoRouteList;
-    }
+
     useMenuStore().genLeftMenu(authList);
   },
   {

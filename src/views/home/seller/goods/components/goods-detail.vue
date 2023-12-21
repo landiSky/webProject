@@ -259,13 +259,13 @@
                 {{ PriceTypeEnum[dataInfo.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
-            <!-- <div class="line"></div> -->
+            <div class="line"></div>
             <div
               v-for="(st, index) of dataInfo.productDeliverySetList"
               :key="index"
               class="line-width"
             >
-              <div class="line"></div>
+              <!-- <div class="line"></div> -->
               <t-descriptions
                 :id="'st' + index"
                 :title="'交付版本' + (index + 1)"

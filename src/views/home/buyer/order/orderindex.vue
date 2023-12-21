@@ -182,10 +182,14 @@
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
                     <p v-if="item.saleType === 0" class="bottom"
-                      >({{ item.accountCount }}个账号{{
-                        item.buyDuration
-                      }}个月)</p
-                    >
+                      >(
+                      <span>{{ item.accountCount }}个账号</span>
+                      <span v-if="item.buyDuration !== '0'"
+                        >{{ item.buyDuration }}个月</span
+                      >
+                      <span v-else>不限</span>
+                      )
+                    </p>
                   </div>
                 </div>
               </t-col>
@@ -371,8 +375,11 @@ import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 

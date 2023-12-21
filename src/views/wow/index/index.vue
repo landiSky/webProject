@@ -372,24 +372,23 @@ const platProductsList = [
   },
   {
     title: '创新服务',
-    desc:
-      '构建数字化产业集群，打造新型产业园区规划和产业导入服务，打造创新的数字底座、智能硬件、绿色业务平台。',
+    desc: '构建数字化产业集群，打造创新的数字底座、智能硬件、绿色业务平台。',
     cards: [
       {
         name: '',
-        desc: '新型产业园区服务',
-        bgImg: tab41,
+        desc: 'Teleinfo碳管家',
+        bgImg: tab42,
         idKey: 'industrialPark',
       },
       {
         name: '',
-        desc: '“双碳”业务体系',
+        desc: '碳电分析管理平台',
         bgImg: tab42,
         idKey: 'intelHardware',
       },
       {
         name: '',
-        desc: '工业互联网智能硬件',
+        desc: '区块链模组',
         bgImg: tab43,
         idKey: 'twoCarbon',
       },

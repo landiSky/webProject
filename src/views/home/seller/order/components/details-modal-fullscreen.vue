@@ -172,7 +172,7 @@
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
-                      dataList.dueDate || '-'
+                      dataList.dueDate || '不限'
                     }}</div>
                   </t-space>
                 </div>
@@ -334,7 +334,7 @@
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
-                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"
+                        :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.productSource}&serverId=${dataList.productServerId}`"
                         alt=""
                       />
                     </div>
@@ -355,6 +355,15 @@
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
+                    <p v-if="dataList.accountCount" style="color: #86909c"
+                      >(
+                      <span>{{ dataList.accountCount }}个账号</span>
+                      <span v-if="dataList.buyDuration !== '0'"
+                        >{{ dataList.buyDuration }}个月</span
+                      >
+                      <span v-else>不限</span>
+                      )</p
+                    >
                     <!-- <p style="color: #86909c"
                       >({{ dataList.accountCount
                       }}{{ dataList.buyDuration }})</p
@@ -384,12 +393,15 @@
                 </t-col>
                 <t-col :span="2">
                   <div class="grid-content">
-                    {{
-                      dataList.saleType === 0
-                        ? dataList.buyDuration + '个月'
-                        : '不限'
-                    }}</div
-                  >
+                    <span v-if="dataList.saleType === 0">
+                      {{
+                        dataList.buyDuration === '0'
+                          ? '不限'
+                          : dataList.buyDuration + '个月'
+                      }}
+                    </span>
+                    <span v-else>不限</span>
+                  </div>
                 </t-col>
                 <t-col
                   :span="
@@ -418,8 +430,8 @@
                 </t-col>
                 <t-col
                   v-if="
-                    (dataList.orderStatus === 0 && dataList.saleType !== 2) ||
-                    dataList.orderStatus === 4
+                    dataList.saleType !== 2 &&
+                    [0, 4].includes(dataList.orderStatus)
                   "
                   :span="3"
                 >
@@ -494,7 +506,7 @@ const state = reactive({
 });
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
-const dataList = ref({
+const dataList = ref<Record<string, any>>({
   id: '1', // 订单id
   orderNum: '1', // 订单号
   productName: '双皮奶', // 商品名称
