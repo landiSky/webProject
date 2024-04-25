@@ -546,31 +546,31 @@ const loadMore = (
   option: { level: any },
   done: (arg0: { value: any; label: any; isLeaf: boolean } | undefined) => void
 ) => {
-  const { level } = option;
-  const promise = new Promise((resolve) => {
-    const params = {
-      code: level === 1 ? pathValue[0] : pathValue[1],
-    };
-    get(`${requestUrl}/v2/web/goods/selectRegion`, params).then((res) => {
-      if (res.code !== 200) {
-        return;
-      }
-      if (level === 1) {
-        districts.value = res.data;
-      } else {
-        municipality.value = res.data;
-      }
-      const openlist = res.data.map((item) => {
-        return {
-          value: level === 1 ? item?.cityCode : item?.districtCode,
-          label: level === 1 ? item?.cityName : item?.districtName,
-          isLeaf: level >= 2,
-        };
-      });
-      resolve(openlist);
-    });
-  });
-  return promise;
+  // const { level } = option;
+  // const promise = new Promise((resolve) => {
+  // const params = {
+  //   code: level === 1 ? pathValue[0] : pathValue[1],
+  // };
+  // get(`${requestUrl}/v2/web/goods/selectRegion`, params).then((res) => {
+  //   if (res.code !== 200) {
+  //     return;
+  //   }
+  //   if (level === 1) {
+  //     districts.value = res.data;
+  //   } else {
+  //     municipality.value = res.data;
+  //   }
+  //   const openlist = res.data.map((item) => {
+  //     return {
+  //       value: level === 1 ? item?.cityCode : item?.districtCode,
+  //       label: level === 1 ? item?.cityName : item?.districtName,
+  //       isLeaf: level >= 2,
+  //     };
+  //   });
+  //   resolve(openlist);
+  // });
+  // });
+  // return promise;
 };
 
 onMounted(() => {
