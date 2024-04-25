@@ -58,6 +58,10 @@
         <t-descriptions-item label="统一社会信用代码">
           {{ currentData.itemInfo.creditCode ?? '-' }}
         </t-descriptions-item>
+        <!--测试1 企业地址-->
+        <t-descriptions-item label="企业地址">
+          北京市/北京市/朝阳区 某某某
+        </t-descriptions-item>
         <t-descriptions-item label="法人姓名">
           {{ currentData.itemInfo.legalPersonName ?? '-' }}
         </t-descriptions-item>

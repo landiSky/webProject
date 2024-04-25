@@ -110,6 +110,11 @@
                 <p style="float: left; width: 20%">统一社会信用代码</p>
                 <p style="float: left">{{ detaillist.creditCode }}</p>
               </div>
+              <!--测试1 企业地址-->
+              <div class="informationlist">
+                <p style="float: left; width: 20%">企业地址</p>
+                <p style="float: left">北京市/北京市/朝阳区 某某某</p>
+              </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">法人姓名</p>
                 <p style="float: left">{{ detaillist.legalPersonName }}</p>

@@ -71,6 +71,28 @@
           >
           </t-input>
         </t-form-item>
+        <!--测试1 企业地址-->
+        <t-form-item label="企业地址" field="enterpriseAddress">
+          <t-cascader
+            v-model="formModel.enterpriseAddress"
+            placeholder="请选择省市区"
+            allow-clear
+            :load-more="loadMore"
+            :options="registration"
+            :style="{ flex: '0 2 50%' }"
+          />
+          <t-input
+            v-model="formModel.address"
+            :max-length="{
+              length: 500,
+              errorOnly: true,
+            }"
+            class="item-input"
+            show-word-limit
+            placeholder="请输入详细地址"
+          >
+          </t-input>
+        </t-form-item>
         <t-form-item label="法人姓名" field="legalPersonName">
           <t-input
             v-model="formModel.legalPersonName"
@@ -336,6 +358,10 @@ const formModel = ref<Record<string, any>>({
   // 新增 0 重新添加 1
   type: 0,
   companyCerPath: '',
+  // 企业地址-省市县
+  enterpriseAddress: [],
+  // 企业地址-详细地址
+  address: '',
 });
 
 const formRules: any = {
@@ -379,7 +405,6 @@ const formRules: any = {
       message: '请输入正确的身份证号',
     },
   ],
-
   contactidcard: [
     {
       required: true,
@@ -396,7 +421,25 @@ const formRules: any = {
     },
   ],
   // contactidcard: [{ required: true, message: '请上传身份证' }],
+  enterpriseAddress: [
+    {
+      required: true,
+      message: '请输入企业地址',
+      validator: (value: string, cb: (params?: any) => void) => {
+        if (!value) return cb('请选择所在地址');
+        if (!formModel.value.address) {
+          return cb('请输入详细地址');
+        }
+        return cb();
+      },
+    },
+  ],
 };
+
+// 省市县
+const registration = ref([]);
+const districts = ref();
+const municipality = ref();
 
 const goback = () => {
   // showModal.value = false;
@@ -498,6 +541,38 @@ const canceldes = () => {
   emit('cancel', formModel.value.type);
 };
 
+// 地区选择
+const loadMore = (
+  option: { level: any },
+  done: (arg0: { value: any; label: any; isLeaf: boolean } | undefined) => void
+) => {
+  const { level } = option;
+  const promise = new Promise((resolve) => {
+    const params = {
+      code: level === 1 ? pathValue[0] : pathValue[1],
+    };
+    get(`${requestUrl}/v2/web/goods/selectRegion`, params).then((res) => {
+      if (res.code !== 200) {
+        return;
+      }
+      if (level === 1) {
+        districts.value = res.data;
+      } else {
+        municipality.value = res.data;
+      }
+      const openlist = res.data.map((item) => {
+        return {
+          value: level === 1 ? item?.cityCode : item?.districtCode,
+          label: level === 1 ? item?.cityName : item?.districtName,
+          isLeaf: level >= 2,
+        };
+      });
+      resolve(openlist);
+    });
+  });
+  return promise;
+};
+
 onMounted(() => {
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
@@ -551,5 +626,9 @@ onMounted(() => {
   // :deep(.tele-upload-list-picture) {
   //   transition: none;
   // }
+  .item-input {
+    flex: 0 2 50%;
+    margin-left: 12px;
+  }
 }
 </style>
