@@ -5,13 +5,98 @@
     <!-- 为什么要加入IDInside -->
     <div></div>
     <!-- 如何加入IDInside -->
-    <div></div>
+    <div class="join">
+      <div class="unified">
+        <div class="unified-left"></div>
+        <div class="unified-title">如何加入IDInside</div>
+        <div class="unified-right"></div>
+      </div>
+      <div class="step">
+        <div class="card">
+          <div class="icon">01</div>
+          <div class="title">报名申请</div>
+          <div class="text"
+            >点击「<span class="text-button">立即报名</span>」
+            填写报名申请信息</div
+          >
+        </div>
+        <div class="card">
+          <div class="icon">02</div>
+          <div class="title">资料提交</div>
+          <div class="text"
+            >点击「<span class="text-button">立即上传</span>」
+            上传完整的产品集成方案。</div
+          >
+        </div>
+        <div class="card">
+          <div class="icon">03</div>
+          <div class="title">报名申请</div>
+          <div class="text"
+            >点击「<span class="text-button">立即查看</span>」
+            查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
+          >
+        </div>
+        <div class="card">
+          <div class="icon">04</div>
+          <div class="title">报名申请</div>
+          <div class="text"
+            >获取IDInside认证证书，请提供测试环境信息及开发测试报告「<span
+              class="text-button"
+              >立即报名</span
+            >」
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">05</div>
+          <div class="title">报名申请</div>
+          <div class="text"
+            >点击「<span class="text-button">立即报名</span>」
+            填写报名申请信息</div
+          >
+        </div>
+      </div>
+    </div>
     <!-- 优秀认证案例 -->
-    <div>
+    <div class="case">
       <div class="unified">
         <div class="unified-left"></div>
         <div class="unified-title">优秀认证案例</div>
         <div class="unified-right"></div>
+      </div>
+      <div class="synopsis">
+        <div class="synopsis-left">
+          <div class="left-01">
+            <div class="tamList">能源行业</div>
+            <div class="title">中小型数字化转型案例</div>
+          </div>
+          <div class="left-02">案例介绍：</div>
+          <div class="left-03"
+            >倾力打造的云计算品牌，面向全世界各个国家和地区的政府机构、企业组织和个人开发者，提供全球领先的云计算、大数据、人工智能等技术产品与服务，以卓越的科技能力打造丰富的行业解决方案，构建开放共赢的云端生态，推动产业互联网建设，助力各行各业实现数字化升级。</div
+          >
+          <div class="left-04"></div>
+          <div class="left-02">取得成果：</div>
+          <!-- 展示图片 -->
+          <div class="left-05">
+            <div class="image">1</div>
+            <div class="image">2</div>
+            <div class="image">3</div>
+            <div class="image">4</div>
+            <div class="image">5</div>
+            <div class="image">6</div>
+          </div>
+          <!-- 展示文字 -->
+          <!-- <div class="left-06">
+            <ui>
+              <li>倾力打造的云计算品牌</li>
+              <li>面向全世界各个国家和地区的政府机构</li>
+              <li>倾力打造的云计算品牌</li>
+              <li>面向全世界各个国家和地区的政府机构</li>
+              <li>倾力打造的云计算品牌</li>
+              <li>面向全世界各个国家和地区的政府机构</li>
+            </ui>
+          </div> -->
+        </div>
+        <div class="synopsis-right">图片</div>
       </div>
     </div>
     <!-- 优秀认证产品 -->
@@ -91,6 +176,188 @@ import WowFooter from '../components/wowFooter/index.vue';
 </script>
 
 <style lang="less" scoped>
+.join {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(127, 235, 39, 0.027);
+
+  .step {
+    display: flex;
+    gap: 28px;
+
+    .card {
+      gap: 0;
+      width: 254px;
+      height: 276px;
+      padding: 20px;
+      background: red;
+      border: 1px solid;
+      border-radius: 4px;
+      border-image-source: linear-gradient(
+        180deg,
+        #fff 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      box-shadow: 0 6px 16px 0 rgba(41, 78, 207, 0.08);
+
+      .icon {
+        display: flex;
+        gap: 0;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+        color: rgba(255, 255, 255, 1);
+        font-weight: 500;
+        font-size: 20px;
+        font-family: Barlow;
+        border-radius: 4px;
+      }
+
+      .title {
+        margin-top: 12px;
+        font-weight: 500;
+        font-size: 16px;
+        font-family: PingFang SC;
+        line-height: 24px;
+        text-align: left;
+      }
+
+      .text {
+        margin-top: 12px;
+        color: rgba(78, 89, 105, 1);
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px;
+        text-align: left;
+
+        .text-button {
+          color: rgba(22, 100, 255, 1);
+          font-weight: 400;
+          font-size: 14px;
+          font-family: PingFang SC;
+          line-height: 22px;
+          text-align: left;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.case {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgb(225, 245, 49);
+
+  .synopsis {
+    display: flex;
+    width: 1398px;
+    height: 660px;
+
+    .synopsis-left {
+      width: 500px;
+      padding: 57px 52px 0;
+      background: burlywood;
+
+      .left-01 {
+        display: flex;
+        gap: 12px;
+
+        .tamList {
+          width: 64px;
+          height: 28px;
+          padding: 4px 8px 4px 8px;
+          color: rgba(0, 147, 42, 1);
+          font-weight: 400;
+          font-size: 12px;
+          font-family: PingFang SC;
+          line-height: 20px;
+          text-align: left;
+          background: rgba(232, 255, 234, 1);
+          border-radius: 2px 0 0 0;
+        }
+
+        .title {
+          color: rgba(29, 33, 41, 1);
+          font-weight: 500;
+          font-size: 20px;
+          font-family: PingFang SC;
+          line-height: 28px;
+          text-align: left;
+        }
+      }
+
+      .left-02 {
+        margin: 16px 0 12px 0;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 500;
+        font-size: 16px;
+        font-family: PingFang SC;
+        line-height: 24px;
+        text-align: left;
+      }
+
+      .left-03 {
+        color: rgba(78, 89, 105, 1);
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px;
+        text-align: left;
+      }
+
+      .left-04 {
+        gap: 0;
+        width: 100%;
+        height: 1px;
+        margin-top: 16px;
+        background: rgba(201, 205, 212, 1);
+      }
+
+      .left-05 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .image {
+          gap: 0;
+          width: 124px;
+          height: 118px;
+          background: #edf5fd;
+        }
+      }
+
+      .left-06 {
+        padding-left: 66px;
+
+        > ui > li {
+          margin-top: 12px;
+          color: #4e5969;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: PingFang SC;
+          line-height: 22px;
+          text-align: left;
+        }
+      }
+    }
+
+    .synopsis-right {
+      width: 890px;
+      background: blue;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
 .product {
   display: flex;
   flex-direction: column;
@@ -106,7 +373,6 @@ import WowFooter from '../components/wowFooter/index.vue';
       width: 964px;
       height: 596px;
       background: rgb(0, 60, 255);
-      opacity: 0;
     }
 
     .introduce {
@@ -122,7 +388,6 @@ import WowFooter from '../components/wowFooter/index.vue';
         #fff 0.72%,
         rgba(255, 255, 255, 0) 99.23%
       );
-      opacity: 0;
 
       .title {
         margin-bottom: 12px;
@@ -151,7 +416,6 @@ import WowFooter from '../components/wowFooter/index.vue';
         height: 1px;
         margin: 12px 0;
         background: rgba(201, 205, 212, 1);
-        opacity: 0;
       }
 
       .briefintroduction {
@@ -191,7 +455,6 @@ import WowFooter from '../components/wowFooter/index.vue';
         #edf5fd 71.65%
       );
       border-radius: 4px;
-      opacity: 0;
 
       .title {
         color: rgba(29, 33, 41, 1);
@@ -265,7 +528,6 @@ import WowFooter from '../components/wowFooter/index.vue';
       background: rgb(58, 212, 166);
       border-radius: 12px;
       box-shadow: 0 4px 80px 0 rgba(0, 75, 220, 0.12);
-      opacity: 0;
     }
   }
 }
