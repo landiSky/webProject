@@ -444,7 +444,8 @@ const formRules: any = {
       required: true,
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入详细地址');
-        if (value.length < 5) return cb('详细地址长度在5-500');
+        if (value.length < 5) return cb('长度至少5个字符');
+        if (value.length > 500) return cb('长度不超过500个字符');
         return cb();
       },
     },
