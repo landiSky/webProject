@@ -204,7 +204,8 @@
               </div>
             </div>
           </div>
-          <div class="firmright">
+          <!-- 企业节点认证 -->
+          <!-- <div class="firmright">
             <div class="firm">
               <div class="firm-title">企业节点认证</div
               ><span
@@ -267,6 +268,78 @@
                 </div>
               </div>
             </div>
+          </div> -->
+          <!-- 企业认证 -->
+          <div class="firmright">
+            <div class="firm">
+              <div class="firm-title">企业认证</div
+              ><span
+                style="padding: 1px 8px; line-height: 22px"
+                :class="stateClass[userInfoByCompany.certificateStatus]"
+                >{{
+                  CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
+                }}</span
+              >
+            </div>
+            <div
+              class="fimelist"
+              style="float: left; width: 90%; font-size: 12px"
+            >
+              <p style="margin: 12px 0 0 0">开通权益:</p>
+              <ul style="margin-left: 10px">
+                <li style="width: 100%">
+                  <span></span><span style="float: left">使用限免应用</span>
+                </li>
+                <li style="width: 100%">
+                  <span></span><span>免费上架应用，跨平台推广</span>
+                </li>
+                <li> <span></span><span>免费使用开发者能力</span> </li>
+              </ul>
+              <div class="fimelistdata">
+                <t-button
+                  v-if="
+                    !userInfoByCompany.companyId ||
+                    userInfoByCompany.certificateStatus ===
+                      CompanyAuthStatus.UNAUTH
+                  "
+                  type="primary"
+                  class="dirlist-btn"
+                  style="display: block; margin: 4px auto 0; padding: 5px 10px"
+                  @click="authentication"
+                  >去认证</t-button
+                >
+
+                <div v-else class="states">
+                  <p
+                    style="
+                      width: 50px;
+                      margin: 4px auto 0;
+                      padding: 5px;
+                      text-align: center;
+                    "
+                    :class="stateClass[userInfoByCompany.certificateStatus]"
+                  >
+                    {{
+                      CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
+                    }}</p
+                  >
+
+                  <p
+                    v-if="
+                      [
+                        CompanyAuthStatus.TO_CHECK,
+                        CompanyAuthStatus.REJECT,
+                      ].includes(userInfoByCompany.certificateStatus)
+                    "
+                    style="width: 80px; margin: 0 auto; font-size: 12px"
+                  >
+                    <t-button type="text" @click="viewdetails"
+                      >查看详情</t-button
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -317,7 +390,15 @@
     </div> -->
     <!-- 已购应用 -->
     <div v-if="authDialogVisible.length !== 0" class="purchased">
-      <h3>已购应用</h3>
+      <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
+        <t-tab-pane key="1">
+          <template #title> <icon-calendar /> 全部应用 </template>
+        </t-tab-pane>
+        <t-tab-pane key="2">
+          <template #title> <icon-user /> 企业自建应用 </template>
+        </t-tab-pane>
+      </t-tabs>
+      <!-- <h3>已购应用</h3> -->
       <div class="Applysd">
         <div
           v-for="(item, index) in authDialogVisible"
@@ -603,6 +684,8 @@ const state = reactive({
     statusled: 0,
   },
 });
+// tabs来回切换值
+const tabsApplication = ref(1);
 // 立即认证弹窗
 const editModalVisible = ref(false);
 // 去认证弹窗
@@ -864,6 +947,16 @@ const multiples = () => {
     router.push('/buyer/order');
   } else {
     Message.error('未分配订单管理权限,请联系企业管理员查看订单');
+  }
+};
+// 应用切换
+const TabClickApplication = (key: any) => {
+  tabsApplication.value = key;
+  if (key === '1') {
+    console.log('点击切换', tabsApplication.value);
+    console.log('点击切换获取参数', key);
+  } else {
+    console.log('我是2');
   }
 };
 
