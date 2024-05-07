@@ -309,14 +309,6 @@ const StatusList = [
 
 const columns = [
   {
-    title: '商品ID',
-    dataIndex: 'id',
-    ellipsis: true,
-    tooltip: true,
-    width: 160,
-    fixed: 'left',
-  },
-  {
     title: '商品名称',
     dataIndex: 'name',
     ellipsis: true,
@@ -382,6 +374,14 @@ const columns = [
     filterable: {
       filters: SaleTypeList,
     },
+  },
+  {
+    title: '商品ID',
+    dataIndex: 'id',
+    ellipsis: true,
+    tooltip: true,
+    width: 160,
+    // fixed: 'left',
   },
   {
     title: '所属商家',
