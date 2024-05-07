@@ -119,7 +119,10 @@
         {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
+        {{ DeliveryTypeEnum[record.deliveryType] ?? '-' }}
+      </template>
+      <template #saleType="{ record }">
+        {{ SaleTypeEnum[record.saleType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
@@ -228,14 +231,14 @@ const AppTypeList = [
 ];
 
 // 交付方式
-const SaleTypeEnum: { [name: string]: any } = {
+const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
   0: 'SaaS',
   1: '独立部署',
 };
 
-const SaleTypeList = [
+const DeliveryTypeList = [
   {
     text: '全部',
     value: null,
@@ -247,6 +250,37 @@ const SaleTypeList = [
   {
     text: '独立部署',
     value: 1,
+  },
+];
+
+// 定价方式
+const SaleTypeEnum: { [name: string]: any } = {
+  0: '套餐定价',
+  1: '一口价',
+  2: '价格面议',
+  3: '免费',
+};
+
+const SaleTypeList = [
+  {
+    text: '全部',
+    value: null,
+  },
+  {
+    text: '套餐定价',
+    value: 0,
+  },
+  {
+    text: '一口价',
+    value: 1,
+  },
+  {
+    text: '价格面议',
+    value: 2,
+  },
+  {
+    text: '免费',
+    value: 3,
   },
 ];
 
@@ -335,6 +369,15 @@ const columns = [
     title: '交付方式',
     dataIndex: 'deliveryType',
     slotName: 'deliveryType',
+    width: 120,
+    filterable: {
+      filters: DeliveryTypeList,
+    },
+  },
+  {
+    title: '定价方式',
+    dataIndex: 'saleType',
+    slotName: 'saleType',
     width: 120,
     filterable: {
       filters: SaleTypeList,
