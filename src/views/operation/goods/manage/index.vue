@@ -113,7 +113,10 @@
         <span v-else class="circle green"></span>
         {{ StatusEnum[record.status] ?? '-' }}
       </template>
-
+      <!-- 测试定价方式 -->
+      <template #saleType="{ record }">
+        {{ SaleTypeList[record.saleType] || '-' }}
+      </template>
       <template #operations="{ record }">
         <t-link class="action-list" @click="clickDetailBtn(record)">
           详情
@@ -276,7 +279,7 @@ const SaleTypeEnum: { [name: string]: any } = {
   1: '独立部署',
 };
 
-const SaleTypeList = [
+const DeliverTypeList = [
   {
     text: '全部',
     value: null,
@@ -325,15 +328,36 @@ const StatusList = [
     value: 1,
   },
 ];
-const columns = [
+// 测试定价方式
+const SaleTypeList = {
+  0: '套餐定价',
+  1: '一口价',
+  2: '价格面议',
+  3: '免费',
+};
+const PricingMethodList = [
   {
-    title: '商品ID',
-    dataIndex: 'id',
-    ellipsis: true,
-    tooltip: true,
-    width: 160,
-    fixed: 'left',
+    text: '全部',
+    value: null,
   },
+  {
+    text: '套餐定价',
+    value: 0,
+  },
+  {
+    text: '一口价',
+    value: 1,
+  },
+  {
+    text: '价格面议',
+    value: 2,
+  },
+  {
+    text: '免费',
+    value: 3,
+  },
+];
+const columns = [
   {
     title: '商品名称',
     dataIndex: 'name',
@@ -385,7 +409,7 @@ const columns = [
     slotName: 'deliveryType',
     width: 102,
     filterable: {
-      filters: SaleTypeList,
+      filters: DeliverTypeList,
     },
   },
   {
@@ -397,12 +421,29 @@ const columns = [
       filters: StatusList,
     },
   },
+  // 测试定价方式
+  {
+    title: '定价方式',
+    dataIndex: 'saleType',
+    slotName: 'saleType',
+    width: 140,
+    filterable: {
+      filters: PricingMethodList,
+    },
+  },
   {
     title: '上架时间',
     dataIndex: 'upShelfTime',
     sortable: {
       sortDirections: ['ascend', 'descend'],
     },
+    width: 160,
+  },
+  {
+    title: '商品ID',
+    dataIndex: 'id',
+    ellipsis: true,
+    tooltip: true,
     width: 160,
   },
   {

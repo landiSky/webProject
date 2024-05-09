@@ -283,11 +283,19 @@
                   {{ st.name }}
                 </t-descriptions-item>
                 <t-descriptions-item
+                  v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
+                  label="对接SaaS应用"
+                >
+                  xxxx<t-link href="link" :hoverable="false"
+                    >查看应用接入信息</t-link
+                  >
+                </t-descriptions-item>
+                <!-- <t-descriptions-item
                   v-if="dataInfo.deliveryType == 0"
                   label="应用服务地址"
                 >
                   {{ st.url }}
-                </t-descriptions-item>
+                </t-descriptions-item> -->
                 <t-descriptions-item
                   v-if="dataInfo.saleType === 0"
                   label="套餐定价设置"
@@ -317,7 +325,7 @@
                 >
                   {{ st.accountNumList[0].price }} 元
                 </t-descriptions-item>
-                <t-descriptions-item label="应用密钥">
+                <!-- <t-descriptions-item label="应用密钥">
                   <a
                     :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
                       st.appSecret
@@ -325,6 +333,29 @@
                     download
                     >下载密钥文件</a
                   >
+                </t-descriptions-item> -->
+                <t-descriptions-item label="是否支持试用">
+                  {{ st.probation === 0 ? '是' : '否' }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="dataInfo.probation === 0"
+                  label="试用版本地址"
+                >
+                  <t-link href="link" :hoverable="false">{{
+                    st.address
+                  }}</t-link>
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="dataInfo.probation === 0"
+                  label="试用账号"
+                >
+                  {{ st.probationaccount }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="dataInfo.probation === 0"
+                  label="试用密码"
+                >
+                  {{ st.probationpassword }}
                 </t-descriptions-item>
               </t-descriptions>
               <div
@@ -414,6 +445,7 @@ const PriceTypeEnum: { [name: string]: any } = {
   0: '套餐定价(账号+时长)',
   1: '一口价定价',
   2: '价格面议',
+  3: '免费',
 };
 
 const DurationEnum: { [name: string]: string } = {
