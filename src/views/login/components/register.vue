@@ -227,7 +227,7 @@ const goRegister = () => {
         regisLoading.value = true;
         const { phone, code, password, confirmPassword, email } = form.value;
         apiRegisterUser({
-          phone,
+          mobile: phone,
           code,
           password: sm2(password, userStore.configInfo?.publicKey),
           confirmPassword: sm2(
