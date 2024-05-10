@@ -329,7 +329,7 @@ const StatusList = [
   },
 ];
 // 测试定价方式
-const SaleTypeList = {
+const SaleTypeList: { [name: string]: any } = {
   0: '套餐定价',
   1: '一口价',
   2: '价格面议',
