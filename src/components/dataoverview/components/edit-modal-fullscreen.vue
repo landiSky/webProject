@@ -308,7 +308,12 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, reactive } from 'vue';
 import { useUserStore } from '@/store/modules/user';
-import { authDetails, authSubmit, authRepeat } from '@/api/authentication';
+import {
+  authDetails,
+  authSubmit,
+  authRepeat,
+  getRegion,
+} from '@/api/authentication';
 import { getToken } from '@/utils/auth';
 import { storeToRefs } from 'pinia';
 import {
@@ -334,12 +339,12 @@ const showModal = ref(true);
 const formRef = ref();
 
 const uploadHeaders = {
-  Authorization: `Bearer ${getToken()}`,
+  Authorization: `${getToken()}`,
 };
 
 const formModel = ref<Record<string, any>>({
   id: userInfo.value?.companyId,
-  userId: userInfo.value?.userId,
+  userId: userInfo.value?.id,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -543,41 +548,66 @@ const canceldes = () => {
 
 // 地区选择
 const loadMore = (
-  option: { level: any },
+  option: { pathValue: any; level: any },
   done: (arg0: { value: any; label: any; isLeaf: boolean } | undefined) => void
 ) => {
-  // const { level } = option;
-  // const promise = new Promise((resolve) => {
-  // const params = {
-  //   code: level === 1 ? pathValue[0] : pathValue[1],
-  // };
-  // get(`${requestUrl}/v2/web/goods/selectRegion`, params).then((res) => {
-  //   if (res.code !== 200) {
-  //     return;
-  //   }
-  //   if (level === 1) {
-  //     districts.value = res.data;
-  //   } else {
-  //     municipality.value = res.data;
-  //   }
-  //   const openlist = res.data.map((item) => {
-  //     return {
-  //       value: level === 1 ? item?.cityCode : item?.districtCode,
-  //       label: level === 1 ? item?.cityName : item?.districtName,
-  //       isLeaf: level >= 2,
-  //     };
-  //   });
-  //   resolve(openlist);
-  // });
-  // });
-  // return promise;
+  const { pathValue, level } = option;
+  const promise = new Promise((resolve) => {
+    const params = {
+      code: level === 1 ? pathValue[0] : pathValue[1],
+    };
+    getRegion(params).then((res) => {
+      if (res.code !== 200) {
+        return;
+      }
+      if (level === 1) {
+        districts.value = res.data;
+      } else {
+        municipality.value = res.data;
+      }
+      const openlist = res.data.map(
+        (item: {
+          cityCode: any;
+          dictCode: any;
+          cityName: any;
+          dictValue: any;
+        }) => {
+          return {
+            value: level === 1 ? item?.cityCode : item?.dictCode,
+            label: level === 1 ? item?.cityName : item?.dictValue,
+            isLeaf: level >= 2,
+          };
+        }
+      );
+      resolve(openlist);
+    });
+  });
+  return promise;
 };
-
+const getByParentId = () => {
+  const params = {
+    parentId: 0,
+  };
+  getRegion(params).then((res) => {
+    if (res.code !== 200) {
+      return;
+    }
+    const openlist = res.data.map((item: { dictCode: any; dictValue: any }) => {
+      return {
+        ...item,
+        value: item?.dictCode,
+        label: item?.dictValue,
+      };
+    });
+    registration.value = openlist;
+  });
+};
 onMounted(() => {
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
     getUserDetail();
   }
+  getByParentId();
 });
 </script>
 

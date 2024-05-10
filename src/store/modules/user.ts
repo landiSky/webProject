@@ -70,9 +70,7 @@ export const useUserStore = defineStore({
     async getUserBasicInfo() {
       try {
         const userInfo = await apiUsersInfo();
-
         this.userInfo = userInfo as any;
-
         const { companyId, companyList, isAdmin } = userInfo;
 
         //   {
@@ -102,7 +100,6 @@ export const useUserStore = defineStore({
           await this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
         }
-
         return userInfo;
       } catch (error: any) {
         clearToken();
@@ -173,18 +170,18 @@ export const useUserStore = defineStore({
     },
 
     jumpToLogin(routeName: string | undefined = ''): void {
-      const { loginUrl } = this.configInfo || {};
+      // const { loginUrl } = this.configInfo || {};
 
       if (routeName !== 'wowMallDetail') {
         sessionStorage.setItem('mallDetailPath', '');
       }
-
       // window.location.href = loginUrl;
 
       // window.location.href = loginUrl;
-      window.location.href = import.meta.env.DEV
-        ? `${import.meta.env.VITE_APP_DEV_LOGIN}` // 'http://sso-auth-gateway-a.dev.idx.space/sso/web/oauth/authorize?response_type=code&client_id=sso_platform&redirect_uri=http://10.14.148.246:3001&scope=all' // `${import.meta.env.VITE_APP_DEV_LOGIN}`
-        : loginUrl; // TODO 上线后去掉
+      // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
+      // window.location.href = import.meta.env.DEV
+      //   ? `${import.meta.env.VITE_APP_DEV_LOGIN}` // 'http://sso-auth-gateway-a.dev.idx.space/sso/web/oauth/authorize?response_type=code&client_id=sso_platform&redirect_uri=http://10.14.148.246:3001&scope=all' // `${import.meta.env.VITE_APP_DEV_LOGIN}`
+      //   : loginUrl; // TODO 上线后去掉
     },
   },
 });

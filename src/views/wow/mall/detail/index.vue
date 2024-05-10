@@ -313,9 +313,14 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 const clickAddCart = (): void => {
   const { userInfo, userInfoByCompany } = userStore;
 
-  if (!userInfo?.userId) {
+  if (!userInfo?.id) {
+    console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
-    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    // userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    // router.push({
+    //   path: '/login',
+    //   query: { id, title: appName },
+    // });
     return;
   }
 

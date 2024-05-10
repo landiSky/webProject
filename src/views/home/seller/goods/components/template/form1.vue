@@ -86,7 +86,7 @@
             action="/server/web/file/upload"
             list-type="picture-card"
             :headers="{
-              Authorization: `Bearer ${getToken()}`,
+              Authorization: `${getToken()}`,
             }"
             accept=".png,.jpg,.bmp,.jpeg,.gif"
             :limit="1"

@@ -15,7 +15,7 @@ $http.interceptors.request.use(
     // 接口携带 token
     if (token && !customFields?.withoutToken) {
       if (!config.headers) config.headers = {};
-      config.headers.Authorization = `bearer ${token}`;
+      config.headers.Authorization = `${token}`;
     }
 
     return config;

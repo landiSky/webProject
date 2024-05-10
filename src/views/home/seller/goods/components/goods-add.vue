@@ -938,7 +938,7 @@ const templateRef = ref();
 const step = ref(1);
 
 const uploadHeaders = {
-  Authorization: `Bearer ${getToken()}`,
+  Authorization: `${getToken()}`,
 };
 
 const prdRef = ref();
