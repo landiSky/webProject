@@ -402,7 +402,7 @@
               >
             </div>
             <t-form
-              :ref="copyFormRef[index]"
+              :ref="(el:any) => (copyFormRef[index].value = el)"
               :model="copyModal[index]"
               :rules="copyRules"
             >
@@ -528,7 +528,7 @@
               >
             </div>
             <t-form
-              :ref="copyFormRef[index]"
+              :ref="(el:any) => (copyFormRef[index].value = el)"
               :model="copyModal2[index]"
               :rules="copyRules"
             >
@@ -589,7 +589,7 @@
               >
             </div>
             <t-form
-              :ref="copyFormRef[index]"
+              :ref="(el:any) => (copyFormRef[index].value = el)"
               :model="copyModal3[index]"
               :rules="copyRules"
             >
