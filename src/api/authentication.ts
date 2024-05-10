@@ -39,3 +39,8 @@ export function apiHasCompany(data: Record<string, any>) {
 export function apiHasCompanyShow() {
   return $http.get('/server/web/company/getMasterCompanyInfo');
 }
+
+// 字典
+export function getRegion(params: Record<string, any>) {
+  return $http.get('/server/web/dict/getByParentId', { params });
+}
