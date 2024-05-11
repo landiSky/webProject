@@ -72,17 +72,18 @@
           </t-input>
         </t-form-item>
         <!--测试1 企业地址-->
-        <t-form-item label="企业地址" field="enterpriseAddress">
+        <t-form-item label="企业地址" field="orgAddrCounty">
           <t-cascader
-            v-model="formModel.enterpriseAddress"
-            placeholder="请选择省市区"
+            v-model="formModel.orgAddrCounty"
+            placeholder="请选择省/市/区"
             allow-clear
             :load-more="loadMore"
             :options="registration"
-            :style="{ flex: '0 2 50%' }"
           />
-          <t-input
-            v-model="formModel.address"
+        </t-form-item>
+        <t-form-item field="orgAddr" :hide-asterisk="true">
+          <t-textarea
+            v-model="formModel.orgAddr"
             :max-length="{
               length: 500,
               errorOnly: true,
@@ -91,7 +92,7 @@
             show-word-limit
             placeholder="请输入详细地址"
           >
-          </t-input>
+          </t-textarea>
         </t-form-item>
         <t-form-item label="法人姓名" field="legalPersonName">
           <t-input
@@ -363,10 +364,14 @@ const formModel = ref<Record<string, any>>({
   // 新增 0 重新添加 1
   type: 0,
   companyCerPath: '',
-  // 企业地址-省市县
-  enterpriseAddress: [],
   // 企业地址-详细地址
-  address: '',
+  orgAddr: '',
+  // 省级地址编码
+  orgAddrProvince: '',
+  // 市级地址编码
+  orgAddrCity: '',
+  // 区级地址编码
+  orgAddrCounty: '',
 });
 
 const formRules: any = {
@@ -426,15 +431,21 @@ const formRules: any = {
     },
   ],
   // contactidcard: [{ required: true, message: '请上传身份证' }],
-  enterpriseAddress: [
+  orgAddrCounty: [
     {
       required: true,
-      message: '请输入企业地址',
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请选择所在地址');
-        if (!formModel.value.address) {
-          return cb('请输入详细地址');
-        }
+        return cb();
+      },
+    },
+  ],
+
+  orgAddr: [
+    {
+      required: true,
+      validator: (value: string, cb: (params?: any) => void) => {
+        if (!value) return cb('请输入详细地址');
         return cb();
       },
     },
@@ -547,59 +558,45 @@ const canceldes = () => {
 };
 
 // 地区选择
-const loadMore = (
-  option: { pathValue: any; level: any },
-  done: (arg0: { value: any; label: any; isLeaf: boolean } | undefined) => void
-) => {
-  const { pathValue, level } = option;
+const loadMore = (option: any, done: any) => {
+  const { id, dictKey, dictCode } = option;
   const promise = new Promise((resolve) => {
     const params = {
-      code: level === 1 ? pathValue[0] : pathValue[1],
+      parentId: id,
     };
     getRegion(params).then((res) => {
-      if (res.code !== 200) {
-        return;
+      if (dictKey === 'PROVINCE') {
+        formModel.value.orgAddrProvince = dictCode;
+      } else if (dictKey === 'CITY') {
+        formModel.value.orgAddrCity = dictCode;
       }
-      if (level === 1) {
-        districts.value = res.data;
-      } else {
-        municipality.value = res.data;
-      }
-      const openlist = res.data.map(
-        (item: {
-          cityCode: any;
-          dictCode: any;
-          cityName: any;
-          dictValue: any;
-        }) => {
-          return {
-            value: level === 1 ? item?.cityCode : item?.dictCode,
-            label: level === 1 ? item?.cityName : item?.dictValue,
-            isLeaf: level >= 2,
-          };
-        }
-      );
-      resolve(openlist);
+      const openlist = res.map((item: any) => {
+        return {
+          ...item,
+          value: item?.dictCode,
+          label: item?.dictValue,
+          isLeaf: dictKey === 'CITY',
+        };
+      });
+      done(openlist, openlist);
     });
   });
   return promise;
 };
+
 const getByParentId = () => {
   const params = {
     parentId: 0,
   };
   getRegion(params).then((res) => {
-    if (res.code !== 200) {
-      return;
-    }
-    const openlist = res.data.map((item: { dictCode: any; dictValue: any }) => {
+    const openest = res.map((item: { dictCode: any; dictValue: any }) => {
       return {
         ...item,
         value: item?.dictCode,
         label: item?.dictValue,
       };
     });
-    registration.value = openlist;
+    registration.value = openest;
   });
 };
 onMounted(() => {
@@ -656,9 +653,5 @@ onMounted(() => {
   // :deep(.tele-upload-list-picture) {
   //   transition: none;
   // }
-  .item-input {
-    flex: 0 2 50%;
-    margin-left: 12px;
-  }
 }
 </style>

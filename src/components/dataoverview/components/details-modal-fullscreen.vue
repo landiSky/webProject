@@ -113,7 +113,15 @@
               <!--测试1 企业地址-->
               <div class="informationlist">
                 <p style="float: left; width: 20%">企业地址</p>
-                <p style="float: left">北京市/北京市/朝阳区 某某某</p>
+                <p style="float: left"
+                  >{{ detaillist?.orgAddrProvince }}/{{
+                    detaillist?.orgAddrCity
+                  }}/{{ detaillist?.orgAddrCounty }}</p
+                >
+              </div>
+              <div class="informationlist">
+                <p style="float: left; width: 20%">&nbsp;</p>
+                <p style="float: left; width: 80%">{{ detaillist?.orgAddr }}</p>
               </div>
               <div class="informationlist">
                 <p style="float: left; width: 20%">法人姓名</p>
@@ -250,6 +258,10 @@ const detaillist = ref({
   businessLicense: '',
   certificateStatus: 0,
   remark: '驳理由',
+  orgAddr: '',
+  orgAddrCity: '',
+  orgAddrCounty: '',
+  orgAddrProvince: '',
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
