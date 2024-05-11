@@ -92,7 +92,8 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
             : redirectUri;
 
           if (logoutUrl) {
-            window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+            // window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+            window.location.href = `${serverUri}`;
           } else {
             window.location.reload();
           }

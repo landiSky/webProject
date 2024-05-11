@@ -130,7 +130,7 @@
       </t-tabs>
     </div>
     <div v-if="state == 2">
-      <span class="title">密码找回</span>
+      <span class="title">找回密码</span>
       <t-form
         ref="performsRef"
         :model="performs"
@@ -285,10 +285,12 @@ import {
   apiChheckLogin,
   verificationCode,
   apiLogin,
+  userforgotPassword,
 } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import { getToken, setToken } from '@/utils/auth';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/modules/user';
 
 import SliderCaptcha from './captcha.vue';
 
@@ -320,6 +322,7 @@ const performs2 = ref({
   code: '',
 });
 const state = ref(1);
+const userStore = useUserStore();
 
 const formRules = {
   username: [
@@ -497,8 +500,31 @@ const clickBindingBtn = () => {
   });
 };
 
-// 密码找回
-const validate = () => {};
+// 找回密码
+const validate = () => {
+  formRef.value.validate((errors: any) => {
+    if (!errors) {
+      loginLoading.value = true;
+      const { username, code, password, confirmPassword } = performs.value;
+      userforgotPassword({
+        mobile: username,
+        code,
+        password: sm2(password, userStore.configInfo?.publicKey),
+        confirmPassword: sm2(confirmPassword, userStore.configInfo?.publicKey),
+      })
+        .then(() => {
+          Message.success('修改成功');
+          getLog();
+        })
+        .catch(() => {
+          loginLoading.value = false;
+        })
+        .finally(() => {
+          loginLoading.value = false;
+        });
+    }
+  });
+};
 // 确认绑定
 const binding = () => {};
 
@@ -531,39 +557,35 @@ const counts: Record<string, any> = ref();
 const times = ref();
 const codeText = ref('获取短信验证码');
 const codeFtn = (type: number) => {
-  if (type === 1) {
-    const { username } = performs.value;
-    if (!username) {
-      Message.error('手机号不能为空');
-      return;
-    }
-    if (!phoneTs.test(username)) {
-      Message.error('手机号格式不正确,需要填写11位手机号');
-      return;
-    }
-    if (counts.value) {
-      return;
-    }
-    verificationCode({ phone: performs.value.username, type: '3' }).then(
-      (res) => {
-        if (res.code === 200) {
-          counts.value = 60;
-          times.value = setInterval(() => {
-            if (counts.value === 0) {
-              clearInterval(times.value);
-              codeText.value = '获取短信验证码';
-              counts.value = null;
-              return;
-            }
-            counts.value -= 1;
-          }, 1000);
-          codeText.value = '秒后重新发送';
-        } else {
-          Message.error(res.msg);
-        }
-      }
-    );
+  const { username } = performs.value;
+  if (!username) {
+    Message.error('手机号不能为空');
+    return;
   }
+  if (!phoneTs.test(username)) {
+    Message.error('手机号格式不正确,需要填写11位手机号');
+    return;
+  }
+  if (counts.value) {
+    return;
+  }
+  verificationCode({ phone: performs.value.username, type }).then((res) => {
+    if (res.code === 200) {
+      counts.value = 60;
+      times.value = setInterval(() => {
+        if (counts.value === 0) {
+          clearInterval(times.value);
+          codeText.value = '获取短信验证码';
+          counts.value = null;
+          return;
+        }
+        counts.value -= 1;
+      }, 1000);
+      codeText.value = '秒后重新发送';
+    } else {
+      Message.error(res.msg);
+    }
+  });
 };
 
 const captchaSuccess = () => {
@@ -573,18 +595,23 @@ const captchaSuccess = () => {
       realLoginRequest();
       break;
     case 2:
+      realLoginRequest();
       break;
     case 3:
+      // 找回密码点击事件
       validate();
       break;
     case 4:
+      // 绑定点击事件
       binding();
       break;
     case 5:
-      codeFtn(1);
+      // 找回密码验证码
+      codeFtn(5);
       break;
     case 6:
-      codeFtn(1);
+      // 绑定验证码
+      codeFtn(4);
       break;
     default:
       realLoginRequest();

@@ -7,12 +7,74 @@
     </div>
     <div class="centers">
       <div class="datalist">
-        <div class="dataimg">
+        <div
+          v-if="
+            userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH
+          "
+          class="dataimg"
+        >
           <img :src="empty" alt="" />
         </div>
-        <div class="datatitle">您还没有完成服务商认证，认证后即可查看详情</div>
+        <div
+          v-if="
+            [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
+              userInfoByCompany.certificateStatus
+            )
+          "
+          class="img_auth"
+        >
+          <img :src="auth" alt="" />
+        </div>
+        <!-- 未认证 -->
+        <div
+          v-if="
+            userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH
+          "
+          class="datatitle"
+          >您还没有完成服务商认证，完成认证后可开通以下服务</div
+        >
+        <!-- 审核中 -->
+        <div
+          v-if="
+            userInfoByCompany.certificateStatus === CompanyAuthStatus.TO_CHECK
+          "
+          class="datatitle"
+          >企业认证审核中，完成认证后可开通以下服务</div
+        >
+        <!-- 驳回 -->
+        <div
+          v-if="
+            userInfoByCompany.certificateStatus === CompanyAuthStatus.REJECT
+          "
+        >
+          <div class="datatitle">企业认证申请已被驳回，请重新认证</div>
+          <div class="datatitle_02">完成认证后可开通以下服务</div>
+        </div>
+        <div class="certification certification_01"
+          >上架应用/服务，在整个标识领域推广应用/服务</div
+        >
+        <div class="certification certification_02"
+          >管理组织架构，以企业购买应用,企业内多账号共同使用应用</div
+        >
         <div class="databutton">
-          <t-button type="primary" @click="authentications">立即认证</t-button>
+          <t-button
+            v-if="
+              userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH
+            "
+            type="primary"
+            @click="onEditModalConfirm"
+            >立即认证</t-button
+          >
+          <t-button
+            v-if="
+              [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
+                userInfoByCompany.certificateStatus
+              )
+            "
+            type="primary"
+            @click="hasdflags"
+            >查看详情</t-button
+          >
         </div>
       </div>
     </div>
@@ -48,6 +110,11 @@
 <script lang="ts" setup>
 import { ref, reactive, defineProps } from 'vue';
 import empty from '@/assets/images/home/empty.png';
+import auth from '@/assets/images/home/auth.png';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
+import { CompanyAuthStatus } from '@/enums/common';
+
 import EditModal from './components/edit-modal.vue';
 import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
@@ -62,6 +129,9 @@ const state = reactive({
     statusled: 0,
   },
 });
+
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 // 立即认证弹窗
 const editModalVisible = ref(false);
@@ -108,7 +178,7 @@ const onEditModalConfirmflag = () => {
 // 详情 取消
 const detailflagclick = () => {
   detailflag.value = false;
-  editModalVisible.value = true;
+  // editModalVisible.value = true;
 };
 </script>
 
@@ -137,22 +207,77 @@ const detailflagclick = () => {
     height: 100%;
 
     .datalist {
-      width: 300px;
-      height: 300px;
-      // background-color: pink;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
       .dataimg {
-        display: flex;
-        justify-content: center;
+        width: 120px;
+        height: 120px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .img_auth {
+        width: 72px;
+        height: 72px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
 
       .datatitle {
-        margin: 32px auto;
+        margin-top: 16px;
+        color: rgba(0, 0, 0, 1);
+        font-weight: 500;
+        font-size: 16px;
         // text-align: center;
+        font-family: PingFang SC;
+        line-height: 24px;
+      }
+
+      .datatitle_02 {
+        margin-top: 16px;
+        color: rgba(0, 0, 0, 1);
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px;
       }
 
       .databutton {
         display: flex;
         justify-content: center;
+        margin-top: 30px;
+      }
+
+      .certification {
+        display: flex;
+        width: 434px;
+        height: 46px;
+        margin-top: 16px;
+        padding: 12px 12px 12px 54px;
+        color: rgba(78, 89, 105, 1);
+        font-weight: 400;
+        font-size: 14px;
+        font-family: PingFang SC;
+        line-height: 22px;
+      }
+
+      .certification_01 {
+        background: url(@/assets/images/home/certification_01.png) no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .certification_02 {
+        background: url(@/assets/images/home/certification_02.png) no-repeat;
+        background-size: 100% 100%;
       }
     }
   }

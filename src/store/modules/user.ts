@@ -162,7 +162,8 @@ export const useUserStore = defineStore({
       const serverUri = import.meta.env.DEV
         ? import.meta.env.VITE_APP_DEV_HOST
         : this.configInfo?.redirectUri;
-      window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${serverUri}`;
+      // window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${serverUri}`;
+      window.location.href = `${serverUri}`;
     },
 
     clearUserInfo(): void {

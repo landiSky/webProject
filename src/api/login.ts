@@ -44,6 +44,11 @@ export function apiLogin(data: Record<string, any>) {
   return $http.post(`/auth/login`, data);
 }
 
+// 找回密码
+export function userforgotPassword(data: Record<string, any>) {
+  return $http.post(`/server/web/user/forgotPassword`, data);
+}
+
 // 登录前校验
 export function apiChheckLogin(data: Record<string, any>) {
   return $http.post(`/sso/web/checkLogin`, data);
