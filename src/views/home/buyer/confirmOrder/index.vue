@@ -120,6 +120,8 @@ const clickCreateOrder = () => {
     orderSource, // 订单来源：0-本平台，1-跨平台
     accountId, // 账号id
     durationId, // 时长id
+    // TODO w: 新增字段
+    // saasAppId---来源？
     userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
   };
   submitLoading.value = true;

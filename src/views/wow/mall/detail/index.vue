@@ -286,7 +286,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
   authModalVisible.value = false;
 
-  // 封装确认订单需要的字段
+  // TODO 封装确认订单需要的字段
   orderStore.createOrderInfo = {
     companyId,
     productId: id,

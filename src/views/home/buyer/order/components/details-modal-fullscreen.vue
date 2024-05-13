@@ -51,11 +51,18 @@
                     <icon-clock-circle-fill />
                   </div>
 
-                  <div class="order-success-text">
+                  <div
+                    v-if="dataList.aleterPriceStatus === 1"
+                    class="order-success-text"
+                  >
                     待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
                   </div>
+                  <div v-else> 待支付-待卖家修改金额 </div>
                 </t-space>
-                <div>
+                <div
+                  v-if="dataList.aleterPriceStatus === 1"
+                  class="margintop-16"
+                >
                   <t-button
                     type="primary"
                     @click="modificationamount(dataList.id)"
@@ -92,16 +99,16 @@
                   <div
                     v-if="dataList.evaluateStatus === 0"
                     class="order-success-text"
-                    >已完成：订单已交付，请评价</div
-                  >
+                    >已交付：订单已交付，请评价
+                  </div>
                   <div v-else class="order-success-text"
-                    >已完成：订单已交付。</div
-                  >
+                    >已交付：订单已交付。
+                  </div>
                 </t-space>
                 <!-- 后续改为 ===0 -->
                 <div
                   v-if="dataList.evaluateStatus !== 0"
-                  class="order-item-deploy"
+                  class="order-item-deploy margintop-16"
                 >
                   <t-button type="primary" @click="review(dataList.id)"
                     >立即评价</t-button
@@ -136,7 +143,7 @@
                     已驳回：支付凭证已被服务商驳回，请买家重新上传支付凭证。
                   </div>
                 </t-space>
-                <div class="order-item-deploy">
+                <div class="order-item-deploy margintop-16">
                   <t-space align="start">
                     <div class="order-item-left">驳回原因</div>
                     <!-- <div class="order-item-right">{{
@@ -173,7 +180,7 @@
                     待确认交付：服务商已完成交付，请买家确认交付信息。
                   </div>
                 </t-space>
-                <div>
+                <div class="margintop-16">
                   <t-button type="primary" @click="delivery(dataList.id)"
                     >确认已交付</t-button
                   >
@@ -837,6 +844,10 @@ onMounted(() => {
   }
 }
 
+.margintop-16 {
+  margin-top: 16px;
+}
+
 .order-success {
   .order-success-icon {
     color: #00aa2a;
@@ -875,7 +886,7 @@ onMounted(() => {
 }
 
 .order-success {
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   color: var(--t-41-d-2129, #1d2129);
   font-weight: 500;
   font-size: 14px;
