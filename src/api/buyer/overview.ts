@@ -13,6 +13,10 @@ export function orderGo(params: Record<string, any>) {
 export function authDialogdata(params: Record<string, any>) {
   return $http.get('/server/web/order/purchasedApps', { params });
 }
+// 企业自建应用
+export function selectSelfApps(params: Record<string, any>) {
+  return $http.get('/server/web/app/info/selectSelfApps', { params });
+}
 // 获取当前公司下用户的信息
 export function apiUserProfile(params: Record<string, any>) {
   return $http.get('/server/web/user/profile', { params });
