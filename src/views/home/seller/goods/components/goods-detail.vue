@@ -286,7 +286,12 @@
                   v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
                   label="对接SaaS应用"
                 >
-                  xxxx<t-link href="link" :hoverable="false"
+                  {{ st.productDeliverySetList.application
+                  }}<t-link
+                    :hoverable="false"
+                    @click="
+                      applicationlink(st.productDeliverySetList.saasAppId)
+                    "
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -335,27 +340,18 @@
                   >
                 </t-descriptions-item> -->
                 <t-descriptions-item label="是否支持试用">
-                  {{ st.probation === 0 ? '是' : '否' }}
+                  {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
-                <t-descriptions-item
-                  v-if="dataInfo.probation === 0"
-                  label="试用版本地址"
-                >
+                <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
                   <t-link href="link" :hoverable="false">{{
-                    st.address
+                    st.tryUrl
                   }}</t-link>
                 </t-descriptions-item>
-                <t-descriptions-item
-                  v-if="dataInfo.probation === 0"
-                  label="试用账号"
-                >
-                  {{ st.probationaccount }}
+                <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
+                  {{ st.tryAccount }}
                 </t-descriptions-item>
-                <t-descriptions-item
-                  v-if="dataInfo.probation === 0"
-                  label="试用密码"
-                >
-                  {{ st.probationpassword }}
+                <t-descriptions-item v-if="st.isTry === 1" label="试用密码">
+                  {{ st.tryPwd }}
                 </t-descriptions-item>
               </t-descriptions>
               <div
@@ -383,7 +379,9 @@ import {
   goodsDetail,
   preUp,
 } from '@/api/goods-manage';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const visible = ref(true);
 // 状态
 const StatusEnum: { [name: string]: any } = {
@@ -572,6 +570,14 @@ const clickView = () => {
 const toAnchor = (link: string) => {
   const ele = document.getElementById(link);
   ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
+};
+
+// 应用跳转详情
+const applicationlink = (id: number) => {
+  console.log('应用id', id);
+  if (id) {
+    router.push({ path: '', query: { selectById: id } });
+  }
 };
 </script>
 
