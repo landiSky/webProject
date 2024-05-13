@@ -260,7 +260,7 @@
                 >
                   <span>{{ st.application }}</span
                   ><a class="application-link" :href="st.applicationLink"
-                    >应用对接验证链接</a
+                    >查看应用接入信息</a
                   >
                 </t-descriptions-item>
                 <t-descriptions-item

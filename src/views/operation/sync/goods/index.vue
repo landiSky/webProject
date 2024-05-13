@@ -132,7 +132,7 @@
 
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
-        <t-link @click="Message.warning('敬请期待')"> 打标 </t-link>
+        <t-link @click="handleLabel(record)"> 打标 </t-link>
         <t-link v-if="record.status === StatusEnum.WTB" @click="start(record)">
           开启同步
         </t-link>
@@ -149,6 +149,14 @@
     @confirm="onModalConfirm"
     @cancel="onModalConfirm"
   ></Detail>
+
+  <Label
+    v-if="labelVisible"
+    :label-visible="labelVisible"
+    :record-data="recordData"
+    @on-confirm="handleLabelConfirm"
+    @on-cancel="handleLabelCancel"
+  />
 </template>
 
 <script setup lang="ts">
@@ -163,8 +171,10 @@ import {
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
+import Label from './components/label.vue';
 
 const tableRef = ref();
+const recordData = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
@@ -421,6 +431,8 @@ const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const modalVisible = ref(false); // 编辑全屏展示弹窗
 
+const labelVisible = ref(false);
+
 function fetchData() {
   const { current, pageSize } = pagination;
   const params = {
@@ -442,6 +454,16 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+// 打标
+const handleLabel = (record: any) => {
+  recordData.value = record;
+  labelVisible.value = true;
+};
+
+const handleLabelCancel = () => {
+  labelVisible.value = false;
+};
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
