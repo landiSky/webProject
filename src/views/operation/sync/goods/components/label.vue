@@ -169,6 +169,12 @@ const handleTransferSelectChange = (values: []) => {
   } else {
     state.limit = false;
   }
+  console.log(
+    'handleTransferSelectChange',
+    state.checkedValues,
+    state.limit,
+    targetTreeRef.value?.getCheckedNodes()
+  );
 };
 
 onMounted(async () => {
@@ -177,6 +183,19 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
+:deep(.tele-tree-node) {
+  .tele-tree-node-indent {
+    .tele-tree-node-indent-block {
+      width: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+:deep(.tele-transfer-view-body) {
+  padding: 12px 8px;
+}
+
 .label-modal-container {
   .content {
     :deep(.tele-transfer-view) {
