@@ -6,3 +6,8 @@ export function fetchLabel(params: Record<string, any>) {
     params,
   });
 }
+
+// 打标确定
+export function comfirmLabel(data: Record<string, any>) {
+  return $http.post('/inventory/web/product/tag', data);
+}

@@ -51,4 +51,11 @@ export default [
       ]);
     },
   },
+  {
+    url: '/inventory/web/product/tag',
+    method: 'post',
+    response: () => {
+      return successResponseWrap([]);
+    },
+  },
 ];

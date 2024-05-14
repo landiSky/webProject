@@ -151,8 +151,8 @@
   ></Detail>
 
   <Label
-    v-if="labelVisible"
     :label-visible="labelVisible"
+    :confirm-loading="state.confirmLoading"
     :record-data="recordData"
     @on-confirm="handleLabelConfirm"
     @on-cancel="handleLabelCancel"
@@ -168,6 +168,7 @@ import {
   stopSync,
   classList,
 } from '@/api/operation/sync-class';
+import { comfirmLabel } from '@/api/inventory/fetchLabel';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
@@ -191,12 +192,14 @@ const state = reactive<{
   tableData: Record<string, any>[];
   editData: Record<string, any> | undefined; // 要编辑的数据
   detailData: Record<string, any>; // 详情数据，如果是从列表获取，同editData字段，如果是从接口获取，请完善接口逻辑
+  confirmLoading: boolean;
 }>({
   tableLoading: false,
   formModel: { ...defaultFormModel },
   tableData: [],
   editData: {},
   detailData: {},
+  confirmLoading: false,
 });
 
 const formModelIsEmpty = () => {
@@ -459,6 +462,31 @@ function fetchData() {
 const handleLabel = (record: any) => {
   recordData.value = record;
   labelVisible.value = true;
+};
+
+const handleLabelConfirm = (data = [], productId = '') => {
+  state.confirmLoading = true;
+  const tagIdList = data.map((item: any) => item.key);
+  if (tagIdList.length === 0) {
+    state.confirmLoading = false;
+    return Message.warning('未选择标签');
+  }
+  return comfirmLabel({
+    productId,
+    tagIdList,
+  }).then((res) => {
+    if (res.code === 200) {
+      state.confirmLoading = false;
+      Message.success('打标成功');
+      labelVisible.value = false;
+    } else {
+      Message.success('打标失败');
+      labelVisible.value = false;
+    }
+  });
+  // .finally(() => {
+  //   state.confirmLoading = false;
+  // });
 };
 
 const handleLabelCancel = () => {

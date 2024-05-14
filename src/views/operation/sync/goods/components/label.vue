@@ -6,6 +6,7 @@
     :height="600"
     class="label-modal-container"
     body-class="label-modal-body"
+    :ok-loading="props.confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel"
   >
@@ -55,7 +56,6 @@ import {
   reactive,
 } from 'vue';
 import { fetchLabel } from '@/api/inventory/fetchLabel';
-// import treeData from './data';
 
 const emits = defineEmits(['onConfirm', 'onCancel']);
 
@@ -82,6 +82,7 @@ const state = reactive<{
 const props = defineProps({
   labelVisible: Boolean,
   recordData: Object,
+  confirmLoading: Boolean,
 });
 
 const showModal = computed(() => props.labelVisible);
@@ -149,7 +150,11 @@ const getTransferData = (treeData = [], transferDataSource = [], level = 0) => {
 };
 
 const handleOk = () => {
-  emits('onConfirm');
+  emits(
+    'onConfirm',
+    targetTreeRef.value?.getCheckedNodes(),
+    props.recordData?.id
+  );
 };
 
 const handleCancel = () => {
@@ -162,7 +167,6 @@ const fetchLabelData = () => {
       if (res.code === 200) {
         state.treeData = res.data;
         state.labelLoading = false;
-        console.log('fetchLabelData', state.treeData);
       }
     })
     .finally(() => {
@@ -182,25 +186,26 @@ const handleTransferSelectChange = (values: []) => {
 
 onMounted(async () => {
   await fetchLabelData();
+  console.log('props', props.confirmLoading);
 });
 </script>
 
 <style lang="less" scoped>
-:deep(.tele-tree-node) {
-  .tele-tree-node-indent {
-    .tele-tree-node-indent-block {
-      width: 0;
-      margin-right: 0;
-    }
-  }
-}
-
-:deep(.tele-transfer-view-body) {
-  padding: 4px 12px;
-}
-
 .label-modal-container {
   .content {
+    :deep(.tele-tree-node) {
+      .tele-tree-node-indent {
+        .tele-tree-node-indent-block {
+          width: 0;
+          margin-right: 0;
+        }
+      }
+    }
+
+    :deep(.tele-transfer-view-body) {
+      padding: 4px 12px;
+    }
+
     :deep(.tele-transfer-view) {
       height: 418px;
     }
