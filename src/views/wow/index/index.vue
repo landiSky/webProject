@@ -100,13 +100,28 @@
         <span class="subTitle">当前活跃企业节点</span>
         <t-table
           :columns="columns"
-          :data="activeNodeList"
           :bordered="false"
           :pagination="false"
-          :scroll="{ y: '90%' }"
           class="table"
           scrollbar
         />
+        <Vue3SeamlessScroll
+          class="scroll_box"
+          :list="activeNodeList"
+          :open-watch="true"
+          :hover="true"
+          :step="0.3"
+          :wait-time="1000"
+        >
+          <t-table
+            :columns="columns"
+            :show-header="false"
+            :data="activeNodeList"
+            :bordered="false"
+            :pagination="false"
+            scrollbar
+          />
+        </Vue3SeamlessScroll>
       </div>
       <div class="right">
         <span class="subTitle">开通企业节点，获取以下资源及服务</span>
@@ -178,6 +193,7 @@ import {
   apiNodeOverall,
   apiGetProductId,
 } from '@/api/wow/index';
+import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
@@ -260,8 +276,11 @@ const allCategList = [
     icon: 'freeTry',
     title: '免费试用',
     desc: '尝试限免应用，开启企业数字化时代',
-    disable: true,
-    action: () => {},
+    action: () => {
+      router.push({
+        path: '/wow/mall',
+      });
+    },
   },
   {
     icon: 'idService',
@@ -438,7 +457,11 @@ const goCardDetail = (item: Record<string, any>) => {
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {
-    activeNodeList.value = data;
+    if (data.length >= 51) {
+      activeNodeList.value = data.slice(1, 51);
+    } else {
+      activeNodeList.value = data;
+    }
   });
   apiNodeOverall().then((data) => {
     activeOverall.value = data;
@@ -618,11 +641,14 @@ onMounted(() => {
       margin-right: 46px;
       color: #435c97;
       cursor: pointer;
+      transition-duration: 0.5s;
+      transition-property: color, transform;
 
       .hoverVector {
-        display: none;
         width: 40px;
         margin-top: 12px;
+        opacity: 0;
+        transition: all 1s ease;
       }
 
       &:hover {
@@ -630,7 +656,7 @@ onMounted(() => {
         transform: translate(0, -20px);
 
         .hoverVector {
-          display: block;
+          opacity: 1;
         }
       }
 
@@ -731,6 +757,15 @@ onMounted(() => {
         :deep(.tele-empty) {
           padding: 50px 0;
         }
+
+        :deep(.tele-table-td-content) {
+          display: none;
+        }
+      }
+
+      .scroll_box {
+        height: 288px;
+        overflow: hidden;
       }
     }
 
