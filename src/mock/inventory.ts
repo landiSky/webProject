@@ -11,18 +11,39 @@ export default [
           name: '类型分组',
           children: [
             {
-              id: '1788041657850138624',
-              name: '标签三',
+              id: '1788041390358401024',
+              name: '标签一',
               tagCountByTag: null,
             },
             {
-              id: '1788041632701091840',
+              id: '1788041390358401031',
               name: '标签二',
               tagCountByTag: null,
             },
+          ],
+        },
+        {
+          id: '1787762050190151680',
+          name: '行业分组',
+          children: [
             {
-              id: '1788041390358401024',
-              name: '标签一',
+              id: '1788816357266165760',
+              name: '金融',
+              tagCountByTag: null,
+            },
+            {
+              id: '1788816357266165761',
+              name: '交通',
+              tagCountByTag: null,
+            },
+            {
+              id: '1788816357266165762',
+              name: '餐饮',
+              tagCountByTag: null,
+            },
+            {
+              id: '1788816357266165763',
+              name: '互联网',
               tagCountByTag: null,
             },
           ],

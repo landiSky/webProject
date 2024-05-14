@@ -35,7 +35,7 @@
             ref="targetTreeRef"
             :checkable="true"
             :checked-keys="selectedKeys"
-            :data="getTargetTreeData(data, selectedKeys, onSelect)"
+            :data="getTargetTreeData(data)"
             @check="onSelect"
           />
         </template>
@@ -55,7 +55,7 @@ import {
   reactive,
 } from 'vue';
 import { fetchLabel } from '@/api/inventory/fetchLabel';
-import treeData from './data';
+// import treeData from './data';
 
 const emits = defineEmits(['onConfirm', 'onCancel']);
 
@@ -72,7 +72,7 @@ const state = reactive<{
 }>({
   labelLoading: true,
   transferData: [],
-  treeData,
+  treeData: [],
   sourceTreeData: [],
   selectedKeys: [],
   limit: false,
@@ -91,10 +91,10 @@ const getSourceTreeData = (data = []) => {
   const travel = (_treeData = []) => {
     const treeDataSource = [];
     _treeData.forEach((item) => {
-      if (item.children || values.includes(item.key)) {
+      if (item.children || values.includes(item.id)) {
         treeDataSource.push({
-          title: item.title,
-          key: item.key,
+          title: item.name,
+          key: item.id,
           checkable: item.checkable,
           children: travel(item.children),
         });
@@ -111,15 +111,15 @@ const getTargetTreeData = (data = []) => {
   const travel = (_treeData = []) => {
     const treeDataSource = [];
     _treeData.forEach((item) => {
-      if (item.children || values.includes(item.key)) {
+      if (item.children || values.includes(item.id)) {
         treeDataSource.push({
-          title: item.title,
-          key: item.key,
+          title: item.name,
+          key: item.id,
           checkable: item.checkable,
           // 这里需要加下最多只能选3个限制
           disableCheckbox:
             state.limit &&
-            !state.checkedValues.includes(item.key) &&
+            !state.checkedValues.includes(item.id) &&
             !!state.checkedValues[0],
           children: travel(item.children),
         });
@@ -130,14 +130,20 @@ const getTargetTreeData = (data = []) => {
   return travel(state.treeData).filter((i) => i.children[0]);
 };
 
-const getTransferData = (treeData = [], transferDataSource = []) => {
+const getTransferData = (treeData = [], transferDataSource = [], level = 0) => {
   treeData.forEach((item) => {
-    if (item.children) getTransferData(item.children, transferDataSource);
-    else
+    if (level === 0) {
+      // 第一层没有复选框
+      item.checkable = false;
+    }
+    if (item.children) {
+      getTransferData(item.children, transferDataSource, level + 1);
+    } else {
       transferDataSource.push({
-        label: item.title,
-        value: item.key,
+        label: item.name,
+        value: item.id,
       });
+    }
   });
   return transferDataSource;
 };
@@ -154,7 +160,9 @@ const fetchLabelData = () => {
   fetchLabel({ id: props.recordData?.id })
     .then((res: any) => {
       if (res.code === 200) {
+        state.treeData = res.data;
         state.labelLoading = false;
+        console.log('fetchLabelData', state.treeData);
       }
     })
     .finally(() => {
@@ -164,7 +172,7 @@ const fetchLabelData = () => {
 
 const handleTransferSelectChange = (values: []) => {
   state.checkedValues = values;
-  // 因为共用source和target共用一个values存储，所以还需要判断target本身是否有值
+  // 因为source和target共用一个values存储，所以还需要判断target本身是否有值
   if (values.length >= 3 && targetTreeRef.value?.getCheckedNodes().length > 0) {
     state.limit = true;
   } else {
