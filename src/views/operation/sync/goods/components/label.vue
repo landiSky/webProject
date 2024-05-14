@@ -164,17 +164,12 @@ const fetchLabelData = () => {
 
 const handleTransferSelectChange = (values: []) => {
   state.checkedValues = values;
-  if (targetTreeRef.value?.getCheckedNodes().length >= 2) {
+  // 因为共用source和target共用一个values存储，所以还需要判断target本身是否有值
+  if (values.length >= 3 && targetTreeRef.value?.getCheckedNodes().length > 0) {
     state.limit = true;
   } else {
     state.limit = false;
   }
-  console.log(
-    'handleTransferSelectChange',
-    state.checkedValues,
-    state.limit,
-    targetTreeRef.value?.getCheckedNodes()
-  );
 };
 
 onMounted(async () => {
@@ -193,7 +188,7 @@ onMounted(async () => {
 }
 
 :deep(.tele-transfer-view-body) {
-  padding: 12px 8px;
+  padding: 4px 12px;
 }
 
 .label-modal-container {
