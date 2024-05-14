@@ -19,6 +19,7 @@
       <t-transfer
         v-if="!state.labelLoading"
         :title="['全部标签', '已选择标签']"
+        :default-value="getDetaultTransferData(state.treeData)"
         :data="getTransferData(state.treeData)"
         :show-select-all="false"
         @select="handleTransferSelectChange"
@@ -66,6 +67,7 @@ const state = reactive<{
   transferData: Record<string, any>[];
   treeData: Record<string, any>[];
   sourceTreeData: Record<string, any>[];
+  targetTreeData: Record<string, any>[];
   selectedKeys: Record<string, any>[];
   limit: boolean;
   checkedValues: Record<string, any>[];
@@ -74,6 +76,7 @@ const state = reactive<{
   transferData: [],
   treeData: [],
   sourceTreeData: [],
+  targetTreeData: [],
   selectedKeys: [],
   limit: false,
   checkedValues: [],
@@ -86,6 +89,24 @@ const props = defineProps({
 });
 
 const showModal = computed(() => props.labelVisible);
+
+// 回显使用
+const getDetaultTransferData = (treeData = [], transferDataSource = []) => {
+  treeData.forEach((item) => {
+    if (item.children) {
+      getDetaultTransferData(item.children, transferDataSource);
+    } else {
+      transferDataSource.push({
+        label: item.name,
+        value: item.id,
+        hasChecked: item.hasChecked,
+      });
+    }
+  });
+  return transferDataSource
+    .filter((item) => item.hasChecked)
+    .map((i) => i.value);
+};
 
 const getSourceTreeData = (data = []) => {
   const values = data.map((item) => item.value);
@@ -186,7 +207,6 @@ const handleTransferSelectChange = (values: []) => {
 
 onMounted(async () => {
   await fetchLabelData();
-  console.log('props', props.confirmLoading);
 });
 </script>
 
