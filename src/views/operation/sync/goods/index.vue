@@ -151,6 +151,7 @@
   ></Detail>
 
   <Label
+    v-if="labelVisible"
     :label-visible="labelVisible"
     :confirm-loading="state.confirmLoading"
     :record-data="recordData"
