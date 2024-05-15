@@ -1,4 +1,4 @@
-import { successResponseWrap, failResponseWrap } from './response';
+import { successResponseWrap } from './response';
 
 export default [
   {
