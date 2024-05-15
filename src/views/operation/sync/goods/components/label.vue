@@ -103,9 +103,10 @@ const getDetaultTransferData = (treeData = [], transferDataSource = []) => {
       });
     }
   });
-  return transferDataSource
+  const result = transferDataSource
     .filter((item) => item.hasChecked)
     .map((i) => i.value);
+  return result;
 };
 
 const getSourceTreeData = (data = []) => {
@@ -183,16 +184,17 @@ const handleCancel = () => {
 };
 
 const fetchLabelData = () => {
-  fetchLabel({ id: props.recordData?.id })
-    .then((res: any) => {
+  return new Promise((resolve) => {
+    fetchLabel({ productId: props.recordData?.id }).then((res: any) => {
+      state.labelLoading = false;
       if (res.code === 200) {
         state.treeData = res.data;
-        state.labelLoading = false;
+        resolve(res.data);
+      } else {
+        resolve([]);
       }
-    })
-    .finally(() => {
-      state.labelLoading = false;
     });
+  });
 };
 
 const handleTransferSelectChange = (values: []) => {
@@ -206,7 +208,14 @@ const handleTransferSelectChange = (values: []) => {
 };
 
 onMounted(async () => {
-  await fetchLabelData();
+  const result = await fetchLabelData();
+  // 获取编辑默认选中的节点
+  const r = getDetaultTransferData(result);
+  // 初始化选中的节点
+  setTimeout(() => {
+    targetTreeRef?.value?.checkNode(r, true);
+    state.limit = r.length >= 3;
+  }, 200);
 });
 </script>
 

@@ -2,7 +2,7 @@ import { successResponseWrap, failResponseWrap } from './response';
 
 export default [
   {
-    url: '/inventory/web/tag/tree',
+    url: '/inventory/web/tag/treeByProductId',
     method: 'get',
     response: () => {
       return successResponseWrap([
@@ -47,6 +47,7 @@ export default [
             {
               id: '1788816357266165763',
               name: '互联网',
+              //   hasChecked: true,
               tagCountByTag: null,
             },
           ],
