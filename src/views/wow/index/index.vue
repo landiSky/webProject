@@ -279,6 +279,9 @@ const allCategList = [
     action: () => {
       router.push({
         path: '/wow/mall',
+        query: {
+          free: 12,
+        },
       });
     },
   },

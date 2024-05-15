@@ -5,6 +5,11 @@ export function apiProductType() {
   return $http.get('/server/web/product/type/tree');
 }
 
+// 前台标签筛选配置
+export function apiTagList() {
+  return $http.get('/server/web/reception/tagList');
+}
+
 //  获取企业下成员列表
 export function apiMemberList(params: Record<string, any>) {
   return $http.get('/server/web/member/getCompanyMember', { params });
