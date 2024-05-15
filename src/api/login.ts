@@ -19,7 +19,7 @@ export function apiBindPhone(data: Record<string, any>) {
 
 // 获取配置信息
 export function apiConfigInfo() {
-  return $http.get('/server/web/config/info');
+  return $http.get('/server/web/config');
 }
 
 // 获取 token
