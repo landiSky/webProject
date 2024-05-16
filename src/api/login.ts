@@ -58,3 +58,8 @@ export function apiChheckLogin(data: Record<string, any>) {
 export function verificationCode(params: Record<string, any>) {
   return $http.get('/server/web/captcha/sendCaptcha', { params });
 }
+
+// 二级节点第三方登录
+export function snmsClientLogin(params: Record<string, any>) {
+  return $http.get('/auth/snmsClientLogin', { params });
+}
