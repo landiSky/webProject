@@ -198,6 +198,95 @@
           >
         </div>
       </div>
+
+      <!-- 产品评价 -->
+      <div class="evaluate">
+        <div class="top">产品评价（238）</div>
+        <div class="body">
+          <div class="score">
+            <div class="score-title">综合评分</div>
+            <div class="score-num">4.5</div>
+            <div class="score-count">
+              <t-rate :default-value="4.5" :count="5" allow-half readonly />
+            </div>
+          </div>
+          <div class="evaluate-list">
+            <div class="top-list">
+              <div
+                :class="appraiseIndex === 0 ? 'appraise' : ''"
+                @click="appraiseClick(0)"
+                >好评 (138)</div
+              >
+              <div
+                :class="appraiseIndex === 1 ? 'appraise' : ''"
+                @click="appraiseClick(1)"
+                >中评 (88)</div
+              >
+              <div
+                :class="appraiseIndex === 2 ? 'appraise' : ''"
+                @click="appraiseClick(2)"
+                >差评 (2)</div
+              >
+            </div>
+            <div class="comment">
+              <div class="comment-list">
+                <t-comment author="我是***昵称">
+                  <template #avatar>
+                    <t-image
+                      width="52"
+                      style="border-radius: 50%"
+                      :src="avatar"
+                    />
+                  </template>
+                  <template #content>
+                    <div>
+                      <div class="count">
+                        <t-rate
+                          :default-value="4.5"
+                          :count="5"
+                          allow-half
+                          readonly
+                        />
+                      </div>
+                      <div class="textarea">
+                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                      </div>
+                      <div class="time">2022-12-21</div>
+                    </div>
+                  </template>
+                </t-comment>
+              </div>
+              <div class="comment-list">
+                <t-comment author="我是***昵称">
+                  <template #avatar>
+                    <t-image
+                      width="52"
+                      style="border-radius: 50%"
+                      :src="avatar"
+                    />
+                  </template>
+                  <template #content>
+                    <div>
+                      <div class="count">
+                        <t-rate
+                          :default-value="4.5"
+                          :count="5"
+                          allow-half
+                          readonly
+                        />
+                      </div>
+                      <div class="textarea">
+                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                      </div>
+                      <div class="time">2022-12-21</div>
+                    </div>
+                  </template>
+                </t-comment>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <AuthMemberModal
@@ -223,6 +312,7 @@ import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import copy from '@/assets/images/copy.png';
+import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
 import Template3 from './layout/template3.vue';
@@ -265,6 +355,7 @@ const isPreview = ref(false);
 const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
+const appraiseIndex = ref(0);
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -492,6 +583,10 @@ const onIntroScroll = () => {
   fixedTop.value = Boolean(top < 70);
 };
 
+const appraiseClick = (value: number) => {
+  appraiseIndex.value = value;
+};
+
 onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
@@ -554,7 +649,7 @@ onUnmounted(() => {
 
   .productIntro {
     width: 1176px;
-    margin-top: 32px;
+    margin: 32px 0 132px 0;
 
     .baseInfo {
       display: flex;
@@ -679,8 +774,7 @@ onUnmounted(() => {
     .intro {
       display: flex;
       justify-content: start;
-      margin-bottom: 132px;
-
+      // margin-bottom: 132px;
       .template {
         flex: 1;
         width: 900px;
@@ -696,6 +790,7 @@ onUnmounted(() => {
           &.fixed {
             position: fixed;
             top: 64px;
+            z-index: 9999;
             width: 900px;
           }
 
@@ -753,6 +848,118 @@ onUnmounted(() => {
 
         button {
           width: 208px;
+        }
+      }
+    }
+
+    .evaluate {
+      width: 900px;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 1);
+      border-top: solid rgba(229, 232, 239, 1) 1px;
+      border-radius: 4px 0 0 0;
+
+      .top {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 500;
+        font-size: 20px;
+        font-family: PingFang SC;
+        line-height: 28px;
+        text-align: center;
+      }
+
+      .body {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+
+        .score {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 168px;
+          padding: 40px 32px;
+          font-weight: 500;
+          font-family: PingFang SC;
+          line-height: 22px;
+          border: 1px solid rgba(229, 232, 239, 1);
+
+          .score-title {
+            color: rgba(29, 33, 41, 1);
+            font-size: 14px;
+          }
+
+          .score-num {
+            margin: 12px 0;
+            color: rgba(255, 20, 20, 1);
+            font-size: 30px;
+          }
+        }
+
+        .evaluate-list {
+          margin-left: 12px;
+
+          .top-list {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            width: 627px;
+            height: 44px;
+            padding: 0 24px 0 24px;
+            background: rgba(242, 243, 248, 1);
+            box-shadow: 0 -1px 0 0 rgba(229, 232, 239, 1) inset;
+
+            div {
+              display: flex;
+              align-items: center;
+              height: 100%;
+              color: rgba(78, 89, 105, 1);
+              font-weight: 400;
+              font-size: 14px;
+              font-family: PingFang SC;
+              cursor: pointer;
+
+              &:hover {
+                color: rgba(22, 100, 255, 1);
+                border-bottom: solid rgba(22, 100, 255, 1) 1px;
+              }
+            }
+
+            .appraise {
+              color: rgba(22, 100, 255, 1);
+              border-bottom: solid rgba(22, 100, 255, 1) 1px;
+            }
+          }
+
+          .comment {
+            .comment-list {
+              margin-top: 16px;
+              padding-bottom: 16px;
+              font-size: 14px;
+              font-family: PingFang SC;
+              line-height: 22px;
+              border-bottom: 1px solid rgba(229, 232, 239, 1);
+
+              .count {
+                margin-top: 4px;
+              }
+
+              .textarea {
+                margin-top: 12px;
+                color: rgba(78, 89, 105, 1);
+                font-weight: 400;
+              }
+
+              .time {
+                margin-top: 12px;
+                color: rgba(134, 144, 156, 1);
+                font-weight: 500;
+              }
+            }
+          }
         }
       }
     }
