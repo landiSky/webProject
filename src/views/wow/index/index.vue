@@ -119,6 +119,7 @@
             :data="activeNodeList"
             :bordered="false"
             :pagination="false"
+            class="table-01"
             scrollbar
           />
         </Vue3SeamlessScroll>
@@ -758,11 +759,19 @@ onMounted(() => {
         margin-top: -12px;
         // margin-left: -16px;
         :deep(.tele-empty) {
-          padding: 50px 0;
+          padding: 50px 0 !important;
         }
 
         :deep(.tele-table-td-content) {
           display: none;
+        }
+      }
+
+      .table-01 {
+        margin-top: -12px;
+
+        :deep(.tele-empty) {
+          padding: 50px 0 !important;
         }
       }
 
