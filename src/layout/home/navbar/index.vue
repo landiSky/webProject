@@ -11,7 +11,7 @@
       </div>
       <div class="right">
         <t-space>
-          <t-link class="active">平台管理</t-link>
+          <t-link class="active" @click="setDot">平台管理</t-link>
           <t-link @click="clickIdService">标识管理</t-link>
         </t-space>
       </div>
@@ -70,6 +70,7 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
@@ -103,6 +104,8 @@ const clickLogout = () => {
 };
 
 const clickIdService = () => {
+  // TODO w:用户标识服务打点
+  console.log('用户主导航点击标识服务打点');
   const { nodeStatus } = userInfoByCompany.value || {};
   if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
     const { snmsUrls } = userInfo.value || {};
@@ -149,6 +152,11 @@ const onChangeCompany = async (companyId: string) => {
   });
 
   // 要在 app.vue 中监听 userstore.的变化
+};
+
+const setDot = () => {
+  // TODO w:用户主导航平台管理打点,这个打点位置存疑？
+  console.log('用户主导航平台管理打点');
 };
 </script>
 

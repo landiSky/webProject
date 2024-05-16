@@ -311,6 +311,8 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 };
 
 const clickAddCart = (): void => {
+  // TODO w: 立即购买打点
+  console.log('立即购买打点', route.params.id);
   const { userInfo, userInfoByCompany } = userStore;
 
   if (!userInfo?.userId) {
@@ -403,6 +405,8 @@ const clickNav = (index: number) => {
 };
 
 const buyConsult = () => {
+  // TODO w: 购买咨询打点
+  console.log('购买咨询打点', route.params.id);
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -413,6 +417,8 @@ const onIntroScroll = () => {
 };
 
 onMounted(() => {
+  // TODO w: 商品详情打点
+  console.log('商品详情打点', route.params.id);
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {

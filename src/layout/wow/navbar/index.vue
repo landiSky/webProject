@@ -97,11 +97,8 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -160,6 +157,8 @@ const goLogin = () => {
 };
 
 const onSearch = () => {
+  // TODO w: 商城首页搜索打点：分为登录和未登录两种情况
+  console.log('商城首页搜索打点', searchContent.value);
   router.push({
     name: 'wowMall',
     query: {
@@ -169,6 +168,8 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
+  // TODO w: 标识服务打点：分为登录和未登录两种情况
+  console.log('标识服务打点');
   if (!userInfo.value?.userId) {
     Modal.info({
       title: '登录提醒',

@@ -389,6 +389,8 @@ watch(
 );
 
 onMounted(() => {
+  // TODO w: 商城首页打点:分为登录和未登录两种情况
+  console.log('mall index 商城首页打点');
   getProductType();
   getProductList();
 });

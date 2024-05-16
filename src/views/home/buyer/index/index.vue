@@ -992,6 +992,8 @@ watch(
   }
 );
 onMounted(() => {
+  // TODO w:买家中心概览页打点
+  console.log('买家中心概览页打点');
   initOpt();
 
   if (route.query?.openAuthModal) {

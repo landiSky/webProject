@@ -84,6 +84,8 @@ watch(
  * @param key 被点击的三级菜单的key
  */
 const clickMenuItem = (key: string) => {
+  // TODO w: 各个菜单的打点统计（可能和概览打点重复）
+  console.log('左侧菜单打点', key);
   if (/http(s)?:/.test(key)) {
     window.open(key);
   } else {
