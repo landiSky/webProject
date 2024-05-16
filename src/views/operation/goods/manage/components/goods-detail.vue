@@ -310,7 +310,7 @@
                   {{ st.name || '-' }}
                 </t-descriptions-item>
                 <t-descriptions-item
-                  v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
+                  v-if="formModel.deliveryType == 0 && formModel.saleType == 3"
                   label="对接SaaS应用"
                 >
                   {{ st.productDeliverySetList.application
@@ -379,8 +379,8 @@
               </t-descriptions>
               <div
                 v-if="
-                  dataInfo.productDeliverySetList &&
-                  index + 1 !== dataInfo.productDeliverySetList.length
+                  formModel.productDeliverySetList &&
+                  index + 1 !== formModel.productDeliverySetList.length
                 "
                 class="line"
               ></div>

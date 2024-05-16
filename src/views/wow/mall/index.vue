@@ -317,7 +317,7 @@ const apiParams = ref<Record<string, any>>({
   tagIdList: [null, null, null],
 });
 
-const tagList = [
+const tagList = ref([
   {
     id: '1787760236464050176',
     name: '类型分组',
@@ -372,7 +372,7 @@ const tagList = [
       },
     ],
   },
-];
+]);
 
 const onCustomPriceBlur = () => {
   if (!customPriceStart.value && !customPriceEnd.value) {
