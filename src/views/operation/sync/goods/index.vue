@@ -132,7 +132,7 @@
 
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
-        <t-link @click="Message.warning('敬请期待')"> 打标 </t-link>
+        <t-link @click="handleLabel(record)"> 打标 </t-link>
         <t-link v-if="record.status === StatusEnum.WTB" @click="start(record)">
           开启同步
         </t-link>
@@ -149,6 +149,15 @@
     @confirm="onModalConfirm"
     @cancel="onModalConfirm"
   ></Detail>
+
+  <Label
+    v-if="labelVisible"
+    :label-visible="labelVisible"
+    :confirm-loading="state.confirmLoading"
+    :record-data="recordData"
+    @on-confirm="handleLabelConfirm"
+    @on-cancel="handleLabelCancel"
+  />
 </template>
 
 <script setup lang="ts">
@@ -160,11 +169,14 @@ import {
   stopSync,
   classList,
 } from '@/api/operation/sync-class';
+import { comfirmLabel } from '@/api/inventory/fetchLabel';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
+import Label from './components/label.vue';
 
 const tableRef = ref();
+const recordData = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
@@ -181,12 +193,14 @@ const state = reactive<{
   tableData: Record<string, any>[];
   editData: Record<string, any> | undefined; // 要编辑的数据
   detailData: Record<string, any>; // 详情数据，如果是从列表获取，同editData字段，如果是从接口获取，请完善接口逻辑
+  confirmLoading: boolean;
 }>({
   tableLoading: false,
   formModel: { ...defaultFormModel },
   tableData: [],
   editData: {},
   detailData: {},
+  confirmLoading: false,
 });
 
 const formModelIsEmpty = () => {
@@ -421,6 +435,8 @@ const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const modalVisible = ref(false); // 编辑全屏展示弹窗
 
+const labelVisible = ref(false);
+
 function fetchData() {
   const { current, pageSize } = pagination;
   const params = {
@@ -442,6 +458,41 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+// 打标
+const handleLabel = (record: any) => {
+  recordData.value = record;
+  labelVisible.value = true;
+};
+
+const handleLabelConfirm = (data = [], productId = '') => {
+  state.confirmLoading = true;
+  const tagIdList = data.map((item: any) => item.key);
+  if (tagIdList.length === 0) {
+    state.confirmLoading = false;
+    return Message.warning('未选择标签');
+  }
+  return comfirmLabel({
+    productId,
+    tagIdList,
+  }).then((res) => {
+    if (res.code === 200) {
+      state.confirmLoading = false;
+      Message.success('打标成功');
+      labelVisible.value = false;
+    } else {
+      Message.success('打标失败');
+      labelVisible.value = false;
+    }
+  });
+  // .finally(() => {
+  //   state.confirmLoading = false;
+  // });
+};
+
+const handleLabelCancel = () => {
+  labelVisible.value = false;
+};
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
