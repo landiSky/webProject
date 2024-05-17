@@ -551,11 +551,10 @@ onMounted(() => {
     // span:last-child {
     //   text-align: right;
     // }
-    .goods-price {
-      padding-bottom: 18px;
-      border-bottom: 1px solid #e5e8ef;
-    }
-
+    // .goods-price {
+    //   padding-bottom: 18px;
+    //   border-bottom: 1px solid #e5e8ef;
+    // }
     .item {
       display: flex;
       justify-content: start;
