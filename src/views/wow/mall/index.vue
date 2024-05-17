@@ -384,10 +384,14 @@ const onCustomPriceBlur = () => {
 
 const getProductList = () => {
   const { page, size } = pagination;
+  const tagIdList = apiParams.value.tagIdList.filter((item: any) => {
+    return item;
+  });
   const params: Record<string, any> = {
     pageNum: page,
     pageSize: size,
     ...apiParams.value,
+    tagIdList: tagIdList.length > 0 ? tagIdList : null,
   };
   // 价格区间是选择了已有的，还是自定义的
   if (customPriceStart.value || customPriceEnd.value) {
