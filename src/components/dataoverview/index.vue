@@ -81,13 +81,13 @@
     <!-- @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false" -->
     <!-- 认证指南 -->
-    <EditModal
+    <!-- <EditModal
       v-if="editModalVisible"
       :data="state.editData"
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
       @hasdflag="hasdflags"
-    ></EditModal>
+    ></EditModal> -->
     <!-- 企业认证 填写信息弹窗 -->
     <EditModalFullscreen
       v-if="gotoverifys"
@@ -178,7 +178,7 @@ const onEditModalConfirmflag = () => {
 // 详情 取消
 const detailflagclick = () => {
   detailflag.value = false;
-  // editModalVisible.value = true;
+  editModalVisible.value = true;
 };
 </script>
 
