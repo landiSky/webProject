@@ -86,6 +86,8 @@ import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { getToken } from '@/utils/auth';
+import { apiDataPoint } from '@/api/data-point';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -157,8 +159,9 @@ const goLogin = () => {
 };
 
 const onSearch = () => {
-  // TODO w: 商城首页搜索打点：分为登录和未登录两种情况
-  console.log('商城首页搜索打点', searchContent.value);
+  // TODO w: 商城搜索打点
+  console.log('主导航栏商品搜索打点', searchContent.value);
+  // apiDataPoint(null, searchContent.value, 5, 9);
   router.push({
     name: 'wowMall',
     query: {
@@ -169,7 +172,10 @@ const onSearch = () => {
 
 const clickIdService = () => {
   // TODO w: 标识服务打点：分为登录和未登录两种情况
-  console.log('标识服务打点');
+  const isLogin = !!getToken();
+  console.log('前台页标识服务打点,登录状态==', isLogin);
+  // apiDataPoint(null, null, 5, isLogin ? 11 : 8);
+
   if (!userInfo.value?.userId) {
     Modal.info({
       title: '登录提醒',

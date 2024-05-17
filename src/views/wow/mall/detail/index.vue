@@ -194,6 +194,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
+import { apiDataPoint } from '@/api/data-point';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
 import Template3 from './layout/template3.vue';
@@ -407,6 +408,7 @@ const clickNav = (index: number) => {
 const buyConsult = () => {
   // TODO w: 购买咨询打点
   console.log('购买咨询打点', route.params.id);
+  // apiDataPoint(route.params.id as string, null, 4, 4);
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -419,6 +421,7 @@ const onIntroScroll = () => {
 onMounted(() => {
   // TODO w: 商品详情打点
   console.log('商品详情打点', route.params.id);
+  // apiDataPoint(route.params.id as string, null, 4, 3);
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {

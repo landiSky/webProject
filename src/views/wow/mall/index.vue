@@ -242,6 +242,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { apiProductList } from '@/api/wow/mall';
 import { apiProductType } from '@/api/common';
 import { DeliverType, DeliverTypeDesc } from '@/enums/common';
+import { apiDataPoint } from '@/api/data-point';
 import { PriceEnum } from './constant';
 import WowFooter from '../components/wowFooter/index.vue';
 
@@ -389,8 +390,9 @@ watch(
 );
 
 onMounted(() => {
-  // TODO w: 商城首页打点:分为登录和未登录两种情况
-  console.log('mall index 商城首页打点');
+  // TODO w: 商城首页打点:是否分为登录和未登录两种情况？
+  console.log('商城首页打点');
+  // apiDataPoint(null, null, 3, 1);
   getProductType();
   getProductList();
 });

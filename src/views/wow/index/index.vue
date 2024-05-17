@@ -178,6 +178,7 @@ import {
   apiNodeOverall,
   apiGetProductId,
 } from '@/api/wow/index';
+import { apiDataPoint } from '@/api/data-point';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
@@ -437,8 +438,9 @@ const goCardDetail = (item: Record<string, any>) => {
 };
 
 onMounted(() => {
-  // TODO w: 首页打点：分为登录和未登录两种情况
+  // TODO w: 首页打点
   console.log('首页打点');
+  // apiDataPoint(null, null, 1, 1);
   apiActiveNode().then((data: any) => {
     activeNodeList.value = data;
   });

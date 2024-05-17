@@ -74,6 +74,7 @@ import { onMounted } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { apiDataPoint } from '@/api/data-point';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -106,6 +107,7 @@ const clickLogout = () => {
 const clickIdService = () => {
   // TODO w:用户标识服务打点
   console.log('用户主导航点击标识服务打点');
+  // apiDataPoint(null, null, 6, 11);
   const { nodeStatus } = userInfoByCompany.value || {};
   if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
     const { snmsUrls } = userInfo.value || {};
@@ -157,6 +159,7 @@ const onChangeCompany = async (companyId: string) => {
 const setDot = () => {
   // TODO w:用户主导航平台管理打点,这个打点位置存疑？
   console.log('用户主导航平台管理打点');
+  // apiDataPoint(null, null, 6, 10);
 };
 </script>
 
