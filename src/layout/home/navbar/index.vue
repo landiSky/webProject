@@ -135,7 +135,7 @@ const clickIdService = () => {
   if (primary === true || userInfo.value?.isAdmin) {
     const { snmsUrls, companyId } = userInfo.value || {};
     const params = {
-      snmsId: snmsUrls?.snmsLoginId,
+      snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,
     };
     snmsClientLogin(params).then(() => {});
