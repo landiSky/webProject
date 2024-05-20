@@ -317,10 +317,7 @@ import {
 } from '@/api/authentication';
 import { getToken } from '@/utils/auth';
 import { storeToRefs } from 'pinia';
-import {
-  Message,
-  // Modal
-} from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
@@ -542,6 +539,20 @@ const onConfirm = (done: (closed: boolean) => void) => {
               .catch((err) => {
                 done(false);
               });
+          } else if (res.data.code === 401010) {
+            Modal.warning({
+              title: '企业节点前缀申请已完成，可同步完成企业认证。',
+              content: '',
+              titleAlign: 'start',
+              okText: '好的',
+            });
+          } else if (res.data.code === 401007) {
+            Modal.warning({
+              title: '企业认证重复',
+              content: res.data.message,
+              titleAlign: 'start',
+              okText: '好的',
+            });
           } else {
             Message.error('信用代码已存在');
           }

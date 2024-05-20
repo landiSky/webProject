@@ -144,9 +144,7 @@ const clickIdService = () => {
       title: '仅企业管理员可操作',
       content: '',
       titleAlign: 'start',
-      hideCancel: false,
       okText: '好的',
-      onOk: () => {},
     });
   }
 };
