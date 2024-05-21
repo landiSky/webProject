@@ -304,7 +304,11 @@ import { ref, onMounted, onUnmounted, h } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
-import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
+import {
+  apiProductDetail,
+  apiComputePrice,
+  apiBypageList,
+} from '@/api/wow/mall';
 import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
@@ -349,6 +353,7 @@ const forCompList = [
 ];
 
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const evaluateDatail = ref<Record<string, any>>({});
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
 const isPreview = ref(false);
@@ -587,6 +592,20 @@ const appraiseClick = (value: number) => {
   appraiseIndex.value = value;
 };
 
+const BypageList = () => {
+  const params = {
+    productId: route.params.id, // 商品ID
+    starType: 1, // 类型 1差评 2 中评 3 好评
+    pageNum: 1,
+    pageSize: 100,
+  };
+  apiProductDetail(params)
+    .then((data) => {
+      evaluateDatail.value = data;
+    })
+    .catch(() => {});
+};
+
 onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
@@ -633,6 +652,9 @@ onMounted(() => {
     .catch(() => {});
 
   window.addEventListener('scroll', onIntroScroll, true);
+
+  // 商品评价
+  // BypageList()
 });
 
 onUnmounted(() => {
