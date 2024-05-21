@@ -529,7 +529,12 @@ const validate = () => {
 const binding = () => {};
 
 const realLoginRequest = () => {
-  formInput.value.value = sm2(form.value.password, configInfo?.publicKey);
+  const publicKey =
+    '047df36f25dab03d12739e57a1c3a86a72019bea590e5ffaefa79145d9129ae5ae9d395de0fba16a9577c7d52b27cda3e2ec63f522d4d69c5a92a0a0b388b1db10';
+  formInput.value.value = sm2(
+    form.value.password,
+    configInfo?.publicKey ?? publicKey
+  );
 
   apiLogin({
     username: form.value.username,
