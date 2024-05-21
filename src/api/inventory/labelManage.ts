@@ -24,3 +24,8 @@ export function fetchAddGroup(data: Record<string, any>) {
 export function fetchEditGroup(data: Record<string, any>) {
   return $http.post('/inventory/web/group/update', data);
 }
+
+// 删除分组
+export function fetchDelGroup(id: string) {
+  return $http.get(`/inventory/web/group/deleteById?id=${id}`);
+}

@@ -35,7 +35,9 @@
                   <t-button type="text" @click="handleGroupEdit(record)"
                     >编辑</t-button
                   >
-                  <t-button type="text" @click="handleGroupDel">删除</t-button>
+                  <t-button type="text" @click="handleGroupDel(record)"
+                    >删除</t-button
+                  >
                 </template>
               </t-table>
             </div>
@@ -94,6 +96,7 @@ import {
   fetchLabelData,
   fetchAddGroup,
   fetchEditGroup,
+  fetchDelGroup,
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
 import labelArrow from '@/assets/images/inventory/label-arrow.png';
@@ -215,10 +218,25 @@ const handleGroupEdit = (record: any) => {
   });
 };
 
-const handleTableRowClick = (record: any) => {
-  state.tagTableLoading = true;
-  state.rowKey = record.id;
-  fetchTagData(record.id);
+const handleGroupDel = (record: any) => {
+  console.log('handleDel', record);
+  fetchDelGroup(record.id).then((res) => {
+    if (res.code === 200) {
+      Message.success(res.message);
+      fetchGroupData();
+    } else {
+      Message.error(res.message);
+    }
+  });
+};
+
+const handleTableRowClick = (record: any, eve: Event) => {
+  if (eve.target.type !== 'button') {
+    // 点击操作按钮不发送请求
+    state.tagTableLoading = true;
+    state.rowKey = record.id;
+    fetchTagData(record.id);
+  }
 };
 
 // 设置table行背景色

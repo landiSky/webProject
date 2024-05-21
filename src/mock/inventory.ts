@@ -246,4 +246,10 @@ export default [
       remark: '备注',
     }),
   },
+  {
+    // 删除分组
+    url: '/inventory/web/group/deleteById',
+    method: 'get',
+    response: successResponseWrap(),
+  },
 ];
