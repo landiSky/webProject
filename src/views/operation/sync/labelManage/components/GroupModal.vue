@@ -38,12 +38,10 @@
         ]"
       >
         <t-radio-group v-model="form.type">
-          <t-tooltip
-            :default-popup-visible="typeDisabled"
-            content="前台展示分组超过三组"
-          >
+          <t-tooltip v-if="typeDisabled" content="前台展示分组超过三组">
             <t-radio :value="1" :disabled="typeDisabled">是</t-radio>
           </t-tooltip>
+          <t-radio v-else :value="1">是</t-radio>
           <t-radio :value="0">否</t-radio>
         </t-radio-group>
       </t-form-item>
@@ -61,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import {
   defineProps,
   defineEmits,
@@ -68,6 +67,7 @@ import {
   reactive,
   ref,
   onMounted,
+  watch,
 } from 'vue';
 import { fetchFilterData } from '@/api/inventory/labelManage';
 
@@ -77,6 +77,7 @@ const props = defineProps({
   visible: Boolean,
   confirmLoading: Boolean,
   title: String,
+  groupEditData: Object,
 });
 
 const formRef = ref();
@@ -88,7 +89,7 @@ const form = reactive<{
   remark: string;
 }>({
   name: '',
-  type: 3,
+  type: 0,
   remark: '',
 });
 
@@ -101,6 +102,20 @@ const validateRadio = (value: number, callback: (error?: string) => void) => {
     callback();
   }
 };
+
+watch(
+  () => props.groupEditData,
+  (newVal) => {
+    if (newVal) {
+      form.name = newVal.name;
+      form.type = newVal.type;
+      form.remark = newVal.remark;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 const handleOk = () => {
   formRef.value.validate((errors: undefined) => {
@@ -115,11 +130,8 @@ const handleCancel = () => {
 };
 
 onMounted(() => {
-  console.log('onmountd');
   fetchFilterData().then((res) => {
-    console.log('res', res);
     if (res.code === 200) {
-      form.type = res.data > 3 ? 0 : 1;
       typeDisabled.value = res.data > 3;
     }
   });

@@ -124,6 +124,69 @@ export default [
           remark: '备注',
           tagCountByGroup: 0,
         },
+        {
+          id: '1787762149846814723',
+          name: '行1', // 分组名称
+          type: 1, // 前台筛选
+          remark: '',
+          tagCountByGroup: 0, // 标签数
+        },
+        {
+          id: '17877620501901516675',
+          name: '行业分组',
+          type: 1,
+          remark: '',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787760236464050185',
+          name: '类型分组',
+          type: 1,
+          remark: '备注',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787762149846814709',
+          name: '行1', // 分组名称
+          type: 1, // 前台筛选
+          remark: '',
+          tagCountByGroup: 0, // 标签数
+        },
+        {
+          id: '1787762050190151612',
+          name: '行业分组',
+          type: 1,
+          remark: '',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787760236464050144',
+          name: '类型分组',
+          type: 1,
+          remark: '备注',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787762149846814766',
+          name: '行1', // 分组名称
+          type: 1, // 前台筛选
+          remark: '',
+          tagCountByGroup: 0, // 标签数
+        },
+        {
+          id: '1787762050190151677',
+          name: '行业分组',
+          type: 1,
+          remark: '',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787760236464050188',
+          name: '类型分组',
+          type: 1,
+          remark: '备注',
+          tagCountByGroup: 0,
+        },
       ]);
     },
   },
@@ -171,5 +234,16 @@ export default [
     url: '/inventory/web/group/insert',
     method: 'post',
     response: successResponseWrap(),
+  },
+  {
+    // 编辑分组
+    url: '/inventory/web/group/update',
+    method: 'post',
+    response: successResponseWrap({
+      id: '1787760236464050176',
+      name: '类型分组',
+      type: 1,
+      remark: '备注',
+    }),
   },
 ];

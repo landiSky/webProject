@@ -1,7 +1,7 @@
 <template>
   <t-page-header flex title="商品管理" :show-back="false">
     <t-row class="page-container">
-      <t-col flex="auto">
+      <t-col flex="1">
         <div class="left-page-container" :show-back="false">
           <div class="left-content-layout">
             <div class="left-page-title">分组列表</div>
@@ -16,6 +16,8 @@
               <t-table
                 ref="tableRef"
                 row-key="id"
+                :scroll="{ y: state.scrollHeight }"
+                :row-class="setRowClass"
                 :loading="state.groupTableLoading"
                 :columns="tagGroupColumns"
                 :data="state.groupTableData"
@@ -29,17 +31,19 @@
                 <template #type="{ record }">
                   <span>{{ TypeList[record.type] }}</span>
                 </template>
-                <template #operater>
-                  <t-button type="text">编辑</t-button>
-                  <t-button type="text">删除</t-button>
+                <template #operater="{ record }">
+                  <t-button type="text" @click="handleGroupEdit(record)"
+                    >编辑</t-button
+                  >
+                  <t-button type="text" @click="handleGroupDel">删除</t-button>
                 </template>
               </t-table>
             </div>
           </div>
         </div>
       </t-col>
-      <t-col flex="40px" class="arrow">箭头</t-col>
-      <t-col flex="auto">
+      <t-col flex="40px" class="arrow"><img :src="labelArrow" /></t-col>
+      <t-col flex="1">
         <div class="right-page-container" flex :show-back="false">
           <div class="right-content-layout">
             <div class="right-page-title">行业分组标签</div>
@@ -50,6 +54,7 @@
               <t-table
                 ref="tableRef"
                 row-key="id"
+                :scroll="{ y: state.scrollHeight }"
                 :loading="state.tagTableLoading"
                 :columns="tagColumns"
                 :data="state.tagTableData"
@@ -72,9 +77,10 @@
   </t-page-header>
   <GroupModal
     v-if="state.showGroupVisible"
-    title="新增分组"
+    :title="state.groupTitle"
     :visible="state.showGroupVisible"
     :confirm-loading="state.confirmGroupLoading"
+    :group-edit-data="state.groupEditData"
     @on-confirm="handleLabelConfirm"
     @on-cancel="handleLabelCancel"
   />
@@ -87,8 +93,10 @@ import {
   fetchGroupData,
   fetchLabelData,
   fetchAddGroup,
+  fetchEditGroup,
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
+import labelArrow from '@/assets/images/inventory/label-arrow.png';
 import GroupModal from './components/GroupModal.vue';
 
 const state = reactive<{
@@ -98,6 +106,10 @@ const state = reactive<{
   groupTableData: Record<string, any>[];
   tagTableLoading: boolean;
   tagTableData: Record<string, any>[];
+  groupTitle: string;
+  rowKey: string;
+  scrollHeight: number;
+  groupEditData: any;
 }>({
   groupTableLoading: false,
   showGroupVisible: false,
@@ -105,6 +117,10 @@ const state = reactive<{
   groupTableData: [],
   tagTableLoading: false,
   tagTableData: [],
+  groupTitle: '新增分组',
+  rowKey: '',
+  scrollHeight: window.innerHeight - 344,
+  groupEditData: {},
 });
 
 // 状态
@@ -170,6 +186,8 @@ const tagColumns = [
 
 // 新增分组
 const handleAddGroup = () => {
+  state.groupTitle = '新增分组';
+  state.groupEditData = null;
   state.showGroupVisible = true;
 };
 
@@ -185,23 +203,37 @@ const fetchTagData = (id: string) => {
   });
 };
 
-const handleTableRowClick = (record: any) => {
-  state.tagTableLoading = true;
-  fetchTagData(record.id).then((res) => {
-    state.tagTableLoading = false;
+const handleGroupEdit = (record: any) => {
+  state.groupTitle = '编辑分组';
+  state.showGroupVisible = true;
+  fetchEditGroup({ groupId: record.id }).then((res) => {
     if (res.code === 200) {
-      state.tagTableData = res.data;
+      state.groupEditData = res.data;
     } else {
-      state.tagTableData = [];
+      state.groupEditData = {};
     }
   });
 };
 
+const handleTableRowClick = (record: any) => {
+  state.tagTableLoading = true;
+  state.rowKey = record.id;
+  fetchTagData(record.id);
+};
+
+// 设置table行背景色
+const setRowClass = (record: TableData) => {
+  return state.rowKey === record.key ? 'selectd-row' : {};
+};
+
 const handleLabelConfirm = (form: object) => {
+  state.confirmGroupLoading = true;
   fetchAddGroup(form).then((res) => {
-    console.log('handleLabelConfirm', res);
+    state.confirmGroupLoading = false;
     if (res.code === 200) {
       Message.success(res.message);
+      fetchGroupData();
+      state.showGroupVisible = false;
     } else {
       Message.error(res.message);
     }
@@ -216,9 +248,9 @@ onMounted(async () => {
   state.groupTableLoading = true;
   await fetchGroupData().then((res) => {
     state.groupTableLoading = false;
-    console.log('res', res);
     if (res.code === 200) {
       state.groupTableData = res.data;
+      state.rowKey = res.data[0]?.id; // 默认选择第一个
       fetchTagData(res.data[0]?.id);
     } else {
       state.groupTableData = [];
@@ -236,18 +268,28 @@ onMounted(async () => {
   background: #e8f4ff;
 }
 
+.selectd-row {
+  td {
+    background: #e8f4ff;
+  }
+}
+
 .tele-page-header {
   padding: 16px 0 0;
 }
 
 .page-container {
-  align-items: center;
   padding: 16px 34px 20px;
   background: #fff;
 
   .arrow {
-    margin-top: 30px;
+    margin-top: 24%;
     text-align: center;
+
+    img {
+      width: 12px;
+      height: 24px;
+    }
   }
 }
 
@@ -259,7 +301,6 @@ onMounted(async () => {
 .left-content-layout,
 .right-content-layout {
   .content {
-    height: calc(100% - 20px);
     padding: 20px;
     border: 1px solid #c9cdd4;
 

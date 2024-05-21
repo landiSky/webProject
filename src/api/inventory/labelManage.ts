@@ -19,3 +19,8 @@ export function fetchFilterData() {
 export function fetchAddGroup(data: Record<string, any>) {
   return $http.post('/inventory/web/group/insert', data);
 }
+
+// 编辑分组
+export function fetchEditGroup(data: Record<string, any>) {
+  return $http.post('/inventory/web/group/update', data);
+}
