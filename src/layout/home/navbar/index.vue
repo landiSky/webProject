@@ -73,6 +73,7 @@ import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { snmsClientLogin } from '@/api/login';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -101,30 +102,49 @@ const clickLogout = () => {
     },
   });
 };
-
+// 以前的
+// const clickIdService = () => {
+//   const { nodeStatus } = userInfoByCompany.value || {};
+//   if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
+//     const { snmsUrls } = userInfo.value || {};
+//     window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
+//   } else {
+//     Modal.info({
+//       title: '使用提醒',
+//       content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+//       titleAlign: 'start',
+//       hideCancel: false,
+//       cancelText: '暂不开通',
+//       okText: '去开通',
+//       onOk: () => {
+//         // 变更不同的值，再卖家首页才可以多次点击
+//         const curAuthValue = route.query.openAuthModal;
+//         router.push({
+//           path: '/buyer/index',
+//           query: {
+//             openAuthModal: curAuthValue ? Number(curAuthValue) + 1 : 1,
+//           },
+//         });
+//       },
+//     });
+//   }
+// };
+// 现在的
 const clickIdService = () => {
-  const { nodeStatus } = userInfoByCompany.value || {};
-  if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
-    const { snmsUrls } = userInfo.value || {};
-    window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
+  const { primary } = userInfoByCompany.value || {};
+  if (primary === true || userInfo.value?.isAdmin) {
+    const { snmsUrls, companyId } = userInfo.value || {};
+    const params = {
+      snmsLoginId: snmsUrls?.snmsLoginId,
+      companyId,
+    };
+    snmsClientLogin(params).then(() => {});
   } else {
-    Modal.info({
-      title: '使用提醒',
-      content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
       titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不开通',
-      okText: '去开通',
-      onOk: () => {
-        // 变更不同的值，再卖家首页才可以多次点击
-        const curAuthValue = route.query.openAuthModal;
-        router.push({
-          path: '/buyer/index',
-          query: {
-            openAuthModal: curAuthValue ? Number(curAuthValue) + 1 : 1,
-          },
-        });
-      },
+      okText: '好的',
     });
   }
 };

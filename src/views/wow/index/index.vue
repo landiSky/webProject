@@ -100,13 +100,29 @@
         <span class="subTitle">当前活跃企业节点</span>
         <t-table
           :columns="columns"
-          :data="activeNodeList"
           :bordered="false"
           :pagination="false"
-          :scroll="{ y: '90%' }"
           class="table"
           scrollbar
         />
+        <Vue3SeamlessScroll
+          class="scroll_box"
+          :list="activeNodeList"
+          :open-watch="true"
+          :hover="true"
+          :step="0.3"
+          :wait-time="1000"
+        >
+          <t-table
+            :columns="columns"
+            :show-header="false"
+            :data="activeNodeList"
+            :bordered="false"
+            :pagination="false"
+            class="table-01"
+            scrollbar
+          />
+        </Vue3SeamlessScroll>
       </div>
       <div class="right">
         <span class="subTitle">开通企业节点，获取以下资源及服务</span>
@@ -178,14 +194,14 @@ import {
   apiNodeOverall,
   apiGetProductId,
 } from '@/api/wow/index';
+import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
 const router = useRouter();
 
-const { userInfo, userInfoByCompany }: Record<string, any> = storeToRefs(
-  userStore
-);
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
@@ -212,7 +228,7 @@ const clickCarousel = (link: string) => {
 };
 
 const clickIdService = () => {
-  if (!userInfo.value?.userId) {
+  if (!userInfo.value?.id) {
     Modal.info({
       title: '登录提醒',
       content: '暂未登录，需要登录后方可查看标识服务。',
@@ -261,8 +277,14 @@ const allCategList = [
     icon: 'freeTry',
     title: '免费试用',
     desc: '尝试限免应用，开启企业数字化时代',
-    disable: true,
-    action: () => {},
+    action: () => {
+      router.push({
+        path: '/wow/mall',
+        query: {
+          free: 12,
+        },
+      });
+    },
   },
   {
     icon: 'idService',
@@ -295,8 +317,7 @@ const allCategList = [
 const platProductsList = [
   {
     title: '数字基建',
-    desc:
-      '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
+    desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
         name: 'TNaas',
@@ -321,8 +342,7 @@ const platProductsList = [
   },
   {
     title: '工业互联网技术服务',
-    desc:
-      '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
+    desc: '以标识解析体系为底座，将数字标识与智能硬件融合；为企业打造综合的企业数字化和工业互联网服务体系。',
     cards: [
       {
         name: 'IDMonitor',
@@ -346,8 +366,7 @@ const platProductsList = [
   },
   {
     title: '区块链技术服务',
-    desc:
-      '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
+    desc: '工业互联网融合区块链技术，通过底层许可公有链、Baas、跨链技术等，提供立足产业的区块链技术服务和价值交换平台。',
     cards: [
       {
         name: 'TChain',
@@ -442,7 +461,11 @@ const goCardDetail = (item: Record<string, any>) => {
 
 onMounted(() => {
   apiActiveNode().then((data: any) => {
-    activeNodeList.value = data;
+    if (data.length >= 51) {
+      activeNodeList.value = data.slice(1, 51);
+    } else {
+      activeNodeList.value = data;
+    }
   });
   apiNodeOverall().then((data) => {
     activeOverall.value = data;
@@ -622,11 +645,14 @@ onMounted(() => {
       margin-right: 46px;
       color: #435c97;
       cursor: pointer;
+      transition-duration: 0.5s;
+      transition-property: color, transform;
 
       .hoverVector {
-        display: none;
         width: 40px;
         margin-top: 12px;
+        opacity: 0;
+        transition: all 1s ease;
       }
 
       &:hover {
@@ -634,7 +660,7 @@ onMounted(() => {
         transform: translate(0, -20px);
 
         .hoverVector {
-          display: block;
+          opacity: 1;
         }
       }
 
@@ -733,8 +759,25 @@ onMounted(() => {
         margin-top: -12px;
         // margin-left: -16px;
         :deep(.tele-empty) {
-          padding: 50px 0;
+          padding: 50px 0 !important;
         }
+
+        :deep(.tele-table-td-content) {
+          display: none;
+        }
+      }
+
+      .table-01 {
+        margin-top: -12px;
+
+        :deep(.tele-empty) {
+          padding: 50px 0 !important;
+        }
+      }
+
+      .scroll_box {
+        height: 288px;
+        overflow: hidden;
       }
     }
 

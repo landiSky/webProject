@@ -46,7 +46,7 @@
         @press-enter="onSearch"
         @search="onSearch"
       />
-      <t-space v-if="userInfo?.userId">
+      <t-space v-if="userInfo?.id">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
 
         <span class="username">
@@ -97,11 +97,8 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -153,10 +150,10 @@ const goRegister = () => {
   });
 };
 const goLogin = () => {
-  userStore.jumpToLogin();
-  // router.push({
-  //   path: '/login',
-  // });
+  // userStore.jumpToLogin();
+  router.push({
+    path: '/login',
+  });
 };
 
 const onSearch = () => {
@@ -169,7 +166,7 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
-  if (!userInfo.value?.userId) {
+  if (!userInfo.value?.id) {
     Modal.info({
       title: '登录提醒',
       content: '暂未登录，需要登录后方可查看标识服务。',

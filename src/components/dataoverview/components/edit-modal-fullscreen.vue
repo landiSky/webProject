@@ -72,17 +72,18 @@
           </t-input>
         </t-form-item>
         <!--测试1 企业地址-->
-        <t-form-item label="企业地址" field="enterpriseAddress">
+        <t-form-item label="企业地址" field="orgAddrCounty">
           <t-cascader
-            v-model="formModel.enterpriseAddress"
-            placeholder="请选择省市区"
+            v-model="formModel.orgAddrCounty"
+            placeholder="请选择省/市/区"
             allow-clear
             :load-more="loadMore"
             :options="registration"
-            :style="{ flex: '0 2 50%' }"
           />
-          <t-input
-            v-model="formModel.address"
+        </t-form-item>
+        <t-form-item field="orgAddr" :hide-asterisk="true">
+          <t-textarea
+            v-model="formModel.orgAddr"
             :max-length="{
               length: 500,
               errorOnly: true,
@@ -91,7 +92,7 @@
             show-word-limit
             placeholder="请输入详细地址"
           >
-          </t-input>
+          </t-textarea>
         </t-form-item>
         <t-form-item label="法人姓名" field="legalPersonName">
           <t-input
@@ -308,13 +309,15 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted, reactive } from 'vue';
 import { useUserStore } from '@/store/modules/user';
-import { authDetails, authSubmit, authRepeat } from '@/api/authentication';
+import {
+  authDetails,
+  authSubmit,
+  authRepeat,
+  getRegion,
+} from '@/api/authentication';
 import { getToken } from '@/utils/auth';
 import { storeToRefs } from 'pinia';
-import {
-  Message,
-  // Modal
-} from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
@@ -334,12 +337,12 @@ const showModal = ref(true);
 const formRef = ref();
 
 const uploadHeaders = {
-  Authorization: `Bearer ${getToken()}`,
+  Authorization: `${getToken()}`,
 };
 
 const formModel = ref<Record<string, any>>({
   id: userInfo.value?.companyId,
-  userId: userInfo.value?.userId,
+  userId: userInfo.value?.id,
   // 企业名称
   companyName: '',
   // 统一社会信用代码
@@ -358,10 +361,14 @@ const formModel = ref<Record<string, any>>({
   // 新增 0 重新添加 1
   type: 0,
   companyCerPath: '',
-  // 企业地址-省市县
-  enterpriseAddress: [],
   // 企业地址-详细地址
-  address: '',
+  orgAddr: '',
+  // 省级地址编码
+  orgAddrProvince: '',
+  // 市级地址编码
+  orgAddrCity: '',
+  // 区级地址编码
+  orgAddrCounty: '',
 });
 
 const formRules: any = {
@@ -421,15 +428,21 @@ const formRules: any = {
     },
   ],
   // contactidcard: [{ required: true, message: '请上传身份证' }],
-  enterpriseAddress: [
+  orgAddrCounty: [
     {
       required: true,
-      message: '请输入企业地址',
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请选择所在地址');
-        if (!formModel.value.address) {
-          return cb('请输入详细地址');
-        }
+        return cb();
+      },
+    },
+  ],
+
+  orgAddr: [
+    {
+      required: true,
+      validator: (value: string, cb: (params?: any) => void) => {
+        if (!value) return cb('请输入详细地址');
         return cb();
       },
     },
@@ -526,6 +539,20 @@ const onConfirm = (done: (closed: boolean) => void) => {
               .catch((err) => {
                 done(false);
               });
+          } else if (res.data.code === 401010) {
+            Modal.warning({
+              title: '企业节点前缀申请已完成，可同步完成企业认证。',
+              content: '',
+              titleAlign: 'start',
+              okText: '好的',
+            });
+          } else if (res.data.code === 401007) {
+            Modal.warning({
+              title: '企业认证重复',
+              content: res.data.message,
+              titleAlign: 'start',
+              okText: '好的',
+            });
           } else {
             Message.error('信用代码已存在');
           }
@@ -542,42 +569,53 @@ const canceldes = () => {
 };
 
 // 地区选择
-const loadMore = (
-  option: { level: any },
-  done: (arg0: { value: any; label: any; isLeaf: boolean } | undefined) => void
-) => {
-  // const { level } = option;
-  // const promise = new Promise((resolve) => {
-  // const params = {
-  //   code: level === 1 ? pathValue[0] : pathValue[1],
-  // };
-  // get(`${requestUrl}/v2/web/goods/selectRegion`, params).then((res) => {
-  //   if (res.code !== 200) {
-  //     return;
-  //   }
-  //   if (level === 1) {
-  //     districts.value = res.data;
-  //   } else {
-  //     municipality.value = res.data;
-  //   }
-  //   const openlist = res.data.map((item) => {
-  //     return {
-  //       value: level === 1 ? item?.cityCode : item?.districtCode,
-  //       label: level === 1 ? item?.cityName : item?.districtName,
-  //       isLeaf: level >= 2,
-  //     };
-  //   });
-  //   resolve(openlist);
-  // });
-  // });
-  // return promise;
+const loadMore = (option: any, done: any) => {
+  const { id, dictKey, dictCode } = option;
+  const promise = new Promise((resolve) => {
+    const params = {
+      parentId: id,
+    };
+    getRegion(params).then((res) => {
+      if (dictKey === 'PROVINCE') {
+        formModel.value.orgAddrProvince = dictCode;
+      } else if (dictKey === 'CITY') {
+        formModel.value.orgAddrCity = dictCode;
+      }
+      const openlist = res.map((item: any) => {
+        return {
+          ...item,
+          value: item?.dictCode,
+          label: item?.dictValue,
+          isLeaf: dictKey === 'CITY',
+        };
+      });
+      done(openlist, openlist);
+    });
+  });
+  return promise;
 };
 
+const getByParentId = () => {
+  const params = {
+    parentId: 0,
+  };
+  getRegion(params).then((res) => {
+    const openest = res.map((item: { dictCode: any; dictValue: any }) => {
+      return {
+        ...item,
+        value: item?.dictCode,
+        label: item?.dictValue,
+      };
+    });
+    registration.value = openest;
+  });
+};
 onMounted(() => {
   // 0是提交认证 1是修改认证
   if (props.data?.statusled === 1) {
     getUserDetail();
   }
+  getByParentId();
 });
 </script>
 
@@ -626,9 +664,5 @@ onMounted(() => {
   // :deep(.tele-upload-list-picture) {
   //   transition: none;
   // }
-  .item-input {
-    flex: 0 2 50%;
-    margin-left: 12px;
-  }
 }
 </style>

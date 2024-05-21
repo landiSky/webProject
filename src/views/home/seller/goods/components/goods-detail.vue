@@ -283,11 +283,24 @@
                   {{ st.name }}
                 </t-descriptions-item>
                 <t-descriptions-item
+                  v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
+                  label="对接SaaS应用"
+                >
+                  {{ st.productDeliverySetList.application
+                  }}<t-link
+                    :hoverable="false"
+                    @click="
+                      applicationlink(st.productDeliverySetList.saasAppId)
+                    "
+                    >查看应用接入信息</t-link
+                  >
+                </t-descriptions-item>
+                <!-- <t-descriptions-item
                   v-if="dataInfo.deliveryType == 0"
                   label="应用服务地址"
                 >
                   {{ st.url }}
-                </t-descriptions-item>
+                </t-descriptions-item> -->
                 <t-descriptions-item
                   v-if="dataInfo.saleType === 0"
                   label="套餐定价设置"
@@ -317,7 +330,7 @@
                 >
                   {{ st.accountNumList[0].price }} 元
                 </t-descriptions-item>
-                <t-descriptions-item label="应用密钥">
+                <!-- <t-descriptions-item label="应用密钥">
                   <a
                     :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
                       st.appSecret
@@ -325,6 +338,20 @@
                     download
                     >下载密钥文件</a
                   >
+                </t-descriptions-item> -->
+                <t-descriptions-item label="是否支持试用">
+                  {{ st.isTry === 1 ? '是' : '否' }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
+                  <t-link href="link" :hoverable="false">{{
+                    st.tryUrl
+                  }}</t-link>
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
+                  {{ st.tryAccount }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用密码">
+                  {{ st.tryPwd }}
                 </t-descriptions-item>
               </t-descriptions>
               <div
@@ -352,7 +379,9 @@ import {
   goodsDetail,
   preUp,
 } from '@/api/goods-manage';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const visible = ref(true);
 // 状态
 const StatusEnum: { [name: string]: any } = {
@@ -414,6 +443,7 @@ const PriceTypeEnum: { [name: string]: any } = {
   0: '套餐定价(账号+时长)',
   1: '一口价定价',
   2: '价格面议',
+  3: '免费',
 };
 
 const DurationEnum: { [name: string]: string } = {
@@ -540,6 +570,14 @@ const clickView = () => {
 const toAnchor = (link: string) => {
   const ele = document.getElementById(link);
   ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
+};
+
+// 应用跳转详情
+const applicationlink = (id: number) => {
+  console.log('应用id', id);
+  if (id) {
+    router.push({ path: '', query: { selectById: id } });
+  }
 };
 </script>
 

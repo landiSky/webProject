@@ -66,14 +66,32 @@
                       >、</span
                     >
                   </span>
-                  <t-tooltip
+                  <!-- <t-tooltip
                     v-if="entPrefixListSuffix?.length"
                     :content="entPrefixListSuffix.join(',')"
                   >
                     <t-link
                       >更多前缀 ({{ entPrefixListSuffix?.length }})</t-link
                     >
-                  </t-tooltip>
+                  </t-tooltip> -->
+
+                  <t-popover
+                    position="bottom"
+                    :title="`全部前缀（${entPrefixListSuffix?.length}）`"
+                  >
+                    <t-link
+                      >更多前缀 ({{ entPrefixListSuffix?.length }})</t-link
+                    >
+                    <template #content>
+                      <div class="popover-bottom">
+                        <div
+                          v-for="(item, index) in entPrefixListSuffix"
+                          :key="index"
+                          >{{ item }}</div
+                        >
+                      </div>
+                    </template>
+                  </t-popover>
                   <span class="divider">|</span>
                 </div>
               </div>
@@ -389,13 +407,29 @@
       </div>
     </div> -->
     <!-- 已购应用 -->
-    <div v-if="authDialogVisible.length !== 0" class="purchased">
+    <div class="purchased">
       <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
         <t-tab-pane key="1">
-          <template #title> <icon-calendar /> 全部应用 </template>
+          <template #title>
+            <img
+              class="application-img"
+              :class="tabsApplication == 1 ? 'application-blue-img' : ''"
+              src="./image/application_01.png"
+              alt=""
+            />
+            已购应用
+          </template>
         </t-tab-pane>
         <t-tab-pane key="2">
-          <template #title> <icon-user /> 企业自建应用 </template>
+          <template #title>
+            <img
+              class="application-img"
+              :class="tabsApplication == 2 ? 'application-blue-img' : ''"
+              src="./image/application_02.png"
+              alt=""
+            />
+            企业自建应用
+          </template>
         </t-tab-pane>
       </t-tabs>
       <!-- <h3>已购应用</h3> -->
@@ -440,6 +474,7 @@
                 @click="configurationapp(item)"
                 >配置应用</span
               ><span
+                v-if="tabsApplication == 1"
                 style="margin-left: auto; color: #86909c; cursor: pointer"
                 @click="
                   instructionsuse(
@@ -517,6 +552,18 @@
             </div> -->
           <!-- </div> -->
         </div>
+        <div v-if="authDialogVisible.length === 0" class="nothing-application">
+          <div class="nothing-application-img"></div>
+          <div>{{
+            tabsApplication == 1 ? '暂无已购应用' : '暂无企业自建应用'
+          }}</div>
+          <t-button
+            class="nothing-application-button"
+            type="primary"
+            @click="goapply"
+            >{{ tabsApplication == 1 ? '查看应用商城' : '创建应用' }}</t-button
+          >
+        </div>
       </div>
     </div>
     <!-- 订单概览 -->
@@ -542,6 +589,7 @@
         </div>
       </div>
     </div>
+
     <!-- 配置应用 -->
     <AuthMemberModal
       v-if="editModalVisiblealter"
@@ -591,7 +639,12 @@ import { storeToRefs } from 'pinia';
 import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
 
-import { orderOver, authDialogdata, orderGo } from '@/api/buyer/overview';
+import {
+  orderOver,
+  authDialogdata,
+  orderGo,
+  selectSelfApps,
+} from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
@@ -748,13 +801,22 @@ const orderlistdata = () => {
 };
 // 已购应用
 const authDialog = () => {
-  // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
-  authDialogdata({
-    companyId: userInfoByCompany.value?.companyId,
-    userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.userId, // userInfoByCompany.value?.id || '',
-  }).then((res) => {
-    authDialogVisible.value = res || [];
-  });
+  if (Number(tabsApplication.value) === 1) {
+    // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
+    authDialogdata({
+      companyId: userInfoByCompany.value?.companyId,
+      userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id, // userInfoByCompany.value?.id || '',
+    }).then((res) => {
+      authDialogVisible.value = res || [];
+    });
+  } else if (Number(tabsApplication.value) === 2) {
+    selectSelfApps({
+      companyId: userInfoByCompany.value?.companyId,
+      userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id, // userInfoByCompany.value?.id || '',
+    }).then((res) => {
+      authDialogVisible.value = res || [];
+    });
+  }
 };
 
 // 去认证
@@ -952,11 +1014,27 @@ const multiples = () => {
 // 应用切换
 const TabClickApplication = (key: any) => {
   tabsApplication.value = key;
-  if (key === '1') {
-    console.log('点击切换', tabsApplication.value);
-    console.log('点击切换获取参数', key);
+  if (
+    key === '1' &&
+    (userInfoByCompany.value.certificateStatus === 1 ||
+      userInfoByCompany.value.nodeStatus === 1)
+  ) {
+    authDialog();
+  } else if (
+    key === '2' &&
+    (userInfoByCompany.value.certificateStatus === 1 ||
+      userInfoByCompany.value.nodeStatus === 1)
+  ) {
+    authDialog();
+  }
+};
+
+const goapply = () => {
+  if (Number(tabsApplication.value) === 1) {
+    // 跳转应用商城
+    router.push('/wow/mall');
   } else {
-    console.log('我是2');
+    // 跳转应用模块
   }
 };
 
@@ -1106,6 +1184,21 @@ onMounted(() => {
               color: #86909c;
               // color: #86909c;
               text-align: center;
+            }
+
+            .popover-bottom {
+              display: flex;
+              flex-direction: columns;
+
+              &div {
+                margin-top: 16px;
+                color: rgba(78, 89, 105, 1);
+                font-weight: 400;
+                font-size: 12px;
+                font-family: PingFang SC;
+                line-height: 20px;
+                text-align: left;
+              }
             }
           }
 
@@ -1610,6 +1703,31 @@ onMounted(() => {
       line-height: 34px;
     }
 
+    :deep(.tele-tabs-tab) {
+      margin: 0 16px 0 0;
+    }
+
+    :deep(.tele-tabs-tab-active) {
+      color: rgba(34, 51, 84, 1);
+    }
+
+    :deep(.tele-tabs-tab-title) {
+      display: flex;
+      align-items: center;
+    }
+
+    .application-img {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+    }
+
+    .application-blue-img {
+      transform: translateY(-60px);
+      // 颜色、x轴偏移量、y轴偏移量,这里的颜色就是你要指定的颜色，不管原来的图片是什么颜色，都会变成这个颜色
+      filter: drop-shadow(rgba(22, 100, 255, 1) 0 60px);
+    }
+
     .Applysd {
       //   height: 500px;
       //   background-color: pink;
@@ -1617,6 +1735,7 @@ onMounted(() => {
       flex-wrap: wrap;
       justify-content: space-between;
       width: 100%;
+      height: 100%;
 
       .purchasedlist {
         display: flex;
@@ -1678,6 +1797,30 @@ onMounted(() => {
             line-height: 22px;
           }
         }
+      }
+
+      .purchasedlist:nth-child(-n + 2) {
+        margin-top: 20px;
+      }
+
+      .nothing-application {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 425px;
+      }
+
+      .nothing-application-img {
+        width: 120px;
+        height: 120px;
+        background: url(@/assets/images/home/empty.png) no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .nothing-application-button {
+        margin-top: 12px;
       }
     }
   }

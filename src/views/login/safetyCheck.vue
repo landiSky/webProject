@@ -186,7 +186,7 @@ const clickCheckBtn = () => {
       const { phone, captcha } = safeForm.value;
       checkBtnLoading.value = true;
       apiBindPhone({
-        userId: userStore.userInfo?.userId,
+        userId: userStore.userInfo?.id,
         phone,
         captcha,
       })

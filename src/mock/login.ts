@@ -12,7 +12,7 @@ export default [
   },
 
   {
-    url: '/server/web/config/info',
+    url: '/server/web/config',
     method: 'get',
     response: () => {
       return successResponseWrap({

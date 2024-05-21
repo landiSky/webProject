@@ -16,3 +16,8 @@ export function apiProductDetail(params: Record<string, any>) {
 export function apiComputePrice(data: Record<string, any>) {
   return $http.post('/server/web/reception/computePrice', data);
 }
+
+// 获取商品列表
+export function apiBypageList(data: Record<string, any>) {
+  return $http.post('/server/web/product/evaluate/listByPage', data);
+}

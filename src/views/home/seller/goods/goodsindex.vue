@@ -106,7 +106,10 @@
         <span v-else class="circle green"></span>
         {{ StatusEnum[record.status] }}
       </template>
-
+      <!-- 测试定价方式 -->
+      <template #saleType="{ record }">
+        {{ SaleTypeList[record.saleType] || '-' }}
+      </template>
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
         <t-link
@@ -299,6 +302,36 @@ const StatusList = [
   },
 ];
 
+// 测试定价方式
+const SaleTypeList: { [name: string]: any } = {
+  0: '套餐定价',
+  1: '一口价',
+  2: '价格面议',
+  3: '免费',
+};
+const PricingMethodList = [
+  {
+    text: '全部',
+    value: null,
+  },
+  {
+    text: '套餐定价',
+    value: 0,
+  },
+  {
+    text: '一口价',
+    value: 1,
+  },
+  {
+    text: '价格面议',
+    value: 2,
+  },
+  {
+    text: '免费',
+    value: 3,
+  },
+];
+
 const classList = ref([
   {
     text: '全部',
@@ -356,6 +389,16 @@ const columns = [
     width: 140,
     filterable: {
       filters: StatusList,
+    },
+  },
+  // 测试定价方式
+  {
+    title: '定价方式',
+    dataIndex: 'saleType',
+    slotName: 'saleType',
+    width: 140,
+    filterable: {
+      filters: PricingMethodList,
     },
   },
   {

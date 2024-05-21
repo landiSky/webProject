@@ -14,7 +14,7 @@ const visible = ref(true);
 
 const emit = defineEmits(['success', 'cancel']);
 const pictureConfig = {
-  url: '/sso/static/api/v1/captcha/get',
+  url: '/auth/captcha/get',
   method: 'post',
   customFields: {
     returnRawResponse: true,
@@ -27,7 +27,7 @@ const pictureConfig = {
 };
 
 const checkPictureConfig = {
-  url: '/sso/static/api/v1/captcha/check',
+  url: '/auth/captcha/check',
   method: 'post',
 };
 

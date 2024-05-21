@@ -91,7 +91,10 @@ const props = defineProps({
 const showModal = computed(() => props.labelVisible);
 
 // 回显使用
-const getDetaultTransferData = (treeData = [], transferDataSource = []) => {
+const getDetaultTransferData = (
+  treeData: any[] = [],
+  transferDataSource: any[] = []
+) => {
   treeData.forEach((item) => {
     if (item.children) {
       getDetaultTransferData(item.children, transferDataSource);
@@ -109,7 +112,7 @@ const getDetaultTransferData = (treeData = [], transferDataSource = []) => {
   return result;
 };
 
-const getSourceTreeData = (data = []) => {
+const getSourceTreeData = (data: any[] = []) => {
   const values = data.map((item) => item.value);
   const travel = (_treeData = []) => {
     const treeDataSource = [];
@@ -129,7 +132,7 @@ const getSourceTreeData = (data = []) => {
   return travel(state.treeData).filter((i) => i.children[0]);
 };
 
-const getTargetTreeData = (data = []) => {
+const getTargetTreeData = (data: any[] = []) => {
   const values = data.map((item) => item.value);
   const travel = (_treeData = []) => {
     const treeDataSource = [];
@@ -153,7 +156,11 @@ const getTargetTreeData = (data = []) => {
   return travel(state.treeData).filter((i) => i.children[0]);
 };
 
-const getTransferData = (treeData = [], transferDataSource = [], level = 0) => {
+const getTransferData = (
+  treeData: any[] = [],
+  transferDataSource: any[] = [],
+  level = 0
+) => {
   treeData.forEach((item) => {
     if (level === 0) {
       // 第一层没有复选框

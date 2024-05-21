@@ -2,7 +2,7 @@
  * 获取用户信息api返回的数据类型
  */
 export interface UserInfo {
-  userId?: number;
+  id?: number;
   username?: string;
   nickName?: string;
   deptName?: string;

@@ -352,6 +352,7 @@
                 :options="deliveryTypeList"
                 class="sale-radio"
                 type="button"
+                @change="radiogroupChange"
               >
               </t-radio-group>
               <t-link
@@ -362,7 +363,10 @@
             </t-form-item>
             <t-form-item label="商品定价方式">
               <t-radio-group v-model="formModel2.saleType">
-                <t-radio :value="priceTypeList[0].value">
+                <t-radio
+                  v-if="formModel2.deliveryType == 1"
+                  :value="priceTypeList[0].value"
+                >
                   {{ priceTypeList[0].label }}
                   <t-tooltip
                     content="可使用账号数量及使用时间均根据套餐设限，套餐价格=账号单价*套餐账号数*时长"
@@ -370,7 +374,10 @@
                     <icon-question-circle style="color: #86909c" size="12" />
                   </t-tooltip>
                 </t-radio>
-                <t-radio :value="priceTypeList[1].value">
+                <t-radio
+                  v-if="formModel2.deliveryType == 1"
+                  :value="priceTypeList[1].value"
+                >
                   {{ priceTypeList[1].label }}
                   <t-tooltip content="可使用账号数量及可使用时间均不受限">
                     <icon-question-circle style="color: #86909c" size="12" />
@@ -381,6 +388,17 @@
                   :value="priceTypeList[2].value"
                 >
                   {{ priceTypeList[2].label }}
+                </t-radio>
+                <t-radio
+                  v-if="formModel2.deliveryType == 0"
+                  :value="priceTypeList[3].value"
+                >
+                  {{ priceTypeList[3].label }}
+                  <t-tooltip
+                    content="用户不付款即可安装使用应用。你可以在应用内限制免费版所享有的功能权益"
+                  >
+                    <icon-question-circle style="color: #86909c" size="12" />
+                  </t-tooltip>
                 </t-radio>
               </t-radio-group>
             </t-form-item>
@@ -409,6 +427,7 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal[index].name"
+                  placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -510,11 +529,80 @@
                   >
                 </t-select>
               </t-form-item>
+              <t-form-item label="是否支持试用" field="probation">
+                <t-radio-group v-model="copyModal[index].probation">
+                  <t-radio
+                    v-for="(c, index) of probationList"
+                    :key="index"
+                    :value="c.value"
+                  >
+                    {{ c.label }}
+                  </t-radio>
+                </t-radio-group>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用版本地址"
+                class="sale-item"
+                field="address"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].address"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 500,
+                    errorOnly: true,
+                  }"
+                  @input="validate(copyFormRef[index].value, 'address')"
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用账号"
+                class="sale-item"
+                field="probationaccount"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationaccount"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 10,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationaccount')
+                  "
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用密码"
+                class="sale-item"
+                field="probationpassword"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationpassword"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 32,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationpassword')
+                  "
+                >
+                </t-input>
+              </t-form-item>
             </t-form>
           </div>
         </div>
         <div v-if="formModel2.saleType == priceTypeList[1].value">
-          <div v-for="(c, index) of copyModal2" :key="c" class="sale-copy">
+          <div v-for="(c, index) of copyModal2" :key="index" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
                 <div class="body-title-icon" />
@@ -535,6 +623,7 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal2[index].name"
+                  placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -571,6 +660,75 @@
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
+              <t-form-item label="是否支持试用" field="probation">
+                <t-radio-group v-model="copyModal[index].probation">
+                  <t-radio
+                    v-for="(c, index) of probationList"
+                    :key="index"
+                    :value="c.value"
+                  >
+                    {{ c.label }}
+                  </t-radio>
+                </t-radio-group>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用版本地址"
+                class="sale-item"
+                field="address"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].address"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 500,
+                    errorOnly: true,
+                  }"
+                  @input="validate(copyFormRef[index].value, 'address')"
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用账号"
+                class="sale-item"
+                field="probationaccount"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationaccount"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 10,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationaccount')
+                  "
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用密码"
+                class="sale-item"
+                field="probationpassword"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationpassword"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 32,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationpassword')
+                  "
+                >
+                </t-input>
+              </t-form-item>
             </t-form>
           </div>
         </div>
@@ -596,6 +754,7 @@
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
                   v-model.trim="copyModal3[index].name"
+                  placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
@@ -604,6 +763,131 @@
                   @input="validate(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
+              </t-form-item>
+              <t-form-item label="是否支持试用" field="probation">
+                <t-radio-group v-model="copyModal[index].probation">
+                  <t-radio
+                    v-for="(c, index) of probationList"
+                    :key="index"
+                    :value="c.value"
+                  >
+                    {{ c.label }}
+                  </t-radio>
+                </t-radio-group>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用版本地址"
+                class="sale-item"
+                field="address"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].address"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 500,
+                    errorOnly: true,
+                  }"
+                  @input="validate(copyFormRef[index].value, 'address')"
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用账号"
+                class="sale-item"
+                field="probationaccount"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationaccount"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 10,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationaccount')
+                  "
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="copyModal[index].probation === 0"
+                label="试用密码"
+                class="sale-item"
+                field="probationpassword"
+              >
+                <t-input
+                  v-model.trim="copyModal[index].probationpassword"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 32,
+                    errorOnly: true,
+                  }"
+                  @input="
+                    validate(copyFormRef[index].value, 'probationpassword')
+                  "
+                >
+                </t-input>
+              </t-form-item>
+            </t-form>
+          </div>
+        </div>
+        <div v-if="formModel2.saleType == priceTypeList[3].value">
+          <div v-for="(c, index) of copyModal4" :key="index" class="sale-copy">
+            <div class="body-title">
+              <div class="body-title-left">
+                <div class="body-title-icon" />
+                <div>交付版本{{ index + 1 }}</div>
+              </div>
+              <div
+                v-if="copyModal4.length > 1"
+                class="body-title-right"
+                @click="deleteSaleCopy(index)"
+                >删除</div
+              >
+            </div>
+            <t-form
+              :ref="copyFormRef[index]"
+              :model="copyModal4[index]"
+              :rules="copyRules"
+              label-align="left"
+              :label-col-props="{
+                span: 6,
+                offset: 0,
+              }"
+            >
+              <t-form-item label="交付版本名称" class="sale-item" field="name">
+                <t-input
+                  v-model.trim="copyModal4[index].name"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 10,
+                    errorOnly: true,
+                  }"
+                  @input="validate(copyFormRef[index].value, 'name')"
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item label="选择已上线SaaS应用" field="durationList">
+                <t-select
+                  v-model="copyModal4[index].durationList"
+                  :style="{ width: '100%' }"
+                  placeholder="请选择已上线的SaaS应用"
+                  multiple
+                  allow-search
+                >
+                  <t-option
+                    v-for="item in durationOptions"
+                    :key="item.value"
+                    :value="item.value"
+                    >{{ item.label }}</t-option
+                  >
+                </t-select>
               </t-form-item>
             </t-form>
           </div>
@@ -654,7 +938,7 @@ const templateRef = ref();
 const step = ref(1);
 
 const uploadHeaders = {
-  Authorization: `Bearer ${getToken()}`,
+  Authorization: `${getToken()}`,
 };
 
 const prdRef = ref();
@@ -710,12 +994,18 @@ const priceTypeList = ref([
   { label: '套餐定价(账号+时长)', value: 0 },
   { label: '一口价定价', value: 1 },
   { label: '价格面议', value: 2 },
+  { label: '免费', value: 3 },
+]);
+
+const probationList = ref([
+  { label: '是', value: 0 },
+  { label: '否', value: 1 },
 ]);
 
 const formModel2 = ref({
   productId: undefined,
   deliveryType: 0,
-  saleType: 0,
+  saleType: 3,
   productDeliveryList: [] as any,
 });
 const formRules = {
@@ -751,6 +1041,10 @@ const copyModal = ref<any[]>([
       },
     ],
     durationList: [],
+    probation: 0,
+    address: '',
+    probationaccount: '',
+    probationpassword: '',
   },
 ]);
 const copyModal2 = ref<any[]>([
@@ -759,13 +1053,40 @@ const copyModal2 = ref<any[]>([
     url: '',
     productDeliverySetInfoList: [{ price: null }],
     onePiece: null,
+    probation: 0,
+    address: '',
+    probationaccount: '',
+    probationpassword: '',
   },
 ]);
 const copyModal3 = ref<any[]>([
   {
     name: '',
+    probation: 0,
+    address: '',
+    probationaccount: '',
+    probationpassword: '',
   },
 ]);
+const copyModal4 = ref<any[]>([
+  {
+    name: '',
+    durationList: [],
+    probation: 0,
+    address: '',
+    probationaccount: '',
+    probationpassword: '',
+  },
+]);
+
+// 服务交付方式change事件
+const radiogroupChange = (c: any) => {
+  if (c === 1) {
+    formModel2.value.saleType = 0;
+  } else {
+    formModel2.value.saleType = 3;
+  }
+};
 
 const addPrice = (c: any) => {
   c.productDeliverySetInfoList.push({
@@ -788,6 +1109,10 @@ const addCopy = () => {
         },
       ],
       durationList: [],
+      probation: 0,
+      address: '',
+      probationaccount: '',
+      probationpassword: '',
     });
   } else if (formModel2.value.saleType === 1) {
     copyModal2.value.push({
@@ -795,10 +1120,23 @@ const addCopy = () => {
       url: '',
       onePiece: null,
       productDeliverySetInfoList: [{ price: null }],
+      probation: 0,
+      address: '',
+      probationaccount: '',
+      probationpassword: '',
+    });
+  } else if (formModel2.value.saleType === 3) {
+    copyModal4.value.push({
+      name: '',
+      durationList: [],
     });
   } else {
     copyModal3.value.push({
       name: '',
+      probation: 0,
+      address: '',
+      probationaccount: '',
+      probationpassword: '',
     });
   }
 };
@@ -807,6 +1145,8 @@ const deleteSaleCopy = (index: number) => {
     copyModal.value.splice(index, 1);
   } else if (formModel2.value.saleType === 1) {
     copyModal2.value.splice(index, 1);
+  } else if (formModel2.value.saleType === 3) {
+    copyModal4.value.splice(index, 1);
   } else {
     copyModal3.value.splice(index, 1);
   }
@@ -868,6 +1208,19 @@ const copyRules = {
         return cb();
       },
     },
+  ],
+  probation: [{ required: true, message: '请选择是否支持试用' }],
+  address: [
+    { required: true, message: '请输入试用版本地址' },
+    { maxLength: 500, message: '最多可输入500个字符' },
+  ],
+  probationaccount: [
+    { required: true, message: '请输入试用账号' },
+    { maxLength: 10, message: '最多可输入10个字符' },
+  ],
+  probationpassword: [
+    { required: true, message: '请输入试用密码' },
+    { maxLength: 32, message: '最多可输入32个字符' },
   ],
 };
 
@@ -996,6 +1349,9 @@ const showAddCopy = computed(() => {
   if (formModel2.value.saleType === 1) {
     return copyModal2.value.length < 3;
   }
+  if (formModel2.value.saleType === 3) {
+    return copyModal4.value.length < 3;
+  }
   return copyModal3.value.length < 3;
 });
 
@@ -1007,7 +1363,7 @@ const validateAccountPrice = () => {
       for (const p of m.productDeliverySetInfoList) {
         if (!p.price || !p.accountNum) {
           failed = true;
-          copyFormRef[index].value.setFields({
+          copyFormRef[index].value[0].setFields({
             productDeliverySetInfoList: {
               status: 'error',
               message: `请完善定价设置`,
@@ -1017,7 +1373,7 @@ const validateAccountPrice = () => {
         }
         if (!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) {
           failed = true;
-          copyFormRef[index].value.setFields({
+          copyFormRef[index].value[0].setFields({
             productDeliverySetInfoList: {
               status: 'error',
               message: `价格请填写10位以内整数`,
@@ -1027,7 +1383,7 @@ const validateAccountPrice = () => {
         }
         if (!/^[1-9]\d*$/.test(p.accountNum) || p.accountNum.length > 10) {
           failed = true;
-          copyFormRef[index].value.setFields({
+          copyFormRef[index].value[0].setFields({
             productDeliverySetInfoList: {
               status: 'error',
               message: `账号数量请填写10位以内整数`,
@@ -1056,6 +1412,8 @@ const buildForm2 = () => {
       tempList = JSON.parse(JSON.stringify(tempList));
     }
     modalList = tempList;
+  } else if (formModel2.value.saleType === 3) {
+    modalList = copyModal4.value;
   } else {
     modalList = copyModal3.value;
   }
@@ -1074,27 +1432,30 @@ const validForm2 = async () => {
     length = copyModal.value.length;
   } else if (formModel2.value.saleType === 1) {
     length = copyModal2.value.length;
+  } else if (formModel2.value.saleType === 3) {
+    length = copyModal4.value.length;
   } else {
     length = copyModal3.value.length;
   }
   if (length > 0) {
-    const result2 = await copyFormRef[0].value.validate();
+    const result2 = await copyFormRef[0].value[0].validate();
     if (result2) {
       pass = false;
     }
   }
   if (length > 1) {
-    const result2 = await copyFormRef[1].value.validate();
+    const result2 = await copyFormRef[1].value[0].validate();
     if (result2) {
       pass = false;
     }
   }
   if (length > 2) {
-    const result2 = await copyFormRef[2].value.validate();
+    const result2 = await copyFormRef[2].value[0].validate();
     if (result2) {
       pass = false;
     }
   }
+
   if (validateAccountPrice()) {
     pass = false;
   }
@@ -1108,7 +1469,8 @@ const getModalJson = () => {
     JSON.stringify(formModel2.value) +
     JSON.stringify(copyModal.value) +
     JSON.stringify(copyModal2.value) +
-    JSON.stringify(copyModal3.value)
+    JSON.stringify(copyModal3.value) +
+    JSON.stringify(copyModal4.value)
   );
 };
 
@@ -1124,11 +1486,10 @@ const getDetail = (id: any) => {
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
     formModel2.value.productId = res.id;
-    formModel2.value.deliveryType = res.deliveryType || 0;
-    formModel2.value.saleType = res.saleType || 0;
+    formModel2.value.deliveryType = res.deliveryType;
+    formModel2.value.saleType = res.saleType;
     templateDetail.value = JSON.parse(res.detail);
     templateRef.value.templateData = JSON.parse(res.detail);
-
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];
     if (res.useExplain) {
       expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
@@ -1160,6 +1521,10 @@ const getDetail = (id: any) => {
             url: one.url,
             productDeliverySetInfoList: list1,
             durationList: list2,
+            probation: one.probation,
+            address: one.address,
+            probationaccount: one.probationaccount,
+            probationpassword: one.probationpassword,
           });
         }
       } else {
@@ -1168,6 +1533,10 @@ const getDetail = (id: any) => {
           url: '',
           productDeliverySetInfoList: [{ accountNum: '', price: '' }],
           durationList: [],
+          probation: 0,
+          address: '',
+          probationaccount: '',
+          probationpassword: '',
         });
       }
     } else if (formModel2.value.saleType === 1) {
@@ -1193,6 +1562,10 @@ const getDetail = (id: any) => {
             url: one.url,
             productDeliverySetInfoList: list1,
             onePiece,
+            probation: one.probation,
+            address: one.address,
+            probationaccount: one.probationaccount,
+            probationpassword: one.probationpassword,
           });
         }
       } else {
@@ -1200,6 +1573,30 @@ const getDetail = (id: any) => {
           name: '',
           url: '',
           productDeliverySetInfoList: [{ price: '' }],
+          probation: 0,
+          address: '',
+          probationaccount: '',
+          probationpassword: '',
+        });
+      }
+    } else if (formModel2.value.saleType === 3) {
+      copyModal4.value = [];
+      const list = res.productDeliverySetList;
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list2: any[] = [];
+          for (const three of one.durationList) {
+            list2.push(three.duration);
+          }
+          copyModal.value.push({
+            name: one.name,
+            durationList: list2,
+          });
+        }
+      } else {
+        copyModal4.value.push({
+          name: '',
+          durationList: [],
         });
       }
     } else {
@@ -1209,11 +1606,19 @@ const getDetail = (id: any) => {
         for (const one of list) {
           copyModal3.value.push({
             name: one.name,
+            probation: one.probation,
+            address: one.address,
+            probationaccount: one.probationaccount,
+            probationpassword: one.probationpassword,
           });
         }
       } else {
         copyModal3.value.push({
           name: '',
+          probation: 0,
+          address: '',
+          probationaccount: '',
+          probationpassword: '',
         });
       }
     }
@@ -1494,7 +1899,7 @@ const validateAPT = (isAccount: boolean, index: number) => {
   let pass = true;
   for (const p of m.productDeliverySetInfoList) {
     if ((!/^[1-9]\d*$/.test(p.price) || p.price.length > 10) && !isAccount) {
-      copyFormRef[index].value.setFields({
+      copyFormRef[index].value[0].setFields({
         productDeliverySetInfoList: {
           status: 'error',
           message: `价格请填写10位以内整数`,
@@ -1507,7 +1912,7 @@ const validateAPT = (isAccount: boolean, index: number) => {
       (!/^[1-9]\d*$/.test(p.accountNum) || p.accountNum.length > 10) &&
       isAccount
     ) {
-      copyFormRef[index].value.setFields({
+      copyFormRef[index].value[0].setFields({
         productDeliverySetInfoList: {
           status: 'error',
           message: `账号数量请填写10位以内整数`,
@@ -1518,7 +1923,7 @@ const validateAPT = (isAccount: boolean, index: number) => {
     }
   }
   if (pass) {
-    copyFormRef[index].value.clearValidate();
+    copyFormRef[index].value[0].clearValidate();
   }
 };
 
