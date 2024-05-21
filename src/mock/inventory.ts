@@ -97,4 +97,58 @@ export default [
       return successResponseWrap([]);
     },
   },
+  {
+    // 分组列表
+    url: '/inventory/web/group/selectList',
+    method: 'get',
+    response: () => {
+      return successResponseWrap([
+        {
+          id: '1787762149846814720',
+          name: '行1', // 分组名称
+          type: 1, // 前台筛选
+          remark: '',
+          tagCountByGroup: 0, // 标签数
+        },
+        {
+          id: '1787762050190151680',
+          name: '行业分组',
+          type: 1,
+          remark: '',
+          tagCountByGroup: 0,
+        },
+        {
+          id: '1787760236464050176',
+          name: '类型分组',
+          type: 1,
+          remark: '备注',
+          tagCountByGroup: 0,
+        },
+      ]);
+    },
+  },
+  {
+    // 分组标签
+    url: '/inventory/web/tag/selectList',
+    method: 'get',
+    response: () => {
+      return successResponseWrap([
+        {
+          id: '1788041657850138624',
+          name: '标签三', // 标签名称
+          tagCountByTag: 0, // 打标商品数
+        },
+        {
+          id: '1788041632701091840',
+          name: '标签二',
+          tagCountByTag: 0,
+        },
+        {
+          id: '1788041390358401024',
+          name: '标签一',
+          tagCountByTag: 0,
+        },
+      ]);
+    },
+  },
 ];

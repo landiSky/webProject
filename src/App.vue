@@ -20,6 +20,7 @@ const infoRouteList = [
   'ROUTE_SYNC',
   'ROUTE_SYNC_CLASS',
   'ROUTE_SYNC_GOODS',
+  'ROUTE_SYNC_LABEL',
 ];
 
 const opearationRouteList = [

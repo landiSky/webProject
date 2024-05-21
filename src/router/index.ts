@@ -137,7 +137,6 @@ export const appMenus = (authsList: Array<string> = []) => {
 
   const menuList = iterMenu([...homeRoutesList, ...operationRoutesList]);
   useUserStore().authPathList = pathList;
-
   return menuList;
 };
 

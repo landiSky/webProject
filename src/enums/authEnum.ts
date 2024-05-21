@@ -25,6 +25,7 @@ const operationAuth = {
   '/sync': 'ROUTE_SYNC', // 清单管理
   '/sync/class': 'ROUTE_SYNC_CLASS', // 商品分类管理
   '/sync/goods': 'ROUTE_SYNC_GOODS', // 商品管理
+  '/sync/label/manage': 'ROUTE_SYNC_LABEL', // 标签管理
 };
 export const RouteAuthEnum = { ...BaseRouteAuth, ...operationAuth } as Record<
   string,
