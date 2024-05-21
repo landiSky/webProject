@@ -151,4 +151,25 @@ export default [
       ]);
     },
   },
+  {
+    // 前台筛选
+    url: '/inventory/web/group/selectCountByType',
+    method: 'get',
+    response: () => {
+      return {
+        code: 200,
+        traceId: null,
+        success: true,
+        data: 3,
+        message: '操作成功',
+        err: null,
+      };
+    },
+  },
+  {
+    // 新增分组
+    url: '/inventory/web/group/insert',
+    method: 'post',
+    response: successResponseWrap(),
+  },
 ];

@@ -83,7 +83,12 @@
 <script setup lang="ts">
 // @ts-nocheck
 import { onMounted, reactive } from 'vue';
-import { fetchGroupData, fetchLabelData } from '@/api/inventory/labelManage';
+import {
+  fetchGroupData,
+  fetchLabelData,
+  fetchAddGroup,
+} from '@/api/inventory/labelManage';
+import { Message } from '@tele-design/web-vue';
 import GroupModal from './components/GroupModal.vue';
 
 const state = reactive<{
@@ -192,8 +197,15 @@ const handleTableRowClick = (record: any) => {
   });
 };
 
-const handleLabelConfirm = (data: any) => {
-  console.log('handleLabelConfirm');
+const handleLabelConfirm = (form: object) => {
+  fetchAddGroup(form).then((res) => {
+    console.log('handleLabelConfirm', res);
+    if (res.code === 200) {
+      Message.success(res.message);
+    } else {
+      Message.error(res.message);
+    }
+  });
 };
 
 const handleLabelCancel = () => {
