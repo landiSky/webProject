@@ -70,7 +70,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const uploadHeaders = {
-  Authorization: `Bearer ${getToken()}`,
+  Authorization: `${getToken()}`,
 };
 const formRef = ref();
 

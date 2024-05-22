@@ -40,7 +40,8 @@ export function createPermissionGuard(router: Router) {
           .getUserBasicInfo()
           .then((res) => {
             const userInfo: Record<string, any> = res;
-            if (userInfo?.userId) {
+
+            if (userInfo?.id) {
               if (userInfo?.bindStatus === 1 || userInfo?.safeCheck) {
                 // 跳转到绑定页面，进行手机号绑定和安全校验
                 next('/safetycheck');
@@ -133,7 +134,8 @@ export function createPermissionGuard(router: Router) {
       next();
     } else {
       // s4: 没有 token，需要鉴权，去登录页
-      userStore.jumpToLogin();
+      // userStore.jumpToLogin();
+      next('/login');
     }
   });
 }

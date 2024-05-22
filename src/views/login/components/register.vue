@@ -56,6 +56,21 @@
           </template>
         </t-input-password>
       </t-form-item>
+      <t-form-item field="email" :validate-trigger="['change', 'blur']">
+        <t-input
+          v-model="form.email"
+          placeholder="请输入邮箱"
+          size="large"
+          :max-length="{
+            length: 255,
+            errorOnly: true,
+          }"
+        >
+          <template #prefix>
+            <icon-email :size="12" />
+          </template>
+        </t-input>
+      </t-form-item>
       <t-form-item field="agreement">
         <t-checkbox v-model="agreement">我已阅读并遵守</t-checkbox>
         <t-link @click="goAgreement">《用户服务协议》</t-link>
@@ -112,6 +127,7 @@ const form = ref({
   code: '',
   password: '',
   confirmPassword: '',
+  email: '',
 });
 
 const btnDisabled = computed(() => {
@@ -167,6 +183,20 @@ const formRules = {
       },
     },
   ],
+  email: [
+    {
+      validator: (value: string, cb: (params?: any) => void) => {
+        if (!value) return cb('请输入邮箱');
+        const reata = new RegExp(
+          '^$|^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$'
+        );
+        if (reata.test(value)) {
+          return cb();
+        }
+        return cb('邮箱格式不正确');
+      },
+    },
+  ],
 };
 
 const goAgreement = () => {
@@ -177,9 +207,10 @@ const goAgreement = () => {
 };
 
 const goLogin = () => {
-  userStore.jumpToLogin();
+  // userStore.jumpToLogin();
   // router.push('/buyer');
   // emit('login');
+  router.push('/login');
 };
 
 const goRegister = () => {
@@ -194,15 +225,16 @@ const goRegister = () => {
         });
       } else {
         regisLoading.value = true;
-        const { phone, code, password, confirmPassword } = form.value;
+        const { phone, code, password, confirmPassword, email } = form.value;
         apiRegisterUser({
-          phone,
+          mobile: phone,
           code,
           password: sm2(password, userStore.configInfo?.publicKey),
           confirmPassword: sm2(
             confirmPassword,
             userStore.configInfo?.publicKey
           ),
+          email,
         })
           .then(() => {
             Message.success('注册成功，去登录！');

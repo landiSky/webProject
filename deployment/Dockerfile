@@ -7,7 +7,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 
 # 项目路径
 COPY dist /usr/share/nginx/html
-COPY default.conf /etc/nginx/conf.d/default.conf
+# COPY default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

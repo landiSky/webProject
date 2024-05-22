@@ -12,6 +12,7 @@ export const SaleType = {
   PACKAGE: 0, // 套餐
   ONEOFF: 1, // 一口价
   CONSULT: 2, // 面议
+  FREE: 3, // 免费
 };
 
 export const AccountType = {

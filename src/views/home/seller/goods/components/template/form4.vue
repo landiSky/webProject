@@ -85,7 +85,7 @@
                 : []
             "
             :headers="{
-              Authorization: `Bearer ${getToken()}`,
+              Authorization: `${getToken()}`,
             }"
             action="/server/web/file/upload"
             accept=".png,.jpg,.bmp,.jpeg,.gif"

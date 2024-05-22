@@ -119,7 +119,10 @@
         {{ AppTypeEnum[record.type] ?? '-' }}
       </template>
       <template #deliveryType="{ record }">
-        {{ SaleTypeEnum[record.deliveryType] ?? '-' }}
+        {{ DeliveryTypeEnum[record.deliveryType] ?? '-' }}
+      </template>
+      <template #saleType="{ record }">
+        {{ SaleTypeEnum[record.saleType] ?? '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
@@ -129,7 +132,7 @@
 
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
-        <t-link @click="Message.warning('敬请期待')"> 打标 </t-link>
+        <t-link @click="handleLabel(record)"> 打标 </t-link>
         <t-link v-if="record.status === StatusEnum.WTB" @click="start(record)">
           开启同步
         </t-link>
@@ -146,6 +149,15 @@
     @confirm="onModalConfirm"
     @cancel="onModalConfirm"
   ></Detail>
+
+  <Label
+    v-if="labelVisible"
+    :label-visible="labelVisible"
+    :confirm-loading="state.confirmLoading"
+    :record-data="recordData"
+    @on-confirm="handleLabelConfirm"
+    @on-cancel="handleLabelCancel"
+  />
 </template>
 
 <script setup lang="ts">
@@ -157,11 +169,14 @@ import {
   stopSync,
   classList,
 } from '@/api/operation/sync-class';
+import { comfirmLabel } from '@/api/inventory/fetchLabel';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
+import Label from './components/label.vue';
 
 const tableRef = ref();
+const recordData = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
   companyName: '',
@@ -178,12 +193,14 @@ const state = reactive<{
   tableData: Record<string, any>[];
   editData: Record<string, any> | undefined; // 要编辑的数据
   detailData: Record<string, any>; // 详情数据，如果是从列表获取，同editData字段，如果是从接口获取，请完善接口逻辑
+  confirmLoading: boolean;
 }>({
   tableLoading: false,
   formModel: { ...defaultFormModel },
   tableData: [],
   editData: {},
   detailData: {},
+  confirmLoading: false,
 });
 
 const formModelIsEmpty = () => {
@@ -228,14 +245,14 @@ const AppTypeList = [
 ];
 
 // 交付方式
-const SaleTypeEnum: { [name: string]: any } = {
+const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
   0: 'SaaS',
   1: '独立部署',
 };
 
-const SaleTypeList = [
+const DeliveryTypeList = [
   {
     text: '全部',
     value: null,
@@ -247,6 +264,37 @@ const SaleTypeList = [
   {
     text: '独立部署',
     value: 1,
+  },
+];
+
+// 定价方式
+const SaleTypeEnum: { [name: string]: any } = {
+  0: '套餐定价',
+  1: '一口价',
+  2: '价格面议',
+  3: '免费',
+};
+
+const SaleTypeList = [
+  {
+    text: '全部',
+    value: null,
+  },
+  {
+    text: '套餐定价',
+    value: 0,
+  },
+  {
+    text: '一口价',
+    value: 1,
+  },
+  {
+    text: '价格面议',
+    value: 2,
+  },
+  {
+    text: '免费',
+    value: 3,
   },
 ];
 
@@ -274,14 +322,6 @@ const StatusList = [
 ];
 
 const columns = [
-  {
-    title: '商品ID',
-    dataIndex: 'id',
-    ellipsis: true,
-    tooltip: true,
-    width: 160,
-    fixed: 'left',
-  },
   {
     title: '商品名称',
     dataIndex: 'name',
@@ -337,8 +377,25 @@ const columns = [
     slotName: 'deliveryType',
     width: 120,
     filterable: {
+      filters: DeliveryTypeList,
+    },
+  },
+  {
+    title: '定价方式',
+    dataIndex: 'saleType',
+    slotName: 'saleType',
+    width: 120,
+    filterable: {
       filters: SaleTypeList,
     },
+  },
+  {
+    title: '商品ID',
+    dataIndex: 'id',
+    ellipsis: true,
+    tooltip: true,
+    width: 160,
+    // fixed: 'left',
   },
   {
     title: '所属商家',
@@ -378,6 +435,8 @@ const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const modalVisible = ref(false); // 编辑全屏展示弹窗
 
+const labelVisible = ref(false);
+
 function fetchData() {
   const { current, pageSize } = pagination;
   const params = {
@@ -399,6 +458,41 @@ function fetchData() {
       state.tableLoading = false;
     });
 }
+
+// 打标
+const handleLabel = (record: any) => {
+  recordData.value = record;
+  labelVisible.value = true;
+};
+
+const handleLabelConfirm = (data = [], productId = '') => {
+  state.confirmLoading = true;
+  const tagIdList = data.map((item: any) => item.key);
+  if (tagIdList.length === 0) {
+    state.confirmLoading = false;
+    return Message.warning('未选择标签');
+  }
+  return comfirmLabel({
+    productId,
+    tagIdList,
+  }).then((res) => {
+    if (res.code === 200) {
+      state.confirmLoading = false;
+      Message.success('打标成功');
+      labelVisible.value = false;
+    } else {
+      Message.success('打标失败');
+      labelVisible.value = false;
+    }
+  });
+  // .finally(() => {
+  //   state.confirmLoading = false;
+  // });
+};
+
+const handleLabelCancel = () => {
+  labelVisible.value = false;
+};
 
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {

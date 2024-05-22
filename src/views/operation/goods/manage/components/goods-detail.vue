@@ -310,11 +310,24 @@
                   {{ st.name || '-' }}
                 </t-descriptions-item>
                 <t-descriptions-item
+                  v-if="formModel.deliveryType == 0 && formModel.saleType == 3"
+                  label="对接SaaS应用"
+                >
+                  {{ st.productDeliverySetList.application
+                  }}<t-link
+                    :hoverable="false"
+                    @click="
+                      applicationlink(st.productDeliverySetList.saasAppId)
+                    "
+                    >查看应用接入信息</t-link
+                  >
+                </t-descriptions-item>
+                <!-- <t-descriptions-item
                   v-if="formModel.deliveryType == 0"
                   label="应用服务地址"
                 >
                   {{ st.url || '-' }}
-                </t-descriptions-item>
+                </t-descriptions-item> -->
                 <t-descriptions-item
                   v-if="formModel.saleType === 0"
                   label="套餐定价设置"
@@ -349,7 +362,28 @@
                   }}
                   元
                 </t-descriptions-item>
+                <t-descriptions-item label="是否支持试用">
+                  {{ st.isTry === 1 ? '是' : '否' }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
+                  <t-link href="link" :hoverable="false">{{
+                    st.tryUrl
+                  }}</t-link>
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
+                  {{ st.tryAccount }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用密码">
+                  {{ st.tryPwd }}
+                </t-descriptions-item>
               </t-descriptions>
+              <div
+                v-if="
+                  formModel.productDeliverySetList &&
+                  index + 1 !== formModel.productDeliverySetList.length
+                "
+                class="line"
+              ></div>
             </div>
           </div>
         </div>
@@ -395,6 +429,7 @@ const PriceTypeEnum: { [name: string]: any } = {
   0: '套餐定价(账号+时长)',
   1: '一口价定价',
   2: '价格面议',
+  3: '免费',
 };
 // 平台
 const PlatformEnum: { [name: string]: any } = {
@@ -573,6 +608,13 @@ const clickDeleteBtn = () => {
       doDelete(props.data?.id);
     },
   });
+};
+// 应用跳转详情
+const applicationlink = (id: number) => {
+  console.log('应用id', id);
+  if (id) {
+    router.push({ path: '', query: { selectById: id } });
+  }
 };
 </script>
 

@@ -15,7 +15,7 @@ $http.interceptors.request.use(
     // 接口携带 token
     if (token && !customFields?.withoutToken) {
       if (!config.headers) config.headers = {};
-      config.headers.Authorization = `bearer ${token}`;
+      config.headers.Authorization = `${token}`;
     }
 
     return config;
@@ -92,7 +92,8 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
             : redirectUri;
 
           if (logoutUrl) {
-            window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+            // window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+            window.location.href = `${serverUri}`;
           } else {
             window.location.reload();
           }

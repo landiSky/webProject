@@ -30,7 +30,10 @@
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span class="tag">标签一</span> -->
+            <!-- <span class="tag tag-left">标签一</span>
+            <span class="tag">标签一</span>
+            <span class="tag">标签一</span>
+            <span class="tag">标签一</span> -->
           </div>
           <div class="description">
             <t-typography-paragraph
@@ -53,6 +56,9 @@
             <span v-if="computing">计算中...</span>
             <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
               价格面议
+            </span>
+            <span v-else-if="prodDetail.saleType === SaleType.FREE">
+              免费
             </span>
             <span v-else>¥ {{ price || '-' }}</span>
           </div>
@@ -77,7 +83,17 @@
               <span v-else>-</span>
             </span>
           </div>
-          <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">
+          <div class="custom">
+            <span class="label">交付方式:</span>
+            <span>{{ DeliverTypeDesc[prodDetail.deliveryType] }}</span>
+          </div>
+          <div
+            v-if="
+              prodDetail.saleType !== SaleType.CONSULT &&
+              prodDetail.saleType !== SaleType.FREE
+            "
+            class="custom"
+          >
             <span class="label">账号数:</span>
             <span v-if="prodDetail.saleType === SaleType.PACKAGE">
               <t-radio-group
@@ -96,7 +112,13 @@
             </span>
             <span v-else>不限</span>
           </div>
-          <div v-if="prodDetail.saleType !== SaleType.CONSULT" class="custom">
+          <div
+            v-if="
+              prodDetail.saleType !== SaleType.CONSULT &&
+              prodDetail.saleType !== SaleType.FREE
+            "
+            class="custom"
+          >
             <span class="label">选择时长:</span>
             <span v-if="prodDetail.saleType === SaleType.PACKAGE">
               <t-radio-group
@@ -118,7 +140,13 @@
             </span>
             <span v-else>不限</span>
           </div>
-
+          <t-button
+            type="outline"
+            size="large"
+            style="width: 140px; margin-right: 12px"
+            @click="clickProbation"
+            >0元试用</t-button
+          >
           <t-button
             type="primary"
             size="large"
@@ -170,6 +198,95 @@
           >
         </div>
       </div>
+
+      <!-- 产品评价 -->
+      <div class="evaluate">
+        <div class="top">产品评价（238）</div>
+        <div class="body">
+          <div class="score">
+            <div class="score-title">综合评分</div>
+            <div class="score-num">4.5</div>
+            <div class="score-count">
+              <t-rate :default-value="4.5" :count="5" allow-half readonly />
+            </div>
+          </div>
+          <div class="evaluate-list">
+            <div class="top-list">
+              <div
+                :class="appraiseIndex === 0 ? 'appraise' : ''"
+                @click="appraiseClick(0)"
+                >好评 (138)</div
+              >
+              <div
+                :class="appraiseIndex === 1 ? 'appraise' : ''"
+                @click="appraiseClick(1)"
+                >中评 (88)</div
+              >
+              <div
+                :class="appraiseIndex === 2 ? 'appraise' : ''"
+                @click="appraiseClick(2)"
+                >差评 (2)</div
+              >
+            </div>
+            <div class="comment">
+              <div class="comment-list">
+                <t-comment author="我是***昵称">
+                  <template #avatar>
+                    <t-image
+                      width="52"
+                      style="border-radius: 50%"
+                      :src="avatar"
+                    />
+                  </template>
+                  <template #content>
+                    <div>
+                      <div class="count">
+                        <t-rate
+                          :default-value="4.5"
+                          :count="5"
+                          allow-half
+                          readonly
+                        />
+                      </div>
+                      <div class="textarea">
+                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                      </div>
+                      <div class="time">2022-12-21</div>
+                    </div>
+                  </template>
+                </t-comment>
+              </div>
+              <div class="comment-list">
+                <t-comment author="我是***昵称">
+                  <template #avatar>
+                    <t-image
+                      width="52"
+                      style="border-radius: 50%"
+                      :src="avatar"
+                    />
+                  </template>
+                  <template #content>
+                    <div>
+                      <div class="count">
+                        <t-rate
+                          :default-value="4.5"
+                          :count="5"
+                          allow-half
+                          readonly
+                        />
+                      </div>
+                      <div class="textarea">
+                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                      </div>
+                      <div class="time">2022-12-21</div>
+                    </div>
+                  </template>
+                </t-comment>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <AuthMemberModal
@@ -183,18 +300,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, h } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
-import { apiProductDetail, apiComputePrice } from '@/api/wow/mall';
-import { SaleType, AccountType } from '@/enums/common';
+import {
+  apiProductDetail,
+  apiComputePrice,
+  apiBypageList,
+} from '@/api/wow/mall';
+import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import { apiDataPoint } from '@/api/data-point';
+import copy from '@/assets/images/copy.png';
+import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
 import Template3 from './layout/template3.vue';
@@ -231,12 +354,14 @@ const forCompList = [
 ];
 
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const evaluateDatail = ref<Record<string, any>>({});
 const deliveryList = ref<Record<string, any>[]>([]);
 const selectVersion = ref<Record<string, any>>({});
 const isPreview = ref(false);
 const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
+const appraiseIndex = ref(0);
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -311,14 +436,65 @@ const onAuthConfirm = (memberIdList: string[]): any => {
   });
 };
 
+// 0元试用
+const clickProbation = () => {
+  Modal.info({
+    title: '试用说明',
+    content: () => {
+      const onClick = () => {
+        navigator.clipboard.writeText('111111111111').then(() => {
+          Message.success('复制成功');
+        });
+      };
+      return h('div', { class: 'info-modal-content' }, [
+        h(
+          'div',
+          { style: 'margin-left: 12px;' },
+          '试用版本数据随时可能会被清除，请不要作为生产使用'
+        ),
+        h('div', { style: 'display: flex;margin-top: 24px;' }, [
+          h('div', { style: 'display: flex;margin-left: 12px;' }, [
+            h('div', '试用账号:'),
+            h('div', { style: 'margin-left: 12px;' }, 'xxxxxxxxx'),
+          ]),
+          h(
+            'div',
+            { style: 'display: flex;margin-left: 12px;align-items: center;' },
+            [
+              h('div', '试用密码:'),
+              h('div', { style: 'margin-left: 12px;' }, 'xxxxxx'),
+              h('div', {
+                style: `margin-left: 12px;width: 12px;height: 12px;background: url(${copy});background-size: 100% 100%;cursor: pointer;`,
+                onClick,
+              }),
+            ]
+          ),
+        ]),
+      ]);
+    },
+    titleAlign: 'start',
+    hideCancel: false,
+    cancelText: '取消',
+    okText: '进入试用',
+    onOk: () => {
+      userStore.jumpToLogin();
+    },
+  });
+};
+
 const clickAddCart = (): void => {
   // TODO w: 立即购买打点
   console.log('立即购买打点', route.params.id);
   const { userInfo, userInfoByCompany } = userStore;
 
-  if (!userInfo?.userId) {
+  if (!userInfo?.id) {
+    console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
-    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    // userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    // router.push({
+    //   path: '/login',
+    //   query: { id, title: appName },
+    // });
     return;
   }
 
@@ -418,6 +594,24 @@ const onIntroScroll = () => {
   fixedTop.value = Boolean(top < 70);
 };
 
+const appraiseClick = (value: number) => {
+  appraiseIndex.value = value;
+};
+
+const BypageList = () => {
+  const params = {
+    productId: route.params.id, // 商品ID
+    starType: 1, // 类型 1差评 2 中评 3 好评
+    pageNum: 1,
+    pageSize: 100,
+  };
+  apiProductDetail(params)
+    .then((data) => {
+      evaluateDatail.value = data;
+    })
+    .catch(() => {});
+};
+
 onMounted(() => {
   // TODO w: 商品详情打点
   console.log('商品详情打点', route.params.id);
@@ -467,6 +661,9 @@ onMounted(() => {
     .catch(() => {});
 
   window.addEventListener('scroll', onIntroScroll, true);
+
+  // 商品评价
+  // BypageList()
 });
 
 onUnmounted(() => {
@@ -483,7 +680,7 @@ onUnmounted(() => {
 
   .productIntro {
     width: 1176px;
-    margin-top: 32px;
+    margin: 32px 0 132px 0;
 
     .baseInfo {
       display: flex;
@@ -526,11 +723,33 @@ onUnmounted(() => {
         flex: 1;
 
         .header {
+          display: flex;
+          align-items: center;
           margin-bottom: 16px;
           color: #1d2129;
           font-weight: 500;
           font-size: 24px;
           line-height: 32px;
+
+          .tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            // width: 52px;
+            height: 24px;
+            margin-left: 8px;
+            padding: 1px 8px;
+            color: rgba(22, 100, 255, 1);
+            font-weight: 400;
+            font-size: 12px;
+            font-family: PingFang SC;
+            background: rgba(232, 244, 255, 1);
+            border-radius: 2px;
+          }
+
+          .tag-left {
+            margin-left: 16px;
+          }
         }
 
         .description {
@@ -586,8 +805,7 @@ onUnmounted(() => {
     .intro {
       display: flex;
       justify-content: start;
-      margin-bottom: 132px;
-
+      // margin-bottom: 132px;
       .template {
         flex: 1;
         width: 900px;
@@ -603,6 +821,7 @@ onUnmounted(() => {
           &.fixed {
             position: fixed;
             top: 64px;
+            z-index: 9999;
             width: 900px;
           }
 
@@ -660,6 +879,118 @@ onUnmounted(() => {
 
         button {
           width: 208px;
+        }
+      }
+    }
+
+    .evaluate {
+      width: 900px;
+      padding: 20px 24px;
+      background: rgba(255, 255, 255, 1);
+      border-top: solid rgba(229, 232, 239, 1) 1px;
+      border-radius: 4px 0 0 0;
+
+      .top {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 500;
+        font-size: 20px;
+        font-family: PingFang SC;
+        line-height: 28px;
+        text-align: center;
+      }
+
+      .body {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+
+        .score {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          height: 168px;
+          padding: 40px 32px;
+          font-weight: 500;
+          font-family: PingFang SC;
+          line-height: 22px;
+          border: 1px solid rgba(229, 232, 239, 1);
+
+          .score-title {
+            color: rgba(29, 33, 41, 1);
+            font-size: 14px;
+          }
+
+          .score-num {
+            margin: 12px 0;
+            color: rgba(255, 20, 20, 1);
+            font-size: 30px;
+          }
+        }
+
+        .evaluate-list {
+          margin-left: 12px;
+
+          .top-list {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            width: 627px;
+            height: 44px;
+            padding: 0 24px 0 24px;
+            background: rgba(242, 243, 248, 1);
+            box-shadow: 0 -1px 0 0 rgba(229, 232, 239, 1) inset;
+
+            div {
+              display: flex;
+              align-items: center;
+              height: 100%;
+              color: rgba(78, 89, 105, 1);
+              font-weight: 400;
+              font-size: 14px;
+              font-family: PingFang SC;
+              cursor: pointer;
+
+              &:hover {
+                color: rgba(22, 100, 255, 1);
+                border-bottom: solid rgba(22, 100, 255, 1) 1px;
+              }
+            }
+
+            .appraise {
+              color: rgba(22, 100, 255, 1);
+              border-bottom: solid rgba(22, 100, 255, 1) 1px;
+            }
+          }
+
+          .comment {
+            .comment-list {
+              margin-top: 16px;
+              padding-bottom: 16px;
+              font-size: 14px;
+              font-family: PingFang SC;
+              line-height: 22px;
+              border-bottom: 1px solid rgba(229, 232, 239, 1);
+
+              .count {
+                margin-top: 4px;
+              }
+
+              .textarea {
+                margin-top: 12px;
+                color: rgba(78, 89, 105, 1);
+                font-weight: 400;
+              }
+
+              .time {
+                margin-top: 12px;
+                color: rgba(134, 144, 156, 1);
+                font-weight: 500;
+              }
+            }
+          }
         }
       }
     }

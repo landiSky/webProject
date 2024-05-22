@@ -256,6 +256,15 @@
                 </t-descriptions-item>
                 <t-descriptions-item
                   v-if="formModel.deliveryType == 0"
+                  label="已上线Saas应用"
+                >
+                  <span>{{ st.application }}</span
+                  ><a class="application-link" :href="st.applicationLink"
+                    >查看应用接入信息</a
+                  >
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.deliveryType == 0"
                   label="应用服务地址"
                 >
                   {{ st.url }}
@@ -512,6 +521,10 @@ onMounted(() => {
     flex: 1;
     justify-content: center;
     margin-right: 150px;
+
+    .application-link {
+      cursor: pointer;
+    }
 
     .center {
       display: flex;

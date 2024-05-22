@@ -5,6 +5,11 @@ export function apiProductType() {
   return $http.get('/server/web/product/type/tree');
 }
 
+// 前台标签筛选配置
+export function apiTagList() {
+  return $http.get('/server/web/reception/tagList');
+}
+
 //  获取企业下成员列表
 export function apiMemberList(params: Record<string, any>) {
   return $http.get('/server/web/member/getCompanyMember', { params });
@@ -12,10 +17,10 @@ export function apiMemberList(params: Record<string, any>) {
 
 //  获取企业下某个应用下有权限的成员列表
 export function apiMemListByProduct(data: Record<string, any>) {
-  return $http.post('/server/web/product/app/selectConfig', data);
+  return $http.post('/server/web/product/member/selectConfig', data);
 }
 
 // 给应用授权可查看的成员
 export function apiAuthMember(data: Record<string, any>) {
-  return $http.post('/server/web/product/app/saveConfig', data);
+  return $http.post('/server/web/product/member/saveConfig', data);
 }

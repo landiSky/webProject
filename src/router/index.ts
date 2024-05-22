@@ -23,11 +23,11 @@ const constantRoutes = [
     name: 'agreement',
     component: () => import('@/views/agreement/userProtocol.vue'),
   },
-  // {
-  //   path: '/login',
-  //   name: 'login',
-  //   component: () => import('@/views/login/login.vue'),
-  // },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/login.vue'),
+  },
   {
     path: '/register',
     name: 'register',
@@ -62,7 +62,7 @@ const routesList = [...constantRoutes, ...errorRoutes];
 
 // 不需要做登陆鉴权的路由放白名单里
 export const whiteList = [
-  // '/login',
+  '/login',
   '/register',
   '/404',
   '/500',
@@ -137,7 +137,6 @@ export const appMenus = (authsList: Array<string> = []) => {
 
   const menuList = iterMenu([...homeRoutesList, ...operationRoutesList]);
   useUserStore().authPathList = pathList;
-
   return menuList;
 };
 

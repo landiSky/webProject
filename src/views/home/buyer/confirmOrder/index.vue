@@ -39,10 +39,16 @@
             />
             <span>{{ createOrderInfo?.name }}</span>
           </span>
-          <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
+          <span>
+            <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
+            <span v-if="createOrderInfo?.saleType === SaleType.FREE">免费</span>
+          </span>
           <span>
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
               面议
+            </template>
+            <template v-else-if="createOrderInfo?.saleType === SaleType.FREE">
+              0
             </template>
             <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
           </span>
@@ -54,6 +60,9 @@
             <span>
               <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
                 面议
+              </template>
+              <template v-else-if="createOrderInfo?.saleType === SaleType.FREE">
+                0
               </template>
               <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
             </span>

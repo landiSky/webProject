@@ -103,24 +103,35 @@
             >
             <div class="information">
               <div class="informationlist">
-                <p style="float: left; width: 20%">企业名称</p>
+                <p style="float: left; width: 108px">企业名称</p>
                 <p style="float: left">{{ detaillist.companyName }}</p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 20%">统一社会信用代码</p>
+                <p style="float: left; width: 108px">统一社会信用代码</p>
                 <p style="float: left">{{ detaillist.creditCode }}</p>
               </div>
               <!--测试1 企业地址-->
               <div class="informationlist">
-                <p style="float: left; width: 20%">企业地址</p>
-                <p style="float: left">北京市/北京市/朝阳区 某某某</p>
+                <p style="float: left; width: 108px">企业地址</p>
+                <p style="float: left"
+                  >{{ detaillist?.orgAddrProvince }}/{{
+                    detaillist?.orgAddrCity
+                  }}/{{ detaillist?.orgAddrCounty }}</p
+                >
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 20%">法人姓名</p>
+                <p style="float: left; width: 108px">&nbsp;</p>
+                <p
+                  style="float: left; width: 60%；word-wrap; word-break: normal"
+                  >{{ detaillist?.orgAddr }}</p
+                >
+              </div>
+              <div class="informationlist">
+                <p style="float: left; width: 108px">法人姓名</p>
                 <p style="float: left">{{ detaillist.legalPersonName }}</p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 20%">营业执照</p>
+                <p style="float: left; width: 108px">营业执照</p>
                 <div style="display: flex; width: 170px; height: 100px">
                   <img
                     style="width: 100%; height: 100%"
@@ -154,15 +165,15 @@
             >
             <div class="information">
               <div class="informationlist">
-                <p style="float: left; width: 20%">联系人姓名</p>
+                <p style="float: left; width: 108px">联系人姓名</p>
                 <p style="float: left">{{ detaillist.contactName }}</p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 20%">联系人身份证号</p>
+                <p style="float: left; width: 108px">联系人身份证号</p>
                 <p style="float: left">{{ detaillist.contactIdCard }}</p>
               </div>
               <div class="informationlist">
-                <p style="float: left; width: 20%">联系人身份证</p>
+                <p style="float: left; width: 108px">联系人身份证</p>
                 <div style="display: flex">
                   <div
                     style="
@@ -250,6 +261,10 @@ const detaillist = ref({
   businessLicense: '',
   certificateStatus: 0,
   remark: '驳理由',
+  orgAddr: '',
+  orgAddrCity: '',
+  orgAddrCounty: '',
+  orgAddrProvince: '',
 });
 
 const emit = defineEmits(['confirm', 'cancel']);

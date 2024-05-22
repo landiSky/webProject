@@ -46,7 +46,7 @@
         @press-enter="onSearch"
         @search="onSearch"
       />
-      <t-space v-if="userInfo?.userId">
+      <t-space v-if="userInfo?.id">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
 
         <span class="username">
@@ -152,10 +152,10 @@ const goRegister = () => {
   });
 };
 const goLogin = () => {
-  userStore.jumpToLogin();
-  // router.push({
-  //   path: '/login',
-  // });
+  // userStore.jumpToLogin();
+  router.push({
+    path: '/login',
+  });
 };
 
 const onSearch = () => {
@@ -177,39 +177,41 @@ const clickIdService = () => {
   // apiDataPoint(null, null, 5, isLogin ? 11 : 8);
 
   if (!userInfo.value?.userId) {
-    Modal.info({
-      title: '登录提醒',
-      content: '暂未登录，需要登录后方可查看标识服务。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不登录',
-      okText: '去登录',
-      onOk: () => {
-        userStore.jumpToLogin();
-      },
-    });
-  } else {
-    const { snmsUrls } = userInfo.value || {};
-    const { nodeStatus } = userInfoByCompany.value || {};
-    if (nodeStatus === NodeAuthStatus.AUTHED) {
-      window.open(snmsUrls.idPointer, '_blank');
-    } else {
+    if (!userInfo.value?.id) {
       Modal.info({
-        title: '使用提醒',
-        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        title: '登录提醒',
+        content: '暂未登录，需要登录后方可查看标识服务。',
         titleAlign: 'start',
         hideCancel: false,
-        cancelText: '暂不开通',
-        okText: '去开通',
+        cancelText: '暂不登录',
+        okText: '去登录',
         onOk: () => {
-          router.push({
-            path: '/buyer/index',
-            query: {
-              openAuthModal: 1,
-            },
-          });
+          userStore.jumpToLogin();
         },
       });
+    } else {
+      const { snmsUrls } = userInfo.value || {};
+      const { nodeStatus } = userInfoByCompany.value || {};
+      if (nodeStatus === NodeAuthStatus.AUTHED) {
+        window.open(snmsUrls.idPointer, '_blank');
+      } else {
+        Modal.info({
+          title: '使用提醒',
+          content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+          titleAlign: 'start',
+          hideCancel: false,
+          cancelText: '暂不开通',
+          okText: '去开通',
+          onOk: () => {
+            router.push({
+              path: '/buyer/index',
+              query: {
+                openAuthModal: 1,
+              },
+            });
+          },
+        });
+      }
     }
   }
 };

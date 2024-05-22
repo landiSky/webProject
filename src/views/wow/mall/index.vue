@@ -7,14 +7,15 @@
         <span class="value">
           <span
             :class="{ active: !apiParams.productTypeId }"
-            @click="apiParams.productTypeId = null"
+            class="span-padding"
+            @click="(apiParams.productTypeId = null), clickSearchBtn()"
             >不限</span
           >
           <span
             v-for="item in productTypeList"
             :key="item.id"
             :class="{ active: apiParams.productTypeId === item.id }"
-            @click="apiParams.productTypeId = item.id"
+            @click="(apiParams.productTypeId = item.id), clickSearchBtn()"
           >
             {{ item.name }}
           </span>
@@ -29,17 +30,22 @@
                 apiParams.deliveryType
               ),
             }"
-            @click="apiParams.deliveryType = null"
+            class="span-padding"
+            @click="(apiParams.deliveryType = null), clickSearchBtn()"
             >不限</span
           >
           <span
             :class="{ active: apiParams.deliveryType === DeliverType.DEPLOY }"
-            @click="apiParams.deliveryType = DeliverType.DEPLOY"
+            @click="
+              (apiParams.deliveryType = DeliverType.DEPLOY), clickSearchBtn()
+            "
             >{{ DeliverTypeDesc[DeliverType.DEPLOY] }}</span
           >
           <span
             :class="{ active: apiParams.deliveryType === DeliverType.SAAS }"
-            @click="apiParams.deliveryType = DeliverType.SAAS"
+            @click="
+              (apiParams.deliveryType = DeliverType.SAAS), clickSearchBtn()
+            "
             >{{ DeliverTypeDesc[DeliverType.SAAS] }}</span
           >
         </span>
@@ -49,14 +55,21 @@
         <span class="value">
           <span
             :class="{ active: selectPriceInterval === -1 }"
-            @click="selectPriceInterval = -1"
+            class="span-padding"
+            @click="(selectPriceInterval = -1), clickSearchBtn()"
             >不限</span
+          >
+          <span
+            :class="{ active: selectPriceInterval === -2 }"
+            class="span-padding"
+            @click="(selectPriceInterval = -2), clickSearchBtn()"
+            ><span class="free"></span>免费</span
           >
           <span
             v-for="(item, index) in PriceEnum"
             :key="index"
             :class="{ active: selectPriceInterval === index }"
-            @click="selectPriceInterval = index"
+            @click="(selectPriceInterval = index), clickSearchBtn()"
             >{{ item.length > 1 ? `${item[0]}-${item[1]}` : `${item[0]}以上` }}
           </span>
           <span class="customPrice">
@@ -78,10 +91,37 @@
                 @blur="onCustomPriceBlur"
               />
             </span>
+            <t-button
+              type="primary"
+              style="margin-left: 4px"
+              @click="clickSearchBtn"
+            >
+              查询</t-button
+            >
           </span>
         </span>
       </span>
-      <span>
+      <span v-for="(item, index) in tagList" :key="index" class="item">
+        <span class="label">{{ item.name }}:</span>
+        <span class="value">
+          <span
+            :class="{ active: apiParams.tagIdList[index] === null }"
+            class="span-padding"
+            @click="tagsClick(index, null)"
+            >不限</span
+          >
+          <span
+            v-for="item2 in item.children"
+            :key="item2.id"
+            :class="{ active: apiParams.tagIdList[index] === item2.id }"
+            @click="tagsClick(index, item2)"
+          >
+            {{ item2.name }}
+          </span>
+        </span>
+      </span>
+
+      <!-- <span>
         <t-button
           type="primary"
           style="margin-right: 16px"
@@ -90,7 +130,7 @@
           查询</t-button
         >
         <t-button @click="clickResetBtn"> 重置</t-button>
-      </span>
+      </span> -->
     </div>
     <div class="result">
       <div class="sort">
@@ -240,7 +280,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { apiProductList } from '@/api/wow/mall';
-import { apiProductType } from '@/api/common';
+import { apiProductType, apiTagList } from '@/api/common';
 import { DeliverType, DeliverTypeDesc } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { PriceEnum } from './constant';
@@ -275,7 +315,65 @@ const apiParams = ref<Record<string, any>>({
   priceSort: null,
   upShelfTimeSort: null,
   name: route.query.goodsName || null,
+  tagIdList: [null, null, null],
 });
+
+const tagList = ref([
+  {
+    id: '1787760236464050176',
+    name: '类型分组',
+    children: [
+      {
+        id: '1788041657850138624',
+        name: '标签三',
+      },
+      {
+        id: '1788041632701091840',
+        name: '标签二',
+      },
+      {
+        id: '1788041390358401024',
+        name: '标签一',
+      },
+    ],
+  },
+  {
+    id: '1787760236464050171',
+    name: '类型分组1',
+    children: [
+      {
+        id: '1788041657850138621',
+        name: '标签三',
+      },
+      {
+        id: '1788041632701091841',
+        name: '标签二',
+      },
+      {
+        id: '1788041390358401021',
+        name: '标签一',
+      },
+    ],
+  },
+  {
+    id: '1787760236464050172',
+    name: '类型分组2',
+    children: [
+      {
+        id: '1788041657850138622',
+        name: '标签三',
+      },
+      {
+        id: '1788041632701091842',
+        name: '标签二',
+      },
+      {
+        id: '1788041390358401022',
+        name: '标签一',
+      },
+    ],
+  },
+]);
 
 const onCustomPriceBlur = () => {
   if (!customPriceStart.value && !customPriceEnd.value) {
@@ -287,10 +385,14 @@ const onCustomPriceBlur = () => {
 
 const getProductList = () => {
   const { page, size } = pagination;
+  const tagIdList = apiParams.value.tagIdList.filter((item: any) => {
+    return item;
+  });
   const params: Record<string, any> = {
     pageNum: page,
     pageSize: size,
     ...apiParams.value,
+    tagIdList: tagIdList.length > 0 ? tagIdList : null,
   };
   // 价格区间是选择了已有的，还是自定义的
   if (customPriceStart.value || customPriceEnd.value) {
@@ -305,6 +407,8 @@ const getProductList = () => {
     [params.startPrice, params.endPrice] =
       selectPriceInterval.value === -1 ? [] : temp;
   }
+  params.free =
+    selectPriceInterval.value === -2 ? selectPriceInterval.value : null;
 
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
@@ -339,6 +443,14 @@ const getProductType = () => {
   apiProductType() // TODO 添加查询参数
     .then((data: any) => {
       productTypeList.value = data || [];
+    })
+    .catch(() => {});
+};
+
+const getTagList = () => {
+  apiTagList() // TODO 添加查询参数
+    .then((data: any) => {
+      tagList.value = data || [];
     })
     .catch(() => {});
 };
@@ -380,6 +492,13 @@ const clickAllSort = () => {
   getProductList();
 };
 
+const tagsClick = (parentsubscript: any, item: any) => {
+  const tagList = apiParams.value.tagIdList;
+  tagList[parentsubscript] = item?.id ?? item;
+  apiParams.value.tagIdList = tagList;
+  getProductList();
+};
+
 watch(
   () => route.query.goodsName,
   (newV) => {
@@ -389,11 +508,27 @@ watch(
   }
 );
 
+watch(
+  () => route.query.free,
+  (newV) => {
+    if (newV) {
+      pagination.page = 1;
+      selectPriceInterval.value = -2;
+      apiParams.value.free = -2;
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
 onMounted(() => {
   // TODO w: 商城首页打点:是否分为登录和未登录两种情况？
   console.log('商城首页打点');
   // apiDataPoint(null, null, 3, 1);
   getProductType();
+  getTagList();
   getProductList();
 });
 </script>
@@ -417,15 +552,13 @@ onMounted(() => {
     padding: 16px 24px;
     background-color: #fff;
 
-    span:last-child {
-      text-align: right;
-    }
-
-    .goods-price {
-      padding-bottom: 18px;
-      border-bottom: 1px solid #e5e8ef;
-    }
-
+    // span:last-child {
+    //   text-align: right;
+    // }
+    // .goods-price {
+    //   padding-bottom: 18px;
+    //   border-bottom: 1px solid #e5e8ef;
+    // }
     .item {
       display: flex;
       justify-content: start;
@@ -449,11 +582,14 @@ onMounted(() => {
         font-weight: 400;
 
         & > span:not(.customPrice) {
-          display: inline-block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // display: inline-block;
           margin-right: 40px;
           margin-bottom: 2px;
-          padding: 2px 10px;
-          line-height: 22px;
+          padding: 2px 2px;
+          // line-height: 22px;
           cursor: pointer;
 
           &:hover {
@@ -462,13 +598,26 @@ onMounted(() => {
           }
 
           &.active {
-            display: block;
+            // display: block;
+            display: flex;
             // width: 52px;
             height: 26px;
             color: #fff;
             text-align: center;
             background: #1664ff;
             border-radius: 4px;
+          }
+        }
+
+        .span-padding {
+          padding: 2px 10px !important;
+
+          .free {
+            width: 16px;
+            height: 16px;
+            margin-right: 2px;
+            background-image: url('@/assets/images/wow/mall/free.png');
+            background-size: 100% 100%;
           }
         }
       }
