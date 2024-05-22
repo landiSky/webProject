@@ -85,6 +85,16 @@ const operationRoutesList = [
           hideInMenu: false,
         },
       },
+      {
+        path: '/sync/label/manage',
+        name: 'syncLabelManage',
+        component: () => import('@/views/operation/sync/labelManage/index.vue'),
+        meta: {
+          name: '标签管理',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
     ],
     meta: {
       name: '清单管理',
