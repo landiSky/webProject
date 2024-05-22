@@ -50,7 +50,11 @@
           <div class="right-content-layout">
             <div class="right-page-title">行业分组标签</div>
             <div class="content">
-              <t-button type="primary" size="large" class="add-btn"
+              <t-button
+                type="primary"
+                size="large"
+                class="add-btn"
+                @click="handleAddLabel"
                 >新增标签</t-button
               >
               <t-table
@@ -66,9 +70,13 @@
                 <template #sortNumber="{ rowIndex }">
                   <span>{{ rowIndex + 1 }}</span>
                 </template>
-                <template #operater>
-                  <t-button type="text">编辑</t-button>
-                  <t-button type="text">删除</t-button>
+                <template #operater="{ record }">
+                  <t-button type="text" @click="handleLabelEdit(record)"
+                    >编辑</t-button
+                  >
+                  <t-button type="text" @click="handleLabelDel(record)"
+                    >删除</t-button
+                  >
                 </template>
               </t-table>
             </div>
@@ -83,6 +91,16 @@
     :visible="state.showGroupVisible"
     :confirm-loading="state.confirmGroupLoading"
     :group-edit-data="state.groupEditData"
+    @on-confirm="handleGroupConfirm"
+    @on-cancel="handleGroupCancel"
+  />
+  <LabelModal
+    v-if="state.showLabelVisible"
+    :title="state.labelTitle"
+    :visible="state.showLabelVisible"
+    :confirm-loading="state.confirmLabelLoading"
+    :label-edit-data="state.labelEditData"
+    :group-row-record="state.groupRowRecord"
     @on-confirm="handleLabelConfirm"
     @on-cancel="handleLabelCancel"
   />
@@ -97,33 +115,49 @@ import {
   fetchAddGroup,
   fetchEditGroup,
   fetchDelGroup,
+  fetchAddLabel,
+  fetchEditLabel,
+  fetchDelLabel,
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
 import labelArrow from '@/assets/images/inventory/label-arrow.png';
-import GroupModal from './components/GroupModal.vue';
+import GroupModal from './components/groupModal.vue';
+import LabelModal from './components/labelModal.vue';
 
 const state = reactive<{
   groupTableLoading: boolean;
   showGroupVisible: boolean;
+  showLabelVisible: boolean;
   confirmGroupLoading: boolean;
+  confirmLabelLoading: boolean;
   groupTableData: Record<string, any>[];
   tagTableLoading: boolean;
   tagTableData: Record<string, any>[];
+  groupRowRecord: Record<string, any>;
+  groupEditRecord: Record<string, any>[];
   groupTitle: string;
+  labelTitle: string;
   rowKey: string;
   scrollHeight: number;
   groupEditData: any;
+  labelEditData: any;
 }>({
   groupTableLoading: false,
   showGroupVisible: false,
+  showLabelVisible: false,
   confirmGroupLoading: false,
+  confirmLabelLoading: false,
   groupTableData: [],
+  groupRowRecord: {},
+  groupEditRecord: [],
   tagTableLoading: false,
   tagTableData: [],
   groupTitle: '新增分组',
+  labelTitle: '新增标签',
   rowKey: '',
   scrollHeight: window.innerHeight - 344,
   groupEditData: {},
+  labelEditData: {},
 });
 
 // 状态
@@ -209,20 +243,14 @@ const fetchTagData = (id: string) => {
 const handleGroupEdit = (record: any) => {
   state.groupTitle = '编辑分组';
   state.showGroupVisible = true;
-  fetchEditGroup({ groupId: record.id }).then((res) => {
-    if (res.code === 200) {
-      state.groupEditData = res.data;
-    } else {
-      state.groupEditData = {};
-    }
-  });
+  state.groupEditData = record;
 };
 
 const handleGroupDel = (record: any) => {
   console.log('handleDel', record);
   fetchDelGroup(record.id).then((res) => {
     if (res.code === 200) {
-      Message.success(res.message);
+      Message.success('删除成功');
       fetchGroupData();
     } else {
       Message.error(res.message);
@@ -235,6 +263,7 @@ const handleTableRowClick = (record: any, eve: Event) => {
     // 点击操作按钮不发送请求
     state.tagTableLoading = true;
     state.rowKey = record.id;
+    state.groupRowRecord = record;
     fetchTagData(record.id);
   }
 };
@@ -244,12 +273,28 @@ const setRowClass = (record: TableData) => {
   return state.rowKey === record.key ? 'selectd-row' : {};
 };
 
-const handleLabelConfirm = (form: object) => {
+const handleGroupConfirm = (form: object) => {
   state.confirmGroupLoading = true;
-  fetchAddGroup(form).then((res) => {
+  const params = state.groupEditData
+    ? { id: state.groupEditData.id, ...form }
+    : form;
+  // 编辑确认
+  if (state.groupEditData) {
+    fetchEditGroup(params).then((res) => {
+      state.confirmGroupLoading = false;
+      if (res.code === 200) {
+        Message.success('编辑成功');
+        fetchGroupData();
+      } else {
+        Message.error(res.message);
+      }
+    });
+    return;
+  }
+  fetchAddGroup(params).then((res) => {
     state.confirmGroupLoading = false;
     if (res.code === 200) {
-      Message.success(res.message);
+      Message.success('新增成功');
       fetchGroupData();
       state.showGroupVisible = false;
     } else {
@@ -258,8 +303,75 @@ const handleLabelConfirm = (form: object) => {
   });
 };
 
-const handleLabelCancel = () => {
+const handleGroupCancel = () => {
   state.showGroupVisible = false;
+};
+
+// 标签新增
+const handleAddLabel = () => {
+  console.log('handleAddLabel');
+  state.showLabelVisible = true;
+  state.labelTitle = '新增标签';
+  state.labelEditData = null;
+};
+
+// 标签确认
+const handleLabelConfirm = (form) => {
+  state.confirmLabelLoading = true;
+  const params = state.labelEditData
+    ? { ...form, id: state.labelEditData.id, groupId: state.groupRowRecord.id }
+    : { ...form, groupId: state.groupRowRecord.id };
+
+  if (state.labelEditData) {
+    fetchEditLabel(params).then((res) => {
+      state.confirmLabelLoading = false;
+      if (res.code === 200) {
+        Message.success('编辑成功');
+        fetchTagData(state.rowKey);
+        state.showLabelVisible = false;
+      } else {
+        Message.error(res.message);
+      }
+    });
+    return;
+  }
+
+  fetchAddLabel(params).then((res) => {
+    state.confirmLabelLoading = false;
+    if (res.code === 200) {
+      Message.success('新增成功');
+      fetchTagData(state.rowKey);
+      state.showLabelVisible = false;
+    } else {
+      Message.error(res.message);
+    }
+  });
+};
+
+// 标签关闭
+const handleLabelCancel = () => {
+  state.showLabelVisible = false;
+};
+
+// 标签 编辑
+const handleLabelEdit = (record: any) => {
+  state.LabelTitle = '编辑标签';
+  state.showLabelVisible = true;
+  console.log('handleLabelEdit', record);
+  state.labelEditData = record;
+};
+
+// 标签删除
+const handleLabelDel = (record: any) => {
+  console.log('handleDel', record);
+  fetchDelLabel(record.id).then((res) => {
+    if (res.code === 200) {
+      Message.success('删除成功');
+      fetchLabelData();
+    } else {
+      Message.error(res.message);
+    }
+  });
 };
 
 onMounted(async () => {
@@ -269,6 +381,7 @@ onMounted(async () => {
     if (res.code === 200) {
       state.groupTableData = res.data;
       state.rowKey = res.data[0]?.id; // 默认选择第一个
+      state.groupRowRecord = res.data[0] || {}; // 默认存第一行值供标签使用
       fetchTagData(res.data[0]?.id);
     } else {
       state.groupTableData = [];

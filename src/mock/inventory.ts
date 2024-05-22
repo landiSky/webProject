@@ -191,7 +191,7 @@ export default [
     },
   },
   {
-    // 分组标签
+    // 分组标签列表
     url: '/inventory/web/tag/selectList',
     method: 'get',
     response: () => {
@@ -239,16 +239,36 @@ export default [
     // 编辑分组
     url: '/inventory/web/group/update',
     method: 'post',
-    response: successResponseWrap({
-      id: '1787760236464050176',
-      name: '类型分组',
-      type: 1,
-      remark: '备注',
-    }),
+    response: successResponseWrap(),
   },
   {
     // 删除分组
     url: '/inventory/web/group/deleteById',
+    method: 'get',
+    response: successResponseWrap(),
+  },
+  {
+    // 新增标签
+    url: '/inventory/web/tag/insert',
+    method: 'post',
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
+  },
+  {
+    // 编辑标签
+    url: '/inventory/web/tag/update',
+    method: 'post',
+    response: successResponseWrap(),
+  },
+  {
+    // 删除标签
+    url: '/inventory/web/tag/deleteById',
     method: 'get',
     response: successResponseWrap(),
   },

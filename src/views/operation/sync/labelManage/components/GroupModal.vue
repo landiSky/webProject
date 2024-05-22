@@ -3,8 +3,8 @@
     v-model:visible="showModal"
     :width="520"
     :height="324"
-    class="label-modal-container"
-    body-class="label-modal-body"
+    class="group-modal-container"
+    body-class="group-modal-body"
     :ok-loading="props.confirmLoading"
     @ok="handleOk"
     @cancel="handleCancel"
@@ -20,7 +20,7 @@
         label="分组名称"
         :rules="[
           { required: true, message: '分组名称不允许为空' },
-          { minLength: 4, message: '只能输入4个字符' },
+          { maxLength: 4, message: '不允许超过4个字符' },
         ]"
         :validate-trigger="['change', 'input']"
       >
