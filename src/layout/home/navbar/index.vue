@@ -132,7 +132,7 @@ const clickLogout = () => {
 // 现在的
 const clickIdService = () => {
   const { primary } = userInfoByCompany.value || {};
-  if (primary === true || userInfo.value?.isAdmin) {
+  if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
     const { snmsUrls, companyId } = userInfo.value || {};
     const params = {
       snmsLoginId: snmsUrls?.snmsLoginId,

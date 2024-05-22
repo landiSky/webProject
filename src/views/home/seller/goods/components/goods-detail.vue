@@ -212,7 +212,13 @@
                 {{ dataInfo.productTypeName }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
-                {{ '-' }}
+                <div
+                  v-for="(item, index) in dataInfo?.tagMap"
+                  :key="index"
+                  class="product-labels"
+                  >{{ item.tagName }}</div
+                >
+                <div v-if="!dataInfo?.tagMap?.length">-</div>
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
                 {{ TypeEnum[dataInfo.type] || '-' }}
@@ -619,6 +625,26 @@ const applicationlink = (id: number) => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      .product-labels {
+        display: inline-block;
+        width: 52px;
+        height: 20px;
+        margin-left: 8px;
+        padding: 0 8px;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 400;
+        font-size: 12px;
+        font-family: PingFang SC;
+        line-height: 20px;
+        text-align: center;
+        background: rgba(242, 243, 248, 1);
+        border-radius: 2px 0 0 0;
+      }
+
+      .product-labels:first-child {
+        margin-left: 0;
+      }
 
       a {
         color: #1664ff;
