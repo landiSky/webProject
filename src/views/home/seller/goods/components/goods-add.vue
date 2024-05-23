@@ -433,7 +433,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'name')"
+                  @input="validateArray(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -454,7 +454,7 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index].value, 'url')"
+                  @input="validateArray(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item
@@ -554,7 +554,7 @@
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryUrl')"
+                  @input="validateArray(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
@@ -572,7 +572,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryAccount')"
+                  @input="validateArray(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
@@ -590,7 +590,7 @@
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryPwd')"
+                  @input="validateArray(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -625,7 +625,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'name')"
+                  @input="validateArray(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -646,13 +646,13 @@
                     minRows: 2,
                     maxRows: 5,
                   }"
-                  @input="validate(copyFormRef[index].value, 'url')"
+                  @input="validateArray(copyFormRef[index].value, 'url')"
                 />
               </t-form-item>
               <t-form-item label="一口价金额" field="onePiece" required>
                 <t-input
                   v-model.trim="copyModal2[index].onePiece"
-                  @input="validate(copyFormRef[index].value, 'onePiece')"
+                  @input="validateArray(copyFormRef[index].value, 'onePiece')"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
@@ -681,7 +681,7 @@
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryUrl')"
+                  @input="validateArray(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
@@ -699,7 +699,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryAccount')"
+                  @input="validateArray(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
@@ -717,7 +717,7 @@
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryPwd')"
+                  @input="validateArray(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -752,7 +752,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'name')"
+                  @input="validateArray(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
@@ -781,7 +781,7 @@
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryUrl')"
+                  @input="validateArray(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
@@ -799,7 +799,7 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryAccount')"
+                  @input="validateArray(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
@@ -817,7 +817,7 @@
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'tryPwd')"
+                  @input="validateArray(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -856,20 +856,21 @@
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'name')"
+                  @input="validateArray(copyFormRef[index].value, 'name')"
                 >
                 </t-input>
               </t-form-item>
-              <t-form-item label="选择已上线SaaS应用" field="durationList">
+              <t-form-item label="选择SaaS应用" field="saasAppId">
                 <t-select
-                  v-model="copyModal4[index].durationList"
+                  v-model="copyModal4[index].saasAppId"
                   :style="{ width: '100%' }"
                   placeholder="请选择已上线的SaaS应用"
                   multiple
+                  :limit="1"
                   allow-search
                 >
                   <t-option
-                    v-for="item in durationOptions"
+                    v-for="item in applicationList"
                     :key="item.value"
                     :value="item.value"
                     >{{ item.label }}</t-option
@@ -908,6 +909,7 @@ import {
   saveGoods2,
   saveAndUp,
   goodsDetail,
+  selectOnlineMallApps,
 } from '@/api/goods-manage';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
@@ -972,6 +974,8 @@ const templateDetail = ref(); // 存放原始的模板详情，为了点击取�
 const logoList = ref<any[]>([]);
 const detailList = ref<any[]>([]);
 const expList = ref<any[]>([]);
+// 应用
+const applicationList = ref<any[]>([]);
 
 const deliveryTypeList = ref([
   { label: 'SaaS类', value: 0 },
@@ -1058,7 +1062,7 @@ const copyModal3 = ref<any[]>([
 const copyModal4 = ref<any[]>([
   {
     name: '',
-    durationList: [],
+    saasAppId: '',
     isTry: 0,
     tryUrl: '',
     tryAccount: '',
@@ -1115,7 +1119,7 @@ const addCopy = () => {
   } else if (formModel2.value.saleType === 3) {
     copyModal4.value.push({
       name: '',
-      durationList: [],
+      saasAppId: '',
     });
   } else {
     copyModal3.value.push({
@@ -1187,6 +1191,15 @@ const copyRules = {
       },
     },
   ],
+  saasAppId: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请选择已上线的SaaS应用');
+        return cb();
+      },
+    },
+  ],
   durationList: [
     {
       required: true,
@@ -1203,7 +1216,7 @@ const copyRules = {
   ],
   tryAccount: [
     { required: true, message: '请输入试用账号' },
-    { maxLength: 10, message: '最多可输入10个字符' },
+    { maxLength: 50, message: '最多可输入50个字符' },
   ],
   tryPwd: [
     { required: true, message: '请输入试用密码' },
@@ -1571,19 +1584,15 @@ const getDetail = (id: any) => {
       const list = res.productDeliverySetList;
       if (list && list.length > 0) {
         for (const one of list) {
-          const list2: any[] = [];
-          for (const three of one.durationList) {
-            list2.push(three.duration);
-          }
-          copyModal.value.push({
+          copyModal4.value.push({
             name: one.name,
-            durationList: list2,
+            saasAppId: one.saasAppId,
           });
         }
       } else {
         copyModal4.value.push({
           name: '',
-          durationList: [],
+          saasAppId: '',
         });
       }
     } else {
@@ -1700,6 +1709,20 @@ const beforeUpload50 = (file: File) => {
   });
 };
 
+const getSelectApplication = () => {
+  const params = {
+    companyId: userInfoByCompany.value?.companyId,
+  };
+  selectOnlineMallApps(params).then((data: any) => {
+    applicationList.value = [
+      {
+        value: '1788845955890679808',
+        label: 'saas应用',
+      },
+    ];
+  });
+};
+
 onMounted(() => {
   window.addEventListener('online', () => {
     online.value = true;
@@ -1710,6 +1733,7 @@ onMounted(() => {
   });
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
+  getSelectApplication();
   if (props.data?.id) {
     formModel.value.id = props.data?.id;
     formModel2.value.productId = props.data?.id;
@@ -1876,6 +1900,11 @@ const clickUp = async () => {
 };
 
 const validate = (ref: any, key: string) => {
+  nextTick(() => {
+    ref.validateField(key);
+  });
+};
+const validateArray = (ref: any, key: string) => {
   nextTick(() => {
     ref[0].validateField(key);
   });

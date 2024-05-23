@@ -471,7 +471,7 @@ const clickProbation = () => {
     cancelText: '取消',
     okText: '进入试用',
     onOk: () => {
-      console.log(selectVersion.value.tryUrl);
+      window.open(selectVersion.value.tryUrl);
       // userStore.jumpToLogin();
     },
   });

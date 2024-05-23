@@ -366,9 +366,16 @@
                   {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
-                  <t-link href="link" :hoverable="false">{{
-                    st.tryUrl
-                  }}</t-link>
+                  <t-link
+                    :hoverable="false"
+                    @click="
+                      (ev) => {
+                        ev.view.open(st.tryUrl);
+                      }
+                    "
+                  >
+                    {{ st.tryUrl }}
+                  </t-link>
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
                   {{ st.tryAccount }}
