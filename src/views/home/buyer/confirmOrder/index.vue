@@ -118,13 +118,14 @@ const clickCreateOrder = () => {
     durationId,
     memberIdList,
   } = createOrderInfo.value;
+  console.log(`Create order`, createOrderInfo.value);
   const params = {
     memberId: userStore.selectCompany?.memberId,
     memberIdList,
     sellerId: companyId, // 卖家id（商品创者所属机构id）
     productId, // 商品id
     deliveryType, // 交付类型 0-saas类,1-独立部署类
-    productPrice: price, // 商品金额
+    productPrice: price ?? 0, // 商品金额
     deliveryVersionId, // 交付版本id
     orderSource, // 订单来源：0-本平台，1-跨平台
     accountId, // 账号id
