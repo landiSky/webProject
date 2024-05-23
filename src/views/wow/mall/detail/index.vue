@@ -301,6 +301,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
+import { apiDataPoint } from '@/api/data-point';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
@@ -397,7 +398,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
   authModalVisible.value = false;
 
-  // 封装确认订单需要的字段
+  // TODO 封装确认订单需要的字段
   orderStore.createOrderInfo = {
     companyId,
     productId: id,
@@ -478,6 +479,8 @@ const clickProbation = () => {
 };
 
 const clickAddCart = (): void => {
+  // TODO w: 立即购买打点
+  console.log('立即购买打点', route.params.id);
   const { userInfo, userInfoByCompany } = userStore;
 
   if (!userInfo?.id) {
@@ -575,6 +578,9 @@ const clickNav = (index: number) => {
 };
 
 const buyConsult = () => {
+  // TODO w: 购买咨询打点
+  console.log('购买咨询打点', route.params.id);
+  // apiDataPoint(route.params.id as string, null, 4, 4);
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -604,6 +610,9 @@ const appraiseClick = (value: number) => {
 };
 
 onMounted(() => {
+  // TODO w: 商品详情打点
+  console.log('商品详情打点', route.params.id);
+  // apiDataPoint(route.params.id as string, null, 4, 3);
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {

@@ -122,7 +122,7 @@
               <div class="informationlist">
                 <p style="float: left; width: 108px">&nbsp;</p>
                 <p
-                  style="float: left; width: 60%；word-wrap:;word-break:normal;"
+                  style="float: left; width: 60%；word-wrap; word-break: normal"
                   >{{ detaillist?.orgAddr }}</p
                 >
               </div>

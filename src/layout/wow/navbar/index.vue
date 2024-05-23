@@ -86,6 +86,8 @@ import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { getToken } from '@/utils/auth';
+import { apiDataPoint } from '@/api/data-point';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -157,6 +159,9 @@ const goLogin = () => {
 };
 
 const onSearch = () => {
+  // TODO w: 商城搜索打点
+  console.log('主导航栏商品搜索打点', searchContent.value);
+  // apiDataPoint(null, searchContent.value, 5, 9);
   router.push({
     name: 'wowMall',
     query: {
@@ -166,40 +171,47 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
-  if (!userInfo.value?.id) {
-    Modal.info({
-      title: '登录提醒',
-      content: '暂未登录，需要登录后方可查看标识服务。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不登录',
-      okText: '去登录',
-      onOk: () => {
-        userStore.jumpToLogin();
-      },
-    });
-  } else {
-    const { snmsUrls } = userInfo.value || {};
-    const { nodeStatus } = userInfoByCompany.value || {};
-    if (nodeStatus === NodeAuthStatus.AUTHED) {
-      window.open(snmsUrls.idPointer, '_blank');
-    } else {
+  // TODO w: 标识服务打点：分为登录和未登录两种情况
+  const isLogin = !!getToken();
+  console.log('前台页标识服务打点,登录状态==', isLogin);
+  // apiDataPoint(null, null, 5, isLogin ? 11 : 8);
+
+  if (!userInfo.value?.userId) {
+    if (!userInfo.value?.id) {
       Modal.info({
-        title: '使用提醒',
-        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        title: '登录提醒',
+        content: '暂未登录，需要登录后方可查看标识服务。',
         titleAlign: 'start',
         hideCancel: false,
-        cancelText: '暂不开通',
-        okText: '去开通',
+        cancelText: '暂不登录',
+        okText: '去登录',
         onOk: () => {
-          router.push({
-            path: '/buyer/index',
-            query: {
-              openAuthModal: 1,
-            },
-          });
+          userStore.jumpToLogin();
         },
       });
+    } else {
+      const { snmsUrls } = userInfo.value || {};
+      const { nodeStatus } = userInfoByCompany.value || {};
+      if (nodeStatus === NodeAuthStatus.AUTHED) {
+        window.open(snmsUrls.idPointer, '_blank');
+      } else {
+        Modal.info({
+          title: '使用提醒',
+          content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+          titleAlign: 'start',
+          hideCancel: false,
+          cancelText: '暂不开通',
+          okText: '去开通',
+          onOk: () => {
+            router.push({
+              path: '/buyer/index',
+              query: {
+                openAuthModal: 1,
+              },
+            });
+          },
+        });
+      }
     }
   }
 };

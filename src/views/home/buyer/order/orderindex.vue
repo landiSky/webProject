@@ -181,7 +181,10 @@
                 <div class="grid-content bg-purple-light">
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
-                    <p v-if="item.saleType === 0" class="bottom"
+                    <p v-if="item.saleType === 3" class="bottom"
+                      ><span>{{ '(免费)' }}</span></p
+                    >
+                    <!-- <p v-else-if="item.saleType === 0" class="bottom"
                       >(
                       <span>{{ item.accountCount }}个账号</span>
                       <span v-if="item.buyDuration !== '0'"
@@ -189,7 +192,7 @@
                       >
                       <span v-else>不限</span>
                       )
-                    </p>
+                    </p> -->
                   </div>
                 </div>
               </t-col>
@@ -201,7 +204,7 @@
                   }} -->
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">面议</div>
+                  <div class="desc">价格面议</div>
                 </div>
               </t-col>
 
@@ -212,11 +215,14 @@
                     <!-- {{
                     String(item.realityPrice).indexOf('.') > -1 ? '' : '元'
                   }} -->
-                    <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p>
+                    <!-- <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p> -->
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">面议</div>
+                  <div v-if="item.aleterPriceStatus === 1" class="desc"
+                    ><span class="top">¥{{ item.realityPrice }}</span></div
+                  >
+                  <div v-else class="desc">价格面议</div>
                 </div>
               </t-col>
               <t-col :span="2">
@@ -225,6 +231,15 @@
                     <div v-if="item?.orderStatus === 0">
                       <img :src="tobereviewed" alt="" />
                       <span style="float: left">待支付</span>
+                    </div>
+                    <div
+                      v-if="
+                        item?.orderStatus === 0 &&
+                        item.saleType === 2 &&
+                        item.aleterPriceStatus !== 1
+                      "
+                    >
+                      <span>待修改金额</span>
                     </div>
                     <div v-if="item.orderStatus === 1">
                       <img :src="tobepaid" alt="" />
@@ -245,7 +260,7 @@
                     </div>
                     <div v-if="item.orderStatus === 3">
                       <img :src="success" alt="" />
-                      <span style="float: left">已完成</span>
+                      <span style="float: left">已交付</span>
                     </div>
                   </div>
                 </div>
@@ -261,7 +276,11 @@
                 <div class="grid-content">
                   <div class="desc">
                     <t-button
-                      v-if="item.orderStatus === 0 || item.orderStatus === 4"
+                      v-if="
+                        ((item.orderStatus === 0 || item.orderStatus === 4) &&
+                          item.saleType !== 2) ||
+                        (item.saleType === 2 && item.aleterPriceStatus === 1)
+                      "
                       type="text"
                       style="width: 100%"
                       @click="modificationamount(item.id)"
@@ -275,6 +294,14 @@
                       style="width: 100%"
                       @click="delivery(item.id)"
                       >确认已交付</t-button
+                    >
+
+                    <t-button
+                      v-if="item.orderStatus === 3 && item.evaluateStatus !== 1"
+                      type="text"
+                      style="width: 100%"
+                      @click="review(item.id)"
+                      >立即评价</t-button
                     >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
                       >订单详情</span
@@ -341,6 +368,13 @@
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
     ></EditModal>
+    <ReviewModal
+      v-if="reviewModalVisible"
+      :data="state.updataamount"
+      @confirm="onRevieModalConfirm"
+      @cancel="reviewModalVisible = false"
+    >
+    </ReviewModal>
     <!-- 订单交付 -->
     <!-- <EditModalDelivery
       v-if="deliveryVisible"
@@ -368,18 +402,17 @@ import { useUserStore } from '@/store/modules/user';
 import { orderList, orderNum, buyerDeployed } from '@/api/buyer/order';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
+import { Message } from '@tele-design/web-vue';
 import tobepaid from './images/tobepaid.png';
 import tobereviewed from './images/tobereviewed.png';
 import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
+import ReviewModal from './components/review-modal.vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -441,10 +474,10 @@ const orderStatusTypeNav = reactive([
     label: '待交付',
     value: '2',
   },
-  {
-    label: '已完成',
-    value: '3',
-  },
+  // {
+  //   label: '已交付',
+  //   value: '3',
+  // },
 ]);
 // 订单状态2
 const orderStatusSelect = ref([
@@ -461,7 +494,7 @@ const orderStatusSelect = ref([
     value: '2',
   },
   {
-    label: '已完成',
+    label: '已交付',
     value: '3',
   },
   {
@@ -567,7 +600,7 @@ const clickNav = (value: string | null, ins: number) => {
         value: '2',
       },
       {
-        label: '已完成',
+        label: '已交付',
         value: '3',
       },
       {
@@ -598,7 +631,8 @@ const dataStatistics = () => {
 const editModalVisible = ref(false);
 // 交付应用 弹窗 开关
 // const deliveryVisible = ref(false);
-
+// 评论弹窗
+const reviewModalVisible = ref(false);
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
 
@@ -662,12 +696,22 @@ const onEditModalConfirm = () => {
   editModalVisible.value = false;
   init();
 };
+
+// 确定评论
+const onRevieModalConfirm = () => {
+  reviewModalVisible.value = false;
+};
 // 买家确认交付
 const delivery = (id: string) => {
   //  Message.success('上传支付凭证成功');
   buyerDeployed({ id }).then((res) => {
     init();
   });
+};
+// 买家评论
+const review = (id: string) => {
+  reviewModalVisible.value = true;
+  Message.success('评论成功');
 };
 // 查询
 const getTableData = () => {

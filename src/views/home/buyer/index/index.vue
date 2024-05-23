@@ -673,6 +673,7 @@ import {
 
 import AuthModal from '@/components/auth-modal/index.vue';
 import ellipsis from '@/components/ellipsis/index.vue';
+import { apiDataPoint } from '@/api/data-point';
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';

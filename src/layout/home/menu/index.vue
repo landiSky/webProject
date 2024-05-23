@@ -43,6 +43,7 @@
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMenuStore } from '@/store/modules/menu';
+import { apiDataPoint } from '@/api/data-point';
 
 const router = useRouter();
 const route = useRoute();
@@ -52,6 +53,16 @@ const menuStore = useMenuStore();
 
 const selectedKey = ref<string[]>([]);
 const openedKey = ref<string[]>([]);
+
+const pathMap = {
+  12: '/buyer/index',
+  13: '/buyer/order',
+  14: '/seller/goods',
+  15: '/seller/order',
+  16: '/开发者中心',
+  17: '/system/users',
+  18: '/system/roles',
+};
 
 watch(
   route,
@@ -79,6 +90,10 @@ watch(
   }
 );
 
+const findKeyByValue = (obj: { [key: string]: any }, value: string) => {
+  return Object.keys(obj).find((key) => obj[key] === value);
+};
+
 /**
  * 路由跳转至该路径
  * @param key 被点击的三级菜单的key
@@ -88,6 +103,12 @@ const clickMenuItem = (key: string) => {
     window.open(key);
   } else {
     router.push({ path: key });
+    // TODO w: 各个菜单的打点统计
+    const num = findKeyByValue(pathMap, key);
+    if (num) {
+      // apiDataPoint(null, null, 6, parseInt(num, 10));
+      console.log('左侧菜单打点', key, num);
+    }
   }
 };
 /**

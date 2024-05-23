@@ -41,25 +41,8 @@
         <div class="centers">
           <div class="asjhdg">
             <div class="asjhdg-title">
-              <span
-                style="
-                  float: left;
-                  width: 4px;
-                  height: 12px;
-                  margin-right: 8px;
-                  background-color: #1664ff;
-                "
-              >
-              </span>
-              <span
-                style="
-                  float: left;
-                  font-weight: 500;
-                  font-size: 14px;
-                  line-height: 22px;
-                "
-                >订单状态</span
-              >
+              <span class="color-box"></span>
+              <span class="text-cls">订单状态</span>
             </div>
             <div class="statusinfo">
               <div v-if="dataList.orderStatus === 0">
@@ -83,7 +66,7 @@
                     >待审核：买家已提交支付凭证，请进行审核。
                   </div>
                 </t-space>
-                <div class="return-ok">
+                <div class="return-ok margintop-16">
                   <t-button
                     type="primary"
                     status="danger"
@@ -106,7 +89,7 @@
                     已驳回：支付凭证已驳回，待买家重新上传
                   </div>
                 </t-space>
-                <div class="order-item-deploy">
+                <div class="order-item-deploy margintop-16">
                   <t-space align="start">
                     <div class="order-item-left">驳回原因</div>
                     <!-- <div class="order-item-right">{{
@@ -137,7 +120,12 @@
                   </div>
                 </t-space>
                 <div>
-                  <t-button type="primary" @click="delivery">立即交付</t-button>
+                  <t-button
+                    type="primary"
+                    class="margintop-16"
+                    @click="delivery"
+                    >立即交付</t-button
+                  >
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
@@ -157,18 +145,31 @@
                     <icon-check-circle-fill />
                   </div>
 
-                  <div class="order-success-text">已完成：订单已完成。</div>
+                  <div
+                    v-if="dataList.evaluateStatus === 0"
+                    class="order-success-text"
+                    >已交付：买家已确认交付，待买家评价
+                  </div>
+                  <div v-else class="order-success-text"
+                    >已交付：订单已交付。
+                  </div>
                 </t-space>
 
-                <div class="order-item-deploy">
+                <div
+                  v-if="dataList.evaluateStatus === 1"
+                  class="order-item-deploy margintop-16"
+                >
                   <t-space>
-                    <div class="order-item-left">部署状态</div>
+                    <div class="order-item-left">交付状态</div>
                     <div class="order-item-right">{{
                       dataList.deploymentStatusName
                     }}</div>
                   </t-space>
                 </div>
-                <div class="order-item-due-date remove-margin">
+                <div
+                  v-if="dataList.evaluateStatus === 1"
+                  class="order-item-due-date remove-margin"
+                >
                   <t-space>
                     <div class="order-item-left">服务到期时间</div>
                     <div class="order-item-right">{{
@@ -179,25 +180,8 @@
               </div>
             </div>
             <div class="asjhdg-title" style="margin-top: 24px">
-              <span
-                style="
-                  float: left;
-                  width: 4px;
-                  height: 12px;
-                  margin-right: 8px;
-                  background-color: #1664ff;
-                "
-              >
-              </span>
-              <span
-                style="
-                  float: left;
-                  font-weight: 500;
-                  font-size: 14px;
-                  line-height: 22px;
-                "
-                >订单信息</span
-              >
+              <span class="color-box"></span>
+              <span class="text-cls">订单信息</span>
             </div>
 
             <div class="information">
@@ -264,25 +248,8 @@
               </div>
             </div>
             <div class="asjhdg-title" style="margin-top: 24px">
-              <span
-                style="
-                  float: left;
-                  width: 4px;
-                  height: 12px;
-                  margin-right: 8px;
-                  background-color: #1664ff;
-                "
-              >
-              </span>
-              <span
-                style="
-                  float: left;
-                  font-weight: 500;
-                  font-size: 14px;
-                  line-height: 22px;
-                "
-                >商品信息</span
-              >
+              <span class="color-box"></span>
+              <span class="text-cls">商品信息</span>
             </div>
             <div class="cardContent">
               <t-row type="flex" class="row-title aligntext">
@@ -328,9 +295,6 @@
                       class="imgs"
                       style="float: left; width: 80px; margin: 0 12px"
                     >
-                      <!-- dataList.productLogo -->
-                      <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
-                      <!-- :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`" -->
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
@@ -355,19 +319,18 @@
                 <t-col :span="3">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
-                    <p v-if="dataList.accountCount" style="color: #86909c"
+                    <p v-if="dataList.saleType === 3" style="color: #86909c"
+                      >(免费)
+                    </p>
+                    <!-- <p v-else-if="dataList.accountCount" style="color: #86909c"
                       >(
                       <span>{{ dataList.accountCount }}个账号</span>
                       <span v-if="dataList.buyDuration !== '0'"
                         >{{ dataList.buyDuration }}个月</span
                       >
-                      <span v-else>不限</span>
-                      )</p
-                    >
-                    <!-- <p style="color: #86909c"
-                      >({{ dataList.accountCount
-                      }}{{ dataList.buyDuration }})</p
-                    > -->
+                      <span v-else>不限 </span>
+                      )
+                    </p> -->
                   </div>
                 </t-col>
                 <t-col :span="3">
@@ -412,26 +375,15 @@
                 >
                   <div v-if="dataList.saleType !== 2" class="grid-content">
                     ¥{{ dataList.realityPrice }}
-                    <!-- {{
-                      String(dataList.couponMoney).indexOf('.') > -1 ? '' : '元'
-                    }} -->
-                    <p style="color: #86909c"
-                      >(已优惠：{{ dataList.couponMoney }}
-                      <!-- {{
-                        String(dataList.couponMoney).indexOf('.') > -1
-                          ? ''
-                          : '元'
-                      }} -->元 )</p
-                    ></div
-                  >
+                  </div>
                   <div v-if="dataList.saleType === 2" class="grid-content">
                     面议
                   </div>
                 </t-col>
                 <t-col
                   v-if="
-                    dataList.saleType !== 2 &&
-                    [0, 4].includes(dataList.orderStatus)
+                    [0, 4].includes(dataList.orderStatus) &&
+                    dataList.saleType !== 3
                   "
                   :span="3"
                 >
@@ -440,11 +392,64 @@
                       type="text"
                       style="width: 100%"
                       @click="modificationamount"
-                      >修改优惠金额</t-button
+                      >修改金额</t-button
                     >
                   </div>
                 </t-col>
               </t-row>
+            </div>
+            <div v-if="dataList.orderStatus === 3">
+              <div class="asjhdg-title" style="margin-top: 24px">
+                <span class="color-box"></span>
+                <span class="text-cls">买家评价</span>
+              </div>
+              <div v-if="3 == 3" class="reviewContent">
+                <div class="row-review">
+                  <div>总体评价</div>
+                  <t-rate v-model="reviewContent.total" allow-half readonly />
+                  <span v-if="reviewContent.total !== 0"
+                    >{{ reviewContent.total }}星
+                  </span>
+                </div>
+                <div class="row-review">
+                  <div>产品评价</div>
+                  <t-rate v-model="reviewContent.product" allow-half readonly />
+                  <span v-if="reviewContent.product !== 0"
+                    >{{ reviewContent.product }}星</span
+                  >
+                </div>
+                <div class="row-review">
+                  <div>服务评价</div>
+                  <t-rate v-model="reviewContent.server" allow-half readonly />
+                  <span v-if="reviewContent.server !== 0"
+                    >{{ reviewContent.server }}星</span
+                  >
+                </div>
+                <div class="row-review">
+                  <div>交付评价</div>
+                  <t-rate
+                    v-model="reviewContent.logistics"
+                    allow-half
+                    readonly
+                  />
+                  <span v-if="reviewContent.logistics !== 0"
+                    >{{ reviewContent.logistics }}星</span
+                  >
+                </div>
+
+                <div class="row-review-content">
+                  <div>评价详情</div>
+                  <span> {{ reviewContent.content || '-' }}</span>
+                </div>
+                <div class="row-review-content">
+                  <div>评价时间</div>
+                  <span> {{ reviewContent.date || '-' }}</span>
+                </div>
+              </div>
+              <div v-else class="nodata-cls">
+                <img :src="noData" alt="" />
+                <div> 暂无评价，订单将在7天后自动评价</div>
+              </div>
             </div>
           </div>
         </div>
@@ -481,6 +486,7 @@ import { sellerDetail, sellerPass, merchantSub } from '@/api/seller/order';
 
 import { Message, Modal } from '@tele-design/web-vue';
 
+import noData from '@/assets/images/noData.png';
 import EditModal from './edit-modal.vue';
 import EditModalTurndown from './edit-modal-turndown.vue';
 import EditModalDelivery from './edit-modal-delivery.vue';
@@ -504,6 +510,7 @@ const state = reactive({
     orderid: '',
   },
 });
+
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
 const showModal = ref(true);
 const dataList = ref<Record<string, any>>({
@@ -552,6 +559,15 @@ const deliveryVisible = ref(false);
 const goback = () => {
   emit('cancel');
 };
+
+const reviewContent = ref({
+  total: 0,
+  product: 0,
+  server: 3,
+  logistics: 0,
+  content: '8989898989898989',
+  date: '2024-10-20',
+});
 
 const init = () => {
   sellerDetail({ id: props.data.id }).then((res) => {
@@ -630,33 +646,36 @@ const passok = (id: string) => {
 };
 // 交付应用
 const delivery = () => {
-  if (dataList.value.deliveryType === 0) {
-    Modal.warning({
-      title: '我已完成账号重置，确定交付该应用',
-      content: '交付订单流转到买家确定状态。',
-      titleAlign: 'start',
-      okText: ' 确定',
-      hideCancel: false,
-      // okButtonProps: {
-      //   status: 'danger',
-      // },
-      onOk: () => {
-        // deleteUsers(params);
-        merchantSub({
-          id: dataList.value.id,
-        }).then((res) => {
-          init();
-          Message.success('交付成功');
-        });
-      },
-      onCancel: () => {
-        // Message.success('取消交付成功');
-      },
-    });
-  } else if (dataList.value.deliveryType === 1) {
-    state.editData.id = dataList.value.id;
-    deliveryVisible.value = true;
-  }
+  // 这版交付只有私有部署了,saas免费
+  state.editData.id = dataList.value.id;
+  deliveryVisible.value = true;
+  // if (dataList.value.deliveryType === 0) {
+  //   Modal.warning({
+  //     title: '我已完成账号重置，确定交付该应用',
+  //     content: '交付订单流转到买家确定状态。',
+  //     titleAlign: 'start',
+  //     okText: ' 确定',
+  //     hideCancel: false,
+  //     // okButtonProps: {
+  //     //   status: 'danger',
+  //     // },
+  //     onOk: () => {
+  //       // deleteUsers(params);
+  //       merchantSub({
+  //         id: dataList.value.id,
+  //       }).then((res) => {
+  //         init();
+  //         Message.success('交付成功');
+  //       });
+  //     },
+  //     onCancel: () => {
+  //       // Message.success('取消交付成功');
+  //     },
+  //   });
+  // } else if (dataList.value.deliveryType === 1) {
+  //   state.editData.id = dataList.value.id;
+  //   deliveryVisible.value = true;
+  // }
 };
 // 交付应用 完成
 const ondeliveryModalConfirm = () => {
@@ -814,6 +833,88 @@ onMounted(() => {
           // background: #f2f3f8;
         }
       }
+
+      .reviewContent {
+        padding: 16px;
+        background-color: #f6f7fb;
+
+        .row-review {
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          margin-bottom: 4px;
+          color: #4e5969;
+          font-size: 12px;
+
+          > div {
+            margin-right: 12px;
+          }
+
+          ::v-deep(.tele-icon) {
+            width: 20px;
+            height: 20px;
+          }
+        }
+
+        .row-review-content {
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-start;
+          margin: 10px 0;
+          color: #4e5969;
+          font-size: 12px;
+
+          > div {
+            margin-right: 12px;
+          }
+
+          > span {
+            max-width: 600px;
+            overflow: hidden;
+            color: #1d2129;
+            white-space: normal;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+          }
+        }
+
+        .row-review-content:last-of-type {
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-start;
+          margin: 0;
+          color: 1d2129;
+          font-size: 12px;
+
+          > div {
+            margin-right: 12px;
+          }
+
+          > span {
+            color: #1d2129;
+          }
+        }
+      }
+
+      .nodata-cls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        padding: 16px;
+        color: #86909c;
+        font-size: 12px;
+        background-color: #f6f7fb;
+
+        .review-btn {
+          margin-top: 4px;
+          color: #1664ff;
+          cursor: pointer;
+        }
+      }
     }
   }
 
@@ -831,6 +932,25 @@ onMounted(() => {
   align-items: center;
   justify-content: flex-start;
   margin-bottom: 16px;
+
+  .color-box {
+    float: left;
+    width: 4px;
+    height: 12px;
+    margin-right: 8px;
+    background-color: #1664ff;
+  }
+
+  .text-cls {
+    float: left;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+  }
+}
+
+.margintop-16 {
+  margin-top: 16px;
 }
 
 .order-success {
@@ -875,7 +995,7 @@ onMounted(() => {
 }
 
 .order-success {
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   color: var(--t-41-d-2129, #1d2129);
   font-weight: 500;
   font-size: 14px;
