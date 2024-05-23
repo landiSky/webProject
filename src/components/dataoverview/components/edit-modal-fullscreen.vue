@@ -586,10 +586,10 @@ const loadMore = (option: any, done: any) => {
           ...item,
           value: item?.dictCode,
           label: item?.dictValue,
-          isLeaf: dictKey === 'CITY',
+          isLeaf: Number(item?.hasChildren) === 0,
         };
       });
-      done(openlist, openlist);
+      done(openlist);
     });
   });
   return promise;
