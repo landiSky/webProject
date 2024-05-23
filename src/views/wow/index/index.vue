@@ -330,12 +330,12 @@ const platProductsList = [
         name: 'IDPoint',
         desc: '标识解析二级节点',
         bgImg: tab12,
-        idKey: 'idpoint',
+        idKey: 'idpointer',
       },
 
       {
         name: 'IDHub',
-        desc: '标识解析二级节点',
+        desc: '标识解析企业节点',
         bgImg: tab13,
         idKey: 'idhub',
       },
