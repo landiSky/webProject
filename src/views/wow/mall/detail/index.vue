@@ -30,10 +30,13 @@
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span class="tag tag-left">标签一</span>
-            <span class="tag">标签一</span>
-            <span class="tag">标签一</span>
-            <span class="tag">标签一</span> -->
+            <span
+              v-for="(item, index) in prodDetail?.tagMap"
+              :key="index"
+              class="tag"
+              :class="{ 'tag-left': index === 0 }"
+              >{{ item.tagName }}</span
+            >
           </div>
           <div class="description">
             <t-typography-paragraph
@@ -141,6 +144,7 @@
             <span v-else>不限</span>
           </div>
           <t-button
+            v-if="Number(selectVersion.isTry) === 1"
             type="outline"
             size="large"
             style="width: 140px; margin-right: 12px"
@@ -201,84 +205,66 @@
 
       <!-- 产品评价 -->
       <div class="evaluate">
-        <div class="top">产品评价（238）</div>
+        <div class="top">产品评价（{{ evaluateDatail?.total ?? 0 }}）</div>
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">4.5</div>
+            <div class="score-num">{{ evaluateDatail?.avgEvaluate ?? 5 }}</div>
             <div class="score-count">
-              <t-rate :default-value="4.5" :count="5" allow-half readonly />
+              <t-rate
+                :default-value="evaluateDatail?.avgEvaluate ?? 5"
+                :count="5"
+                allow-half
+                readonly
+              />
             </div>
           </div>
           <div class="evaluate-list">
             <div class="top-list">
               <div
-                :class="appraiseIndex === 0 ? 'appraise' : ''"
-                @click="appraiseClick(0)"
-                >好评 (138)</div
-              >
-              <div
                 :class="appraiseIndex === 1 ? 'appraise' : ''"
                 @click="appraiseClick(1)"
-                >中评 (88)</div
+                >好评 ({{ evaluateDatail?.totalH ?? 0 }})</div
               >
               <div
                 :class="appraiseIndex === 2 ? 'appraise' : ''"
                 @click="appraiseClick(2)"
-                >差评 (2)</div
+                >中评 ({{ evaluateDatail?.totalZ ?? 0 }})</div
+              >
+              <div
+                :class="appraiseIndex === 3 ? 'appraise' : ''"
+                @click="appraiseClick(3)"
+                >差评 ({{ evaluateDatail?.totalC ?? 0 }})</div
               >
             </div>
             <div class="comment">
-              <div class="comment-list">
-                <t-comment author="我是***昵称">
+              <div
+                v-for="(item, index) in evaluateDatail?.records"
+                :key="index"
+                class="comment-list"
+              >
+                <t-comment :author="item?.nickname ?? '-'">
                   <template #avatar>
                     <t-image
                       width="52"
                       style="border-radius: 50%"
-                      :src="avatar"
+                      :src="item?.avatar ?? avatar"
                     />
                   </template>
                   <template #content>
                     <div>
                       <div class="count">
                         <t-rate
-                          :default-value="4.5"
+                          :default-value="item?.totalStar ?? 0"
                           :count="5"
                           allow-half
                           readonly
                         />
                       </div>
                       <div class="textarea">
-                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                        {{ item?.content ?? '-' }}
                       </div>
-                      <div class="time">2022-12-21</div>
-                    </div>
-                  </template>
-                </t-comment>
-              </div>
-              <div class="comment-list">
-                <t-comment author="我是***昵称">
-                  <template #avatar>
-                    <t-image
-                      width="52"
-                      style="border-radius: 50%"
-                      :src="avatar"
-                    />
-                  </template>
-                  <template #content>
-                    <div>
-                      <div class="count">
-                        <t-rate
-                          :default-value="4.5"
-                          :count="5"
-                          allow-half
-                          readonly
-                        />
-                      </div>
-                      <div class="textarea">
-                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
-                      </div>
-                      <div class="time">2022-12-21</div>
+                      <div class="time">{{ item?.createTime ?? '-' }}</div>
                     </div>
                   </template>
                 </t-comment>
@@ -361,7 +347,7 @@ const isPreview = ref(false);
 const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
-const appraiseIndex = ref(0);
+const appraiseIndex = ref(1);
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -442,7 +428,8 @@ const clickProbation = () => {
     title: '试用说明',
     content: () => {
       const onClick = () => {
-        navigator.clipboard.writeText('111111111111').then(() => {
+        const text = `试用账号： ${selectVersion.value.tryAccount}  试用密码： ${selectVersion.value.tryPwd}`;
+        navigator.clipboard.writeText(text).then(() => {
           Message.success('复制成功');
         });
       };
@@ -455,14 +442,22 @@ const clickProbation = () => {
         h('div', { style: 'display: flex;margin-top: 24px;' }, [
           h('div', { style: 'display: flex;margin-left: 12px;' }, [
             h('div', '试用账号:'),
-            h('div', { style: 'margin-left: 12px;' }, 'xxxxxxxxx'),
+            h(
+              'div',
+              { style: 'margin-left: 12px;' },
+              selectVersion.value.tryAccount
+            ),
           ]),
           h(
             'div',
             { style: 'display: flex;margin-left: 12px;align-items: center;' },
             [
               h('div', '试用密码:'),
-              h('div', { style: 'margin-left: 12px;' }, 'xxxxxx'),
+              h(
+                'div',
+                { style: 'margin-left: 12px;' },
+                selectVersion.value.tryPwd
+              ),
               h('div', {
                 style: `margin-left: 12px;width: 12px;height: 12px;background: url(${copy});background-size: 100% 100%;cursor: pointer;`,
                 onClick,
@@ -477,7 +472,8 @@ const clickProbation = () => {
     cancelText: '取消',
     okText: '进入试用',
     onOk: () => {
-      userStore.jumpToLogin();
+      console.log(selectVersion.value.tryUrl);
+      // userStore.jumpToLogin();
     },
   });
 };
@@ -594,22 +590,23 @@ const onIntroScroll = () => {
   fixedTop.value = Boolean(top < 70);
 };
 
-const appraiseClick = (value: number) => {
-  appraiseIndex.value = value;
-};
-
 const BypageList = () => {
   const params = {
     productId: route.params.id, // 商品ID
-    starType: 1, // 类型 1差评 2 中评 3 好评
+    starType: appraiseIndex.value, // 类型 1差评 2 中评 3 好评
     pageNum: 1,
     pageSize: 100,
   };
-  apiProductDetail(params)
+  apiBypageList(params)
     .then((data) => {
       evaluateDatail.value = data;
     })
     .catch(() => {});
+};
+
+const appraiseClick = (value: number) => {
+  appraiseIndex.value = value;
+  BypageList();
 };
 
 onMounted(() => {
@@ -663,7 +660,7 @@ onMounted(() => {
   window.addEventListener('scroll', onIntroScroll, true);
 
   // 商品评价
-  // BypageList()
+  BypageList();
 });
 
 onUnmounted(() => {

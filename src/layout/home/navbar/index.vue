@@ -136,26 +136,21 @@ const clickIdService = () => {
   // TODO w:用户标识服务打点
   console.log('用户主导航点击标识服务打点');
   // apiDataPoint(null, null, 6, 11);
-  const { nodeStatus } = userInfoByCompany.value || {};
-  if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
-    const { snmsUrls } = userInfo.value || {};
-    window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
-    const { primary } = userInfoByCompany.value || {};
-    if (primary === true || userInfo.value?.isAdmin) {
-      const { snmsUrls, companyId } = userInfo.value || {};
-      const params = {
-        snmsLoginId: snmsUrls?.snmsLoginId,
-        companyId,
-      };
-      snmsClientLogin(params).then(() => {});
-    } else {
-      Modal.warning({
-        title: '仅企业管理员可操作',
-        content: '',
-        titleAlign: 'start',
-        okText: '好的',
-      });
-    }
+  const { primary } = userInfoByCompany.value || {};
+  if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+    const { snmsUrls, companyId } = userInfo.value || {};
+    const params = {
+      snmsLoginId: snmsUrls?.snmsLoginId,
+      companyId,
+    };
+    snmsClientLogin(params).then(() => {});
+  } else {
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
   }
 };
 const goWow = () => {

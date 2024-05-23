@@ -3,7 +3,7 @@
     <t-modal
       v-model:visible="visible"
       fullscreen
-      has-back-btn="false"
+      :has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
       :on-before-back="onBack"
@@ -161,11 +161,11 @@
               @progress="uploadProgress"
             >
               <template #upload-button>
-                <t-spin size="24" :loading="logoUploading">
+                <t-spin :size="24" :loading="logoUploading">
                   <div :class="`tele-upload-list-item`">
                     <div class="tele-upload-picture-card">
                       <div class="tele-upload-picture-card-text">
-                        <IconPlus size="16" stroke-width="6" />
+                        <IconPlus :size="16" :stroke-width="6" />
                         <div
                           style="
                             margin-top: 8px;
@@ -249,11 +249,11 @@
                 @error="uploadDetailError"
               >
                 <template #upload-button>
-                  <t-spin size="24" :loading="detailUploading">
+                  <t-spin :size="24" :loading="detailUploading">
                     <div :class="`tele-upload-list-item`">
                       <div class="tele-upload-picture-card">
                         <div class="tele-upload-picture-card-text">
-                          <IconPlus size="16" stroke-width="6" />
+                          <IconPlus :size="16" :stroke-width="6" />
                           <div
                             style="
                               margin-top: 8px;
@@ -371,7 +371,7 @@
                   <t-tooltip
                     content="可使用账号数量及使用时间均根据套餐设限，套餐价格=账号单价*套餐账号数*时长"
                   >
-                    <icon-question-circle style="color: #86909c" size="12" />
+                    <icon-question-circle style="color: #86909c" :size="12" />
                   </t-tooltip>
                 </t-radio>
                 <t-radio
@@ -380,7 +380,7 @@
                 >
                   {{ priceTypeList[1].label }}
                   <t-tooltip content="可使用账号数量及可使用时间均不受限">
-                    <icon-question-circle style="color: #86909c" size="12" />
+                    <icon-question-circle style="color: #86909c" :size="12" />
                   </t-tooltip>
                 </t-radio>
                 <t-radio
@@ -397,7 +397,7 @@
                   <t-tooltip
                     content="用户不付款即可安装使用应用。你可以在应用内限制免费版所享有的功能权益"
                   >
-                    <icon-question-circle style="color: #86909c" size="12" />
+                    <icon-question-circle style="color: #86909c" :size="12" />
                   </t-tooltip>
                 </t-radio>
               </t-radio-group>
@@ -494,7 +494,7 @@
                       v-if="c.productDeliverySetInfoList.length > 1"
                       class="price-icon"
                       @click="deletePrice(copyModal[index], cIndex)"
-                      ><icon-delete size="16"></icon-delete
+                      ><icon-delete :size="16"></icon-delete
                     ></div>
                   </div>
                   <div
@@ -502,7 +502,7 @@
                     class="add-price"
                     @click="addPrice(c)"
                     ><icon-plus
-                      stroke-width="6"
+                      :stroke-width="6"
                       :style="{
                         fontSize: '12px',
                         color: '#1664FF',
@@ -529,10 +529,10 @@
                   >
                 </t-select>
               </t-form-item>
-              <t-form-item label="是否支持试用" field="probation">
-                <t-radio-group v-model="copyModal[index].probation">
+              <t-form-item label="是否支持试用" field="isTry">
+                <t-radio-group v-model="copyModal[index].isTry">
                   <t-radio
-                    v-for="(c, index) of probationList"
+                    v-for="(c, index) of isTryList"
                     :key="index"
                     :value="c.value"
                   >
@@ -541,60 +541,56 @@
                 </t-radio-group>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal[index].isTry === 1"
                 label="试用版本地址"
                 class="sale-item"
-                field="address"
+                field="tryUrl"
               >
                 <t-input
-                  v-model.trim="copyModal[index].address"
+                  v-model.trim="copyModal[index].tryUrl"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'address')"
+                  @input="validate(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal[index].isTry === 1"
                 label="试用账号"
                 class="sale-item"
-                field="probationaccount"
+                field="tryAccount"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationaccount"
+                  v-model.trim="copyModal[index].tryAccount"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationaccount')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal[index].isTry === 1"
                 label="试用密码"
                 class="sale-item"
-                field="probationpassword"
+                field="tryPwd"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationpassword"
+                  v-model.trim="copyModal[index].tryPwd"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationpassword')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -660,10 +656,10 @@
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
               </t-form-item>
-              <t-form-item label="是否支持试用" field="probation">
-                <t-radio-group v-model="copyModal[index].probation">
+              <t-form-item label="是否支持试用" field="isTry">
+                <t-radio-group v-model="copyModal2[index].isTry">
                   <t-radio
-                    v-for="(c, index) of probationList"
+                    v-for="(c, index) of isTryList"
                     :key="index"
                     :value="c.value"
                   >
@@ -672,60 +668,56 @@
                 </t-radio-group>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal2[index].isTry === 1"
                 label="试用版本地址"
                 class="sale-item"
-                field="address"
+                field="tryUrl"
               >
                 <t-input
-                  v-model.trim="copyModal[index].address"
+                  v-model.trim="copyModal2[index].tryUrl"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'address')"
+                  @input="validate(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal2[index].isTry === 1"
                 label="试用账号"
                 class="sale-item"
-                field="probationaccount"
+                field="tryAccount"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationaccount"
+                  v-model.trim="copyModal2[index].tryAccount"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationaccount')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal2[index].isTry === 1"
                 label="试用密码"
                 class="sale-item"
-                field="probationpassword"
+                field="tryPwd"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationpassword"
+                  v-model.trim="copyModal2[index].tryPwd"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationpassword')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -764,10 +756,10 @@
                 >
                 </t-input>
               </t-form-item>
-              <t-form-item label="是否支持试用" field="probation">
-                <t-radio-group v-model="copyModal[index].probation">
+              <t-form-item label="是否支持试用" field="isTry">
+                <t-radio-group v-model="copyModal3[index].isTry">
                   <t-radio
-                    v-for="(c, index) of probationList"
+                    v-for="(c, index) of isTryList"
                     :key="index"
                     :value="c.value"
                   >
@@ -776,60 +768,56 @@
                 </t-radio-group>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal3[index].isTry === 1"
                 label="试用版本地址"
                 class="sale-item"
-                field="address"
+                field="tryUrl"
               >
                 <t-input
-                  v-model.trim="copyModal[index].address"
+                  v-model.trim="copyModal3[index].tryUrl"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 500,
                     errorOnly: true,
                   }"
-                  @input="validate(copyFormRef[index].value, 'address')"
+                  @input="validate(copyFormRef[index].value, 'tryUrl')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal3[index].isTry === 1"
                 label="试用账号"
                 class="sale-item"
-                field="probationaccount"
+                field="tryAccount"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationaccount"
+                  v-model.trim="copyModal3[index].tryAccount"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 10,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationaccount')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryAccount')"
                 >
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="copyModal[index].probation === 0"
+                v-if="copyModal3[index].isTry === 1"
                 label="试用密码"
                 class="sale-item"
-                field="probationpassword"
+                field="tryPwd"
               >
                 <t-input
-                  v-model.trim="copyModal[index].probationpassword"
+                  v-model.trim="copyModal3[index].tryPwd"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
                     length: 32,
                     errorOnly: true,
                   }"
-                  @input="
-                    validate(copyFormRef[index].value, 'probationpassword')
-                  "
+                  @input="validate(copyFormRef[index].value, 'tryPwd')"
                 >
                 </t-input>
               </t-form-item>
@@ -854,7 +842,6 @@
               :ref="copyFormRef[index]"
               :model="copyModal4[index]"
               :rules="copyRules"
-              label-align="left"
               :label-col-props="{
                 span: 6,
                 offset: 0,
@@ -894,7 +881,7 @@
         </div>
         <t-divider v-if="showAddCopy"></t-divider>
         <div v-if="showAddCopy" class="copy-add" @click="addCopy">
-          <iconpark-icon name="squarePlus" size="20"></iconpark-icon>
+          <iconpark-icon name="squarePlus" :size="20"></iconpark-icon>
           <div class="copy-add-title">添加交付版本</div>
         </div>
       </div>
@@ -933,8 +920,8 @@ let needSave = false;
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
-const visible = ref(true);
-const templateRef = ref();
+const visible: Record<string, any> = ref(true);
+const templateRef: Record<string, any> = ref();
 const step = ref(1);
 
 const uploadHeaders = {
@@ -997,9 +984,9 @@ const priceTypeList = ref([
   { label: '免费', value: 3 },
 ]);
 
-const probationList = ref([
-  { label: '是', value: 0 },
-  { label: '否', value: 1 },
+const isTryList = ref([
+  { label: '是', value: 1 },
+  { label: '否', value: 0 },
 ]);
 
 const formModel2 = ref({
@@ -1041,10 +1028,10 @@ const copyModal = ref<any[]>([
       },
     ],
     durationList: [],
-    probation: 0,
-    address: '',
-    probationaccount: '',
-    probationpassword: '',
+    isTry: 0,
+    tryUrl: '',
+    tryAccount: '',
+    tryPwd: '',
   },
 ]);
 const copyModal2 = ref<any[]>([
@@ -1053,29 +1040,29 @@ const copyModal2 = ref<any[]>([
     url: '',
     productDeliverySetInfoList: [{ price: null }],
     onePiece: null,
-    probation: 0,
-    address: '',
-    probationaccount: '',
-    probationpassword: '',
+    isTry: 0,
+    tryUrl: '',
+    tryAccount: '',
+    tryPwd: '',
   },
 ]);
 const copyModal3 = ref<any[]>([
   {
     name: '',
-    probation: 0,
-    address: '',
-    probationaccount: '',
-    probationpassword: '',
+    isTry: 0,
+    tryUrl: '',
+    tryAccount: '',
+    tryPwd: '',
   },
 ]);
 const copyModal4 = ref<any[]>([
   {
     name: '',
     durationList: [],
-    probation: 0,
-    address: '',
-    probationaccount: '',
-    probationpassword: '',
+    isTry: 0,
+    tryUrl: '',
+    tryAccount: '',
+    tryPwd: '',
   },
 ]);
 
@@ -1109,10 +1096,10 @@ const addCopy = () => {
         },
       ],
       durationList: [],
-      probation: 0,
-      address: '',
-      probationaccount: '',
-      probationpassword: '',
+      isTry: 0,
+      tryUrl: '',
+      tryAccount: '',
+      tryPwd: '',
     });
   } else if (formModel2.value.saleType === 1) {
     copyModal2.value.push({
@@ -1120,10 +1107,10 @@ const addCopy = () => {
       url: '',
       onePiece: null,
       productDeliverySetInfoList: [{ price: null }],
-      probation: 0,
-      address: '',
-      probationaccount: '',
-      probationpassword: '',
+      isTry: 0,
+      tryUrl: '',
+      tryAccount: '',
+      tryPwd: '',
     });
   } else if (formModel2.value.saleType === 3) {
     copyModal4.value.push({
@@ -1133,10 +1120,10 @@ const addCopy = () => {
   } else {
     copyModal3.value.push({
       name: '',
-      probation: 0,
-      address: '',
-      probationaccount: '',
-      probationpassword: '',
+      isTry: 0,
+      tryUrl: '',
+      tryAccount: '',
+      tryPwd: '',
     });
   }
 };
@@ -1209,16 +1196,16 @@ const copyRules = {
       },
     },
   ],
-  probation: [{ required: true, message: '请选择是否支持试用' }],
-  address: [
+  isTry: [{ required: true, message: '请选择是否支持试用' }],
+  tryUrl: [
     { required: true, message: '请输入试用版本地址' },
     { maxLength: 500, message: '最多可输入500个字符' },
   ],
-  probationaccount: [
+  tryAccount: [
     { required: true, message: '请输入试用账号' },
     { maxLength: 10, message: '最多可输入10个字符' },
   ],
-  probationpassword: [
+  tryPwd: [
     { required: true, message: '请输入试用密码' },
     { maxLength: 32, message: '最多可输入32个字符' },
   ],
@@ -1486,8 +1473,8 @@ const getDetail = (id: any) => {
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
     formModel2.value.productId = res.id;
-    formModel2.value.deliveryType = res.deliveryType;
-    formModel2.value.saleType = res.saleType;
+    formModel2.value.deliveryType = res.deliveryType ?? 0;
+    formModel2.value.saleType = res.saleType ?? 3;
     templateDetail.value = JSON.parse(res.detail);
     templateRef.value.templateData = JSON.parse(res.detail);
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];
@@ -1521,10 +1508,10 @@ const getDetail = (id: any) => {
             url: one.url,
             productDeliverySetInfoList: list1,
             durationList: list2,
-            probation: one.probation,
-            address: one.address,
-            probationaccount: one.probationaccount,
-            probationpassword: one.probationpassword,
+            isTry: one.isTry,
+            tryUrl: one.tryUrl,
+            tryAccount: one.tryAccount,
+            tryPwd: one.tryPwd,
           });
         }
       } else {
@@ -1533,10 +1520,10 @@ const getDetail = (id: any) => {
           url: '',
           productDeliverySetInfoList: [{ accountNum: '', price: '' }],
           durationList: [],
-          probation: 0,
-          address: '',
-          probationaccount: '',
-          probationpassword: '',
+          isTry: 0,
+          tryUrl: '',
+          tryAccount: '',
+          tryPwd: '',
         });
       }
     } else if (formModel2.value.saleType === 1) {
@@ -1562,10 +1549,10 @@ const getDetail = (id: any) => {
             url: one.url,
             productDeliverySetInfoList: list1,
             onePiece,
-            probation: one.probation,
-            address: one.address,
-            probationaccount: one.probationaccount,
-            probationpassword: one.probationpassword,
+            isTry: one.isTry,
+            tryUrl: one.tryUrl,
+            tryAccount: one.tryAccount,
+            tryPwd: one.tryPwd,
           });
         }
       } else {
@@ -1573,10 +1560,10 @@ const getDetail = (id: any) => {
           name: '',
           url: '',
           productDeliverySetInfoList: [{ price: '' }],
-          probation: 0,
-          address: '',
-          probationaccount: '',
-          probationpassword: '',
+          isTry: 0,
+          tryUrl: '',
+          tryAccount: '',
+          tryPwd: '',
         });
       }
     } else if (formModel2.value.saleType === 3) {
@@ -1606,19 +1593,19 @@ const getDetail = (id: any) => {
         for (const one of list) {
           copyModal3.value.push({
             name: one.name,
-            probation: one.probation,
-            address: one.address,
-            probationaccount: one.probationaccount,
-            probationpassword: one.probationpassword,
+            isTry: one.isTry,
+            tryUrl: one.tryUrl,
+            tryAccount: one.tryAccount,
+            tryPwd: one.tryPwd,
           });
         }
       } else {
         copyModal3.value.push({
           name: '',
-          probation: 0,
-          address: '',
-          probationaccount: '',
-          probationpassword: '',
+          isTry: 0,
+          tryUrl: '',
+          tryAccount: '',
+          tryPwd: '',
         });
       }
     }
@@ -1890,7 +1877,7 @@ const clickUp = async () => {
 
 const validate = (ref: any, key: string) => {
   nextTick(() => {
-    ref.validateField(key);
+    ref[0].validateField(key);
   });
 };
 

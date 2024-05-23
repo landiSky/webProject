@@ -60,7 +60,12 @@
         </t-descriptions-item>
         <!--测试1 企业地址-->
         <t-descriptions-item label="企业地址">
-          北京市/北京市/朝阳区 某某某
+          {{ currentData.itemInfo?.orgAddrProvince }}/{{
+            currentData.itemInfo?.orgAddrCity
+          }}/{{ currentData.itemInfo?.orgAddrCounty }}
+        </t-descriptions-item>
+        <t-descriptions-item>
+          {{ currentData.itemInfo?.orgAddr }}
         </t-descriptions-item>
         <t-descriptions-item label="法人姓名">
           {{ currentData.itemInfo.legalPersonName ?? '-' }}
