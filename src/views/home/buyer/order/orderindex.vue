@@ -199,12 +199,9 @@
               <t-col :span="3">
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">¥{{ item.productPrice }}</div>
-                  <!-- {{
-                    String(item.productPrice).indexOf('.') > -1 ? '' : '元'
-                  }} -->
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">价格面议</div>
+                  <div class="desc"> 价格面议 </div>
                 </div>
               </t-col>
 
@@ -212,16 +209,12 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
-                    <!-- {{
-                    String(item.realityPrice).indexOf('.') > -1 ? '' : '元'
-                  }} -->
-                    <!-- <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p> -->
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div v-if="item.aleterPriceStatus === 1" class="desc"
-                    ><span class="top">¥{{ item.realityPrice }}</span></div
-                  >
+                  <div v-if="item.alterPriceStatus === 1" class="desc">
+                    <span class="top">¥{{ item.realityPrice }}</span>
+                  </div>
                   <div v-else class="desc">价格面议</div>
                 </div>
               </t-col>
@@ -236,7 +229,7 @@
                       v-if="
                         item?.orderStatus === 0 &&
                         item.saleType === 2 &&
-                        item.aleterPriceStatus !== 1
+                        item.alterPriceStatus !== 1
                       "
                     >
                       <span>待修改金额</span>
@@ -279,7 +272,7 @@
                       v-if="
                         ((item.orderStatus === 0 || item.orderStatus === 4) &&
                           item.saleType !== 2) ||
-                        (item.saleType === 2 && item.aleterPriceStatus === 1)
+                        (item.saleType === 2 && item.alterPriceStatus === 1)
                       "
                       type="text"
                       style="width: 100%"

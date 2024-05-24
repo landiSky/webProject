@@ -148,8 +148,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       amountUpdata({
-        id: state.formModel.id,
-        couponMoney: state.formModel.amount,
+        // id: state.formModel.id,
+        // couponMoney: state.formModel.amount,
+        orderId: state.formModel.id,
+        realityPrice: needPaySum.value,
       })
         .then(() => {
           emit('confirm');

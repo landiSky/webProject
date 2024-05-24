@@ -207,12 +207,16 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
-                    <!-- <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p> -->
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">价格面议</div></div
-                >
+                  <div class="desc">
+                    <span v-if="item.alterPriceStatus !== 1" class="desc"
+                      >价格面议
+                    </span>
+                    <span v-else class="top">¥{{ item.realityPrice }}</span>
+                  </div>
+                </div>
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -225,7 +229,7 @@
                       v-if="
                         item?.orderStatus === 0 &&
                         item.saleType === 2 &&
-                        item.aleterPriceStatus !== 1
+                        item.alterPriceStatus !== 1
                       "
                     >
                       <span>待修改金额</span>

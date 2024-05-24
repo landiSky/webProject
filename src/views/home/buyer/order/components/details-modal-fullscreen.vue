@@ -52,22 +52,31 @@
                   </div>
 
                   <div
-                    v-if="dataList.aleterPriceStatus === 1"
+                    v-if="dataList.sceleType !== 2"
                     class="order-success-text"
                   >
                     待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
                   </div>
-                  <div v-else> 待支付-待卖家修改金额 </div>
+                  <div
+                    v-if="
+                      dataList.saleType === 2 && dataList.alterPriceStatus === 0
+                    "
+                  >
+                    待支付-待卖家修改金额
+                  </div>
                 </t-space>
                 <div
-                  v-if="dataList.aleterPriceStatus === 1"
+                  v-if="
+                    dataList.saleType !== 2 ||
+                    (dataList.saleType === 2 && dataList.alterPriceStatus === 1)
+                  "
                   class="margintop-16"
                 >
                   <t-button
                     type="primary"
                     @click="modificationamount(dataList.id)"
-                    >上传凭证</t-button
-                  >
+                    >上传凭证
+                  </t-button>
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 1">
