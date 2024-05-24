@@ -52,17 +52,19 @@
                   </div>
 
                   <div
-                    v-if="dataList.sceleType !== 2"
+                    v-if="dataList.saleType !== 2"
                     class="order-success-text"
                   >
                     待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
                   </div>
-                  <div
-                    v-if="
-                      dataList.saleType === 2 && dataList.alterPriceStatus === 0
-                    "
-                  >
-                    待支付-待卖家修改金额
+
+                  <div v-else>
+                    <span v-if="dataList.alterPriceStatus === 0"
+                      >待支付-待卖家修改金额
+                    </span>
+                    <span v-else>
+                      待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
+                    </span>
                   </div>
                 </t-space>
                 <div
@@ -114,9 +116,8 @@
                     >已交付：订单已交付。
                   </div>
                 </t-space>
-                <!-- 后续改为 ===0 -->
                 <div
-                  v-if="dataList.evaluateStatus !== 0"
+                  v-if="dataList.evaluateStatus === 0"
                   class="order-item-deploy margintop-16"
                 >
                   <t-button type="primary" @click="review(dataList.id)"

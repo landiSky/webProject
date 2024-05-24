@@ -50,11 +50,32 @@
                   <div class="order-success-icon is-primary">
                     <icon-clock-circle-fill />
                   </div>
-
-                  <div class="order-success-text">
+                  <div
+                    v-if="dataList.saleType !== 2"
+                    class="order-success-text"
+                  >
                     待支付：商品已下单，待买家上传支付凭证并提交审核。
                   </div>
+
+                  <div v-else>
+                    <span v-if="dataList.alterPriceStatus === 0"
+                      >待支付-待修改金额
+                    </span>
+                    <span v-else>
+                      待支付：商品已下单，待买家上传支付凭证并提交审核。
+                    </span>
+                  </div>
                 </t-space>
+                <div
+                  v-if="
+                    dataList.saleType === 2 && dataList.alterPriceStatus === 0
+                  "
+                  class="margintop-16"
+                >
+                  <t-button type="primary" @click="modificationamount"
+                    >修改金额
+                  </t-button>
+                </div>
               </div>
               <div v-if="dataList.orderStatus === 1">
                 <t-space class="order-success spacing">
@@ -377,7 +398,10 @@
                     ¥{{ dataList.realityPrice }}
                   </div>
                   <div v-if="dataList.saleType === 2" class="grid-content">
-                    面议
+                    <span v-if="dataList.alterPriceStatus === 1"
+                      >¥{{ dataList.realityPrice }}
+                    </span>
+                    <span v-else>面议</span>
                   </div>
                 </t-col>
                 <t-col
@@ -483,6 +507,7 @@
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 import { utilsCopy } from '@/utils/tools';
 import { sellerDetail, sellerPass, merchantSub } from '@/api/seller/order';
+import { getOrderDetailEstimate } from '@/api/order';
 
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -573,6 +598,9 @@ const init = () => {
   sellerDetail({ id: props.data.id }).then((res) => {
     // @ts-ignore
     dataList.value = res;
+  });
+  getOrderDetailEstimate({ orderId: props.data.id }).then((res) => {
+    console.log('评价', res);
   });
 };
 

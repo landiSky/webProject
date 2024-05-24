@@ -272,7 +272,9 @@
                       v-if="
                         ((item.orderStatus === 0 || item.orderStatus === 4) &&
                           item.saleType !== 2) ||
-                        (item.saleType === 2 && item.alterPriceStatus === 1)
+                        (item.saleType === 2 &&
+                          item.alterPriceStatus === 1 &&
+                          (item.orderStatus === 0 || item.orderStatus === 4))
                       "
                       type="text"
                       style="width: 100%"
