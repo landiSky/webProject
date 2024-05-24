@@ -7,7 +7,7 @@ export function apiDataPoint(
   source?: number,
   target?: number
 ) {
-  return $http.post('/server/datapoint/save', {
+  return $http.post('/operation/web/datapoint/save', {
     productId,
     searchWord,
     source,

@@ -157,8 +157,8 @@
             style="width: 296px"
             :disabled="isPreview"
             @click="clickAddCart"
-            >立即购买</t-button
-          >
+            >立即购买
+          </t-button>
         </div>
       </div>
       <div class="intro">
@@ -480,9 +480,10 @@ const clickProbation = () => {
 
 const clickAddCart = (): void => {
   // TODO w: 立即购买打点
-  console.log('立即购买打点', route.params.id);
+  apiDataPoint(route.params.id as string, null, 4, 4).then((res) => {
+    console.log('立即购买打点', route.params.id);
+  });
   const { userInfo, userInfoByCompany } = userStore;
-
   if (!userInfo?.id) {
     console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
@@ -579,8 +580,9 @@ const clickNav = (index: number) => {
 
 const buyConsult = () => {
   // TODO w: 购买咨询打点
-  console.log('购买咨询打点', route.params.id);
-  // apiDataPoint(route.params.id as string, null, 4, 4);
+  apiDataPoint(route.params.id as string, null, 4, 5).then((res) => {
+    console.log('购买咨询打点', route.params.id);
+  });
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -611,8 +613,9 @@ const appraiseClick = (value: number) => {
 
 onMounted(() => {
   // TODO w: 商品详情打点
-  console.log('商品详情打点', route.params.id);
-  // apiDataPoint(route.params.id as string, null, 4, 3);
+  apiDataPoint(route.params.id as string, null, 4, 3).then((res) => {
+    console.log('商品详情打点', route.params.id);
+  });
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {

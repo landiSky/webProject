@@ -525,8 +525,9 @@ watch(
 
 onMounted(() => {
   // TODO w: 商城首页打点:是否分为登录和未登录两种情况？
-  console.log('商城首页打点');
-  // apiDataPoint(null, null, 3, 1);
+  apiDataPoint(null, null, 3, 1).then((res) => {
+    console.log('商城首页打点');
+  });
   getProductType();
   getTagList();
   getProductList();

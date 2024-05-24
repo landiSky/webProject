@@ -106,8 +106,9 @@ const clickMenuItem = (key: string) => {
     // TODO w: 各个菜单的打点统计
     const num = findKeyByValue(pathMap, key);
     if (num) {
-      // apiDataPoint(null, null, 6, parseInt(num, 10));
-      console.log('左侧菜单打点', key, num);
+      apiDataPoint(null, null, 6, parseInt(num, 10)).then((res) => {
+        console.log('左侧菜单打点', key, num, res);
+      });
     }
   }
 };
