@@ -20,6 +20,16 @@ export function apiMemListByProduct(data: Record<string, any>) {
   return $http.post('/server/web/product/member/selectConfig', data);
 }
 
+//  获取自建应用详情拿取成员信息回显展示
+export function apiSelectById(params: Record<string, any>) {
+  return $http.get('/server/web/app/info/selectById', { params });
+}
+
+//  自建应用修改信息-概览页
+export function apiUpdateOrLineStatus(data: Record<string, any>) {
+  return $http.post('/server/web/app/info/updateOrLineStatus', data);
+}
+
 // 给应用授权可查看的成员
 export function apiAuthMember(data: Record<string, any>) {
   return $http.post('/server/web/product/member/saveConfig', data);

@@ -8,6 +8,14 @@ export function orderOver(params: Record<string, any>) {
 export function orderGo(params: Record<string, any>) {
   return $http.get('/server/web/order/jumpApps', { params });
 }
+// 买家中心 自建应用前往
+export function appInfoClientLogin(params: Record<string, any>) {
+  return $http.get('/auth/appInfoClientLogin', { params });
+}
+// 买家中心 已购应用前往
+export function alreadyBuyClientLogin(params: Record<string, any>) {
+  return $http.get('/auth/alreadyBuyClientLogin', { params });
+}
 
 // 已购应用
 export function authDialogdata(params: Record<string, any>) {

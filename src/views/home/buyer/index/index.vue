@@ -600,6 +600,16 @@
       @cancel="editModalVisiblealter = false"
     >
     </AuthMemberModal>
+    <!-- 配置自建应用 -->
+    <AuthApplicationsModal
+      v-if="editModalApplication"
+      :product-id="selectProduct.productId"
+      :delivery-set-id="selectProduct.deliveryId"
+      :account-count="selectProduct.accountCount"
+      @confirm="onEditModalConfirmselfbuilt"
+      @cancel="editModalApplication = false"
+    >
+    </AuthApplicationsModal>
     <!-- 认证指南 -->
     <EditModal
       v-if="editModalVisible"
@@ -644,10 +654,14 @@ import {
   authDialogdata,
   orderGo,
   selectSelfApps,
+  appInfoClientLogin,
+  alreadyBuyClientLogin,
 } from '@/api/buyer/overview';
 
 // 头像
 import AuthMemberModal from '@/components/auth-member/index.vue';
+// 自建应用
+import AuthApplicationsModal from '@/components/auth-member/self-built-applications.vue';
 
 import EditModal from '@/components/dataoverview/components/edit-modal.vue';
 
@@ -674,6 +688,7 @@ import {
 import AuthModal from '@/components/auth-modal/index.vue';
 import ellipsis from '@/components/ellipsis/index.vue';
 import { apiDataPoint } from '@/api/data-point';
+import { snmsClientLogin } from '@/api/login';
 import avatar from './image/avatar.png';
 import group1 from './image/group1.png';
 import group2 from './image/group2.png';
@@ -748,6 +763,8 @@ const gotoverifys = ref(false);
 const detailflag = ref(false);
 // 配置应用 弹窗
 const editModalVisiblealter = ref(false);
+// 配置自建应用 弹窗
+const editModalApplication = ref(false);
 
 // //已购应用
 const authDialogVisible: Record<string, any> = ref([]);
@@ -930,7 +947,13 @@ const togo = (detailData: Record<string, any>) => {
       cancelText: '暂不开通',
       okText: '去开通',
       onOk: () => {
-        authModalVisible.value = true;
+        // authModalVisible.value = true;
+        const { snmsUrls, companyId } = userInfo.value || {};
+        const params = {
+          snmsLoginId: snmsUrls?.snmsLoginId,
+          companyId,
+        };
+        snmsClientLogin(params).then(() => {});
       },
     });
     return;
@@ -946,21 +969,36 @@ const togo = (detailData: Record<string, any>) => {
   const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
-    orderGo({ id }).then((res: any) => {
-      window.open(res, '_blank');
-    });
+    if (Number(tabsApplication.value) === 1) {
+      alreadyBuyClientLogin({ orderId: id }).then((res) => {});
+    } else if (Number(tabsApplication.value) === 2) {
+      appInfoClientLogin({ appInfoId: id }).then((res) => {});
+    }
+    // orderGo({ id }).then((res: any) => {
+    //   window.open(res, '_blank');
+    // });
   }
 };
 
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProduct.value = item; // 配置的应用 id
-  editModalVisiblealter.value = true;
+  if (Number(tabsApplication.value) === 1) {
+    editModalVisiblealter.value = true;
+  } else if (Number(tabsApplication.value) === 2) {
+    editModalApplication.value = true;
+  }
 };
 // 配置应用 确定
 const onEditModalConfirmAlter = () => {
   editModalVisiblealter.value = false;
 };
+
+// 配置自建应用 确定
+const onEditModalConfirmselfbuilt = () => {
+  editModalApplication.value = false;
+};
+
 const filetype = (val: any) => {
   if (val === 'doc') {
     return 'application/msword;charset=utf-8';
@@ -1016,15 +1054,8 @@ const multiples = () => {
 const TabClickApplication = (key: any) => {
   tabsApplication.value = key;
   if (
-    key === '1' &&
-    (userInfoByCompany.value.certificateStatus === 1 ||
-      userInfoByCompany.value.nodeStatus === 1)
-  ) {
-    authDialog();
-  } else if (
-    key === '2' &&
-    (userInfoByCompany.value.certificateStatus === 1 ||
-      userInfoByCompany.value.nodeStatus === 1)
+    userInfoByCompany.value.certificateStatus === 1 ||
+    userInfoByCompany.value.nodeStatus === 1
   ) {
     authDialog();
   }
