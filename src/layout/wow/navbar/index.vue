@@ -14,26 +14,26 @@
             @click="goIndex"
             >首页</t-link
           >
-          <t-tooltip content="敬请期待">
+          <!-- <t-tooltip content="敬请期待">
             <t-link>限免应用</t-link>
-          </t-tooltip>
+          </t-tooltip> -->
 
           <t-link @click="clickIdService">标识服务</t-link>
+          <t-link
+            :class="{ active: selectTab === TabPath.MALL }"
+            @click="gotoMall"
+            >商城</t-link
+          >
           <t-tooltip content="敬请期待">
             <t-link>平台产品</t-link>
           </t-tooltip>
           <t-tooltip content="敬请期待">
             <t-link>平台服务</t-link>
           </t-tooltip>
-          <t-link
-            :class="{ active: selectTab === TabPath.MALL }"
-            @click="gotoMall"
-            >商城</t-link
-          >
 
-          <t-tooltip content="敬请期待">
+          <!-- <t-tooltip content="敬请期待">
             <t-link>前沿政策</t-link>
-          </t-tooltip>
+          </t-tooltip> -->
         </t-space>
       </div>
     </div>
@@ -88,6 +88,7 @@ import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
 import { getToken } from '@/utils/auth';
 import { apiDataPoint } from '@/api/data-point';
+import { snmsClientLogin } from '@/api/login';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -190,26 +191,20 @@ const clickIdService = () => {
         },
       });
     } else {
-      const { snmsUrls } = userInfo.value || {};
-      const { nodeStatus } = userInfoByCompany.value || {};
-      if (nodeStatus === NodeAuthStatus.AUTHED) {
-        window.open(snmsUrls.idPointer, '_blank');
+      const { primary } = userInfoByCompany.value || {};
+      if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+        const { snmsUrls, companyId } = userInfo.value || {};
+        const params = {
+          snmsLoginId: snmsUrls?.snmsLoginId,
+          companyId,
+        };
+        snmsClientLogin(params).then(() => {});
       } else {
-        Modal.info({
-          title: '使用提醒',
-          content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        Modal.warning({
+          title: '仅企业管理员可操作',
+          content: '',
           titleAlign: 'start',
-          hideCancel: false,
-          cancelText: '暂不开通',
-          okText: '去开通',
-          onOk: () => {
-            router.push({
-              path: '/buyer/index',
-              query: {
-                openAuthModal: 1,
-              },
-            });
-          },
+          okText: '好的',
         });
       }
     }
