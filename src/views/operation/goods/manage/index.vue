@@ -539,7 +539,6 @@ const handleReset = () => {
 
 // 编辑全屏展示成功
 const onModalConfirm = () => {
-  console.log(111111111);
   modalVisible.value = false;
   fetchData();
 };
