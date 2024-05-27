@@ -280,8 +280,8 @@
                           item.realityPrice
                         )
                       "
-                      >修改金额</t-button
-                    >
+                      >修改金额
+                    </t-button>
                     <t-button
                       v-if="item.orderStatus === 1"
                       type="text"

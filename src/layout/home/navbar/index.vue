@@ -134,8 +134,9 @@ const clickLogout = () => {
 // 现在的
 const clickIdService = () => {
   // TODO w:用户标识服务打点
-  console.log('用户主导航点击标识服务打点');
-  // apiDataPoint(null, null, 6, 11);
+  apiDataPoint(null, null, 6, 11).then((res) => {
+    console.log('用户主导航点击标识服务打点');
+  });
   const { primary } = userInfoByCompany.value || {};
   if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
     const { snmsUrls, companyId } = userInfo.value || {};
