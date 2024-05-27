@@ -175,7 +175,6 @@
                     >已交付：订单已交付。
                   </div>
                 </t-space>
-
                 <div
                   v-if="dataList.evaluateStatus === 1"
                   class="order-item-deploy margintop-16"
@@ -427,37 +426,49 @@
                 <span class="color-box"></span>
                 <span class="text-cls">买家评价</span>
               </div>
-              <div v-if="3 == 3" class="reviewContent">
+              <div v-if="dataList.evaluateStatus === 1" class="reviewContent">
                 <div class="row-review">
                   <div>总体评价</div>
-                  <t-rate v-model="reviewContent.total" allow-half readonly />
-                  <span v-if="reviewContent.total !== 0"
-                    >{{ reviewContent.total }}星
+                  <t-rate
+                    v-model="reviewContent.totalStar"
+                    allow-half
+                    readonly
+                  />
+                  <span v-if="reviewContent.totalStar !== 0"
+                    >{{ reviewContent.totalStar }}星
                   </span>
                 </div>
                 <div class="row-review">
                   <div>产品评价</div>
-                  <t-rate v-model="reviewContent.product" allow-half readonly />
-                  <span v-if="reviewContent.product !== 0"
-                    >{{ reviewContent.product }}星</span
+                  <t-rate
+                    v-model="reviewContent.productStar"
+                    allow-half
+                    readonly
+                  />
+                  <span v-if="reviewContent.productStar !== 0"
+                    >{{ reviewContent.productStar }}星</span
                   >
                 </div>
                 <div class="row-review">
                   <div>服务评价</div>
-                  <t-rate v-model="reviewContent.server" allow-half readonly />
-                  <span v-if="reviewContent.server !== 0"
-                    >{{ reviewContent.server }}星</span
+                  <t-rate
+                    v-model="reviewContent.serviceStar"
+                    allow-half
+                    readonly
+                  />
+                  <span v-if="reviewContent.serviceStar !== 0"
+                    >{{ reviewContent.serviceStar }}星</span
                   >
                 </div>
                 <div class="row-review">
                   <div>交付评价</div>
                   <t-rate
-                    v-model="reviewContent.logistics"
+                    v-model="reviewContent.deliveryStar"
                     allow-half
                     readonly
                   />
-                  <span v-if="reviewContent.logistics !== 0"
-                    >{{ reviewContent.logistics }}星</span
+                  <span v-if="reviewContent.deliveryStar !== 0"
+                    >{{ reviewContent.deliveryStar }}星</span
                   >
                 </div>
 
@@ -467,7 +478,7 @@
                 </div>
                 <div class="row-review-content">
                   <div>评价时间</div>
-                  <span> {{ reviewContent.date || '-' }}</span>
+                  <span> {{ reviewContent.createTime || '-' }}</span>
                 </div>
               </div>
               <div v-else class="nodata-cls">
@@ -573,6 +584,7 @@ const dataList = ref<Record<string, any>>({
   saleType: 0, // 1-一口价定价,2-面议
   attachmentAddressArr: [], // 支付凭证
   productId: '', // 商品id
+  evaluateStatus: 0, // 评价状态 0-未评价，1-已评价
   productServerId: '',
 });
 // 修改金额 弹窗 开关
@@ -586,12 +598,12 @@ const goback = () => {
 };
 
 const reviewContent = ref({
-  total: 0,
-  product: 0,
-  server: 3,
-  logistics: 0,
-  content: '8989898989898989',
-  date: '2024-10-20',
+  totalStar: 0, // 总体评价
+  productStar: 0, // 产品评价
+  serviceStar: 0, // 服务评价
+  deliveryStar: 0, // 交付评价
+  content: '', //  评价内容
+  createTime: '', // 评价时间
 });
 
 const init = () => {
@@ -599,8 +611,12 @@ const init = () => {
     // @ts-ignore
     dataList.value = res;
   });
-  getOrderDetailEstimate({ orderId: props.data.id }).then((res) => {
+  // 获取评价内容
+  getOrderDetailEstimate({ orderId: props.data.id }).then((res: any) => {
     console.log('评价', res);
+    if (dataList.value.evaluateStatus === 1) {
+      reviewContent.value = res;
+    }
   });
 };
 
