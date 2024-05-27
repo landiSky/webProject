@@ -610,12 +610,11 @@ const init = () => {
   sellerDetail({ id: props.data.id }).then((res) => {
     // @ts-ignore
     dataList.value = res;
-  });
-  // 获取评价内容
-  getOrderDetailEstimate({ orderId: props.data.id }).then((res: any) => {
-    console.log('评价', res);
     if (dataList.value.evaluateStatus === 1) {
-      reviewContent.value = res;
+      // 获取评价内容
+      getOrderDetailEstimate({ orderId: props.data.id }).then((res: any) => {
+        reviewContent.value = res;
+      });
     }
   });
 };

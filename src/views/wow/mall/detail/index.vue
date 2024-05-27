@@ -196,7 +196,7 @@
         </div>
         <div class="consult">
           <span class="title">服务商资质</span>
-          <span class="header">服务商名称：北京泰尔英福科技有限公司</span>
+          <span class="header">服务商名称：{{ prodDetail?.companyName }}</span>
           <t-button type="primary" size="large" @click="buyConsult"
             >购买咨询</t-button
           >

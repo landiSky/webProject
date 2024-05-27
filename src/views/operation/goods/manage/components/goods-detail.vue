@@ -313,12 +313,11 @@
                   v-if="formModel.deliveryType == 0 && formModel.saleType == 3"
                   label="对接SaaS应用"
                 >
-                  {{ st.productDeliverySetList.application
+                  {{ st.application
                   }}<t-link
                     :hoverable="false"
-                    @click="
-                      applicationlink(st.productDeliverySetList.saasAppId)
-                    "
+                    style="margin-left: 8px"
+                    @click="applicationlink(st.saasAppId)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -369,7 +368,7 @@
                   <t-link
                     :hoverable="false"
                     @click="
-                      (ev) => {
+                      (ev:any) => {
                         ev.view.open(st.tryUrl);
                       }
                     "

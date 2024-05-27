@@ -176,7 +176,7 @@ export const useUserStore = defineStore({
       if (routeName !== 'wowMallDetail') {
         sessionStorage.setItem('mallDetailPath', '');
       }
-      // window.location.href = loginUrl;
+      window.location.href = `${window.location.origin}/#/login`;
 
       // window.location.href = loginUrl;
       // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
