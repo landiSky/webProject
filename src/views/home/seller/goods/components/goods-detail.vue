@@ -351,7 +351,7 @@
                   <t-link
                     :hoverable="false"
                     @click="
-                      (ev) => {
+                      (ev:any) => {
                         ev.view.open(st.tryUrl);
                       }
                     "
