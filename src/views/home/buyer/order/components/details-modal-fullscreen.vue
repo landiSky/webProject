@@ -390,7 +390,7 @@
                 <span class="color-box"></span>
                 <span class="text-cls">买家评价</span>
               </div>
-              <div v-if="2 == 3" class="reviewContent">
+              <!-- <div class="reviewContent">
                 <div class="row-review">
                   <div>总体评价</div>
                   <t-rate
@@ -444,8 +444,8 @@
                   <div>评价时间</div>
                   <span> {{ reviewContent.date || '-' }}</span>
                 </div>
-              </div>
-              <div v-else class="nodata-cls">
+              </div> -->
+              <div class="nodata-cls">
                 <img :src="noData" alt="" />
                 <div> 暂无评价，订单将在7天后自动评价</div>
                 <div class="review-btn" @click="review(dataList.id)"
