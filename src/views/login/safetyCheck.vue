@@ -157,7 +157,7 @@ const clickSendBtn = () => {
   sendBtnLoading.value = true;
   apiSendCaptcha({ phone: safeForm.value.phone, type: 4 })
     .then((res) => {
-      if (res.code === 200) {
+      if (res.data.code === 200) {
         Message.success('验证码已发送，注意查收');
         countDownTime.value = 180; // 3分钟
         timerId.value = setInterval(() => {
