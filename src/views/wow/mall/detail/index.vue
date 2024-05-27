@@ -270,6 +270,16 @@
                 </t-comment>
               </div>
             </div>
+            <div class="pagination">
+              <t-pagination
+                :total="pagination.total"
+                :page-size="pagination.pageSize"
+                :current="pagination.current"
+                show-total
+                hide-on-single-page
+                @change="paginationchange"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -286,7 +296,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -348,6 +358,15 @@ const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
 const appraiseIndex = ref(1);
+const pagination = reactive<{
+  current: number; // 当前页码
+  pageSize: number;
+  total: number;
+}>({
+  current: 0,
+  pageSize: 10,
+  total: 0,
+});
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -596,8 +615,8 @@ const BypageList = () => {
   const params = {
     productId: route.params.id, // 商品ID
     starType: appraiseIndex.value, // 类型 1差评 2 中评 3 好评
-    pageNum: 1,
-    pageSize: 100,
+    pageNum: pagination.current,
+    pageSize: pagination.pageSize,
   };
   apiBypageList(params)
     .then((data) => {
@@ -608,6 +627,11 @@ const BypageList = () => {
 
 const appraiseClick = (value: number) => {
   appraiseIndex.value = value;
+  BypageList();
+};
+
+const paginationchange = (current: number) => {
+  pagination.current = current;
   BypageList();
 };
 
@@ -990,6 +1014,12 @@ onUnmounted(() => {
                 font-weight: 500;
               }
             }
+          }
+
+          .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
           }
         }
       }
