@@ -390,49 +390,53 @@
                 <span class="color-box"></span>
                 <span class="text-cls">买家评价</span>
               </div>
-              <!-- <div class="reviewContent">
+              <div v-if="dataList.evaluateStatus === 1" class="reviewContent">
                 <div class="row-review">
                   <div>总体评价</div>
                   <t-rate
-                    v-model="reviewContent.total"
+                    v-model="reviewContent.totalStar"
                     :default-value="0"
                     allow-half
+                    readonly
                   />
-                  <span v-if="reviewContent.total !== 0"
-                    >{{ reviewContent.total }}星
+                  <span v-if="reviewContent.totalStar !== 0"
+                    >{{ reviewContent.totalStar }}星
                   </span>
                 </div>
                 <div class="row-review">
                   <div>产品评价</div>
                   <t-rate
-                    v-model="reviewContent.product"
+                    v-model="reviewContent.productStar"
                     :default-value="0"
                     allow-half
+                    readonly
                   />
-                  <span v-if="reviewContent.product !== 0"
-                    >{{ reviewContent.product }}星</span
+                  <span v-if="reviewContent.productStar !== 0"
+                    >{{ reviewContent.productStar }}星</span
                   >
                 </div>
                 <div class="row-review">
                   <div>服务评价</div>
                   <t-rate
-                    v-model="reviewContent.server"
+                    v-model="reviewContent.serviceStar"
                     :default-value="0"
                     allow-half
+                    readonly
                   />
-                  <span v-if="reviewContent.server !== 0"
-                    >{{ reviewContent.server }}星</span
+                  <span v-if="reviewContent.serviceStar !== 0"
+                    >{{ reviewContent.serviceStar }}星</span
                   >
                 </div>
                 <div class="row-review">
                   <div>交付评价</div>
                   <t-rate
-                    v-model="reviewContent.logistics"
+                    v-model="reviewContent.deliveryStar"
                     :default-value="0"
                     allow-half
+                    readonly
                   />
-                  <span v-if="reviewContent.logistics !== 0"
-                    >{{ reviewContent.logistics }}星</span
+                  <span v-if="reviewContent.deliveryStar !== 0"
+                    >{{ reviewContent.deliveryStar }}星</span
                   >
                 </div>
 
@@ -442,10 +446,10 @@
                 </div>
                 <div class="row-review-content">
                   <div>评价时间</div>
-                  <span> {{ reviewContent.date || '-' }}</span>
+                  <span> {{ reviewContent.createTime || '-' }}</span>
                 </div>
-              </div> -->
-              <div class="nodata-cls">
+              </div>
+              <div v-else class="nodata-cls">
                 <img :src="noData" alt="" />
                 <div> 暂无评价，订单将在7天后自动评价</div>
                 <div class="review-btn" @click="review(dataList.id)"
@@ -467,7 +471,7 @@
 
     <ReviewModal
       v-if="reviewModalVisible"
-      :data="state.updataamount"
+      :data="state.evaluateContent"
       @confirm="onRevieModalConfirm"
       @cancel="reviewModalVisible = false"
     >
@@ -482,12 +486,17 @@ import { utilsCopy } from '@/utils/tools';
 import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useRouter, useRoute } from 'vue-router';
+import { getOrderDetailEstimate } from '@/api/order';
 import noData from '@/assets/images/noData.png';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
 import EditModal from './edit-modal.vue';
 import ReviewModal from './review-modal.vue';
 
 const router = useRouter();
 
+const userStore = useUserStore();
+const { userInfo }: Record<string, any> = storeToRefs(userStore);
 const props = defineProps({
   orderId: {
     type: String,
@@ -503,14 +512,20 @@ const state = reactive({
     currentamount: [{}],
     // amount: '',
   },
+  // 评价内容
+  evaluateContent: {
+    userId: '',
+    companyId: '',
+    orderId: '',
+  },
 });
 const reviewContent = ref({
-  total: 0,
-  product: 0,
-  server: 0,
-  logistics: 0,
-  content: '8989898989898989',
-  date: '2024-10-20',
+  totalStar: 0, // 总体评价
+  productStar: 0, // 产品评价
+  serviceStar: 0, // 服务评价
+  deliveryStar: 0, // 交付评价
+  content: '', //  评价内容
+  createTime: '', // 评价时间
 });
 
 const emit = defineEmits(['confirm', 'cancel', 'turndowns']);
@@ -519,9 +534,7 @@ const dataList: Record<string, any> = ref({});
 const reviewModalVisible = ref(false);
 // 上传凭证 弹窗 开关
 const editModalVisible = ref(false);
-const onRevieModalConfirm = () => {
-  reviewModalVisible.value = false;
-};
+
 const goback = () => {
   // emit('cancel');
   router.push({
@@ -535,7 +548,26 @@ const init = () => {
     // @ts-ignore
     dataList.value = res;
     console.log('0000', dataList.value);
+    if (dataList.value.evaluateStatus === 1) {
+      // 获取订单评价
+      getOrderDetailEstimate({ orderId: props.orderId }).then((res: any) => {
+        reviewContent.value = res;
+      });
+    }
   });
+
+  // 评价的id
+  state.evaluateContent.userId = userInfo.value.id;
+  state.evaluateContent.companyId = userInfo.value.companyId;
+  state.evaluateContent.orderId = props.orderId ?? '';
+  console.log('00001111', state.evaluateContent);
+};
+
+const onRevieModalConfirm = () => {
+  console.log('评价成功', reviewContent.value);
+  reviewModalVisible.value = false;
+  // 刷新详情
+  init();
 };
 
 // 点击复制
@@ -571,7 +603,6 @@ const delivery = (id: string) => {
   });
 };
 const review = (id: string) => {
-  console.log('立即评价000');
   reviewModalVisible.value = true;
 };
 

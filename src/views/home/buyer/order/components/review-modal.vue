@@ -12,47 +12,52 @@
       <div class="reviewContent">
         <div class="row-review">
           <div>总体评价</div>
-          <t-rate v-model="reviewContent.total" :default-value="0" allow-half />
-          <span v-if="reviewContent.total !== 0"
-            >{{ reviewContent.total }}星
+          <t-rate
+            v-model="reviewContent.totalStar"
+            :default-value="0"
+            allow-half
+          />
+          <span v-if="reviewContent.totalStar !== 0"
+            >{{ reviewContent.totalStar }}星
           </span>
         </div>
         <div class="row-review">
           <div>产品评价</div>
           <t-rate
-            v-model="reviewContent.product"
+            v-model="reviewContent.productStar"
             :default-value="0"
             allow-half
           />
-          <span v-if="reviewContent.product !== 0"
-            >{{ reviewContent.product }}星</span
+          <span v-if="reviewContent.productStar !== 0"
+            >{{ reviewContent.productStar }}星</span
           >
         </div>
         <div class="row-review">
           <div>服务评价</div>
           <t-rate
-            v-model="reviewContent.server"
+            v-model="reviewContent.serviceStar"
             :default-value="0"
             allow-half
           />
-          <span v-if="reviewContent.server !== 0"
-            >{{ reviewContent.server }}星</span
+          <span v-if="reviewContent.serviceStar !== 0"
+            >{{ reviewContent.serviceStar }}星</span
           >
         </div>
         <div class="row-review">
           <div>交付评价</div>
           <t-rate
-            v-model="reviewContent.logistics"
+            v-model="reviewContent.deliveryStar"
             :default-value="0"
             allow-half
           />
-          <span v-if="reviewContent.logistics !== 0"
-            >{{ reviewContent.logistics }}星</span
+          <span v-if="reviewContent.deliveryStar !== 0"
+            >{{ reviewContent.deliveryStar }}星</span
           >
         </div>
 
         <div class="row-review-content">
           <t-textarea
+            v-model="reviewContent.content"
             placeholder="请输入评价详情"
             :max-length="300"
             allow-clear
@@ -67,6 +72,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, reactive, ref, onMounted } from 'vue';
 import { Message } from '@tele-design/web-vue';
+import { orderEvaluate } from '@/api/order';
 
 const props = defineProps({
   data: {
@@ -76,32 +82,42 @@ const props = defineProps({
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const reviewContent = ref({
-  total: 0,
-  product: 0,
-  server: 0,
-  logistics: 0,
-  content: '8989898989898989',
-  date: '2024-10-20',
+  totalStar: 0,
+  productStar: 0,
+  serviceStar: 0,
+  deliveryStar: 0,
+  content: '',
 });
 const visible = ref(true);
 const state = reactive({
   formModel: {
-    id: '',
+    userId: '',
+    companyId: '',
+    orderId: '',
   },
 });
 const onConfirm = (done: (closed: boolean) => void) => {
   if (
-    reviewContent.value.total === 0 ||
-    reviewContent.value.product === 0 ||
-    reviewContent.value.server === 0 ||
-    reviewContent.value.logistics === 0
+    reviewContent.value.totalStar === 0 ||
+    reviewContent.value.productStar === 0 ||
+    reviewContent.value.serviceStar === 0 ||
+    reviewContent.value.deliveryStar === 0
   ) {
     Message.warning('请先评价订单');
     done(false);
   } else {
-    // todo 提交接口
-    done(true);
-    emit('confirm');
+    // 提交接口
+    orderEvaluate({
+      ...state.formModel,
+      totalStar: reviewContent.value.totalStar,
+      productStar: reviewContent.value.productStar,
+      serviceStar: reviewContent.value.serviceStar,
+      deliveryStar: reviewContent.value.deliveryStar,
+      content: reviewContent.value.content,
+    }).then((res) => {
+      done(true);
+      emit('confirm');
+    });
   }
 };
 const emitflag = () => {
@@ -109,8 +125,9 @@ const emitflag = () => {
 };
 
 onMounted(() => {
-  const { id } = props.data;
-  state.formModel = { id };
+  const { userId, companyId, orderId } = props.data;
+  state.formModel = { userId, companyId, orderId };
+  console.log('props.data', props.data);
 });
 </script>
 

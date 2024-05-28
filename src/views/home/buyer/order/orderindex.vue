@@ -365,7 +365,7 @@
     ></EditModal>
     <ReviewModal
       v-if="reviewModalVisible"
-      :data="state.updataamount"
+      :data="state.evaluateContent"
       @confirm="onRevieModalConfirm"
       @cancel="reviewModalVisible = false"
     >
@@ -433,6 +433,12 @@ const state = reactive({
     id: '',
     currentamount: [],
     amount: '',
+  },
+  // 评级内容
+  evaluateContent: {
+    userId: '',
+    companyId: '',
+    orderId: '',
   },
 });
 const tableData: Record<string, any> = ref([]);
@@ -695,6 +701,8 @@ const onEditModalConfirm = () => {
 // 确定评论
 const onRevieModalConfirm = () => {
   reviewModalVisible.value = false;
+  Message.success('评论成功');
+  init();
 };
 // 买家确认交付
 const delivery = (id: string) => {
@@ -705,8 +713,12 @@ const delivery = (id: string) => {
 };
 // 买家评论
 const review = (id: string) => {
+  // 评价的id
+  state.evaluateContent.userId = userInfo.value.id;
+  state.evaluateContent.companyId = userInfo.value.companyId;
+  state.evaluateContent.orderId = id ?? '';
+  console.log('00001111', state.evaluateContent);
   reviewModalVisible.value = true;
-  Message.success('评论成功');
 };
 // 查询
 const getTableData = () => {
