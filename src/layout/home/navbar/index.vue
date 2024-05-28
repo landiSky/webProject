@@ -144,7 +144,7 @@ const clickIdService = () => {
       snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,
     };
-    snmsClientLogin(params).then((res) => {
+    snmsClientLogin(params).then((res: any) => {
       console.log(res, '----------');
       if (!res?.request?.responseURL) {
         return;
