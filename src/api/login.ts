@@ -68,5 +68,10 @@ export function verificationCode(params: Record<string, any>) {
 
 // 二级节点第三方登录
 export function snmsClientLogin(params: Record<string, any>) {
-  return $http.get('/auth/snmsClientLogin', { params });
+  return $http.get('/auth/snmsClientLogin', {
+    params,
+    customFields: {
+      returnRawResponse: true, // 业务方直接处理原始 response
+    },
+  });
 }
