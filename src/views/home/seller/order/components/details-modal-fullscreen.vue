@@ -171,32 +171,10 @@
                     class="order-success-text"
                     >已交付：买家已确认交付，待买家评价
                   </div>
-                  <div v-else class="order-success-text"
-                    >已交付：订单已交付。
+                  <div v-else class="order-success-text">
+                    已交付：订单已交付，买家已完成评价。
                   </div>
                 </t-space>
-                <div
-                  v-if="dataList.evaluateStatus === 1"
-                  class="order-item-deploy margintop-16"
-                >
-                  <t-space>
-                    <div class="order-item-left">交付状态</div>
-                    <div class="order-item-right">{{
-                      dataList.deploymentStatusName
-                    }}</div>
-                  </t-space>
-                </div>
-                <div
-                  v-if="dataList.evaluateStatus === 1"
-                  class="order-item-due-date remove-margin"
-                >
-                  <t-space>
-                    <div class="order-item-left">服务到期时间</div>
-                    <div class="order-item-right">{{
-                      dataList.dueDate || '不限'
-                    }}</div>
-                  </t-space>
-                </div>
               </div>
             </div>
             <div class="asjhdg-title" style="margin-top: 24px">
@@ -331,29 +309,19 @@
                         text-align: left;
                       "
                     >
-                      <!-- {{ item.productInfo }} -->
                       {{ dataList.productName }}
                     </div>
                   </div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <p v-if="dataList.saleType === 3" style="color: #86909c"
                       >(免费)
                     </p>
-                    <!-- <p v-else-if="dataList.accountCount" style="color: #86909c"
-                      >(
-                      <span>{{ dataList.accountCount }}个账号</span>
-                      <span v-if="dataList.buyDuration !== '0'"
-                        >{{ dataList.buyDuration }}个月</span
-                      >
-                      <span v-else>不限 </span>
-                      )
-                    </p> -->
                   </div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div v-if="dataList.saleType !== 2" class="grid-content"
                     >¥{{ dataList.productPrice }}
                     <!-- {{
@@ -367,14 +335,14 @@
                   </div>
                 </t-col>
 
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div class="grid-content">{{
                     dataList.saleType === 0
                       ? dataList.accountCount + '个'
                       : '不限'
                   }}</div>
                 </t-col>
-                <t-col :span="2">
+                <t-col :span="2" class="margintop-10">
                   <div class="grid-content">
                     <span v-if="dataList.saleType === 0">
                       {{
@@ -392,6 +360,7 @@
                       ? 3
                       : 5
                   "
+                  class="margintop-10"
                 >
                   <div v-if="dataList.saleType !== 2" class="grid-content">
                     ¥{{ dataList.realityPrice }}
@@ -409,6 +378,7 @@
                     dataList.saleType !== 3
                   "
                   :span="3"
+                  class="margintop-10"
                 >
                   <div class="grid-content">
                     <t-button
@@ -472,7 +442,7 @@
                   >
                 </div>
 
-                <div class="row-review-content">
+                <div class="row-review-content marginbottom-15">
                   <div>评价详情</div>
                   <span> {{ reviewContent.content || '-' }}</span>
                 </div>
@@ -620,10 +590,10 @@ const init = () => {
 };
 
 // 点击复制
-const clickCopy = (Num: string) => {
-  utilsCopy(Num);
-  Message.success('复制成功');
-};
+// const clickCopy = (Num: string) => {
+//   utilsCopy(Num);
+//   Message.success('复制成功');
+// };
 
 // 修改金额 弹窗
 const modificationamount = () => {
@@ -994,6 +964,14 @@ onMounted(() => {
 
 .margintop-16 {
   margin-top: 16px;
+}
+
+.margintop-10 {
+  margin-top: 10px !important;
+}
+
+.marginbottom-15 {
+  margin-bottom: 15px !important;
 }
 
 .order-success {

@@ -116,32 +116,11 @@
                     >已交付：订单已交付。
                   </div>
                 </t-space>
-                <div
-                  v-if="dataList.evaluateStatus === 0"
-                  class="order-item-deploy margintop-16"
-                >
+                <div v-if="dataList.evaluateStatus === 0" class="margintop-16">
                   <t-button type="primary" @click="review(dataList.id)"
                     >立即评价</t-button
                   >
                 </div>
-                <!-- <div class="order-item-deploy">
-                  <t-space>
-                    <div class="order-item-left">部署状态</div>
-                    <div class="order-item-right">{{
-                      dataList.deploymentStatusName
-                    }}</div>
-                  </t-space>
-                </div>
-                <div class="order-item-due-date remove-margin">
-                  <t-space>
-                    <div class="order-item-left">服务到期时间</div>
-                    <div class="order-item-right">{{
-                      dataList.saleType === 2 || dataList.saleType === 1
-                        ? '不限'
-                        : dataList.dueDate || '不限'
-                    }}</div>
-                  </t-space>
-                </div> -->
               </div>
               <div v-if="dataList.orderStatus === 4">
                 <t-space class="order-success spacing">
@@ -156,9 +135,6 @@
                 <div class="order-item-deploy margintop-16">
                   <t-space align="start">
                     <div class="order-item-left">驳回原因</div>
-                    <!-- <div class="order-item-right">{{
-                      dataList.rejectReasonDetail
-                    }}</div> -->
                     <div class="text-wrap">
                       {{ dataList.rejectReasonDetail }}
                     </div>
@@ -294,9 +270,6 @@
                       class="imgs"
                       style="float: left; width: 80px; margin: 0 12px"
                     >
-                      <!-- dataList.productLogo -->
-                      <!-- src="https://img1.baidu.com/it/u=2757919892,1293727771&fm=253&fmt=auto?w=366&h=702" -->
-                      <!-- :src="`/server/web/file/download?name=${dataList.productLogo}&productId=${dataList.productId}`" -->
                       <img
                         class="pay-img"
                         style="width: 80px; height: 80px"
@@ -313,12 +286,11 @@
                         text-align: left;
                       "
                     >
-                      <!-- {{ item.productInfo }} -->
                       {{ dataList.productName }}
                     </div>
                   </div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
                     <p v-if="dataList.accountCount" style="color: #86909c"
@@ -332,7 +304,7 @@
                     >
                   </div>
                 </t-col>
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div v-if="dataList.saleType !== 2" class="grid-content"
                     >¥{{ dataList.productPrice }}
                     <!-- {{
@@ -346,7 +318,7 @@
                   </div>
                 </t-col>
 
-                <t-col :span="3">
+                <t-col :span="3" class="margintop-10">
                   <div class="grid-content">
                     {{
                       dataList.saleType === 0
@@ -355,7 +327,7 @@
                     }}
                   </div>
                 </t-col>
-                <t-col :span="2">
+                <t-col :span="2" class="margintop-10">
                   <div class="grid-content">
                     <span v-if="dataList.saleType === 0">
                       {{
@@ -367,22 +339,12 @@
                     <span v-else>不限</span>
                   </div>
                 </t-col>
-                <t-col :span="5">
+                <t-col :span="5" class="margintop-10">
                   <!--  v-if="dataList.saleType !== 2" -->
                   <div class="grid-content">
                     ¥{{ dataList.realityPrice || 0 }}
                   </div>
                 </t-col>
-                <!-- <t-col v-if="dataList.orderStatus === 0" :span="3">
-                  <div class="grid-content">
-                    <t-button
-                      type="text"
-                      style="width: 100%"
-                      @click="modificationamount"
-                      >修改金额</t-button
-                    >
-                  </div>
-                </t-col> -->
               </t-row>
             </div>
             <div v-if="dataList.orderStatus === 3">
@@ -440,7 +402,7 @@
                   >
                 </div>
 
-                <div class="row-review-content">
+                <div class="row-review-content marginbottom-15">
                   <div>评价详情</div>
                   <span> {{ reviewContent.content || '-' }}</span>
                 </div>
@@ -571,11 +533,11 @@ const onRevieModalConfirm = () => {
 };
 
 // 点击复制
-const clickCopy = (Num: string) => {
-  utilsCopy(Num);
+// const clickCopy = (Num: string) => {
+//   utilsCopy(Num);
 
-  Message.success('复制成功');
-};
+//   Message.success('复制成功');
+// };
 
 // 上传支付凭证 弹窗
 const modificationamount = (id: string) => {
@@ -887,6 +849,14 @@ onMounted(() => {
 
 .margintop-16 {
   margin-top: 16px;
+}
+
+.margintop-10 {
+  margin-top: 10px !important;
+}
+
+.marginbottom-15 {
+  margin-bottom: 15px !important;
 }
 
 .order-success {
