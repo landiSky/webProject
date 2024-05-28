@@ -851,7 +851,7 @@ onUnmounted(() => {
           &.fixed {
             position: fixed;
             top: 64px;
-            z-index: 9999;
+            z-index: 99;
             width: 900px;
           }
 
