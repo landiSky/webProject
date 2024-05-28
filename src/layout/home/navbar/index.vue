@@ -146,10 +146,10 @@ const clickIdService = () => {
     };
     snmsClientLogin(params).then((res: any) => {
       console.log(res, '----------');
-      if (!res?.request?.responseURL) {
+      if (!res?.data?.data) {
         return;
       }
-      window.open(res?.request?.responseURL);
+      window.open(res?.data?.data);
     });
   } else {
     Modal.warning({
