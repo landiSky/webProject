@@ -557,7 +557,10 @@ const clickAddCart = (): void => {
 };
 
 const getPrice = () => {
-  if (prodDetail.value.saleType === SaleType.CONSULT) {
+  if (
+    prodDetail.value.saleType === SaleType.CONSULT ||
+    prodDetail.value.saleType === SaleType.FREE
+  ) {
     return;
   }
   computing.value = true;
@@ -654,7 +657,9 @@ onMounted(() => {
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
-        if ([SaleType.ONEOFF, SaleType.PACKAGE].includes(saleType)) {
+        if (
+          [SaleType.ONEOFF, SaleType.PACKAGE, SaleType.FREE].includes(saleType)
+        ) {
           // 一口价
           //   priceParams.value.deliveryVersionId = deliveryList.value[0].id;
           //   getPrice();
