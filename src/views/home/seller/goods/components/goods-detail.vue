@@ -344,7 +344,10 @@
                     >下载密钥文件</a
                   >
                 </t-descriptions-item> -->
-                <t-descriptions-item label="是否支持试用">
+                <t-descriptions-item
+                  v-if="dataInfo.saleType !== SaleType.FREE"
+                  label="是否支持试用"
+                >
                   {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
@@ -391,6 +394,7 @@ import {
   goodsDetail,
   preUp,
 } from '@/api/goods-manage';
+import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

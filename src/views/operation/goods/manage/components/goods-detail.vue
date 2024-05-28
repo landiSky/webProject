@@ -361,7 +361,10 @@
                   }}
                   元
                 </t-descriptions-item>
-                <t-descriptions-item label="是否支持试用">
+                <t-descriptions-item
+                  v-if="formModel.saleType !== SaleType.FREE"
+                  label="是否支持试用"
+                >
                   {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
@@ -413,6 +416,7 @@ import {
   downGoods,
   verifyGoods,
 } from '@/api/operation/goods';
+import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 import RejectModal from './reject-modal.vue';
