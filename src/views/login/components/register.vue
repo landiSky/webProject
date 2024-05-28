@@ -118,7 +118,7 @@ const regisLoading = ref(false);
 const sendBtnLoading = ref(false);
 const agreement = ref(false); // 是否勾选服务协议
 const timerId = ref();
-const countDownTime = ref(0); // 倒计时2分钟
+const countDownTime = ref(0); // 倒计时3分钟
 const captchaVisible = ref(false);
 
 const formRef = ref();
@@ -256,9 +256,9 @@ const realSendRequest = () => {
   sendBtnLoading.value = true;
   apiSendCaptcha({ phone: form.value.phone, type: 2 })
     .then((res) => {
-      if (res.code === 200) {
+      if (res.data.code === 200) {
         Message.success('验证码已发送，注意查收');
-        countDownTime.value = 120; // 2分钟
+        countDownTime.value = 180; // 3分钟
         timerId.value = setInterval(() => {
           if (countDownTime.value <= 0) {
             clearInterval(timerId.value);

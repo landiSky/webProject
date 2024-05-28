@@ -9,6 +9,9 @@ export function apiRegisterUser(data: Record<string, any>) {
 export function apiSendCaptcha(params: Record<string, any>) {
   return $http.get('/server/web/captcha/sendCaptcha', {
     params,
+    customFields: {
+      returnRawResponse: true, // 业务方直接处理原始 response
+    },
   });
 }
 
@@ -46,7 +49,11 @@ export function apiLogin(data: Record<string, any>) {
 
 // 找回密码
 export function userforgotPassword(data: Record<string, any>) {
-  return $http.post(`/server/web/user/forgotPassword`, data);
+  return $http.post(`/server/web/user/forgotPassword`, data, {
+    customFields: {
+      returnRawResponse: true, // 业务方直接处理原始 response
+    },
+  });
 }
 
 // 登录前校验
@@ -61,5 +68,10 @@ export function verificationCode(params: Record<string, any>) {
 
 // 二级节点第三方登录
 export function snmsClientLogin(params: Record<string, any>) {
-  return $http.get('/auth/snmsClientLogin', { params });
+  return $http.get('/auth/snmsClientLogin', {
+    params,
+    customFields: {
+      returnRawResponse: true, // 业务方直接处理原始 response
+    },
+  });
 }

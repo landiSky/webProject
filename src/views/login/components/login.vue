@@ -283,7 +283,7 @@ import { Message } from '@tele-design/web-vue';
 import {
   apiConfigInfo,
   apiChheckLogin,
-  verificationCode,
+  apiSendCaptcha,
   apiLogin,
   userforgotPassword,
 } from '@/api/login';
@@ -574,9 +574,9 @@ const codeFtn = (type: number) => {
   if (counts.value) {
     return;
   }
-  verificationCode({ phone: performs.value.username, type }).then((res) => {
-    if (res.code === 200) {
-      counts.value = 60;
+  apiSendCaptcha({ phone: performs.value.username, type }).then((res) => {
+    if (res.data.code === 200) {
+      counts.value = 180;
       times.value = setInterval(() => {
         if (counts.value === 0) {
           clearInterval(times.value);
@@ -587,8 +587,9 @@ const codeFtn = (type: number) => {
         counts.value -= 1;
       }, 1000);
       codeText.value = '秒后重新发送';
+      Message.success('验证码已发送，注意查收');
     } else {
-      Message.error(res.msg);
+      Message.error(res.data.msg);
     }
   });
 };

@@ -144,7 +144,13 @@ const clickIdService = () => {
       snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,
     };
-    snmsClientLogin(params).then(() => {});
+    snmsClientLogin(params).then((res: any) => {
+      console.log(res, '----------');
+      if (!res?.data?.data) {
+        return;
+      }
+      window.open(res?.data?.data);
+    });
   } else {
     Modal.warning({
       title: '仅企业管理员可操作',
