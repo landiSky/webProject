@@ -259,9 +259,7 @@
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
-                  <div class="desc">{{
-                    item.effectTime ? item.effectTime : '--'
-                  }}</div>
+                  <div class="desc">{{ item.effectTime || '--' }}</div>
                 </div>
               </t-col>
               <t-col :span="3">
