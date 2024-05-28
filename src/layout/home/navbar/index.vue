@@ -11,7 +11,7 @@
       </div>
       <div class="right">
         <t-space>
-          <t-link class="active">平台管理</t-link>
+          <t-link class="active" @click="setDot">平台管理</t-link>
           <t-link @click="clickIdService">标识管理</t-link>
         </t-space>
       </div>
@@ -70,9 +70,11 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { onMounted } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 
 const userStore = useUserStore();
@@ -131,14 +133,24 @@ const clickLogout = () => {
 // };
 // 现在的
 const clickIdService = () => {
+  // TODO w:用户标识服务打点
+  apiDataPoint(null, null, 6, 11).then((res) => {
+    console.log('用户主导航点击标识服务打点');
+  });
   const { primary } = userInfoByCompany.value || {};
-  if (primary === true || userInfo.value?.isAdmin) {
+  if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
     const { snmsUrls, companyId } = userInfo.value || {};
     const params = {
       snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,
     };
-    snmsClientLogin(params).then(() => {});
+    snmsClientLogin(params).then((res: any) => {
+      console.log(res, '----------');
+      if (!res?.data?.data) {
+        return;
+      }
+      window.open(res?.data?.data);
+    });
   } else {
     Modal.warning({
       title: '仅企业管理员可操作',
@@ -148,7 +160,6 @@ const clickIdService = () => {
     });
   }
 };
-
 const goWow = () => {
   router.push({
     path: '/wow',
@@ -169,6 +180,12 @@ const onChangeCompany = async (companyId: string) => {
   });
 
   // 要在 app.vue 中监听 userstore.的变化
+};
+
+const setDot = () => {
+  // TODO w:用户主导航平台管理打点,这个打点位置存疑？
+  console.log('用户主导航平台管理打点');
+  // apiDataPoint(null, null, 6, 10);
 };
 </script>
 

@@ -179,7 +179,10 @@
                 <div class="grid-content bg-purple-light">
                   <div class="desc">
                     <span class="top">{{ item.deliveryTypeName }}</span>
-                    <p v-if="item.saleType === 0" class="bottom"
+                    <p v-if="item.saleType === 3" class="bottom">
+                      <span>{{ '(免费)' }}</span>
+                    </p>
+                    <!-- <p v-if="item.saleType === 0" class="bottom"
                       >(
                       <span>{{ item.accountCount }}个账号</span>
                       <span v-if="item.buyDuration !== '0'"
@@ -187,7 +190,7 @@
                       >
                       <span v-else>不限</span>
                       )
-                    </p>
+                    </p> -->
                   </div>
                 </div>
               </t-col>
@@ -196,7 +199,7 @@
                   <div class="desc"> ¥{{ item.productPrice }}</div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">面议</div>
+                  <div class="desc">价格面议</div>
                 </div>
               </t-col>
 
@@ -204,12 +207,16 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
-                    <p class="bottom">(已优惠:{{ item.couponMoney }}元)</p>
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">
-                  <div class="desc">面议</div></div
-                >
+                  <div class="desc">
+                    <span v-if="item.alterPriceStatus !== 1" class="desc"
+                      >价格面议
+                    </span>
+                    <span v-else class="top">¥{{ item.realityPrice }}</span>
+                  </div>
+                </div>
               </t-col>
               <t-col :span="2">
                 <div class="grid-content">
@@ -217,6 +224,15 @@
                     <div v-if="item.orderStatus === 0">
                       <img :src="tobepaid" alt="" />
                       <span style="float: left">待支付</span>
+                    </div>
+                    <div
+                      v-if="
+                        item?.orderStatus === 0 &&
+                        item.saleType === 2 &&
+                        item.alterPriceStatus !== 1
+                      "
+                    >
+                      <span>待修改金额</span>
                     </div>
                     <div v-if="item.orderStatus === 1">
                       <img :src="tobereviewed" alt="" />
@@ -236,26 +252,23 @@
                     </div>
                     <div v-if="item.orderStatus === 3">
                       <img :src="success" alt="" />
-                      <span style="float: left">已完成</span>
+                      <span style="float: left">已交付</span>
                     </div>
                   </div>
                 </div>
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
-                  <div class="desc">{{
-                    item.effectTime ? item.effectTime : '--'
-                  }}</div>
+                  <div class="desc">{{ item.effectTime || '--' }}</div>
                 </div>
               </t-col>
               <t-col :span="3">
                 <div class="grid-content">
                   <div class="desc">
                     <!-- v-if="item.orderStatus === 0 && item.saleType !== 2" -->
+                    <!-- item.saleType !== 2 && 只要未支付或者驳回了，卖家都可以修改价格 -->
                     <t-button
-                      v-if="
-                        item.saleType !== 2 && [0, 4].includes(item.orderStatus)
-                      "
+                      v-if="[0, 4].includes(item.orderStatus)"
                       type="text"
                       style="width: 100%"
                       @click="
@@ -265,8 +278,8 @@
                           item.realityPrice
                         )
                       "
-                      >修改优惠金额</t-button
-                    >
+                      >修改金额
+                    </t-button>
                     <t-button
                       v-if="item.orderStatus === 1"
                       type="text"
@@ -383,11 +396,8 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-}: Record<string, any> = storeToRefs(userStore);
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -448,10 +458,10 @@ const orderStatusTypeNav = reactive([
     label: '待交付',
     value: '2',
   },
-  {
-    label: '已完成',
-    value: '3',
-  },
+  // {
+  //   label: '已交付',
+  //   value: '3',
+  // },
 ]);
 // 订单状态2
 const orderStatusSelect = ref([
@@ -468,7 +478,7 @@ const orderStatusSelect = ref([
     value: '2',
   },
   {
-    label: '已完成',
+    label: '已交付',
     value: '3',
   },
   {
@@ -570,7 +580,7 @@ const clickNav = (value: string | null, ins: number) => {
         value: '2',
       },
       {
-        label: '已完成',
+        label: '已交付',
         value: '3',
       },
       {

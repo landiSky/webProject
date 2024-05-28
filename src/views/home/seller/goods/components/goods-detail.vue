@@ -212,7 +212,13 @@
                 {{ dataInfo.productTypeName }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
-                {{ '-' }}
+                <div
+                  v-for="(item, index) in dataInfo?.tagMap"
+                  :key="index"
+                  class="product-labels"
+                  >{{ item.tagName }}</div
+                >
+                <div v-if="!dataInfo?.tagMap?.length">-</div>
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
                 {{ TypeEnum[dataInfo.type] || '-' }}
@@ -286,12 +292,11 @@
                   v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
                   label="对接SaaS应用"
                 >
-                  {{ st.productDeliverySetList.application
+                  {{ st.application
                   }}<t-link
                     :hoverable="false"
-                    @click="
-                      applicationlink(st.productDeliverySetList.saasAppId)
-                    "
+                    style="margin-left: 8px"
+                    @click="applicationlink(st.saasAppId)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -339,13 +344,23 @@
                     >下载密钥文件</a
                   >
                 </t-descriptions-item> -->
-                <t-descriptions-item label="是否支持试用">
+                <t-descriptions-item
+                  v-if="dataInfo.saleType !== SaleType.FREE"
+                  label="是否支持试用"
+                >
                   {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
-                  <t-link href="link" :hoverable="false">{{
-                    st.tryUrl
-                  }}</t-link>
+                  <t-link
+                    :hoverable="false"
+                    @click="
+                      (ev:any) => {
+                        ev.view.open(st.tryUrl);
+                      }
+                    "
+                  >
+                    {{ st.tryUrl }}
+                  </t-link>
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
                   {{ st.tryAccount }}
@@ -379,6 +394,7 @@ import {
   goodsDetail,
   preUp,
 } from '@/api/goods-manage';
+import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -619,6 +635,26 @@ const applicationlink = (id: number) => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      .product-labels {
+        display: inline-block;
+        width: 52px;
+        height: 20px;
+        margin-left: 8px;
+        padding: 0 8px;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 400;
+        font-size: 12px;
+        font-family: PingFang SC;
+        line-height: 20px;
+        text-align: center;
+        background: rgba(242, 243, 248, 1);
+        border-radius: 2px 0 0 0;
+      }
+
+      .product-labels:first-child {
+        margin-left: 0;
+      }
 
       a {
         color: #1664ff;

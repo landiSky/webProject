@@ -313,12 +313,11 @@
                   v-if="formModel.deliveryType == 0 && formModel.saleType == 3"
                   label="对接SaaS应用"
                 >
-                  {{ st.productDeliverySetList.application
+                  {{ st.application
                   }}<t-link
                     :hoverable="false"
-                    @click="
-                      applicationlink(st.productDeliverySetList.saasAppId)
-                    "
+                    style="margin-left: 8px"
+                    @click="applicationlink(st.saasAppId)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -362,13 +361,23 @@
                   }}
                   元
                 </t-descriptions-item>
-                <t-descriptions-item label="是否支持试用">
+                <t-descriptions-item
+                  v-if="formModel.saleType !== SaleType.FREE"
+                  label="是否支持试用"
+                >
                   {{ st.isTry === 1 ? '是' : '否' }}
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
-                  <t-link href="link" :hoverable="false">{{
-                    st.tryUrl
-                  }}</t-link>
+                  <t-link
+                    :hoverable="false"
+                    @click="
+                      (ev:any) => {
+                        ev.view.open(st.tryUrl);
+                      }
+                    "
+                  >
+                    {{ st.tryUrl }}
+                  </t-link>
                 </t-descriptions-item>
                 <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
                   {{ st.tryAccount }}
@@ -407,6 +416,7 @@ import {
   downGoods,
   verifyGoods,
 } from '@/api/operation/goods';
+import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 import RejectModal from './reject-modal.vue';

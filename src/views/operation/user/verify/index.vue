@@ -273,17 +273,17 @@ const columns = [
       filters: EntStatusList,
     },
   },
-  {
-    title: '企业节点认证状态',
-    dataIndex: 'nodeStatus',
-    ellipsis: true,
-    tooltip: true,
-    slotName: 'entPointStatus',
-    width: 220,
-    filterable: {
-      filters: EntStatusList,
-    },
-  },
+  // {
+  //   title: '企业节点认证状态',
+  //   dataIndex: 'nodeStatus',
+  //   ellipsis: true,
+  //   tooltip: true,
+  //   slotName: 'entPointStatus',
+  //   width: 220,
+  //   filterable: {
+  //     filters: EntStatusList,
+  //   },
+  // },
 ];
 
 const pagination = reactive<{

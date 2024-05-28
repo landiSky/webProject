@@ -233,19 +233,40 @@ export default [
     // 新增分组
     url: '/inventory/web/group/insert',
     method: 'post',
-    response: successResponseWrap(),
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
   },
   {
     // 编辑分组
     url: '/inventory/web/group/update',
     method: 'post',
-    response: successResponseWrap(),
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
   },
   {
     // 删除分组
     url: '/inventory/web/group/deleteById',
     method: 'get',
-    response: successResponseWrap(),
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
   },
   {
     // 新增标签
@@ -264,12 +285,26 @@ export default [
     // 编辑标签
     url: '/inventory/web/tag/update',
     method: 'post',
-    response: successResponseWrap(),
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
   },
   {
     // 删除标签
     url: '/inventory/web/tag/deleteById',
     method: 'get',
-    response: successResponseWrap(),
+    response: successResponseWrap({
+      traceId: null,
+      code: 200,
+      success: true,
+      data: null,
+      message: '操作成功',
+      err: null,
+    }),
   },
 ];

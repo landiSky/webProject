@@ -194,6 +194,7 @@ import {
   apiNodeOverall,
   apiGetProductId,
 } from '@/api/wow/index';
+import { apiDataPoint } from '@/api/data-point';
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import WowFooter from '../components/wowFooter/index.vue';
 
@@ -329,12 +330,12 @@ const platProductsList = [
         name: 'IDPoint',
         desc: '标识解析二级节点',
         bgImg: tab12,
-        idKey: 'idpoint',
+        idKey: 'idpointer',
       },
 
       {
         name: 'IDHub',
-        desc: '标识解析二级节点',
+        desc: '标识解析企业节点',
         bgImg: tab13,
         idKey: 'idhub',
       },
@@ -460,6 +461,10 @@ const goCardDetail = (item: Record<string, any>) => {
 };
 
 onMounted(() => {
+  // TODO w: 首页打点
+  apiDataPoint(null, null, 1, 1).then((res) => {
+    console.log('首页打点');
+  });
   apiActiveNode().then((data: any) => {
     if (data.length >= 51) {
       activeNodeList.value = data.slice(1, 51);

@@ -30,10 +30,13 @@
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span class="tag tag-left">标签一</span>
-            <span class="tag">标签一</span>
-            <span class="tag">标签一</span>
-            <span class="tag">标签一</span> -->
+            <span
+              v-for="(item, index) in prodDetail?.tagMap"
+              :key="index"
+              class="tag"
+              :class="{ 'tag-left': index === 0 }"
+              >{{ item.tagName }}</span
+            >
           </div>
           <div class="description">
             <t-typography-paragraph
@@ -141,6 +144,7 @@
             <span v-else>不限</span>
           </div>
           <t-button
+            v-if="Number(selectVersion.isTry) === 1"
             type="outline"
             size="large"
             style="width: 140px; margin-right: 12px"
@@ -153,8 +157,8 @@
             style="width: 296px"
             :disabled="isPreview"
             @click="clickAddCart"
-            >立即购买</t-button
-          >
+            >立即购买
+          </t-button>
         </div>
       </div>
       <div class="intro">
@@ -192,7 +196,7 @@
         </div>
         <div class="consult">
           <span class="title">服务商资质</span>
-          <span class="header">服务商名称：北京泰尔英福科技有限公司</span>
+          <span class="header">服务商名称：{{ prodDetail?.companyName }}</span>
           <t-button type="primary" size="large" @click="buyConsult"
             >购买咨询</t-button
           >
@@ -201,88 +205,80 @@
 
       <!-- 产品评价 -->
       <div class="evaluate">
-        <div class="top">产品评价（238）</div>
+        <div class="top">产品评价（{{ evaluateDatail?.total ?? 0 }}）</div>
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">4.5</div>
+            <div class="score-num">{{ evaluateDatail?.avgEvaluate ?? 5 }}</div>
             <div class="score-count">
-              <t-rate :default-value="4.5" :count="5" allow-half readonly />
+              <t-rate
+                :default-value="evaluateDatail?.avgEvaluate ?? 5"
+                :count="5"
+                allow-half
+                readonly
+              />
             </div>
           </div>
           <div class="evaluate-list">
             <div class="top-list">
               <div
-                :class="appraiseIndex === 0 ? 'appraise' : ''"
-                @click="appraiseClick(0)"
-                >好评 (138)</div
-              >
-              <div
                 :class="appraiseIndex === 1 ? 'appraise' : ''"
                 @click="appraiseClick(1)"
-                >中评 (88)</div
+                >好评 ({{ evaluateDatail?.totalH ?? 0 }})</div
               >
               <div
                 :class="appraiseIndex === 2 ? 'appraise' : ''"
                 @click="appraiseClick(2)"
-                >差评 (2)</div
+                >中评 ({{ evaluateDatail?.totalZ ?? 0 }})</div
+              >
+              <div
+                :class="appraiseIndex === 3 ? 'appraise' : ''"
+                @click="appraiseClick(3)"
+                >差评 ({{ evaluateDatail?.totalC ?? 0 }})</div
               >
             </div>
             <div class="comment">
-              <div class="comment-list">
-                <t-comment author="我是***昵称">
+              <div
+                v-for="(item, index) in evaluateDatail?.records"
+                :key="index"
+                class="comment-list"
+              >
+                <t-comment :author="item?.nickname ?? '-'">
                   <template #avatar>
                     <t-image
                       width="52"
                       style="border-radius: 50%"
-                      :src="avatar"
+                      :src="item?.avatar ?? avatar"
                     />
                   </template>
                   <template #content>
                     <div>
                       <div class="count">
                         <t-rate
-                          :default-value="4.5"
+                          :default-value="item?.totalStar ?? 0"
                           :count="5"
                           allow-half
                           readonly
                         />
                       </div>
                       <div class="textarea">
-                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
+                        {{ item?.content ?? '-' }}
                       </div>
-                      <div class="time">2022-12-21</div>
+                      <div class="time">{{ item?.createTime ?? '-' }}</div>
                     </div>
                   </template>
                 </t-comment>
               </div>
-              <div class="comment-list">
-                <t-comment author="我是***昵称">
-                  <template #avatar>
-                    <t-image
-                      width="52"
-                      style="border-radius: 50%"
-                      :src="avatar"
-                    />
-                  </template>
-                  <template #content>
-                    <div>
-                      <div class="count">
-                        <t-rate
-                          :default-value="4.5"
-                          :count="5"
-                          allow-half
-                          readonly
-                        />
-                      </div>
-                      <div class="textarea">
-                        非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，非常好的软件！功能全面，试用流畅相应即使。服务到位！会持续回购非常好的软件！功能全面，试用流畅、相应即使。服务到位！会持续回购，试用流畅、相应即使。服务到位！会持续回购面，试用流畅、相应即使。服务到位！会持续回购
-                      </div>
-                      <div class="time">2022-12-21</div>
-                    </div>
-                  </template>
-                </t-comment>
-              </div>
+            </div>
+            <div class="pagination">
+              <t-pagination
+                :total="pagination.total"
+                :page-size="pagination.pageSize"
+                :current="pagination.current"
+                show-total
+                hide-on-single-page
+                @change="paginationchange"
+              />
             </div>
           </div>
         </div>
@@ -300,7 +296,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -315,6 +311,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
+import { apiDataPoint } from '@/api/data-point';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
@@ -360,7 +357,16 @@ const isPreview = ref(false);
 const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
-const appraiseIndex = ref(0);
+const appraiseIndex = ref(1);
+const pagination = reactive<{
+  current: number; // 当前页码
+  pageSize: number;
+  total: number;
+}>({
+  current: 1,
+  pageSize: 10,
+  total: 0,
+});
 
 const setNavRef = (el: any) => {
   if (el) {
@@ -411,11 +417,12 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
   authModalVisible.value = false;
 
-  // 封装确认订单需要的字段
+  // TODO 封装确认订单需要的字段
   orderStore.createOrderInfo = {
     companyId,
     productId: id,
     deliveryVersionId: selectVersion.value.id,
+    saasAppId: selectVersion.value.saasAppId,
     price: price.value,
     accountDesc,
     durationDesc,
@@ -441,7 +448,8 @@ const clickProbation = () => {
     title: '试用说明',
     content: () => {
       const onClick = () => {
-        navigator.clipboard.writeText('111111111111').then(() => {
+        const text = `试用账号： ${selectVersion.value.tryAccount}  试用密码： ${selectVersion.value.tryPwd}`;
+        navigator.clipboard.writeText(text).then(() => {
           Message.success('复制成功');
         });
       };
@@ -454,14 +462,22 @@ const clickProbation = () => {
         h('div', { style: 'display: flex;margin-top: 24px;' }, [
           h('div', { style: 'display: flex;margin-left: 12px;' }, [
             h('div', '试用账号:'),
-            h('div', { style: 'margin-left: 12px;' }, 'xxxxxxxxx'),
+            h(
+              'div',
+              { style: 'margin-left: 12px;' },
+              selectVersion.value.tryAccount
+            ),
           ]),
           h(
             'div',
             { style: 'display: flex;margin-left: 12px;align-items: center;' },
             [
               h('div', '试用密码:'),
-              h('div', { style: 'margin-left: 12px;' }, 'xxxxxx'),
+              h(
+                'div',
+                { style: 'margin-left: 12px;' },
+                selectVersion.value.tryPwd
+              ),
               h('div', {
                 style: `margin-left: 12px;width: 12px;height: 12px;background: url(${copy});background-size: 100% 100%;cursor: pointer;`,
                 onClick,
@@ -476,14 +492,18 @@ const clickProbation = () => {
     cancelText: '取消',
     okText: '进入试用',
     onOk: () => {
-      userStore.jumpToLogin();
+      window.open(selectVersion.value.tryUrl);
+      // userStore.jumpToLogin();
     },
   });
 };
 
 const clickAddCart = (): void => {
+  // TODO w: 立即购买打点
+  apiDataPoint(route.params.id as string, null, 4, 4).then((res) => {
+    console.log('立即购买打点', route.params.id);
+  });
   const { userInfo, userInfoByCompany } = userStore;
-
   if (!userInfo?.id) {
     console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
@@ -537,7 +557,10 @@ const clickAddCart = (): void => {
 };
 
 const getPrice = () => {
-  if (prodDetail.value.saleType === SaleType.CONSULT) {
+  if (
+    prodDetail.value.saleType === SaleType.CONSULT ||
+    prodDetail.value.saleType === SaleType.FREE
+  ) {
     return;
   }
   computing.value = true;
@@ -579,6 +602,10 @@ const clickNav = (index: number) => {
 };
 
 const buyConsult = () => {
+  // TODO w: 购买咨询打点
+  apiDataPoint(route.params.id as string, null, 4, 5).then((res) => {
+    console.log('购买咨询打点', route.params.id);
+  });
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -588,25 +615,35 @@ const onIntroScroll = () => {
   fixedTop.value = Boolean(top < 70);
 };
 
-const appraiseClick = (value: number) => {
-  appraiseIndex.value = value;
-};
-
 const BypageList = () => {
   const params = {
     productId: route.params.id, // 商品ID
-    starType: 1, // 类型 1差评 2 中评 3 好评
-    pageNum: 1,
-    pageSize: 100,
+    starType: appraiseIndex.value, // 类型 1差评 2 中评 3 好评
+    pageNum: pagination.current,
+    pageSize: pagination.pageSize,
   };
-  apiProductDetail(params)
+  apiBypageList(params)
     .then((data) => {
       evaluateDatail.value = data;
     })
     .catch(() => {});
 };
 
+const appraiseClick = (value: number) => {
+  appraiseIndex.value = value;
+  BypageList();
+};
+
+const paginationchange = (current: number) => {
+  pagination.current = current;
+  BypageList();
+};
+
 onMounted(() => {
+  // TODO w: 商品详情打点
+  apiDataPoint(route.params.id as string, null, 4, 3).then((res) => {
+    console.log('商品详情打点', route.params.id);
+  });
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
@@ -620,7 +657,9 @@ onMounted(() => {
       const { saleType } = data;
 
       if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
-        if ([SaleType.ONEOFF, SaleType.PACKAGE].includes(saleType)) {
+        if (
+          [SaleType.ONEOFF, SaleType.PACKAGE, SaleType.FREE].includes(saleType)
+        ) {
           // 一口价
           //   priceParams.value.deliveryVersionId = deliveryList.value[0].id;
           //   getPrice();
@@ -654,7 +693,7 @@ onMounted(() => {
   window.addEventListener('scroll', onIntroScroll, true);
 
   // 商品评价
-  // BypageList()
+  BypageList();
 });
 
 onUnmounted(() => {
@@ -812,7 +851,7 @@ onUnmounted(() => {
           &.fixed {
             position: fixed;
             top: 64px;
-            z-index: 9999;
+            z-index: 99;
             width: 900px;
           }
 
@@ -981,6 +1020,12 @@ onUnmounted(() => {
                 font-weight: 500;
               }
             }
+          }
+
+          .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
           }
         }
       }

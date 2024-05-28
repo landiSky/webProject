@@ -283,7 +283,7 @@ import { Message } from '@tele-design/web-vue';
 import {
   apiConfigInfo,
   apiChheckLogin,
-  verificationCode,
+  apiSendCaptcha,
   apiLogin,
   userforgotPassword,
 } from '@/api/login';
@@ -529,7 +529,12 @@ const validate = () => {
 const binding = () => {};
 
 const realLoginRequest = () => {
-  formInput.value.value = sm2(form.value.password, configInfo?.publicKey);
+  const publicKey =
+    '047df36f25dab03d12739e57a1c3a86a72019bea590e5ffaefa79145d9129ae5ae9d395de0fba16a9577c7d52b27cda3e2ec63f522d4d69c5a92a0a0b388b1db10';
+  formInput.value.value = sm2(
+    form.value.password,
+    configInfo?.publicKey ?? publicKey
+  );
 
   apiLogin({
     username: form.value.username,
@@ -569,9 +574,9 @@ const codeFtn = (type: number) => {
   if (counts.value) {
     return;
   }
-  verificationCode({ phone: performs.value.username, type }).then((res) => {
-    if (res.code === 200) {
-      counts.value = 60;
+  apiSendCaptcha({ phone: performs.value.username, type }).then((res) => {
+    if (res.data.code === 200) {
+      counts.value = 180;
       times.value = setInterval(() => {
         if (counts.value === 0) {
           clearInterval(times.value);
@@ -582,8 +587,9 @@ const codeFtn = (type: number) => {
         counts.value -= 1;
       }, 1000);
       codeText.value = '秒后重新发送';
+      Message.success('验证码已发送，注意查收');
     } else {
-      Message.error(res.msg);
+      Message.error(res.data.msg);
     }
   });
 };

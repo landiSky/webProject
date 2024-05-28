@@ -69,3 +69,8 @@ export function deleteGoods(id: any) {
 export function preUp(id: any) {
   return $http.post(`/server/web/product/upShelfCheck?id=${id}`);
 }
+
+// 应用列表
+export function selectOnlineMallApps(params: any) {
+  return $http.get(`/server/web/app/info/selectOnlineMallApps`, { params });
+}

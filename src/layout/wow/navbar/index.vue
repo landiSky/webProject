@@ -14,26 +14,26 @@
             @click="goIndex"
             >首页</t-link
           >
-          <t-tooltip content="敬请期待">
+          <!-- <t-tooltip content="敬请期待">
             <t-link>限免应用</t-link>
-          </t-tooltip>
+          </t-tooltip> -->
 
           <t-link @click="clickIdService">标识服务</t-link>
+          <t-link
+            :class="{ active: selectTab === TabPath.MALL }"
+            @click="gotoMall"
+            >商城</t-link
+          >
           <t-tooltip content="敬请期待">
             <t-link>平台产品</t-link>
           </t-tooltip>
           <t-tooltip content="敬请期待">
             <t-link>平台服务</t-link>
           </t-tooltip>
-          <t-link
-            :class="{ active: selectTab === TabPath.MALL }"
-            @click="gotoMall"
-            >商城</t-link
-          >
 
-          <t-tooltip content="敬请期待">
+          <!-- <t-tooltip content="敬请期待">
             <t-link>前沿政策</t-link>
-          </t-tooltip>
+          </t-tooltip> -->
         </t-space>
       </div>
     </div>
@@ -86,6 +86,9 @@ import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
+import { getToken } from '@/utils/auth';
+import { apiDataPoint } from '@/api/data-point';
+import { snmsClientLogin } from '@/api/login';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -157,6 +160,10 @@ const goLogin = () => {
 };
 
 const onSearch = () => {
+  // TODO w: 商城搜索打点
+  apiDataPoint(null, searchContent.value, 5, 9).then((res) => {
+    console.log('主导航栏商品搜索打点', searchContent.value);
+  });
   router.push({
     name: 'wowMall',
     query: {
@@ -166,40 +173,42 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
-  if (!userInfo.value?.id) {
-    Modal.info({
-      title: '登录提醒',
-      content: '暂未登录，需要登录后方可查看标识服务。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不登录',
-      okText: '去登录',
-      onOk: () => {
-        userStore.jumpToLogin();
-      },
-    });
-  } else {
-    const { snmsUrls } = userInfo.value || {};
-    const { nodeStatus } = userInfoByCompany.value || {};
-    if (nodeStatus === NodeAuthStatus.AUTHED) {
-      window.open(snmsUrls.idPointer, '_blank');
-    } else {
+  // TODO w: 标识服务打点
+  // const isLogin = !!getToken();
+  apiDataPoint(null, null, 5, 8).then((res) => {
+    console.log('前台页标识服务打点');
+  });
+
+  if (!userInfo.value?.userId) {
+    if (!userInfo.value?.id) {
       Modal.info({
-        title: '使用提醒',
-        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+        title: '登录提醒',
+        content: '暂未登录，需要登录后方可查看标识服务。',
         titleAlign: 'start',
         hideCancel: false,
-        cancelText: '暂不开通',
-        okText: '去开通',
+        cancelText: '暂不登录',
+        okText: '去登录',
         onOk: () => {
-          router.push({
-            path: '/buyer/index',
-            query: {
-              openAuthModal: 1,
-            },
-          });
+          userStore.jumpToLogin();
         },
       });
+    } else {
+      const { primary } = userInfoByCompany.value || {};
+      if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+        const { snmsUrls, companyId } = userInfo.value || {};
+        const params = {
+          snmsLoginId: snmsUrls?.snmsLoginId,
+          companyId,
+        };
+        snmsClientLogin(params).then(() => {});
+      } else {
+        Modal.warning({
+          title: '仅企业管理员可操作',
+          content: '',
+          titleAlign: 'start',
+          okText: '好的',
+        });
+      }
     }
   }
 };

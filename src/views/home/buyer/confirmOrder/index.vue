@@ -41,14 +41,18 @@
           </span>
           <span>
             <span>{{ DeliverTypeDesc[createOrderInfo?.deliveryType] }}</span>
-            <span v-if="createOrderInfo?.saleType === SaleType.FREE">免费</span>
+            <p
+              v-if="createOrderInfo?.saleType === SaleType.FREE"
+              style="color: #86909c"
+              >(免费)</p
+            >
           </span>
           <span>
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
               面议
             </template>
             <template v-else-if="createOrderInfo?.saleType === SaleType.FREE">
-              0
+              ¥0.00
             </template>
             <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
           </span>
@@ -62,7 +66,7 @@
                 面议
               </template>
               <template v-else-if="createOrderInfo?.saleType === SaleType.FREE">
-                0
+                ¥0.00
               </template>
               <template v-else>¥{{ createOrderInfo?.price || '-' }}</template>
             </span>
@@ -117,18 +121,23 @@ const clickCreateOrder = () => {
     accountId,
     durationId,
     memberIdList,
+    saasAppId,
   } = createOrderInfo.value;
+  console.log(`Create order`, createOrderInfo.value);
   const params = {
     memberId: userStore.selectCompany?.memberId,
     memberIdList,
     sellerId: companyId, // 卖家id（商品创者所属机构id）
     productId, // 商品id
     deliveryType, // 交付类型 0-saas类,1-独立部署类
-    productPrice: price, // 商品金额
+    productPrice: price ?? 0, // 商品金额
     deliveryVersionId, // 交付版本id
     orderSource, // 订单来源：0-本平台，1-跨平台
     accountId, // 账号id
     durationId, // 时长id
+    // TODO w: 新增字段
+    // saasAppId---来源？
+    saasAppId,
     userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
   };
   submitLoading.value = true;
