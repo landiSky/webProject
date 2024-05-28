@@ -865,7 +865,6 @@
                   v-model="copyModal4[index].saasAppId"
                   :style="{ width: '100%' }"
                   placeholder="请选择已上线的SaaS应用"
-                  multiple
                   :limit="1"
                   allow-search
                 >

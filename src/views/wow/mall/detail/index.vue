@@ -422,6 +422,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     companyId,
     productId: id,
     deliveryVersionId: selectVersion.value.id,
+    saasAppId: selectVersion.value.saasAppId,
     price: price.value,
     accountDesc,
     durationDesc,

@@ -117,6 +117,7 @@ const clickCreateOrder = () => {
     accountId,
     durationId,
     memberIdList,
+    saasAppId,
   } = createOrderInfo.value;
   console.log(`Create order`, createOrderInfo.value);
   const params = {
@@ -132,6 +133,7 @@ const clickCreateOrder = () => {
     durationId, // 时长id
     // TODO w: 新增字段
     // saasAppId---来源？
+    saasAppId,
     userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
   };
   submitLoading.value = true;
