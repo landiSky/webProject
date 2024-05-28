@@ -239,7 +239,10 @@
                 </span>
               </span>
               <span class="price">
-                <template v-if="item.lowPrice !== '-1.00'">
+                <template v-if="item.lowPrice == '-2.00'">
+                  <span class="prefix">0元试用</span>
+                </template>
+                <template v-else-if="item.lowPrice !== '-1.00'">
                   <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
                   <span class="suffix">元起</span>
                 </template>
@@ -318,62 +321,7 @@ const apiParams = ref<Record<string, any>>({
   tagIdList: [null, null, null],
 });
 
-const tagList = ref([
-  {
-    id: '1787760236464050176',
-    name: '类型分组',
-    children: [
-      {
-        id: '1788041657850138624',
-        name: '标签三',
-      },
-      {
-        id: '1788041632701091840',
-        name: '标签二',
-      },
-      {
-        id: '1788041390358401024',
-        name: '标签一',
-      },
-    ],
-  },
-  {
-    id: '1787760236464050171',
-    name: '类型分组1',
-    children: [
-      {
-        id: '1788041657850138621',
-        name: '标签三',
-      },
-      {
-        id: '1788041632701091841',
-        name: '标签二',
-      },
-      {
-        id: '1788041390358401021',
-        name: '标签一',
-      },
-    ],
-  },
-  {
-    id: '1787760236464050172',
-    name: '类型分组2',
-    children: [
-      {
-        id: '1788041657850138622',
-        name: '标签三',
-      },
-      {
-        id: '1788041632701091842',
-        name: '标签二',
-      },
-      {
-        id: '1788041390358401022',
-        name: '标签一',
-      },
-    ],
-  },
-]);
+const tagList = ref<Record<string, any>>([]);
 
 const onCustomPriceBlur = () => {
   if (!customPriceStart.value && !customPriceEnd.value) {
