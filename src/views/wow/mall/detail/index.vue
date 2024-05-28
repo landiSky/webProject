@@ -363,7 +363,7 @@ const pagination = reactive<{
   pageSize: number;
   total: number;
 }>({
-  current: 0,
+  current: 1,
   pageSize: 10,
   total: 0,
 });
