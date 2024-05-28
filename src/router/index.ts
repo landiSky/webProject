@@ -72,6 +72,7 @@ export const whiteList = [
   '/wow/freeApp',
   '/wow/mall',
   '/wow/platProducts',
+  '/devCenter/manage',
 ];
 
 const router = createRouter({

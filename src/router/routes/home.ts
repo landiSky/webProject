@@ -94,6 +94,24 @@ const homeRoutesList = [
     },
   },
   {
+    path: '/devCenter',
+    component: PAGE_LAYOUT,
+    children: [
+      {
+        path: '/devCenter/manage',
+        name: 'devManage',
+        component: () => import('@/views/home/devCenter/manage/index.vue'),
+        meta: {
+          name: '应用接入管理',
+          keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
+        },
+      },
+    ],
+    meta: {
+      name: '开发者中心',
+    },
+  },
+  {
     path: '/order',
     component: PAGE_LAYOUT_NOMENU,
     children: [
