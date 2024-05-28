@@ -293,6 +293,11 @@
                 <t-col :span="3" class="margintop-10">
                   <div class="grid-content bg-purple-light">
                     {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
+                    <p
+                      v-if="dataList?.saleType === SaleType.FREE"
+                      style="color: #86909c"
+                      >(免费)</p
+                    >
                     <p v-if="dataList.accountCount" style="color: #86909c"
                       >(
                       <span>{{ dataList.accountCount }}个账号</span>
@@ -445,6 +450,7 @@
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 
 import { utilsCopy } from '@/utils/tools';
+import { SaleType } from '@/enums/common';
 import { buyerOrderDetail, buyerDeployed } from '@/api/buyer/order';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useRouter, useRoute } from 'vue-router';
