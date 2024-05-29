@@ -283,9 +283,9 @@ const handleDrawerConfirm = (res: any) => {
   }
 };
 
-const handleDetail = () => {};
+const handleDetail = (record?: any) => {};
 
-const handleLaunch = () => {};
+const handleLaunch = (record?: any) => {};
 
 const handleSave = () => {};
 

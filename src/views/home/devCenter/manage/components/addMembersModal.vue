@@ -54,7 +54,12 @@ const props = defineProps({
   labelEditData: Object,
   groupRowRecord: Object,
   companyId: String,
-  memberList: Array,
+  memberList: {
+    type: Array,
+    default() {
+      return [];
+    },
+  },
 });
 
 const showModal = computed(() => props.visible);
@@ -90,7 +95,7 @@ onMounted(async () => {
   await fetchCompanyMember(props.companyId).then((res: any) => {
     if (res.code === 200) {
       form.memberIdList = res.data;
-      form.selectList = props.memberList.map((item: any) => item.memberId);
+      form.selectList = props?.memberList.map((item: any) => item.memberId);
 
       console.log('memberList', form.selectList, form.memberIdList);
     } else {
