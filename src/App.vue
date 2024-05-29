@@ -1,15 +1,26 @@
 <template>
-  <router-view></router-view>
+  <router-view v-if="isRouterAlive"></router-view>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue';
+import { onMounted, watch, provide, ref } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
 import { clearToken } from './utils/auth';
 
 const userStore = useUserStore();
+
+const isRouterAlive = ref(true);
+
+const reload = () => {
+  isRouterAlive.value = false; // 先关闭，
+  setTimeout(() => {
+    isRouterAlive.value = true;
+  });
+};
+
+provide('reload', reload);
 
 const infoRouteList = [
   'ROUTE_GOODS',

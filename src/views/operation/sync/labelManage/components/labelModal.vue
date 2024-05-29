@@ -74,7 +74,6 @@ const showModal = computed(() => props.visible);
 watch(
   () => props.labelEditData,
   (newVal) => {
-    console.log('watch', newVal);
     if (newVal) {
       form.name = newVal.name;
     }
@@ -95,8 +94,4 @@ const handleOk = () => {
 const handleCancel = () => {
   emits('onCancel');
 };
-
-onMounted(() => {
-  console.log('label onmouted', props.labelEditData);
-});
 </script>

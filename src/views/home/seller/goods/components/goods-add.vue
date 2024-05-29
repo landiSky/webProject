@@ -1683,7 +1683,6 @@ const beforeUpload = (file: File) => {
 const beforeUpload50 = (file: File) => {
   return new Promise<void>((resolve, reject) => {
     const type = file.type as string;
-    console.log(type);
     if (
       !(
         type.endsWith('/msword') ||

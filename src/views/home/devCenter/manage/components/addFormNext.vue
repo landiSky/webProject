@@ -15,10 +15,16 @@
             >取消</t-button
           >
           <span class="right=btn">
-            <t-button class="save-btn" @click="handleLaunchOrSave"
+            <t-button
+              class="save-btn"
+              :loading="state.saveLoading"
+              @click="handleLaunchOrSave(0)"
               >保存</t-button
             >
-            <t-button type="primary" @click="handleLaunchOrSave(1)"
+            <t-button
+              type="primary"
+              :loading="state.launchLoading"
+              @click="handleLaunchOrSave(1)"
               >上线</t-button
             >
           </span>
@@ -292,7 +298,7 @@
                       required: true,
                       message: '应用首页地址不允许为空',
                     },
-                    { maxLength: 10, message: '不允许超过10个字符' },
+                    { maxLength: 1000, message: '不允许超过1000个字符' },
                     {
                       match: /^(https?:\/\/).+$/,
                       message: '请输入正确格式',
@@ -301,7 +307,7 @@
                 >
                   <t-input
                     v-model="form.homeUri"
-                    :max-length="{ length: 10, errorOnly: true }"
+                    :max-length="{ length: 1000, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
@@ -320,7 +326,7 @@
                       required: true,
                       message: '应用回调地址不允许为空',
                     },
-                    { maxLength: 10, message: '不允许超过10个字符' },
+                    { maxLength: 1000, message: '不允许超过1000个字符' },
                     {
                       match: /^(https?:\/\/).+$/,
                       message: '请输入正确格式',
@@ -329,7 +335,7 @@
                 >
                   <t-input
                     v-model="form.redirectUri"
-                    :max-length="{ length: 10, errorOnly: true }"
+                    :max-length="{ length: 1000, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
@@ -442,17 +448,21 @@ import {
   onMounted,
   reactive,
   ref,
+  inject,
 } from 'vue';
 import plus from '@/assets/images/devCenter/plus.png';
 import { fetchApplicationDetail, fetchLaunch } from '@/api/devCenter/manage';
 import { getToken } from '@/utils/auth';
 import { Message, FileItem } from '@tele-design/web-vue';
+import { useRouter } from 'vue-router';
 import AddMembersModal from './addMembersModal.vue';
 
 const props = defineProps({
   visible: Boolean,
   editId: String,
 });
+
+const reload: any = inject('reload');
 
 const anchorRef = ref();
 const logoRef = ref();
@@ -490,6 +500,8 @@ const state = reactive<{
   showMemberModal: boolean;
   confirmMembersLoading: boolean;
   companyId: string;
+  saveLoading: boolean;
+  launchLoading: boolean;
 }>({
   tableData: [],
   tableLoading: false,
@@ -497,6 +509,8 @@ const state = reactive<{
   showMemberModal: false,
   confirmMembersLoading: false,
   companyId: '',
+  saveLoading: false,
+  launchLoading: false,
 });
 
 const emit = defineEmits(['onConfirm', 'onCancel']);
@@ -572,7 +586,7 @@ const handleCancel = () => {
   emit('onCancel');
 };
 
-// 上线和保存
+// 上线和保存   还差重新请求table数据和loading两个button区分
 const handleLaunchOrSave = (status: number) => {
   // status保存为0， 上线为1
   formRef.value.validate((errors: undefined) => {
@@ -597,11 +611,20 @@ const handleLaunchOrSave = (status: number) => {
         }
       }
       params.status = status;
+      state[status ? 'launchLoading' : 'saveLoading'] = true;
       fetchLaunch(params).then((res) => {
         if (res.code === 200) {
-          Message.success('上线成功');
-          emit('onCancel');
+          Message.success({
+            content: status === 0 ? '保存成功' : '上线成功',
+            duration: 2000,
+            onClose: () => {
+              state[status ? 'launchLoading' : 'saveLoading'] = false;
+              emit('onCancel');
+              reload();
+            },
+          });
         } else {
+          state[status ? 'launchLoading' : 'saveLoading'] = false;
           Message.error(res.message);
         }
       });
