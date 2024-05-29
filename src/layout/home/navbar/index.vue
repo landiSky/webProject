@@ -76,6 +76,7 @@ import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
+import { sm2 } from '@/utils/encrypt';
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -139,7 +140,7 @@ const clickIdService = () => {
   });
   const { primary } = userInfoByCompany.value || {};
   if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
-    const { snmsUrls, companyId } = userInfo.value || {};
+    const { snmsUrls, companyId, id } = userInfo.value || {};
     const params = {
       snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,
@@ -149,7 +150,18 @@ const clickIdService = () => {
       if (!res?.data?.data) {
         return;
       }
-      window.open(res?.data?.data);
+      const data = {
+        type: 'snms',
+        companyId,
+        userId: id,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      console.log(sm2data);
+      console.log(`${res?.data?.data}&data=${sm2data}`);
+      window.open(`${res?.data?.data}&data=${sm2data}`);
     });
   } else {
     Modal.warning({
