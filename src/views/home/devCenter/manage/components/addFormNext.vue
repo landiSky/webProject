@@ -26,26 +26,18 @@
       </template>
 
       <t-row class="modal-body" justify="center">
-        <t-col class="archor" flex="224px">
-          <t-affix :offset-top="80">
-            <t-anchor>
-              <t-anchor-link href="#proof" @click.prevent="toAnchor('#proof')"
-                >应用凭证</t-anchor-link
-              >
-              <t-anchor-link
-                href="#appInfo"
-                @click.prevent="toAnchor('#appInfo')"
-                >应用信息</t-anchor-link
-              >
-              <t-anchor-link
-                href="#abutInfo"
-                @click.prevent="toAnchor('#abutInfo')"
-                >对接信息</t-anchor-link
-              >
-              <t-anchor-link
-                v-if="showAuthLimit"
-                href="#authInfo"
-                @click.prevent="toAnchor('#authInfo')"
+        <t-col class="anchor" flex="224px">
+          <t-affix :offset-top="80" class="affix">
+            <t-anchor
+              :ref="anchorRef"
+              :change-hash="false"
+              scroll-container="#abutInfo"
+              @change="handleAnchorChange"
+            >
+              <t-anchor-link href="#proof">应用凭证</t-anchor-link>
+              <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
+              <t-anchor-link href="#abutInfo">对接信息</t-anchor-link>
+              <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
               >
             </t-anchor>
@@ -446,6 +438,7 @@ const props = defineProps({
   editId: String,
 });
 
+const anchorRef = ref();
 const logoRef = ref();
 const logoVisible = ref(false);
 const logoUploading = ref(false);
@@ -506,6 +499,7 @@ const uploadHeaders = {
 };
 
 const toAnchor = (link: string) => {
+  // 防止hash跳转 点击需要加prevent
   const ele = document.getElementById(link);
   ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
@@ -587,7 +581,6 @@ const handleLaunchOrSave = (status: number) => {
         }
       }
       params.status = status;
-      console.log('params', params);
       fetchLaunch(params).then((res) => {
         if (res.code === 200) {
           Message.success('上线成功');
@@ -708,6 +701,22 @@ onMounted(() => {
       state.tableData = [];
     }
   });
+  setTimeout(() => {
+    toAnchor('abutInfo');
+    const anchorItems = document.getElementsByClassName(
+      'tele-anchor-link-item'
+    );
+    Array.from(anchorItems).forEach((item, idx) => {
+      if (idx === 2) {
+        item.classList.add('tele-anchor-link-active');
+      }
+    });
+    const anchorSlider = document.getElementsByClassName(
+      'tele-anchor-line-slider'
+    )[0];
+    // @ts-ignore
+    anchorSlider.style.top = '62px';
+  }, 200);
 });
 </script>
 
@@ -723,30 +732,17 @@ onMounted(() => {
   overflow: auto;
   background-color: #fff;
 
-  .archor {
+  .anchor {
     z-index: 999;
     margin-left: 80px;
+
+    .affix {
+      position: fixed;
+      top: 100px;
+      z-index: 999;
+    }
   }
 
-  //   .content {
-  //     display: flex;
-  //     flex: 1;
-  //     justify-content: center;
-  //     margin-right: 150px;
-
-  //     .center {
-  //       display: flex;
-  //       flex-direction: column;
-  //       align-items: start;
-  //       justify-content: start;
-  //       width: 632px;
-
-  //       a {
-  //         color: #1664ff;
-  //         text-decoration: none;
-  //       }
-  //     }
-  //   }
   .copy {
     margin-left: 10px;
     cursor: pointer;
@@ -777,6 +773,7 @@ onMounted(() => {
 .footer {
   display: flex;
   justify-content: space-around;
+  padding: 0 100px 0 300px;
 
   .save-btn {
     margin-right: 8px;
