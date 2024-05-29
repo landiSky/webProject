@@ -32,7 +32,7 @@
               :ref="anchorRef"
               :change-hash="false"
               scroll-container="#abutInfo"
-              @change="handleAnchorChange"
+              @select="handleAnchorSelect"
             >
               <t-anchor-link href="#proof">应用凭证</t-anchor-link>
               <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
@@ -674,6 +674,13 @@ const handleMembersConfirm = (data: []) => {
 
 const handleMembersCancel = () => {
   state.showMemberModal = false;
+};
+
+const handleAnchorSelect = (hash: string) => {
+  const anchorItems = document.getElementsByClassName('tele-anchor-link-item');
+  if (hash !== '#abutInfo') {
+    anchorItems[2].classList.remove('tele-anchor-link-active');
+  }
 };
 
 onMounted(() => {
