@@ -284,6 +284,7 @@
             >
               <t-descriptions-item>
                 <t-form-item
+                  class="tip-content"
                   label="应用首页地址"
                   field="homeUri"
                   :rules="[
@@ -292,6 +293,10 @@
                       message: '应用首页地址不允许为空',
                     },
                     { maxLength: 10, message: '不允许超过10个字符' },
+                    {
+                      match: /^(https?:\/\/).+$/,
+                      message: '请输入正确格式',
+                    },
                   ]"
                 >
                   <t-input
@@ -302,8 +307,12 @@
                     placeholder="请输入"
                   >
                   </t-input>
+                  <span class="tip"
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                  >
                 </t-form-item>
                 <t-form-item
+                  class="tip-content"
                   label="应用回调地址"
                   field="redirectUri"
                   :rules="[
@@ -312,6 +321,10 @@
                       message: '应用回调地址不允许为空',
                     },
                     { maxLength: 10, message: '不允许超过10个字符' },
+                    {
+                      match: /^(https?:\/\/).+$/,
+                      message: '请输入正确格式',
+                    },
                   ]"
                 >
                   <t-input
@@ -322,6 +335,9 @@
                     placeholder="请输入"
                   >
                   </t-input>
+                  <span class="tip"
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                  >
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -774,6 +790,16 @@ onMounted(() => {
       margin-right: 8px;
       cursor: pointer;
     }
+  }
+}
+
+.tip-content {
+  .tele-form-item-content {
+    display: block;
+  }
+
+  .tip {
+    color: #86909c;
   }
 }
 
