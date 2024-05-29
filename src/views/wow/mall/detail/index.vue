@@ -212,7 +212,8 @@
             <div class="score-num">{{ evaluateDatail?.avgEvaluate ?? 5 }}</div>
             <div class="score-count">
               <t-rate
-                :default-value="evaluateDatail?.avgEvaluate ?? 5"
+                v-model="evaluateDatail.avgEvaluate"
+                :default-value="5"
                 :count="5"
                 allow-half
                 readonly
@@ -255,7 +256,8 @@
                     <div>
                       <div class="count">
                         <t-rate
-                          :default-value="item?.totalStar ?? 0"
+                          v-model="item.totalStar"
+                          :default-value="5"
                           :count="5"
                           allow-half
                           readonly
