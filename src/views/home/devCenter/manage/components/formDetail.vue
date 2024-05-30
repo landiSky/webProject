@@ -141,10 +141,7 @@
                     },
                   ]"
                 >
-                  <t-radio-group v-model="form.appType">
-                    <t-radio :value="0">企业自建应用</t-radio>
-                    <t-radio :value="1">商城应用</t-radio>
-                  </t-radio-group>
+                  <span>{{ AppTypeEnum[form.appType] ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
                   field="appName"
@@ -156,13 +153,7 @@
                     },
                   ]"
                 >
-                  <t-textarea
-                    v-model="form.appName"
-                    placeholder="请输入"
-                    :max-length="50"
-                    allow-clear
-                    show-word-limit
-                  />
+                  <span>{{ form.appName ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
                   field="introduction"
@@ -174,13 +165,7 @@
                     },
                   ]"
                 >
-                  <t-textarea
-                    v-model="form.introduction"
-                    placeholder="请输入"
-                    :max-length="500"
-                    allow-clear
-                    show-word-limit
-                  />
+                  <span>{{ form.introduction }}</span>
                 </t-form-item>
                 <t-form-item
                   label="应用图标"
@@ -206,72 +191,10 @@
                               () => (logoVisible = false)
                             "
                           />
-                          <div class="image-hover">
-                            <div class="hover-bg"> </div>
-                            <div class="icon-list">
-                              <icon-eye
-                                :style="{
-                                  fontSize: '20px',
-                                  color: '#fff',
-                                  cursor: 'pointer',
-                                }"
-                                @click="() => (logoVisible = true)"
-                              />
-                              <icon-delete
-                                :style="{
-                                  fontSize: '20px',
-                                  color: '#fff',
-                                  cursor: 'pointer',
-                                }"
-                                @click="() => (form.appLogo = '')"
-                              />
-                            </div>
-                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <t-upload
-                    v-if="form.appLogo == ''"
-                    :ref="logoRef"
-                    :file-list="logoList"
-                    :limit="1"
-                    :multiple="false"
-                    :headers="uploadHeaders"
-                    action="/server/web/file/upload"
-                    :show-cancel-button="false"
-                    accept=".png,.jpg,.bmp,.jpeg,.gif"
-                    :show-file-list="false"
-                    @before-upload="beforeUpload"
-                    @success="uploadSuccess"
-                    @error="uploadError"
-                    @progress="uploadProgress"
-                  >
-                    <template #upload-button>
-                      <t-spin size="24" :loading="logoUploading">
-                        <div :class="`tele-upload-list-item`">
-                          <div class="tele-upload-picture-card">
-                            <div class="tele-upload-picture-card-text">
-                              <IconPlus size="16" stroke-width="6" />
-                              <div
-                                style="
-                                  margin-top: 8px;
-                                  font-weight: 500;
-                                  font-size: 12px;
-                                "
-                                >点击上传</div
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </t-spin>
-                    </template>
-                  </t-upload>
-                </t-form-item>
-                <t-form-item label="" field="" class="hint-item">
-                  <div class="hint"
-                    >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
-                  >
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -305,14 +228,7 @@
                     },
                   ]"
                 >
-                  <t-input
-                    v-model="form.homeUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
-                    allow-clear
-                    show-word-limit
-                    placeholder="请输入"
-                  >
-                  </t-input>
+                  <div>{{ form.homeUri }}</div>
                   <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
                   >
@@ -333,14 +249,7 @@
                     },
                   ]"
                 >
-                  <t-input
-                    v-model="form.redirectUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
-                    allow-clear
-                    show-word-limit
-                    placeholder="请输入"
-                  >
-                  </t-input>
+                  <div>{{ form.redirectUri }}</div>
                   <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
                   >
@@ -372,10 +281,7 @@
                     },
                   ]"
                 >
-                  <t-radio-group v-model="form.memberType">
-                    <t-radio :value="1">仅添加企业成员可用</t-radio>
-                    <t-radio :value="0">全部企业成员可用</t-radio>
-                  </t-radio-group>
+                  <span>{{ MemberEnum[form.memberType] ?? '-' }}</span>
                 </t-form-item>
               </t-descriptions-item>
               <t-descriptions-item v-if="form.memberType === 1">
@@ -387,10 +293,11 @@
                   :rules="[
                     {
                       required: true,
+                      //   validator: validateMembers,
                     },
                   ]"
                 >
-                  <t-tag
+                  <span
                     v-for="item of form.memberList"
                     :key="item.memberId"
                     class="tagItem"
@@ -398,26 +305,7 @@
                     @close="handleTagRemove(item.memberId)"
                   >
                     {{ item.username }}
-                  </t-tag>
-                </t-form-item>
-                <t-form-item
-                  field="memberList"
-                  label=""
-                  :rules="[
-                    {
-                      validator: validateMembers,
-                    },
-                  ]"
-                >
-                  <span
-                    class="add-section"
-                    :class="form.memberList.length ? '' : 'add-move'"
-                    ><img
-                      class="plus-img"
-                      :src="plus"
-                      @click="handleAddMembers"
-                    />添加企业成员</span
-                  >
+                  </span>
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -449,10 +337,8 @@ import {
   ref,
   inject,
 } from 'vue';
-import plus from '@/assets/images/devCenter/plus.png';
 import { fetchApplicationDetail, fetchLaunch } from '@/api/devCenter/manage';
-import { getToken } from '@/utils/auth';
-import { Message, FileItem } from '@tele-design/web-vue';
+import { Message } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
 
 const props = defineProps({
@@ -463,13 +349,8 @@ const props = defineProps({
 const reload: any = inject('reload');
 
 const anchorRef = ref();
-const logoRef = ref();
 const logoVisible = ref(false);
-const logoUploading = ref(false);
 const formRef = ref();
-const online = ref(true);
-
-const logoList = ref<any[]>([]);
 
 const form = reactive<{
   appType: number; // 0、自建应用 1、商城应用
@@ -522,10 +403,6 @@ const showAuthLimit = computed(() => {
   return false;
 });
 
-const uploadHeaders = {
-  Authorization: `${getToken()}`,
-};
-
 const toAnchor = (link: string) => {
   // 防止hash跳转 点击需要加prevent
   const ele = document.getElementById(link);
@@ -550,17 +427,6 @@ const columns = [
 const validateRadio = (value: number, callback: (error?: string) => void) => {
   if (![0, 1].includes(value)) {
     callback('权限类型不能为空');
-  } else {
-    callback();
-  }
-};
-
-const validateMembers = (
-  value: Record<string, any>[],
-  callback: (error?: string) => void
-) => {
-  if (!value.length) {
-    callback('企业成员不能为空');
   } else {
     callback();
   }
@@ -643,67 +509,6 @@ const handleCopy = async (text: string) => {
   }
 };
 
-const beforeUpload = (file: File) => {
-  return new Promise<void>((resolve, reject) => {
-    const type = file.type as string;
-    if (
-      !(
-        type.endsWith('/jpg') ||
-        type.endsWith('/png') ||
-        type.endsWith('/bmp') ||
-        type.endsWith('/tif') ||
-        type.endsWith('/gif')
-      )
-    ) {
-      Message.warning(`上传失败，请检查文件类型`);
-      reject();
-    }
-    const over2 = file.size > 1024 * 1024 * 10;
-    if (over2) {
-      Message.warning(`上传失败，文件大小不要超过10M`);
-      reject();
-    }
-    if (!online.value) {
-      Message.warning('网络异常，暂时无法上传，请检查网络');
-      reject();
-    }
-    // @ts-ignore
-    resolve(true);
-  });
-};
-
-const uploadSuccess = (fileItem: FileItem) => {
-  logoUploading.value = false;
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    form.appLogo = fileItem.response.data;
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-  formRef.value.validateField('appLogo');
-};
-
-const uploadError = (fileItem: FileItem) => {
-  logoUploading.value = false;
-  form.appLogo = '';
-  const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
-  formRef.value.validateField('appLogo');
-};
-
-const uploadProgress = () => {
-  logoUploading.value = true;
-};
-
-const handleAddMembers = () => {
-  state.showMemberModal = true;
-};
-
 const handleMembersConfirm = (data: []) => {
   state.showMemberModal = false;
   form.memberList = data;
@@ -718,6 +523,16 @@ const handleAnchorSelect = (hash: string) => {
   if (hash !== '#abutInfo') {
     anchorItems[2].classList.remove('tele-anchor-link-active');
   }
+};
+
+const AppTypeEnum: { [name: string]: any } = {
+  0: '企业自建应用',
+  1: '商城应用',
+};
+
+const MemberEnum: { [name: string]: any } = {
+  1: '仅添加企业成员可用',
+  0: '全部企业成员可用',
 };
 
 onMounted(() => {
@@ -819,6 +634,7 @@ onMounted(() => {
 .tip-content {
   .tele-form-item-content {
     display: block;
+    margin-top: 5px;
   }
 
   .tip {

@@ -47,16 +47,65 @@
             <span>{{ AppTypeEnum[record.appType] ?? '-' }}</span>
           </template>
           <template #clientId="{ record }">
-            <span
-              >{{ record.clientId }}<icon-copy @click="handleCopy(record)"
-            /></span>
+            <t-tooltip v-if="state.showTip" :content="record.clientId">
+              <span class="tablecell-item">{{
+                computeLength(record.clientId)
+              }}</span>
+            </t-tooltip>
+            <span v-else class="tablecell-item">{{
+              computeLength(record.clientId)
+            }}</span>
+
+            <icon-copy
+              class="copy"
+              size="14"
+              @click="handleCopy(record.clientId)"
+            />
+          </template>
+          <template #clientSecret="{ record }">
+            <t-tooltip v-if="state.showTip" :content="record.clientSecret">
+              <span class="tablecell-item">{{
+                computeLength(record.clientSecret)
+              }}</span>
+            </t-tooltip>
+            <span v-else class="tablecell-item">{{
+              computeLength(record.clientSecret)
+            }}</span>
+
+            <icon-copy
+              class="copy"
+              size="14"
+              @click="handleCopy(record.clientSecret)"
+            />
           </template>
           <template #status="{ record }">
-            <span>{{ StatusEnum[record.status] ?? '-' }}</span>
+            <span
+              class="status-section"
+              :class="record.status ? '' : 'offline'"
+              >{{ StatusEnum[record.status] ?? '-' }}</span
+            >
           </template>
-          <template #operater="{ record }">
-            <t-button type="text" @click="handleDetail(record)">详情</t-button>
-            <t-button type="text" @click="handleLaunch(record)">上线</t-button>
+          <template #operation="{ record }">
+            <span class="operation-section">
+              <t-button type="text" @click="handleTableDetail(record)"
+                >详情</t-button
+              >
+              <t-button type="text" @click="handleTableLaunch(record)"
+                >上线</t-button
+              >
+              <t-button
+                type="text"
+                :disabled="record.status === 1"
+                @click="handleTableEdit(record)"
+                >编辑</t-button
+              >
+              <t-button
+                type="text"
+                :disabled="record.status === 1"
+                @click="handleTableDel(record)"
+                >删除</t-button
+              >
+            </span>
           </template>
         </t-table>
       </t-col>
@@ -73,10 +122,16 @@
       :visible="state.showAddFormNext"
       title="编辑应用"
       :edit-id="state.editId"
-      @on-launch="handleLaunch"
-      @on-save="handleSave"
       @on-cancel="handleCancel"
     />
+    <FormDetail
+      v-if="state.showFormDetail"
+      :visible="state.showFormDetail"
+      title="应用详情"
+      :edit-id="state.editId"
+      @on-cancel="handleDetailCancel"
+    >
+    </FormDetail>
   </t-page-header>
 </template>
 
@@ -84,18 +139,27 @@
 import { reactive, computed, onMounted } from 'vue';
 import { fetchApplicationList } from '@/api/devCenter/manage';
 import { Message } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
+import FormDetail from './components/formDetail.vue';
+
+const store = useUserStore();
+
+const { userInfo } = store;
+
+console.log('userInfo', userInfo);
 
 const baseParams: Record<string, string | number | null> = reactive<{
   appName: string;
   appType: number | null;
   status: number | null;
+  companyId: string;
 }>({
   appName: '',
   appType: null, // 默认为全部
   status: null,
-  // pageSize pageNum
+  companyId: '',
 });
 
 const pagination = reactive<{
@@ -116,12 +180,16 @@ const state = reactive<{
   showDrawer: boolean;
   showAddFormNext: boolean;
   editId: string;
+  showTip: boolean;
+  showFormDetail: boolean;
 }>({
   tableLoading: false,
   tableData: [],
   showDrawer: false,
   showAddFormNext: false,
   editId: '',
+  showTip: false,
+  showFormDetail: false,
 });
 
 const AppTypeList = [
@@ -195,6 +263,7 @@ const columns = [
   {
     title: 'APP Secret',
     dataIndex: 'clientSecret',
+    slotName: 'clientSecret',
     width: 180,
     ellipsis: true,
     tooltip: true,
@@ -215,31 +284,43 @@ const columns = [
   },
   {
     title: '操作',
-    dataIndex: 'operations',
-    slotName: 'operations',
+    dataIndex: 'operation',
+    slotName: 'operation',
     width: 220,
   },
 ];
 
-const handleCopy = async (record: any) => {
+const handleCopy = async (text: string) => {
   try {
-    await navigator.clipboard.writeText(record.clientId);
+    await navigator.clipboard.writeText(text);
     Message.success('复制成功');
   } catch (err) {
     Message.error('复制失败');
   }
 };
 
+const computeLength = (data: string) => {
+  if (data.length > 10) {
+    state.showTip = true;
+    return `${data.slice(0, 10)}...`;
+  }
+  state.showTip = false;
+  return data;
+};
+
 const fetchTableData = async () => {
   state.tableLoading = true;
   const { pageNum, pageSize } = pagination;
-  await fetchApplicationList({ ...baseParams, pageNum, pageSize }).then(
-    (res) => {
-      state.tableLoading = false;
-      pagination.total = res.data?.total;
-      state.tableData = res.data?.records || [];
-    }
-  );
+  await fetchApplicationList({
+    ...baseParams,
+    companyId: userInfo?.companyId,
+    pageNum,
+    pageSize,
+  }).then((res) => {
+    state.tableLoading = false;
+    pagination.total = res.data?.total;
+    state.tableData = res.data?.records || [];
+  });
 };
 
 const handleFilterChange = (dataIndex: string, filteredValues: string[]) => {
@@ -274,6 +355,10 @@ const handleDrawerCancel = () => {
   state.showDrawer = false;
 };
 
+const handleDetailCancel = () => {
+  state.showFormDetail = false;
+};
+
 const handleDrawerConfirm = (res: any) => {
   if (res.data) {
     state.showDrawer = false;
@@ -283,14 +368,21 @@ const handleDrawerConfirm = (res: any) => {
   }
 };
 
-const handleDetail = (record?: any) => {};
+const handleTableDetail = (record: Record<string, any>) => {
+  state.showFormDetail = true;
+  state.editId = record.id;
+};
 
-const handleLaunch = (record?: any) => {};
+const handleTableLaunch = (record: Record<string, any>) => {};
 
-const handleSave = () => {};
+const handleTableEdit = (record: Record<string, any>) => {
+  state.showFormDetail = true;
+  state.editId = record.id;
+};
+
+const handleTableDel = (record: Record<string, any>) => {};
 
 const handleCancel = () => {
-  console.log('handleCancel');
   state.showAddFormNext = false;
   state.showDrawer = false;
 };
@@ -311,5 +403,32 @@ onMounted(async () => {
 <style lang="less" scoped>
 .page-container {
   margin-bottom: 16px;
+}
+
+.operation-section {
+  button {
+    margin-right: 20px;
+    padding: 0;
+  }
+}
+
+.copy {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.status-section::before {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: #00aa2a;
+  border-radius: 50%;
+  content: '';
+}
+
+.offline::before {
+  background: #c9cdd4;
 }
 </style>
