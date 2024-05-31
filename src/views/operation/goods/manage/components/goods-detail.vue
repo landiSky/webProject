@@ -622,7 +622,7 @@ const clickDeleteBtn = () => {
 };
 // 应用跳转详情
 const applicationlink = (id: number) => {
-  operationLogin({ productDeliverySetId: id }).then((res: any) => {
+  operationLogin({ appInfoId: id }).then((res: any) => {
     window.open(res);
   });
 };
