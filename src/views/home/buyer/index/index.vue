@@ -932,7 +932,7 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
 };
 // 前往
 const togo = (detailData: Record<string, any>) => {
-  const { id, dueDate, type, productId, deliveryId } = detailData;
+  const { id, dueDate, type, productId, deliveryId, deliveryType } = detailData;
   const { snmsUrls, companyId } = userInfo.value || {};
   // 标识类应用需要申请开通企业节点
   if (
@@ -990,7 +990,11 @@ const togo = (detailData: Record<string, any>) => {
           JSON.stringify(data),
           userStore.configInfo?.publicKey
         );
-        window.open(`${res?.data}&data=${sm2data}`);
+        if (deliveryType === 1) {
+          window.open(res);
+          return;
+        }
+        window.open(`${res}&data=${sm2data}`);
       });
     } else if (Number(tabsApplication.value) === 2) {
       appInfoClientLogin({ appInfoId: id }).then((res: any) => {
@@ -1002,7 +1006,7 @@ const togo = (detailData: Record<string, any>) => {
           JSON.stringify(data),
           userStore.configInfo?.publicKey
         );
-        window.open(`${res?.data}&data=${sm2data}`);
+        window.open(`${res}&data=${sm2data}`);
       });
     }
     // orderGo({ id }).then((res: any) => {
