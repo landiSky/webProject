@@ -1,7 +1,7 @@
 <template>
   <div class="add-goods-container">
     <t-modal
-      v-model:visible="showModal"
+      v-model:visible="state.showModal"
       fullscreen
       has-back-btn="false"
       ok-text="完成"
@@ -14,23 +14,21 @@
           <t-button style="margin-right: 8px" @click="handleCancel"
             >取消</t-button
           >
-          <span class="right=btn">
+          <span class="right-btn">
             <t-button
+              v-if="props.tableRecord?.status === 0"
               class="save-btn"
-              :loading="state.saveLoading"
-              @click="handleLaunchOrSave(0)"
-              >保存</t-button
+              :loading="state.delLoading"
+              @click="handleDel"
+              >删除</t-button
             >
-            <t-button
-              type="primary"
-              :loading="state.launchLoading"
-              @click="handleLaunchOrSave(1)"
+            <t-button :loading="state.launchLoading" @click="handleLaunch"
               >上线</t-button
             >
+            <t-button type="primary" @click="handleEdit">编辑</t-button>
           </span>
         </div>
       </template>
-
       <t-row class="modal-body" justify="center">
         <t-col class="anchor" flex="224px">
           <t-affix :offset-top="80" class="affix">
@@ -324,6 +322,13 @@
       @on-cancel="handleMembersCancel"
     >
     </AddMembersModal>
+    <AddFormNext
+      v-if="state.showAddFormNext"
+      :visible="state.showAddFormNext"
+      title="编辑应用"
+      :edit-id="props.editId"
+      @on-cancel="handleCancel"
+    />
   </div>
 </template>
 
@@ -336,14 +341,17 @@ import {
   reactive,
   ref,
   inject,
+  watch,
 } from 'vue';
 import { fetchApplicationDetail, fetchLaunch } from '@/api/devCenter/manage';
 import { Message } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
+import AddFormNext from './addFormNext.vue';
 
 const props = defineProps({
   visible: Boolean,
   editId: String,
+  tableRecord: Object,
 });
 
 const reload: any = inject('reload');
@@ -381,6 +389,9 @@ const state = reactive<{
   companyId: string;
   saveLoading: boolean;
   launchLoading: boolean;
+  showAddFormNext: boolean;
+  editId: string;
+  showModal: boolean;
 }>({
   tableData: [],
   tableLoading: false,
@@ -390,11 +401,19 @@ const state = reactive<{
   companyId: '',
   saveLoading: false,
   launchLoading: false,
+  showAddFormNext: false,
+  editId: '',
+  showModal: true,
 });
 
 const emit = defineEmits(['onCancel']);
 
-const showModal = computed(() => props.visible);
+// watch(
+//   () => props.visible,
+//   (val: boolean) => {
+//     state.showModal = val;
+//   }
+// );
 
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
@@ -448,6 +467,12 @@ const handleTagRemove = (key: string) => {
 // 取消
 const handleCancel = () => {
   emit('onCancel');
+  state.showAddFormNext = false;
+};
+
+const handleEdit = () => {
+  state.showModal = false;
+  state.showAddFormNext = true;
 };
 
 // 上线和保存   还差重新请求table数据和loading两个button区分
@@ -562,22 +587,6 @@ onMounted(() => {
       state.tableData = [];
     }
   });
-  setTimeout(() => {
-    toAnchor('abutInfo');
-    const anchorItems = document.getElementsByClassName(
-      'tele-anchor-link-item'
-    );
-    Array.from(anchorItems).forEach((item, idx) => {
-      if (idx === 2) {
-        item.classList.add('tele-anchor-link-active');
-      }
-    });
-    const anchorSlider = document.getElementsByClassName(
-      'tele-anchor-line-slider'
-    )[0];
-    // @ts-ignore
-    anchorSlider.style.top = '62px';
-  }, 200);
 });
 </script>
 
@@ -647,7 +656,7 @@ onMounted(() => {
   justify-content: space-around;
   padding: 0 100px 0 300px;
 
-  .save-btn {
+  button {
     margin-right: 8px;
   }
 }
