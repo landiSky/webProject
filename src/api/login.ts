@@ -49,11 +49,7 @@ export function apiLogin(data: Record<string, any>) {
 
 // 找回密码
 export function userforgotPassword(data: Record<string, any>) {
-  return $http.post(`/server/web/user/forgotPassword`, data, {
-    customFields: {
-      returnRawResponse: true, // 业务方直接处理原始 response
-    },
-  });
+  return $http.post(`/server/web/user/forgotPassword`, data);
 }
 
 // 登录前校验

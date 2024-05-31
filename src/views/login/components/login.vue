@@ -502,7 +502,7 @@ const clickBindingBtn = () => {
 
 // 找回密码
 const validate = () => {
-  formRef.value.validate((errors: any) => {
+  performsRef.value.validate((errors: any) => {
     if (!errors) {
       loginLoading.value = true;
       const { username, code, password, confirmPassword } = performs.value;
@@ -512,9 +512,10 @@ const validate = () => {
         password: sm2(password, userStore.configInfo?.publicKey),
         confirmPassword: sm2(confirmPassword, userStore.configInfo?.publicKey),
       })
-        .then(() => {
+        .then((res: any) => {
           Message.success('修改成功');
           getLog();
+          loginLoading.value = false;
         })
         .catch(() => {
           loginLoading.value = false;
