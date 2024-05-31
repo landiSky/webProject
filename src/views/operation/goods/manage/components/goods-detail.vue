@@ -317,7 +317,7 @@
                   }}<t-link
                     :hoverable="false"
                     style="margin-left: 8px"
-                    @click="applicationlink(st.id)"
+                    @click="applicationlink(st.saasAppId)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -621,8 +621,8 @@ const clickDeleteBtn = () => {
   });
 };
 // 应用跳转详情
-const applicationlink = (id: number) => {
-  operationLogin({ appInfoId: id }).then((res: any) => {
+const applicationlink = (saasAppId: any) => {
+  operationLogin({ appInfoId: saasAppId }).then((res: any) => {
     window.open(res);
   });
 };

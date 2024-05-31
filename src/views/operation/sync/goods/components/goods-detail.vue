@@ -259,7 +259,9 @@
                   label="已上线Saas应用"
                 >
                   <span>{{ st.application }}</span
-                  ><a class="application-link" @click="applicationlink(st.id)"
+                  ><a
+                    class="application-link"
+                    @click="applicationlink(st.saasAppId)"
                     >查看应用接入信息</a
                   >
                 </t-descriptions-item>
@@ -484,8 +486,8 @@ const statusColor = computed(() => {
 });
 
 // 应用跳转详情
-const applicationlink = (id: number) => {
-  operationLogin({ appInfoId: id }).then((res: any) => {
+const applicationlink = (saasAppId: any) => {
+  operationLogin({ appInfoId: saasAppId }).then((res: any) => {
     window.open(res);
   });
 };
