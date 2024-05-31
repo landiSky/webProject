@@ -44,3 +44,8 @@ export function startSync(id: number) {
 export function stopSync(id: number) {
   return $http.post(`/inventory/web/product/stopSynchronizationById?id=${id}`);
 }
+
+// 详情应用第三方跳转
+export function operationLogin(params: Record<string, any>) {
+  return $http.get('/auth/operationLogin', { params });
+}

@@ -682,7 +682,7 @@ import {
   NodeAuthStatus,
   NodeAuthStatusDESC,
 } from '@/enums/common';
-
+import { sm2 } from '@/utils/encrypt';
 // import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
@@ -932,8 +932,8 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
 };
 // 前往
 const togo = (detailData: Record<string, any>) => {
-  const { id, dueDate, type } = detailData;
-
+  const { id, dueDate, type, productId, deliveryId, deliveryType } = detailData;
+  const { snmsUrls, companyId } = userInfo.value || {};
   // 标识类应用需要申请开通企业节点
   if (
     AppType.IDAPP === type &&
@@ -948,12 +948,21 @@ const togo = (detailData: Record<string, any>) => {
       okText: '去开通',
       onOk: () => {
         // authModalVisible.value = true;
-        const { snmsUrls, companyId } = userInfo.value || {};
         const params = {
           snmsLoginId: snmsUrls?.snmsLoginId,
           companyId,
         };
-        snmsClientLogin(params).then(() => {});
+        snmsClientLogin(params).then((res: any) => {
+          const data = {
+            type: 'snms',
+            companyId,
+          };
+          const sm2data = sm2(
+            JSON.stringify(data),
+            userStore.configInfo?.publicKey
+          );
+          window.open(`${res?.data?.data}&data=${sm2data}`);
+        });
       },
     });
     return;
@@ -970,9 +979,35 @@ const togo = (detailData: Record<string, any>) => {
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
     if (Number(tabsApplication.value) === 1) {
-      alreadyBuyClientLogin({ orderId: id }).then((res) => {});
+      alreadyBuyClientLogin({ orderId: id }).then((res: any) => {
+        const data = {
+          type: 'productApp',
+          productId,
+          productDeliverySetId: deliveryId,
+          memberId: selectCompany.value?.memberId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        if (deliveryType === 1) {
+          window.open(res);
+          return;
+        }
+        window.open(`${res}&data=${sm2data}`);
+      });
     } else if (Number(tabsApplication.value) === 2) {
-      appInfoClientLogin({ appInfoId: id }).then((res) => {});
+      appInfoClientLogin({ appInfoId: id }).then((res: any) => {
+        const data = {
+          type: 'selfApp',
+          companyId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        window.open(`${res}&data=${sm2data}`);
+      });
     }
     // orderGo({ id }).then((res: any) => {
     //   window.open(res, '_blank');

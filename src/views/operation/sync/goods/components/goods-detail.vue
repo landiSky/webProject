@@ -259,7 +259,7 @@
                   label="已上线Saas应用"
                 >
                   <span>{{ st.application }}</span
-                  ><a class="application-link" :href="st.applicationLink"
+                  ><a class="application-link" @click="applicationlink(st.id)"
                     >查看应用接入信息</a
                   >
                 </t-descriptions-item>
@@ -323,7 +323,12 @@
 
 <script lang="ts" setup>
 import { ref, defineProps, defineEmits, onMounted, computed } from 'vue';
-import { goodsDetail, startSync, stopSync } from '@/api/operation/sync-class';
+import {
+  goodsDetail,
+  startSync,
+  stopSync,
+  operationLogin,
+} from '@/api/operation/sync-class';
 import { Message, Modal } from '@tele-design/web-vue';
 
 // 交付方式
@@ -477,6 +482,13 @@ const statusColor = computed(() => {
   }
   return '#FFFAE8';
 });
+
+// 应用跳转详情
+const applicationlink = (id: number) => {
+  operationLogin({ appInfoId: id }).then((res: any) => {
+    window.open(res);
+  });
+};
 
 onMounted(() => {
   if (props.data?.id) {

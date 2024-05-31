@@ -317,7 +317,7 @@
                   }}<t-link
                     :hoverable="false"
                     style="margin-left: 8px"
-                    @click="applicationlink(st.saasAppId)"
+                    @click="applicationlink(st.id)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -416,6 +416,7 @@ import {
   downGoods,
   verifyGoods,
 } from '@/api/operation/goods';
+import { operationLogin } from '@/api/operation/sync-class';
 import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
@@ -621,10 +622,9 @@ const clickDeleteBtn = () => {
 };
 // 应用跳转详情
 const applicationlink = (id: number) => {
-  console.log('应用id', id);
-  if (id) {
-    router.push({ path: '', query: { selectById: id } });
-  }
+  operationLogin({ appInfoId: id }).then((res: any) => {
+    window.open(res);
+  });
 };
 </script>
 
