@@ -27,10 +27,25 @@
               @click="handleDel"
               >删除</t-button
             >
-            <t-button :loading="state.launchLoading" @click="handleLaunch"
+            <t-button
+              v-if="!props.tableRecord?.status"
+              :loading="state.launchLoading"
+              @click="handleLaunch"
               >上线</t-button
             >
-            <t-button type="primary" @click="handleEdit">编辑</t-button>
+            <t-button
+              type="primary"
+              :disabled="props.tableRecord?.status"
+              @click="handleEdit"
+              >编辑</t-button
+            >
+            <t-button
+              v-if="props.tableRecord?.status"
+              type="primary"
+              status="danger"
+              @click="handleOffine"
+              >下线</t-button
+            >
           </span>
         </div>
       </template>
