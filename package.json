@@ -11,7 +11,8 @@
     "dev": "vite --config ./config/vite.config.dev.ts",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
     "lint-staged": "npx lint-staged",
-    "tsc": "vue-tsc --noEmit"
+    "tsc": "vue-tsc --noEmit",
+    "fix-memory-limit": "cross-env LIMIT=8192 increase-memory-limit"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
@@ -34,7 +35,9 @@
     "@vue/runtime-core": "^3.2.45",
     "@vueuse/core": "^7.3.0",
     "axios": "^0.24.0",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
+    "increase-memory-limit": "^1.0.7",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.9",
