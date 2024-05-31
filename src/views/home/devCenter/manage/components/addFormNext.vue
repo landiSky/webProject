@@ -31,9 +31,9 @@
         </div>
       </template>
 
-      <t-row class="modal-body" justify="center">
+      <t-row class="content-body" justify="center">
         <t-col class="anchor" flex="224px">
-          <t-affix :offset-top="80" class="affix">
+          <t-affix :offset-top="80" class="affix-sec">
             <t-anchor
               :ref="anchorRef"
               :change-hash="false"
@@ -774,10 +774,10 @@ onMounted(() => {
   margin: 0;
 }
 
-.modal-body {
+.content-body {
   display: flex;
   height: 100%;
-  padding: 24px 20px;
+  padding: 0 20px;
   overflow: auto;
   background-color: #fff;
 
@@ -785,9 +785,9 @@ onMounted(() => {
     z-index: 999;
     margin-left: 80px;
 
-    .affix {
+    .affix-sec {
       position: fixed;
-      top: 100px;
+      top: 110px;
       z-index: 999;
     }
   }

@@ -9,6 +9,11 @@
       :on-before-back="handleBack"
       @back="emit('onCancel')"
     >
+      <t-alert class="top-inform" type="warning" banner center
+        >应用状态：{{
+          props.tableRecord?.status ? '已上线' : '未上线'
+        }}</t-alert
+      >
       <template #footer>
         <div class="footer">
           <t-button style="margin-right: 8px" @click="handleCancel"
@@ -31,7 +36,7 @@
       </template>
       <t-row class="modal-body" justify="center">
         <t-col class="anchor" flex="224px">
-          <t-affix :offset-top="80" class="affix">
+          <t-affix :offset-top="160" class="affix">
             <t-anchor
               :ref="anchorRef"
               :change-hash="false"
@@ -595,6 +600,18 @@ onMounted(() => {
   margin: 0;
 }
 
+.top-inform {
+  position: relative;
+  margin-top: -24px;
+  line-height: 30px;
+  text-align: center;
+
+  .tele-alert-icon {
+    position: absolute;
+    left: 45%;
+  }
+}
+
 .modal-body {
   display: flex;
   height: 100%;
@@ -608,7 +625,7 @@ onMounted(() => {
 
     .affix {
       position: fixed;
-      top: 100px;
+      top: 160px;
       z-index: 999;
     }
   }
