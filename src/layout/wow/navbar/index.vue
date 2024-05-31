@@ -89,6 +89,7 @@ import { NodeAuthStatus } from '@/enums/common';
 import { getToken } from '@/utils/auth';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
+import { sm2 } from '@/utils/encrypt';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -200,7 +201,20 @@ const clickIdService = () => {
           snmsLoginId: snmsUrls?.snmsLoginId,
           companyId,
         };
-        snmsClientLogin(params).then(() => {});
+        snmsClientLogin(params).then((res: any) => {
+          if (!res?.data?.data) {
+            return;
+          }
+          const data = {
+            type: 'snms',
+            companyId,
+          };
+          const sm2data = sm2(
+            JSON.stringify(data),
+            userStore.configInfo?.publicKey
+          );
+          window.open(`${res?.data?.data}&data=${sm2data}`);
+        });
       } else {
         Modal.warning({
           title: '仅企业管理员可操作',
