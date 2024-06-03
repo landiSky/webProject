@@ -2,6 +2,7 @@
   <div class="add-goods-container">
     <t-modal
       v-model:visible="showModal"
+      :title="props.title"
       fullscreen
       has-back-btn="false"
       ok-text="完成"
@@ -79,39 +80,26 @@
                   :pagination="false"
                 >
                   <template #clientId="{ record }">
-                    <t-tooltip v-if="state.showTip" :content="record.clientId">
-                      <span class="tablecell-item">{{
-                        computeLength(record.clientId)
-                      }}</span>
-                    </t-tooltip>
-                    <span v-else class="tablecell-item">{{
-                      computeLength(record.clientId)
-                    }}</span>
-
-                    <icon-copy
-                      class="copy"
-                      size="14"
-                      @click="handleCopy(record.clientId)"
-                    />
+                    <t-typography-paragraph
+                      copyable
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                      class="merchantName"
+                      >{{ record.clientId }}</t-typography-paragraph
+                    >
                   </template>
                   <template #clientSecret="{ record }">
-                    <t-tooltip
-                      v-if="state.showTip"
-                      :content="record.clientSecret"
+                    <t-typography-paragraph
+                      copyable
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                      class="merchantName"
+                      >{{ record.clientSecret }}</t-typography-paragraph
                     >
-                      <span class="tablecell-item">{{
-                        computeLength(record.clientSecret)
-                      }}</span>
-                    </t-tooltip>
-                    <span v-else class="tablecell-item">{{
-                      computeLength(record.clientSecret)
-                    }}</span>
-
-                    <icon-copy
-                      class="copy"
-                      size="14"
-                      @click="handleCopy(record.clientSecret)"
-                    />
                   </template>
                 </t-table>
               </t-descriptions-item>
@@ -344,6 +332,7 @@ import AddMembersModal from './addMembersModal.vue';
 const props = defineProps({
   visible: Boolean,
   editId: String,
+  title: String,
 });
 
 const reload: any = inject('reload');
@@ -538,30 +527,30 @@ const MemberEnum: { [name: string]: any } = {
 onMounted(() => {
   // 获取编辑详情信息
   state.tableLoading = true;
-  fetchApplicationDetail(props.editId || '').then((res) => {
-    if (res.code === 200) {
+  fetchApplicationDetail(props.editId || '')
+    .then((res) => {
       state.tableLoading = false;
       state.tableData = [
         {
-          clientId: res.data?.clientId,
-          clientSecret: res.data?.clientSecret,
-          id: res.data?.id,
+          clientId: res?.clientId,
+          clientSecret: res?.clientSecret,
+          id: res?.id,
         },
       ];
-      form.appType = res.data?.appType;
-      form.appName = res.data?.appName;
-      form.introduction = res.data?.introduction;
-      form.appLogo = res.data?.appLogo;
-      form.memberList = res.data?.memberList;
-      form.memberType = res.data?.memberType;
-      form.homeUri = res.data?.homeUri;
-      form.redirectUri = res.data?.redirectUri;
-      state.companyId = res.data?.companyId;
-    } else {
+      form.appType = res?.appType;
+      form.appName = res?.appName;
+      form.introduction = res?.introduction;
+      form.appLogo = res?.appLogo;
+      form.memberList = res?.memberList;
+      form.memberType = res?.memberType;
+      form.homeUri = res?.homeUri;
+      form.redirectUri = res?.redirectUri;
+      state.companyId = res?.companyId;
+    })
+    .catch(() => {
       state.tableLoading = false;
       state.tableData = [];
-    }
-  });
+    });
   setTimeout(() => {
     toAnchor('abutInfo');
     const anchorItems = document.getElementsByClassName(
@@ -584,6 +573,10 @@ onMounted(() => {
 <style lang="less" scope>
 .tele-modal-fullscreen .tele-modal-body {
   margin: 0;
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 
 .modal-body {
