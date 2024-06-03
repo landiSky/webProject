@@ -121,7 +121,7 @@ import {
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
 import labelArrow from '@/assets/images/inventory/label-arrow.png';
-import GroupModal from './components/GroupModal.vue';
+import GroupModal from './components/groupModal.vue';
 import LabelModal from './components/labelModal.vue';
 
 const state = reactive<{
