@@ -15,7 +15,7 @@
           <t-button style="margin-right: 8px" @click="handleCancel"
             >取消</t-button
           >
-          <span class="right=btn">
+          <span class="right-btn">
             <t-button
               class="save-btn"
               :loading="state.saveLoading"
@@ -32,9 +32,9 @@
         </div>
       </template>
 
-      <t-row class="modal-body" justify="center">
+      <t-row class="content-body" justify="center">
         <t-col class="anchor" flex="224px">
-          <t-affix :offset-top="80" class="affix">
+          <t-affix :offset-top="80" class="affix-sec">
             <t-anchor
               :ref="anchorRef"
               :change-hash="false"
@@ -447,6 +447,7 @@ const props = defineProps({
   visible: Boolean,
   editId: String,
   title: String,
+  showAnchor: Boolean, // 用来判断第一次锚点定位
 });
 
 const reload: any = inject('reload');
@@ -499,7 +500,6 @@ const state = reactive<{
   saveLoading: false,
   launchLoading: false,
 });
-
 const emit = defineEmits(['onCancel']);
 
 const showModal = computed(() => props.visible);
@@ -737,20 +737,23 @@ onMounted(() => {
       state.tableData = [];
     });
   setTimeout(() => {
-    toAnchor('abutInfo');
-    const anchorItems = document.getElementsByClassName(
-      'tele-anchor-link-item'
-    );
-    Array.from(anchorItems).forEach((item, idx) => {
-      if (idx === 2) {
-        item.classList.add('tele-anchor-link-active');
-      }
-    });
-    const anchorSlider = document.getElementsByClassName(
-      'tele-anchor-line-slider'
-    )[0];
-    // @ts-ignore
-    anchorSlider.style.top = '62px';
+    console.log('addFormNext', props.showAnchor);
+    if (props.showAnchor) {
+      toAnchor('abutInfo');
+      const anchorItems = document.getElementsByClassName(
+        'tele-anchor-link-item'
+      );
+      Array.from(anchorItems).forEach((item, idx) => {
+        if (idx === 2) {
+          item.classList.add('tele-anchor-link-active');
+        }
+      });
+      const anchorSlider = document.getElementsByClassName(
+        'tele-anchor-line-slider'
+      )[0];
+      // @ts-ignore
+      anchorSlider.style.top = '62px';
+    }
   }, 200);
 });
 </script>
@@ -767,7 +770,7 @@ onMounted(() => {
 .modal-body {
   display: flex;
   height: 100%;
-  padding: 24px 20px;
+  padding: 0 20px;
   overflow: auto;
   background-color: #fff;
 
@@ -775,9 +778,9 @@ onMounted(() => {
     z-index: 999;
     margin-left: 80px;
 
-    .affix {
+    .affix-sec {
       position: fixed;
-      top: 100px;
+      top: 110px;
       z-index: 999;
     }
   }
@@ -824,7 +827,7 @@ onMounted(() => {
   justify-content: space-around;
   padding: 0 100px 0 300px;
 
-  .save-btn {
+  button {
     margin-right: 8px;
   }
 }

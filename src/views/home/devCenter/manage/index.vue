@@ -80,8 +80,10 @@
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button type="text" @click="handleTableLaunch(record)"
-                >上线</t-button
+              <t-button
+                type="text"
+                @click="handleTableLaunchOrDel(record, 0)"
+                >{{ record.status ? '下线' : '上线' }}</t-button
               >
               <t-button
                 type="text"
@@ -92,7 +94,7 @@
               <t-button
                 type="text"
                 :disabled="record.status === 1"
-                @click="handleTableDel(record)"
+                @click="handleTableLaunchOrDel(record, 1)"
                 >删除</t-button
               >
             </span>
@@ -112,11 +114,13 @@
       :visible="state.showAddFormNext"
       title="编辑应用"
       :edit-id="state.editId"
-      @on-cancel="handleCancel"
+      :show-anchor="state.showAnchor"
+      @on-cancel="handleEditCancel"
     />
     <FormDetail
       v-if="state.showFormDetail"
       :visible="state.showFormDetail"
+      :table-record="state.tableRecord"
       title="应用详情"
       :edit-id="state.editId"
       @on-cancel="handleDetailCancel"
@@ -128,18 +132,17 @@
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue';
 import { fetchApplicationList } from '@/api/devCenter/manage';
+import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
-// import { Message } from '@tele-design/web-vue';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
 import FormDetail from './components/formDetail.vue';
+// import OfflineOrDel from './components/offlineOrDel.vue';
 
 const store = useUserStore();
 
 const { userInfo } = store;
-
-console.log('userInfo', userInfo);
 
 const baseParams: Record<string, string | number | null> = reactive<{
   appName: string;
@@ -171,6 +174,10 @@ const state = reactive<{
   editId: string;
   showTip: boolean;
   showFormDetail: boolean;
+  mode: number; // 0 代表下线 1代表删除
+  showLaunchOrDel: boolean;
+  tableRecord: Record<string, any>;
+  showAnchor: boolean;
 }>({
   tableLoading: false,
   tableData: [],
@@ -179,6 +186,10 @@ const state = reactive<{
   editId: '',
   showTip: false,
   showFormDetail: false,
+  mode: 0,
+  showLaunchOrDel: false,
+  tableRecord: {},
+  showAnchor: false,
 });
 
 const AppTypeList = [
@@ -330,7 +341,7 @@ const handleDetailCancel = () => {
 
 const handleDrawerConfirm = (res: any) => {
   if (res) {
-    state.showDrawer = false;
+    state.showAnchor = true;
     state.showAddFormNext = true;
     // 获取编辑应用信息
     state.editId = res;
@@ -339,20 +350,56 @@ const handleDrawerConfirm = (res: any) => {
 
 const handleTableDetail = (record: Record<string, any>) => {
   state.showFormDetail = true;
+  state.tableRecord = record;
   state.editId = record.id;
 };
 
-const handleTableLaunch = (record: Record<string, any>) => {};
+const handleText = () => {
+  // 0 未上线 1 已上线
+  const { status } = state.tableRecord as Record<string, any>;
+  return {
+    // eslint-disable-next-line no-nested-ternary
+    btn: state.mode ? '删除' : status ? '下架应用' : '上线应用',
+    // eslint-disable-next-line no-nested-ternary
+    title: state.mode
+      ? '确定删除该应用吗？'
+      : status
+      ? '确定下线该应用吗？'
+      : '确定上线该应用吗？',
+  };
+};
+
+const handleTableLaunchOrDel = (record: Record<string, any>, mode: number) => {
+  state.showLaunchOrDel = true;
+  state.tableRecord = record;
+  state.mode = mode; // 上下线操作
+  Modal.warning({
+    title: handleText().title,
+    content: '你可以自定义此处文本。此对话框将在你点击「删除」按钮后即刻关闭。',
+    titleAlign: 'start',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+  });
+};
+
+// 删除或者下线确认
+const handleModalConfirm = () => {};
+
+// 删除或者下线取消
+const handleModalCancel = (record: Record<string, any>) => {};
 
 const handleTableEdit = (record: Record<string, any>) => {
-  state.showFormDetail = true;
+  state.showAddFormNext = true;
   state.editId = record.id;
 };
 
-const handleTableDel = (record: Record<string, any>) => {};
-
-const handleCancel = () => {
+const handleEditCancel = () => {
+  state.showAnchor = false;
   state.showAddFormNext = false;
+  state.showFormDetail = false;
   state.showDrawer = false;
 };
 
