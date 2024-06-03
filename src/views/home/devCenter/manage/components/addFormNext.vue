@@ -26,7 +26,7 @@
               type="primary"
               :loading="state.launchLoading"
               @click="handleLaunchOrSave(1)"
-              >上线</t-button
+              >保存并上线</t-button
             >
           </span>
         </div>
@@ -555,15 +555,6 @@ const validateMembers = (
   }
 };
 
-const computeLength = (data: string) => {
-  if (data.length > 20) {
-    state.showTip = true;
-    return `${data.slice(0, 20)}...`;
-  }
-  state.showTip = false;
-  return data;
-};
-
 const handleTagRemove = (key: string) => {
   form.memberList = form.memberList.filter((item) => item.memberId !== key);
 };
@@ -603,7 +594,7 @@ const handleLaunchOrSave = (status: number) => {
         if (res.code === 200) {
           Message.success({
             content: status === 0 ? '保存成功' : '上线成功',
-            duration: 2000,
+            duration: 1000,
             onClose: () => {
               state[status ? 'launchLoading' : 'saveLoading'] = false;
               emit('onCancel');
@@ -621,15 +612,6 @@ const handleLaunchOrSave = (status: number) => {
 
 const handleBack = () => {
   emit('onCancel');
-};
-
-const handleCopy = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    Message.success('复制成功');
-  } catch (err) {
-    Message.error('复制失败');
-  }
 };
 
 const beforeUpload = (file: File) => {
@@ -737,7 +719,6 @@ onMounted(() => {
       state.tableData = [];
     });
   setTimeout(() => {
-    console.log('addFormNext', props.showAnchor);
     if (props.showAnchor) {
       toAnchor('abutInfo');
       const anchorItems = document.getElementsByClassName(
@@ -767,7 +748,7 @@ onMounted(() => {
   margin-bottom: 0;
 }
 
-.modal-body {
+.content-body {
   display: flex;
   height: 100%;
   padding: 0 20px;

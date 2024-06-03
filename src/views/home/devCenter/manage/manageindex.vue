@@ -80,11 +80,9 @@
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button
-                type="text"
-                @click="handleTableLaunchOrDel(record, 0)"
-                >{{ record.status ? '下线' : '上线' }}</t-button
-              >
+              <t-button type="text" @click="handleTableLaunchOrDel(record)">{{
+                record.status ? '下线' : '上线'
+              }}</t-button>
               <t-button
                 type="text"
                 :disabled="record.status === 1"
@@ -94,7 +92,7 @@
               <t-button
                 type="text"
                 :disabled="record.status === 1"
-                @click="handleTableLaunchOrDel(record, 1)"
+                @click="handleTableDel(record)"
                 >删除</t-button
               >
             </span>
@@ -418,38 +416,12 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
-.page-container {
-  margin-bottom: 16px;
+.biox {
+  width: 100%;
+  height: 100%;
 }
 
 :deep(.tele-typography) {
   margin-bottom: 0;
-}
-
-.operation-section {
-  button {
-    margin-right: 20px;
-    padding: 0;
-  }
-}
-
-.copy {
-  margin-left: 10px;
-  cursor: pointer;
-}
-
-.status-section::before {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 6px;
-  vertical-align: middle;
-  background: #00aa2a;
-  border-radius: 50%;
-  content: '';
-}
-
-.offline::before {
-  background: #c9cdd4;
 }
 </style>

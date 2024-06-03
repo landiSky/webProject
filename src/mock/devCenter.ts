@@ -332,4 +332,35 @@ export default [
       });
     },
   },
+  {
+    url: '/server/web/app/info/checkStatus',
+    method: 'get',
+    response: () => successResponseWrap(true),
+  },
+  {
+    url: '/server/web/app/info/lineStatus',
+    method: 'post',
+    response: () =>
+      successResponseWrap({
+        traceId: null,
+        code: 200,
+        success: true,
+        data: null,
+        message: '操作成功',
+        err: null,
+      }),
+  },
+  {
+    url: '/server/web/app/info/deleteById',
+    method: 'get',
+    response: () =>
+      successResponseWrap({
+        traceId: null,
+        code: 200,
+        success: true,
+        data: null,
+        message: '操作成功',
+        err: null,
+      }),
+  },
 ];

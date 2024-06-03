@@ -209,6 +209,9 @@
                 <div v-if="item.saleType !== 2" class="grid-content">
                   <div class="desc">
                     <span class="top">¥{{ item.realityPrice }}</span>
+                    <p v-if="item.couponMoney > 0" class="bottom"
+                      >(已优惠:{{ item.couponMoney }}元)</p
+                    >
                   </div>
                 </div>
                 <div v-if="item.saleType === 2" class="grid-content">

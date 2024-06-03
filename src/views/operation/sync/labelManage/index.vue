@@ -250,7 +250,6 @@ const handleGroupEdit = (record: any) => {
 };
 
 const handleGroupDel = (record: any) => {
-  console.log('handleDel', record);
   fetchDelGroup(record.id).then((res) => {
     if (res.code === 200) {
       Message.success('删除成功');
@@ -312,7 +311,6 @@ const handleGroupCancel = () => {
 
 // 标签新增
 const handleAddLabel = () => {
-  console.log('handleAddLabel');
   state.showLabelVisible = true;
   state.labelTitle = '新增标签';
   state.labelEditData = null;
@@ -360,13 +358,11 @@ const handleLabelCancel = () => {
 const handleLabelEdit = (record: any) => {
   state.LabelTitle = '编辑标签';
   state.showLabelVisible = true;
-  console.log('handleLabelEdit', record);
   state.labelEditData = record;
 };
 
 // 标签删除
 const handleLabelDel = (record: any) => {
-  console.log('handleDel', record);
   fetchDelLabel(record.id).then((res) => {
     if (res.code === 200) {
       Message.success('删除成功');

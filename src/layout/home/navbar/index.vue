@@ -17,6 +17,18 @@
       </div>
     </div>
     <div class="right-side">
+      <div
+        v-if="!userInfo?.value?.isAdmin"
+        style="width: 232px; margin-right: 58px; background-color: red"
+      >
+        <t-input-search
+          v-model="searchContent"
+          class="inputSearch"
+          placeholder="请输入商品名称"
+          @press-enter="onSearch"
+          @search="onSearch"
+        />
+      </div>
       <span v-if="!userInfo?.companyList?.length" style="margin-right: 32px">{{
         userInfo?.mobile
       }}</span>
@@ -28,7 +40,7 @@
         @select="onChangeCompany"
       >
         <div class="click-item">
-          <icon-down style="margin-right: 8px" />
+          <icon-down class="icon-down" />
           <span class="companyName">{{
             selectCompany?.companyName || '-'
           }}</span>
@@ -51,7 +63,7 @@
       </t-dropdown>
 
       <t-dropdown trigger="click" :popup-container="'.navbar'" class="logout">
-        <div class="click-item">
+        <div class="click-item2">
           <iconpark-icon name="user" size="28px"></iconpark-icon>
         </div>
 
@@ -70,7 +82,7 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
@@ -81,7 +93,7 @@ import { sm2 } from '@/utils/encrypt';
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
-
+const searchContent = ref();
 const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 
 const handleLogout = async () => {
@@ -195,6 +207,19 @@ const setDot = () => {
   console.log('用户主导航平台管理打点');
   // apiDataPoint(null, null, 6, 10);
 };
+
+const onSearch = () => {
+  // TODO w: 商城搜索打点
+  apiDataPoint(null, searchContent.value, 6, 2).then((res) => {
+    console.log('用户主导航栏商品搜索打点', searchContent.value);
+  });
+  router.push({
+    name: 'wowMall',
+    query: {
+      goodsName: searchContent.value,
+    },
+  });
+};
 </script>
 
 <style lang="less" scoped>
@@ -285,10 +310,16 @@ const setDot = () => {
     }
 
     .click-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+
       &:first-child {
         display: flex;
         margin-right: 24px;
       }
+      // background-color: red;
       // margin-right: 8px;
       // padding: 10px 24px 10px 10px;
       &:hover {
@@ -296,12 +327,36 @@ const setDot = () => {
         cursor: pointer;
       }
 
+      .icon-down {
+        margin-bottom: 2px;
+        margin-left: 10px;
+        color: white;
+        opacity: 0.6;
+      }
+
       .companyName {
         display: inline-block;
         max-width: 144px;
+        margin-right: 24px;
+        margin-left: 8px;
         overflow: hidden;
+        color: white;
+        font-size: 12px;
         white-space: nowrap;
         text-overflow: ellipsis;
+        opacity: 0.6;
+      }
+    }
+
+    .click-item2 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+
+      &:hover {
+        background-color: #272e3b;
+        cursor: pointer;
       }
     }
 
