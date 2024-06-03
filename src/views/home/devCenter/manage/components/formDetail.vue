@@ -361,10 +361,13 @@ import {
   reactive,
   ref,
   inject,
-  watch,
 } from 'vue';
-import { fetchApplicationDetail, fetchLaunch } from '@/api/devCenter/manage';
-import { Message } from '@tele-design/web-vue';
+import {
+  fetchApplicationDetail,
+  fetchLaunch,
+  fetchOffineStatus,
+} from '@/api/devCenter/manage';
+import { Message, Modal } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
 import AddFormNext from './addFormNext.vue';
 
@@ -412,6 +415,7 @@ const state = reactive<{
   showAddFormNext: boolean;
   editId: string;
   showModal: boolean;
+  offlineStatus: boolean; // 判断是否可以下线
 }>({
   tableData: [],
   tableLoading: false,
@@ -424,16 +428,10 @@ const state = reactive<{
   showAddFormNext: false,
   editId: '',
   showModal: true,
+  offlineStatus: false,
 });
 
 const emit = defineEmits(['onCancel']);
-
-// watch(
-//   () => props.visible,
-//   (val: boolean) => {
-//     state.showModal = val;
-//   }
-// );
 
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
@@ -441,12 +439,6 @@ const showAuthLimit = computed(() => {
   }
   return false;
 });
-
-const toAnchor = (link: string) => {
-  // 防止hash跳转 点击需要加prevent
-  const ele = document.getElementById(link);
-  ele && ele.scrollIntoView({ block: 'start', behavior: 'smooth' });
-};
 
 const columns = [
   {
@@ -561,6 +553,29 @@ const handleMembersConfirm = (data: []) => {
 
 const handleMembersCancel = () => {
   state.showMemberModal = false;
+};
+
+// 下线
+const handleOffine = async () => {
+  await fetchOffineStatus(props.editId || '').then((res: any) => {
+    state.offlineStatus = res;
+    if (res) {
+      Modal.warning({
+        title: '确定下线该应用吗？',
+        content: '若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线',
+        titleAlign: 'start',
+        okText: '下架应用',
+        hideCancel: false,
+        okLoading: false,
+        okButtonProps: {
+          status: 'danger',
+        },
+        onBeforeOk() {
+          console.log('onBeforeOk');
+        },
+      });
+    }
+  });
 };
 
 const handleAnchorSelect = (hash: string) => {

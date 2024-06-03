@@ -345,4 +345,9 @@ export default [
       });
     },
   },
+  {
+    url: '/server/web/app/info/checkStatus',
+    method: 'get',
+    response: () => successResponseWrap(true),
+  },
 ];

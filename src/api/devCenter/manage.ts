@@ -24,3 +24,8 @@ export function fetchCompanyMember(companyId: string | undefined) {
 export function fetchLaunch(data: Record<string, any>) {
   return $http.post('/server/web/app/info/updateOrLineStatus', data);
 }
+
+// 应用下线
+export function fetchOffineStatus(id: string) {
+  return $http.get(`/server/web/app/info/checkStatus?id=${id}`);
+}
