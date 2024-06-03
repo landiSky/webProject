@@ -25,7 +25,12 @@ export function fetchLaunch(data: Record<string, any>) {
   return $http.post('/server/web/app/info/updateOrLineStatus', data);
 }
 
-// 应用下线
+// 判断应用是否可以下线
 export function fetchOffineStatus(id: string) {
   return $http.get(`/server/web/app/info/checkStatus?id=${id}`);
+}
+
+// 应用下线
+export function fetchOffine(data: Record<string, any>) {
+  return $http.post('/server/web/app/info/lineStatus', data);
 }

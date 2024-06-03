@@ -354,6 +354,7 @@ import {
   fetchApplicationDetail,
   fetchLaunch,
   fetchOffineStatus,
+  fetchOffine,
 } from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
@@ -405,6 +406,7 @@ const state = reactive<{
   editId: string;
   showModal: boolean;
   offlineStatus: boolean; // 判断是否可以下线
+  offlineLoading: boolean;
 }>({
   tableData: [],
   tableLoading: false,
@@ -418,6 +420,7 @@ const state = reactive<{
   editId: '',
   showModal: true,
   offlineStatus: false,
+  offlineLoading: false,
 });
 
 const emit = defineEmits(['onCancel']);
@@ -452,15 +455,6 @@ const validateRadio = (value: number, callback: (error?: string) => void) => {
   }
 };
 
-const computeLength = (data: string) => {
-  if (data.length > 20) {
-    state.showTip = true;
-    return `${data.slice(0, 20)}...`;
-  }
-  state.showTip = false;
-  return data;
-};
-
 const handleTagRemove = (key: string) => {
   form.memberList = form.memberList.filter((item) => item.memberId !== key);
 };
@@ -476,63 +470,30 @@ const handleEdit = () => {
   state.showAddFormNext = true;
 };
 
-// 上线和保存   还差重新请求table数据和loading两个button区分
-const handleLaunchOrSave = (status: number) => {
-  // status保存为0， 上线为1
-  formRef.value.validate((errors: undefined) => {
-    if (!errors) {
-      let params: Record<string, any> = {};
-      if (form.appType === 1) {
-        params = {
-          ...form,
-          memberList: undefined,
-          id: props.editId,
-          memberType: undefined,
-        };
-      } else {
-        const memberIdList = form.memberList.map((i) => i.memberId);
-        params = {
-          ...form,
-          memberList: undefined,
-          id: props.editId,
-        };
-        if (form.memberType === 1) {
-          params.memberIdList = memberIdList;
-        }
-      }
-      params.status = status;
-      state[status ? 'launchLoading' : 'saveLoading'] = true;
-      fetchLaunch(params).then((res) => {
-        if (res.code === 200) {
-          Message.success({
-            content: status === 0 ? '保存成功' : '上线成功',
-            duration: 2000,
-            onClose: () => {
-              state[status ? 'launchLoading' : 'saveLoading'] = false;
-              emit('onCancel');
-              reload();
-            },
-          });
-        } else {
-          state[status ? 'launchLoading' : 'saveLoading'] = false;
-          Message.error(res.message);
-        }
+// 上线
+const handleLaunch = () => {
+  state.launchLoading = true;
+  // 0 未上线 1 上线
+  fetchOffine({ id: props.editId, status: 0 }).then((res: any) => {
+    if (res.code === 200) {
+      Message.success({
+        content: '上线成功',
+        duration: 1000,
+        onClose: () => {
+          state.launchLoading = false;
+          reload();
+        },
       });
+      return;
     }
+    Message.error(res.message);
+    state.launchLoading = false;
+    reload();
   });
 };
 
 const handleBack = () => {
   emit('onCancel');
-};
-
-const handleCopy = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    Message.success('复制成功');
-  } catch (err) {
-    Message.error('复制失败');
-  }
 };
 
 const handleMembersConfirm = (data: []) => {
@@ -555,12 +516,40 @@ const handleOffine = async () => {
         titleAlign: 'start',
         okText: '下架应用',
         hideCancel: false,
-        okLoading: false,
+        okLoading: state.offlineLoading,
         okButtonProps: {
           status: 'danger',
         },
-        onBeforeOk() {
-          console.log('onBeforeOk');
+        onBeforeOk(done) {
+          state.offlineLoading = true;
+          fetchOffine({ id: props.editId, status: 1 }).then((res: any) => {
+            if (res.code === 200) {
+              done(true);
+              Message.success({
+                content: '下线成功',
+                duration: 1000,
+                onClose: () => {
+                  state.offlineLoading = false;
+                  reload();
+                },
+              });
+              return;
+            }
+            Message.error(res.message);
+            state.offlineLoading = false;
+          });
+        },
+      });
+    } else {
+      Modal.warning({
+        title: '该应用因在商城上架，无法下架',
+        content:
+          '当前对接应用已在商城上架，请先下架再下线，若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线。',
+        titleAlign: 'start',
+        okText: '知道了',
+        hideCancel: true,
+        okButtonProps: {
+          type: 'primary',
         },
       });
     }
@@ -635,7 +624,7 @@ onMounted(() => {
   }
 }
 
-.modal-body {
+.content-body {
   display: flex;
   height: 100%;
   padding: 24px 20px;

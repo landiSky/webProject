@@ -337,4 +337,17 @@ export default [
     method: 'get',
     response: () => successResponseWrap(true),
   },
+  {
+    url: '/server/web/app/info/lineStatus',
+    method: 'post',
+    response: () =>
+      successResponseWrap({
+        traceId: null,
+        code: 200,
+        success: true,
+        data: null,
+        message: '操作成功',
+        err: null,
+      }),
+  },
 ];

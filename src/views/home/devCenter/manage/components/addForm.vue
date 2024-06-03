@@ -231,7 +231,6 @@ const uploadSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
   if (res?.code === 200) {
     form.appLogo = fileItem.response.data;
-    console.log('uploadSuccess', fileItem.response.data);
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
     Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);

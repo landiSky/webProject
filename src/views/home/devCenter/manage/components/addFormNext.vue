@@ -603,7 +603,7 @@ const handleLaunchOrSave = (status: number) => {
         if (res.code === 200) {
           Message.success({
             content: status === 0 ? '保存成功' : '上线成功',
-            duration: 2000,
+            duration: 1000,
             onClose: () => {
               state[status ? 'launchLoading' : 'saveLoading'] = false;
               emit('onCancel');
@@ -737,7 +737,6 @@ onMounted(() => {
       state.tableData = [];
     });
   setTimeout(() => {
-    console.log('addFormNext', props.showAnchor);
     if (props.showAnchor) {
       toAnchor('abutInfo');
       const anchorItems = document.getElementsByClassName(
@@ -767,7 +766,7 @@ onMounted(() => {
   margin-bottom: 0;
 }
 
-.modal-body {
+.content-body {
   display: flex;
   height: 100%;
   padding: 0 20px;
