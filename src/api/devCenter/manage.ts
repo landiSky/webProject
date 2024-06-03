@@ -34,3 +34,8 @@ export function fetchOffineStatus(id: string) {
 export function fetchOffine(data: Record<string, any>) {
   return $http.post('/server/web/app/info/lineStatus', data);
 }
+
+// 应用删除
+export function fetchDel(id: string) {
+  return $http.get(`/server/web/app/info/deleteById?id=${id}`);
+}

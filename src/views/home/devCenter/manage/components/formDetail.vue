@@ -352,7 +352,7 @@ import {
 } from 'vue';
 import {
   fetchApplicationDetail,
-  fetchLaunch,
+  fetchDel,
   fetchOffineStatus,
   fetchOffine,
 } from '@/api/devCenter/manage';
@@ -407,6 +407,7 @@ const state = reactive<{
   showModal: boolean;
   offlineStatus: boolean; // 判断是否可以下线
   offlineLoading: boolean;
+  delLoading: boolean;
 }>({
   tableData: [],
   tableLoading: false,
@@ -421,6 +422,7 @@ const state = reactive<{
   showModal: true,
   offlineStatus: false,
   offlineLoading: false,
+  delLoading: false,
 });
 
 const emit = defineEmits(['onCancel']);
@@ -489,6 +491,44 @@ const handleLaunch = () => {
     Message.error(res.message);
     state.launchLoading = false;
     reload();
+  });
+};
+
+// 删除
+const handleDel = () => {
+  console.log('handleDel');
+  Modal.warning({
+    title: '确定删除该应用吗？',
+    content: '',
+    titleAlign: 'start',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onBeforeOk(done) {
+      state.delLoading = true;
+      fetchDel(props.editId || '').then((res: any) => {
+        if (res.code === 200) {
+          done(true);
+          Message.success({
+            content: '删除成功',
+            duration: 1000,
+            onClose: () => {
+              state.delLoading = false;
+              reload();
+            },
+          });
+          return;
+        }
+        Message.error(res.message);
+        state.delLoading = false;
+      });
+    },
+  });
+  fetchDel(props.editId || '').then((res) => {
+    // state.delLoading = false;
+    console.log('res', res);
   });
 };
 

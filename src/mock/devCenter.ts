@@ -350,4 +350,17 @@ export default [
         err: null,
       }),
   },
+  {
+    url: '/server/web/app/info/deleteById',
+    method: 'get',
+    response: () =>
+      successResponseWrap({
+        traceId: null,
+        code: 200,
+        success: true,
+        data: null,
+        message: '操作成功',
+        err: null,
+      }),
+  },
 ];
