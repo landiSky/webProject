@@ -279,11 +279,7 @@ const handleConfirm = () => {
   formRef.value.validate((errors: undefined) => {
     if (!errors) {
       fetchApplicationAdd(form).then((res) => {
-        if (res.code === 200) {
-          emit('onConfirm', res);
-        } else {
-          Message.error(res.message);
-        }
+        emit('onConfirm', res);
       });
     }
   });

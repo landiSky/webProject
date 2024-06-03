@@ -35,7 +35,7 @@
             'show-total': true,
             'show-jumper': true,
             'show-page-size': true,
-            'hide-on-single-page': hideOnSinglePage,
+            'hide-on-single-page': true,
             ...pagination,
             'current': pagination.pageNum,
           }"
@@ -47,36 +47,26 @@
             <span>{{ AppTypeEnum[record.appType] ?? '-' }}</span>
           </template>
           <template #clientId="{ record }">
-            <t-tooltip v-if="state.showTip" :content="record.clientId">
-              <span class="tablecell-item">{{
-                computeLength(record.clientId)
-              }}</span>
-            </t-tooltip>
-            <span v-else class="tablecell-item">{{
-              computeLength(record.clientId)
-            }}</span>
-
-            <icon-copy
-              class="copy"
-              size="14"
-              @click="handleCopy(record.clientId)"
-            />
+            <t-typography-paragraph
+              copyable
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              class="merchantName"
+              >{{ record.clientId }}</t-typography-paragraph
+            >
           </template>
           <template #clientSecret="{ record }">
-            <t-tooltip v-if="state.showTip" :content="record.clientSecret">
-              <span class="tablecell-item">{{
-                computeLength(record.clientSecret)
-              }}</span>
-            </t-tooltip>
-            <span v-else class="tablecell-item">{{
-              computeLength(record.clientSecret)
-            }}</span>
-
-            <icon-copy
-              class="copy"
-              size="14"
-              @click="handleCopy(record.clientSecret)"
-            />
+            <t-typography-paragraph
+              copyable
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              class="merchantName"
+              >{{ record.clientSecret }}</t-typography-paragraph
+            >
           </template>
           <template #status="{ record }">
             <span
@@ -140,10 +130,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { fetchApplicationList } from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
 import FormDetail from './components/formDetail.vue';
@@ -174,8 +165,6 @@ const pagination = reactive<{
   pageSize: 10,
   total: 0,
 });
-
-const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const state = reactive<{
   tableLoading: boolean;
@@ -267,8 +256,6 @@ const columns = [
     title: 'App ID',
     dataIndex: 'clientId',
     slotName: 'clientId',
-    ellipsis: true,
-    tooltip: true,
     width: 160,
   },
   {
@@ -276,13 +263,13 @@ const columns = [
     dataIndex: 'clientSecret',
     slotName: 'clientSecret',
     width: 180,
-    ellipsis: true,
-    tooltip: true,
   },
   {
     title: '应用创建人',
     dataIndex: 'createUser',
     width: 150,
+    ellipsis: true,
+    tooltip: true,
   },
   {
     title: '应用状态',
@@ -301,24 +288,6 @@ const columns = [
   },
 ];
 
-const handleCopy = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    Message.success('复制成功');
-  } catch (err) {
-    Message.error('复制失败');
-  }
-};
-
-const computeLength = (data: string) => {
-  if (data.length > 10) {
-    state.showTip = true;
-    return `${data.slice(0, 10)}...`;
-  }
-  state.showTip = false;
-  return data;
-};
-
 const fetchTableData = async () => {
   state.tableLoading = true;
   const { pageNum, pageSize } = pagination;
@@ -327,10 +296,10 @@ const fetchTableData = async () => {
     companyId: userInfo?.companyId,
     pageNum,
     pageSize,
-  }).then((res) => {
+  }).then((res: any) => {
     state.tableLoading = false;
-    pagination.total = res.data?.total;
-    state.tableData = res.data?.records || [];
+    pagination.total = res.total ?? 0;
+    state.tableData = res.records ?? [];
   });
 };
 
@@ -371,11 +340,11 @@ const handleDetailCancel = () => {
 };
 
 const handleDrawerConfirm = (res: any) => {
-  if (res.data) {
+  if (res) {
     state.showAnchor = true;
     state.showAddFormNext = true;
     // 获取编辑应用信息
-    state.editId = res.data;
+    state.editId = res;
   }
 };
 
@@ -440,6 +409,7 @@ const handleSearch = () => {
 
 const handleReset = () => {
   baseParams.appName = '';
+  fetchTableData();
 };
 
 onMounted(async () => {
@@ -450,6 +420,10 @@ onMounted(async () => {
 <style lang="less" scoped>
 .page-container {
   margin-bottom: 16px;
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 
 .operation-section {
