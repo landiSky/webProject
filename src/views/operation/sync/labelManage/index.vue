@@ -1,6 +1,6 @@
 <template>
   <t-page-header flex title="标签管理" :show-back="false">
-    <t-row class="page-container" :gutter="24">
+    <t-row class="page-container">
       <t-col :span="12">
         <div class="left-page-container" :show-back="false">
           <div class="left-content-layout">
@@ -393,7 +393,7 @@ onMounted(async () => {
 });
 </script>
 
-<style scope lang="less">
+<style scoped lang="less">
 .tele-table-hover:not(.tele-table-dragging)
   .tele-table-tr:not(.tele-table-tr-empty):not(.tele-table-tr-summary):hover
   .tele-table-td:not(.tele-table-col-fixed-left):not(
@@ -427,7 +427,7 @@ onMounted(async () => {
   }
 }
 
-.tele-page-header-content {
+:deep(.tele-page-header-content) {
   padding: 24px 24px 0;
   background: #f2f3f8;
 }
@@ -455,16 +455,18 @@ onMounted(async () => {
 
 .left-page-title,
 .right-page-title {
+  margin-bottom: 16px;
   margin-left: 10px;
   font-weight: 500;
   font-size: 14px;
+  font-family: PingFang SC;
   line-height: 44px;
 }
 
 .left-page-container {
   display: flex;
   align-items: center;
-  padding-right: 15px;
+  padding-right: 24px;
 }
 
 .left-content-layout {

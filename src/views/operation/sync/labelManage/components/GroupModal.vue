@@ -2,7 +2,6 @@
   <t-modal
     v-model:visible="showModal"
     :width="520"
-    :height="324"
     class="group-modal-container"
     body-class="group-modal-body"
     :ok-loading="props.confirmLoading"
