@@ -490,13 +490,11 @@ const handleLaunch = () => {
     }
     Message.error(res.message);
     state.launchLoading = false;
-    reload();
   });
 };
 
 // 删除
 const handleDel = () => {
-  console.log('handleDel');
   Modal.warning({
     title: '确定删除该应用吗？',
     content: '',
@@ -550,7 +548,7 @@ const handleOffine = async () => {
         title: '确定下线该应用吗？',
         content: '若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线',
         titleAlign: 'start',
-        okText: '下架应用',
+        okText: '下线应用',
         hideCancel: false,
         okLoading: state.offlineLoading,
         okButtonProps: {
@@ -578,7 +576,7 @@ const handleOffine = async () => {
       });
     } else {
       Modal.warning({
-        title: '该应用因在商城上架，无法下架',
+        title: '该应用因在商城上架，无法下线',
         content:
           '当前对接应用已在商城上架，请先下架再下线，若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线。',
         titleAlign: 'start',

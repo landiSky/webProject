@@ -80,11 +80,9 @@
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button
-                type="text"
-                @click="handleTableLaunchOrDel(record, 0)"
-                >{{ record.status ? '下线' : '上线' }}</t-button
-              >
+              <t-button type="text" @click="handleTableLaunchOrDel(record)">{{
+                record.status ? '下线' : '上线'
+              }}</t-button>
               <t-button
                 type="text"
                 :disabled="record.status === 1"
@@ -94,7 +92,7 @@
               <t-button
                 type="text"
                 :disabled="record.status === 1"
-                @click="handleTableLaunchOrDel(record, 1)"
+                @click="handleTableDel(record)"
                 >删除</t-button
               >
             </span>
@@ -131,14 +129,18 @@
 
 <script setup lang="ts">
 import { reactive, onMounted } from 'vue';
-import { fetchApplicationList } from '@/api/devCenter/manage';
+import {
+  fetchApplicationList,
+  fetchOffineStatus,
+  fetchOffine,
+  fetchDel,
+} from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
 import FormDetail from './components/formDetail.vue';
-// import OfflineOrDel from './components/offlineOrDel.vue';
 
 const store = useUserStore();
 
@@ -174,10 +176,11 @@ const state = reactive<{
   editId: string;
   showTip: boolean;
   showFormDetail: boolean;
-  mode: number; // 0 代表下线 1代表删除
-  showLaunchOrDel: boolean;
   tableRecord: Record<string, any>;
   showAnchor: boolean;
+  offlineLoading: boolean;
+  launchLoading: boolean;
+  delLoading: boolean;
 }>({
   tableLoading: false,
   tableData: [],
@@ -186,10 +189,11 @@ const state = reactive<{
   editId: '',
   showTip: false,
   showFormDetail: false,
-  mode: 0,
-  showLaunchOrDel: false,
   tableRecord: {},
   showAnchor: false,
+  offlineLoading: false,
+  launchLoading: false,
+  delLoading: false,
 });
 
 const AppTypeList = [
@@ -354,42 +358,111 @@ const handleTableDetail = (record: Record<string, any>) => {
   state.editId = record.id;
 };
 
-const handleText = () => {
-  // 0 未上线 1 已上线
-  const { status } = state.tableRecord as Record<string, any>;
-  return {
-    // eslint-disable-next-line no-nested-ternary
-    btn: state.mode ? '删除' : status ? '下架应用' : '上线应用',
-    // eslint-disable-next-line no-nested-ternary
-    title: state.mode
-      ? '确定删除该应用吗？'
-      : status
-      ? '确定下线该应用吗？'
-      : '确定上线该应用吗？',
-  };
+const handleTableLaunchOrDel = (record: Record<string, any>) => {
+  // 0 未上线 1 上线
+  const { status, id } = record;
+  if (status) {
+    fetchOffineStatus(id).then((res: any) => {
+      if (res) {
+        Modal.warning({
+          title: '确定下线该应用吗？',
+          content:
+            '若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线',
+          titleAlign: 'start',
+          okText: '下线应用',
+          hideCancel: false,
+          okLoading: state.offlineLoading,
+          okButtonProps: {
+            status: 'danger',
+          },
+          onBeforeOk(done) {
+            state.offlineLoading = true;
+            fetchOffine({ id, status: 1 }).then((res: any) => {
+              if (res.code === 200) {
+                done(true);
+                Message.success({
+                  content: '下线成功',
+                  duration: 500,
+                  onClose: () => {
+                    state.offlineLoading = false;
+                    fetchTableData();
+                  },
+                });
+                return;
+              }
+              Message.error(res.message);
+              state.offlineLoading = false;
+            });
+          },
+        });
+      } else {
+        Modal.warning({
+          title: '该应用因在商城上架，无法下线',
+          content:
+            '当前对接应用已在商城上架，请先下架再下线，若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线。',
+          titleAlign: 'start',
+          okText: '知道了',
+          hideCancel: true,
+          okButtonProps: {
+            type: 'primary',
+          },
+        });
+      }
+    });
+  } else {
+    state.launchLoading = true;
+    // 0 未上线 1 上线
+    fetchOffine({ id, status: 0 }).then((res: any) => {
+      if (res.code === 200) {
+        Message.success({
+          content: '上线成功',
+          duration: 500,
+          onClose: () => {
+            state.launchLoading = false;
+            fetchTableData();
+          },
+        });
+        return;
+      }
+      Message.error(res.message);
+      state.launchLoading = false;
+    });
+  }
 };
 
-const handleTableLaunchOrDel = (record: Record<string, any>, mode: number) => {
-  state.showLaunchOrDel = true;
-  state.tableRecord = record;
-  state.mode = mode; // 上下线操作
+// 删除或者下线确认
+const handleTableDel = (record: Record<string, any>) => {
+  const { id } = record;
   Modal.warning({
-    title: handleText().title,
-    content: '你可以自定义此处文本。此对话框将在你点击「删除」按钮后即刻关闭。',
+    title: '确定删除该应用吗？',
+    content: '',
     titleAlign: 'start',
     okText: '删除',
     hideCancel: false,
     okButtonProps: {
       status: 'danger',
     },
+    onBeforeOk(done) {
+      state.delLoading = true;
+      fetchDel(id).then((res: any) => {
+        if (res.code === 200) {
+          done(true);
+          Message.success({
+            content: '删除成功',
+            duration: 500,
+            onClose: () => {
+              state.delLoading = false;
+              fetchTableData();
+            },
+          });
+          return;
+        }
+        Message.error(res.message);
+        state.delLoading = false;
+      });
+    },
   });
 };
-
-// 删除或者下线确认
-const handleModalConfirm = () => {};
-
-// 删除或者下线取消
-const handleModalCancel = (record: Record<string, any>) => {};
 
 const handleTableEdit = (record: Record<string, any>) => {
   state.showAddFormNext = true;

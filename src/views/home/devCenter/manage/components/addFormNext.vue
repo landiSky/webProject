@@ -26,7 +26,7 @@
               type="primary"
               :loading="state.launchLoading"
               @click="handleLaunchOrSave(1)"
-              >上线</t-button
+              >保存并上线</t-button
             >
           </span>
         </div>
@@ -555,15 +555,6 @@ const validateMembers = (
   }
 };
 
-const computeLength = (data: string) => {
-  if (data.length > 20) {
-    state.showTip = true;
-    return `${data.slice(0, 20)}...`;
-  }
-  state.showTip = false;
-  return data;
-};
-
 const handleTagRemove = (key: string) => {
   form.memberList = form.memberList.filter((item) => item.memberId !== key);
 };
@@ -621,15 +612,6 @@ const handleLaunchOrSave = (status: number) => {
 
 const handleBack = () => {
   emit('onCancel');
-};
-
-const handleCopy = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    Message.success('复制成功');
-  } catch (err) {
-    Message.error('复制失败');
-  }
 };
 
 const beforeUpload = (file: File) => {
