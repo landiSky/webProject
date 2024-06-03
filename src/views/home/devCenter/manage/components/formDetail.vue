@@ -526,10 +526,6 @@ const handleDel = () => {
       });
     },
   });
-  fetchDel(props.editId || '').then((res) => {
-    // state.delLoading = false;
-    console.log('res', res);
-  });
 };
 
 const handleBack = () => {
