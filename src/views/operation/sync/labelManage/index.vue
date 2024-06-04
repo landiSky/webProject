@@ -1,7 +1,7 @@
 <template>
-  <t-page-header flex title="商品管理" :show-back="false">
+  <t-page-header flex title="标签管理" :show-back="false">
     <t-row class="page-container">
-      <t-col flex="1">
+      <t-col :span="12">
         <div class="left-page-container" :show-back="false">
           <div class="left-content-layout">
             <div class="left-page-title">分组列表</div>
@@ -42,10 +42,13 @@
               </t-table>
             </div>
           </div>
+          <div>
+            <div class="left-content-img"></div>
+          </div>
         </div>
       </t-col>
-      <t-col flex="40px" class="arrow"><img :src="labelArrow" /></t-col>
-      <t-col flex="1">
+      <!-- <t-col :span="2" class="arrow"><img :src="labelArrow" /></t-col> -->
+      <t-col :span="12">
         <div class="right-page-container" flex :show-back="false">
           <div class="right-content-layout">
             <div class="right-page-title">行业分组标签</div>
@@ -120,8 +123,8 @@ import {
   fetchDelLabel,
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
-import labelArrow from '@/assets/images/inventory/label-arrow.png';
-import GroupModal from './components/groupModal.vue';
+import labelArrow from '@/assets/images/inventory/label-arrow1.png';
+import GroupModal from './components/GroupModal.vue';
 import LabelModal from './components/labelModal.vue';
 
 const state = reactive<{
@@ -176,7 +179,7 @@ const tagGroupColumns = [
   {
     title: '分组名称',
     dataIndex: 'name',
-    width: 140,
+    width: 130,
   },
   {
     title: '标签数',
@@ -188,12 +191,12 @@ const tagGroupColumns = [
     title: '是否支持筛选',
     dataIndex: 'type',
     slotName: 'type',
-    width: 120,
+    width: 110,
   },
   {
     title: '操作',
     slotName: 'operater',
-    width: 126,
+    width: 110,
   },
 ];
 
@@ -207,7 +210,7 @@ const tagColumns = [
   {
     title: '标签名称',
     dataIndex: 'name',
-    width: 140,
+    width: 130,
   },
   {
     title: '打标商品数',
@@ -217,7 +220,7 @@ const tagColumns = [
   {
     title: '操作',
     slotName: 'operater',
-    width: 126,
+    width: 110,
   },
 ];
 
@@ -386,7 +389,7 @@ onMounted(async () => {
 });
 </script>
 
-<style scope lang="less">
+<style scoped lang="less">
 .tele-table-hover:not(.tele-table-dragging)
   .tele-table-tr:not(.tele-table-tr-empty):not(.tele-table-tr-summary):hover
   .tele-table-td:not(.tele-table-col-fixed-left):not(
@@ -420,7 +423,7 @@ onMounted(async () => {
   }
 }
 
-.tele-page-header-content {
+:deep(.tele-page-header-content) {
   padding: 24px 24px 0;
   background: #f2f3f8;
 }
@@ -432,7 +435,9 @@ onMounted(async () => {
     border: 1px solid #c9cdd4;
 
     .add-btn {
+      height: 32px;
       margin-bottom: 10px;
+      padding: 6px 16px 6px 16px;
     }
 
     .tele-table-container {
@@ -446,9 +451,31 @@ onMounted(async () => {
 
 .left-page-title,
 .right-page-title {
+  margin-bottom: 16px;
   margin-left: 10px;
   font-weight: 500;
   font-size: 14px;
+  font-family: PingFang SC;
   line-height: 44px;
+}
+
+.left-page-container {
+  display: flex;
+  align-items: center;
+  padding-right: 24px;
+}
+
+.left-content-layout {
+  width: 100%;
+}
+
+.left-content-img {
+  width: 20px;
+  height: 20px;
+  margin-top: 44px;
+  margin-left: -10px;
+  border-top: 1px solid rgba(201, 205, 212, 1);
+  border-right: 1px solid rgba(201, 205, 212, 1);
+  transform: rotate(45deg);
 }
 </style>

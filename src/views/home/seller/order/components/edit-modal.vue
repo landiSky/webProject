@@ -25,21 +25,21 @@
         >
         <p v-else style="font-weight: 500; font-size: 14px">面议</p>
       </t-form-item>
-      <t-form-item field="amount" label="修改金额">
+      <t-form-item
+        field="amount"
+        label="修改金额"
+        :validate-trigger="['change', 'input']"
+      >
         <t-input-number
           v-model="state.formModel.amount"
           placeholder="请输入"
           class="input-demo"
           :precision="2"
-          :step="2"
+          :step="1"
           :min="0.0"
+          allow-clear
           model-event="input"
         />
-        <!-- <t-input-number
-            v-model="state.formModel.amount"
-            placeholder="请输入"
-            :min="1"
-          /> -->
       </t-form-item>
     </t-form>
     <template #footer>
@@ -128,12 +128,12 @@ const formRules = {
     },
     {
       match: /^\d+(.\d{1,2})?$/,
-      message: '只可输入小数点后两位或大于0的整数',
+      message: '只可输入小数点后两位或大于等于0的整数',
     },
     {
       validator: (value: any, cb: any) => {
-        if (state.formModel.amount <= 0) {
-          return cb('输入金额不能为0');
+        if (state.formModel.amount < 0) {
+          return cb('输入金额不能小于0');
         }
         if (state.formModel.amount > 100000000) {
           return cb('输入金额不能大于 100,000,000');
