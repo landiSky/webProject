@@ -243,6 +243,22 @@ const fetchTagData = (id: string) => {
   });
 };
 
+// 标签列表
+const handleLabelList = async () => {
+  state.groupTableLoading = true;
+  await fetchGroupData().then((res) => {
+    state.groupTableLoading = false;
+    if (res.code === 200) {
+      state.groupTableData = res.data;
+      state.rowKey = res.data[0]?.id; // 默认选择第一个
+      state.groupRowRecord = res.data[0] || {}; // 默认存第一行值供标签使用
+      fetchTagData(res.data[0]?.id);
+    } else {
+      state.groupTableData = [];
+    }
+  });
+};
+
 const handleGroupEdit = (record: any) => {
   state.groupTitle = '编辑分组';
   state.showGroupVisible = true;
@@ -253,7 +269,7 @@ const handleGroupDel = (record: any) => {
   fetchDelGroup(record.id).then((res) => {
     if (res.code === 200) {
       Message.success('删除成功');
-      fetchGroupData();
+      handleLabelList();
     } else {
       Message.error(res.message);
     }
@@ -286,7 +302,7 @@ const handleGroupConfirm = (form: object) => {
       state.confirmGroupLoading = false;
       if (res.code === 200) {
         Message.success('编辑成功');
-        fetchGroupData();
+        handleLabelList();
       } else {
         Message.error(res.message);
       }
@@ -297,7 +313,7 @@ const handleGroupConfirm = (form: object) => {
     state.confirmGroupLoading = false;
     if (res.code === 200) {
       Message.success('新增成功');
-      fetchGroupData();
+      handleLabelList();
       state.showGroupVisible = false;
     } else {
       Message.error(res.message);
@@ -373,41 +389,13 @@ const handleLabelDel = (record: any) => {
   });
 };
 
-onMounted(async () => {
-  state.groupTableLoading = true;
-  await fetchGroupData().then((res) => {
-    state.groupTableLoading = false;
-    if (res.code === 200) {
-      state.groupTableData = res.data;
-      state.rowKey = res.data[0]?.id; // 默认选择第一个
-      state.groupRowRecord = res.data[0] || {}; // 默认存第一行值供标签使用
-      fetchTagData(res.data[0]?.id);
-    } else {
-      state.groupTableData = [];
-    }
-  });
+onMounted(() => {
+  // 调用列表
+  handleLabelList();
 });
 </script>
 
 <style scoped lang="less">
-.tele-table-hover:not(.tele-table-dragging)
-  .tele-table-tr:not(.tele-table-tr-empty):not(.tele-table-tr-summary):hover
-  .tele-table-td:not(.tele-table-col-fixed-left):not(
-    .tele-table-col-fixed-right
-  ) {
-  background: #e8f4ff;
-}
-
-.selectd-row {
-  td {
-    background: #e8f4ff;
-  }
-}
-
-.tele-page-header {
-  padding: 16px 0 0;
-}
-
 .page-container {
   padding: 16px 34px 20px;
   background: #fff;
@@ -426,6 +414,24 @@ onMounted(async () => {
 :deep(.tele-page-header-content) {
   padding: 24px 24px 0;
   background: #f2f3f8;
+
+  .tele-table-hover:not(.tele-table-dragging)
+    .tele-table-tr:not(.tele-table-tr-empty):not(.tele-table-tr-summary):hover
+    .tele-table-td:not(.tele-table-col-fixed-left):not(
+      .tele-table-col-fixed-right
+    ) {
+    background: #e8f4ff;
+  }
+
+  .selectd-row {
+    td {
+      background: #e8f4ff;
+    }
+  }
+
+  .tele-page-header {
+    padding: 16px 0 0;
+  }
 }
 
 .left-content-layout,
@@ -440,7 +446,7 @@ onMounted(async () => {
       padding: 6px 16px 6px 16px;
     }
 
-    .tele-table-container {
+    :deep(.tele-table-container) {
       .tele-btn-size-medium {
         margin-right: 4px;
         padding: 0;
