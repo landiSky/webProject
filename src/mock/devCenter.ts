@@ -319,7 +319,21 @@ export default [
     },
   },
   {
-    url: '/server/web/app/info/updateOrLineStatus',
+    url: '/server/web/app/info/upLine',
+    method: 'post',
+    response: () => {
+      return successResponseWrap({
+        traceId: null,
+        code: 200,
+        success: true,
+        data: null,
+        message: '操作成功',
+        err: null,
+      });
+    },
+  },
+  {
+    url: '/server/web/app/info/save',
     method: 'post',
     response: () => {
       return successResponseWrap({

@@ -22,7 +22,20 @@ export function fetchCompanyMember(companyId: string | undefined) {
 
 // 应用上线
 export function fetchLaunch(data: Record<string, any>) {
-  return $http.post('/server/web/app/info/updateOrLineStatus', data);
+  return $http.post('/server/web/app/info/upLine', data, {
+    customFields: {
+      returnRawResponse: true,
+    },
+  });
+}
+
+// 应用保存
+export function fetchSave(data: Record<string, any>) {
+  return $http.post('/server/web/app/info/save', data, {
+    customFields: {
+      returnRawResponse: true,
+    },
+  });
 }
 
 // 判断应用是否可以下线

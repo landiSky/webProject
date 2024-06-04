@@ -438,7 +438,11 @@ import {
   inject,
 } from 'vue';
 import plus from '@/assets/images/devCenter/plus.png';
-import { fetchApplicationDetail, fetchLaunch } from '@/api/devCenter/manage';
+import {
+  fetchApplicationDetail,
+  fetchLaunch,
+  fetchSave,
+} from '@/api/devCenter/manage';
 import { getToken } from '@/utils/auth';
 import { Message, FileItem } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
@@ -564,45 +568,91 @@ const handleCancel = () => {
   emit('onCancel');
 };
 
-// 上线和保存   还差重新请求table数据和loading两个button区分
+// 上线和保存
 const handleLaunchOrSave = (status: number) => {
   // status保存为0， 上线为1
+
+  // 保存
+  let params: Record<string, any> = {};
+  if (form.appType === 1) {
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+      memberType: undefined,
+    };
+  } else {
+    const memberIdList = form.memberList.map((i) => i.memberId);
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+    };
+    if (form.memberType === 1) {
+      params.memberIdList = memberIdList;
+    }
+  }
+  params.status = status;
+  if (!status) {
+    // 保存
+    state.saveLoading = true;
+    fetchSave(params).then((res) => {
+      const { data } = res;
+      if (data?.code === 200) {
+        Message.success({
+          content: '保存成功',
+          duration: 1000,
+          onClose: () => {
+            state.saveLoading = false;
+            emit('onCancel');
+            reload();
+          },
+        });
+      } else {
+        state.saveLoading = false;
+        Message.error(res.message);
+      }
+    });
+    return;
+  }
+  // 保存并上线
   formRef.value.validate((errors: undefined) => {
     if (!errors) {
-      let params: Record<string, any> = {};
-      if (form.appType === 1) {
-        params = {
-          ...form,
-          memberList: undefined,
-          id: props.editId,
-          memberType: undefined,
-        };
-      } else {
-        const memberIdList = form.memberList.map((i) => i.memberId);
-        params = {
-          ...form,
-          memberList: undefined,
-          id: props.editId,
-        };
-        if (form.memberType === 1) {
-          params.memberIdList = memberIdList;
-        }
-      }
-      params.status = status;
-      state[status ? 'launchLoading' : 'saveLoading'] = true;
+      // let params: Record<string, any> = {};
+      // if (form.appType === 1) {
+      //   params = {
+      //     ...form,
+      //     memberList: undefined,
+      //     id: props.editId,
+      //     memberType: undefined,
+      //   };
+      // } else {
+      //   const memberIdList = form.memberList.map((i) => i.memberId);
+      //   params = {
+      //     ...form,
+      //     memberList: undefined,
+      //     id: props.editId,
+      //   };
+      //   if (form.memberType === 1) {
+      //     params.memberIdList = memberIdList;
+      //   }
+      // }
+      // params.status = status;
+      state.launchLoading = true;
       fetchLaunch(params).then((res) => {
-        if (res.code === 200) {
+        const { data } = res;
+        if (data?.code === 200) {
           Message.success({
-            content: status === 0 ? '保存成功' : '上线成功',
+            content: '上线成功',
             duration: 1000,
             onClose: () => {
-              state[status ? 'launchLoading' : 'saveLoading'] = false;
+              state.launchLoading = false;
               emit('onCancel');
               reload();
             },
           });
         } else {
-          state[status ? 'launchLoading' : 'saveLoading'] = false;
+          state.launchLoading = false;
           Message.error(res.message);
         }
       });
