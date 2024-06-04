@@ -32,6 +32,12 @@
             @check="onSelect"
           />
         </template>
+        <template #target-title="{ countSelected }">
+          <span class="tele-transfer-view-header-title">已选择标签</span>
+          <span class="tele-transfer-view-header-count target-title">
+            {{ countSelected }} / 3
+          </span>
+        </template>
         <template #target="{ data, selectedKeys, onSelect }">
           <t-tree
             ref="targetTreeRef"
