@@ -577,7 +577,7 @@ const codeFtn = (type: number) => {
   }
   apiSendCaptcha({ phone: performs.value.username, type }).then((res) => {
     if (res.data.code === 200) {
-      counts.value = 180;
+      counts.value = 60;
       times.value = setInterval(() => {
         if (counts.value === 0) {
           clearInterval(times.value);

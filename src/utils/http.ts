@@ -82,21 +82,22 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
           clearToken();
 
           // 这样写是为了请登录域名下的 cookie
-          const configInfo = JSON.parse(
-            localStorage.getItem('configInfo') as string
-          );
+          // const configInfo = JSON.parse(
+          //   localStorage.getItem('configInfo') as string
+          // );
 
-          const { logoutUrl, redirectUri } = configInfo || {};
-          const serverUri = import.meta.env.DEV
-            ? import.meta.env.VITE_APP_DEV_HOST
-            : redirectUri;
-
-          if (logoutUrl) {
-            // window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
-            window.location.href = `${serverUri}`;
-          } else {
-            window.location.reload();
-          }
+          // const { logoutUrl, redirectUri } = configInfo || {};
+          // const serverUri = import.meta.env.DEV
+          //   ? import.meta.env.VITE_APP_DEV_HOST
+          //   : redirectUri;
+          const serverUri = `${window.location.origin}/#/login`;
+          window.location.href = `${serverUri}`;
+          // if (logoutUrl) {
+          // window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
+          //   window.location.href = `${serverUri}`;
+          // } else {
+          // window.location.reload();
+          // }
 
           return reject(data);
         }
