@@ -1,7 +1,7 @@
 <template>
   <t-page-header flex title="标签管理" :show-back="false">
     <t-row class="page-container">
-      <t-col :span="12">
+      <t-col class="col-flex">
         <div class="left-page-container" :show-back="false">
           <div class="left-content-layout">
             <div class="left-page-title">分组列表</div>
@@ -42,14 +42,14 @@
               </t-table>
             </div>
           </div>
-          <div>
-            <div class="left-content-img"></div>
-          </div>
         </div>
       </t-col>
+      <div class="conter-triangle">
+        <div class="triangle"></div>
+      </div>
       <!-- <t-col :span="2" class="arrow"><img :src="labelArrow" /></t-col> -->
-      <t-col :span="12">
-        <div class="right-page-container" flex :show-back="false">
+      <t-col class="col-flex">
+        <div class="right-page-container" :show-back="false">
           <div class="right-content-layout">
             <div class="right-page-title">行业分组标签</div>
             <div class="content">
@@ -303,6 +303,7 @@ const handleGroupConfirm = (form: object) => {
       if (res.code === 200) {
         Message.success('编辑成功');
         handleLabelList();
+        state.showGroupVisible = false;
       } else {
         Message.error(res.message);
       }
@@ -382,7 +383,7 @@ const handleLabelDel = (record: any) => {
   fetchDelLabel(record.id).then((res) => {
     if (res.code === 200) {
       Message.success('删除成功');
-      fetchLabelData();
+      fetchTagData(state.rowKey);
     } else {
       Message.error(res.message);
     }
@@ -397,8 +398,16 @@ onMounted(() => {
 
 <style scoped lang="less">
 .page-container {
-  padding: 16px 34px 20px;
+  display: flex;
+  // justify-content: space-between;
+  height: 100%;
+  padding: 16px 0 20px 34px;
   background: #fff;
+
+  .col-flex {
+    flex: 0 3 48%;
+    height: 100%;
+  }
 
   .arrow {
     margin-top: 24%;
@@ -408,6 +417,10 @@ onMounted(() => {
       width: 12px;
       height: 24px;
     }
+  }
+
+  :deep(.tele-page-header) {
+    padding: 16px 0 0 0;
   }
 }
 
@@ -428,15 +441,14 @@ onMounted(() => {
       background: #e8f4ff;
     }
   }
-
-  .tele-page-header {
-    padding: 16px 0 0;
-  }
 }
 
 .left-content-layout,
 .right-content-layout {
+  height: 100%;
+
   .content {
+    height: 100%;
     padding: 20px;
     border: 1px solid #c9cdd4;
 
@@ -465,23 +477,26 @@ onMounted(() => {
   line-height: 44px;
 }
 
-.left-page-container {
+.left-page-container,
+.right-page-container {
+  height: 91%;
+}
+
+.conter-triangle {
   display: flex;
+  flex: 0 3 2%;
   align-items: center;
+  height: 100%;
   padding-right: 24px;
-}
 
-.left-content-layout {
-  width: 100%;
-}
-
-.left-content-img {
-  width: 20px;
-  height: 20px;
-  margin-top: 44px;
-  margin-left: -10px;
-  border-top: 1px solid rgba(201, 205, 212, 1);
-  border-right: 1px solid rgba(201, 205, 212, 1);
-  transform: rotate(45deg);
+  .triangle {
+    width: 20px;
+    height: 20px;
+    margin-top: 60px;
+    margin-left: -10px;
+    border-top: 1px solid rgba(201, 205, 212, 1);
+    border-right: 1px solid rgba(201, 205, 212, 1);
+    transform: rotate(45deg);
+  }
 }
 </style>
