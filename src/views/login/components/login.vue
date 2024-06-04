@@ -162,6 +162,9 @@
             type="primary"
             @click="
               () => {
+                if (Number(counts) > 0) {
+                  return;
+                }
                 captchaType = 5;
                 captchaVisible = true;
               }
@@ -246,6 +249,9 @@
             type="primary"
             @click="
               () => {
+                if (Number(counts) > 0) {
+                  return;
+                }
                 captchaType = 6;
                 captchaVisible = true;
               }
