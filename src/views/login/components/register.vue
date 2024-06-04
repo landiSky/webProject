@@ -258,7 +258,7 @@ const realSendRequest = () => {
     .then((res) => {
       if (res.data.code === 200) {
         Message.success('验证码已发送，注意查收');
-        countDownTime.value = 180; // 3分钟
+        countDownTime.value = 60; // 3分钟
         timerId.value = setInterval(() => {
           if (countDownTime.value <= 0) {
             clearInterval(timerId.value);
