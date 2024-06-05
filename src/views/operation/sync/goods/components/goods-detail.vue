@@ -186,7 +186,13 @@
                 }}
               </t-descriptions-item>
               <t-descriptions-item label="商品标签">
-                {{ '-' }}
+                <div
+                  v-for="(item, index) in formModel?.tagMap"
+                  :key="index"
+                  class="product-labels"
+                  >{{ item.tagName }}</div
+                >
+                <div v-if="!formModel?.tagMap?.length">-</div>
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
                 {{ TypeEnum[formModel.type] }}
@@ -265,12 +271,12 @@
                     >查看应用接入信息</a
                   >
                 </t-descriptions-item>
-                <t-descriptions-item
+                <!-- <t-descriptions-item
                   v-if="formModel.deliveryType == 0"
                   label="应用服务地址"
                 >
                   {{ st.url }}
-                </t-descriptions-item>
+                </t-descriptions-item> -->
                 <t-descriptions-item
                   v-if="formModel.saleType === 0"
                   label="套餐定价设置"
@@ -305,7 +311,7 @@
                   }}
                   元
                 </t-descriptions-item>
-                <t-descriptions-item label="应用秘钥">
+                <!-- <t-descriptions-item label="应用秘钥">
                   <a
                     :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
                       st.appSecret
@@ -313,7 +319,7 @@
                     download
                     >下载秘钥文件</a
                   >
-                </t-descriptions-item>
+                </t-descriptions-item> -->
               </t-descriptions>
             </div>
           </div>
@@ -346,6 +352,7 @@ const PriceTypeEnum: { [name: string]: any } = {
   0: '套餐定价(账号+时长)',
   1: '一口价定价',
   2: '价格面议',
+  3: '免费',
 };
 
 const DurationEnum: { [name: string]: string } = {
@@ -547,6 +554,26 @@ onMounted(() => {
       align-items: start;
       justify-content: start;
       width: 632px;
+
+      .product-labels {
+        display: inline-block;
+        width: 52px;
+        height: 20px;
+        margin-left: 8px;
+        padding: 0 8px;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 400;
+        font-size: 12px;
+        font-family: PingFang SC;
+        line-height: 20px;
+        text-align: center;
+        background: rgba(242, 243, 248, 1);
+        border-radius: 2px 0 0 0;
+      }
+
+      .product-labels:first-child {
+        margin-left: 0;
+      }
 
       a {
         color: #1664ff;

@@ -102,10 +102,13 @@
       </template>
       <template #tag="{ record }">
         <div class="tag-div">
-          <div v-if="record.tag">
-            <t-tag v-for="t in record.tag" :key="t"> {{ t }}</t-tag>
-          </div>
-          <div v-else>-</div>
+          <div
+            v-for="(item, index) in record?.tagMap"
+            :key="index"
+            class="product-labels"
+            >{{ item.tagName }}</div
+          >
+          <div v-if="!record?.tagMap?.length">-</div>
         </div>
       </template>
       <template #productTypeId="{ record }">
@@ -332,7 +335,7 @@ const columns = [
   },
   {
     title: '商品标签',
-    dataIndex: 'tag',
+    dataIndex: 'tagMap',
     slotName: 'tag',
     width: 270,
   },
@@ -626,8 +629,26 @@ onMounted(() => {
 
 .tag-div {
   display: flex;
-  flex-direction: row;
-  gap: 4px 4px;
+
+  .product-labels {
+    display: inline-block;
+    width: 52px;
+    height: 20px;
+    margin-left: 8px;
+    padding: 0 8px;
+    color: rgba(29, 33, 41, 1);
+    font-weight: 400;
+    font-size: 12px;
+    font-family: PingFang SC;
+    line-height: 20px;
+    text-align: center;
+    background: rgba(242, 243, 248, 1);
+    border-radius: 2px 0 0 0;
+  }
+
+  .product-labels:first-child {
+    margin-left: 0;
+  }
 }
 
 :deep(.tele-form-item) {
