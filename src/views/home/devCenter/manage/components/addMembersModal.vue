@@ -92,15 +92,14 @@ const handleCancel = () => {
 
 onMounted(async () => {
   console.log('props.memberList', props.memberList);
-  await fetchCompanyMember(props.companyId).then((res: any) => {
-    if (res.code === 200) {
-      form.memberIdList = res.data;
+  await fetchCompanyMember(props.companyId)
+    .then((res: any) => {
+      form.memberIdList = res;
       form.selectList = props?.memberList.map((item: any) => item.memberId);
-
       console.log('memberList', form.selectList, form.memberIdList);
-    } else {
+    })
+    .catch(() => {
       form.memberIdList = [];
-    }
-  });
+    });
 });
 </script>

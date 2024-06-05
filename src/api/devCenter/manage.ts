@@ -17,7 +17,9 @@ export function fetchApplicationDetail(id: string) {
 
 // 成员列表
 export function fetchCompanyMember(companyId: string | undefined) {
-  return $http.get(`/server/member/getCompanyMember?companyId=${companyId}`);
+  return $http.get(
+    `/server/web/member/getCompanyMember?companyId=${companyId}`
+  );
 }
 
 // 应用上线

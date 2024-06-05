@@ -205,7 +205,7 @@ const beforeUpload = (file: File) => {
         type.endsWith('/jpg') ||
         type.endsWith('/png') ||
         type.endsWith('/bmp') ||
-        type.endsWith('/tif') ||
+        type.endsWith('/jpeg') ||
         type.endsWith('/gif')
       )
     ) {

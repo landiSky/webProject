@@ -10,7 +10,10 @@
       :on-before-back="handleBack"
       @back="emit('onCancel')"
     >
-      <t-alert class="top-inform" type="warning" banner center
+      <t-alert
+        class="top-inform"
+        :type="props.tableRecord?.status ? 'success' : 'warning'"
+        :banner="true"
         >应用状态：{{
           props.tableRecord?.status ? '已上线' : '未上线'
         }}</t-alert
@@ -34,7 +37,19 @@
               @click="handleLaunch"
               >上线</t-button
             >
+            <t-tooltip
+              v-if="props.tableRecord?.status"
+              content="该应用已上线，暂时无法编辑"
+              position="top"
+            >
+              <t-button
+                :disabled="props.tableRecord?.status"
+                @click="handleEdit"
+                >编辑</t-button
+              >
+            </t-tooltip>
             <t-button
+              v-if="!props.tableRecord?.status"
               type="primary"
               :disabled="props.tableRecord?.status"
               @click="handleEdit"
@@ -82,7 +97,7 @@
               :title-style="{
                 fontSize: '14px',
                 lineHeight: '22px',
-                marginBottom: '16px',
+                marginBottom: '24px',
               }"
               :title-divider-style="{ height: '12px' }"
               :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
@@ -96,6 +111,7 @@
                   :columns="columns"
                   :data="state.tableData"
                   :pagination="false"
+                  style="width: 629px"
                 >
                   <template #clientId="{ record }">
                     <t-typography-paragraph
@@ -128,7 +144,6 @@
               :title-style="{
                 fontSize: '14px',
                 lineHeight: '22px',
-                marginBottom: '16px',
               }"
               :title-divider-style="{ height: '12px' }"
               :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
@@ -171,7 +186,7 @@
                     },
                   ]"
                 >
-                  <span>{{ form.introduction }}</span>
+                  <span>{{ form.introduction ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
                   label="应用图标"
@@ -188,14 +203,9 @@
                             width="100px"
                             height="100px"
                             fit="cover"
+                            preview
                             :src="`/server/web/file/download?name=${form.appLogo}`"
-                            :preview-visible="logoVisible"
-                            :preview-props="{
-                              src: `/server/web/file/download?name=${form.appLogo}`,
-                            }"
-                            @preview-visible-change="
-                              () => (logoVisible = false)
-                            "
+                            class="image-cursor"
                           />
                         </div>
                       </div>
@@ -210,7 +220,6 @@
               :title-style="{
                 fontSize: '14px',
                 lineHeight: '22px',
-                marginBottom: '16px',
               }"
               :title-divider-style="{ height: '12px' }"
               :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
@@ -234,7 +243,7 @@
                     },
                   ]"
                 >
-                  <div>{{ form.homeUri }}</div>
+                  <div>{{ form.homeUri ?? '-' }}</div>
                   <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
                   >
@@ -255,7 +264,7 @@
                     },
                   ]"
                 >
-                  <div>{{ form.redirectUri }}</div>
+                  <div>{{ form.redirectUri ?? '-' }}</div>
                   <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
                   >
@@ -269,7 +278,6 @@
               :title-style="{
                 fontSize: '14px',
                 lineHeight: '22px',
-                marginBottom: '16px',
               }"
               :title-divider-style="{ height: '12px' }"
               :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
@@ -355,6 +363,7 @@ import {
   fetchDel,
   fetchOffineStatus,
   fetchOffine,
+  fetchLaunch,
 } from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
@@ -445,7 +454,7 @@ const columns = [
     title: 'APP Secret',
     dataIndex: 'clientSecret',
     slotName: 'clientSecret',
-    width: 418,
+    width: 400,
   },
 ];
 
@@ -474,22 +483,27 @@ const handleEdit = () => {
 
 // 上线
 const handleLaunch = () => {
-  state.launchLoading = true;
-  // 0 未上线 1 上线
-  fetchOffine({ id: props.editId, status: 0 }).then((res: any) => {
-    if (res.code === 200) {
-      Message.success({
-        content: '上线成功',
-        duration: 1000,
-        onClose: () => {
+  formRef.value.validate((errors: undefined) => {
+    if (!errors) {
+      state.launchLoading = true;
+      // 0 未上线 1 上线
+      fetchLaunch({ ...form, id: props.editId, status: 1 }).then((res) => {
+        const { data } = res;
+        if (data?.code === 200) {
+          Message.success({
+            content: '上线成功',
+            duration: 1000,
+            onClose: () => {
+              state.launchLoading = false;
+              reload();
+            },
+          });
+        } else {
           state.launchLoading = false;
-          reload();
-        },
+          Message.error(data.message);
+        }
       });
-      return;
     }
-    Message.error(res.message);
-    state.launchLoading = false;
   });
 };
 
@@ -506,8 +520,8 @@ const handleDel = () => {
     },
     onBeforeOk(done) {
       state.delLoading = true;
-      fetchDel(props.editId || '').then((res: any) => {
-        if (res.code === 200) {
+      fetchDel(props.editId || '')
+        .then(() => {
           done(true);
           Message.success({
             content: '删除成功',
@@ -517,11 +531,11 @@ const handleDel = () => {
               reload();
             },
           });
-          return;
-        }
-        Message.error(res.message);
-        state.delLoading = false;
-      });
+        })
+        .catch(() => {
+          done(false);
+          state.delLoading = false;
+        });
     },
   });
 };
@@ -556,8 +570,8 @@ const handleOffine = async () => {
         },
         onBeforeOk(done) {
           state.offlineLoading = true;
-          fetchOffine({ id: props.editId, status: 1 }).then((res: any) => {
-            if (res.code === 200) {
+          fetchOffine({ id: props.editId, status: 0 })
+            .then(() => {
               done(true);
               Message.success({
                 content: '下线成功',
@@ -567,11 +581,12 @@ const handleOffine = async () => {
                   reload();
                 },
               });
-              return;
-            }
-            Message.error(res.message);
-            state.offlineLoading = false;
-          });
+            })
+            .catch(() => {
+              Message.error(res.message);
+              state.offlineLoading = false;
+              done(false);
+            });
         },
       });
     } else {
@@ -640,22 +655,36 @@ onMounted(() => {
 <style lang="less" scope>
 .tele-modal-fullscreen .tele-modal-body {
   margin: 0;
+  padding: 0 0 24px 0;
 }
 
 :deep(.tele-typography) {
   margin-bottom: 0;
 }
 
-.top-inform {
-  position: relative;
-  margin-top: -24px;
-  line-height: 30px;
-  text-align: center;
+.tele-alert-success {
+  background-color: rgba(232, 244, 255, 1);
+}
 
-  .tele-alert-icon {
-    position: absolute;
-    left: 45%;
+.top-inform {
+  display: flex;
+  justify-content: center;
+  height: 62px;
+  margin-bottom: 25px;
+  padding: 20px 324px 20px 324px;
+
+  .tele-alert-body {
+    display: contents;
   }
+  // position: relative;
+  // margin-top: -24px;
+  // line-height: 30px;
+  // text-align: center;
+
+  // .tele-alert-icon {
+  //   position: absolute;
+  //   left: 45%;
+  // }
 }
 
 .content-body {
@@ -752,6 +781,10 @@ onMounted(() => {
       overflow: hidden;
       border: 1px solid #e5e8ef;
       border-radius: 2px;
+
+      .image-cursor {
+        cursor: pointer;
+      }
 
       .image-hover {
         position: absolute;

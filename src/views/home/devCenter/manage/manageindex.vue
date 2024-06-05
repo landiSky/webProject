@@ -349,6 +349,7 @@ const handleDrawerConfirm = (res: any) => {
     state.showAddFormNext = true;
     // 获取编辑应用信息
     state.editId = res;
+    handleDrawerCancel();
   }
 };
 
@@ -377,8 +378,8 @@ const handleTableLaunchOrDel = (record: Record<string, any>) => {
           },
           onBeforeOk(done) {
             state.offlineLoading = true;
-            fetchOffine({ id, status: 1 }).then((res: any) => {
-              if (res.code === 200) {
+            fetchOffine({ id, status: 0 })
+              .then(() => {
                 done(true);
                 Message.success({
                   content: '下线成功',
@@ -388,11 +389,11 @@ const handleTableLaunchOrDel = (record: Record<string, any>) => {
                     fetchTableData();
                   },
                 });
-                return;
-              }
-              Message.error(res.message);
-              state.offlineLoading = false;
-            });
+              })
+              .catch(() => {
+                state.offlineLoading = false;
+                done(false);
+              });
           },
         });
       } else {
@@ -412,8 +413,8 @@ const handleTableLaunchOrDel = (record: Record<string, any>) => {
   } else {
     state.launchLoading = true;
     // 0 未上线 1 上线
-    fetchOffine({ id, status: 0 }).then((res: any) => {
-      if (res.code === 200) {
+    fetchOffine({ id, status: 1 })
+      .then(() => {
         Message.success({
           content: '上线成功',
           duration: 500,
@@ -422,11 +423,10 @@ const handleTableLaunchOrDel = (record: Record<string, any>) => {
             fetchTableData();
           },
         });
-        return;
-      }
-      Message.error(res.message);
-      state.launchLoading = false;
-    });
+      })
+      .catch(() => {
+        state.launchLoading = false;
+      });
   }
 };
 
@@ -444,8 +444,8 @@ const handleTableDel = (record: Record<string, any>) => {
     },
     onBeforeOk(done) {
       state.delLoading = true;
-      fetchDel(id).then((res: any) => {
-        if (res.code === 200) {
+      fetchDel(id)
+        .then(() => {
           done(true);
           Message.success({
             content: '删除成功',
@@ -455,11 +455,11 @@ const handleTableDel = (record: Record<string, any>) => {
               fetchTableData();
             },
           });
-          return;
-        }
-        Message.error(res.message);
-        state.delLoading = false;
-      });
+        })
+        .catch(() => {
+          state.delLoading = false;
+          done(false);
+        });
     },
   });
 };

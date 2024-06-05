@@ -78,6 +78,7 @@
                   :columns="columns"
                   :data="state.tableData"
                   :pagination="false"
+                  style="width: 629px"
                 >
                   <template #clientId="{ record }">
                     <t-typography-paragraph
@@ -536,7 +537,7 @@ const columns = [
     title: 'APP Secret',
     dataIndex: 'clientSecret',
     slotName: 'clientSecret',
-    width: 418,
+    width: 400,
   },
 ];
 
@@ -610,7 +611,7 @@ const handleLaunchOrSave = (status: number) => {
         });
       } else {
         state.saveLoading = false;
-        Message.error(res.message);
+        Message.error(data?.message);
       }
     });
     return;
@@ -633,7 +634,7 @@ const handleLaunchOrSave = (status: number) => {
           });
         } else {
           state.launchLoading = false;
-          Message.error(res.message);
+          Message.error(data?.message);
         }
       });
     }
@@ -652,7 +653,7 @@ const beforeUpload = (file: File) => {
         type.endsWith('/jpg') ||
         type.endsWith('/png') ||
         type.endsWith('/bmp') ||
-        type.endsWith('/tif') ||
+        type.endsWith('/jpeg') ||
         type.endsWith('/gif')
       )
     ) {

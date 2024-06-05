@@ -292,30 +292,23 @@ export default [
     },
   },
   {
-    url: '/server/member/getCompanyMember',
+    url: '/server/web/member/getCompanyMember',
     method: 'get',
     response: () => {
-      return successResponseWrap({
-        traceId: null,
-        code: 200,
-        success: true,
-        data: [
-          {
-            username: '陈佳佳',
-            memberId: '1793458703685521408',
-          },
-          {
-            username: '陈佳佳',
-            memberId: '1793459596296327168',
-          },
-          {
-            username: '用户名',
-            memberId: '成员id',
-          },
-        ],
-        message: '操作成功',
-        err: null,
-      });
+      return successResponseWrap([
+        {
+          username: '陈佳佳',
+          memberId: '1793458703685521408',
+        },
+        {
+          username: '陈佳佳',
+          memberId: '1793459596296327168',
+        },
+        {
+          username: '用户名',
+          memberId: '成员id',
+        },
+      ]);
     },
   },
   {
