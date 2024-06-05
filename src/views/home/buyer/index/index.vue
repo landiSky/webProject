@@ -1109,6 +1109,7 @@ const goapply = () => {
     router.push('/wow/mall');
   } else {
     // 跳转应用模块
+    router.push('/devCenter/manage');
   }
 };
 
