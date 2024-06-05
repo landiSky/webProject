@@ -954,6 +954,12 @@ const togo = (detailData: Record<string, any>) => {
           companyId,
         };
         snmsClientLogin(params).then((res: any) => {
+          if (res?.data?.code === 102006) {
+            Message.error(res?.data?.message);
+          }
+          if (!res?.data?.data) {
+            return;
+          }
           const data = {
             type: 'snms',
             companyId,

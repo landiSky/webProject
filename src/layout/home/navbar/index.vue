@@ -83,7 +83,7 @@
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
-import { Modal } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { NodeAuthStatus } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
@@ -158,6 +158,9 @@ const clickIdService = () => {
       companyId,
     };
     snmsClientLogin(params).then((res: any) => {
+      if (res?.data?.code === 102006) {
+        Message.error(res?.data?.message);
+      }
       if (!res?.data?.data) {
         return;
       }
