@@ -537,6 +537,7 @@ onMounted(() => {
     margin-right: 150px;
 
     .application-link {
+      margin-left: 8px;
       cursor: pointer;
     }
 
