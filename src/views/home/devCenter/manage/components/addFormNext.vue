@@ -618,26 +618,6 @@ const handleLaunchOrSave = (status: number) => {
   // 保存并上线
   formRef.value.validate((errors: undefined) => {
     if (!errors) {
-      // let params: Record<string, any> = {};
-      // if (form.appType === 1) {
-      //   params = {
-      //     ...form,
-      //     memberList: undefined,
-      //     id: props.editId,
-      //     memberType: undefined,
-      //   };
-      // } else {
-      //   const memberIdList = form.memberList.map((i) => i.memberId);
-      //   params = {
-      //     ...form,
-      //     memberList: undefined,
-      //     id: props.editId,
-      //   };
-      //   if (form.memberType === 1) {
-      //     params.memberIdList = memberIdList;
-      //   }
-      // }
-      // params.status = status;
       state.launchLoading = true;
       fetchLaunch(params).then((res) => {
         const { data } = res;
