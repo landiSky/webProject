@@ -1712,12 +1712,12 @@ const getSelectApplication = () => {
     companyId: userInfoByCompany.value?.companyId,
   };
   selectOnlineMallApps(params).then((data: any) => {
-    applicationList.value = [
-      {
-        value: '1788845955890679808',
-        label: 'saas应用',
-      },
-    ];
+    applicationList.value = data.map((item: any) => {
+      const params = item;
+      params.value = item.id;
+      params.label = item.appName;
+      return params;
+    });
   });
 };
 
