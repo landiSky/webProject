@@ -194,9 +194,9 @@ const clickIdService = () => {
         },
       });
     } else {
-      const { primary } = userInfoByCompany.value || {};
+      const { primary, companyId } = userInfoByCompany.value || {};
       if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
-        const { snmsUrls, companyId } = userInfo.value || {};
+        const { snmsUrls } = userInfo.value || {};
         const params = {
           snmsLoginId: snmsUrls?.snmsLoginId,
           companyId,

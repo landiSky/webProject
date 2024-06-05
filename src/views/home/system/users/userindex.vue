@@ -64,7 +64,7 @@
           {{ record.status === 0 ? '在职' : '离职' }}
         </template>
         <template #operations="{ record }">
-          <t-link
+          <!-- <t-link
             v-if="
               record.memberType === 1 &&
               record.status === 0 &&
@@ -73,7 +73,15 @@
             @click="clickDetailBtn(record)"
           >
             变更管理员
-          </t-link>
+          </t-link> -->
+          <span
+            v-if="
+              record.memberType === 1 &&
+              record.status === 0 &&
+              userInfoByCompany.primary !== rolestatusled.ROLESTATUS
+            "
+            >--</span
+          >
           <t-link
             v-if="
               record.status === 0 &&

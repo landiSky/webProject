@@ -150,9 +150,9 @@ const clickIdService = () => {
   apiDataPoint(null, null, 6, 11).then((res) => {
     console.log('用户主导航点击标识服务打点');
   });
-  const { primary } = userInfoByCompany.value || {};
+  const { primary, companyId } = userInfoByCompany.value || {};
   if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
-    const { snmsUrls, companyId } = userInfo.value || {};
+    const { snmsUrls } = userInfo.value || {};
     const params = {
       snmsLoginId: snmsUrls?.snmsLoginId,
       companyId,

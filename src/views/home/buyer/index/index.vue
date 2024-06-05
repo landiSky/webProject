@@ -948,6 +948,7 @@ const togo = (detailData: Record<string, any>) => {
       okText: '去开通',
       onOk: () => {
         // authModalVisible.value = true;
+        const { companyId } = userInfoByCompany.value || {};
         const params = {
           snmsLoginId: snmsUrls?.snmsLoginId,
           companyId,
