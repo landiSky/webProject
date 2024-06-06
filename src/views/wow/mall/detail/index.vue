@@ -223,8 +223,8 @@
           <div class="evaluate-list">
             <div class="top-list">
               <div
-                :class="appraiseIndex === 1 ? 'appraise' : ''"
-                @click="appraiseClick(1)"
+                :class="appraiseIndex === 3 ? 'appraise' : ''"
+                @click="appraiseClick(3)"
                 >好评 ({{ evaluateDatail?.totalH ?? 0 }})</div
               >
               <div
@@ -233,8 +233,8 @@
                 >中评 ({{ evaluateDatail?.totalZ ?? 0 }})</div
               >
               <div
-                :class="appraiseIndex === 3 ? 'appraise' : ''"
-                @click="appraiseClick(3)"
+                :class="appraiseIndex === 1 ? 'appraise' : ''"
+                @click="appraiseClick(1)"
                 >差评 ({{ evaluateDatail?.totalC ?? 0 }})</div
               >
             </div>
@@ -244,7 +244,7 @@
                 :key="index"
                 class="comment-list"
               >
-                <t-comment :author="item?.nickname ?? '-'">
+                <t-comment :author="item?.nickname || '-'">
                   <template #avatar>
                     <t-image
                       width="52"
@@ -359,7 +359,7 @@ const isPreview = ref(false);
 const introParentRef = ref();
 const fixedTop = ref(false);
 const activeNavIndex = ref(0);
-const appraiseIndex = ref(1);
+const appraiseIndex = ref(3);
 const pagination = reactive<{
   current: number; // 当前页码
   pageSize: number;
@@ -617,6 +617,18 @@ const onIntroScroll = () => {
   fixedTop.value = Boolean(top < 70);
 };
 
+const evaluateTotal = (value: any, data: any) => {
+  if (value === 1) {
+    return data?.totalC;
+  }
+  if (value === 2) {
+    return data?.totalZ;
+  }
+  if (value === 3) {
+    return data?.totalH;
+  }
+  return data?.totalH;
+};
 const BypageList = () => {
   const params = {
     productId: route.params.id, // 商品ID
@@ -627,12 +639,14 @@ const BypageList = () => {
   apiBypageList(params)
     .then((data) => {
       evaluateDatail.value = data;
+      pagination.total = evaluateTotal(appraiseIndex.value, data);
     })
     .catch(() => {});
 };
 
 const appraiseClick = (value: number) => {
   appraiseIndex.value = value;
+  pagination.current = 1;
   BypageList();
 };
 
