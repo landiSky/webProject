@@ -450,6 +450,7 @@
             <div class="tophead-to"
               ><span>{{ item.productName }}</span
               ><span
+                v-if="userInfoByCompany.primary !== AccountType?.UNAUTH"
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
                 @click="togo(item)"
