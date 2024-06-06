@@ -296,7 +296,7 @@
                   }}<t-link
                     :hoverable="false"
                     style="margin-left: 8px"
-                    @click="applicationlink(st.saasAppId)"
+                    @click="applicationlink(st)"
                     >查看应用接入信息</t-link
                   >
                 </t-descriptions-item>
@@ -589,10 +589,12 @@ const toAnchor = (link: string) => {
 };
 
 // 应用跳转详情
-const applicationlink = (id: number) => {
-  console.log('应用id', id);
-  if (id) {
-    router.push({ path: '', query: { selectById: id } });
+const applicationlink = (data: any) => {
+  if (data?.saasAppId) {
+    router.push({
+      name: 'devManage',
+      query: { selectById: data?.saasAppId, selectByState: data?.appStatus },
+    });
   }
 };
 </script>

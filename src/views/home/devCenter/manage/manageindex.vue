@@ -128,7 +128,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import {
   fetchApplicationList,
   fetchOffineStatus,
@@ -143,6 +144,8 @@ import AddFormNext from './components/addFormNext.vue';
 import FormDetail from './components/formDetail.vue';
 
 const store = useUserStore();
+const router = useRouter();
+const route = useRoute();
 
 const { userInfo } = store;
 
@@ -341,6 +344,9 @@ const handleDrawerCancel = () => {
 
 const handleDetailCancel = () => {
   state.showFormDetail = false;
+  if (route.query?.selectById) {
+    router.push({ name: 'devManage' });
+  }
 };
 
 const handleDrawerConfirm = (res: any) => {
@@ -354,6 +360,7 @@ const handleDrawerConfirm = (res: any) => {
 };
 
 const handleTableDetail = (record: Record<string, any>) => {
+  console.log(record);
   state.showFormDetail = true;
   state.tableRecord = record;
   state.editId = record.id;
@@ -484,6 +491,21 @@ const handleReset = () => {
   baseParams.appName = '';
   fetchTableData();
 };
+
+watch(
+  () => route.query.selectById,
+  (newV) => {
+    if (newV) {
+      handleTableDetail({
+        status: Number(route.query.selectByState),
+        id: newV,
+      });
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 onMounted(async () => {
   await fetchTableData();

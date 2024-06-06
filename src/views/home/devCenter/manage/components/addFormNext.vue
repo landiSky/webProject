@@ -11,7 +11,7 @@
       @back="emit('onCancel')"
     >
       <template #footer>
-        <div class="footer">
+        <div class="footer-button">
           <t-button style="margin-right: 8px" @click="handleCancel"
             >取消</t-button
           >
@@ -605,8 +605,8 @@ const handleLaunchOrSave = (status: number) => {
           duration: 1000,
           onClose: () => {
             state.saveLoading = false;
-            emit('onCancel');
-            reload();
+            // emit('onCancel');
+            // reload();
           },
         });
       } else {
@@ -834,7 +834,7 @@ onMounted(() => {
   }
 }
 
-.footer {
+.footer-button {
   display: flex;
   justify-content: space-around;
   padding: 0 100px 0 300px;

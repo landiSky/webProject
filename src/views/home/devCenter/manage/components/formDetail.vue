@@ -19,7 +19,7 @@
         }}</t-alert
       >
       <template #footer>
-        <div class="footer">
+        <div class="footer-button">
           <t-button style="margin-right: 8px" @click="handleCancel"
             >取消</t-button
           >
@@ -358,6 +358,7 @@ import {
   ref,
   inject,
 } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import {
   fetchApplicationDetail,
   fetchDel,
@@ -377,6 +378,8 @@ const props = defineProps({
 });
 
 const reload: any = inject('reload');
+const router = useRouter();
+const route = useRoute();
 
 const anchorRef = ref();
 const logoVisible = ref(false);
@@ -495,6 +498,9 @@ const handleLaunch = () => {
             duration: 1000,
             onClose: () => {
               state.launchLoading = false;
+              if (route.query?.selectById) {
+                router.push({ name: 'devManage' });
+              }
               reload();
             },
           });
@@ -528,6 +534,9 @@ const handleDel = () => {
             duration: 1000,
             onClose: () => {
               state.delLoading = false;
+              if (route.query?.selectById) {
+                router.push({ name: 'devManage' });
+              }
               reload();
             },
           });
@@ -578,6 +587,9 @@ const handleOffine = async () => {
                 duration: 1000,
                 onClose: () => {
                   state.offlineLoading = false;
+                  if (route.query?.selectById) {
+                    router.push({ name: 'devManage' });
+                  }
                   reload();
                 },
               });
@@ -743,7 +755,7 @@ onMounted(() => {
   }
 }
 
-.footer {
+.footer-button {
   display: flex;
   justify-content: space-around;
   padding: 0 100px 0 300px;
