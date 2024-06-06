@@ -27,7 +27,7 @@ export function apiSelectById(params: Record<string, any>) {
 
 //  自建应用修改信息-概览页
 export function apiUpdateOrLineStatus(data: Record<string, any>) {
-  return $http.post('/server/web/app/info/updateOrLineStatus', data);
+  return $http.post('/server/web/app/member/update', data);
 }
 
 // 给应用授权可查看的成员

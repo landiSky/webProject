@@ -8,7 +8,7 @@
       @cancel="emit('cancel')"
     >
       <template #title> 应用授权 </template>
-      <p style="margin-bottom: 20px">邀请企业成员使用2</p>
+      <p style="margin-bottom: 20px">邀请企业成员使用</p>
       <t-select
         v-model="selectMemList"
         placeholder="请选择授权成员"
@@ -44,33 +44,32 @@ import {
 } from '@/api/common';
 
 const store = useUserStore();
-const { userInfo, selectCompany } = storeToRefs(store);
+const { selectCompany } = storeToRefs(store);
 
 const props = defineProps({
   productId: String,
-  deliverySetId: String,
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const visible = ref(true);
 const memberList = ref<{ username: string; memberId: string }[] | []>([]); // 不在当前应用下的成员列表
 const selectMemList = ref<string[]>([]);
-const detailsApplication: Record<string, any> = ref();
 
 // eslint-disable-next-line consistent-return
 const onConfirm = (done: (closed: boolean) => void) => {
+  done(true);
   if (!selectMemList.value.length) {
     done(false);
     return Message.warning(' 请选择要邀请的成员');
   }
 
   apiUpdateOrLineStatus({
-    ...detailsApplication.value,
+    appInfoId: props.productId,
     memberIdList: selectMemList.value,
   })
     .then(() => {
       Message.success('邀请成功!');
       emit('confirm');
-      done(true);
+      done(false);
     })
     .catch(() => {
       done(false);
@@ -79,18 +78,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
 onMounted(() => {
   apiMemberList({
     companyId: selectCompany.value?.companyId,
-    productId: props.productId,
   })
     .then((data: any) => {
       memberList.value = data || [];
     })
     .catch(() => {});
-
   apiSelectById({
     id: props.productId,
   })
     .then((data: any) => {
-      detailsApplication.value = data;
       selectMemList.value = (data?.memberList || []).map(
         (item: { username: string; memberId: string }) => item.memberId
       );

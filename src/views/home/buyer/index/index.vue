@@ -439,14 +439,14 @@
           :key="index"
           class="purchasedlist"
         >
-          <div style="width: 102px">
+          <div v-if="tabsApplication == 1" style="width: 102px">
             <img
               :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
               alt=""
               style="width: 102px; height: 102px"
             />
           </div>
-          <div class="leftcont">
+          <div v-if="tabsApplication == 1" class="leftcont">
             <div class="tophead-to"
               ><span>{{ item.productName }}</span
               ><span
@@ -488,69 +488,46 @@
               ></div
             >
           </div>
-          <!-- <div id="page" class="zhengshu-container-box">
-            <div> 1111 </div> -->
-          <!-- <div class="zhengshu-container-box-title"> 电子数据存证证书 </div>
-            <div class="zhengshu-container-box-bid">
-              存证BID：{detail?.bid || '--'}
+
+          <!-- 企业自建应用 -->
+          <div v-if="tabsApplication == 2" style="width: 102px">
+            <img
+              :src="`/server/web/file/download?name=${item.appLogo}`"
+              alt=""
+              style="width: 102px; height: 102px"
+            />
+          </div>
+          <div v-if="tabsApplication == 2" class="leftcont">
+            <div class="tophead-to"
+              ><span>{{ item.appName }}</span
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                class="to-container"
+                @click="togo(item)"
+              >
+                前往 <span class="to-img"></span></span
+            ></div>
+            <div class="tophead-intro">
+              <t-typography-paragraph
+                style="width: 100%"
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ item.introduction }}
+              </t-typography-paragraph>
             </div>
-            <div class="zhengshu-container-box-center">
-              <div>
-                <span>存证所有人</span>
-                <span>{detail?.belonger || '--'}</span>
-              </div>
-              <div>
-                <span>存证创建者</span>
-                <span>{detail?.creator || '--'}</span>
-              </div>
-              <div>
-                <span>存证类型</span>
-                <span
-                  >{detail?.templateType === 1 ? '文件存证' : '数据存证'}</span
-                >
-              </div>
-              <div>
-                <span>存证时间</span>
-                <span>{detail?.ctime || '--'}</span>
-              </div>
-              <div>
-                <span>存证平台</span>
-                <span>可信存证服务平台</span>
-              </div>
-              <div>
-                <span>所属链 </span>
-                <span>
-                  {detail?.chainInfo?.chainTypeId === 0 ? '自建链' : ''}
-                </span>
-              </div>
-              <div>
-                <span>交易hash</span>
-                <span>{detail?.chainInfo?.blockHash || '--'}</span>
-              </div>
-              <div>
-                <span>上链时间</span>
-                <span>{timestampToTime(detail?.chainInfo?.timestamp)}</span>
-              </div>
+            <div class="tophead"
+              ><span
+                v-if="userInfoByCompany.primary === AccountType?.MAIN"
+                style="color: #1664ff; cursor: pointer"
+                @click="configurationapp(item)"
+              >
+                配置应用
+              </span>
             </div>
-            <div class="zhengshu-container-box-shuoming">
-              <div class="zhengshu-container-box-shuoming-box">
-                <div class="zhengshu-container-box-shuoming-box-title">
-                  证书说明
-                </div>
-                <div class="zhengshu-container-box-shuoming-box-center">
-                  1、本证书数据保全时间采用中国国家科学院授时中心标准时间。
-                </div>
-                <div class="zhengshu-container-box-shuoming-box-center">
-                  2、本证书可作为电子数据备案凭证。
-                </div>
-                <div class="zhengshu-container-box-shuoming-box-center">
-                  3、如需验证电子数据的一致性和保全时间，可在
-                  <a href="http://www.cunzheng.com">http://www.cunzheng.com</a>
-                  查询。
-                </div>
-              </div>
-            </div> -->
-          <!-- </div> -->
+          </div>
         </div>
         <div v-if="authDialogVisible.length === 0" class="nothing-application">
           <div class="nothing-application-img"></div>
@@ -603,9 +580,7 @@
     <!-- 配置自建应用 -->
     <AuthApplicationsModal
       v-if="editModalApplication"
-      :product-id="selectProduct.productId"
-      :delivery-set-id="selectProduct.deliveryId"
-      :account-count="selectProduct.accountCount"
+      :product-id="selectProduct.id"
       @confirm="onEditModalConfirmselfbuilt"
       @cancel="editModalApplication = false"
     >
@@ -819,6 +794,7 @@ const orderlistdata = () => {
 };
 // 已购应用
 const authDialog = () => {
+  authDialogVisible.value = [];
   if (Number(tabsApplication.value) === 1) {
     // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
     authDialogdata({
