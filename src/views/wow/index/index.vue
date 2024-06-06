@@ -168,7 +168,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Modal } from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { NodeAuthStatus } from '@/enums/common';
@@ -194,8 +194,10 @@ import {
   apiNodeOverall,
   apiGetProductId,
 } from '@/api/wow/index';
+import { snmsClientLogin } from '@/api/login';
 import { apiDataPoint } from '@/api/data-point';
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
+import { sm2 } from '@/utils/encrypt';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
@@ -242,26 +244,36 @@ const clickIdService = () => {
       },
     });
   } else {
-    const { snmsUrls } = userInfo.value || {};
-    const { nodeStatus } = userInfoByCompany.value || {};
-    if (nodeStatus === NodeAuthStatus.AUTHED) {
-      window.open(snmsUrls.idPointer, '_blank');
+    const { primary, companyId } = userInfoByCompany.value || {};
+    if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+      const { snmsUrls } = userInfo.value || {};
+      const params = {
+        snmsLoginId: snmsUrls?.snmsLoginId,
+        companyId,
+      };
+      snmsClientLogin(params).then((res: any) => {
+        if (res?.data?.code === 102006) {
+          Message.error(res?.data?.message);
+        }
+        if (!res?.data?.data) {
+          return;
+        }
+        const data = {
+          type: 'snms',
+          companyId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        window.open(`${res?.data?.data}&data=${sm2data}`);
+      });
     } else {
-      Modal.info({
-        title: '使用提醒',
-        content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
+      Modal.warning({
+        title: '仅企业管理员可操作',
+        content: '',
         titleAlign: 'start',
-        hideCancel: false,
-        cancelText: '暂不开通',
-        okText: '去开通',
-        onOk: () => {
-          router.push({
-            path: '/buyer/index',
-            query: {
-              openAuthModal: 1,
-            },
-          });
-        },
+        okText: '好的',
       });
     }
   }
