@@ -133,7 +133,7 @@ const form = ref({
 const btnDisabled = computed(() => {
   const { phone, code, password, confirmPassword } = form.value;
 
-  return !(phone && code && password && confirmPassword);
+  return !(phone && code && password && confirmPassword && agreement.value);
 });
 
 const formRules = {
@@ -178,7 +178,7 @@ const formRules = {
     {
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入确认密码');
-        if (value !== form.value.password) return cb('两次密码不一致');
+        if (value !== form.value.password) return cb('密码和确认密码不一致');
         return cb();
       },
     },

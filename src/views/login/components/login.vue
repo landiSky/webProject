@@ -564,6 +564,8 @@ const onCaptchaCancel = () => {
 
 const tabsChange = (e: any) => {
   console.log(e, 'e--------');
+  formRef.value.resetFields();
+  formRef.value.clearValidate();
 };
 const counts: Record<string, any> = ref();
 const times = ref();

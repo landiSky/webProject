@@ -484,10 +484,12 @@ const handleEditCancel = () => {
 };
 
 const handleSearch = () => {
+  pagination.pageNum = 1;
   fetchTableData();
 };
 
 const handleReset = () => {
+  pagination.pageNum = 1;
   baseParams.appName = '';
   fetchTableData();
 };

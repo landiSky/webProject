@@ -31,7 +31,9 @@
           @click="stop"
           >停止同步</t-button
         >
-        <t-button
+
+        <t-button @click="handleLabel(formModel)">打标</t-button>
+        <!-- <t-button
           v-if="formModel.status === StatusEnum.WTB"
           @click="Message.warning('敬请期待')"
           >打标</t-button
@@ -41,7 +43,7 @@
           type="primary"
           @click="Message.warning('敬请期待')"
           >打标</t-button
-        >
+        > -->
       </div>
     </template>
     <div>
@@ -327,10 +329,26 @@
       </div>
     </div>
   </t-modal>
+
+  <Label
+    v-if="labelVisible"
+    :label-visible="labelVisible"
+    :confirm-loading="state.confirmLoading"
+    :record-data="recordData"
+    @on-confirm="handleLabelConfirm"
+    @on-cancel="handleLabelCancel"
+  />
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, defineEmits, onMounted, computed } from 'vue';
+import {
+  ref,
+  defineProps,
+  defineEmits,
+  onMounted,
+  computed,
+  reactive,
+} from 'vue';
 import {
   goodsDetail,
   startSync,
@@ -338,6 +356,9 @@ import {
   operationLogin,
 } from '@/api/operation/sync-class';
 import { Message, Modal } from '@tele-design/web-vue';
+import { comfirmLabel } from '@/api/inventory/fetchLabel';
+
+import Label from './label.vue';
 
 // 交付方式
 const DeliveryTypeEnum: { [name: string]: any } = {
@@ -497,6 +518,48 @@ const applicationlink = (saasAppId: any) => {
   operationLogin({ appInfoId: saasAppId }).then((res: any) => {
     window.open(res);
   });
+};
+const labelVisible = ref(false);
+const recordData = ref();
+const state = reactive<{
+  confirmLoading: boolean;
+}>({
+  confirmLoading: false,
+});
+
+// 打标
+const handleLabel = (record: any) => {
+  recordData.value = record;
+  labelVisible.value = true;
+};
+
+const handleLabelConfirm = (data = [], productId = '') => {
+  state.confirmLoading = true;
+  const tagIdList = data.map((item: any) => item.key);
+  if (tagIdList.length === 0) {
+    state.confirmLoading = false;
+    return Message.warning('未选择标签');
+  }
+  return comfirmLabel({
+    productId,
+    tagIdList,
+  }).then((res) => {
+    if (res.code === 200) {
+      state.confirmLoading = false;
+      Message.success('打标成功');
+      labelVisible.value = false;
+    } else {
+      Message.success('打标失败');
+      labelVisible.value = false;
+    }
+  });
+  // .finally(() => {
+  //   state.confirmLoading = false;
+  // });
+};
+
+const handleLabelCancel = () => {
+  labelVisible.value = false;
 };
 
 onMounted(() => {

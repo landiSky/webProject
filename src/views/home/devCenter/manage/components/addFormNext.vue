@@ -143,6 +143,7 @@
                       required: true,
                       message: '应用名称不允许为空',
                     },
+                    { maxLength: 50, message: '不允许超过50个字符' },
                   ]"
                 >
                   <t-textarea
@@ -161,6 +162,7 @@
                       required: true,
                       message: '应用描述不允许为空',
                     },
+                    { maxLength: 500, message: '不允许超过500个字符' },
                   ]"
                 >
                   <t-textarea
@@ -259,7 +261,8 @@
                 </t-form-item>
                 <t-form-item label="" field="" class="hint-item">
                   <div class="hint"
-                    >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
+                    >建议图片尺寸：200px *
+                    200px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -690,8 +693,8 @@ const uploadError = (fileItem: FileItem) => {
   logoUploading.value = false;
   form.appLogo = '';
   const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
+  if (size > 10 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过10M`);
   } else {
     Message.error(`上传失败，请检查网络`);
   }
