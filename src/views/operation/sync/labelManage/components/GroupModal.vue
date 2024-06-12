@@ -48,7 +48,7 @@
         <t-textarea
           v-model="form.remark"
           placeholder="请输入"
-          :max-length="500"
+          :max-length="200"
           allow-clear
           show-word-limit
         />
