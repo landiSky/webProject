@@ -123,7 +123,6 @@ import {
   fetchDelLabel,
 } from '@/api/inventory/labelManage';
 import { Message } from '@tele-design/web-vue';
-import labelArrow from '@/assets/images/inventory/label-arrow1.png';
 import GroupModal from './components/GroupModal.vue';
 import LabelModal from './components/labelModal.vue';
 
@@ -233,30 +232,32 @@ const handleAddGroup = () => {
 
 const fetchTagData = (id: string) => {
   state.tagTableLoading = true;
-  fetchLabelData(id).then((res) => {
-    state.tagTableLoading = false;
-    if (res.code === 200) {
+  fetchLabelData(id)
+    .then((res) => {
+      state.tagTableLoading = false;
       state.tagTableData = res.data;
-    } else {
+    })
+    .catch(() => {
+      state.tagTableLoading = false;
       state.tagTableData = [];
-    }
-  });
+    });
 };
 
-// 标签列表
-const handleLabelList = async () => {
+// 标签列表 有id的代表只更新标签，高亮显示在当前选择的分组不变
+const handleLabelList = async (id: string) => {
   state.groupTableLoading = true;
-  await fetchGroupData().then((res) => {
-    state.groupTableLoading = false;
-    if (res.code === 200) {
+  await fetchGroupData()
+    .then((res) => {
+      state.groupTableLoading = false;
       state.groupTableData = res.data;
-      state.rowKey = res.data[0]?.id; // 默认选择第一个
-      state.groupRowRecord = res.data[0] || {}; // 默认存第一行值供标签使用
-      fetchTagData(res.data[0]?.id);
-    } else {
+      state.rowKey = id || res.data[0]?.id; // 默认选择第一个
+      state.groupRowRecord = id || res.data[0]; // 默认存第一行值供标签使用
+      fetchTagData(id || res.data[0]?.id);
+    })
+    .catch(() => {
+      state.groupTableLoading = false;
       state.groupTableData = [];
-    }
-  });
+    });
 };
 
 const handleGroupEdit = (record: any) => {
@@ -266,14 +267,14 @@ const handleGroupEdit = (record: any) => {
 };
 
 const handleGroupDel = (record: any) => {
-  fetchDelGroup(record.id).then((res) => {
-    if (res.code === 200) {
+  fetchDelGroup(record.id)
+    .then(() => {
       Message.success('删除成功');
       handleLabelList();
-    } else {
-      Message.error(res.message);
-    }
-  });
+    })
+    .catch((e) => {
+      Message.error(e.message);
+    });
 };
 
 const handleTableRowClick = (record: any, eve: Event) => {
@@ -298,28 +299,30 @@ const handleGroupConfirm = (form: object) => {
     : form;
   // 编辑确认
   if (state.groupEditData) {
-    fetchEditGroup(params).then((res) => {
-      state.confirmGroupLoading = false;
-      if (res.code === 200) {
+    fetchEditGroup(params)
+      .then(() => {
+        state.confirmGroupLoading = false;
         Message.success('编辑成功');
-        handleLabelList();
+        handleLabelList(state.rowKey);
         state.showGroupVisible = false;
-      } else {
-        Message.error(res.message);
-      }
-    });
+      })
+      .catch((e) => {
+        state.confirmGroupLoading = false;
+        Message.error(e.message);
+      });
     return;
   }
-  fetchAddGroup(params).then((res) => {
-    state.confirmGroupLoading = false;
-    if (res.code === 200) {
+  fetchAddGroup(params)
+    .then(() => {
+      state.confirmGroupLoading = false;
       Message.success('新增成功');
-      handleLabelList();
+      handleLabelList(state.rowKey);
       state.showGroupVisible = false;
-    } else {
-      Message.error(res.message);
-    }
-  });
+    })
+    .catch((e) => {
+      state.confirmGroupLoading = false;
+      Message.error(e.message);
+    });
 };
 
 const handleGroupCancel = () => {
@@ -341,29 +344,31 @@ const handleLabelConfirm = (form) => {
     : { ...form, groupId: state.groupRowRecord.id };
 
   if (state.labelEditData) {
-    fetchEditLabel(params).then((res) => {
-      state.confirmLabelLoading = false;
-      if (res.code === 200) {
+    fetchEditLabel(params)
+      .then(() => {
+        state.confirmLabelLoading = false;
         Message.success('编辑成功');
         fetchTagData(state.rowKey);
         state.showLabelVisible = false;
-      } else {
-        Message.error(res.message);
-      }
-    });
+      })
+      .catch((e) => {
+        Message.error(e.message);
+        state.confirmLabelLoading = false;
+      });
     return;
   }
 
-  fetchAddLabel(params).then((res) => {
-    state.confirmLabelLoading = false;
-    if (res.code === 200) {
+  fetchAddLabel(params)
+    .then(() => {
+      state.confirmLabelLoading = false;
       Message.success('新增成功');
       fetchTagData(state.rowKey);
       state.showLabelVisible = false;
-    } else {
-      Message.error(res.message);
-    }
-  });
+    })
+    .catch((e) => {
+      state.confirmLabelLoading = false;
+      Message.error(e.message);
+    });
 };
 
 // 标签关闭
@@ -380,14 +385,14 @@ const handleLabelEdit = (record: any) => {
 
 // 标签删除
 const handleLabelDel = (record: any) => {
-  fetchDelLabel(record.id).then((res) => {
-    if (res.code === 200) {
+  fetchDelLabel(record.id)
+    .then(() => {
       Message.success('删除成功');
       fetchTagData(state.rowKey);
-    } else {
-      Message.error(res.message);
-    }
-  });
+    })
+    .catch((e) => {
+      Message.error(e.message);
+    });
 };
 
 onMounted(() => {
