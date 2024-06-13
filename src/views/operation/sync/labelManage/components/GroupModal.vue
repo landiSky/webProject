@@ -131,7 +131,7 @@ const handleCancel = () => {
 onMounted(() => {
   fetchFilterData().then((res) => {
     if (res.code === 200) {
-      typeDisabled.value = res.data > 3;
+      typeDisabled.value = res.data >= 3;
     }
   });
 });
