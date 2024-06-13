@@ -651,9 +651,9 @@ onMounted(() => {
     border-radius: 2px 0 0 0;
   }
 
-  // .product-labels:first-child {
-  //   margin-left: 0;
-  // }
+  .product-labels:first-child {
+    margin-left: 0;
+  }
 }
 
 :deep(.tele-form-item) {
