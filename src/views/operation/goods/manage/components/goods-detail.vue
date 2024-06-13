@@ -675,7 +675,7 @@ const applicationlink = (saasAppId: any) => {
 
       .product-labels {
         display: inline-block;
-        width: 52px;
+        // width: 52px;
         height: 20px;
         margin-left: 8px;
         padding: 0 8px;
