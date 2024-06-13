@@ -122,7 +122,7 @@ import {
   fetchEditLabel,
   fetchDelLabel,
 } from '@/api/inventory/labelManage';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import GroupModal from './components/GroupModal.vue';
 import LabelModal from './components/labelModal.vue';
 
@@ -267,14 +267,26 @@ const handleGroupEdit = (record: any) => {
 };
 
 const handleGroupDel = (record: any) => {
-  fetchDelGroup(record.id)
-    .then(() => {
-      Message.success('删除成功');
-      handleLabelList();
-    })
-    .catch((e) => {
-      Message.error(e.message);
-    });
+  Modal.warning({
+    title: '确认删除该分组吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      fetchDelGroup(record.id)
+        .then(() => {
+          Message.success('删除成功');
+          handleLabelList();
+        })
+        .catch((e) => {
+          Message.error(e.message);
+        });
+    },
+  });
 };
 
 const handleTableRowClick = (record: any, eve: Event) => {
@@ -385,14 +397,26 @@ const handleLabelEdit = (record: any) => {
 
 // 标签删除
 const handleLabelDel = (record: any) => {
-  fetchDelLabel(record.id)
-    .then(() => {
-      Message.success('删除成功');
-      fetchTagData(state.rowKey);
-    })
-    .catch((e) => {
-      Message.error(e.message);
-    });
+  Modal.warning({
+    title: '确认删除该分组下的标签吗？',
+    titleAlign: 'start',
+    content: '',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      fetchDelLabel(record.id)
+        .then(() => {
+          Message.success('删除成功');
+          fetchTagData(state.rowKey);
+        })
+        .catch((e) => {
+          Message.error(e.message);
+        });
+    },
+  });
 };
 
 onMounted(() => {
