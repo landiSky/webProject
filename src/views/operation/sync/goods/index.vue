@@ -106,8 +106,11 @@
             v-for="(item, index) in record?.tagMap"
             :key="index"
             class="product-labels"
-            >{{ item.tagName }}</div
           >
+            <t-tooltip :content="item.tagName">
+              <span>{{ item.tagName }}</span>
+            </t-tooltip>
+          </div>
           <div v-if="!record?.tagMap?.length">-</div>
         </div>
       </template>
@@ -336,8 +339,9 @@ const columns = [
   {
     title: '商品标签',
     dataIndex: 'tagMap',
+    ellipsis: true,
     slotName: 'tag',
-    width: 270,
+    width: 300,
   },
 
   {
@@ -632,23 +636,26 @@ onMounted(() => {
 
   .product-labels {
     display: inline-block;
-    width: 52px;
+    width: 100px;
     height: 20px;
     margin-left: 8px;
     padding: 0 8px;
+    overflow: hidden;
     color: rgba(29, 33, 41, 1);
     font-weight: 400;
     font-size: 12px;
     font-family: PingFang SC;
     line-height: 20px;
+    white-space: nowrap;
     text-align: center;
+    text-overflow: ellipsis;
     background: rgba(242, 243, 248, 1);
     border-radius: 2px 0 0 0;
   }
 
-  .product-labels:first-child {
-    margin-left: 0;
-  }
+  // .product-labels:first-child {
+  //   margin-left: 0;
+  // }
 }
 
 :deep(.tele-form-item) {
