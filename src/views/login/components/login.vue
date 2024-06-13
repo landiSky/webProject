@@ -3,7 +3,7 @@
     <div v-if="state == 1">
       <span class="title">欢迎登录智数通平台</span>
       <t-tabs default-active-key="1" @change="tabsChange">
-        <t-tab-pane key="1" title="密码登录">
+        <t-tab-pane key="1" title="手机号登录">
           <form
             ref="orgFormRef"
             action="/auth/login"
