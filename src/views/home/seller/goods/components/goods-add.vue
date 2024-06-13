@@ -355,11 +355,6 @@
                 @change="radiogroupChange"
               >
               </t-radio-group>
-              <t-link
-                v-if="formModel2.deliveryType === 0"
-                @click="Message.warning('开发中')"
-                >《SaaS类应用对接指南》</t-link
-              >
             </t-form-item>
             <t-form-item label="商品定价方式">
               <t-radio-group v-model="formModel2.saleType">
@@ -1031,7 +1026,7 @@ const copyModal = ref<any[]>([
       },
     ],
     durationList: [],
-    isTry: 0,
+    isTry: 1,
     tryUrl: '',
     tryAccount: '',
     tryPwd: '',
@@ -1043,7 +1038,7 @@ const copyModal2 = ref<any[]>([
     url: '',
     productDeliverySetInfoList: [{ price: null }],
     onePiece: null,
-    isTry: 0,
+    isTry: 1,
     tryUrl: '',
     tryAccount: '',
     tryPwd: '',
@@ -1052,7 +1047,7 @@ const copyModal2 = ref<any[]>([
 const copyModal3 = ref<any[]>([
   {
     name: '',
-    isTry: 0,
+    isTry: 1,
     tryUrl: '',
     tryAccount: '',
     tryPwd: '',
@@ -1062,10 +1057,6 @@ const copyModal4 = ref<any[]>([
   {
     name: '',
     saasAppId: '',
-    isTry: 0,
-    tryUrl: '',
-    tryAccount: '',
-    tryPwd: '',
   },
 ]);
 
@@ -1099,7 +1090,7 @@ const addCopy = () => {
         },
       ],
       durationList: [],
-      isTry: 0,
+      isTry: 1,
       tryUrl: '',
       tryAccount: '',
       tryPwd: '',
@@ -1110,7 +1101,7 @@ const addCopy = () => {
       url: '',
       onePiece: null,
       productDeliverySetInfoList: [{ price: null }],
-      isTry: 0,
+      isTry: 1,
       tryUrl: '',
       tryAccount: '',
       tryPwd: '',
@@ -1123,7 +1114,7 @@ const addCopy = () => {
   } else {
     copyModal3.value.push({
       name: '',
-      isTry: 0,
+      isTry: 1,
       tryUrl: '',
       tryAccount: '',
       tryPwd: '',
@@ -1532,7 +1523,7 @@ const getDetail = (id: any) => {
           url: '',
           productDeliverySetInfoList: [{ accountNum: '', price: '' }],
           durationList: [],
-          isTry: 0,
+          isTry: 1,
           tryUrl: '',
           tryAccount: '',
           tryPwd: '',
@@ -1572,7 +1563,7 @@ const getDetail = (id: any) => {
           name: '',
           url: '',
           productDeliverySetInfoList: [{ price: '' }],
-          isTry: 0,
+          isTry: 1,
           tryUrl: '',
           tryAccount: '',
           tryPwd: '',
@@ -1610,7 +1601,7 @@ const getDetail = (id: any) => {
       } else {
         copyModal3.value.push({
           name: '',
-          isTry: 0,
+          isTry: 1,
           tryUrl: '',
           tryAccount: '',
           tryPwd: '',

@@ -124,7 +124,7 @@
         </div>
         <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
         <div
-          v-if="userInfoByCompany.nodeStatus !== NodeAuthStatus.AUTHED"
+          v-if="userInfoByCompany.certificateStatus !== NodeAuthStatus.AUTHED"
           class="direction"
         >
           <div class="dirleft">
