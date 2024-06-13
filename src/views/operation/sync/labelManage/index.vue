@@ -244,15 +244,15 @@ const fetchTagData = (id: string) => {
 };
 
 // 标签列表 有id的代表只更新标签，高亮显示在当前选择的分组不变
-const handleLabelList = async (id: string) => {
+const handleLabelList = async () => {
   state.groupTableLoading = true;
   await fetchGroupData()
     .then((res) => {
       state.groupTableLoading = false;
       state.groupTableData = res.data;
-      state.rowKey = id || res.data[0]?.id; // 默认选择第一个
-      state.groupRowRecord = id || res.data[0]; // 默认存第一行值供标签使用
-      fetchTagData(id || res.data[0]?.id);
+      state.rowKey = res.data[0]?.id; // 默认选择第一个
+      state.groupRowRecord = res.data[0] || []; // 默认存第一行值供标签使用
+      fetchTagData(res.data[0]?.id);
     })
     .catch(() => {
       state.groupTableLoading = false;
@@ -303,7 +303,7 @@ const handleGroupConfirm = (form: object) => {
       .then(() => {
         state.confirmGroupLoading = false;
         Message.success('编辑成功');
-        handleLabelList(state.rowKey);
+        handleLabelList();
         state.showGroupVisible = false;
       })
       .catch((e) => {
@@ -316,7 +316,7 @@ const handleGroupConfirm = (form: object) => {
     .then(() => {
       state.confirmGroupLoading = false;
       Message.success('新增成功');
-      handleLabelList(state.rowKey);
+      handleLabelList();
       state.showGroupVisible = false;
     })
     .catch((e) => {
