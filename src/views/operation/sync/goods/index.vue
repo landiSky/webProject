@@ -486,19 +486,17 @@ const handleLabelConfirm = (data = [], productId = '') => {
   return comfirmLabel({
     productId,
     tagIdList,
-  }).then((res) => {
-    if (res.code === 200) {
+  })
+    .then(() => {
       state.confirmLoading = false;
       Message.success('打标成功');
       labelVisible.value = false;
-    } else {
-      Message.success('打标失败');
-      labelVisible.value = false;
-    }
-  });
-  // .finally(() => {
-  //   state.confirmLoading = false;
-  // });
+      fetchData();
+    })
+    .catch((e) => {
+      state.confirmLoading = false;
+      Message.error(e.message);
+    });
 };
 
 const handleLabelCancel = () => {
@@ -668,5 +666,9 @@ onMounted(() => {
   font-size: 12px;
   line-height: 20px;
   text-align: center;
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 </style>

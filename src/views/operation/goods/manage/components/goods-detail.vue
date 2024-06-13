@@ -803,4 +803,8 @@ const applicationlink = (saasAppId: any) => {
   font-size: 12px;
   line-height: 20px;
 }
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
+}
 </style>
