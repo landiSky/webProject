@@ -3,7 +3,6 @@
     <t-modal
       v-model:visible="visible"
       fullscreen
-      :has-back-btn="false"
       ok-text="完成"
       popup-container=".add-goods-container"
       :on-before-back="onBack"
