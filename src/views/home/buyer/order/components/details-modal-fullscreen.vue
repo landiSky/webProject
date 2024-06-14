@@ -209,7 +209,7 @@
                   </t-typography-paragraph>
                 </t-space>
               </div>
-              <div class="informationlist">
+              <div v-if="dataList.saleType !== 3" class="informationlist">
                 <t-space align="start">
                   <div>支付凭证</div>
 
