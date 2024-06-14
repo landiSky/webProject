@@ -485,6 +485,7 @@ const handleEditCancel = () => {
   state.showAddFormNext = false;
   state.showFormDetail = false;
   state.showDrawer = false;
+  fetchTableData();
 };
 
 const handleSearch = () => {
