@@ -161,6 +161,7 @@
                       message: '应用类型不允许为空',
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <span>{{ AppTypeEnum[form.appType] ?? '-' }}</span>
                 </t-form-item>
@@ -173,6 +174,7 @@
                       message: '应用名称不允许为空',
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <span>{{ form.appName ?? '-' }}</span>
                 </t-form-item>
@@ -185,6 +187,7 @@
                       message: '应用描述不允许为空',
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <span>{{ form.introduction ?? '-' }}</span>
                 </t-form-item>
@@ -194,6 +197,7 @@
                   class="pic-item"
                   validate-trigger="blur"
                   :rules="[{ required: true, message: '请上传应用图标' }]"
+                  :hide-asterisk="true"
                 >
                   <div class="file-list">
                     <div v-if="form.appLogo" class="file-container">
@@ -242,11 +246,12 @@
                       message: '请输入正确格式',
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <div>{{ form.homeUri ?? '-' }}</div>
-                  <span class="tip"
+                  <!-- <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
-                  >
+                  > -->
                 </t-form-item>
                 <t-form-item
                   class="tip-content"
@@ -263,11 +268,12 @@
                       message: '请输入正确格式',
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <div>{{ form.redirectUri ?? '-' }}</div>
-                  <span class="tip"
+                  <!-- <span class="tip"
                     >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
-                  >
+                  > -->
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -294,6 +300,7 @@
                       validator: validateRadio,
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <span>{{ MemberEnum[form.memberType] ?? '-' }}</span>
                 </t-form-item>
@@ -310,6 +317,7 @@
                       //   validator: validateMembers,
                     },
                   ]"
+                  :hide-asterisk="true"
                 >
                   <span
                     v-for="item of form.memberList"
@@ -486,31 +494,31 @@ const handleEdit = () => {
 
 // 上线
 const handleLaunch = () => {
-  formRef.value.validate((errors: undefined) => {
-    if (!errors) {
-      state.launchLoading = true;
-      // 0 未上线 1 上线
-      fetchLaunch({ ...form, id: props.editId, status: 1 }).then((res) => {
-        const { data } = res;
-        if (data?.code === 200) {
-          Message.success({
-            content: '上线成功',
-            duration: 1000,
-            onClose: () => {
-              state.launchLoading = false;
-              if (route.query?.selectById) {
-                router.push({ name: 'devManage' });
-              }
-              reload();
-            },
-          });
-        } else {
+  // formRef.value.validate((errors: undefined) => {
+  //   if (!errors) {
+  state.launchLoading = true;
+  // 0 未上线 1 上线
+  fetchLaunch({ ...form, id: props.editId, status: 1 }).then((res) => {
+    const { data } = res;
+    if (data?.code === 200) {
+      Message.success({
+        content: '上线成功',
+        duration: 1000,
+        onClose: () => {
           state.launchLoading = false;
-          Message.error(data.message);
-        }
+          if (route.query?.selectById) {
+            router.push({ name: 'devManage' });
+          }
+          reload();
+        },
       });
+    } else {
+      state.launchLoading = false;
+      Message.error(data.message);
     }
   });
+  //   }
+  // });
 };
 
 // 删除
