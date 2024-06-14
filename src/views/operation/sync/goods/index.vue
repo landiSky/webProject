@@ -107,9 +107,14 @@
             :key="index"
             class="product-labels"
           >
-            <t-tooltip :content="item.tagName">
-              <span>{{ item.tagName }}</span>
-            </t-tooltip>
+            <t-typography-paragraph
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+            >
+              {{ item.tagName }}
+            </t-typography-paragraph>
           </div>
           <div v-if="!record?.tagMap?.length">-</div>
         </div>
@@ -339,9 +344,8 @@ const columns = [
   {
     title: '商品标签',
     dataIndex: 'tagMap',
-    ellipsis: true,
     slotName: 'tag',
-    width: 300,
+    width: 270,
   },
 
   {
@@ -634,19 +638,16 @@ onMounted(() => {
 
   .product-labels {
     display: inline-block;
-    width: 100px;
+    width: 72px;
     height: 20px;
     margin-left: 8px;
     padding: 0 8px;
-    overflow: hidden;
     color: rgba(29, 33, 41, 1);
     font-weight: 400;
     font-size: 12px;
     font-family: PingFang SC;
     line-height: 20px;
-    white-space: nowrap;
     text-align: center;
-    text-overflow: ellipsis;
     background: rgba(242, 243, 248, 1);
     border-radius: 2px 0 0 0;
   }
@@ -665,5 +666,9 @@ onMounted(() => {
   font-size: 12px;
   line-height: 20px;
   text-align: center;
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 </style>

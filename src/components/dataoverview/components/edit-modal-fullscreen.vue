@@ -578,6 +578,11 @@ const loadMore = (option: any, done: any) => {
     getRegion(params).then((res) => {
       if (dictKey === 'PROVINCE') {
         formModel.value.orgAddrProvince = dictCode;
+        // 每次选择省级时清空市区级字段
+        // 市级地址编码
+        formModel.value.orgAddrCity = '';
+        // 区级地址编码
+        formModel.value.orgAddrCounty = '';
       } else if (dictKey === 'CITY') {
         formModel.value.orgAddrCity = dictCode;
       }

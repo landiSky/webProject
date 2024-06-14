@@ -927,8 +927,10 @@ const togo = (detailData: Record<string, any>) => {
         // authModalVisible.value = true;
         const { companyId } = userInfoByCompany.value || {};
         const params = {
+          companyId: userInfo.value?.isAdmin
+            ? userInfo.value?.companyId
+            : companyId,
           snmsLoginId: snmsUrls?.snmsLoginId,
-          companyId,
         };
         snmsClientLogin(params).then((res: any) => {
           if (res?.data?.code === 102006) {
@@ -939,7 +941,9 @@ const togo = (detailData: Record<string, any>) => {
           }
           const data = {
             type: 'snms',
-            companyId,
+            companyId: userInfo.value?.isAdmin
+              ? userInfo.value?.companyId
+              : companyId,
           };
           const sm2data = sm2(
             JSON.stringify(data),

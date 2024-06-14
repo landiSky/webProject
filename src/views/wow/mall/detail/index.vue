@@ -30,13 +30,25 @@
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <span
+            <!-- <span
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
               class="tag"
               :class="{ 'tag-left': index === 0 }"
-              >{{ item.tagName }}</span
+            > -->
+            <t-typography-paragraph
+              v-for="(item, index) in prodDetail?.tagMap"
+              :key="index"
+              class="tag"
+              :class="{ 'tag-left': index === 0 }"
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
             >
+              {{ item.tagName }}
+            </t-typography-paragraph>
+            <!-- </span> -->
           </div>
           <div class="description">
             <t-typography-paragraph
@@ -781,7 +793,7 @@ onUnmounted(() => {
             display: flex;
             align-items: center;
             justify-content: center;
-            // width: 52px;
+            width: 72px;
             height: 24px;
             margin-left: 8px;
             padding: 1px 8px;
@@ -1047,5 +1059,9 @@ onUnmounted(() => {
       }
     }
   }
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 </style>

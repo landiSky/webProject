@@ -1,9 +1,9 @@
 <template>
   <div class="loginWrapper">
     <div v-if="state == 1">
-      <span class="title">欢迎登录工业互联网</span>
+      <span class="title">欢迎登录智数通平台</span>
       <t-tabs default-active-key="1" @change="tabsChange">
-        <t-tab-pane key="1" title="密码登录">
+        <t-tab-pane key="1" title="手机号登录">
           <form
             ref="orgFormRef"
             action="/auth/login"
@@ -65,7 +65,7 @@
           <t-divider direction="vertical" />
           <t-link class="bottomOpt" @click="goRegister">注册账号</t-link>
         </t-tab-pane>
-        <t-tab-pane key="2" title="SNMS登录">
+        <t-tab-pane key="2" title="二级节点账号登录">
           <form
             ref="orgFormRef"
             action="/auth/login"
@@ -87,7 +87,7 @@
             >
               <t-input
                 v-model.trim="form.username"
-                placeholder="请输入用户名"
+                placeholder="请输入二级节点系统用户名"
                 size="large"
                 ><template #prefix>
                   <iconpark-icon name="mobile"></iconpark-icon>
@@ -369,7 +369,7 @@ const formRules2 = {
   username: [
     {
       validator: (value: string, cb: (params?: any) => void) => {
-        if (!value) return cb('请输入用户名');
+        if (!value) return cb('请输入二级节点系统用户名');
         return cb();
       },
     },
@@ -414,15 +414,14 @@ const performsRules = {
     {
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入新密码');
-        return cb();
-        // if (
-        //   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][])[\da-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][]{8,}/.test(
-        //     value
-        //   )
-        // ) {
-        //   return cb();
-        // }
-        // return cb('至少包含8位字符, 且包含大小写字母、数字和特殊字符');
+        if (
+          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][])[\da-zA-Z~!@#$%^&*()_+`\-={}:";'<>?,./\\|\][]{8,}/.test(
+            value
+          )
+        ) {
+          return cb();
+        }
+        return cb('至少包含8位字符, 且包含大小写字母、数字和特殊字符');
       },
     },
   ],

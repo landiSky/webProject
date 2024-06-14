@@ -239,8 +239,16 @@
                   v-for="(item, index) in formModel?.tagMap"
                   :key="index"
                   class="product-labels"
-                  >{{ item.tagName }}</div
                 >
+                  <t-typography-paragraph
+                    :ellipsis="{
+                      rows: 1,
+                      showTooltip: true,
+                    }"
+                  >
+                    {{ item.tagName }}
+                  </t-typography-paragraph>
+                </div>
                 <div v-if="!formModel?.tagMap?.length">-</div>
               </t-descriptions-item>
               <t-descriptions-item label="应用类型">
@@ -675,7 +683,7 @@ const applicationlink = (saasAppId: any) => {
 
       .product-labels {
         display: inline-block;
-        // width: 52px;
+        width: 72px;
         height: 20px;
         margin-left: 8px;
         padding: 0 8px;
@@ -794,5 +802,9 @@ const applicationlink = (saasAppId: any) => {
   color: #1d2129;
   font-size: 12px;
   line-height: 20px;
+}
+
+:deep(.tele-typography) {
+  margin-bottom: 0;
 }
 </style>
