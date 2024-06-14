@@ -182,7 +182,7 @@
                     <p v-if="item.saleType === 3" class="bottom">
                       <span>{{ '(免费)' }}</span>
                     </p>
-                    <!-- <p v-if="item.saleType === 0" class="bottom"
+                    <p v-if="item.saleType === 0" class="bottom"
                       >(
                       <span>{{ item.accountCount }}个账号</span>
                       <span v-if="item.buyDuration !== '0'"
@@ -190,7 +190,7 @@
                       >
                       <span v-else>不限</span>
                       )
-                    </p> -->
+                    </p>
                   </div>
                 </div>
               </t-col>
