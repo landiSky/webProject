@@ -138,16 +138,20 @@ import {
 } from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
 import FormDetail from './components/formDetail.vue';
 
 const store = useUserStore();
+const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 
 const { userInfo } = store;
+
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 const baseParams: Record<string, string | number | null> = reactive<{
   appName: string;
@@ -300,7 +304,7 @@ const fetchTableData = async () => {
   const { pageNum, pageSize } = pagination;
   await fetchApplicationList({
     ...baseParams,
-    companyId: userInfo?.companyId,
+    companyId: userInfoByCompany.value?.companyId,
     pageNum,
     pageSize,
   }).then((res: any) => {

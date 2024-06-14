@@ -165,6 +165,8 @@
 import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue';
 import { Message, FileItem } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import { fetchApplicationAdd } from '@/api/devCenter/manage';
 
 const logoRef = ref();
@@ -175,6 +177,9 @@ const formRef = ref();
 const logoList = ref<any[]>([]);
 const online = ref(true);
 
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+
 const emit = defineEmits(['onConfirm', 'onCancel']);
 
 const form = reactive<{
@@ -182,11 +187,13 @@ const form = reactive<{
   appType: number;
   introduction: string;
   appLogo: string;
+  companyId: string;
 }>({
   appName: '',
   appType: 0, // 1商场
   introduction: '',
   appLogo: '',
+  companyId: userInfoByCompany.value?.companyId,
 });
 
 const props = defineProps({
