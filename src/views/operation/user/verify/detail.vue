@@ -65,7 +65,9 @@
           }}/{{ currentData.itemInfo?.orgAddrCounty }}
         </t-descriptions-item>
         <t-descriptions-item>
-          {{ currentData.itemInfo?.orgAddr }}
+          <t-typography-paragraph style="width: 492px">
+            {{ currentData.itemInfo?.orgAddr }}
+          </t-typography-paragraph>
         </t-descriptions-item>
         <t-descriptions-item label="法人姓名">
           {{ currentData.itemInfo.legalPersonName ?? '-' }}
