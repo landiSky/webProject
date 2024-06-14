@@ -127,7 +127,7 @@
           :headers="uploadHeaders"
           action="/server/web/file/upload"
           :show-cancel-button="false"
-          accept=".png,.jpg,.bmp,.jpeg,.gif"
+          accept=".jpg,.png,.bmp,.tif,.gif"
           :show-file-list="false"
           @before-upload="beforeUpload"
           @success="uploadSuccess"
@@ -213,7 +213,7 @@ const beforeUpload = (file: File) => {
         type.endsWith('/jpg') ||
         type.endsWith('/png') ||
         type.endsWith('/bmp') ||
-        type.endsWith('/jpeg') ||
+        type.endsWith('/tif') ||
         type.endsWith('/gif')
       )
     ) {
