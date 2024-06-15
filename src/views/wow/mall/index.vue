@@ -222,6 +222,17 @@
                   <t-tag color="#E8F4FF">{{
                     DeliverTypeDesc[item.deliveryType]
                   }}</t-tag>
+                  <t-typography-paragraph
+                    v-for="(item2, index) in item?.tagList"
+                    :key="index"
+                    class="tagList"
+                    :ellipsis="{
+                      rows: 1,
+                      showTooltip: true,
+                    }"
+                  >
+                    {{ item2.name }}
+                  </t-typography-paragraph>
                 </span>
                 <span class="desc">
                   <t-typography-paragraph
@@ -689,11 +700,17 @@ onMounted(() => {
           }
 
           .tag {
+            display: flex;
+
             :deep(.tele-tag) {
               color: #1664ff;
               font-weight: 400;
               font-size: 12px;
               line-height: 22px; /* 183.333% */
+            }
+
+            :deep(.tele-typography) {
+              margin-bottom: 0;
             }
           }
 
@@ -731,5 +748,21 @@ onMounted(() => {
       }
     }
   }
+}
+
+.tagList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 24px;
+  margin-left: 8px;
+  padding: 1px 8px;
+  color: rgba(22, 100, 255, 1);
+  font-weight: 400;
+  font-size: 12px;
+  font-family: PingFang SC;
+  background: rgba(232, 244, 255, 1);
+  border-radius: 2px;
 }
 </style>
