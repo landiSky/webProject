@@ -134,8 +134,8 @@ export function createPermissionGuard(router: Router) {
       next();
     } else {
       // s4: 没有 token，需要鉴权，去登录页
-      // userStore.jumpToLogin();
-      next('/login');
+      userStore.jumpToLogin();
+      // next('/login');
     }
   });
 }

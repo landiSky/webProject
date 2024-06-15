@@ -549,7 +549,9 @@ const realLoginRequest = () => {
     .then((data) => {
       // orgFormRef.value.submit();
       setToken(data.tokenValue);
-      router.push({ path: '/buyer/index' });
+      const mallDetailPath = sessionStorage.getItem('mallDetailPath');
+      const uriHash = mallDetailPath || '/buyer/index';
+      router.push({ path: uriHash });
     })
     .catch(() => {
       loginLoading.value = false;
