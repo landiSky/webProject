@@ -114,9 +114,9 @@
               <div class="informationlist">
                 <p style="float: left; width: 108px">企业地址</p>
                 <p style="float: left"
-                  >{{ detaillist?.orgAddrProvince }}/{{
-                    detaillist?.orgAddrCity
-                  }}/{{ detaillist?.orgAddrCounty }}</p
+                  >{{ detaillist?.orgAddrProvinceValue }}/{{
+                    detaillist?.orgAddrCityValue
+                  }}/{{ detaillist?.orgAddrCountyValue }}</p
                 >
               </div>
               <div class="informationlist">
@@ -264,6 +264,9 @@ const detaillist = ref({
   orgAddrCity: '',
   orgAddrCounty: '',
   orgAddrProvince: '',
+  orgAddrCityValue: '',
+  orgAddrCountyValue: '',
+  orgAddrProvinceValue: '',
 });
 
 const emit = defineEmits(['confirm', 'cancel']);

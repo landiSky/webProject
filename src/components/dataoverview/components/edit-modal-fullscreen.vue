@@ -72,11 +72,10 @@
           </t-input>
         </t-form-item>
         <!--测试1 企业地址-->
-        <t-form-item label="企业地址" field="orgAddrCounty">
+        <t-form-item label="企业地址" field="address">
           <t-cascader
-            v-model="formModel.orgAddrCounty"
+            v-model="formModel.address"
             placeholder="请选择省/市/区"
-            allow-clear
             :load-more="loadMore"
             :options="registration"
           />
@@ -369,6 +368,8 @@ const formModel = ref<Record<string, any>>({
   orgAddrCity: '',
   // 区级地址编码
   orgAddrCounty: '',
+
+  address: [],
 });
 
 const formRules: any = {
@@ -428,7 +429,7 @@ const formRules: any = {
     },
   ],
   // contactidcard: [{ required: true, message: '请上传身份证' }],
-  orgAddrCounty: [
+  address: [
     {
       required: true,
       validator: (value: string, cb: (params?: any) => void) => {
@@ -443,6 +444,7 @@ const formRules: any = {
       required: true,
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入详细地址');
+        if (value.length < 5) return cb('详细地址长度在5-500');
         return cb();
       },
     },
@@ -465,6 +467,13 @@ const getUserDetail = () => {
       //  @ts-ignore
       formModel.value = res;
       formModel.value.type = 1;
+      formModel.value.address = [
+        [
+          res.orgAddrProvinceValue,
+          res.orgAddrCityValue,
+          res.orgAddrCountyValue,
+        ],
+      ];
     })
     .catch((error) => {});
 };
@@ -525,6 +534,11 @@ const beforeUpload = (file: File) => {
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
+      if (!formModel.value.orgAddrCity) {
+        formModel.value.orgAddrCity = formModel.value.address;
+      } else {
+        formModel.value.orgAddrCounty = formModel.value.address;
+      }
       // setFields;
       authRepeat({ creditCode: formModel.value.creditCode })
         .then((res) => {
@@ -570,7 +584,7 @@ const canceldes = () => {
 
 // 地区选择
 const loadMore = (option: any, done: any) => {
-  const { id, dictKey, dictCode } = option;
+  const { id, dictKey, dictCode, hasChildren } = option;
   const promise = new Promise((resolve) => {
     const params = {
       parentId: id,
@@ -578,10 +592,7 @@ const loadMore = (option: any, done: any) => {
     getRegion(params).then((res) => {
       if (dictKey === 'PROVINCE') {
         formModel.value.orgAddrProvince = dictCode;
-        // 每次选择省级时清空市区级字段
-        // 市级地址编码
         formModel.value.orgAddrCity = '';
-        // 区级地址编码
         formModel.value.orgAddrCounty = '';
       } else if (dictKey === 'CITY') {
         formModel.value.orgAddrCity = dictCode;
