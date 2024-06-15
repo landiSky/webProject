@@ -326,6 +326,7 @@ import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import { apiDataPoint } from '@/api/data-point';
+import { copyToClipboard } from '@/utils/index';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
@@ -463,9 +464,11 @@ const clickProbation = () => {
     content: () => {
       const onClick = () => {
         const text = `试用账号： ${selectVersion.value.tryAccount}  试用密码： ${selectVersion.value.tryPwd}`;
-        navigator.clipboard.writeText(text).then(() => {
-          Message.success('复制成功');
-        });
+        // navigator.clipboard.writeText(text).then(() => {
+        //   Message.success('复制成功');
+        // });
+        copyToClipboard(text);
+        Message.success('复制成功');
       };
       return h('div', { class: 'info-modal-content' }, [
         h(
