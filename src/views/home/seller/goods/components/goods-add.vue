@@ -1200,9 +1200,22 @@ const copyRules = {
   ],
   isTry: [{ required: true, message: '请选择是否支持试用' }],
   tryUrl: [
-    { required: true, message: '请输入试用版本地址' },
-    { maxLength: 500, message: '最多可输入500个字符' },
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入试用版本地址');
+        if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
+        if (value.length > 500) {
+          return cb('最多可输入50个字符');
+        }
+        return cb();
+      },
+    },
   ],
+  // tryUrl: [
+  //   { required: true, message: '请输入试用版本地址' },
+  //   { maxLength: 500, message: '最多可输入500个字符' },
+  // ],
   tryAccount: [
     { required: true, message: '请输入试用账号' },
     { maxLength: 50, message: '最多可输入50个字符' },
