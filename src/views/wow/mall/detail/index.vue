@@ -100,7 +100,7 @@
           </div>
           <div class="custom">
             <span class="label">交付方式:</span>
-            <span>{{ DeliverTypeDesc[prodDetail.deliveryType] }}</span>
+            <span>{{ DeliverTypeDesc[prodDetail.deliveryType] ?? '-' }}</span>
           </div>
           <div
             v-if="
