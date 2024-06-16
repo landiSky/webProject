@@ -31,10 +31,22 @@
               <t-step :description="dataList.merchantDeliverTime"
                 >服务商交付</t-step
               >
-              <t-step :description="dataList.confirmDeployedTime"
+              <t-step
+                :description="
+                  dataList.deliveryType === 0
+                    ? ''
+                    : dataList.confirmDeployedTime
+                "
                 >买家确认交付</t-step
               >
-              <t-step>订单已交付</t-step>
+              <t-step
+                :description="
+                  dataList.deliveryType === 0
+                    ? dataList.confirmDeployedTime
+                    : ''
+                "
+                >订单已交付</t-step
+              >
             </t-steps>
           </div>
         </div>
@@ -348,7 +360,13 @@
                 <t-col :span="5" class="margintop-10">
                   <!--  v-if="dataList.saleType !== 2" -->
                   <div class="grid-content">
-                    ¥{{ dataList.realityPrice || 0 }}
+                    <!-- ¥{{ dataList.realityPrice || 0 }} -->
+                    <div class="desc">
+                      <span class="top">¥{{ dataList.realityPrice }}</span>
+                      <p v-if="dataList.couponMoney > 0" class="bottom"
+                        >(已优惠:{{ dataList.couponMoney }}元)</p
+                      >
+                    </div>
                   </div>
                 </t-col>
               </t-row>
@@ -624,6 +642,10 @@ onMounted(() => {
     // float: left;
     margin-left: -36px;
   }
+
+  :deep(.tele-steps-item-process .tele-steps-item-description) {
+    margin-left: -36px;
+  }
 }
 
 .modal-body {
@@ -727,6 +749,33 @@ onMounted(() => {
 
             .imgs {
               height: 80px;
+            }
+
+            .desc {
+              // margin-top: 8px;
+              &.payStatus {
+                > div {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+
+                  img {
+                    width: 12px;
+                    height: 12px;
+                    margin-right: 4px;
+                  }
+                }
+              }
+
+              .top {
+                display: inline-block;
+                margin-bottom: 4px;
+              }
+
+              .bottom {
+                color: #86909c;
+                line-height: 20px;
+              }
             }
           }
         }
