@@ -1584,15 +1584,15 @@ onMounted(() => {
 
           ul {
             li {
-              // margin-top: 5px;
               display: flex;
               align-items: center;
+              margin-top: 5px;
               color: #4e5969;
 
               span:nth-child(1) {
                 float: left;
-                width: 6px;
-                height: 6px;
+                width: 4px;
+                height: 4px;
                 margin-right: 8px;
                 background-color: #4e5969;
                 border-radius: 6px;
