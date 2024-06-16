@@ -148,6 +148,7 @@
                   <div class="grid-content-list" style="flex: 1">
                     <span class="dingdclass">买家：</span>
                     <t-typography-paragraph
+                      style="width: 250px"
                       :ellipsis="{
                         rows: 1,
                         showTooltip: true,

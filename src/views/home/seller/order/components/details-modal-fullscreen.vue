@@ -203,6 +203,7 @@
                 <t-space>
                   <div>买家信息</div>
                   <t-typography-paragraph
+                    style="width: 250px"
                     :ellipsis="{
                       rows: 1,
                       showTooltip: true,
