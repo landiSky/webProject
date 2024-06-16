@@ -374,6 +374,8 @@ import {
   fetchOffine,
   fetchLaunch,
 } from '@/api/devCenter/manage';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import { Message, Modal } from '@tele-design/web-vue';
 import AddMembersModal from './addMembersModal.vue';
 import AddFormNext from './addFormNext.vue';
@@ -393,6 +395,9 @@ const anchorRef = ref();
 const logoVisible = ref(false);
 const formRef = ref();
 
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+
 const form = reactive<{
   appType: number; // 0、自建应用 1、商城应用
   appName: string; // 应用名称
@@ -402,6 +407,7 @@ const form = reactive<{
   redirectUri: string; // 应用回调地址
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
+  companyId: string;
 }>({
   appType: 1,
   appName: '',
@@ -411,6 +417,7 @@ const form = reactive<{
   redirectUri: '',
   memberList: [],
   memberType: 0,
+  companyId: userInfoByCompany.value?.companyId,
 });
 
 const state = reactive<{
