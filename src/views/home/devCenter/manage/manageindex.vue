@@ -209,7 +209,7 @@ const AppTypeList = [
     value: null,
   },
   {
-    text: '自建应用',
+    text: '企业自建应用',
     value: 0,
   },
   {
@@ -219,7 +219,7 @@ const AppTypeList = [
 ];
 
 const AppTypeEnum: { [name: string]: any } = {
-  0: '自建应用',
+  0: '企业自建应用',
   1: '商城应用',
 };
 
