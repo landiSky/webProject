@@ -77,15 +77,19 @@
 
                   <t-popover
                     position="bottom"
-                    :title="`全部前缀（${entPrefixListSuffix?.length}）`"
+                    :title="`全部前缀（${userInfoByCompany.entPrefixList?.length}）`"
                   >
-                    <t-link
-                      >更多前缀 ({{ entPrefixListSuffix?.length }})</t-link
+                    <t-link v-if="entPrefixListSuffix?.length"
+                      >更多前缀 ({{
+                        userInfoByCompany.entPrefixList?.length
+                      }})</t-link
                     >
                     <template #content>
                       <div class="popover-bottom">
                         <div
-                          v-for="(item, index) in entPrefixListSuffix"
+                          v-for="(
+                            item, index
+                          ) in userInfoByCompany.entPrefixList"
                           :key="index"
                           >{{ item }}</div
                         >
