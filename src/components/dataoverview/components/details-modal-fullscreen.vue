@@ -116,7 +116,8 @@
                 <p style="float: left"
                   >{{ detaillist?.orgAddrProvinceValue }}/{{
                     detaillist?.orgAddrCityValue
-                  }}/{{ detaillist?.orgAddrCountyValue }}</p
+                  }}{{ detaillist?.orgAddrCountyValue ? '/' : ''
+                  }}{{ detaillist?.orgAddrCountyValue }}</p
                 >
               </div>
               <div class="informationlist">

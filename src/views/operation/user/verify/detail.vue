@@ -62,7 +62,8 @@
         <t-descriptions-item label="企业地址">
           {{ currentData.itemInfo?.orgAddrProvinceValue }}/{{
             currentData.itemInfo?.orgAddrCityValue
-          }}/{{ currentData.itemInfo?.orgAddrCountyValue }}
+          }}{{ currentData.itemInfo?.orgAddrCountyValue ? '/' : ''
+          }}{{ currentData.itemInfo?.orgAddrCountyValue }}
         </t-descriptions-item>
         <t-descriptions-item>
           <t-typography-paragraph style="width: 492px">
