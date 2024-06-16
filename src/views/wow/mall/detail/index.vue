@@ -221,11 +221,10 @@
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">{{ evaluateDatail?.avgEvaluate ?? 5 }}</div>
+            <div class="score-num">{{ evaluateDatail?.avgEvaluate }}</div>
             <div class="score-count">
               <t-rate
                 v-model="evaluateDatail.avgEvaluate"
-                :default-value="5"
                 :count="5"
                 allow-half
                 readonly
@@ -653,7 +652,10 @@ const BypageList = () => {
   };
   apiBypageList(params)
     .then((data) => {
-      evaluateDatail.value = data;
+      evaluateDatail.value = {
+        ...data,
+        avgEvaluate: data.avgEvaluate ?? 5,
+      };
       pagination.total = evaluateTotal(appraiseIndex.value, data);
     })
     .catch(() => {});
