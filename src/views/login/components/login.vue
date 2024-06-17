@@ -213,7 +213,7 @@
           >
         </t-form-item>
       </t-form>
-      <t-link class="bottomOpt" @click="getLog">去登录</t-link>
+      <t-link @click="getLog">去登录</t-link>
     </div>
 
     <div v-if="state == 3">

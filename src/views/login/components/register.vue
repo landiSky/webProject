@@ -72,7 +72,11 @@
         </t-input>
       </t-form-item>
       <t-form-item field="agreement">
-        <t-checkbox v-model="agreement">我已阅读并遵守</t-checkbox>
+        <t-checkbox
+          v-model="agreement"
+          :class="agreement ? '' : 'deep-checkbox'"
+          >我已阅读并遵守</t-checkbox
+        >
         <t-link @click="goAgreement">《用户服务协议》</t-link>
       </t-form-item>
       <t-form-item>
@@ -187,6 +191,7 @@ const formRules = {
     {
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入邮箱');
+        if (value.length > 255) return cb('长度不超过255个字符');
         const reata = new RegExp(
           '^$|^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$'
         );
@@ -393,5 +398,21 @@ onUnmounted(() => {
   //     display: none;
   //   }
   // }
+}
+
+.deep-checkbox {
+  :deep(.tele-checkbox-icon) {
+    background: rgba(243, 244, 246, 1);
+    border: none;
+  }
+
+  :deep(.tele-checkbox-label) {
+    color: rgba(128, 131, 148, 1);
+    font-weight: 400;
+    font-size: 12px;
+    font-family: PingFang SC;
+    line-height: 16px;
+    text-align: left;
+  }
 }
 </style>
