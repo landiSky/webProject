@@ -154,10 +154,10 @@ const goRegister = () => {
   });
 };
 const goLogin = () => {
-  // userStore.jumpToLogin();
-  router.push({
-    path: '/login',
-  });
+  userStore.jumpToLogin();
+  // router.push({
+  //   path: '/login',
+  // });
 };
 
 const onSearch = () => {

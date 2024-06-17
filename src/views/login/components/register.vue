@@ -207,10 +207,10 @@ const goAgreement = () => {
 };
 
 const goLogin = () => {
-  // userStore.jumpToLogin();
+  userStore.jumpToLogin();
   // router.push('/buyer');
   // emit('login');
-  router.push('/login');
+  // router.push('/login');
 };
 
 const goRegister = () => {

@@ -60,9 +60,10 @@
         </t-descriptions-item>
         <!--测试1 企业地址-->
         <t-descriptions-item label="企业地址">
-          {{ currentData.itemInfo?.orgAddrProvince }}/{{
-            currentData.itemInfo?.orgAddrCity
-          }}/{{ currentData.itemInfo?.orgAddrCounty }}
+          {{ currentData.itemInfo?.orgAddrProvinceValue }}/{{
+            currentData.itemInfo?.orgAddrCityValue
+          }}{{ currentData.itemInfo?.orgAddrCountyValue ? '/' : ''
+          }}{{ currentData.itemInfo?.orgAddrCountyValue }}
         </t-descriptions-item>
         <t-descriptions-item>
           <t-typography-paragraph style="width: 492px">

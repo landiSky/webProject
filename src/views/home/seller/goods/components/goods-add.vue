@@ -182,7 +182,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
             >
           </t-form-item>
           <t-form-item
@@ -271,7 +271,7 @@
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
-              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制2M以内。</div
+              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
             >
           </t-form-item>
           <t-form-item label="商品分类" field="productTypeId">
@@ -1200,9 +1200,22 @@ const copyRules = {
   ],
   isTry: [{ required: true, message: '请选择是否支持试用' }],
   tryUrl: [
-    { required: true, message: '请输入试用版本地址' },
-    { maxLength: 500, message: '最多可输入500个字符' },
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入试用版本地址');
+        if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
+        if (value.length > 500) {
+          return cb('最多可输入50个字符');
+        }
+        return cb();
+      },
+    },
   ],
+  // tryUrl: [
+  //   { required: true, message: '请输入试用版本地址' },
+  //   { maxLength: 500, message: '最多可输入500个字符' },
+  // ],
   tryAccount: [
     { required: true, message: '请输入试用账号' },
     { maxLength: 50, message: '最多可输入50个字符' },
@@ -1227,8 +1240,8 @@ const uploadError = (fileItem: FileItem) => {
   logoUploading.value = false;
   formModel.value.logo = '';
   const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
+  if (size > 10 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过10M`);
   } else {
     Message.error(`上传失败，请检查网络`);
   }
@@ -1260,8 +1273,8 @@ const uploadDetailProgress = () => {
 const uploadDetailError = (fileItem: FileItem) => {
   detailUploading.value = false;
   const size = fileItem.file?.size ?? 0;
-  if (size > 2 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过2M`);
+  if (size > 10 * 1024 * 1024) {
+    Message.error(`上传失败，文件大小不要超过10M`);
   } else {
     Message.error(`上传失败，请检查网络`);
   }
@@ -1656,9 +1669,9 @@ const beforeUpload = (file: File) => {
       Message.warning(`上传失败，请检查文件类型`);
       reject();
     }
-    const over2 = file.size > 1024 * 1024 * 2;
+    const over2 = file.size > 1024 * 1024 * 10;
     if (over2) {
-      Message.warning(`上传失败，文件大小不要超过2M`);
+      Message.warning(`上传失败，文件大小不要超过10M`);
       reject();
     }
     if (!online.value) {

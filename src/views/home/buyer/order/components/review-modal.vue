@@ -82,10 +82,10 @@ const props = defineProps({
 });
 const emit = defineEmits(['confirm', 'cancel']);
 const reviewContent = ref({
-  totalStar: 0,
-  productStar: 0,
-  serviceStar: 0,
-  deliveryStar: 0,
+  totalStar: 5,
+  productStar: 5,
+  serviceStar: 5,
+  deliveryStar: 5,
   content: '',
 });
 const visible = ref(true);
@@ -114,10 +114,14 @@ const onConfirm = (done: (closed: boolean) => void) => {
       serviceStar: reviewContent.value.serviceStar,
       deliveryStar: reviewContent.value.deliveryStar,
       content: reviewContent.value.content,
-    }).then((res) => {
-      done(true);
-      emit('confirm');
-    });
+    })
+      .then((res) => {
+        done(true);
+        emit('confirm');
+      })
+      .catch(() => {
+        done(true);
+      });
   }
 };
 const emitflag = () => {

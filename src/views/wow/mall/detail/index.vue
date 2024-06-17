@@ -100,7 +100,7 @@
           </div>
           <div class="custom">
             <span class="label">交付方式:</span>
-            <span>{{ DeliverTypeDesc[prodDetail.deliveryType] }}</span>
+            <span>{{ DeliverTypeDesc[prodDetail.deliveryType] ?? '-' }}</span>
           </div>
           <div
             v-if="
@@ -221,11 +221,10 @@
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">{{ evaluateDatail?.avgEvaluate ?? 5 }}</div>
+            <div class="score-num">{{ evaluateDatail?.avgEvaluate }}</div>
             <div class="score-count">
               <t-rate
                 v-model="evaluateDatail.avgEvaluate"
-                :default-value="5"
                 :count="5"
                 allow-half
                 readonly
@@ -326,6 +325,7 @@ import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import { apiDataPoint } from '@/api/data-point';
+import { copyToClipboard } from '@/utils/index';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
 import Template1 from './layout/template1.vue';
@@ -463,9 +463,11 @@ const clickProbation = () => {
     content: () => {
       const onClick = () => {
         const text = `试用账号： ${selectVersion.value.tryAccount}  试用密码： ${selectVersion.value.tryPwd}`;
-        navigator.clipboard.writeText(text).then(() => {
-          Message.success('复制成功');
-        });
+        // navigator.clipboard.writeText(text).then(() => {
+        //   Message.success('复制成功');
+        // });
+        copyToClipboard(text);
+        Message.success('复制成功');
       };
       return h('div', { class: 'info-modal-content' }, [
         h(
@@ -521,7 +523,7 @@ const clickAddCart = (): void => {
   if (!userInfo?.id) {
     console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
-    // userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
     // router.push({
     //   path: '/login',
     //   query: { id, title: appName },
@@ -650,7 +652,10 @@ const BypageList = () => {
   };
   apiBypageList(params)
     .then((data) => {
-      evaluateDatail.value = data;
+      evaluateDatail.value = {
+        ...data,
+        avgEvaluate: data.avgEvaluate ?? 5,
+      };
       pagination.total = evaluateTotal(appraiseIndex.value, data);
     })
     .catch(() => {});

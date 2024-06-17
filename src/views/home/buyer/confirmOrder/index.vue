@@ -17,6 +17,7 @@
           <span>
             <span class="companyLabel">商家:</span>
             <t-typography-paragraph
+              style="width: 250px"
               :ellipsis="{
                 rows: 1,
                 showTooltip: true,
