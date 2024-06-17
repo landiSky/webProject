@@ -28,6 +28,11 @@
                 <template #sortNumber="{ rowIndex }">
                   <span>{{ rowIndex + 1 }}</span>
                 </template>
+                <template #tagCountByGroup="{ record }">
+                  <span>{{
+                    record.tagCountByGroup >= 1 ? record.tagCountByGroup : '-'
+                  }}</span>
+                </template>
                 <template #type="{ record }">
                   <span>{{ TypeList[record.type] }}</span>
                 </template>
@@ -72,6 +77,11 @@
               >
                 <template #sortNumber="{ rowIndex }">
                   <span>{{ rowIndex + 1 }}</span>
+                </template>
+                <template #tagCountByTag="{ record }">
+                  <span>{{
+                    record.tagCountByTag >= 1 ? record.tagCountByTag : '-'
+                  }}</span>
                 </template>
                 <template #operater="{ record }">
                   <t-button type="text" @click="handleLabelEdit(record)"
@@ -183,6 +193,7 @@ const tagGroupColumns = [
   {
     title: '标签数',
     dataIndex: 'tagCountByGroup',
+    slotName: 'tagCountByGroup',
     width: 70,
     tooltip: true,
   },
@@ -214,6 +225,7 @@ const tagColumns = [
   {
     title: '打标商品数',
     dataIndex: 'tagCountByTag',
+    slotName: 'tagCountByTag',
     width: 180,
   },
   {
