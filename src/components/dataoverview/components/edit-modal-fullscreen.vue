@@ -467,13 +467,11 @@ const getUserDetail = () => {
       //  @ts-ignore
       formModel.value = res;
       formModel.value.type = 1;
-      formModel.value.address = [
-        [
-          res.orgAddrProvinceValue,
-          res.orgAddrCityValue,
-          res.orgAddrCountyValue,
-        ],
-      ];
+      const addList = [[]] as any;
+      if (res.orgAddrProvinceValue) addList[0].push(res.orgAddrProvinceValue);
+      if (res.orgAddrCityValue) addList[0].push(res.orgAddrCityValue);
+      if (res.orgAddrCountyValue) addList[0].push(res.orgAddrCountyValue);
+      formModel.value.address = addList;
     })
     .catch((error) => {});
 };
@@ -535,9 +533,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       if (!formModel.value.orgAddrCity) {
-        formModel.value.orgAddrCity = formModel.value.address;
+        const { address } = formModel.value;
+        if (!(address instanceof Array)) {
+          formModel.value.orgAddrCity = address;
+        }
       } else {
-        formModel.value.orgAddrCounty = formModel.value.address;
+        const { address } = formModel.value;
+        if (!(address instanceof Array)) {
+          formModel.value.orgAddrCounty = address;
+        }
       }
       // setFields;
       authRepeat({ creditCode: formModel.value.creditCode })

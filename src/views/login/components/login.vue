@@ -150,7 +150,7 @@
         <t-form-item field="code" :validate-trigger="['change', 'input']">
           <t-input
             v-model.trim="performs.code"
-            placeholder="请输入验证码"
+            placeholder="短信验证码"
             size="large"
             class="code_input"
             ><template #prefix>
@@ -175,7 +175,7 @@
         <t-form-item field="password" :validate-trigger="['change', 'input']">
           <t-input-password
             v-model.trim="performs.password"
-            placeholder="请输入新密码"
+            placeholder="请输入密码"
             size="large"
             autocomplete="new-password"
           >
@@ -190,7 +190,7 @@
         >
           <t-input-password
             v-model.trim="performs.confirmPassword"
-            placeholder="请确认新密码"
+            placeholder="请确认密码"
             size="large"
             autocomplete="new-password"
           >
@@ -213,7 +213,7 @@
           >
         </t-form-item>
       </t-form>
-      <t-link class="bottomOpt" @click="getLog">去登录</t-link>
+      <t-link @click="getLog">去登录</t-link>
     </div>
 
     <div v-if="state == 3">
