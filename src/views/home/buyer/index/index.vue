@@ -987,6 +987,9 @@ const togo = (detailData: Record<string, any>) => {
           return;
         }
         window.open(`${res}&data=${sm2data}`);
+        // window.open(
+        //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
+        // );
       });
     } else if (Number(tabsApplication.value) === 2) {
       appInfoClientLogin({ appInfoId: id }).then((res: any) => {
@@ -999,6 +1002,9 @@ const togo = (detailData: Record<string, any>) => {
           userStore.configInfo?.publicKey
         );
         window.open(`${res}&data=${sm2data}`);
+        // window.open(
+        //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
+        // );
       });
     }
     // orderGo({ id }).then((res: any) => {
