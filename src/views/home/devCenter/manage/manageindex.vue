@@ -277,7 +277,7 @@ const columns = [
   },
   {
     title: '应用创建人',
-    dataIndex: 'createUser',
+    dataIndex: 'createUserName',
     width: 150,
     ellipsis: true,
     tooltip: true,
