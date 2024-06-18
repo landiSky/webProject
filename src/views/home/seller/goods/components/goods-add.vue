@@ -859,8 +859,7 @@
                   v-model="copyModal4[index].saasAppId"
                   :style="{ width: '100%' }"
                   placeholder="请选择已上线的SaaS应用"
-                  :limit="1"
-                  allow-search
+                  :show-extra-options="false"
                 >
                   <t-option
                     v-for="item in applicationList"
