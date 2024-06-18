@@ -49,7 +49,10 @@
           v-model="form.remark"
           placeholder="请输入"
           :max-length="200"
-          allow-clear
+          :auto-size="{
+            minRows: 9,
+            maxRows: 10,
+          }"
           show-word-limit
         />
       </t-form-item>
