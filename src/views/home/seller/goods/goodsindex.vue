@@ -489,6 +489,7 @@ const clickDetailBtn = async (record: any) => {
 };
 
 const infoToEdit = () => {
+  router.push({ name: 'sellerGoods' });
   modalVisible.value = false;
   addModalVisible.value = true;
 };
