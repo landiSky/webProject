@@ -601,7 +601,11 @@ const applicationlink = (data: any) => {
   if (data?.saasAppId) {
     router.push({
       name: 'devManage',
-      query: { selectById: data?.saasAppId, selectByState: data?.appStatus },
+      query: {
+        selectById: data?.saasAppId,
+        selectByState: data?.appStatus,
+        goodsDetailID: props.data?.id,
+      },
     });
   }
 };

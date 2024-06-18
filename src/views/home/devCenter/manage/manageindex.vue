@@ -349,7 +349,10 @@ const handleDrawerCancel = () => {
 const handleDetailCancel = () => {
   state.showFormDetail = false;
   if (route.query?.selectById) {
-    router.push({ name: 'devManage' });
+    router.push({
+      name: 'sellerGoods',
+      query: { goodsDetailID: route.query?.goodsDetailID },
+    });
   }
 };
 
