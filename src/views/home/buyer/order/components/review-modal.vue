@@ -120,7 +120,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
         emit('confirm');
       })
       .catch(() => {
-        done(true);
+        done(false);
       });
   }
 };
