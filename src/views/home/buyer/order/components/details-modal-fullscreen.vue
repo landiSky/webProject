@@ -362,7 +362,12 @@
                   <div class="grid-content">
                     <!-- ¥{{ dataList.realityPrice || 0 }} -->
                     <div class="desc">
-                      <span v-if="dataList.alterPriceStatus === 0" class="top"
+                      <span
+                        v-if="
+                          dataList.alterPriceStatus === 0 &&
+                          dataList.saleType === 2
+                        "
+                        class="top"
                         >面议</span
                       >
                       <span v-else class="top"
