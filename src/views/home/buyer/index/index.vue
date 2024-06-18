@@ -971,7 +971,13 @@ const togo = (detailData: Record<string, any>) => {
   if (!dueDate || compareDate(dueDate, formattedTime)) {
     // TODO 过期时间判断
     if (Number(tabsApplication.value) === 1) {
-      alreadyBuyClientLogin({ orderId: id }).then((res: any) => {
+      const params = {
+        productId,
+        productDeliverySetId: deliveryId,
+        memberId: selectCompany.value?.memberId,
+        orderId: id,
+      };
+      alreadyBuyClientLogin(params).then((res: any) => {
         const data = {
           type: 'productApp',
           productId,
@@ -992,7 +998,11 @@ const togo = (detailData: Record<string, any>) => {
         // );
       });
     } else if (Number(tabsApplication.value) === 2) {
-      appInfoClientLogin({ appInfoId: id }).then((res: any) => {
+      const params = {
+        appInfoId: id,
+        companyId,
+      };
+      appInfoClientLogin(params).then((res: any) => {
         const data = {
           type: 'selfApp',
           companyId,
