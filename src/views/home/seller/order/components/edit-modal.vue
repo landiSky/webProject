@@ -19,7 +19,7 @@
 
       <t-form-item label="当前价格">
         <p
-          v-if="state.formModel.currentamount"
+          v-if="Number(state.formModel.currentamount) > 0"
           style="font-weight: 500; font-size: 14px"
           >￥{{ state.formModel.currentamount }}</p
         >
@@ -128,12 +128,12 @@ const formRules = {
     },
     {
       match: /^\d+(.\d{1,2})?$/,
-      message: '只可输入小数点后两位或大于等于0的整数',
+      message: '只可输入小数点后两位或大于等于1的整数',
     },
     {
       validator: (value: any, cb: any) => {
-        if (state.formModel.amount < 0) {
-          return cb('输入金额不能小于0');
+        if (state.formModel.amount < 1) {
+          return cb('输入金额不能小于1');
         }
         if (state.formModel.amount > 100000000) {
           return cb('输入金额不能大于 100,000,000');

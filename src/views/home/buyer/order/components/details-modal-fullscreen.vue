@@ -362,7 +362,17 @@
                   <div class="grid-content">
                     <!-- ¥{{ dataList.realityPrice || 0 }} -->
                     <div class="desc">
-                      <span class="top">¥{{ dataList.realityPrice }}</span>
+                      <span
+                        v-if="
+                          dataList.alterPriceStatus === 0 &&
+                          dataList.saleType === 2
+                        "
+                        class="top"
+                        >面议</span
+                      >
+                      <span v-else class="top"
+                        >¥{{ dataList.realityPrice }}</span
+                      >
                       <p v-if="dataList.couponMoney > 0" class="bottom"
                         >(已优惠:{{ dataList.couponMoney }}元)</p
                       >

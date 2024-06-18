@@ -243,6 +243,8 @@ const detailflagclick = () => {
       }
 
       .datatitle_02 {
+        display: flex;
+        justify-content: center;
         margin-top: 16px;
         color: rgba(0, 0, 0, 1);
         font-weight: 400;

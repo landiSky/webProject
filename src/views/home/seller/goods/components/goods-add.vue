@@ -468,6 +468,7 @@
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .accountNum
                         "
+                        placeholder="请输入"
                         @input="validateAP(index, 'account')"
                         ><template #prefix>账号数：</template
                         ><template #suffix>个</template></t-input
@@ -479,6 +480,7 @@
                           copyModal[index].productDeliverySetInfoList[cIndex]
                             .price
                         "
+                        placeholder="请输入"
                         @input="validateAP(index, 'price')"
                         ><template #prefix>账号单价：</template
                         ><template #suffix>元</template></t-input
@@ -646,6 +648,7 @@
               <t-form-item label="一口价金额" field="onePiece" required>
                 <t-input
                   v-model.trim="copyModal2[index].onePiece"
+                  placeholder="请输入"
                   @input="validateArray(copyFormRef[index].value, 'onePiece')"
                   ><template #suffix><div class="yuan">元</div></template>
                 </t-input>
@@ -859,8 +862,7 @@
                   v-model="copyModal4[index].saasAppId"
                   :style="{ width: '100%' }"
                   placeholder="请选择已上线的SaaS应用"
-                  :limit="1"
-                  allow-search
+                  :show-extra-options="false"
                 >
                   <t-option
                     v-for="item in applicationList"

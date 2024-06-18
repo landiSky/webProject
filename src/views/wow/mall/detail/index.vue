@@ -423,7 +423,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
   if (
     (accountItem?.accountNum || 0) > 0 &&
-    memberIdList?.length > accountItem?.accountNum - 1
+    memberIdList?.length > accountItem?.accountNum
   ) {
     Message.warning('已超出购买账号数');
     return;

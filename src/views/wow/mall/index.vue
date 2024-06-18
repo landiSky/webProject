@@ -251,7 +251,7 @@
               </span>
               <span class="price">
                 <template v-if="item.lowPrice == '-2.00'">
-                  <span class="prefix">0元试用</span>
+                  <span class="prefix">免费</span>
                 </template>
                 <template v-else-if="item.lowPrice !== '-1.00'">
                   <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>

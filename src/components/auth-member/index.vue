@@ -65,7 +65,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
 
   if (
     (props.accountCount || 0) > 0 &&
-    selectMemList.value.length > (props.accountCount || 0) - 1
+    selectMemList.value.length > (props.accountCount || 0)
   ) {
     done(false);
     return Message.warning('已超出购买账号数');

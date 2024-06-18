@@ -166,8 +166,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 import {
   goodsList,
@@ -197,6 +197,7 @@ const defaultFormModel: Record<string, string | null> = {
 };
 
 const router = useRouter();
+const route = useRoute();
 const addModalVisible = ref(false);
 
 const state = reactive<{
@@ -488,11 +489,13 @@ const clickDetailBtn = async (record: any) => {
 };
 
 const infoToEdit = () => {
+  router.push({ name: 'sellerGoods' });
   modalVisible.value = false;
   addModalVisible.value = true;
 };
 
 const onModalConfirm = () => {
+  router.push({ name: 'sellerGoods' });
   modalVisible.value = false;
   fetchData();
 };
@@ -644,6 +647,18 @@ const onPreview = (productId: string) => {
   });
   window.open(routeData?.href, '_blank');
 };
+
+watch(
+  () => route.query.goodsDetailID,
+  (newV) => {
+    if (newV) {
+      clickDetailBtn({ id: newV });
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 const reBuildClassList = (data: any[]) => {
   classList.value = [
