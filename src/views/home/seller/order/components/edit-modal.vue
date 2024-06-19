@@ -36,7 +36,7 @@
           class="input-demo"
           :precision="2"
           :step="1"
-          :min="0.0"
+          :min="1.0"
           allow-clear
           model-event="input"
         />
