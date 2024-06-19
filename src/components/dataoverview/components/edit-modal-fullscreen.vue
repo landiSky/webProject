@@ -545,7 +545,10 @@ const onConfirm = (done: (closed: boolean) => void) => {
         }
       }
       // setFields;
-      authRepeat({ creditCode: formModel.value.creditCode })
+      authRepeat({
+        creditCode: formModel.value.creditCode,
+        companyId: userInfoByCompany.value?.companyId,
+      })
         .then((res) => {
           if (res.data.code === 200) {
             authSubmit(formModel.value)
