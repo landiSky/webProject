@@ -26,7 +26,7 @@
             <t-tree
               :checkable="true"
               :checked-keys="state.selectedKeys"
-              :data="getSourceTreeData"
+              :data="getSourceTreeData(state.treeData)"
               @check="handleSourceSelect"
             />
           </div>
@@ -70,8 +70,6 @@ import { fetchLabel } from '@/api/inventory/fetchLabel';
 
 const emits = defineEmits(['onConfirm', 'onCancel']);
 
-const targetTreeRef = ref(null);
-
 const state = reactive<{
   labelLoading: boolean;
   transferData: Record<string, any>[];
@@ -105,7 +103,7 @@ const handleSourceSelect = (selectedKeys, data) => {
   state.targetData = data.checkedNodes;
 };
 
-const getSourceTreeData = () => {
+const getSourceTreeData = (treeData) => {
   const travel = (_treeData = [], level = 0) => {
     const treeDataSource = [];
     _treeData.forEach((item) => {
@@ -122,11 +120,12 @@ const getSourceTreeData = () => {
     });
     return treeDataSource;
   };
-  return travel(state.treeData);
+  return travel(treeData);
 };
 
 // 回显使用
 const getDetaultTreeData = (treeData: any[] = [], dataSource: any[] = []) => {
+  console.log('getDetaultTreeData', treeData, dataSource);
   treeData.forEach((item) => {
     if (item.children) {
       getDetaultTreeData(item.children, dataSource);
