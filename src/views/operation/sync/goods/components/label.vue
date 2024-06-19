@@ -26,7 +26,7 @@
             <t-tree
               :checkable="true"
               :checked-keys="state.selectedKeys"
-              :data="getSourceTreeData(state.treeData)"
+              :data="getSourceTreeData"
               @check="handleSourceSelect"
             />
           </div>
