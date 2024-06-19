@@ -478,14 +478,14 @@ const handleLabel = (record: any) => {
 
 const handleLabelConfirm = (data = [], productId = '') => {
   state.confirmLoading = true;
-  const tagIdList = data.map((item: any) => item.key);
-  if (tagIdList.length === 0) {
-    state.confirmLoading = false;
-    return Message.warning('未选择标签');
-  }
+
+  // if (data.length === 0) {
+  //   state.confirmLoading = false;
+  //   return Message.warning('未选择标签');
+  // }
   return comfirmLabel({
     productId,
-    tagIdList,
+    tagIdList: data,
   })
     .then(() => {
       state.confirmLoading = false;
