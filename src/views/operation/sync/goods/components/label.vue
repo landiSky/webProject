@@ -125,7 +125,6 @@ const getSourceTreeData = (treeData) => {
 
 // 回显使用
 const getDetaultTreeData = (treeData: any[] = [], dataSource: any[] = []) => {
-  console.log('getDetaultTreeData', treeData, dataSource);
   treeData.forEach((item) => {
     if (item.children) {
       getDetaultTreeData(item.children, dataSource);
@@ -160,7 +159,6 @@ const fetchLabelData = () => {
     fetchLabel({ productId: props.recordData?.id })
       .then((res: any) => {
         state.labelLoading = false;
-        console.log('fetchLabelData', res);
         if (res.code === 200) {
           state.treeData = res.data?.groupTagVOList || [];
           state.tagNum = res.data?.tagCount || 0;
@@ -213,7 +211,9 @@ onMounted(async () => {
     }
 
     .content {
+      height: calc(100% - 40px);
       padding: 8px 20px 8px 16px;
+      overflow-y: auto;
 
       .node-item {
         display: flex;
