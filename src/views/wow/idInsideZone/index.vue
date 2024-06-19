@@ -1,15 +1,50 @@
 <template>
   <div>
     <!-- IDInside合作计划 -->
-    <div></div>
+    <div class="idinside">
+      <video
+        src="@/assets/images/idinside/inside-banner.mp4"
+        class="idinside-video"
+        autoplay
+        loop
+        muted
+      ></video>
+      <div class="idinside-top">
+        <div class="idinside-title">IDInside合作计划</div>
+        <div class="idinside-text">
+          <div class="icon"></div>
+          <div class="text"
+            >"IDInside合作计划"，以打造百款标识产品、服务万家企业为目标。</div
+          >
+        </div>
+        <div class="idinside-text">
+          <div class="icon"></div>
+          <div class="text"
+            >IDInside合作计划旨在发展一批标识解析标杆应用，以国家标识节点为基础，以伙伴应用能力为支撑，探索标识最佳使用模式，共同推动标识解析体系从“建”到“用”，形成百万级工业互联网网络目标，助力标识贯通千行百业。</div
+          >
+        </div>
+      </div>
+    </div>
     <!-- 为什么要加入IDInside -->
-    <div></div>
+    <div class="why-join">
+      <div class="unified">
+        <div class="unified-left unified-icon-01"></div>
+        <div class="unified-title">为什么要加入IDInside</div>
+        <div class="unified-right unified-icon-02"></div>
+      </div>
+      <div class="advantage">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+      </div>
+    </div>
     <!-- 如何加入IDInside -->
     <div class="join">
       <div class="unified">
-        <div class="unified-left"></div>
-        <div class="unified-title">如何加入IDInside</div>
-        <div class="unified-right"></div>
+        <div class="unified-left unified-icon-03"></div>
+        <div class="unified-title unified-title-white">如何加入IDInside</div>
+        <div class="unified-right unified-icon-04"></div>
       </div>
       <div class="step">
         <div class="card">
@@ -17,7 +52,7 @@
           <div class="title">报名申请</div>
           <div class="text"
             >点击「<span class="text-button">立即报名</span>」
-            填写报名申请信息</div
+            <p>填写报名申请信息</p></div
           >
         </div>
         <div class="card">
@@ -30,7 +65,7 @@
         </div>
         <div class="card">
           <div class="icon">03</div>
-          <div class="title">报名申请</div>
+          <div class="title">集成开发</div>
           <div class="text"
             >点击「<span class="text-button">立即查看</span>」
             查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
@@ -38,30 +73,30 @@
         </div>
         <div class="card">
           <div class="icon">04</div>
-          <div class="title">报名申请</div>
+          <div class="title">测评认证</div>
           <div class="text"
             >获取IDInside认证证书，请提供测试环境信息及开发测试报告「<span
               class="text-button"
-              >立即报名</span
+              >立即上传</span
             >」
           </div>
         </div>
         <div class="card">
           <div class="icon">05</div>
-          <div class="title">报名申请</div>
-          <div class="text"
-            >点击「<span class="text-button">立即报名</span>」
-            填写报名申请信息</div
-          >
+          <div class="title">运营推广</div>
+          <div class="text">
+            完成应用上架进行运营推广「<span class="text-button">立即上架</span
+            >」
+          </div>
         </div>
       </div>
     </div>
     <!-- 优秀认证案例 -->
     <div class="case">
       <div class="unified">
-        <div class="unified-left"></div>
+        <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">优秀认证案例</div>
-        <div class="unified-right"></div>
+        <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="synopsis">
         <div class="synopsis-left">
@@ -77,12 +112,12 @@
           <div class="left-02">取得成果：</div>
           <!-- 展示图片 -->
           <div class="left-05">
-            <div class="image">1</div>
-            <div class="image">2</div>
-            <div class="image">3</div>
-            <div class="image">4</div>
-            <div class="image">5</div>
-            <div class="image">6</div>
+            <div class="image"></div>
+            <div class="image"></div>
+            <div class="image"></div>
+            <div class="image"></div>
+            <div class="image"></div>
+            <div class="image"></div>
           </div>
           <!-- 展示文字 -->
           <!-- <div class="left-06">
@@ -96,18 +131,20 @@
             </ui>
           </div> -->
         </div>
-        <div class="synopsis-right">图片</div>
+        <div class="synopsis-right">
+          <img :src="case0101" alt="" />
+        </div>
       </div>
     </div>
     <!-- 优秀认证产品 -->
     <div class="product">
       <div class="unified">
-        <div class="unified-left"></div>
+        <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">优秀认证产品</div>
-        <div class="unified-right"></div>
+        <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="understand">
-        <div class="img">图片</div>
+        <img :src="product1" alt="" class="img" />
         <div class="introduce">
           <div class="title">物易管智能系统</div>
           <div class="company"
@@ -126,20 +163,20 @@
     <!-- 合作伙伴类型 -->
     <div class="partners">
       <div class="unified">
-        <div class="unified-left"></div>
+        <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">合作伙伴类型</div>
-        <div class="unified-right"></div>
+        <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="service">
-        <div class="box">
+        <div class="box box-img-01">
           <div class="title">硬件服务</div>
           <div class="text">在工业领域有自主知识产权的硬件产品服务商</div>
         </div>
-        <div class="box">
+        <div class="box box-img-02">
           <div class="title">软件服务</div>
           <div class="text">在工业领域有自主知识产权的软件产品服务商</div>
         </div>
-        <div class="box">
+        <div class="box box-img-03">
           <div class="title">解决方案服务</div>
           <div class="text"
             >围绕工业各垂直行业的业务特征，打造各行业标准化集成解决方案，为工业用户提供一站式的解决方案服务</div
@@ -150,21 +187,17 @@
     <!-- 伙伴代表 -->
     <div class="partner">
       <div class="unified">
-        <div class="unified-left"></div>
+        <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">伙伴代表</div>
-        <div class="unified-right"></div>
+        <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="img-list">
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
-        <div>122</div>
+        <img
+          v-for="(item, index) in partnerList"
+          :key="index"
+          :src="item"
+          alt=""
+        />
       </div>
     </div>
     <WowFooter></WowFooter>
@@ -172,26 +205,141 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
+
+import case0101 from '@/assets/images/idinside/case/case-01-01.png';
+
+import product1 from '@/assets/images/idinside/product-01.png';
+
+import partner1 from '@/assets/images/idinside/partner/partner-01.png';
+import partner2 from '@/assets/images/idinside/partner/partner-02.png';
+import partner3 from '@/assets/images/idinside/partner/partner-03.png';
+import partner4 from '@/assets/images/idinside/partner/partner-04.png';
+import partner5 from '@/assets/images/idinside/partner/partner-05.png';
+import partner6 from '@/assets/images/idinside/partner/partner-06.png';
+import partner7 from '@/assets/images/idinside/partner/partner-07.png';
+import partner8 from '@/assets/images/idinside/partner/partner-08.png';
+import partner9 from '@/assets/images/idinside/partner/partner-09.png';
+import partner10 from '@/assets/images/idinside/partner/partner-10.png';
+
 import WowFooter from '../components/wowFooter/index.vue';
+
+const partnerList = ref([
+  partner1,
+  partner2,
+  partner3,
+  partner4,
+  partner5,
+  partner6,
+  partner7,
+  partner8,
+  partner9,
+  partner10,
+]);
 </script>
 
 <style lang="less" scoped>
+.idinside {
+  position: relative;
+  width: 100%;
+  height: 700px;
+
+  .idinside-video {
+    z-index: -10;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .idinside-top {
+    position: absolute;
+    top: 196px;
+    left: 229px;
+    z-index: 100;
+
+    .idinside-title {
+      margin-bottom: 12px;
+      color: rgba(29, 33, 41, 1);
+      font-weight: 500;
+      font-size: 36px;
+      font-family: PingFang SC;
+      line-height: 44px;
+      text-align: left;
+    }
+
+    .idinside-text {
+      display: flex;
+      margin-top: 12px;
+
+      .icon {
+        width: 20px;
+        height: 15px;
+        margin-top: 6px;
+        background: url(@/assets/images/idinside/unified/icon-01.png) no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .text {
+        width: 386px;
+        margin-left: 12px;
+        color: rgba(71, 83, 109, 1);
+        font-weight: 400;
+        font-size: 20px;
+        font-family: PingFang SC;
+        line-height: 28px;
+        text-align: left;
+      }
+    }
+  }
+}
+
+.why-join {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .advantage {
+    display: flex;
+    width: 100%;
+    height: 462px;
+    background: url(@/assets/images/idinside/advantage-bg.png) no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
 .join {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(127, 235, 39, 0.027);
+  padding-bottom: 100px;
+  background: url(@/assets/images/idinside/join/join-bg.png) no-repeat;
+  background-size: 100% 100%;
 
   .step {
     display: flex;
     gap: 28px;
 
+    // .card-01 {
+    //   background: url(@/assets/images/idinside/join/join-01.png) no-repeat;
+    // }
+    // .card-02 {
+    //   background: url(@/assets/images/idinside/join/join-02.png) no-repeat;
+    // }
+    // .card-03 {
+    //   background: url(@/assets/images/idinside/join/join-03.png) no-repeat;
+    // }
+    // .card-04 {
+    //   background: url(@/assets/images/idinside/join/join-04.png) no-repeat;
+    // }
+    // .card-05 {
+    //   background: url(@/assets/images/idinside/join/join-05.png) no-repeat;
+    // }
     .card {
       gap: 0;
       width: 254px;
       height: 276px;
       padding: 20px;
-      background: red;
+      background-size: 100% 100%;
       border: 1px solid;
       border-radius: 4px;
       border-image-source: linear-gradient(
@@ -206,13 +354,15 @@ import WowFooter from '../components/wowFooter/index.vue';
         gap: 0;
         align-items: center;
         justify-content: center;
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
         color: rgba(255, 255, 255, 1);
         font-weight: 500;
         font-size: 20px;
         font-family: Barlow;
+        background: rgba(0, 77, 255, 1);
         border-radius: 4px;
+        box-shadow: 0 0 30px 0 rgba(113, 195, 255, 1) inset;
       }
 
       .title {
@@ -251,7 +401,7 @@ import WowFooter from '../components/wowFooter/index.vue';
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(225, 245, 49);
+  padding-bottom: 100px;
 
   .synopsis {
     display: flex;
@@ -261,7 +411,7 @@ import WowFooter from '../components/wowFooter/index.vue';
     .synopsis-left {
       width: 500px;
       padding: 57px 52px 0;
-      background: burlywood;
+      background: rgba(255, 255, 255, 0.66);
 
       .left-01 {
         display: flex;
@@ -327,7 +477,7 @@ import WowFooter from '../components/wowFooter/index.vue';
           gap: 0;
           width: 124px;
           height: 118px;
-          background: #edf5fd;
+          background: rgba(255, 255, 255, 1);
         }
       }
 
@@ -348,7 +498,6 @@ import WowFooter from '../components/wowFooter/index.vue';
 
     .synopsis-right {
       width: 890px;
-      background: blue;
 
       img {
         width: 100%;
@@ -362,7 +511,9 @@ import WowFooter from '../components/wowFooter/index.vue';
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(150, 233, 16);
+  padding-bottom: 84px;
+  background: url(@/assets/images/idinside/product-bg.png) no-repeat;
+  background-size: 100% 100%;
 
   .understand {
     display: flex;
@@ -372,7 +523,6 @@ import WowFooter from '../components/wowFooter/index.vue';
       gap: 0;
       width: 964px;
       height: 596px;
-      background: rgb(0, 60, 255);
     }
 
     .introduce {
@@ -439,21 +589,38 @@ import WowFooter from '../components/wowFooter/index.vue';
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgb(205, 255, 216);
 
   .service {
     display: flex;
     gap: 30px;
 
+    .box-img-01 {
+      background: url(@/assets/images/idinside/partners/partners-01.png)
+        no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .box-img-02 {
+      background: url(@/assets/images/idinside/partners/partners-02.png)
+        no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .box-img-03 {
+      background: url(@/assets/images/idinside/partners/partners-03.png)
+        no-repeat;
+      background-size: 100% 100%;
+    }
+
     .box {
       width: 446px;
       height: 328px;
       padding: 48px;
-      background: linear-gradient(
-        298.41deg,
-        rgba(237, 245, 253, 0) 0%,
-        #edf5fd 71.65%
-      );
+      // background: linear-gradient(
+      //   298.41deg,
+      //   rgba(237, 245, 253, 0) 0%,
+      //   #edf5fd 71.65%
+      // );
       border-radius: 4px;
 
       .title {
@@ -467,6 +634,7 @@ import WowFooter from '../components/wowFooter/index.vue';
       }
 
       .text {
+        width: 223px;
         margin-top: 12px;
         color: rgba(78, 89, 105, 1);
         font-weight: 400;
@@ -485,10 +653,26 @@ import WowFooter from '../components/wowFooter/index.vue';
   justify-content: center;
   margin: 52px 0 40px 0;
 
+  .unified-icon-01 {
+    background: url(@/assets/images/idinside/unified/icon-01.png) no-repeat;
+  }
+
+  .unified-icon-02 {
+    background: url(@/assets/images/idinside/unified/icon-02.png) no-repeat;
+  }
+
+  .unified-icon-03 {
+    background: url(@/assets/images/idinside/unified/icon-03.png) no-repeat;
+  }
+
+  .unified-icon-04 {
+    background: url(@/assets/images/idinside/unified/icon-04.png) no-repeat;
+  }
+
   .unified-left {
     width: 20px;
     height: 15px;
-    background: rebeccapurple;
+    background-size: 100% 100%;
   }
 
   .unified-title {
@@ -501,10 +685,14 @@ import WowFooter from '../components/wowFooter/index.vue';
     text-align: center;
   }
 
+  .unified-title-white {
+    color: rgba(255, 255, 255, 1);
+  }
+
   .unified-right {
     width: 20px;
     height: 15px;
-    background: blue;
+    background-size: 100% 100%;
   }
 }
 
@@ -513,7 +701,6 @@ import WowFooter from '../components/wowFooter/index.vue';
   flex-direction: column;
   align-items: center;
   padding-bottom: 130px;
-  background: blanchedalmond;
 
   .img-list {
     display: flex;
@@ -521,11 +708,10 @@ import WowFooter from '../components/wowFooter/index.vue';
     gap: 32px 32px;
     width: 1398px;
 
-    div {
+    img {
       gap: 0;
       width: 254px;
       height: 254px;
-      background: rgb(58, 212, 166);
       border-radius: 12px;
       box-shadow: 0 4px 80px 0 rgba(0, 75, 220, 0.12);
     }
