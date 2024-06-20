@@ -267,7 +267,7 @@
                     <div>
                       <div class="count">
                         <t-rate
-                          v-model="item.totalStar"
+                          v-model="item.averageStar"
                           :default-value="5"
                           :count="5"
                           allow-half
@@ -281,6 +281,10 @@
                     </div>
                   </template>
                 </t-comment>
+              </div>
+              <div v-if="!evaluateDatail?.records" class="nothing-application">
+                <div class="nothing-application-img"></div>
+                <div>暂无评价</div>
               </div>
             </div>
             <div class="pagination">
@@ -1052,6 +1056,22 @@ onUnmounted(() => {
                 color: rgba(134, 144, 156, 1);
                 font-weight: 500;
               }
+            }
+
+            .nothing-application {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              width: 100%;
+              height: 425px;
+            }
+
+            .nothing-application-img {
+              width: 120px;
+              height: 120px;
+              background: url(@/assets/images/home/empty.png) no-repeat;
+              background-size: 100% 100%;
             }
           }
 
