@@ -226,6 +226,14 @@ onMounted(async () => {
           cursor: pointer;
         }
       }
+
+      :deep(.tele-tree-node-selected .tele-tree-node-title) {
+        color: rgb(29, 33, 41);
+      }
+
+      :deep(.tele-tree-node-title) {
+        cursor: auto;
+      }
     }
 
     :deep(.tele-tree-node) {
