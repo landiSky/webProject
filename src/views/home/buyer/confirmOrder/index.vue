@@ -47,6 +47,17 @@
               style="color: #86909c"
               >(免费)</p
             >
+            <p
+              v-if="createOrderInfo.accountDesc != '不限'"
+              style="color: #86909c"
+              >(
+              <span>{{ createOrderInfo.accountDesc }}账号</span>
+              <span v-if="createOrderInfo.durationDesc !== '不限'">
+                {{ createOrderInfo.durationDesc }}
+              </span>
+              <span v-else>不限</span>
+              )</p
+            >
           </span>
           <span>
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">

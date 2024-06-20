@@ -403,13 +403,13 @@
                   {{ st.tryPwd }}
                 </t-descriptions-item>
               </t-descriptions>
-              <div
+              <!-- <div
                 v-if="
                   formModel.productDeliverySetList &&
                   index + 1 !== formModel.productDeliverySetList.length
                 "
                 class="line"
-              ></div>
+              ></div> -->
             </div>
           </div>
         </div>

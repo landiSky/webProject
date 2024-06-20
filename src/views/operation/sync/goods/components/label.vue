@@ -14,40 +14,44 @@
     <div class="sub-title"
       >请选择商品标签<span class="sub-title-tip">（最多可选择3个）</span></div
     >
-    <div class="content">
+    <div class="container">
       <t-spin v-if="state.labelLoading" class="label-spin" />
-      <t-transfer
-        v-if="!state.labelLoading"
-        :title="['全部标签', '已选择标签']"
-        :default-value="getDetaultTransferData(state.treeData)"
-        :data="getTransferData(state.treeData)"
-        :show-select-all="false"
-        @select="handleTransferSelectChange"
-      >
-        <template #source="{ data, selectedKeys, onSelect }">
-          <t-tree
-            :checkable="true"
-            :checked-keys="selectedKeys"
-            :data="getSourceTreeData(data)"
-            @check="onSelect"
-          />
-        </template>
-        <template #target-title="{ countSelected }">
-          <span class="tele-transfer-view-header-title">已选择标签</span>
-          <span class="tele-transfer-view-header-count target-title">
-            {{ countSelected }} / 3
-          </span>
-        </template>
-        <template #target="{ data, selectedKeys, onSelect }">
-          <t-tree
-            ref="targetTreeRef"
-            :checkable="true"
-            :checked-keys="selectedKeys"
-            :data="getTargetTreeData(data)"
-            @check="onSelect"
-          />
-        </template>
-      </t-transfer>
+      <div v-if="!state.labelLoading" class="tree-box">
+        <div class="left-side">
+          <div class="header-title"
+            ><span>全部标签</span
+            ><span class="num">{{ state.tagNum }}</span></div
+          >
+          <div class="content">
+            <t-tree
+              :checkable="true"
+              :checked-keys="state.selectedKeys"
+              :data="getSourceTreeData(state.treeData)"
+              @check="handleSourceSelect"
+            />
+          </div>
+        </div>
+        <div class="right-side">
+          <div class="header-title"
+            ><span>已选择标签</span
+            ><span class="num">{{ state.selectedKeys.length }}</span></div
+          >
+          <ul class="content">
+            <li
+              v-for="item in state.targetData"
+              :key="item.key"
+              class="node-item"
+            >
+              <span>{{ item.title }}</span
+              ><icon-close
+                size="10"
+                class="close"
+                @click="handleDel(item.key)"
+              />
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </t-modal>
 </template>
@@ -66,26 +70,24 @@ import { fetchLabel } from '@/api/inventory/fetchLabel';
 
 const emits = defineEmits(['onConfirm', 'onCancel']);
 
-const targetTreeRef = ref(null);
-
 const state = reactive<{
   labelLoading: boolean;
   transferData: Record<string, any>[];
   treeData: Record<string, any>[];
   sourceTreeData: Record<string, any>[];
-  targetTreeData: Record<string, any>[];
+  targetData: Record<string, any>[];
   selectedKeys: Record<string, any>[];
-  limit: boolean;
   checkedValues: Record<string, any>[];
+  tagNum: number;
 }>({
   labelLoading: true,
   transferData: [],
   treeData: [],
   sourceTreeData: [],
-  targetTreeData: [],
+  targetData: [],
   selectedKeys: [],
-  limit: false,
   checkedValues: [],
+  tagNum: 0,
 });
 
 const props = defineProps({
@@ -96,100 +98,56 @@ const props = defineProps({
 
 const showModal = computed(() => props.labelVisible);
 
+const handleSourceSelect = (selectedKeys, data) => {
+  state.selectedKeys = selectedKeys;
+  state.targetData = data.checkedNodes;
+};
+
+const getSourceTreeData = (treeData) => {
+  const travel = (_treeData = [], level = 0) => {
+    const treeDataSource = [];
+    _treeData.forEach((item) => {
+      treeDataSource.push({
+        title: item.name,
+        key: item.id,
+        checkable: level, // 第一层不显示复选框
+        // 这里需要加下最多只能选3个限制
+        disableCheckbox:
+          state.selectedKeys.includes(item.id) ||
+          state.selectedKeys.length >= 3,
+        children: item.children?.length ? travel(item.children, level + 1) : [],
+      });
+    });
+    return treeDataSource;
+  };
+  return travel(treeData);
+};
+
 // 回显使用
-const getDetaultTransferData = (
-  treeData: any[] = [],
-  transferDataSource: any[] = []
-) => {
+const getDetaultTreeData = (treeData: any[] = [], dataSource: any[] = []) => {
   treeData.forEach((item) => {
     if (item.children) {
-      getDetaultTransferData(item.children, transferDataSource);
+      getDetaultTreeData(item.children, dataSource);
     } else {
-      transferDataSource.push({
-        label: item.name,
-        value: item.id,
+      dataSource.push({
+        title: item.name,
+        key: item.id,
         hasChecked: item.hasChecked,
       });
     }
   });
-  const result = transferDataSource
-    .filter((item) => item.hasChecked)
-    .map((i) => i.value);
-  return result;
+  const result = dataSource.filter((item) => item.hasChecked);
+  state.selectedKeys = result.map((i) => i.key);
+  state.targetData = result;
 };
 
-const getSourceTreeData = (data: any[] = []) => {
-  const values = data.map((item) => item.value);
-  const travel = (_treeData = []) => {
-    const treeDataSource = [];
-    _treeData.forEach((item) => {
-      if (item.children || values.includes(item.id)) {
-        treeDataSource.push({
-          title: item.name,
-          key: item.id,
-          checkable: item.checkable,
-          children: travel(item.children),
-        });
-      }
-    });
-    return treeDataSource;
-  };
-
-  return travel(state.treeData).filter((i) => i.children[0]);
-};
-
-const getTargetTreeData = (data: any[] = []) => {
-  const values = data.map((item) => item.value);
-  const travel = (_treeData = []) => {
-    const treeDataSource = [];
-    _treeData.forEach((item) => {
-      if (item.children || values.includes(item.id)) {
-        treeDataSource.push({
-          title: item.name,
-          key: item.id,
-          checkable: item.checkable,
-          // 这里需要加下最多只能选3个限制
-          disableCheckbox:
-            state.limit &&
-            !state.checkedValues.includes(item.id) &&
-            !!state.checkedValues[0],
-          children: travel(item.children),
-        });
-      }
-    });
-    return treeDataSource;
-  };
-  return travel(state.treeData).filter((i) => i.children[0]);
-};
-
-const getTransferData = (
-  treeData: any[] = [],
-  transferDataSource: any[] = [],
-  level = 0
-) => {
-  treeData.forEach((item) => {
-    if (level === 0) {
-      // 第一层没有复选框
-      item.checkable = false;
-    }
-    if (item.children) {
-      getTransferData(item.children, transferDataSource, level + 1);
-    } else {
-      transferDataSource.push({
-        label: item.name,
-        value: item.id,
-      });
-    }
-  });
-  return transferDataSource;
+const handleDel = (key: any) => {
+  state.selectedKeys = state.selectedKeys.filter((id) => id !== key);
+  state.targetData = state.targetData.filter((item) => item.key !== key);
 };
 
 const handleOk = () => {
-  emits(
-    'onConfirm',
-    targetTreeRef.value?.getCheckedNodes(),
-    props.recordData?.id
-  );
+  emits('onConfirm', state.selectedKeys, props.recordData?.id);
 };
 
 const handleCancel = () => {
@@ -198,43 +156,86 @@ const handleCancel = () => {
 
 const fetchLabelData = () => {
   return new Promise((resolve) => {
-    fetchLabel({ productId: props.recordData?.id }).then((res: any) => {
-      state.labelLoading = false;
-      if (res.code === 200) {
-        state.treeData = res.data;
-        resolve(res.data);
-      } else {
+    fetchLabel({ productId: props.recordData?.id })
+      .then((res: any) => {
+        state.labelLoading = false;
+        if (res.code === 200) {
+          state.treeData = res.data?.groupTagVOList || [];
+          state.tagNum = res.data?.tagCount || 0;
+          resolve(res.data?.groupTagVOList || []);
+        } else {
+          resolve([]);
+        }
+      })
+      .catch(() => {
+        state.labelLoading = false;
         resolve([]);
-      }
-    });
+      });
   });
-};
-
-const handleTransferSelectChange = (values: []) => {
-  state.checkedValues = values;
-  // 因为source和target共用一个values存储，所以还需要判断target本身是否有值
-  if (values.length >= 3 && targetTreeRef.value?.getCheckedNodes().length > 0) {
-    state.limit = true;
-  } else {
-    state.limit = false;
-  }
 };
 
 onMounted(async () => {
   const result = await fetchLabelData();
   // 获取编辑默认选中的节点
-  const r = getDetaultTransferData(result);
-  // 初始化选中的节点
-  setTimeout(() => {
-    targetTreeRef?.value?.checkNode(r, true);
-    state.limit = r.length >= 3;
-  }, 200);
+  getDetaultTreeData(result);
 });
 </script>
 
 <style lang="less" scoped>
 .label-modal-container {
-  .content {
+  .container {
+    .tree-box {
+      display: flex;
+
+      .left-side {
+        margin-right: 8px;
+      }
+
+      .left-side,
+      .right-side {
+        width: 236px;
+        height: 419px;
+        border: 1px solid #e5e8ef;
+      }
+
+      .header-title {
+        display: flex;
+        justify-content: space-between;
+        height: 40px;
+        padding: 0 12px;
+        color: #1d2129;
+        font-weight: 500;
+        line-height: 40px;
+        background: #f6f7fb;
+      }
+    }
+
+    .content {
+      height: calc(100% - 40px);
+      padding: 8px 20px 8px 16px;
+      overflow-y: auto;
+
+      .node-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 36px;
+        line-height: 36px;
+
+        .close {
+          cursor: pointer;
+        }
+      }
+
+      :deep(.tele-tree-node-selected .tele-tree-node-title) {
+        color: rgb(29, 33, 41);
+      }
+
+      :deep(.tele-tree-node-title) {
+        cursor: auto;
+      }
+    }
+
     :deep(.tele-tree-node) {
       .tele-tree-node-indent {
         .tele-tree-node-indent-block {
@@ -254,10 +255,6 @@ onMounted(async () => {
   }
 
   .label-modal-body {
-    .tele-transfer {
-      justify-content: center;
-    }
-
     .label-spin {
       position: absolute;
       top: 50%;

@@ -381,8 +381,7 @@ const handleTableLaunchOrDel = (record: Record<string, any>) => {
       if (res) {
         Modal.warning({
           title: '确定下线该应用吗？',
-          content:
-            '若已有售卖订单，为避免影响用户使用，请编辑修改后立即重新上线',
+          content: '为避免影响用户使用，请编辑修改后立即重新上线',
           titleAlign: 'start',
           okText: '下线应用',
           hideCancel: false,
