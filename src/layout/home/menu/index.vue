@@ -63,7 +63,7 @@ const pathMap = {
   13: '/buyer/order',
   14: '/seller/goods',
   15: '/seller/order',
-  16: '/开发者中心',
+  16: '/devCenter/manage',
   17: '/system/users',
   18: '/system/roles',
 };
