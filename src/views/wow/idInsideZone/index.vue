@@ -33,10 +33,38 @@
         <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="advantage">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
+        <div class="advantage-list">
+          <div class="img">图片</div>
+          <div class="text">
+            <div class="title">
+              <div class="title-icon">2</div>
+              <div class="title-name">提升技术竞争力</div>
+            </div>
+            <ul>
+              <li
+                >开放资源：提供详细的技术文档，包括产品手册、API文档、安装指南等</li
+              >
+              <li
+                >服务咨询：提供定制化的产品规划和解决方案服务咨询，找到合适的产品应用场景</li
+              >
+              <li
+                >研发协作：提供专业的技术咨询与服务，协同解决合作伙伴的技术难题</li
+              >
+            </ul>
+          </div>
+        </div>
+        <div class="advantage-list">
+          <div class="img">图片</div>
+          <div class="text">文字</div>
+        </div>
+        <div class="advantage-list">
+          <div class="img">图片</div>
+          <div class="text">文字</div>
+        </div>
+        <div class="advantage-list">
+          <div class="img">图片</div>
+          <div class="text">文字</div>
+        </div>
       </div>
     </div>
     <!-- 如何加入IDInside -->
@@ -121,14 +149,14 @@
           </div>
           <!-- 展示文字 -->
           <!-- <div class="left-06">
-            <ui>
+            <ul>
               <li>倾力打造的云计算品牌</li>
               <li>面向全世界各个国家和地区的政府机构</li>
               <li>倾力打造的云计算品牌</li>
               <li>面向全世界各个国家和地区的政府机构</li>
               <li>倾力打造的云计算品牌</li>
               <li>面向全世界各个国家和地区的政府机构</li>
-            </ui>
+            </ul>
           </div> -->
         </div>
         <div class="synopsis-right">
@@ -300,10 +328,49 @@ const partnerList = ref([
 
   .advantage {
     display: flex;
+    justify-content: center;
     width: 100%;
-    height: 462px;
-    background: url(@/assets/images/idinside/advantage-bg.png) no-repeat;
+    height: 406px;
+    margin-top: 74px;
+    background: url(@/assets/images/idinside/whyjoin/advantage-bg.png) no-repeat;
     background-size: 100% 100%;
+    // gap: 111px;
+    .advantage-list {
+      margin-top: -50px;
+
+      .img {
+        width: 264px;
+        height: 266px;
+        padding: 0 0 10.53px 1px;
+        background: red;
+      }
+
+      .text {
+        width: 320px;
+
+        > ul > li {
+          display: flex;
+          align-items: center;
+          margin-top: 5px;
+          color: #4e5969;
+          color: #4e5969;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: PingFang SC;
+          line-height: 22px;
+          text-align: left;
+
+          span:nth-child(1) {
+            float: left;
+            width: 4px;
+            height: 4px;
+            margin-right: 8px;
+            background-color: #4e5969;
+            border-radius: 6px;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -484,7 +551,7 @@ const partnerList = ref([
       .left-06 {
         padding-left: 66px;
 
-        > ui > li {
+        > ul > li {
           margin-top: 12px;
           color: #4e5969;
           font-weight: 400;
