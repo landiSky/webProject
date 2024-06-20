@@ -321,6 +321,31 @@
                   }}
                   元
                 </t-descriptions-item>
+
+                <t-descriptions-item
+                  v-if="formModel.saleType !== SaleType.FREE"
+                  label="是否支持试用"
+                >
+                  {{ st.isTry === 1 ? '是' : '否' }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用版本地址">
+                  <t-link
+                    :hoverable="false"
+                    @click="
+                      (ev:any) => {
+                        ev.view.open(st.tryUrl);
+                      }
+                    "
+                  >
+                    {{ st.tryUrl }}
+                  </t-link>
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用账号">
+                  {{ st.tryAccount }}
+                </t-descriptions-item>
+                <t-descriptions-item v-if="st.isTry === 1" label="试用密码">
+                  {{ st.tryPwd }}
+                </t-descriptions-item>
                 <!-- <t-descriptions-item label="应用秘钥">
                   <a
                     :href="`data:text/plain;charset=utf-8,${encodeURIComponent(
