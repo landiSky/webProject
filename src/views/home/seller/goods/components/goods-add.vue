@@ -310,7 +310,7 @@
           >
             <t-upload
               :ref="prdRef"
-              :limit="1"
+              :limit="10"
               :file-list="expList"
               :multiple="false"
               action="/server/web/file/upload"
@@ -319,6 +319,7 @@
               accept=".pdf,.doc,.docx"
               tip-position="bottom"
               @before-upload="beforeUpload50"
+              @before-remove="beforeRemove50"
               @success="uploadExpSuccess"
               @error="uploadExpError"
               @change="uploadExpChange"
@@ -958,7 +959,7 @@ const formModel = ref<Record<string, any>>({
   productTypeId: '',
   logo: '',
   detailImg: '',
-  useExplain: '',
+  useExplain: [],
   introduction: '',
   detail: '[]',
   companyId: '',
@@ -1297,8 +1298,8 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
 };
 
 const uploadExpError = (fileItem: FileItem) => {
-  formModel.value.useExplain = '';
-  formRef.value.validateField('useExplain');
+  // formModel.value.useExplain = '';
+  // formRef.value.validateField('useExplain');
   const size = fileItem.file?.size ?? 0;
   if (size > 50 * 1024 * 1024) {
     Message.error(`上传失败，文件大小不要超过50M`);
@@ -1310,8 +1311,11 @@ const uploadExpError = (fileItem: FileItem) => {
 const uploadExpSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
   if (res?.code === 200) {
-    formModel.value.useExplain = fileItem.response.data;
-    expList.value = [fileItem];
+    formModel.value.useExplain = [
+      ...formModel.value.useExplain,
+      fileItem.response.data,
+    ];
+    expList.value = [...expList.value, fileItem];
     formRef.value.validateField('useExplain');
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
@@ -1320,9 +1324,9 @@ const uploadExpSuccess = (fileItem: FileItem) => {
 };
 
 const uploadExpChange = (fileList: FileItem[]) => {
-  if (fileList.length === 0) {
-    formModel.value.useExplain = '';
-  }
+  // if (fileList.length === 0) {
+  //   formModel.value.useExplain = [];
+  // }
 };
 
 const getClassList = () => {
@@ -1480,12 +1484,16 @@ const getModalJson = () => {
 
 const getDetail = (id: any) => {
   goodsDetail(id).then((res) => {
+    const useExplainList =
+      res?.useExplainMap.map((item: any) => {
+        return item.useExplain;
+      }) || [];
     formModel.value.name = res.name;
     formModel.value.id = res.id;
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
-    formModel.value.useExplain = res.useExplain;
+    formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
@@ -1496,7 +1504,14 @@ const getDetail = (id: any) => {
     templateRef.value.templateData = JSON.parse(res.detail);
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];
     if (res.useExplain) {
-      expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
+      const useExplainMap = res.useExplainMap.map((item: any) => {
+        const params = item;
+        params.uid = params.useExplain;
+        params.name = params.useExplainOriginal;
+        return params;
+      });
+      expList.value = useExplainMap;
+      // expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
     }
 
     if (formModel2.value.saleType === 0) {
@@ -1712,6 +1727,18 @@ const beforeUpload50 = (file: File) => {
   });
 };
 
+const beforeRemove50 = (file: any) => {
+  return new Promise<void>((resolve, reject) => {
+    const flied = file.response.data || file.uid;
+    const index = formModel.value.useExplain.indexOf(flied);
+    formModel.value.useExplain.splice(index, 1);
+    expList.value.splice(index, 1);
+    // const List = expList.value
+    // List.splice(index, 1);
+    resolve();
+  });
+};
+
 const getSelectApplication = () => {
   const params = {
     companyId: userInfoByCompany.value?.companyId,
@@ -1834,7 +1861,10 @@ const clickNext = async () => {
     return;
   }
   const api = props.data?.id ? updateGoods1 : saveGoods1;
-  api(formModel.value).then((res) => {
+  api({
+    ...formModel.value,
+    useExplain: formModel.value.useExplain.join(','),
+  }).then((res) => {
     if (res) {
       modalJsonString.value = getModalJson();
       step.value = 2;
@@ -2189,6 +2219,10 @@ const validateAP = (index: number, key: string) => {
 
 .pic-item {
   margin-bottom: 0 !important;
+
+  :deep(.tele-upload-list-item) {
+    margin-top: 12px;
+  }
 }
 
 .modal-list {
