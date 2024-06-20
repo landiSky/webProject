@@ -44,10 +44,14 @@ import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMenuStore } from '@/store/modules/menu';
 import { apiDataPoint } from '@/api/data-point';
+import { useUserStore } from '@/store/modules/user';
 
 const router = useRouter();
 const route = useRoute();
 const collapsed = ref(false);
+
+const userStore = useUserStore();
+const { userInfo } = userStore;
 
 const menuStore = useMenuStore();
 
@@ -106,9 +110,11 @@ const clickMenuItem = (key: string) => {
     // TODO w: 各个菜单的打点统计
     const num = findKeyByValue(pathMap, key);
     if (num) {
-      apiDataPoint(null, null, 6, parseInt(num, 10)).then((res) => {
-        console.log('左侧菜单打点', key, num, res);
-      });
+      apiDataPoint(null, null, userInfo?.id, 6, parseInt(num, 10)).then(
+        (res) => {
+          console.log('左侧菜单打点', key, num, res);
+        }
+      );
     }
   }
 };

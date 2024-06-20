@@ -147,7 +147,7 @@ const clickLogout = () => {
 // 现在的
 const clickIdService = () => {
   // TODO w:用户标识服务打点
-  apiDataPoint(null, null, 6, 11).then((res) => {
+  apiDataPoint(null, null, userInfo?.value?.id, 6, 11).then((res) => {
     console.log('用户主导航点击标识服务打点');
   });
   const { primary, companyId } = userInfoByCompany.value || {};
@@ -217,9 +217,11 @@ const setDot = () => {
 
 const onSearch = () => {
   // TODO w: 商城搜索打点
-  apiDataPoint(null, searchContent.value, 6, 2).then((res) => {
-    console.log('用户主导航栏商品搜索打点', searchContent.value);
-  });
+  apiDataPoint(null, searchContent.value, userInfo?.value?.id, 6, 2).then(
+    (res) => {
+      console.log('用户主导航栏商品搜索打点', searchContent.value);
+    }
+  );
   router.push({
     name: 'wowMall',
     query: {

@@ -341,6 +341,7 @@ const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
 const orderStore = useOrderStore();
+const { userInfo } = userStore;
 const authModalVisible = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
@@ -515,11 +516,14 @@ const clickProbation = () => {
 };
 
 const clickAddCart = (): void => {
-  // TODO w: 立即购买打点
-  apiDataPoint(route.params.id as string, null, 4, 4).then((res) => {
-    console.log('立即购买打点', route.params.id);
-  });
   const { userInfo, userInfoByCompany } = userStore;
+  // TODO w: 立即购买打点
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 4).then(
+    (res) => {
+      console.log('立即购买打点', route.params.id);
+    }
+  );
+
   if (!userInfo?.id) {
     console.log(route.fullPath, 'route.fullPath');
     sessionStorage.setItem('mallDetailPath', route.fullPath);
@@ -619,9 +623,11 @@ const clickNav = (index: number) => {
 
 const buyConsult = () => {
   // TODO w: 购买咨询打点
-  apiDataPoint(route.params.id as string, null, 4, 5).then((res) => {
-    console.log('购买咨询打点', route.params.id);
-  });
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 5).then(
+    (res) => {
+      console.log('购买咨询打点', route.params.id);
+    }
+  );
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -674,9 +680,11 @@ const paginationchange = (current: number) => {
 
 onMounted(() => {
   // TODO w: 商品详情打点
-  apiDataPoint(route.params.id as string, null, 4, 3).then((res) => {
-    console.log('商品详情打点', route.params.id);
-  });
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(
+    (res) => {
+      console.log('商品详情打点', route.params.id);
+    }
+  );
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {

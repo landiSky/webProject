@@ -297,11 +297,15 @@ import { apiProductList } from '@/api/wow/mall';
 import { apiProductType, apiTagList } from '@/api/common';
 import { DeliverType, DeliverTypeDesc } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
+import { useUserStore } from '@/store/modules/user';
 import { PriceEnum } from './constant';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
 const route = useRoute();
+
+const userStore = useUserStore();
+const { userInfo } = userStore;
 
 const pagination = reactive({
   page: 1,
@@ -484,7 +488,7 @@ watch(
 
 onMounted(() => {
   // TODO w: 商城首页打点:是否分为登录和未登录两种情况？
-  apiDataPoint(null, null, 3, 1).then((res) => {
+  apiDataPoint(null, null, userInfo?.id, 3, 1).then((res) => {
     console.log('商城首页打点');
   });
   getProductType();
