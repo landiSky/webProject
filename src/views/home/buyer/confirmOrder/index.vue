@@ -49,7 +49,7 @@
             >
             <p
               v-if="createOrderInfo.accountDesc != '不限'"
-              style="color: #86909c"
+              style="margin-left: -20px; color: #86909c"
               >(
               <span>{{ createOrderInfo.accountDesc }}账号</span>
               <span v-if="createOrderInfo.durationDesc !== '不限'">
