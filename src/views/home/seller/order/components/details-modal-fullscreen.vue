@@ -72,14 +72,14 @@
                   <div v-else>
                     <span v-if="dataList.alterPriceStatus === 0">
                       <!-- 待支付-待修改金额 -->
-                      待修改金额，尽快修改金额，未修改买家将无法支付。
+                      待修改金额：尽快修改金额，未修改买家将无法支付。
                     </span>
                     <span v-else>
                       待支付：商品已下单，待买家上传支付凭证并提交审核。
                     </span>
                   </div>
                 </t-space>
-                <div
+                <!-- <div
                   v-if="
                     dataList.saleType === 2 && dataList.alterPriceStatus === 0
                   "
@@ -88,7 +88,7 @@
                   <t-button type="primary" @click="modificationamount"
                     >修改金额
                   </t-button>
-                </div>
+                </div> -->
               </div>
               <div v-if="dataList.orderStatus === 1">
                 <t-space class="order-success spacing">

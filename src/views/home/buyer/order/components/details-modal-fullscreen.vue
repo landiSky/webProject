@@ -73,7 +73,7 @@
                   <div v-else>
                     <span v-if="dataList.alterPriceStatus === 0">
                       <!-- 待支付-待卖家修改金额 -->
-                      待修改金额，待卖家修改金额后进行支付。
+                      待修改金额：待卖家修改金额后进行支付。
                     </span>
                     <span v-else>
                       待支付：商品已下单，请买家上传支付凭证并提交服务商审核。
