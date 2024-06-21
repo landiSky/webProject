@@ -388,6 +388,7 @@ import {
   stopSync,
   operationLogin,
 } from '@/api/operation/sync-class';
+import { SaleType } from '@/enums/common';
 import { Message, Modal } from '@tele-design/web-vue';
 import { comfirmLabel } from '@/api/inventory/fetchLabel';
 
