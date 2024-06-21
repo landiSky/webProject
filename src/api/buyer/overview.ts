@@ -10,11 +10,21 @@ export function orderGo(params: Record<string, any>) {
 }
 // 买家中心 自建应用前往
 export function appInfoClientLogin(params: Record<string, any>) {
-  return $http.get('/auth/appInfoClientLogin', { params });
+  return $http.get('/auth/appInfoClientLogin', {
+    params,
+    customFields: {
+      returnRawData: true,
+    },
+  });
 }
 // 买家中心 已购应用前往
 export function alreadyBuyClientLogin(params: Record<string, any>) {
-  return $http.get('/auth/alreadyBuyClientLogin', { params });
+  return $http.get('/auth/alreadyBuyClientLogin', {
+    params,
+    customFields: {
+      returnRawData: true,
+    },
+  });
 }
 
 // 已购应用

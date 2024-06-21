@@ -869,8 +869,9 @@
                     v-for="item in applicationList"
                     :key="item.value"
                     :value="item.value"
-                    >{{ item.label }}</t-option
                   >
+                    <span v-show="item.status == 1">{{ item.label }}</span>
+                  </t-option>
                 </t-select>
               </t-form-item>
             </t-form>
