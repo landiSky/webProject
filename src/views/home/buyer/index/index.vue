@@ -326,16 +326,16 @@
                   "
                   type="primary"
                   class="dirlist-btn"
-                  style="display: block; margin: 4px auto 0; padding: 5px 10px"
+                  style="display: block; margin: 12px auto 0"
                   @click="authentication"
                   >去认证</t-button
                 >
 
                 <div v-else class="states">
-                  <p
+                  <!-- <p
                     style="
                       width: 50px;
-                      margin: 4px auto 0;
+                      margin: 12px auto 0;
                       padding: 5px;
                       text-align: center;
                     "
@@ -344,7 +344,7 @@
                     {{
                       CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
                     }}</p
-                  >
+                  > -->
 
                   <p
                     v-if="
@@ -353,7 +353,7 @@
                         CompanyAuthStatus.REJECT,
                       ].includes(userInfoByCompany.certificateStatus)
                     "
-                    style="width: 80px; margin: 0 auto; font-size: 12px"
+                    style="width: 80px; margin: 12px auto 0; font-size: 12px"
                   >
                     <t-button type="text" @click="viewdetails"
                       >查看详情</t-button
@@ -1602,7 +1602,7 @@ onMounted(() => {
             li {
               display: flex;
               align-items: center;
-              margin-top: 5px;
+              margin-top: 10px;
               color: #4e5969;
 
               span:nth-child(1) {
