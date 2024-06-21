@@ -977,6 +977,7 @@ const togo = (detailData: Record<string, any>) => {
         memberId: selectCompany.value?.memberId,
         orderId: id,
       };
+
       alreadyBuyClientLogin(params).then((res: any) => {
         const data = {
           type: 'productApp',
@@ -988,14 +989,21 @@ const togo = (detailData: Record<string, any>) => {
           JSON.stringify(data),
           userStore.configInfo?.publicKey
         );
+        if (res.code === 102008) {
+          return Message.warning(res?.message);
+        }
+        if (res.code !== 200) {
+          return Message.error(res?.message);
+        }
         if (deliveryType === 1) {
           window.open(res);
-          return;
+        } else {
+          window.open(`${res}&data=${sm2data}`);
         }
-        window.open(`${res}&data=${sm2data}`);
         // window.open(
         //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
         // );
+        return true;
       });
     } else if (Number(tabsApplication.value) === 2) {
       const params = {
@@ -1003,6 +1011,12 @@ const togo = (detailData: Record<string, any>) => {
         companyId,
       };
       appInfoClientLogin(params).then((res: any) => {
+        if (res.code === 102008) {
+          return Message.warning(res?.message);
+        }
+        if (res.code !== 200) {
+          return Message.error(res?.message);
+        }
         const data = {
           type: 'selfApp',
           companyId,
@@ -1012,6 +1026,7 @@ const togo = (detailData: Record<string, any>) => {
           userStore.configInfo?.publicKey
         );
         window.open(`${res}&data=${sm2data}`);
+        return true;
         // window.open(
         //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
         // );
