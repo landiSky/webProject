@@ -37,19 +37,25 @@
           <div class="img">图片</div>
           <div class="text">
             <div class="title">
-              <div class="title-icon">2</div>
+              <div class="title-icon"></div>
               <div class="title-name">提升技术竞争力</div>
             </div>
             <ul>
-              <li
-                >开放资源：提供详细的技术文档，包括产品手册、API文档、安装指南等</li
-              >
-              <li
-                >服务咨询：提供定制化的产品规划和解决方案服务咨询，找到合适的产品应用场景</li
-              >
-              <li
-                >研发协作：提供专业的技术咨询与服务，协同解决合作伙伴的技术难题</li
-              >
+              <li>
+                <span
+                  >开放资源：提供详细的技术文档，包括产品手册、API文档、安装指南等</span
+                >
+              </li>
+              <li>
+                <span
+                  >服务咨询：提供定制化的产品规划和解决方案服务咨询，找到合适的产品应用场景</span
+                >
+              </li>
+              <li>
+                <span
+                  >研发协作：提供专业的技术咨询与服务，协同解决合作伙伴的技术难题</span
+                >
+              </li>
             </ul>
           </div>
         </div>
@@ -348,25 +354,40 @@ const partnerList = ref([
       .text {
         width: 320px;
 
-        > ul > li {
+        .title {
           display: flex;
           align-items: center;
-          margin-top: 5px;
-          color: #4e5969;
-          color: #4e5969;
-          font-weight: 400;
-          font-size: 14px;
-          font-family: PingFang SC;
-          line-height: 22px;
-          text-align: left;
+          margin-top: 20px;
+          margin-bottom: 12px;
 
-          span:nth-child(1) {
-            float: left;
-            width: 4px;
-            height: 4px;
-            margin-right: 8px;
-            background-color: #4e5969;
-            border-radius: 6px;
+          .title-icon {
+            width: 12px;
+            height: 12px;
+            background: rgba(22, 100, 255, 1);
+          }
+
+          .title-name {
+            margin-left: 8px;
+            color: rgba(0, 0, 0, 1);
+            font-weight: 500;
+            font-size: 16px;
+            font-family: PingFang SC;
+            line-height: 24px;
+            text-align: left;
+          }
+        }
+
+        > ul > li {
+          margin-left: 20px;
+          list-style-type: disc;
+
+          span {
+            color: #4e5969;
+            font-weight: 400;
+            font-size: 14px;
+            font-family: PingFang SC;
+            line-height: 22px;
+            text-align: left;
           }
         }
       }
