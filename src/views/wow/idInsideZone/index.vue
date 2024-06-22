@@ -9,67 +9,49 @@
         loop
         muted
       ></video>
-      <div class="idinside-top">
-        <div class="idinside-title">IDInside合作计划</div>
-        <div class="idinside-text">
-          <div class="icon"></div>
-          <div class="text"
-            >"IDInside合作计划"，以打造百款标识产品、服务万家企业为目标。</div
-          >
-        </div>
-        <div class="idinside-text">
-          <div class="icon"></div>
-          <div class="text"
-            >IDInside合作计划旨在发展一批标识解析标杆应用，以国家标识节点为基础，以伙伴应用能力为支撑，探索标识最佳使用模式，共同推动标识解析体系从“建”到“用”，形成百万级工业互联网网络目标，助力标识贯通千行百业。</div
-          >
+      <div class="idinside-bg">
+        <div class="idinside-top">
+          <div class="idinside-title">IDInside合作计划</div>
+          <div class="idinside-text">
+            <div class="icon"></div>
+            <div class="text"
+              >"IDInside合作计划"，以打造百款标识产品、服务万家企业为目标。</div
+            >
+          </div>
+          <div class="idinside-text">
+            <div class="icon"></div>
+            <div class="text"
+              >IDInside合作计划旨在发展一批标识解析标杆应用，以国家标识节点为基础，以伙伴应用能力为支撑，探索标识最佳使用模式，共同推动标识解析体系从“建”到“用”，形成百万级工业互联网网络目标，助力标识贯通千行百业。</div
+            >
+          </div>
         </div>
       </div>
     </div>
     <!-- 为什么要加入IDInside -->
-    <div class="why-join">
+    <div ref="testref" class="why-join">
       <div class="unified">
         <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">为什么要加入IDInside</div>
         <div class="unified-right unified-icon-02"></div>
       </div>
-      <div class="advantage">
-        <div class="advantage-list">
-          <div class="img">图片</div>
+      <div class="advantage" :class="{ test: true, testenter: testShow }">
+        <div
+          v-for="(item, index) in whyJoin"
+          :key="index"
+          class="advantage-list"
+        >
+          <img :src="item.img" alt="" class="img" />
           <div class="text">
             <div class="title">
               <div class="title-icon"></div>
-              <div class="title-name">提升技术竞争力</div>
+              <div class="title-name">{{ item.title }}</div>
             </div>
             <ul>
-              <li>
-                <span
-                  >开放资源：提供详细的技术文档，包括产品手册、API文档、安装指南等</span
-                >
-              </li>
-              <li>
-                <span
-                  >服务咨询：提供定制化的产品规划和解决方案服务咨询，找到合适的产品应用场景</span
-                >
-              </li>
-              <li>
-                <span
-                  >研发协作：提供专业的技术咨询与服务，协同解决合作伙伴的技术难题</span
-                >
+              <li v-for="item2 in item.introduceList" :key="item2">
+                <span>{{ item2.label }}{{ item2.value }}</span>
               </li>
             </ul>
           </div>
-        </div>
-        <div class="advantage-list">
-          <div class="img">图片</div>
-          <div class="text">文字</div>
-        </div>
-        <div class="advantage-list">
-          <div class="img">图片</div>
-          <div class="text">文字</div>
-        </div>
-        <div class="advantage-list">
-          <div class="img">图片</div>
-          <div class="text">文字</div>
         </div>
       </div>
     </div>
@@ -81,7 +63,7 @@
         <div class="unified-right unified-icon-04"></div>
       </div>
       <div class="step">
-        <div class="card">
+        <div class="card card-01">
           <div class="icon">01</div>
           <div class="title">报名申请</div>
           <div class="text"
@@ -89,7 +71,7 @@
             <p>填写报名申请信息</p></div
           >
         </div>
-        <div class="card">
+        <div class="card card-02">
           <div class="icon">02</div>
           <div class="title">资料提交</div>
           <div class="text"
@@ -97,7 +79,7 @@
             上传完整的产品集成方案。</div
           >
         </div>
-        <div class="card">
+        <div class="card card-03">
           <div class="icon">03</div>
           <div class="title">集成开发</div>
           <div class="text"
@@ -105,7 +87,7 @@
             查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
           >
         </div>
-        <div class="card">
+        <div class="card card-04">
           <div class="icon">04</div>
           <div class="title">测评认证</div>
           <div class="text"
@@ -115,7 +97,7 @@
             >」
           </div>
         </div>
-        <div class="card">
+        <div class="card card-05">
           <div class="icon">05</div>
           <div class="title">运营推广</div>
           <div class="text">
@@ -239,7 +221,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+
+import advantage1 from '@/assets/images/idinside/whyjoin/advantage-01.png';
+import advantage2 from '@/assets/images/idinside/whyjoin/advantage-02.png';
+import advantage3 from '@/assets/images/idinside/whyjoin/advantage-03.png';
+import advantage4 from '@/assets/images/idinside/whyjoin/advantage-04.png';
 
 import case0101 from '@/assets/images/idinside/case/case-01-01.png';
 
@@ -270,6 +257,107 @@ const partnerList = ref([
   partner9,
   partner10,
 ]);
+
+const whyJoin = ref([
+  {
+    img: advantage1,
+    title: '提升技术竞争力',
+    introduceList: [
+      {
+        label: '开放资源：',
+        value: '提供详细的技术文档，包括产品手册、API文档、安装指南等',
+      },
+      {
+        label: '服务咨询：',
+        value: '提供定制化的产品规划和解决方案服务咨询，找到合适的产品应用场景',
+      },
+      {
+        label: '研发协作：',
+        value: '提供专业的技术咨询与服务，协同解决合作伙伴的技术难题',
+      },
+    ],
+  },
+  {
+    img: advantage2,
+    title: '提供联合推广能力',
+    introduceList: [
+      {
+        label: '产品推广：',
+        value: '优选产品入驻智数通平台IDInside专区，推向标识解析体系的全网用户',
+      },
+      {
+        label: '项目推广：',
+        value:
+          '优先获取部委或地方的数字化转型、技术改造和标识贯通等项目合作机会',
+      },
+      {
+        label: '业务推广：',
+        value: '联合工业互联网运营工作组，拓展业务',
+      },
+    ],
+  },
+  {
+    img: advantage3,
+    title: '提升品牌营销能力',
+    introduceList: [
+      {
+        label: '内容推广：',
+        value:
+          '通过公众号（泰尔英福等）、核心央媒报道（光明网等） 将品牌信息传递给大众',
+      },
+      {
+        label: '营销活动：',
+        value:
+          '通过各种形式的专题活动、产品发布会进行品牌营销，如标识大赛，百城千园行，合作伙伴大会、战略发布会',
+      },
+    ],
+  },
+  {
+    img: advantage4,
+    title: '提供培训认证服务',
+    introduceList: [
+      {
+        label: '信息共享：',
+        value: '共享市场洞察、政策与法规等信息',
+      },
+      {
+        label: '产品培训：',
+        value: '组织开展工业互联网标识解析相关培训',
+      },
+      {
+        label: '知识产权合作：',
+        value: '联合编写专利、标准、白皮书等',
+      },
+      {
+        label: '商机共拓：',
+        value: '共享伙伴产品能力、渠道和客户资源',
+      },
+    ],
+  },
+]);
+
+const testShow = ref(false);
+const testref: Record<string, any> = ref(null);
+const handleScroll = () => {
+  nextTick(() => {
+    const currentScroll = testref.value.getBoundingClientRect().top; // 表示当前标签距离顶部滚动的位置
+    console.log(currentScroll);
+    if (currentScroll < 400) {
+      // 当前滚动位置到达testref的时候，显示div（100作为调整用）
+      testShow.value = true;
+    } else {
+      testShow.value = false;
+    }
+  });
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, true);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 </script>
 
 <style lang="less" scoped>
@@ -285,43 +373,61 @@ const partnerList = ref([
     object-fit: cover;
   }
 
-  .idinside-top {
+  .idinside-bg {
     position: absolute;
-    top: 196px;
-    left: 229px;
+    top: 0;
+    left: 0;
     z-index: 100;
+    width: 50%;
+    height: 700px;
+    background: linear-gradient(
+      270deg,
+      rgba(188, 200, 238, 0.18) 0%,
+      rgba(216, 227, 255, 0.8) 42.5%,
+      #e9f0ff 96%
+    );
 
-    .idinside-title {
-      margin-bottom: 12px;
-      color: rgba(29, 33, 41, 1);
-      font-weight: 500;
-      font-size: 36px;
-      font-family: PingFang SC;
-      line-height: 44px;
-      text-align: left;
-    }
-
-    .idinside-text {
+    .idinside-top {
       display: flex;
-      margin-top: 12px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      margin-left: -200px;
 
-      .icon {
-        width: 20px;
-        height: 15px;
-        margin-top: 6px;
-        background: url(@/assets/images/idinside/unified/icon-01.png) no-repeat;
-        background-size: 100% 100%;
+      .idinside-title {
+        margin-bottom: 12px;
+        color: rgba(29, 33, 41, 1);
+        font-weight: 500;
+        font-size: 36px;
+        font-family: PingFang SC;
+        line-height: 44px;
+        text-align: left;
       }
 
-      .text {
-        width: 386px;
-        margin-left: 12px;
-        color: rgba(71, 83, 109, 1);
-        font-weight: 400;
-        font-size: 20px;
-        font-family: PingFang SC;
-        line-height: 28px;
-        text-align: left;
+      .idinside-text {
+        display: flex;
+        margin-top: 12px;
+
+        .icon {
+          width: 20px;
+          height: 15px;
+          margin-top: 6px;
+          background: url(@/assets/images/idinside/unified/icon-01.png)
+            no-repeat;
+          background-size: 100% 100%;
+        }
+
+        .text {
+          width: 386px;
+          margin-left: 12px;
+          color: rgba(71, 83, 109, 1);
+          font-weight: 400;
+          font-size: 20px;
+          font-family: PingFang SC;
+          line-height: 28px;
+          text-align: left;
+        }
       }
     }
   }
@@ -332,23 +438,131 @@ const partnerList = ref([
   flex-direction: column;
   align-items: center;
 
+  .testenter {
+    .advantage-list:nth-child(1) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.1s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.15s ease;
+      }
+    }
+
+    .advantage-list:nth-child(2) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.2s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.25s ease;
+      }
+    }
+
+    .advantage-list:nth-child(3) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.3s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.35s ease;
+      }
+    }
+
+    .advantage-list:nth-child(4) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.4s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.45s ease;
+      }
+    }
+  }
+
+  .test {
+    .advantage-list:nth-child(1) {
+      .img {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+
+      .text {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+    }
+
+    .advantage-list:nth-child(2) {
+      .img {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+
+      .text {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+    }
+
+    .advantage-list:nth-child(3) {
+      .img {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+
+      .text {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+    }
+
+    .advantage-list:nth-child(4) {
+      .img {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+
+      .text {
+        transform: translateX(30%);
+        opacity: 0;
+      }
+    }
+  }
+
   .advantage {
     display: flex;
+    gap: 40px;
     justify-content: center;
     width: 100%;
     height: 406px;
     margin-top: 74px;
+    overflow-x: clip;
     background: url(@/assets/images/idinside/whyjoin/advantage-bg.png) no-repeat;
     background-size: 100% 100%;
-    // gap: 111px;
+
     .advantage-list {
-      margin-top: -50px;
+      margin-top: -82px;
 
       .img {
         width: 264px;
         height: 266px;
-        padding: 0 0 10.53px 1px;
-        background: red;
       }
 
       .text {
@@ -363,7 +577,9 @@ const partnerList = ref([
           .title-icon {
             width: 12px;
             height: 12px;
-            background: rgba(22, 100, 255, 1);
+            background: url(@/assets/images/idinside/whyjoin/icon-01.png)
+              no-repeat;
+            background-size: 100% 100%;
           }
 
           .title-name {
@@ -407,27 +623,31 @@ const partnerList = ref([
     display: flex;
     gap: 28px;
 
-    // .card-01 {
-    //   background: url(@/assets/images/idinside/join/join-01.png) no-repeat;
-    // }
-    // .card-02 {
-    //   background: url(@/assets/images/idinside/join/join-02.png) no-repeat;
-    // }
-    // .card-03 {
-    //   background: url(@/assets/images/idinside/join/join-03.png) no-repeat;
-    // }
-    // .card-04 {
-    //   background: url(@/assets/images/idinside/join/join-04.png) no-repeat;
-    // }
-    // .card-05 {
-    //   background: url(@/assets/images/idinside/join/join-05.png) no-repeat;
-    // }
+    .card-01 {
+      background-image: url(@/assets/images/idinside/join/join-01.png);
+    }
+
+    .card-02 {
+      background-image: url(@/assets/images/idinside/join/join-02.png);
+    }
+
+    .card-03 {
+      background-image: url(@/assets/images/idinside/join/join-03.png);
+    }
+
+    .card-04 {
+      background-image: url(@/assets/images/idinside/join/join-04.png);
+    }
+
+    .card-05 {
+      background-image: url(@/assets/images/idinside/join/join-05.png);
+    }
+
     .card {
-      gap: 0;
       width: 254px;
       height: 276px;
       padding: 20px;
-      background-size: 100% 100%;
+      background-size: contain;
       border: 1px solid;
       border-radius: 4px;
       border-image-source: linear-gradient(
@@ -435,8 +655,8 @@ const partnerList = ref([
         #fff 0%,
         rgba(255, 255, 255, 0) 100%
       );
-      box-shadow: 0 6px 16px 0 rgba(41, 78, 207, 0.08);
-
+      box-shadow: 2px 10px 22px 0 rgba(41, 78, 207, 0.33);
+      // background: rgba(255, 255, 255, 0.33);
       .icon {
         display: flex;
         gap: 0;
