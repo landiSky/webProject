@@ -120,6 +120,12 @@
           下架
         </t-link>
         <t-link
+          v-if="record.status === StatusEnum.YSJ"
+          @click="clickDownBtn(record)"
+        >
+          证书下载
+        </t-link>
+        <t-link
           v-if="record.status !== StatusEnum.YSJ"
           :style="{
             color: record.status === StatusEnum.WSJ ? '#1664FF' : '#C9CDD4',
@@ -163,6 +169,8 @@
     @cancel="onAddModalConfirm"
     @preview="onPreview"
   ></Add>
+
+  <Certificate @cancel="onAddModalConfirm"></Certificate>
 </template>
 
 <script setup lang="ts">
@@ -181,6 +189,8 @@ import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
+
+import Certificate from '@/components/certificate/index.vue';
 import Detail from './components/goods-detail.vue';
 import Add from './components/goods-add.vue';
 
