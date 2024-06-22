@@ -894,10 +894,6 @@ onUnmounted(() => {
         height: 100%;
       }
 
-      :deep(.tele-carousel-indicator-wrapper) {
-        display: none;
-      }
-
       .instructions {
         position: absolute;
         bottom: 93px;
@@ -939,6 +935,10 @@ onUnmounted(() => {
       }
     }
   }
+}
+
+:deep(.tele-carousel-indicator-wrapper) {
+  display: none;
 }
 
 .product {
