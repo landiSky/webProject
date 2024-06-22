@@ -12,16 +12,16 @@
       <div class="idinside-bg">
         <div class="idinside-top">
           <div class="idinside-title">IDInside合作计划</div>
-          <div class="idinside-text">
+          <!-- <div class="idinside-text">
             <div class="icon"></div>
             <div class="text"
               >"IDInside合作计划"，以打造百款标识产品、服务万家企业为目标。</div
             >
-          </div>
+          </div> -->
           <div class="idinside-text">
             <div class="icon"></div>
             <div class="text"
-              >IDInside合作计划旨在发展一批标识解析标杆应用，以国家标识节点为基础，以伙伴应用能力为支撑，探索标识最佳使用模式，共同推动标识解析体系从“建”到“用”，形成百万级工业互联网网络目标，助力标识贯通千行百业。</div
+              >IDInside合作计划”联合生态各方，打造百款产品、服务万家企业，实现产品、应用、场景和标识的预连接，助力政府、产业和企业数字化转型，加速标识贯通，最终形成百万量级节点的工业互联网标识服务网络</div
             >
           </div>
         </div>
@@ -114,49 +114,91 @@
         <div class="unified-title">优秀认证案例</div>
         <div class="unified-right unified-icon-02"></div>
       </div>
-      <div class="synopsis">
-        <div class="synopsis-left">
-          <div class="left-01">
-            <div class="tamList">能源行业</div>
-            <div class="title">中小型数字化转型案例</div>
+      <t-carousel
+        :style="{
+          width: '1398px',
+          height: '660px',
+        }"
+        :auto-play="true"
+        animation-name="fade"
+        show-arrow="never"
+        indicator-position="outer"
+        :current="carouselCurrent"
+      >
+        <t-carousel-item v-for="(item, index) in caseList" :key="index">
+          <div class="synopsis">
+            <div class="synopsis-left">
+              <div class="left-01">
+                <div class="tamList">能源行业</div>
+                <div class="title">{{ item.title }}</div>
+              </div>
+              <div class="left-02">案例介绍：</div>
+              <div class="left-03">{{ item.intro }}</div>
+              <div class="left-04"></div>
+              <div class="left-02">取得成果：</div>
+              <!-- 展示图片 -->
+              <div class="left-05">
+                <div class="image"></div>
+                <div class="image"></div>
+                <div class="image"></div>
+                <div class="image"></div>
+                <div class="image"></div>
+                <div class="image"></div>
+              </div>
+              <!-- 展示文字 -->
+              <!-- <div class="left-06">
+                <ul>
+                  <li>倾力打造的云计算品牌</li>
+                  <li>面向全世界各个国家和地区的政府机构</li>
+                  <li>倾力打造的云计算品牌</li>
+                  <li>面向全世界各个国家和地区的政府机构</li>
+                  <li>倾力打造的云计算品牌</li>
+                  <li>面向全世界各个国家和地区的政府机构</li>
+                </ul>
+              </div> -->
+            </div>
+            <div class="synopsis-right">
+              <img :src="item.img" alt="" />
+              <div class="instructions">
+                <div
+                  class="instructions-left"
+                  @click="about('Left', carouselCurrent)"
+                ></div>
+                <div
+                  class="instructions-icon"
+                  :class="{ 'instructions-icon-blue': carouselCurrent === 1 }"
+                  @click="currentClick(1)"
+                ></div>
+                <div
+                  class="instructions-icon"
+                  :class="{ 'instructions-icon-blue': carouselCurrent === 2 }"
+                  @click="currentClick(2)"
+                ></div>
+                <div
+                  class="instructions-icon"
+                  :class="{ 'instructions-icon-blue': carouselCurrent === 3 }"
+                  @click="currentClick(3)"
+                ></div>
+                <div
+                  class="instructions-icon"
+                  :class="{ 'instructions-icon-blue': carouselCurrent === 4 }"
+                  @click="currentClick(4)"
+                ></div>
+                <div
+                  class="instructions-right"
+                  @click="about('right', carouselCurrent)"
+                ></div>
+              </div>
+            </div>
           </div>
-          <div class="left-02">案例介绍：</div>
-          <div class="left-03"
-            >倾力打造的云计算品牌，面向全世界各个国家和地区的政府机构、企业组织和个人开发者，提供全球领先的云计算、大数据、人工智能等技术产品与服务，以卓越的科技能力打造丰富的行业解决方案，构建开放共赢的云端生态，推动产业互联网建设，助力各行各业实现数字化升级。</div
-          >
-          <div class="left-04"></div>
-          <div class="left-02">取得成果：</div>
-          <!-- 展示图片 -->
-          <div class="left-05">
-            <div class="image"></div>
-            <div class="image"></div>
-            <div class="image"></div>
-            <div class="image"></div>
-            <div class="image"></div>
-            <div class="image"></div>
-          </div>
-          <!-- 展示文字 -->
-          <!-- <div class="left-06">
-            <ul>
-              <li>倾力打造的云计算品牌</li>
-              <li>面向全世界各个国家和地区的政府机构</li>
-              <li>倾力打造的云计算品牌</li>
-              <li>面向全世界各个国家和地区的政府机构</li>
-              <li>倾力打造的云计算品牌</li>
-              <li>面向全世界各个国家和地区的政府机构</li>
-            </ul>
-          </div> -->
-        </div>
-        <div class="synopsis-right">
-          <img :src="case0101" alt="" />
-        </div>
-      </div>
+        </t-carousel-item>
+      </t-carousel>
     </div>
-    <!-- 优秀认证产品 -->
+    <!-- 明星产品 -->
     <div class="product">
       <div class="unified">
         <div class="unified-left unified-icon-01"></div>
-        <div class="unified-title">优秀认证产品</div>
+        <div class="unified-title">明星产品</div>
         <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="understand">
@@ -261,7 +303,7 @@ const partnerList = ref([
 const whyJoin = ref([
   {
     img: advantage1,
-    title: '提升技术竞争力',
+    title: '技术赋能',
     introduceList: [
       {
         label: '开放资源：',
@@ -279,7 +321,7 @@ const whyJoin = ref([
   },
   {
     img: advantage2,
-    title: '提供联合推广能力',
+    title: '业务拓展',
     introduceList: [
       {
         label: '产品推广：',
@@ -298,7 +340,7 @@ const whyJoin = ref([
   },
   {
     img: advantage3,
-    title: '提升品牌营销能力',
+    title: '品牌推广',
     introduceList: [
       {
         label: '内容推广：',
@@ -314,7 +356,7 @@ const whyJoin = ref([
   },
   {
     img: advantage4,
-    title: '提供培训认证服务',
+    title: '资源共享',
     introduceList: [
       {
         label: '信息共享：',
@@ -341,7 +383,6 @@ const testref: Record<string, any> = ref(null);
 const handleScroll = () => {
   nextTick(() => {
     const currentScroll = testref.value.getBoundingClientRect().top; // 表示当前标签距离顶部滚动的位置
-    console.log(currentScroll);
     if (currentScroll < 400) {
       // 当前滚动位置到达testref的时候，显示div（100作为调整用）
       testShow.value = true;
@@ -349,6 +390,45 @@ const handleScroll = () => {
       testShow.value = false;
     }
   });
+};
+
+const caseList = ref([
+  {
+    title: '双碳大脑',
+    intro:
+      '双碳智慧大脑创新中心是服务于政府及企业，依托星火·链网以碳账户为基础实现横纵数据的融会贯通、可信可用，科学计算、监测碳排，辅助政府智能决策。',
+    img: case0101,
+  },
+  {
+    title: '星火可信溯源',
+    intro:
+      '道地中药材需进行产品种植加工，销售等进行溯源，对符合溯源标准产品授予可信溯源标识二维码。',
+    img: case0101,
+  },
+  {
+    title: '晓数通',
+    intro:
+      '晓数通是一款为企业运管人员提供的运营管理工具，需将企业多源异构数据封装成各业务能力台账，实现跨部门数据在线化集成分析，降低企业数据管理成本',
+    img: case0101,
+  },
+  {
+    title: 'CPS融通互联平台',
+    intro:
+      '为推进智能制造的无缝连接，企业需同步并共享设计、采购、生产、销售等各环节的系统数据，打破信息孤岛，实现全价值链关键业务流程的整合。',
+    img: case0101,
+  },
+]);
+const carouselCurrent: Record<string, any> = ref(1);
+const currentClick = (num: number) => {
+  carouselCurrent.value = num;
+};
+
+const about = (name: string, num: number) => {
+  if (name === 'Left') {
+    carouselCurrent.value = num === 1 ? num : num - 1;
+  } else if (name === 'right') {
+    carouselCurrent.value = num === 4 ? num : num + 1;
+  }
 };
 
 onMounted(() => {
@@ -397,6 +477,7 @@ onUnmounted(() => {
 
       .idinside-title {
         margin-bottom: 12px;
+        margin-left: -134px;
         color: rgba(29, 33, 41, 1);
         font-weight: 500;
         font-size: 36px;
@@ -805,11 +886,56 @@ onUnmounted(() => {
     }
 
     .synopsis-right {
+      position: relative;
       width: 890px;
 
       img {
         width: 100%;
         height: 100%;
+      }
+
+      :deep(.tele-carousel-indicator-wrapper) {
+        display: none;
+      }
+
+      .instructions {
+        position: absolute;
+        bottom: 93px;
+        left: 144px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        .instructions-left {
+          width: 5px;
+          height: 10px;
+          background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
+          background-size: 100% 100%;
+          cursor: pointer;
+        }
+
+        .instructions-icon {
+          width: 8px;
+          height: 8px;
+          background: rgba(148, 194, 255, 1);
+          transform: rotate(45deg);
+          cursor: pointer;
+        }
+
+        .instructions-icon-blue {
+          width: 16px;
+          height: 16px;
+          background: rgba(22, 100, 255, 1);
+          transform: rotate(45deg);
+        }
+
+        .instructions-right {
+          width: 5px;
+          height: 10px;
+          background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
+          background-size: 100% 100%;
+          cursor: pointer;
+        }
       }
     }
   }
