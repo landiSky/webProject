@@ -189,7 +189,7 @@
                       <span v-if="item.buyDuration !== '0'"
                         >{{ item.buyDuration }}个月</span
                       >
-                      <span v-else>不限</span>
+                      <span v-else>不限时间</span>
                       )
                     </p>
                   </div>
