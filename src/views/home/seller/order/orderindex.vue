@@ -297,7 +297,7 @@
                       type="text"
                       style="width: 100%"
                       @click="delivery(item.deliveryType, item.id)"
-                      >交付应用</t-button
+                      >立即交付</t-button
                     >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
                       >订单详情</span
