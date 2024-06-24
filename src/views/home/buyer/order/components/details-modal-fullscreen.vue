@@ -312,7 +312,7 @@
                       style="color: #86909c"
                       >(免费)</p
                     >
-                    <p v-if="dataList.accountCount" style="color: #86909c"
+                    <!-- <p v-if="dataList.accountCount" style="color: #86909c"
                       >(
                       <span>{{ dataList.accountCount }}个账号</span>
                       <span v-if="dataList.buyDuration !== '0'"
@@ -320,7 +320,7 @@
                       >
                       <span v-else>不限</span>
                       )</p
-                    >
+                    > -->
                   </div>
                 </t-col>
                 <t-col :span="3" class="margintop-10">
