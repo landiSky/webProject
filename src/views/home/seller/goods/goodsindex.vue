@@ -111,19 +111,32 @@
         {{ SaleTypeList[record.saleType] || '-' }}
       </template>
       <template #operations="{ record }">
-        <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
+        <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
+        <t-link
+          v-if="record.status === StatusEnum.YSJ"
+          @click="certificateBtn(record)"
+        >
+          证书下载
+        </t-link>
+        <t-tooltip
+          v-if="record.status !== StatusEnum.YSJ"
+          content="该商品未上架，暂时无法证书下载"
+          position="top"
+        >
+          <t-link
+            disabled
+            style="color: #86909c"
+            @click="certificateBtn(record)"
+          >
+            证书下载
+          </t-link>
+        </t-tooltip>
         <t-link
           v-if="record.status === StatusEnum.YSJ"
           class="action-down"
           @click="clickDownBtn(record)"
         >
           下架
-        </t-link>
-        <t-link
-          v-if="record.status === StatusEnum.YSJ"
-          @click="clickDownBtn(record)"
-        >
-          证书下载
         </t-link>
         <t-link
           v-if="record.status !== StatusEnum.YSJ"
@@ -139,6 +152,12 @@
             <icon-more />
           </t-link>
           <template #content>
+            <t-doption @click="clickDetailBtn(record)">
+              <template #icon>
+                <icon-common />
+              </template>
+              详情
+            </t-doption>
             <t-doption @click="clickEditBtn(record)">
               <template #icon>
                 <icon-edit />
@@ -170,7 +189,13 @@
     @preview="onPreview"
   ></Add>
 
-  <Certificate @cancel="onAddModalConfirm"></Certificate>
+  <div style="position: absolute; top: -999999px; z-index: -1; width: 732px">
+    <Certificate
+      v-if="certificateVisible"
+      :data="certificateData"
+      @cancel="onCertificate"
+    ></Certificate>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -184,6 +209,7 @@ import {
   deleteGoods,
   preUp,
   fetchClassList,
+  certDownload,
 } from '@/api/goods-manage';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -436,6 +462,39 @@ const hideOnSinglePage = computed(() => pagination.total <= 10);
 
 const modalVisible = ref(false); // 编辑全屏展示弹窗
 
+const certificateVisible = ref(false);
+const certificateData = ref({});
+
+// 证书下载
+const certificateBtn = (record: any) => {
+  const params = {
+    id: record.id,
+  };
+  certDownload(params)
+    .then((res: any) => {
+      if (res?.certificateNum) {
+        certificateVisible.value = true;
+        certificateData.value = res;
+      } else {
+        Modal.warning({
+          title: '该商品未进行打标操作',
+          content: '请联系运营人员进行IDInside打标后可进行下载',
+          titleAlign: 'start',
+          okText: '知道了',
+          hideCancel: true,
+          okButtonProps: {
+            type: 'primary',
+          },
+        });
+      }
+    })
+    .catch(() => {});
+};
+const onCertificate = () => {
+  certificateVisible.value = false;
+  certificateData.value = {};
+};
+
 function fetchData() {
   const { current, pageSize } = pagination;
   const companyId = String(userInfoByCompany.value?.companyId);
@@ -534,6 +593,7 @@ const clickDownBtn = (record: any) => {
     },
   });
 };
+
 const addGoods = () => {
   state.detailData = {};
   addModalVisible.value = true;
