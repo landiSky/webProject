@@ -16,7 +16,7 @@
     </div>
     <div class="certificate-02">
       <div class="title-01">IDInside产品认证证书</div>
-      <div class="title-02">证书编号：{{ data.certificateNum }}</div>
+      <div class="title-02">证书编号：{{ data?.certificateNum }}</div>
       <img
         class="title-line"
         src="@/assets/images/idinside/certificate/line-icon.png"
@@ -26,15 +26,15 @@
     <div class="certificate-03">
       <div class="title-03">兹证明：</div>
       <div class="body-title">
-        <div class="title-04">{{ data.companyName }}</div>
-        <div class="title-05">{{ data.name }}</div>
+        <div class="title-04">{{ data?.companyName }}</div>
+        <div class="title-05">{{ data?.name }}</div>
       </div>
     </div>
     <div class="certificate-04">
       <div class="explain">
         已完成与工业互联网标识解析体系的集成并通过测试认证，符合IDInside产品认证要求，特发此证。
       </div>
-      <div class="certificatetime"> 证书有效期：{{ data.certValidity }} </div>
+      <div class="certificatetime"> 证书有效期：{{ data?.certValidity }} </div>
       <div class="synopsis">
         本证书不能转让或者授权第三方使用。
         证书有效期内，本证书的有效性依据发证机构的定期监督获得保持。
@@ -49,7 +49,7 @@
           alt=""
         />
         <div class="mechanism">发证机构：北京泰尔英福科技有限公司</div>
-        <div class="grantdate">授予日期：{{ data.certAuthDate }}</div>
+        <div class="grantdate">授予日期：{{ data?.certAuthDate }}</div>
       </div>
     </div>
   </div>
@@ -63,35 +63,45 @@ import JsPDF from 'jspdf';
 const emit = defineEmits(['cancel']);
 
 const props = defineProps({
-  data: Object,
+  data: {
+    type: Object,
+    default() {
+      return {};
+    },
+  },
 });
 
 // 查看证书
 const Enable = () => {
-  html2canvas(document.getElementById('box') as HTMLElement, {
+  const params = {
     useCORS: true,
-  }).then((canvas) => {
-    // 设置内容的宽高
-    const contentWidth = canvas.width;
-    const contentHeight = canvas.height;
-    // 设置生成图片的宽高
-    const imgCanvasWidth = 592.28;
-    const imgCanvasHeight = (592.28 / contentWidth) * contentHeight;
-    // console.log(canvas.toDataURL('image/png'));
-    const canvasT = canvas.toDataURL('image/png', 1.0);
-    const pdf = new JsPDF('', 'pt', 'a4');
-    pdf.addImage(
-      canvasT,
-      'PNG',
-      0,
-      0,
-      imgCanvasWidth + 2,
-      imgCanvasHeight - 276
-    );
-    const output = pdf.output('bloburl');
-    window.open(output);
-    emit('cancel');
-  });
+    dpi: 500,
+    scale: 2, // 放大
+  };
+  html2canvas(document.getElementById('box') as HTMLElement, params).then(
+    (canvas) => {
+      // 设置内容的宽高
+      const contentWidth = canvas.width;
+      const contentHeight = canvas.height;
+      // 设置生成图片的宽高
+      const imgCanvasWidth = 592.28;
+      const imgCanvasHeight = (592.28 / contentWidth) * contentHeight;
+      // console.log(canvas.toDataURL('image/png'));
+      const canvasT = canvas.toDataURL('image/png', 1.0);
+      const pdf = new JsPDF('p', 'pt', 'a4');
+      pdf.addImage(
+        canvasT,
+        'PNG',
+        0,
+        0,
+        imgCanvasWidth + 2,
+        imgCanvasHeight - 276
+      );
+      const output = pdf.output('bloburl');
+      window.open(output);
+      emit('cancel');
+    }
+  );
 };
 // 下载证书
 const download = () => {

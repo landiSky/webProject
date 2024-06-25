@@ -12,17 +12,17 @@
     <div class="modal-body">
       <div v-for="(item, index) in data" :key="index" class="module">
         <div class="img">图片</div>
-        <div class="title">{{ item.useExplainOriginal }}</div>
+        <div class="title">{{ item?.useExplainOriginal }}</div>
         <div class="module-button">
           <t-link :hoverable="false">预览</t-link>
           <t-link
             :hoverable="false"
             @click="
               instructionsuse(
-                item.useExplain,
-                item.orderSource,
-                item.productServerId,
-                item.useExplainOriginal
+                item?.useExplain,
+                item?.orderSource,
+                item?.productServerId,
+                item?.useExplainOriginal
               )
             "
             >下载</t-link
@@ -35,7 +35,7 @@
 
 <script lang="ts" setup>
 import Error from '@/assets/images/home/Error.png';
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, ref, PropType } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { authDetails } from '@/api/authentication';
@@ -45,10 +45,15 @@ import Warn from '@/assets/images/home/warn.png';
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
-
+interface dataList {
+  useExplain: string;
+  orderSource: string;
+  productServerId: string;
+  useExplainOriginal: string;
+}
 const props = defineProps({
   data: {
-    type: Array,
+    type: Array as PropType<dataList[]>,
     default() {
       return [];
     },

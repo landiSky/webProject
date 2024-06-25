@@ -449,7 +449,7 @@ const caseList = ref([
       '接入标识解析体系，统一产品及部件编码，实现智能制造互联互通，消除信息孤岛。通过标识解析能力贯穿从原材料采购、管理及最终产品销售，实现了全链条的透明化管理。让企业管理更有效，实现智能化管理。',
   },
 ]);
-const carouselCurrent: Record<string, any> = ref(1);
+const carouselCurrent = ref(1 as number);
 const currentClick = (num: number) => {
   carouselCurrent.value = num;
 };
