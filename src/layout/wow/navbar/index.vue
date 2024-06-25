@@ -123,10 +123,16 @@ const handleLogout = async () => {
   await userStore.logout();
 };
 const goIndex = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 6).then((res) => {
+    console.log('前台导航栏首页点击打点', res);
+  });
   selectTab.value = TabPath.INDEX;
   router.push({ path: '/wow/index' });
 };
 const gotoMall = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 7).then((res) => {
+    console.log('前台导航栏商城点击打点', res);
+  });
   selectTab.value = TabPath.MALL;
   router.push({ path: '/wow/mall' });
 };
@@ -136,6 +142,9 @@ const goBuyer = () => {
   if (userInfo.value?.isAdmin) {
     router.push({ path: '/goods/manage' });
   } else {
+    apiDataPoint(null, null, userInfo?.value?.id, 5, 10).then((res) => {
+      console.log('前台导航栏点击用户平台管理打点', res);
+    });
     router.push({ path: '/buyer/index' });
   }
 };

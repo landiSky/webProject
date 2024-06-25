@@ -1168,6 +1168,9 @@ watch(
   }
 );
 onMounted(() => {
+  apiDataPoint(null, null, userInfo?.value?.id, 2, 1).then((res) => {
+    console.log('概览页全页面打点', res);
+  });
   initOpt();
 
   if (route.query?.openAuthModal) {

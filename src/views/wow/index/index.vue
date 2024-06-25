@@ -477,9 +477,8 @@ const goCardDetail = (item: Record<string, any>) => {
 };
 
 onMounted(() => {
-  // TODO w: 首页打点
   apiDataPoint(null, null, userInfo?.value?.id, 1, 1).then((res) => {
-    console.log('首页打点');
+    console.log('首页全页面打点');
   });
   apiActiveNode().then((data: any) => {
     if (data.length >= 51) {
