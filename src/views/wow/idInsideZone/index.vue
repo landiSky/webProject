@@ -66,24 +66,24 @@
         <div class="card card-01">
           <div class="icon">01</div>
           <div class="title">报名申请</div>
-          <div class="text"
-            >点击「<span class="text-button">立即报名</span>」
-            <p>填写报名申请信息</p></div
+          <div class="text">
+            点击「<span class="text-button" @click="registerNow">立即报名</span
+            >」 <p>填写报名申请信息</p></div
           >
         </div>
         <div class="card card-02">
           <div class="icon">02</div>
           <div class="title">资料提交</div>
           <div class="text"
-            >点击「<span class="text-button">立即上传</span>」
-            上传完整的产品集成方案。</div
+            >点击「<span class="text-button" @click="uploadNow">立即上传</span
+            >」 上传完整的产品集成方案。</div
           >
         </div>
         <div class="card card-03">
           <div class="icon">03</div>
           <div class="title">集成开发</div>
           <div class="text"
-            >点击「<span class="text-button">立即查看</span>」
+            >点击「<span class="text-button" @click="viewNow">立即查看</span>」
             查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
           >
         </div>
@@ -93,6 +93,7 @@
           <div class="text"
             >获取IDInside认证证书，请提供测试环境信息及开发测试报告「<span
               class="text-button"
+              @click="authentication"
               >立即上传</span
             >」
           </div>
@@ -101,7 +102,10 @@
           <div class="icon">05</div>
           <div class="title">运营推广</div>
           <div class="text">
-            完成应用上架进行运营推广「<span class="text-button">立即上架</span
+            完成应用上架进行运营推广「<span
+              class="text-button"
+              @click="immediatelisting"
+              >立即上架</span
             >」
           </div>
         </div>
@@ -137,25 +141,20 @@
               <div class="left-04"></div>
               <div class="left-02">取得成果：</div>
               <!-- 展示图片 -->
-              <div class="left-05">
+              <!-- <div class="left-05">
                 <div class="image"></div>
                 <div class="image"></div>
                 <div class="image"></div>
                 <div class="image"></div>
                 <div class="image"></div>
                 <div class="image"></div>
-              </div>
-              <!-- 展示文字 -->
-              <!-- <div class="left-06">
-                <ul>
-                  <li>倾力打造的云计算品牌</li>
-                  <li>面向全世界各个国家和地区的政府机构</li>
-                  <li>倾力打造的云计算品牌</li>
-                  <li>面向全世界各个国家和地区的政府机构</li>
-                  <li>倾力打造的云计算品牌</li>
-                  <li>面向全世界各个国家和地区的政府机构</li>
-                </ul>
               </div> -->
+              <!-- 展示文字 -->
+              <div class="left-06">
+                <ul>
+                  <li>{{ item.briefintroduction }}</li>
+                </ul>
+              </div>
             </div>
             <div class="synopsis-right">
               <img :src="item.img" alt="" />
@@ -202,17 +201,26 @@
         <div class="unified-right unified-icon-02"></div>
       </div>
       <div class="understand">
-        <img :src="product1" alt="" class="img" />
+        <!-- <img :src="product1" alt="" class="img" /> -->
+        <img
+          :src="
+            previewImgList.length
+              ? `/server/web/file/download?name=${previewImgList[0]}&productId=${prodDetail.id}`
+              : defaultImg
+          "
+          class="img"
+        />
         <div class="introduce">
-          <div class="title">物易管智能系统</div>
-          <div class="company"
-            >深圳万里牛科技有限公司深圳万里牛科技有限公司...</div
-          >
+          <div class="title">{{ prodDetail.name || '-' }}</div>
+          <div class="company">{{ prodDetail.companyName || '-' }}</div>
           <div class="line"></div>
           <div class="briefintroduction">
-            通过物易管基于工业大数据、AI和工业机理融合算法技术打造的旋转设备预测性维护一体化产品，构筑基于工业互联网平台的“低成本、高效率、高质量”的设备精准运维数字化服务平台。主要面向发电机、涡轮机、泵、电动机、发动机、压缩机等设备的预测维护，覆盖钢铁冶炼、石油化工、水泥、火电、啤酒饮料、煤炭、水务等行业领域，赋能企业实现最经济的按需维护。
+            {{ prodDetail.introduction || '-' }}
           </div>
-          <t-button type="primary" class="introduce-button"
+          <t-button
+            type="primary"
+            class="introduce-button"
+            @click="() => goMallDetail(prodDetail.id)"
             >立即了解该产品</t-button
           >
         </div>
@@ -264,13 +272,20 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
-
+import { useUserStore } from '@/store/modules/user';
+import { useRouter, useRoute } from 'vue-router';
+import { AccountType } from '@/enums/common';
+import { apiGetProductId } from '@/api/wow/index';
+import { apiProductDetail } from '@/api/wow/mall';
 import advantage1 from '@/assets/images/idinside/whyjoin/advantage-01.png';
 import advantage2 from '@/assets/images/idinside/whyjoin/advantage-02.png';
 import advantage3 from '@/assets/images/idinside/whyjoin/advantage-03.png';
 import advantage4 from '@/assets/images/idinside/whyjoin/advantage-04.png';
 
 import case0101 from '@/assets/images/idinside/case/case-01-01.png';
+import case0201 from '@/assets/images/idinside/case/case-02-01.png';
+import case0301 from '@/assets/images/idinside/case/case-03-01.png';
+import case0401 from '@/assets/images/idinside/case/case-04-01.png';
 
 import product1 from '@/assets/images/idinside/product-01.png';
 
@@ -285,8 +300,15 @@ import partner8 from '@/assets/images/idinside/partner/partner-08.png';
 import partner9 from '@/assets/images/idinside/partner/partner-09.png';
 import partner10 from '@/assets/images/idinside/partner/partner-10.png';
 
+import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import WowFooter from '../components/wowFooter/index.vue';
 
+const userStore = useUserStore();
+const router = useRouter();
+const route = useRoute();
+const accessProductIds = ref<Record<string, any>>({});
+const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const previewImgList = ref<string[]>([]);
 const partnerList = ref([
   partner1,
   partner2,
@@ -396,26 +418,34 @@ const caseList = ref([
   {
     title: '双碳大脑',
     intro:
-      '双碳智慧大脑创新中心是服务于政府及企业，依托星火·链网以碳账户为基础实现横纵数据的融会贯通、可信可用，科学计算、监测碳排，辅助政府智能决策。',
+      '双碳智慧大脑创新中心是服务于政府及企业，依托星火·链网以碳账户为基础实现横纵数据的融会贯通、可信可用，科学计算、监测碳排，辅助政府智能决策。双碳智慧大脑加入IDInside合作计划，与星火·链网和标识解析体系对接集成，通过数据统一编码，碳排放量监测等，建立一站式碳应用服务进行碳诊断、碳盘查等能力。',
     img: case0101,
+    briefintroduction:
+      '实现为政府提供全局分析视图，评估政策制定策略，准确反馈政策实施效果。帮助企业提升获得投融资市场认可及服务，促进多方合作共享，推动绿色项目的创新和发展。实现向政府提交第三方盘查申请，经核实后完成碳盘查。实现潜在节能机会识别，有效减少碳排，同时积累碳资产为参与碳交易做准备等。',
   },
   {
     title: '星火可信溯源',
     intro:
-      '道地中药材需进行产品种植加工，销售等进行溯源，对符合溯源标准产品授予可信溯源标识二维码。',
-    img: case0101,
+      '道地中药材需进行产品种植加工，销售等进行溯源，对符合溯源标准产品授予可信溯源标识二维码。通过IDInside合作计划进行标识解析体系接入，打造“来源可查，去向可追，责任可究”的服务体系，以品质、安全、透明重塑消费者信任关系，基于“星火·链网”为道地中药材、特色农产品等打造可信溯源服务，以一物一码技术贯通生产源头和消费终端。',
+    img: case0201,
+    briefintroduction:
+      '实现中药材标准/规范产业应用方案。实现种植溯源、加工溯源、包装溯源能力。通过标识解析体系和星火·链网接入，实现种植数据、加工数据互联互通，防伪验真服务，同时实现产品生产全链路可追溯，助力行业健康可持续发展。',
   },
   {
     title: '晓数通',
     intro:
-      '晓数通是一款为企业运管人员提供的运营管理工具，需将企业多源异构数据封装成各业务能力台账，实现跨部门数据在线化集成分析，降低企业数据管理成本',
-    img: case0101,
+      '晓数通是一款为企业运管人员提供的运营管理工具，需将企业多源异构数据封装成各业务能力台账，实现跨部门数据在线化集成分析，降低企业数据管理成本。通过IDInside合作计划晓数通与标识解析体系结合，通过标识元数据采集原始数据，建立标准台账模板，一键生成目标报表，实现从台账到企业一套表上报的全流程管理和上报，企业中用于优化电子统计台账的管理，实现数据的规范治理和高效共享。企业可以通过晓数通平台自动生成符合需求的统计报表，并将结果呈现给用户，实现高效的数据共享与传递。',
+    img: case0301,
+    briefintroduction:
+      '晓数通通过与标识解析体系的结合，实现了企业内部数据的整合，提高数据的透明度。平台的实施加强供应链的协同效应。通过标识解析，企业能够实时跟踪物料和产品流动，优化库存管理，降低企业数据管理成本。',
   },
   {
     title: 'CPS融通互联平台',
     intro:
-      '为推进智能制造的无缝连接，企业需同步并共享设计、采购、生产、销售等各环节的系统数据，打破信息孤岛，实现全价值链关键业务流程的整合。',
-    img: case0101,
+      '为推进智能制造的无缝连接，企业需同步并共享设计、采购、生产、销售等各环节的系统数据，打破信息孤岛，实现全价值链关键业务流程的整合。通过IDInside合作计划，针对制造互联互通等问题，接入标识解析体系，统一标识编码，为产品和部件制定唯一标识编码规则，确保各环节信息一致性。通过标识解析，对产品从设计到售后服务的全生命周期进行管理，可消除数据孤岛，使企业管理更高效。',
+    img: case0401,
+    briefintroduction:
+      '接入标识解析体系，统一产品及部件编码，实现智能制造互联互通，消除信息孤岛。通过标识解析能力贯穿从原材料采购、管理及最终产品销售，实现了全链条的透明化管理。让企业管理更有效，实现智能化管理。',
   },
 ]);
 const carouselCurrent: Record<string, any> = ref(1);
@@ -431,12 +461,63 @@ const about = (name: string, num: number) => {
   }
 };
 
+const registerNow = () => {
+  window.open('https://www.wjx.cn/vm/tUBQRHV.aspx#');
+};
+
+const uploadNow = () => {
+  window.open('https://www.wjx.cn/vm/hwO27TP.aspx#');
+};
+
+const viewNow = () => {};
+
+const authentication = () => {
+  window.open('https://www.wjx.cn/vm/wVsmqlI.aspx#');
+};
+
+const immediatelisting = () => {
+  const { userInfo, userInfoByCompany } = userStore;
+  if (!userInfo?.id) {
+    console.log(route.fullPath, 'route.fullPath');
+    sessionStorage.setItem('mallDetailPath', route.fullPath);
+    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    return;
+  }
+  if (userInfoByCompany?.primary === AccountType.UNAUTH) {
+    router.push({
+      path: '/buyer/index',
+      query: {},
+    });
+    return;
+  }
+  router.push({
+    path: '/seller/goods',
+    query: {},
+  });
+};
+
+const goMallDetail = (id: string) => {
+  router.push({
+    name: 'wowMallDetail',
+    params: { id },
+  });
+};
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, true);
+  apiGetProductId().then((data) => {
+    accessProductIds.value = data;
+    apiProductDetail({ id: data?.idInside })
+      .then((data) => {
+        prodDetail.value = data;
+        previewImgList.value = data.detailImg.split(',');
+      })
+      .catch(() => {});
+  });
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('scroll', handleScroll, true);
 });
 </script>
 
