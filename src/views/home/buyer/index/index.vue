@@ -1023,7 +1023,7 @@ const togo = (detailData: Record<string, any>) => {
     } else if (Number(tabsApplication.value) === 2) {
       const params = {
         appInfoId: id,
-        companyId,
+        companyId: userInfoByCompany.value.companyId,
       };
       appInfoClientLogin(params).then((res: any) => {
         if (res.code === 102008) {
@@ -1034,7 +1034,7 @@ const togo = (detailData: Record<string, any>) => {
         }
         const data = {
           type: 'selfApp',
-          companyId,
+          companyId: userInfoByCompany.value.companyId,
         };
         const sm2data = sm2(
           JSON.stringify(data),
