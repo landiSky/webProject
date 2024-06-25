@@ -14,15 +14,15 @@
         <div class="img">图片</div>
         <div class="title">{{ item.useExplainOriginal }}</div>
         <div class="module-button">
-          <t-link href="link" :hoverable="false">预览</t-link>
+          <t-link :hoverable="false">预览</t-link>
           <t-link
-            href="link"
             :hoverable="false"
             @click="
               instructionsuse(
                 item.useExplain,
                 item.orderSource,
-                item.productServerId
+                item.productServerId,
+                item.useExplainOriginal
               )
             "
             >下载</t-link
@@ -60,15 +60,15 @@ const showModal = ref(true);
 
 // 使用说明
 const instructionsuse = (
-  item: any
-  // fileurl: string,
-  // orderSource: string,
-  // productServerId: string
+  fileurl: string,
+  orderSource: string,
+  productServerId: string,
+  useExplainOriginal: string
 ) => {
   const link = document.createElement('a');
-  const objectUrl = `/server/web/file/orderDownloadBySource?name=${item?.fileurl}&source=${item?.orderSource}&serverId=${item?.productServerId}`; // 创建一个新的url对象
+  const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
   link.href = objectUrl;
-  const fileName = '使用说明';
+  const fileName = useExplainOriginal;
   link.download = fileName; //  下载的时候自定义的文件名
   link.click();
   window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
