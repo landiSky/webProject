@@ -570,7 +570,11 @@ const handleLabel = (record: any) => {
   labelVisible.value = true;
 };
 
-const handleLabelConfirm = (data = [], productId = '', tagStatus = '') => {
+const handleLabelConfirm = (
+  data = [],
+  productId = '',
+  tagStatus = props.data?.tagStatus
+) => {
   state.confirmLoading = true;
   // const tagIdList = data.map((item: any) => item.key);
   // if (tagIdList.length === 0) {
