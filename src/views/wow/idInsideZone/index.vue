@@ -277,6 +277,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { AccountType } from '@/enums/common';
 import { apiGetProductId } from '@/api/wow/index';
 import { apiProductDetail } from '@/api/wow/mall';
+import { Modal } from '@tele-design/web-vue';
 import advantage1 from '@/assets/images/idinside/whyjoin/advantage-01.png';
 import advantage2 from '@/assets/images/idinside/whyjoin/advantage-02.png';
 import advantage3 from '@/assets/images/idinside/whyjoin/advantage-03.png';
@@ -484,9 +485,18 @@ const immediatelisting = () => {
     return;
   }
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {
-    router.push({
-      path: '/buyer/index',
-      query: {},
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业认证后使用，请先进行企业认证。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不认证',
+      okText: '去认证',
+      onOk: () => {
+        router.push({
+          path: '/buyer/index',
+        });
+      },
     });
     return;
   }
