@@ -147,7 +147,12 @@ const handleDel = (key: any) => {
 };
 
 const handleOk = () => {
-  emits('onConfirm', state.selectedKeys, props.recordData?.id);
+  emits(
+    'onConfirm',
+    state.selectedKeys,
+    props.recordData?.id,
+    props.recordData?.tagStatus
+  );
 };
 
 const handleCancel = () => {

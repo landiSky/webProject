@@ -476,7 +476,7 @@ const handleLabel = (record: any) => {
   labelVisible.value = true;
 };
 
-const handleLabelConfirm = (data = [], productId = '') => {
+const handleLabelConfirm = (data = [], productId = '', tagStatus = '') => {
   state.confirmLoading = true;
 
   // if (data.length === 0) {
@@ -486,6 +486,7 @@ const handleLabelConfirm = (data = [], productId = '') => {
   return comfirmLabel({
     productId,
     tagIdList: data,
+    tagStatus,
   })
     .then(() => {
       state.confirmLoading = false;

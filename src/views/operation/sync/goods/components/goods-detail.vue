@@ -570,16 +570,31 @@ const handleLabel = (record: any) => {
   labelVisible.value = true;
 };
 
-const handleLabelConfirm = (data = [], productId = '') => {
+const handleLabelConfirm = (data = [], productId = '', tagStatus = '') => {
   state.confirmLoading = true;
-  const tagIdList = data.map((item: any) => item.key);
-  if (tagIdList.length === 0) {
-    state.confirmLoading = false;
-    return Message.warning('未选择标签');
-  }
+  // const tagIdList = data.map((item: any) => item.key);
+  // if (tagIdList.length === 0) {
+  //   state.confirmLoading = false;
+  //   return Message.warning('未选择标签');
+  // }
+  // return comfirmLabel({
+  //   productId,
+  //   tagIdList,
+  // })
+  //   .then(() => {
+  //     state.confirmLoading = false;
+  //     Message.success('打标成功');
+  //     labelVisible.value = false;
+  //   })
+  //   .catch((e) => {
+  //     state.confirmLoading = false;
+  //     Message.success(e.message);
+  //     // labelVisible.value = false;
+  //   });
   return comfirmLabel({
     productId,
-    tagIdList,
+    tagIdList: data,
+    tagStatus,
   })
     .then(() => {
       state.confirmLoading = false;
@@ -588,8 +603,8 @@ const handleLabelConfirm = (data = [], productId = '') => {
     })
     .catch((e) => {
       state.confirmLoading = false;
-      Message.success(e.message);
-      // labelVisible.value = false;
+      Message.error(e.message);
+      labelVisible.value = false;
     });
 };
 
