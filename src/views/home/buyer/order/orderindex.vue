@@ -362,11 +362,7 @@
       v-if="editModalVisible"
       :data="state.updataamount"
       @confirm="onEditModalConfirm"
-      @cancel="
-        () => {
-          getTableData(), (editModalVisible = false);
-        }
-      "
+      @cancel="editModalVisible = false"
     ></EditModal>
     <ReviewModal
       v-if="reviewModalVisible"

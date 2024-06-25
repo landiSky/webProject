@@ -47,7 +47,7 @@
               style="color: #86909c"
               >(免费)</p
             >
-            <p
+            <!-- <p
               v-if="createOrderInfo.accountDesc != '不限'"
               style="margin-left: -20px; color: #86909c"
               >(
@@ -57,7 +57,7 @@
               </span>
               <span v-else>不限</span>
               )</p
-            >
+            > -->
           </span>
           <span>
             <template v-if="createOrderInfo?.saleType === SaleType.CONSULT">
