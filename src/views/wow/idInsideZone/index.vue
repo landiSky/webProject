@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bodyT">
     <!-- IDInside合作计划 -->
     <div class="idinside">
       <video
@@ -532,6 +532,10 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
+.bodyT {
+  background-color: #fff;
+}
+
 .idinside {
   position: relative;
   width: 100%;
