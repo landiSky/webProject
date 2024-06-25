@@ -362,21 +362,33 @@
       v-if="editModalVisible"
       :data="state.updataamount"
       @confirm="onEditModalConfirm"
-      @cancel="editModalVisible = false"
+      @cancel="
+        () => {
+          getTableData(), (editModalVisible = false);
+        }
+      "
     ></EditModal>
     <!-- 订单交付 -->
     <EditModalDelivery
       v-if="deliveryVisible"
       :data="state.editData"
       @confirm="ondeliveryModalConfirm"
-      @cancel="deliveryVisible = false"
+      @cancel="
+        () => {
+          getTableData(), (deliveryVisible = false);
+        }
+      "
     ></EditModalDelivery>
 
     <!-- 全屏弹窗 -->
     <DetailsModalFullscreen
       v-if="FullscreenDetailsModal"
       :data="state.editData"
-      @cancel="FullscreenDetailsModal = false"
+      @cancel="
+        () => {
+          getTableData(), (FullscreenDetailsModal = false);
+        }
+      "
     >
     </DetailsModalFullscreen>
   </div>

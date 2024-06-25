@@ -362,13 +362,21 @@
       v-if="editModalVisible"
       :data="state.updataamount"
       @confirm="onEditModalConfirm"
-      @cancel="editModalVisible = false"
+      @cancel="
+        () => {
+          getTableData(), (editModalVisible = false);
+        }
+      "
     ></EditModal>
     <ReviewModal
       v-if="reviewModalVisible"
       :data="state.evaluateContent"
       @confirm="onRevieModalConfirm"
-      @cancel="reviewModalVisible = false"
+      @cancel="
+        () => {
+          getTableData(), (reviewModalVisible = false);
+        }
+      "
     >
     </ReviewModal>
     <!-- 订单交付 -->
