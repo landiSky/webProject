@@ -27,7 +27,9 @@
       <div class="title-03">兹证明：</div>
       <div class="body-title">
         <div class="title-04">{{ data?.companyName }}</div>
-        <div class="title-05">{{ data?.name }}</div>
+        <div class="title-05">
+          <div class="title-05-01">{{ data?.name }}</div>
+        </div>
       </div>
     </div>
     <div class="certificate-04">
@@ -229,9 +231,6 @@ onMounted(() => {
     }
 
     .body-title {
-      display: inline-block;
-      margin: 0 auto;
-
       .title-04 {
         margin-top: 20px;
         color: rgba(29, 33, 41, 1);
@@ -243,14 +242,20 @@ onMounted(() => {
       }
 
       .title-05 {
-        margin-top: 10px;
-        color: rgba(29, 33, 41, 1);
-        font-weight: 400;
-        font-size: 16px;
-        font-family: PingFang SC;
-        line-height: 24px;
-        text-align: center;
-        border-bottom: 1px solid rgba(134, 144, 156, 1);
+        display: flex;
+        justify-content: center;
+
+        .title-05-01 {
+          display: inline;
+          margin-top: 10px;
+          color: rgba(29, 33, 41, 1);
+          font-weight: 400;
+          font-size: 16px;
+          font-family: PingFang SC;
+          line-height: 24px;
+          text-align: center;
+          border-bottom: 1px solid rgba(134, 144, 156, 1);
+        }
       }
     }
   }

@@ -467,8 +467,8 @@ const certificateBtn = (record: any) => {
   certDownload(params)
     .then((res: any) => {
       if (res?.certificateNum) {
-        certificateVisible.value = true;
         certificateData.value = res;
+        certificateVisible.value = true;
       } else {
         Modal.warning({
           title: '该商品未进行打标操作',
