@@ -1,11 +1,13 @@
 <template>
   <t-modal
     v-model:visible="showModal"
-    :width="516"
-    title-align="start"
-    :closable="false"
-    :mask-closable="true"
+    :width="857"
+    title="使用说明"
+    title-align="center"
+    :closable="true"
+    :mask-closable="false"
     :footer="null"
+    body-style="background:rgba(248, 248, 248, 1);"
     @cancel="emit('cancel')"
     @close="emit('cancel')"
   >
@@ -14,9 +16,20 @@
         <div class="img"
           ><img :src="imgType(item?.useExplainOriginal)" alt=""
         /></div>
-        <div class="title">{{ item?.useExplainOriginal }}</div>
+        <div class="title">
+          <t-typography-paragraph
+            :ellipsis="{
+              rows: 1,
+              // showTooltip: true,
+              showTooltip: {
+                type: 'popover',
+              },
+            }"
+          >
+            {{ item?.useExplainOriginal }}
+          </t-typography-paragraph>
+        </div>
         <div class="module-button">
-          <t-link :hoverable="false">预览</t-link>
           <t-link
             :hoverable="false"
             @click="
@@ -29,6 +42,8 @@
             "
             >下载</t-link
           >
+          <t-divider direction="vertical" />
+          <t-link :hoverable="false">预览</t-link>
         </div>
       </div>
     </div>
@@ -97,13 +112,22 @@ const instructionsuse = (
 .modal-body {
   display: flex;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 16px;
+  padding: 0 24px;
 }
 
 .module {
+  width: 140px;
+  height: 176px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 4px;
+
   .img {
-    width: 100px;
-    height: 100px;
+    gap: 0;
+    width: 120px;
+    height: 92px;
+    border-radius: 2px;
 
     img {
       width: 100%;
@@ -112,18 +136,26 @@ const instructionsuse = (
   }
 
   .title {
-    width: 100px;
-    margin: 4px 0;
+    width: 120px;
+    height: 22px;
+    margin-top: 10px;
+    padding: 0 10px;
     color: rgba(29, 33, 41, 1);
     font-weight: 500;
-    font-size: 12px;
+    font-size: 14px;
     font-family: PingFang SC;
+    line-height: 22px;
+    text-align: center;
   }
 
   .module-button {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    width: 100px;
+    width: 120px;
+    height: 22px;
+    margin-top: 10px;
+    padding: 0 10px;
   }
 }
 </style>
