@@ -121,7 +121,7 @@
       <t-carousel
         :style="{
           width: '1398px',
-          height: '660px',
+          height: '760px',
         }"
         :auto-play="true"
         animation-name="fade"
@@ -158,37 +158,37 @@
             </div>
             <div class="synopsis-right">
               <img :src="item.img" alt="" />
-              <div class="instructions">
-                <div
-                  class="instructions-left"
-                  @click="about('Left', carouselCurrent)"
-                ></div>
-                <div
-                  class="instructions-icon"
-                  :class="{ 'instructions-icon-blue': carouselCurrent === 1 }"
-                  @click="currentClick(1)"
-                ></div>
-                <div
-                  class="instructions-icon"
-                  :class="{ 'instructions-icon-blue': carouselCurrent === 2 }"
-                  @click="currentClick(2)"
-                ></div>
-                <div
-                  class="instructions-icon"
-                  :class="{ 'instructions-icon-blue': carouselCurrent === 3 }"
-                  @click="currentClick(3)"
-                ></div>
-                <div
-                  class="instructions-icon"
-                  :class="{ 'instructions-icon-blue': carouselCurrent === 4 }"
-                  @click="currentClick(4)"
-                ></div>
-                <div
-                  class="instructions-right"
-                  @click="about('right', carouselCurrent)"
-                ></div>
-              </div>
             </div>
+          </div>
+          <div class="instructions">
+            <div
+              class="instructions-left"
+              @click="about('Left', carouselCurrent)"
+            ></div>
+            <div
+              class="instructions-icon"
+              :class="{ 'instructions-icon-blue': carouselCurrent === 1 }"
+              @click="currentClick(1)"
+            ></div>
+            <div
+              class="instructions-icon"
+              :class="{ 'instructions-icon-blue': carouselCurrent === 2 }"
+              @click="currentClick(2)"
+            ></div>
+            <div
+              class="instructions-icon"
+              :class="{ 'instructions-icon-blue': carouselCurrent === 3 }"
+              @click="currentClick(3)"
+            ></div>
+            <div
+              class="instructions-icon"
+              :class="{ 'instructions-icon-blue': carouselCurrent === 4 }"
+              @click="currentClick(4)"
+            ></div>
+            <div
+              class="instructions-right"
+              @click="about('right', carouselCurrent)"
+            ></div>
           </div>
         </t-carousel-item>
       </t-carousel>
@@ -885,15 +885,19 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 100px;
-
+  // padding-bottom: 100px;
   .synopsis {
+    position: relative;
     display: flex;
     width: 1398px;
     height: 660px;
 
     .synopsis-left {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 500px;
+      height: 660px;
       padding: 57px 52px 0;
       background: rgba(255, 255, 255, 0.66);
 
@@ -981,53 +985,53 @@ onUnmounted(() => {
     }
 
     .synopsis-right {
-      position: relative;
-      width: 890px;
+      // width: 890px;
+      width: 1398px;
 
       img {
         width: 100%;
         height: 100%;
       }
+    }
+  }
 
-      .instructions {
-        position: absolute;
-        bottom: 93px;
-        left: 144px;
-        display: flex;
-        gap: 12px;
-        align-items: center;
+  .instructions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    margin-top: 16px;
 
-        .instructions-left {
-          width: 5px;
-          height: 10px;
-          background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
-          background-size: 100% 100%;
-          cursor: pointer;
-        }
+    .instructions-left {
+      width: 5px;
+      height: 10px;
+      background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+    }
 
-        .instructions-icon {
-          width: 8px;
-          height: 8px;
-          background: rgba(148, 194, 255, 1);
-          transform: rotate(45deg);
-          cursor: pointer;
-        }
+    .instructions-icon {
+      width: 8px;
+      height: 8px;
+      background: rgba(148, 194, 255, 1);
+      transform: rotate(45deg);
+      cursor: pointer;
+    }
 
-        .instructions-icon-blue {
-          width: 16px;
-          height: 16px;
-          background: rgba(22, 100, 255, 1);
-          transform: rotate(45deg);
-        }
+    .instructions-icon-blue {
+      width: 16px;
+      height: 16px;
+      background: rgba(22, 100, 255, 1);
+      transform: rotate(45deg);
+    }
 
-        .instructions-right {
-          width: 5px;
-          height: 10px;
-          background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
-          background-size: 100% 100%;
-          cursor: pointer;
-        }
-      }
+    .instructions-right {
+      width: 5px;
+      height: 10px;
+      background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
     }
   }
 }
