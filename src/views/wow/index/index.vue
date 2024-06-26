@@ -1,6 +1,7 @@
 <template>
-  <div class="carousel">
-    <t-carousel
+  <div class="home-box">
+    <div class="top-box">
+      <!-- <t-carousel
       :style="{
         width: '100%',
         height: '450px',
@@ -20,149 +21,257 @@
           @click="clickCarousel(item.link)"
         />
       </t-carousel-item>
-    </t-carousel>
-  </div>
-  <div class="header">
-    <div
-      v-for="item in allCategList"
-      :key="item.icon"
-      class="headerWrap"
-      @click="item.action"
-    >
-      <t-tooltip v-if="item.disable" content="敬请期待">
-        <div class="headerItem">
+    </t-carousel> -->
+      <div class="top-left-box">
+        <t-popover
+          popup-container=".top-left-box"
+          position="left"
+          trigger="hover"
+          content-class="popover"
+        >
+          <div class="trigger-box"></div>
+          <template #title>
+            <div class="content-header">
+              <span>智能工业</span>
+            </div>
+          </template>
+          <template #content>
+            <div class="hover-content">
+              <span
+                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
+              </span>
+              <span class="hover-more">查看更多<icon-right /></span>
+            </div>
+          </template>
+        </t-popover>
+      </div>
+
+      <div class="top-right-box">
+        <t-popover
+          popup-container=".top-right-box"
+          position="left"
+          trigger="hover"
+          content-class="popover"
+        >
+          <div class="trigger-box"></div>
+          <template #title>
+            <div class="content-header">
+              <span>科技制造</span>
+            </div>
+          </template>
+          <template #content>
+            <div class="hover-content">
+              <span
+                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
+              </span>
+              <span class="hover-more">查看更多<icon-right /></span>
+            </div>
+          </template>
+        </t-popover>
+      </div>
+      <div class="bottom-left-box">
+        <t-popover
+          popup-container=".bottom-left-box"
+          position="left"
+          trigger="hover"
+          content-class="popover"
+        >
+          <div class="trigger-box"></div>
+          <template #title>
+            <div class="content-header">
+              <span>数据</span>
+            </div>
+          </template>
+          <template #content>
+            <div class="hover-content">
+              <span
+                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
+              </span>
+              <span class="hover-more">查看更多<icon-right /></span>
+            </div>
+          </template>
+        </t-popover>
+      </div>
+      <div class="bottom-right-box">
+        <t-popover
+          popup-container=".bottom-right-box"
+          position="left"
+          trigger="hover"
+          content-class="popover"
+        >
+          <div class="trigger-box"></div>
+          <template #title>
+            <div class="content-header">
+              <span>可信</span>
+              <!-- <img
+                src="../../../assets/images/home/top_left_icon1.png"
+                width="12px"
+                height="12px"
+              /> -->
+            </div>
+          </template>
+          <template #content>
+            <div class="hover-content">
+              <span
+                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
+              </span>
+              <span class="hover-more">查看更多<icon-right /></span>
+            </div>
+          </template>
+        </t-popover>
+      </div>
+      <div>
+        <video
+          src="../../../assets/video/newbg.mp4"
+          style="width: 100%; height: auto"
+          autoplay
+          loop
+          muted
+        />
+      </div>
+    </div>
+    <div class="header">
+      <div
+        v-for="item in allCategList"
+        :key="item.icon"
+        class="headerWrap"
+        @click="item.action"
+      >
+        <t-tooltip v-if="item.disable" content="敬请期待">
+          <div class="headerItem">
+            <span>
+              <iconpark-icon :name="item.icon" size="60px"></iconpark-icon>
+            </span>
+            <span class="title">{{ item.title }}</span>
+            <span class="desc">{{ item.desc }}</span>
+          </div>
+        </t-tooltip>
+        <div v-else class="headerItem">
           <span>
             <iconpark-icon :name="item.icon" size="60px"></iconpark-icon>
           </span>
           <span class="title">{{ item.title }}</span>
           <span class="desc">{{ item.desc }}</span>
         </div>
-      </t-tooltip>
-      <div v-else class="headerItem">
-        <span>
-          <iconpark-icon :name="item.icon" size="60px"></iconpark-icon>
-        </span>
-        <span class="title">{{ item.title }}</span>
-        <span class="desc">{{ item.desc }}</span>
+        <span class="divider"></span>
       </div>
-      <span class="divider"></span>
     </div>
-  </div>
-  <div class="platform">
-    <div class="title">平台产品</div>
-    <div>
-      <t-tabs class="platformTab">
-        <t-tab-pane
-          v-for="item in platProductsList"
-          :key="item.title"
-          :title="item.title"
-        >
-          <div class="tabDesc">
-            <span class="contentTitle">
-              <iconpark-icon
-                :key="item.title"
-                name="digitalbase"
-                size="20px"
-              ></iconpark-icon>
-              <span>{{ item.title }}</span>
-            </span>
-            <span class="contentDesc">{{ item.desc }}</span>
-          </div>
-          <div class="cardList">
-            <!-- :style="{
+    <div class="platform">
+      <div class="title">平台产品</div>
+      <div>
+        <t-tabs class="platformTab">
+          <t-tab-pane
+            v-for="item in platProductsList"
+            :key="item.title"
+            :title="item.title"
+          >
+            <div class="tabDesc">
+              <span class="contentTitle">
+                <iconpark-icon
+                  :key="item.title"
+                  name="digitalbase"
+                  size="20px"
+                ></iconpark-icon>
+                <span>{{ item.title }}</span>
+              </span>
+              <span class="contentDesc">{{ item.desc }}</span>
+            </div>
+            <div class="cardList">
+              <!-- :style="{
                 backgroundImage: `url(
                   @/assets/images/wow/index/${card.bgImg}
                 )`,
               }" -->
-            <div
-              v-for="(card, index) in item.cards"
-              :key="index"
-              class="card"
-              @click="goCardDetail(card)"
-            >
-              <img :src="card.bgImg" alt="" />
-              <div class="cardContent">
-                <span>{{ card.name }}</span>
-                <span>{{ card.desc }}</span>
-                <img class="hoverVector" :src="hoverVector" alt="" />
+              <div
+                v-for="(card, index) in item.cards"
+                :key="index"
+                class="card"
+                @click="goCardDetail(card)"
+              >
+                <img :src="card.bgImg" alt="" />
+                <div class="cardContent">
+                  <span>{{ card.name }}</span>
+                  <span>{{ card.desc }}</span>
+                  <img class="hoverVector" :src="hoverVector" alt="" />
+                </div>
               </div>
             </div>
-          </div>
-        </t-tab-pane>
-      </t-tabs>
+          </t-tab-pane>
+        </t-tabs>
+      </div>
     </div>
-  </div>
-  <div class="policy"></div>
-  <div class="idService">
-    <div class="title">标识服务</div>
-    <div class="content">
-      <div class="left">
-        <span class="subTitle">当前活跃企业节点</span>
-        <t-table
-          :columns="columns"
-          :bordered="false"
-          :pagination="false"
-          class="table"
-          scrollbar
-        />
-        <Vue3SeamlessScroll
-          class="scroll_box"
-          :list="activeNodeList"
-          :open-watch="true"
-          :hover="true"
-          :step="0.3"
-          :wait-time="1000"
-        >
+    <div class="policy"></div>
+    <div class="idService">
+      <div class="title">标识服务</div>
+      <div class="content">
+        <div class="left">
+          <span class="subTitle">当前活跃企业节点</span>
           <t-table
             :columns="columns"
-            :show-header="false"
-            :data="activeNodeList"
             :bordered="false"
             :pagination="false"
-            class="table-01"
+            class="table"
             scrollbar
           />
-        </Vue3SeamlessScroll>
-      </div>
-      <div class="right">
-        <span class="subTitle">开通企业节点，获取以下资源及服务</span>
-        <div class="overview">
-          <div class="item">
-            <span class="label">互通企业数</span>
-            <span>
-              <span class="value">{{ activeOverall.interWorkingCount }}</span>
-              <span>家</span>
-            </span>
-          </div>
-          <div class="item">
-            <span class="label">接入应用/服务</span>
-            <span>
-              <span class="value">{{ activeOverall.serverCount }}</span>
-              <span>个</span>
-            </span>
-          </div>
-          <div class="item">
-            <span class="label">使用公开数据标准</span>
-            <span>
-              <span class="value">{{ activeOverall.openStandardCount }}</span>
-              <span>套</span>
-            </span>
-          </div>
+          <Vue3SeamlessScroll
+            class="scroll_box"
+            :list="activeNodeList"
+            :open-watch="true"
+            :hover="true"
+            :step="0.3"
+            :wait-time="1000"
+          >
+            <t-table
+              :columns="columns"
+              :show-header="false"
+              :data="activeNodeList"
+              :bordered="false"
+              :pagination="false"
+              class="table-01"
+              scrollbar
+            />
+          </Vue3SeamlessScroll>
         </div>
-        <t-button
-          v-if="userInfoByCompany?.nodeStatus === NodeAuthStatus?.AUTHED"
-          type="primary"
-          @click="goIdService"
-        >
-          标识服务
-        </t-button>
-        <t-button v-else type="primary" @click="clickIdService">
-          申请开通企业节点
-        </t-button>
+        <div class="right">
+          <span class="subTitle">开通企业节点，获取以下资源及服务</span>
+          <div class="overview">
+            <div class="item">
+              <span class="label">互通企业数</span>
+              <span>
+                <span class="value">{{ activeOverall.interWorkingCount }}</span>
+                <span>家</span>
+              </span>
+            </div>
+            <div class="item">
+              <span class="label">接入应用/服务</span>
+              <span>
+                <span class="value">{{ activeOverall.serverCount }}</span>
+                <span>个</span>
+              </span>
+            </div>
+            <div class="item">
+              <span class="label">使用公开数据标准</span>
+              <span>
+                <span class="value">{{ activeOverall.openStandardCount }}</span>
+                <span>套</span>
+              </span>
+            </div>
+          </div>
+          <t-button
+            v-if="userInfoByCompany?.nodeStatus === NodeAuthStatus?.AUTHED"
+            type="primary"
+            @click="goIdService"
+          >
+            标识服务
+          </t-button>
+          <t-button v-else type="primary" @click="clickIdService">
+            申请开通企业节点
+          </t-button>
+        </div>
       </div>
     </div>
+    <WowFooter></WowFooter>
   </div>
-  <WowFooter></WowFooter>
 </template>
 
 <script lang="ts" setup>
@@ -494,354 +603,482 @@ onMounted(() => {
   apiGetProductId().then((data) => {
     accessProductIds.value = data;
   });
+  // 控制视频播放速度
+  const videoElement = document.querySelector('video');
+  if (videoElement) {
+    videoElement.playbackRate = 0.4; // 视频将以正常速度的0.4倍播放
+  }
 });
 </script>
 
 <style lang="less" scoped>
-.header {
-  display: flex;
-  justify-content: center;
-  padding: 24px 0;
-  text-align: center;
-  background-color: #fff;
+.home-box {
+  .top-box {
+    position: relative;
+    width: 100%;
+    height: auto;
 
-  .headerWrap {
+    .top-left-box {
+      position: absolute;
+      top: 10%;
+      left: 32%;
+      width: 240px;
+      height: 240px;
+      // background-color: red;
+    }
+
+    .top-right-box {
+      position: absolute;
+      top: 1%;
+      left: 68%;
+      width: 240px;
+      height: 240px;
+    }
+
+    .bottom-right-box {
+      position: absolute;
+      top: 50%;
+      left: 69%;
+      width: 240px;
+      height: 240px;
+    }
+
+    .bottom-left-box {
+      position: absolute;
+      top: 54%;
+      left: 32%;
+      width: 240px;
+      height: 240px;
+    }
+
+    .trigger-box {
+      position: relative;
+      top: 0;
+      left: 0;
+      z-index: 2000;
+      width: 300px;
+      height: 300px;
+      background-color: transparent;
+    }
+  }
+
+  .header {
     display: flex;
-    cursor: pointer;
+    justify-content: center;
+    padding: 24px 0;
+    text-align: center;
+    background-color: #fff;
 
-    .headerItem {
+    .headerWrap {
+      display: flex;
+      cursor: pointer;
+
+      .headerItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 293px;
+        height: 170px;
+        padding: 16px 17px;
+
+        span {
+          display: inline-block;
+
+          &.title {
+            margin-top: 14px;
+            margin-bottom: 14px;
+            color: #000;
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 28px;
+          }
+
+          &.desc {
+            color: #4e5969;
+            font-size: 14px;
+            line-height: 22px; /* 157.143% */
+          }
+        }
+
+        &:hover {
+          background: #fff;
+          border-radius: 4px;
+
+          /* 阴影/常规阴影-卡片 */
+          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .divider {
+        display: inline-block;
+        width: 1px;
+        height: 170px;
+        background-color: #e5e8ef;
+      }
+
+      &:last-child .divider {
+        display: none;
+      }
+    }
+  }
+
+  .platform {
+    padding-bottom: 55px;
+    text-align: center;
+    background-image: url('@/assets/images/wow/index/platform_bg.svg');
+
+    .title {
+      padding-top: 40px;
+      padding-bottom: 20px;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 32px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .platformTab {
+      :deep(.tele-tabs-nav) {
+        background: rgba(255, 255, 255, 0.5);
+
+        &::before {
+          display: none;
+        }
+
+        .tele-tabs-nav-tab {
+          justify-content: center;
+
+          .tele-tabs-nav-ink {
+            height: 3px;
+            background-color: #1664ff;
+          }
+
+          .tele-tabs-tab {
+            margin: 0 36px;
+            padding: 12px 0;
+            color: #4e5969;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 22px; /* 157.143% */
+
+            // &.tele-tabs-tab-active {
+            //   margin: 7px 52px 12px 16px;
+            //   padding: 0;
+            // }
+          }
+        }
+      }
+
+      :deep(.tele-tabs-content) {
+        padding-top: 87px;
+      }
+
+      :deep(.tele-tabs-pane) {
+        display: flex;
+        align-items: start;
+        justify-content: center;
+      }
+
+      :deep(.tele-tabs-content-item-active) {
+        overflow: visible;
+      }
+    }
+
+    .tabDesc {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 293px;
-      height: 170px;
-      padding: 16px 17px;
+      align-items: start;
+      width: 368px;
+      margin-top: 61px;
+      margin-right: 86px;
+      margin-left: 100px;
 
-      span {
-        display: inline-block;
+      .contentTitle {
+        display: flex;
+        color: #1d2129;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
 
-        &.title {
-          margin-top: 14px;
-          margin-bottom: 14px;
-          color: #000;
-          font-weight: 500;
-          font-size: 20px;
-          line-height: 28px;
+        span {
+          margin-left: 12px;
+        }
+      }
+
+      .contentDesc {
+        margin-top: 12px;
+        padding-top: 12px;
+        color: #4e5969;
+        font-size: 14px;
+        line-height: 22px;
+        text-align: left;
+        border-top: 1px solid #c9cdd4;
+      }
+    }
+
+    .cardList {
+      display: flex;
+      // flex: 1;
+      .card {
+        display: flex;
+        flex-direction: column;
+        width: 210px;
+        height: 284px;
+        margin-right: 46px;
+        color: #435c97;
+        cursor: pointer;
+        transition-duration: 0.5s;
+        transition-property: color, transform;
+
+        .hoverVector {
+          width: 40px;
+          margin-top: 12px;
+          opacity: 0;
+          transition: all 1s ease;
         }
 
-        &.desc {
-          color: #4e5969;
+        &:hover {
+          color: #1664ff;
+          transform: translate(0, -20px);
+
+          .hoverVector {
+            opacity: 1;
+          }
+        }
+
+        .cardContent {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: -76px;
+
+          span {
+            display: inline-block;
+            font-weight: 300;
+            font-size: 20px;
+            line-height: 28px; /* 140% */
+
+            &:first-child {
+              margin-bottom: 4px;
+            }
+
+            &:last-child {
+              font-size: 14px;
+              line-height: 22px;
+            }
+          }
+
+          .desc {
+            font-weight: 300;
+            font-size: 14px;
+            font-family: PingFang SC;
+            font-style: normal;
+            line-height: 22px; /* 157.143% */
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+  .idService {
+    padding-bottom: 42px;
+    background-color: #f2f3f8;
+
+    .title {
+      padding-top: 40px;
+      padding-bottom: 20px;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: 24px;
+      line-height: 32px;
+      text-align: center;
+      // background: rgba(255, 255, 255, 0.5);
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+
+      .left,
+      .right {
+        width: 580px;
+        height: 414px;
+        padding: 24px;
+        background: #fff;
+        border: 1px solid #ebecf0;
+        border-radius: 4px;
+      }
+
+      .left {
+        margin-right: 16px;
+
+        :deep(.tele-table-header) {
+          background-color: transparent;
+        }
+
+        :deep(.tele-table-th) {
+          color: #1d2129;
+          font-weight: 500;
           font-size: 14px;
           line-height: 22px; /* 157.143% */
+          background-color: transparent;
+        }
+
+        :deep(.tele-table-td) {
+          color: #86909c;
+          font-weight: 400;
+          font-size: 14px;
+          line-height: 22px; /* 157.143% */
+          border-bottom: none;
+        }
+
+        :deep(.tele-table-cell) {
+          padding: 16px 28px 0 0;
+        }
+
+        .table {
+          margin-top: -12px;
+          // margin-left: -16px;
+          :deep(.tele-empty) {
+            padding: 50px 0 !important;
+          }
+
+          :deep(.tele-table-td-content) {
+            display: none;
+          }
+        }
+
+        .table-01 {
+          margin-top: -12px;
+
+          :deep(.tele-empty) {
+            padding: 50px 0 !important;
+          }
+        }
+
+        .scroll_box {
+          height: 288px;
+          overflow: hidden;
         }
       }
 
-      &:hover {
-        background: #fff;
-        border-radius: 4px;
+      .right {
+        .overview {
+          display: flex;
+          justify-content: space-between;
+          width: 530px;
+          height: 164px;
+          margin-top: 32px;
+          margin-bottom: 48px;
+          padding: 40px 14px;
+          background-image: url('@/assets/images/wow/index/idservice_right_bg.svg');
 
-        /* 阴影/常规阴影-卡片 */
-        box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+          .item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            .label {
+              margin-bottom: 24px;
+              color: #000;
+              font-weight: 500;
+              font-size: 14px;
+              line-height: 22px;
+            }
+
+            .value {
+              color: #1664ff;
+              font-weight: 600;
+              font-size: 32px;
+              line-height: 38px;
+            }
+          }
+        }
       }
-    }
 
-    .divider {
-      display: inline-block;
-      width: 1px;
-      height: 170px;
-      background-color: #e5e8ef;
-    }
-
-    &:last-child .divider {
-      display: none;
+      .subTitle {
+        display: block;
+        margin-bottom: 16px;
+        color: #1d2129;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
+      }
     }
   }
 }
 
-.platform {
-  padding-bottom: 55px;
-  text-align: center;
-  background-image: url('@/assets/images/wow/index/platform_bg.svg');
+::v-deep(.tele-trigger-popup) {
+  .tele-trigger-popup-wrapper {
+    .tele-popover-popup-content {
+      width: 322px !important;
+      height: 160px !important;
+      padding: 0;
+      overflow-x: hidden;
+      overflow-y: hidden;
+      background-color: transparent;
 
-  .title {
-    padding-top: 40px;
-    padding-bottom: 20px;
-    color: #1d2129;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 32px;
-    text-align: center;
-    background: rgba(255, 255, 255, 0.5);
-  }
+      .tele-popover-title {
+        width: 100%;
 
-  .platformTab {
-    :deep(.tele-tabs-nav) {
-      background: rgba(255, 255, 255, 0.5);
+        .content-header {
+          position: relative;
+          display: flex !important;
+          align-items: flex-start;
+          justify-content: space-between !important;
+          height: 54px;
+          background-color: transparent !important;
 
-      &::before {
-        display: none;
+          span {
+            margin-left: 30px;
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 54px;
+          }
+        }
       }
 
-      .tele-tabs-nav-tab {
-        justify-content: center;
+      .tele-popover-content {
+        width: 100%;
+        height: 104px;
 
-        .tele-tabs-nav-ink {
-          height: 3px;
-          background-color: #1664ff;
-        }
-
-        .tele-tabs-tab {
-          margin: 0 36px;
-          padding: 12px 0;
+        .hover-content {
+          position: relative;
+          display: flex !important;
+          flex-direction: column;
+          align-items: flex-start !important;
+          justify-content: center !important;
+          height: 100%;
+          padding: 6px 10px 0 20px;
           color: #4e5969;
-          font-weight: 400;
+          font: PingFang SC;
           font-size: 14px;
-          line-height: 22px; /* 157.143% */
+          background-color: #bcf6ff80;
 
-          // &.tele-tabs-tab-active {
-          //   margin: 7px 52px 12px 16px;
-          //   padding: 0;
+          .hover-more {
+            margin-top: 6px;
+            color: #1664ff;
+            cursor: pointer;
+          }
+          // .img_top-left {
+          //   position: absolute;
+          //   bottom: 4px;
+          //   left: 0;
+          // }
+          // .img_top-right {
+          //   position: absolute;
+          //   bottom: 4px;
+          //   right: 0;
           // }
         }
       }
     }
 
-    :deep(.tele-tabs-content) {
-      padding-top: 87px;
-    }
-
-    :deep(.tele-tabs-pane) {
-      display: flex;
-      align-items: start;
-      justify-content: center;
-    }
-
-    :deep(.tele-tabs-content-item-active) {
-      overflow: visible;
-    }
-  }
-
-  .tabDesc {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    width: 368px;
-    margin-top: 61px;
-    margin-right: 86px;
-    margin-left: 100px;
-
-    .contentTitle {
-      display: flex;
-      color: #1d2129;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 28px;
-
-      span {
-        margin-left: 12px;
-      }
-    }
-
-    .contentDesc {
-      margin-top: 12px;
-      padding-top: 12px;
-      color: #4e5969;
-      font-size: 14px;
-      line-height: 22px;
-      text-align: left;
-      border-top: 1px solid #c9cdd4;
-    }
-  }
-
-  .cardList {
-    display: flex;
-    // flex: 1;
-    .card {
-      display: flex;
-      flex-direction: column;
-      width: 210px;
-      height: 284px;
-      margin-right: 46px;
-      color: #435c97;
-      cursor: pointer;
-      transition-duration: 0.5s;
-      transition-property: color, transform;
-
-      .hoverVector {
-        width: 40px;
-        margin-top: 12px;
-        opacity: 0;
-        transition: all 1s ease;
-      }
-
-      &:hover {
-        color: #1664ff;
-        transform: translate(0, -20px);
-
-        .hoverVector {
-          opacity: 1;
-        }
-      }
-
-      .cardContent {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: -76px;
-
-        span {
-          display: inline-block;
-          font-weight: 300;
-          font-size: 20px;
-          line-height: 28px; /* 140% */
-
-          &:first-child {
-            margin-bottom: 4px;
-          }
-
-          &:last-child {
-            font-size: 14px;
-            line-height: 22px;
-          }
-        }
-
-        .desc {
-          font-weight: 300;
-          font-size: 14px;
-          font-family: PingFang SC;
-          font-style: normal;
-          line-height: 22px; /* 157.143% */
-          text-align: center;
-        }
-      }
-    }
-  }
-}
-
-.idService {
-  padding-bottom: 42px;
-  background-color: #f2f3f8;
-
-  .title {
-    padding-top: 40px;
-    padding-bottom: 20px;
-    color: #1d2129;
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 32px;
-    text-align: center;
-    // background: rgba(255, 255, 255, 0.5);
-  }
-
-  .content {
-    display: flex;
-    justify-content: center;
-
-    .left,
-    .right {
-      width: 580px;
-      height: 414px;
-      padding: 24px;
-      background: #fff;
-      border: 1px solid #ebecf0;
-      border-radius: 4px;
-    }
-
-    .left {
-      margin-right: 16px;
-
-      :deep(.tele-table-header) {
-        background-color: transparent;
-      }
-
-      :deep(.tele-table-th) {
-        color: #1d2129;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 22px; /* 157.143% */
-        background-color: transparent;
-      }
-
-      :deep(.tele-table-td) {
-        color: #86909c;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 22px; /* 157.143% */
-        border-bottom: none;
-      }
-
-      :deep(.tele-table-cell) {
-        padding: 16px 28px 0 0;
-      }
-
-      .table {
-        margin-top: -12px;
-        // margin-left: -16px;
-        :deep(.tele-empty) {
-          padding: 50px 0 !important;
-        }
-
-        :deep(.tele-table-td-content) {
-          display: none;
-        }
-      }
-
-      .table-01 {
-        margin-top: -12px;
-
-        :deep(.tele-empty) {
-          padding: 50px 0 !important;
-        }
-      }
-
-      .scroll_box {
-        height: 288px;
-        overflow: hidden;
-      }
-    }
-
-    .right {
-      .overview {
-        display: flex;
-        justify-content: space-between;
-        width: 530px;
-        height: 164px;
-        margin-top: 32px;
-        margin-bottom: 48px;
-        padding: 40px 14px;
-        background-image: url('@/assets/images/wow/index/idservice_right_bg.svg');
-
-        .item {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-
-          .label {
-            margin-bottom: 24px;
-            color: #000;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 22px;
-          }
-
-          .value {
-            color: #1664ff;
-            font-weight: 600;
-            font-size: 32px;
-            line-height: 38px;
-          }
-        }
-      }
-    }
-
-    .subTitle {
-      display: block;
-      margin-bottom: 16px;
-      color: #1d2129;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 28px;
+    .tele-trigger-arrow {
+      visibility: hidden;
     }
   }
 }
