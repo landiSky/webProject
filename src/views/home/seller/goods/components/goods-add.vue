@@ -306,7 +306,6 @@
             label="产品使用说明"
             field="useExplain"
             class="pic-item pic-item2"
-            validate-trigger=""
           >
             <t-upload
               :ref="prdRef"
@@ -1748,14 +1747,15 @@ const beforeUpload50 = (file: File) => {
 
 const beforeRemove50 = (file: any) => {
   return new Promise<void>((resolve, reject) => {
-    const flied = file.response.data || file.uid;
-    const index = formModel.value.useExplain.indexOf(flied);
-    expList.value.splice(index, 1);
+    const flied = file?.response?.data || file.uid;
+    const aggregate = expList.value.filter((item) => {
+      return item.uid !== flied;
+    });
+    expList.value = aggregate;
     if (file.status === 'done') {
+      const index = formModel.value.useExplain.indexOf(flied);
       formModel.value.useExplain.splice(index, 1);
     }
-    // const List = expList.value
-    // List.splice(index, 1);
     resolve();
   });
 };
