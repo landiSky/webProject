@@ -305,7 +305,7 @@
           <t-form-item
             label="产品使用说明"
             field="useExplain"
-            class="pic-item"
+            class="pic-item pic-item2"
             validate-trigger=""
           >
             <t-upload
@@ -1789,9 +1789,15 @@ const doSave = async () => {
       return false;
     }
     if (props.data?.id) {
-      res = await updateGoods1(formModel.value);
+      res = await updateGoods1({
+        ...formModel.value,
+        useExplain: formModel.value.useExplain.join(','),
+      });
     } else {
-      res = await saveGoods1(formModel.value);
+      res = await saveGoods1({
+        ...formModel.value,
+        useExplain: formModel.value.useExplain.join(','),
+      });
     }
   } else {
     const r = await validForm2();
@@ -2220,7 +2226,9 @@ const validateAP = (index: number, key: string) => {
 
 .pic-item {
   margin-bottom: 0 !important;
+}
 
+.pic-item2 {
   :deep(.tele-upload-list-item) {
     margin-top: 12px;
   }
