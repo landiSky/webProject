@@ -200,8 +200,8 @@
         <div class="unified-title">明星产品</div>
         <div class="unified-right unified-icon-02"></div>
       </div>
-      <!-- <div class="learnmore">了解更多</div> -->
       <div class="understand">
+        <div class="learnmore" @click="learnmore">了解更多</div>
         <!-- <img :src="product1" alt="" class="img" /> -->
         <img
           :src="
@@ -515,6 +515,15 @@ const goMallDetail = (id: string) => {
   router.push({
     name: 'wowMallDetail',
     params: { id },
+  });
+};
+
+const learnmore = () => {
+  router.push({
+    path: '/wow/mall',
+    query: {
+      idinside: 1,
+    },
   });
 };
 
@@ -1046,7 +1055,6 @@ onUnmounted(() => {
 }
 
 .product {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1054,21 +1062,23 @@ onUnmounted(() => {
   background: url(@/assets/images/idinside/product-bg.png) no-repeat;
   background-size: 100% 100%;
 
-  .learnmore {
-    position: absolute;
-    top: 57px;
-    right: 260px;
-    color: rgba(22, 100, 255, 1);
-    font-weight: 400;
-    font-size: 20px;
-    font-family: PingFang SC;
-    line-height: 28px;
-    text-align: left;
-  }
-
   .understand {
+    position: relative;
     display: flex;
     width: 1398px;
+
+    .learnmore {
+      position: absolute;
+      top: -76px;
+      right: 0;
+      color: rgba(22, 100, 255, 1);
+      font-weight: 400;
+      font-size: 20px;
+      font-family: PingFang SC;
+      line-height: 28px;
+      text-align: left;
+      cursor: pointer;
+    }
 
     .img {
       gap: 0;
