@@ -566,7 +566,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -584,7 +584,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -694,7 +694,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -712,7 +712,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -794,7 +794,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -812,7 +812,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -1227,7 +1227,7 @@ const copyRules = {
         if (!value || value.length === 0) return cb('请输入试用版本地址');
         if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
         if (value.length > 500) {
-          return cb('最多可输入50个字符');
+          return cb('最多可输入500个字符');
         }
         return cb();
       },
@@ -1243,7 +1243,7 @@ const copyRules = {
   ],
   tryPwd: [
     { required: true, message: '请输入试用密码' },
-    { maxLength: 32, message: '最多可输入32个字符' },
+    { maxLength: 100, message: '最多可输入100个字符' },
   ],
 };
 
