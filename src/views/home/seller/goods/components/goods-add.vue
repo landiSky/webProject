@@ -1747,7 +1747,7 @@ const beforeUpload50 = (file: File) => {
 
 const beforeRemove50 = (file: any) => {
   return new Promise<void>((resolve, reject) => {
-    const flied = file?.response?.data || file.uid;
+    const flied = file.uid ?? file?.response?.data;
     const aggregate = expList.value.filter((item) => {
       return item.uid !== flied;
     });
@@ -1756,6 +1756,7 @@ const beforeRemove50 = (file: any) => {
       const index = formModel.value.useExplain.indexOf(flied);
       formModel.value.useExplain.splice(index, 1);
     }
+    formRef.value.validateField('useExplain');
     resolve();
   });
 };
