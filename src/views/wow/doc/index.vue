@@ -26,7 +26,7 @@
   <WowFooter></WowFooter>
 </template>
 
-<script setup type="ts">
+<script lang="ts" setup>
 import { ref } from 'vue';
 import videoImg from '@/assets/images/wow/doc/doc-banner.mp4';
 import bg1 from '@/assets/images/wow/doc/bg1.png';
@@ -37,48 +37,47 @@ import icon2 from '@/assets/images/wow/doc/icon2.png';
 import icon3 from '@/assets/images/wow/doc/icon3.png';
 import WowFooter from '../components/wowFooter/index.vue';
 
-console.log('bg', bg1)
 const commonStyle = {
-    backgroundSize: 'cover', // 背景图片覆盖整个元素
-    backgroundPosition: 'center', // 背景图片居中显示
-    backgroundRepeat: 'no-repeat', // 不重复背景图片
-}
+  backgroundSize: 'cover', // 背景图片覆盖整个元素
+  backgroundPosition: 'center', // 背景图片居中显示
+  backgroundRepeat: 'no-repeat', // 不重复背景图片
+};
 
 const contents = ref([
-    {
-        bgImg: {
-          backgroundImage: `url(${bg1})`,
-          ...commonStyle
-        },
-        icon: icon1,
-        title: '平台集成文档',
-        desc: '平台集成文档，SaaS应用接入指南',
-        url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose'
+  {
+    bgImg: {
+      backgroundImage: `url(${bg1})`,
+      ...commonStyle,
     },
-    {
-        bgImg: {
-          backgroundImage: `url(${bg2})`,
-          ...commonStyle
-        },
-        icon: icon2,
-        title: '标识服务',
-        desc: '工业互联网标识开放文档，为应用开发者提供完善的应用集成标准流程规范、SDK下载及使用、API接口使用说明等，帮助开发者便捷的完成企业信息系统、平台等与标识体系对接，将企业及企业数据接入标识体系，开发标识应用等操作。'
+    icon: icon1,
+    title: '平台集成文档',
+    desc: '平台集成文档，SaaS应用接入指南',
+    url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose',
+  },
+  {
+    bgImg: {
+      backgroundImage: `url(${bg2})`,
+      ...commonStyle,
     },
-    {
-        bgImg: {
-          backgroundImage: `url(${bg3})`,
-          ...commonStyle
-        },
-        icon: icon3,
-        title: 'IDInside合作计划',
-        desc: '加速标识应用贯通，从零开始，仅需五步，实现应用快速接入标识体系。',
-        url: 'http://id-pointer-sdk.pre.idx.space/docs/idinside/document-overview'
+    icon: icon2,
+    title: '标识服务',
+    desc: '工业互联网标识开放文档，为应用开发者提供完善的应用集成标准流程规范、SDK下载及使用、API接口使用说明等，帮助开发者便捷的完成企业信息系统、平台等与标识体系对接，将企业及企业数据接入标识体系，开发标识应用等操作。',
+  },
+  {
+    bgImg: {
+      backgroundImage: `url(${bg3})`,
+      ...commonStyle,
     },
-])
+    icon: icon3,
+    title: 'IDInside合作计划',
+    desc: '加速标识应用贯通，从零开始，仅需五步，实现应用快速接入标识体系。',
+    url: 'http://id-pointer-sdk.pre.idx.space/docs/idinside/document-overview',
+  },
+]);
 
 const handleSearch = (url) => {
-  window.open(url)
-}
+  window.open(url);
+};
 </script>
 
 <style lang="less" scoped>
