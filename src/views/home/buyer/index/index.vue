@@ -1131,10 +1131,8 @@ const goapply = () => {
     // 跳转应用商城
     router.push('/wow/mall');
   } else {
-    console.log();
     if (
-      !userInfoByCompany.value?.menuCodes.includes('ROUTE_SYSTEM_DEVELOPER') ||
-      userInfoByCompany.value?.primary === AccountType.UNAUTH
+      !userInfoByCompany.value?.menuCodes.includes('ROUTE_SYSTEM_DEVELOPER')
     ) {
       Message.warning('暂无权限');
       return;
