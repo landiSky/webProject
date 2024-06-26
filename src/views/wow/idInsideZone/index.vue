@@ -133,7 +133,7 @@
           <div class="synopsis">
             <div class="synopsis-left">
               <div class="left-01">
-                <div class="tamList">能源行业</div>
+                <div class="tamList">{{ item.type }}</div>
                 <div class="title">{{ item.title }}</div>
               </div>
               <div class="left-02">案例介绍：</div>
@@ -200,6 +200,7 @@
         <div class="unified-title">明星产品</div>
         <div class="unified-right unified-icon-02"></div>
       </div>
+      <!-- <div class="learnmore">了解更多</div> -->
       <div class="understand">
         <!-- <img :src="product1" alt="" class="img" /> -->
         <img
@@ -417,6 +418,7 @@ const handleScroll = () => {
 
 const caseList = ref([
   {
+    type: '双碳',
     title: '双碳大脑',
     intro:
       '双碳智慧大脑创新中心是服务于政府及企业，依托星火·链网以碳账户为基础实现横纵数据的融会贯通、可信可用，科学计算、监测碳排，辅助政府智能决策。双碳智慧大脑加入IDInside合作计划，与星火·链网和标识解析体系对接集成，通过数据统一编码，碳排放量监测等，建立一站式碳应用服务进行碳诊断、碳盘查等能力。',
@@ -425,6 +427,7 @@ const caseList = ref([
       '实现为政府提供全局分析视图，评估政策制定策略，准确反馈政策实施效果。帮助企业提升获得投融资市场认可及服务，促进多方合作共享，推动绿色项目的创新和发展。实现向政府提交第三方盘查申请，经核实后完成碳盘查。实现潜在节能机会识别，有效减少碳排，同时积累碳资产为参与碳交易做准备等。',
   },
   {
+    type: '农业',
     title: '星火可信溯源',
     intro:
       '道地中药材需进行产品种植加工，销售等进行溯源，对符合溯源标准产品授予可信溯源标识二维码。通过IDInside合作计划进行标识解析体系接入，打造“来源可查，去向可追，责任可究”的服务体系，以品质、安全、透明重塑消费者信任关系，基于“星火·链网”为道地中药材、特色农产品等打造可信溯源服务，以一物一码技术贯通生产源头和消费终端。',
@@ -433,6 +436,7 @@ const caseList = ref([
       '实现中药材标准/规范产业应用方案。实现种植溯源、加工溯源、包装溯源能力。通过标识解析体系和星火·链网接入，实现种植数据、加工数据互联互通，防伪验真服务，同时实现产品生产全链路可追溯，助力行业健康可持续发展。',
   },
   {
+    type: '工业',
     title: '晓数通',
     intro:
       '晓数通是一款为企业运管人员提供的运营管理工具，需将企业多源异构数据封装成各业务能力台账，实现跨部门数据在线化集成分析，降低企业数据管理成本。通过IDInside合作计划晓数通与标识解析体系结合，通过标识元数据采集原始数据，建立标准台账模板，一键生成目标报表，实现从台账到企业一套表上报的全流程管理和上报，企业中用于优化电子统计台账的管理，实现数据的规范治理和高效共享。企业可以通过晓数通平台自动生成符合需求的统计报表，并将结果呈现给用户，实现高效的数据共享与传递。',
@@ -441,6 +445,7 @@ const caseList = ref([
       '晓数通通过与标识解析体系的结合，实现了企业内部数据的整合，提高数据的透明度。平台的实施加强供应链的协同效应。通过标识解析，企业能够实时跟踪物料和产品流动，优化库存管理，降低企业数据管理成本。',
   },
   {
+    type: '工业',
     title: 'CPS融通互联平台',
     intro:
       '为推进智能制造的无缝连接，企业需同步并共享设计、采购、生产、销售等各环节的系统数据，打破信息孤岛，实现全价值链关键业务流程的整合。通过IDInside合作计划，针对制造互联互通等问题，接入标识解析体系，统一标识编码，为产品和部件制定唯一标识编码规则，确保各环节信息一致性。通过标识解析，对产品从设计到售后服务的全生命周期进行管理，可消除数据孤岛，使企业管理更高效。',
@@ -906,7 +911,7 @@ onUnmounted(() => {
         gap: 12px;
 
         .tamList {
-          width: 64px;
+          // width: 64px;
           height: 28px;
           padding: 4px 8px 4px 8px;
           color: rgba(0, 147, 42, 1);
@@ -1041,12 +1046,25 @@ onUnmounted(() => {
 }
 
 .product {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 84px;
   background: url(@/assets/images/idinside/product-bg.png) no-repeat;
   background-size: 100% 100%;
+
+  .learnmore {
+    position: absolute;
+    top: 57px;
+    right: 260px;
+    color: rgba(22, 100, 255, 1);
+    font-weight: 400;
+    font-size: 20px;
+    font-family: PingFang SC;
+    line-height: 28px;
+    text-align: left;
+  }
 
   .understand {
     display: flex;
