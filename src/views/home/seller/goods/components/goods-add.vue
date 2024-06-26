@@ -1003,7 +1003,24 @@ const formRules = {
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
   introduction: [{ required: true, message: '请输入商品简介' }],
-  useExplain: [{ required: true, message: '请上传产品使用说明' }],
+  // useExplain: [{ required: true, message: '请上传产品使用说明' }],
+  useExplain: [
+    {
+      required: true,
+      validator: (value: string, cb: (params?: any) => void) => {
+        console.log(value.length);
+        if (value.length === 0) return cb('请上传产品使用说明');
+        const aggregate = expList.value.filter((item: any) => {
+          return item.status !== 'done';
+        });
+        console.log(aggregate);
+        if (aggregate.length !== 0) {
+          return cb('文件正在上传中');
+        }
+        return cb();
+      },
+    },
+  ],
   detail: [
     {
       required: true,
@@ -1316,7 +1333,6 @@ const uploadExpSuccess = (fileItem: FileItem) => {
       ...formModel.value.useExplain,
       fileItem.response.data,
     ];
-    expList.value = [...expList.value, fileItem];
     formRef.value.validateField('useExplain');
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
@@ -1325,6 +1341,7 @@ const uploadExpSuccess = (fileItem: FileItem) => {
 };
 
 const uploadExpChange = (fileList: FileItem[]) => {
+  expList.value = fileList;
   // if (fileList.length === 0) {
   //   formModel.value.useExplain = [];
   // }
@@ -1509,6 +1526,7 @@ const getDetail = (id: any) => {
         const params = item;
         params.uid = params.useExplain;
         params.name = params.useExplainOriginal;
+        params.status = 'done';
         return params;
       });
       expList.value = useExplainMap;
@@ -1732,8 +1750,10 @@ const beforeRemove50 = (file: any) => {
   return new Promise<void>((resolve, reject) => {
     const flied = file.response.data || file.uid;
     const index = formModel.value.useExplain.indexOf(flied);
-    formModel.value.useExplain.splice(index, 1);
     expList.value.splice(index, 1);
+    if (file.status === 'done') {
+      formModel.value.useExplain.splice(index, 1);
+    }
     // const List = expList.value
     // List.splice(index, 1);
     resolve();
