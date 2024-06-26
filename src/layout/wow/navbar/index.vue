@@ -30,6 +30,11 @@
           <t-tooltip content="敬请期待">
             <t-link>平台服务</t-link>
           </t-tooltip>
+          <t-link
+            :class="{ active: selectTab === TabPath.DOC }"
+            @click="goDocCenter"
+            >文档中心</t-link
+          >
 
           <!-- <t-tooltip content="敬请期待">
             <t-link>前沿政策</t-link>
@@ -94,6 +99,7 @@ import { sm2 } from '@/utils/encrypt';
 const TabPath = {
   INDEX: '/wow/index',
   MALL: '/wow/mall',
+  DOC: '/wow/doc',
 };
 const userStore = useUserStore();
 const router = useRouter();
@@ -143,6 +149,14 @@ const goBuyer = () => {
     });
     router.push({ path: '/buyer/index' });
   }
+};
+
+const goDocCenter = () => {
+  // ? 对下最后一个数字传什么
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+    console.log('前台文档中心打点', res);
+  });
+  router.push({ path: '/wow/doc' });
 };
 
 const clickLogout = () => {
