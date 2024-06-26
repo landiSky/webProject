@@ -62,6 +62,7 @@ const contents = ref([
     icon: icon2,
     title: '标识服务',
     desc: '工业互联网标识开放文档，为应用开发者提供完善的应用集成标准流程规范、SDK下载及使用、API接口使用说明等，帮助开发者便捷的完成企业信息系统、平台等与标识体系对接，将企业及企业数据接入标识体系，开发标识应用等操作。',
+    url: '',
   },
   {
     bgImg: {
@@ -75,7 +76,7 @@ const contents = ref([
   },
 ]);
 
-const handleSearch = (url) => {
+const handleSearch = (url: string) => {
   window.open(url);
 };
 </script>
