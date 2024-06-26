@@ -76,15 +76,15 @@
           <div class="title">资料提交</div>
           <div class="text"
             >点击「<span class="text-button" @click="uploadNow">立即上传</span
-            >」 上传完整的产品集成方案。</div
+            >」上传完整的产品集成方案。</div
           >
         </div>
         <div class="card card-03">
           <div class="icon">03</div>
           <div class="title">集成开发</div>
           <div class="text"
-            >点击「<span class="text-button" @click="viewNow">立即查看</span>」
-            查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
+            >点击「<span class="text-button" @click="viewNow">立即查看</span
+            >」查看集成开发文档，下载应用集成开发包及开发测试报告模版。</div
           >
         </div>
         <div class="card card-04">
@@ -368,7 +368,7 @@ const whyJoin = ref([
       {
         label: '内容推广：',
         value:
-          '通过公众号（泰尔英福等）、核心央媒报道（光明网等） 将品牌信息传递给大众',
+          '通过公众号（泰尔英福等）、核心央媒报道（光明网等）将品牌信息传递给大众',
       },
       {
         label: '营销活动：',
