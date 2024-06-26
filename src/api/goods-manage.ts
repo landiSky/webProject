@@ -74,3 +74,8 @@ export function preUp(id: any) {
 export function selectOnlineMallApps(params: any) {
   return $http.get(`/server/web/app/info/selectOnlineMallApps`, { params });
 }
+
+// 证书下载
+export function certDownload(params: any) {
+  return $http.get(`/server/web/product/certDownload`, { params });
+}

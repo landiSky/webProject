@@ -212,9 +212,12 @@
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
-                  :href="`/server/web/file/download?name=${formModel.useExplain}&productId=${formModel.id}`"
+                  v-for="item in formModel.useExplainMap"
+                  :key="item"
+                  class="link-href"
+                  :href="`/server/web/file/download?name=${item.useExplain}&productId=${formModel.id}`"
                   download
-                  >产品使用说明</a
+                  >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
@@ -567,16 +570,35 @@ const handleLabel = (record: any) => {
   labelVisible.value = true;
 };
 
-const handleLabelConfirm = (data = [], productId = '') => {
+const handleLabelConfirm = (
+  data = [],
+  productId = '',
+  tagStatus = props.data?.tagStatus
+) => {
   state.confirmLoading = true;
-  const tagIdList = data.map((item: any) => item.key);
-  if (tagIdList.length === 0) {
-    state.confirmLoading = false;
-    return Message.warning('未选择标签');
-  }
+  // const tagIdList = data.map((item: any) => item.key);
+  // if (tagIdList.length === 0) {
+  //   state.confirmLoading = false;
+  //   return Message.warning('未选择标签');
+  // }
+  // return comfirmLabel({
+  //   productId,
+  //   tagIdList,
+  // })
+  //   .then(() => {
+  //     state.confirmLoading = false;
+  //     Message.success('打标成功');
+  //     labelVisible.value = false;
+  //   })
+  //   .catch((e) => {
+  //     state.confirmLoading = false;
+  //     Message.success(e.message);
+  //     // labelVisible.value = false;
+  //   });
   return comfirmLabel({
     productId,
-    tagIdList,
+    tagIdList: data,
+    tagStatus,
   })
     .then(() => {
       state.confirmLoading = false;
@@ -585,8 +607,8 @@ const handleLabelConfirm = (data = [], productId = '') => {
     })
     .catch((e) => {
       state.confirmLoading = false;
-      Message.success(e.message);
-      // labelVisible.value = false;
+      Message.error(e.message);
+      labelVisible.value = false;
     });
 };
 
@@ -775,5 +797,13 @@ onMounted(() => {
 
 :deep(.tele-typography) {
   margin-bottom: 0;
+}
+
+.link-href {
+  margin-left: 12px;
+}
+
+.link-href:first-child {
+  margin-left: 0;
 }
 </style>

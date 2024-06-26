@@ -236,10 +236,12 @@
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
+                  v-for="item in dataInfo.useExplainMap"
+                  :key="item"
                   class="link-href"
-                  :href="`/server/web/file/download?name=${dataInfo.useExplain}`"
+                  :href="`/server/web/file/download?name=${item.useExplain}`"
                   download
-                  >产品使用说明</a
+                  >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
@@ -779,5 +781,13 @@ const applicationlink = (data: any) => {
 
 :deep(.tele-typography) {
   margin-bottom: 0;
+}
+
+.link-href {
+  margin-left: 12px;
+}
+
+.link-href:first-child {
+  margin-left: 0;
 }
 </style>

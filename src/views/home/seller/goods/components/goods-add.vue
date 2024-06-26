@@ -305,12 +305,11 @@
           <t-form-item
             label="产品使用说明"
             field="useExplain"
-            class="pic-item"
-            validate-trigger=""
+            class="pic-item pic-item2"
           >
             <t-upload
               :ref="prdRef"
-              :limit="1"
+              :limit="10"
               :file-list="expList"
               :multiple="false"
               action="/server/web/file/upload"
@@ -319,6 +318,7 @@
               accept=".pdf,.doc,.docx"
               tip-position="bottom"
               @before-upload="beforeUpload50"
+              @before-remove="beforeRemove50"
               @success="uploadExpSuccess"
               @error="uploadExpError"
               @change="uploadExpChange"
@@ -565,7 +565,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -583,7 +583,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -693,7 +693,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -711,7 +711,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -793,7 +793,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 10,
+                    length: 50,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryAccount')"
@@ -811,7 +811,7 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 32,
+                    length: 100,
                     errorOnly: true,
                   }"
                   @input="validateArray(copyFormRef[index].value, 'tryPwd')"
@@ -959,7 +959,7 @@ const formModel = ref<Record<string, any>>({
   productTypeId: '',
   logo: '',
   detailImg: '',
-  useExplain: '',
+  useExplain: [],
   introduction: '',
   detail: '[]',
   companyId: '',
@@ -1002,7 +1002,24 @@ const formRules = {
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
   introduction: [{ required: true, message: '请输入商品简介' }],
-  useExplain: [{ required: true, message: '请上传产品使用说明' }],
+  // useExplain: [{ required: true, message: '请上传产品使用说明' }],
+  useExplain: [
+    {
+      required: true,
+      validator: (value: string, cb: (params?: any) => void) => {
+        console.log(value.length);
+        if (value.length === 0) return cb('请上传产品使用说明');
+        const aggregate = expList.value.filter((item: any) => {
+          return item.status !== 'done';
+        });
+        console.log(aggregate);
+        if (aggregate.length !== 0) {
+          return cb('文件正在上传中');
+        }
+        return cb();
+      },
+    },
+  ],
   detail: [
     {
       required: true,
@@ -1209,7 +1226,7 @@ const copyRules = {
         if (!value || value.length === 0) return cb('请输入试用版本地址');
         if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
         if (value.length > 500) {
-          return cb('最多可输入50个字符');
+          return cb('最多可输入500个字符');
         }
         return cb();
       },
@@ -1225,7 +1242,7 @@ const copyRules = {
   ],
   tryPwd: [
     { required: true, message: '请输入试用密码' },
-    { maxLength: 32, message: '最多可输入32个字符' },
+    { maxLength: 100, message: '最多可输入100个字符' },
   ],
 };
 
@@ -1298,8 +1315,8 @@ const uploadDetailSuccess = (fileItem: FileItem) => {
 };
 
 const uploadExpError = (fileItem: FileItem) => {
-  formModel.value.useExplain = '';
-  formRef.value.validateField('useExplain');
+  // formModel.value.useExplain = '';
+  // formRef.value.validateField('useExplain');
   const size = fileItem.file?.size ?? 0;
   if (size > 50 * 1024 * 1024) {
     Message.error(`上传失败，文件大小不要超过50M`);
@@ -1311,8 +1328,10 @@ const uploadExpError = (fileItem: FileItem) => {
 const uploadExpSuccess = (fileItem: FileItem) => {
   const res = fileItem.response;
   if (res?.code === 200) {
-    formModel.value.useExplain = fileItem.response.data;
-    expList.value = [fileItem];
+    formModel.value.useExplain = [
+      ...formModel.value.useExplain,
+      fileItem.response.data,
+    ];
     formRef.value.validateField('useExplain');
     Message.success(`上传 ${fileItem.name} 成功`);
   } else {
@@ -1321,9 +1340,10 @@ const uploadExpSuccess = (fileItem: FileItem) => {
 };
 
 const uploadExpChange = (fileList: FileItem[]) => {
-  if (fileList.length === 0) {
-    formModel.value.useExplain = '';
-  }
+  expList.value = fileList;
+  // if (fileList.length === 0) {
+  //   formModel.value.useExplain = [];
+  // }
 };
 
 const getClassList = () => {
@@ -1481,12 +1501,16 @@ const getModalJson = () => {
 
 const getDetail = (id: any) => {
   goodsDetail(id).then((res) => {
+    const useExplainList =
+      res?.useExplainMap.map((item: any) => {
+        return item.useExplain;
+      }) || [];
     formModel.value.name = res.name;
     formModel.value.id = res.id;
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
-    formModel.value.useExplain = res.useExplain;
+    formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
@@ -1497,7 +1521,15 @@ const getDetail = (id: any) => {
     templateRef.value.templateData = JSON.parse(res.detail);
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];
     if (res.useExplain) {
-      expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
+      const useExplainMap = res.useExplainMap.map((item: any) => {
+        const params = item;
+        params.uid = params.useExplain;
+        params.name = params.useExplainOriginal;
+        params.status = 'done';
+        return params;
+      });
+      expList.value = useExplainMap;
+      // expList.value = [{ uid: res.useExplain, name: res.useExplainOriginal }];
     }
 
     if (formModel2.value.saleType === 0) {
@@ -1713,6 +1745,22 @@ const beforeUpload50 = (file: File) => {
   });
 };
 
+const beforeRemove50 = (file: any) => {
+  return new Promise<void>((resolve, reject) => {
+    const flied = file.uid ?? file?.response?.data;
+    const aggregate = expList.value.filter((item) => {
+      return item.uid !== flied;
+    });
+    expList.value = aggregate;
+    if (file.status === 'done') {
+      const index = formModel.value.useExplain.indexOf(flied);
+      formModel.value.useExplain.splice(index, 1);
+    }
+    formRef.value.validateField('useExplain');
+    resolve();
+  });
+};
+
 const getSelectApplication = () => {
   const params = {
     companyId: userInfoByCompany.value?.companyId,
@@ -1762,9 +1810,15 @@ const doSave = async () => {
       return false;
     }
     if (props.data?.id) {
-      res = await updateGoods1(formModel.value);
+      res = await updateGoods1({
+        ...formModel.value,
+        useExplain: formModel.value.useExplain.join(','),
+      });
     } else {
-      res = await saveGoods1(formModel.value);
+      res = await saveGoods1({
+        ...formModel.value,
+        useExplain: formModel.value.useExplain.join(','),
+      });
     }
   } else {
     const r = await validForm2();
@@ -1835,7 +1889,10 @@ const clickNext = async () => {
     return;
   }
   const api = props.data?.id ? updateGoods1 : saveGoods1;
-  api(formModel.value).then((res) => {
+  api({
+    ...formModel.value,
+    useExplain: formModel.value.useExplain.join(','),
+  }).then((res) => {
     if (res) {
       modalJsonString.value = getModalJson();
       step.value = 2;
@@ -2190,6 +2247,12 @@ const validateAP = (index: number, key: string) => {
 
 .pic-item {
   margin-bottom: 0 !important;
+}
+
+.pic-item2 {
+  :deep(.tele-upload-list-item) {
+    margin-top: 12px;
+  }
 }
 
 .modal-list {

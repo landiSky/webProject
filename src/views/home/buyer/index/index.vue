@@ -483,7 +483,7 @@
                 style="margin-left: auto; color: #86909c; cursor: pointer"
                 @click="
                   instructionsuse(
-                    item.useExplain,
+                    item.useExplainMap,
                     item.orderSource,
                     item.productServerId
                   )
@@ -621,6 +621,15 @@
       @confirm="onAuthModalConfirm"
       @cancel="authModalVisible = false"
     ></AuthModal>
+
+    <!-- 文件展示弹窗 -->
+    <DetailsModalUpload
+      v-if="detailupload"
+      :data="uploadList"
+      @confirm="DetailModalConfirmflag"
+      @cancel="detailuploadclick"
+    >
+    </DetailsModalUpload>
   </div>
 </template>
 
@@ -648,6 +657,8 @@ import EditModal from '@/components/dataoverview/components/edit-modal.vue';
 import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
 
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
+
+import DetailsModalUpload from '@/components/dataoverview/components/details-modal-upload.vue';
 
 import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
@@ -745,6 +756,10 @@ const detailflag = ref(false);
 const editModalVisiblealter = ref(false);
 // 配置自建应用 弹窗
 const editModalApplication = ref(false);
+
+// 使用说明 弹窗
+const detailupload = ref(false);
+const uploadList: Record<string, any> = ref([]);
 
 // //已购应用
 const authDialogVisible: Record<string, any> = ref([]);
@@ -1068,31 +1083,23 @@ const filetype = (val: any) => {
 };
 // 使用说明
 const instructionsuse = (
-  fileurl: string,
+  useExplainMap: Array<object>,
   orderSource: string,
   productServerId: string
 ) => {
-  // const type = fileurl.substr(fileurl.lastIndexOf('.') + 1, fileurl.length);
-  // fileDownloadto2({
-  //   name: fileurl,
-  //   source,
-  //   serverId: productServerId,
-  // }).then((res: any) => {
-  const link = document.createElement('a');
-  //   //    type就是blob的type,是MIME类型的，可以自己查看MIME类型都有哪些
-  //   const blogw = new Blob([res], {
-  //     // type: 'application/x-abiword;charset=utf-8'
-  //     // type: 'application/msword;charset=utf-8',
-  //     // type: 'application/pdf;charset=utf-8',
-  //     type: filetype(type),
-  //   });
-  const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
-  link.href = objectUrl;
-  const fileName = '使用说明';
-  link.download = fileName; //  下载的时候自定义的文件名
-  link.click();
-  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url.
-  // });
+  uploadList.value = useExplainMap.map((item: any) => {
+    const params = item;
+    params.orderSource = orderSource;
+    params.productServerId = productServerId;
+    return params;
+  });
+  detailupload.value = true;
+};
+const DetailModalConfirmflag = () => {
+  detailupload.value = false;
+};
+const detailuploadclick = () => {
+  detailupload.value = false;
 };
 
 // 更多

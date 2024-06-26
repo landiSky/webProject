@@ -17,8 +17,11 @@
           <!-- <t-tooltip content="敬请期待">
             <t-link>限免应用</t-link>
           </t-tooltip> -->
-
-          <t-link @click="clickIdService">标识服务</t-link>
+          <t-link
+            :class="{ active: selectTab === TabPath.IDINSIDEZONE }"
+            @click="clickIdService"
+            >IDInside专区</t-link
+          >
           <t-link
             :class="{ active: selectTab === TabPath.MALL }"
             @click="gotoMall"
@@ -98,6 +101,7 @@ import { sm2 } from '@/utils/encrypt';
 
 const TabPath = {
   INDEX: '/wow/index',
+  IDINSIDEZONE: '/wow/idInsideZone',
   MALL: '/wow/mall',
   DOC: '/wow/doc',
 };
@@ -199,64 +203,8 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
-  // TODO w: 标识服务打点
-  // const isLogin = !!getToken();
-  apiDataPoint(null, null, userInfo?.value?.id, 5, 8).then((res) => {
-    console.log('前台页标识服务打点');
-  });
-
-  if (!userInfo.value?.userId) {
-    if (!userInfo.value?.id) {
-      Modal.info({
-        title: '登录提醒',
-        content: '暂未登录，需要登录后方可查看标识服务。',
-        titleAlign: 'start',
-        hideCancel: false,
-        cancelText: '暂不登录',
-        okText: '去登录',
-        onOk: () => {
-          userStore.jumpToLogin();
-        },
-      });
-    } else {
-      const { primary, companyId } = userInfoByCompany.value || {};
-      if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
-        const { snmsUrls } = userInfo.value || {};
-        const params = {
-          companyId: userInfo.value?.isAdmin
-            ? userInfo.value?.companyId
-            : companyId,
-          snmsLoginId: snmsUrls?.snmsLoginId,
-        };
-        snmsClientLogin(params).then((res: any) => {
-          if (res?.data?.code === 102006) {
-            Message.error(res?.data?.message);
-          }
-          if (!res?.data?.data) {
-            return;
-          }
-          const data = {
-            type: 'snms',
-            companyId: userInfo.value?.isAdmin
-              ? userInfo.value?.companyId
-              : companyId,
-          };
-          const sm2data = sm2(
-            JSON.stringify(data),
-            userStore.configInfo?.publicKey
-          );
-          window.open(`${res?.data?.data}&data=${sm2data}`);
-        });
-      } else {
-        Modal.warning({
-          title: '仅企业管理员可操作',
-          content: '',
-          titleAlign: 'start',
-          okText: '好的',
-        });
-      }
-    }
-  }
+  selectTab.value = TabPath.IDINSIDEZONE;
+  router.push({ path: '/wow/idInsideZone' });
 };
 
 onMounted(() => {

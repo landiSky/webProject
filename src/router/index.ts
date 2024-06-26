@@ -73,7 +73,7 @@ export const whiteList = [
   '/wow/mall',
   '/wow/doc',
   '/wow/platProducts',
-  // '/devCenter/manage',
+  '/wow/idInsideZone',
 ];
 
 const router = createRouter({
