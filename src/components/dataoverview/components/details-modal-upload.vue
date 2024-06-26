@@ -11,7 +11,9 @@
   >
     <div class="modal-body">
       <div v-for="(item, index) in data" :key="index" class="module">
-        <div class="img">图片</div>
+        <div class="img"
+          ><img :src="imgType(item?.useExplainOriginal)" alt=""
+        /></div>
         <div class="title">{{ item?.useExplainOriginal }}</div>
         <div class="module-button">
           <t-link :hoverable="false">预览</t-link>
@@ -34,13 +36,14 @@
 </template>
 
 <script lang="ts" setup>
-import Error from '@/assets/images/home/Error.png';
-import { defineProps, defineEmits, ref, PropType } from 'vue';
+import { defineProps, defineEmits, ref, PropType, computed } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { authDetails } from '@/api/authentication';
 import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
+import docxicon from '@/assets/images/idinside/docx-icon.png';
+import pdficon from '@/assets/images/idinside/pdf-icon.png';
 
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
@@ -62,6 +65,16 @@ const props = defineProps({
 
 const emit = defineEmits(['confirm', 'cancel']);
 const showModal = ref(true);
+
+const imgType = (value: string) => {
+  const str = value.toString();
+  const strIndex = str.lastIndexOf('.');
+  const name = str.slice(strIndex, str.length);
+  if (name === '.docx') {
+    return docxicon;
+  }
+  return pdficon;
+};
 
 // 使用说明
 const instructionsuse = (
@@ -91,7 +104,6 @@ const instructionsuse = (
   .img {
     width: 100px;
     height: 100px;
-    background: red;
 
     img {
       width: 100%;
