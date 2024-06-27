@@ -29,7 +29,7 @@
     </div>
     <!-- 为什么要加入IDInside -->
     <div ref="testref" class="why-join">
-      <div class="unified">
+      <div class="unified unified-bottom">
         <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">为什么要加入IDInside</div>
         <div class="unified-right unified-icon-02"></div>
@@ -125,47 +125,54 @@
         }"
         :auto-play="true"
         animation-name="fade"
-        show-arrow="never"
         indicator-position="outer"
+        indicator-type="line"
+        show-arrow="never"
         :current="carouselCurrent"
         @change="currentChange"
       >
         <t-carousel-item v-for="(item, index) in caseList" :key="index">
-          <div class="synopsis">
-            <div class="synopsis-left">
-              <div class="left-01">
-                <div class="tamList">{{ item.type }}</div>
-                <div class="title">{{ item.title }}</div>
-              </div>
-              <div class="left-02">案例介绍：</div>
-              <div class="left-03">{{ item.intro }}</div>
-              <div class="left-04"></div>
-              <div class="left-02">取得成果：</div>
-              <!-- 展示图片 -->
-              <!-- <div class="left-05">
-                <div class="image"></div>
-                <div class="image"></div>
-                <div class="image"></div>
-                <div class="image"></div>
-                <div class="image"></div>
-                <div class="image"></div>
-              </div> -->
-              <!-- 展示文字 -->
-              <div class="left-06">
-                <ul>
-                  <li>{{ item.briefintroduction }}</li>
-                </ul>
-              </div>
-            </div>
-            <div class="synopsis-right">
-              <img :src="item.img" alt="" />
-            </div>
-          </div>
-          <div class="instructions">
+          <div class="carousel-body">
             <div
               class="instructions-left"
               @click="about('Left', carouselCurrent)"
             ></div>
+            <div class="synopsis">
+              <div class="synopsis-left">
+                <div class="left-01">
+                  <div class="tamList">{{ item.type }}</div>
+                  <div class="title">{{ item.title }}</div>
+                </div>
+                <div class="left-02">案例介绍：</div>
+                <div class="left-03">{{ item.intro }}</div>
+                <div class="left-04"></div>
+                <div class="left-02">取得成果：</div>
+                <!-- 展示图片 -->
+                <!-- <div class="left-05">
+                  <div class="image"></div>
+                  <div class="image"></div>
+                  <div class="image"></div>
+                  <div class="image"></div>
+                  <div class="image"></div>
+                  <div class="image"></div>
+                </div> -->
+                <!-- 展示文字 -->
+                <div class="left-06">
+                  <ul>
+                    <li>{{ item.briefintroduction }}</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="synopsis-right">
+                <img :src="item.img" alt="" />
+              </div>
+            </div>
+            <div
+              class="instructions-right"
+              @click="about('right', carouselCurrent)"
+            ></div>
+          </div>
+          <div class="instructions">
             <div
               class="instructions-icon"
               :class="{ 'instructions-icon-blue': carouselCurrent === 1 }"
@@ -186,10 +193,6 @@
               :class="{ 'instructions-icon-blue': carouselCurrent === 4 }"
               @click="currentClick(4)"
             ></div>
-            <div
-              class="instructions-right"
-              @click="about('right', carouselCurrent)"
-            ></div>
           </div>
         </t-carousel-item>
       </t-carousel>
@@ -203,15 +206,15 @@
       </div>
       <div class="understand">
         <div class="learnmore" @click="learnmore">了解更多</div>
-        <!-- <img :src="product1" alt="" class="img" /> -->
-        <img
+        <img :src="product1" alt="" class="img" />
+        <!-- <img
           :src="
             previewImgList.length
               ? `/server/web/file/download?name=${previewImgList[0]}&productId=${prodDetail.id}`
               : defaultImg
           "
           class="img"
-        />
+        /> -->
         <div class="introduce">
           <div class="title">{{ prodDetail.name || '-' }}</div>
           <div class="company">{{ prodDetail.companyName || '-' }}</div>
@@ -303,6 +306,11 @@ import partner7 from '@/assets/images/idinside/partner/partner-07.png';
 import partner8 from '@/assets/images/idinside/partner/partner-08.png';
 import partner9 from '@/assets/images/idinside/partner/partner-09.png';
 import partner10 from '@/assets/images/idinside/partner/partner-10.png';
+import partner11 from '@/assets/images/idinside/partner/partner-11.png';
+import partner12 from '@/assets/images/idinside/partner/partner-12.png';
+import partner13 from '@/assets/images/idinside/partner/partner-13.png';
+import partner14 from '@/assets/images/idinside/partner/partner-14.png';
+import partner15 from '@/assets/images/idinside/partner/partner-15.png';
 
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import WowFooter from '../components/wowFooter/index.vue';
@@ -324,6 +332,11 @@ const partnerList = ref([
   partner8,
   partner9,
   partner10,
+  partner11,
+  partner12,
+  partner13,
+  partner14,
+  partner15,
 ]);
 
 const whyJoin = ref([
@@ -409,10 +422,11 @@ const testref: Record<string, any> = ref(null);
 const handleScroll = () => {
   nextTick(() => {
     const currentScroll = testref.value.getBoundingClientRect().top; // 表示当前标签距离顶部滚动的位置
-    if (currentScroll < 400) {
+    console.log(currentScroll);
+    if (currentScroll < 608) {
       // 当前滚动位置到达testref的时候，显示div（100作为调整用）
       testShow.value = true;
-    } else {
+    } else if (currentScroll > 760) {
       testShow.value = false;
     }
   });
@@ -658,45 +672,17 @@ onUnmounted(() => {
       .img {
         transform: translateY(0%) !important; //滚动后的位置
         opacity: 1 !important; //滚动后显现
-        transition: all 0.1s ease;
-      }
-
-      .text {
-        transform: translateY(0%) !important; //滚动后的位置
-        opacity: 1 !important; //滚动后显现
-        transition: all 0.15s ease;
-      }
-    }
-
-    .advantage-list:nth-child(2) {
-      .img {
-        transform: translateY(0%) !important; //滚动后的位置
-        opacity: 1 !important; //滚动后显现
         transition: all 0.2s ease;
       }
 
       .text {
         transform: translateY(0%) !important; //滚动后的位置
         opacity: 1 !important; //滚动后显现
-        transition: all 0.25s ease;
-      }
-    }
-
-    .advantage-list:nth-child(3) {
-      .img {
-        transform: translateY(0%) !important; //滚动后的位置
-        opacity: 1 !important; //滚动后显现
         transition: all 0.3s ease;
       }
-
-      .text {
-        transform: translateY(0%) !important; //滚动后的位置
-        opacity: 1 !important; //滚动后显现
-        transition: all 0.35s ease;
-      }
     }
 
-    .advantage-list:nth-child(4) {
+    .advantage-list:nth-child(2) {
       .img {
         transform: translateY(0%) !important; //滚动后的位置
         opacity: 1 !important; //滚动后显现
@@ -706,7 +692,35 @@ onUnmounted(() => {
       .text {
         transform: translateY(0%) !important; //滚动后的位置
         opacity: 1 !important; //滚动后显现
-        transition: all 0.45s ease;
+        transition: all 0.5s ease;
+      }
+    }
+
+    .advantage-list:nth-child(3) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.6s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.7s ease;
+      }
+    }
+
+    .advantage-list:nth-child(4) {
+      .img {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.8s ease;
+      }
+
+      .text {
+        transform: translateY(0%) !important; //滚动后的位置
+        opacity: 1 !important; //滚动后显现
+        transition: all 0.9s ease;
       }
     }
   }
@@ -766,14 +780,18 @@ onUnmounted(() => {
     gap: 40px;
     justify-content: center;
     width: 100%;
-    height: 406px;
-    margin-top: 74px;
+    padding-bottom: 72px;
+    // height: 406px;
+    // margin-top: 74px;
     overflow-x: clip;
     background: url(@/assets/images/idinside/whyjoin/advantage-bg.png) no-repeat;
     background-size: 100% 100%;
 
     .advantage-list {
-      margin-top: -82px;
+      // margin-top: -82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       .img {
         width: 264px;
@@ -786,8 +804,8 @@ onUnmounted(() => {
         .title {
           display: flex;
           align-items: center;
+          justify-content: center;
           margin-top: 20px;
-          margin-bottom: 12px;
 
           .title-icon {
             width: 12px;
@@ -809,6 +827,7 @@ onUnmounted(() => {
         }
 
         > ul > li {
+          margin-top: 12px;
           margin-left: 20px;
           list-style-type: disc;
 
@@ -863,14 +882,9 @@ onUnmounted(() => {
       height: 276px;
       padding: 20px;
       background-size: contain;
-      border: 1px solid;
+      // border: 1px solid;
       border-radius: 4px;
-      border-image-source: linear-gradient(
-        180deg,
-        #fff 0%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      box-shadow: 2px 10px 22px 0 rgba(41, 78, 207, 0.33);
+      cursor: pointer;
       // background: rgba(255, 255, 255, 0.33);
       .icon {
         display: flex;
@@ -917,6 +931,15 @@ onUnmounted(() => {
         }
       }
     }
+
+    .card:hover {
+      border-image-source: linear-gradient(
+        180deg,
+        #fff 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      box-shadow: 2px 10px 22px 0 rgba(41, 78, 207, 0.33);
+    }
   }
 }
 
@@ -924,12 +947,19 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // padding-bottom: 100px;
+  // padding-bottom: 80px;
+  .carousel-body {
+    display: flex;
+    align-items: center;
+  }
+
   .synopsis {
     position: relative;
     display: flex;
-    width: 1398px;
+    // width: 1398px;
+    width: 1198px;
     height: 660px;
+    margin: 0 auto;
 
     .synopsis-left {
       position: absolute;
@@ -1041,37 +1071,37 @@ onUnmounted(() => {
     justify-content: center;
     height: 16px;
     margin-top: 16px;
+  }
 
-    .instructions-left {
-      width: 5px;
-      height: 10px;
-      background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
-      background-size: 100% 100%;
-      cursor: pointer;
-    }
+  .instructions-left {
+    width: 20px;
+    height: 40px;
+    background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
+    background-size: 100% 100%;
+    cursor: pointer;
+  }
 
-    .instructions-icon {
-      width: 8px;
-      height: 8px;
-      background: rgba(148, 194, 255, 1);
-      transform: rotate(45deg);
-      cursor: pointer;
-    }
+  .instructions-icon {
+    width: 8px;
+    height: 8px;
+    background: rgba(148, 194, 255, 1);
+    transform: rotate(45deg);
+    cursor: pointer;
+  }
 
-    .instructions-icon-blue {
-      width: 16px;
-      height: 16px;
-      background: rgba(22, 100, 255, 1);
-      transform: rotate(45deg);
-    }
+  .instructions-icon-blue {
+    width: 16px;
+    height: 16px;
+    background: rgba(22, 100, 255, 1);
+    transform: rotate(45deg);
+  }
 
-    .instructions-right {
-      width: 5px;
-      height: 10px;
-      background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
-      background-size: 100% 100%;
-      cursor: pointer;
-    }
+  .instructions-right {
+    width: 20px;
+    height: 40px;
+    background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
+    background-size: 100% 100%;
+    cursor: pointer;
   }
 }
 
@@ -1280,6 +1310,10 @@ onUnmounted(() => {
     height: 15px;
     background-size: 100% 100%;
   }
+}
+
+.unified-bottom {
+  margin: 52px 0 0 0;
 }
 
 .partner {
