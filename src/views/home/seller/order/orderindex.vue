@@ -189,7 +189,7 @@
                       <span v-if="item.buyDuration !== '0'"
                         >{{ item.buyDuration }}个月</span
                       >
-                      <span v-else>不限</span>
+                      <span v-else>不限时间</span>
                       )
                     </p>
                   </div>
@@ -297,7 +297,7 @@
                       type="text"
                       style="width: 100%"
                       @click="delivery(item.deliveryType, item.id)"
-                      >交付应用</t-button
+                      >立即交付</t-button
                     >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
                       >订单详情</span
@@ -376,7 +376,11 @@
     <DetailsModalFullscreen
       v-if="FullscreenDetailsModal"
       :data="state.editData"
-      @cancel="FullscreenDetailsModal = false"
+      @cancel="
+        () => {
+          getTableData(), (FullscreenDetailsModal = false);
+        }
+      "
     >
     </DetailsModalFullscreen>
   </div>

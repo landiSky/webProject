@@ -190,7 +190,7 @@
                       <span v-if="item.buyDuration !== '0'"
                         >{{ item.buyDuration }}个月</span
                       >
-                      <span v-else>不限</span>
+                      <span v-else>不限时间</span>
                       )
                     </p>
                   </div>
@@ -368,7 +368,11 @@
       v-if="reviewModalVisible"
       :data="state.evaluateContent"
       @confirm="onRevieModalConfirm"
-      @cancel="reviewModalVisible = false"
+      @cancel="
+        () => {
+          getTableData(), (reviewModalVisible = false);
+        }
+      "
     >
     </ReviewModal>
     <!-- 订单交付 -->

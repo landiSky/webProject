@@ -486,6 +486,28 @@ watch(
   }
 );
 
+watch(
+  () => route.query.idinside,
+  (newV) => {
+    if (newV) {
+      apiTagList() // TODO 添加查询参数
+        .then((data: any) => {
+          const params = data.filter((item: any) => {
+            return item.name === 'IDInside';
+          });
+          const index = data.findIndex((item: any) => item.name === 'IDInside');
+          // console.log(params[0].children[0].id);
+          tagsClick(index, params[0].children[0]);
+        })
+        .catch(() => {});
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
 onMounted(() => {
   apiDataPoint(null, null, userInfo?.id, 3, 1).then((res) => {
     console.log('商城首页页面打点');

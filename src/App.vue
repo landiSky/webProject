@@ -4,10 +4,14 @@
 
 <script lang="ts" setup>
 import { onMounted, watch, provide, ref } from 'vue';
+
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
+import { useRouter } from 'vue-router';
 import { clearToken } from './utils/auth';
+
+const router = useRouter();
 
 const userStore = useUserStore();
 
@@ -67,6 +71,15 @@ onMounted(() => {
   // 统一添加网络异常提示
   window.addEventListener('offline', () => {
     Message.error('网络有异常，请检查网络后再试。');
+  });
+
+  // 点击菜单时，捕捉报错，刷新页面
+  router.onError((error) => {
+    console.log('router error', error);
+    if (error.message.includes('Failed to fetch dynamically imported module')) {
+      // reload(); // 类似于点击浏览器上的刷新页面按钮
+      window.location.reload();
+    }
   });
 
   window.addEventListener(

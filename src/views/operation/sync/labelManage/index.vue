@@ -37,12 +37,19 @@
                   <span>{{ TypeList[record.type] }}</span>
                 </template>
                 <template #operater="{ record }">
-                  <t-button type="text" @click="handleGroupEdit(record)"
+                  <t-button
+                    v-if="Number(record.isEdit) !== 0"
+                    type="text"
+                    @click="handleGroupEdit(record)"
                     >编辑</t-button
                   >
-                  <t-button type="text" @click="handleGroupDel(record)"
+                  <t-button
+                    v-if="Number(record.isEdit) !== 0"
+                    type="text"
+                    @click="handleGroupDel(record)"
                     >删除</t-button
                   >
+                  <div v-if="Number(record.isEdit) === 0">-</div>
                 </template>
               </t-table>
             </div>
@@ -84,12 +91,19 @@
                   }}</span>
                 </template>
                 <template #operater="{ record }">
-                  <t-button type="text" @click="handleLabelEdit(record)"
+                  <t-button
+                    v-if="Number(record.isEdit) !== 0"
+                    type="text"
+                    @click="handleLabelEdit(record)"
                     >编辑</t-button
                   >
-                  <t-button type="text" @click="handleLabelDel(record)"
+                  <t-button
+                    v-if="Number(record.isEdit) !== 0"
+                    type="text"
+                    @click="handleLabelDel(record)"
                     >删除</t-button
                   >
+                  <div v-if="Number(record.isEdit) === 0">-</div>
                 </template>
               </t-table>
             </div>

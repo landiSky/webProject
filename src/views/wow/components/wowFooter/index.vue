@@ -4,7 +4,7 @@
       <div class="headerWraper">
         <span>IDSphere</span>
         <t-divider direction="vertical"></t-divider>
-        <span>应用运营平台</span>
+        <span>智数通</span>
       </div>
     </div>
     <div class="content">

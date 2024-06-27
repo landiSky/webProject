@@ -21,10 +21,21 @@ const wowRoutesList = [
         name: 'wowPlatProducts',
         component: () => import('@/views/wow/platProducts/index.vue'),
       },
+      // IDInside专区
+      {
+        path: '/wow/idInsideZone',
+        name: 'idInsideZone',
+        component: () => import('@/views/wow/idInsideZone/index.vue'),
+      },
       {
         path: '/wow/mall',
         name: 'wowMall',
         component: () => import('@/views/wow/mall/index.vue'),
+      },
+      {
+        path: '/wow/doc',
+        name: 'wowDoc',
+        component: () => import('@/views/wow/doc/index.vue'),
       },
       {
         // 前台商品详情页预览
@@ -36,6 +47,11 @@ const wowRoutesList = [
         path: '/wow/mall/detail/:id',
         name: 'wowMallDetail',
         component: () => import('@/views/wow/mall/detail/index.vue'),
+      },
+      {
+        path: '/wow/filepreview/',
+        name: 'wowFileFreview',
+        component: () => import('@/views/wow/filepreview/index.vue'),
       },
     ],
   },

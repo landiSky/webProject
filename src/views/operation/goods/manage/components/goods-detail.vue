@@ -259,9 +259,12 @@
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
                 <a
-                  :href="`/server/web/file/download?name=${formModel.useExplain}&productId=${formModel.id}`"
+                  v-for="item in formModel.useExplainMap"
+                  :key="item"
+                  class="link-href"
+                  :href="`/server/web/file/download?name=${item.useExplain}&productId=${formModel.id}`"
                   download
-                  >产品使用说明</a
+                  >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
               <t-descriptions-item label="详情展示信息">
@@ -806,5 +809,13 @@ const applicationlink = (saasAppId: any) => {
 
 :deep(.tele-typography) {
   margin-bottom: 0;
+}
+
+.link-href {
+  margin-left: 12px;
+}
+
+.link-href:first-child {
+  margin-left: 0;
 }
 </style>
