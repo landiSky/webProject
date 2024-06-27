@@ -278,6 +278,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { AccountType } from '@/enums/common';
 import { apiGetProductId } from '@/api/wow/index';
 import { apiProductDetail } from '@/api/wow/mall';
+import { apiDataPoint } from '@/api/data-point';
 import { Modal } from '@tele-design/web-vue';
 import advantage1 from '@/assets/images/idinside/whyjoin/advantage-01.png';
 import advantage2 from '@/assets/images/idinside/whyjoin/advantage-02.png';
@@ -458,7 +459,7 @@ const carouselCurrent = ref(1 as number);
 const currentClick = (num: number) => {
   carouselCurrent.value = num;
 };
-
+const { userInfo } = userStore;
 const about = (name: string, num: number) => {
   if (name === 'Left') {
     carouselCurrent.value = num === 1 ? num : num - 1;
@@ -476,6 +477,9 @@ const uploadNow = () => {
 };
 
 const viewNow = () => {
+  apiDataPoint(null, null, userInfo?.id, 5, 19).then((res) => {
+    console.log('前台导航栏文档中心打点', res);
+  });
   router.push({
     name: 'wowDoc',
     params: {},
@@ -503,6 +507,9 @@ const immediatelisting = () => {
       cancelText: '暂不认证',
       okText: '去认证',
       onOk: () => {
+        apiDataPoint(null, null, userInfo?.id, 6, 12).then((res) => {
+          console.log('用户导航栏概览页打点', res);
+        });
         router.push({
           path: '/buyer/index',
         });
@@ -510,6 +517,9 @@ const immediatelisting = () => {
     });
     return;
   }
+  apiDataPoint(null, null, userInfo?.id, 6, 14).then((res) => {
+    console.log('用户导航栏商品管理点击打点', res);
+  });
   router.push({
     path: '/seller/goods',
     query: {},
@@ -517,6 +527,9 @@ const immediatelisting = () => {
 };
 
 const goMallDetail = (id: string) => {
+  apiDataPoint(null, null, userInfo?.id, 5, 7).then((res) => {
+    console.log('前台导航栏IDInside专区点击打点', res);
+  });
   router.push({
     name: 'wowMallDetail',
     params: { id },
@@ -524,6 +537,9 @@ const goMallDetail = (id: string) => {
 };
 
 const learnmore = () => {
+  apiDataPoint(null, null, userInfo?.id, 5, 9).then((res) => {
+    console.log('前台导航栏商品搜索打点', res);
+  });
   router.push({
     path: '/wow/mall',
     query: {

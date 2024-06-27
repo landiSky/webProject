@@ -203,6 +203,9 @@ const onSearch = () => {
 };
 
 const clickIdService = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 20).then((res) => {
+    console.log('前台导航栏IDInside专区点击打点', res);
+  });
   selectTab.value = TabPath.IDINSIDEZONE;
   router.push({ path: '/wow/idInsideZone' });
 };
