@@ -284,8 +284,58 @@ const clickIdService = () => {
 };
 
 const goIdService = () => {
-  const { snmsUrls } = userInfo.value || {};
-  window.open(snmsUrls.idPointer, '_blank');
+  // const { snmsUrls } = userInfo.value || {};
+  // window.open(snmsUrls.idPointer, '_blank');
+  if (!userInfo.value?.id) {
+    Modal.info({
+      title: '登录提醒',
+      content: '暂未登录，需要登录后方可查看标识服务。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不登录',
+      okText: '去登录',
+      onOk: () => {
+        userStore.jumpToLogin();
+      },
+    });
+  } else {
+    const { primary, companyId } = userInfoByCompany.value || {};
+    if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+      const { snmsUrls } = userInfo.value || {};
+      const params = {
+        companyId: userInfo.value?.isAdmin
+          ? userInfo.value?.companyId
+          : companyId,
+        snmsLoginId: snmsUrls?.snmsLoginId,
+      };
+      snmsClientLogin(params).then((res: any) => {
+        if (res?.data?.code === 102006) {
+          Message.error(res?.data?.message);
+        }
+        if (!res?.data?.data) {
+          return;
+        }
+        const data = {
+          type: 'snms',
+          companyId: userInfo.value?.isAdmin
+            ? userInfo.value?.companyId
+            : companyId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        window.open(`${res?.data?.data}&data=${sm2data}`);
+      });
+    } else {
+      Modal.warning({
+        title: '仅企业管理员可操作',
+        content: '',
+        titleAlign: 'start',
+        okText: '好的',
+      });
+    }
+  }
 };
 
 // 轮播图下面模块汇总
@@ -343,10 +393,10 @@ const platProductsList = [
         idKey: 'tnaas',
       },
       {
-        name: 'IDPoint',
+        name: 'idpointer',
         desc: '标识解析二级节点',
         bgImg: tab12,
-        idKey: 'idpointer',
+        idKey: 'idpoint',
       },
 
       {
