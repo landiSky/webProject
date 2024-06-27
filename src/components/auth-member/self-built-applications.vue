@@ -58,7 +58,7 @@ const selectMemList = ref<string[]>([]);
 const onConfirm = (done: (closed: boolean) => void) => {
   done(true);
   if (!selectMemList.value.length) {
-    done(false);
+    done(true);
     return Message.warning(' 请选择要邀请的成员');
   }
 
