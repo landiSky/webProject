@@ -49,8 +49,7 @@
               preview(
                 item?.useExplain,
                 item?.orderSource,
-                item?.productServerId,
-                item?.useExplainOriginal
+                item?.productServerId
               )
             "
             >预览</t-link
@@ -79,7 +78,7 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 interface dataList {
   useExplain: string;
-  orderSource: string;
+  orderSource: number;
   productServerId: string;
   useExplainOriginal: string;
 }
@@ -99,7 +98,7 @@ const imgType = (value: string) => {
   const str = value.toString();
   const strIndex = str.lastIndexOf('.');
   const name = str.slice(strIndex, str.length);
-  if (name === '.docx') {
+  if (name === '.docx' || name === '.doc') {
     return docxicon;
   }
   return pdficon;
