@@ -37,7 +37,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span
+              <span class="hover-desc"
                 >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
               </span>
               <span class="hover-more">查看更多<icon-right /></span>
@@ -61,7 +61,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span
+              <span class="hover-desc"
                 >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
               </span>
               <span class="hover-more">查看更多<icon-right /></span>
@@ -84,7 +84,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span
+              <span class="hover-desc"
                 >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
               </span>
               <span class="hover-more">查看更多<icon-right /></span>
@@ -112,8 +112,8 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span
-                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
+              <span class="hover-desc"
+                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业工业智能工业工业智能工业
               </span>
               <span class="hover-more">查看更多<icon-right /></span>
             </div>
@@ -122,7 +122,7 @@
       </div>
       <div>
         <video
-          src="../../../assets/video/newbg.mp4"
+          src="../../../assets/video/home-bg.mp4"
           style="width: 100%; height: auto"
           autoplay
           loop
@@ -606,7 +606,7 @@ onMounted(() => {
   // 控制视频播放速度
   const videoElement = document.querySelector('video');
   if (videoElement) {
-    videoElement.playbackRate = 0.4; // 视频将以正常速度的0.4倍播放
+    videoElement.playbackRate = 0.65; // 视频将以正常速度的0.65倍播放
   }
 });
 </script>
@@ -1057,6 +1057,16 @@ onMounted(() => {
           font: PingFang SC;
           font-size: 14px;
           background-color: #bcf6ff80;
+
+          .hover-desc {
+            display: -webkit-box;
+            overflow: hidden;
+            white-space: normal;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+          }
 
           .hover-more {
             margin-top: 6px;
