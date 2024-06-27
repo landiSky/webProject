@@ -475,7 +475,12 @@ const uploadNow = () => {
   window.open('https://www.wjx.cn/vm/hwO27TP.aspx#');
 };
 
-const viewNow = () => {};
+const viewNow = () => {
+  router.push({
+    name: 'wowDoc',
+    params: {},
+  });
+};
 
 const authentication = () => {
   window.open('https://www.wjx.cn/vm/wVsmqlI.aspx#');
