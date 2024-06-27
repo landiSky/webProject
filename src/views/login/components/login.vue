@@ -21,7 +21,7 @@
           >
             <t-form-item
               field="username"
-              :validate-trigger="['change', 'input']"
+              :validate-trigger="['change', 'blur']"
             >
               <t-input
                 v-model.trim="form.username"
@@ -34,7 +34,7 @@
             </t-form-item>
             <t-form-item
               field="password"
-              :validate-trigger="['change', 'input']"
+              :validate-trigger="['change', 'blur']"
             >
               <t-input-password
                 v-model.trim="form.password"
@@ -83,7 +83,7 @@
           >
             <t-form-item
               field="username"
-              :validate-trigger="['change', 'input']"
+              :validate-trigger="['change', 'blur']"
             >
               <t-input
                 v-model.trim="form.username"
@@ -96,7 +96,7 @@
             </t-form-item>
             <t-form-item
               field="password"
-              :validate-trigger="['change', 'input']"
+              :validate-trigger="['change', 'blur']"
             >
               <t-input-password
                 v-model.trim="form.password"
@@ -137,7 +137,7 @@
         :rules="performsRules"
         layout="vertical"
       >
-        <t-form-item field="username" :validate-trigger="['change', 'input']">
+        <t-form-item field="username" :validate-trigger="['change', 'blur']">
           <t-input
             v-model.trim="performs.username"
             placeholder="请输入手机号"
@@ -147,7 +147,7 @@
             </template>
           </t-input>
         </t-form-item>
-        <t-form-item field="code" :validate-trigger="['change', 'input']">
+        <t-form-item field="code" :validate-trigger="['change', 'blur']">
           <t-input
             v-model.trim="performs.code"
             placeholder="短信验证码"
@@ -172,7 +172,7 @@
             >{{ counts || counts === 0 ? counts : '' }}{{ codeText }}</t-button
           >
         </t-form-item>
-        <t-form-item field="password" :validate-trigger="['change', 'input']">
+        <t-form-item field="password" :validate-trigger="['change', 'blur']">
           <t-input-password
             v-model.trim="performs.password"
             placeholder="请输入密码"
@@ -186,7 +186,7 @@
         </t-form-item>
         <t-form-item
           field="confirmPassword"
-          :validate-trigger="['change', 'input']"
+          :validate-trigger="['change', 'blur']"
         >
           <t-input-password
             v-model.trim="performs.confirmPassword"
@@ -224,7 +224,7 @@
         :rules="performsRules"
         layout="vertical"
       >
-        <t-form-item field="username" :validate-trigger="['change', 'input']">
+        <t-form-item field="username" :validate-trigger="['change', 'blur']">
           <t-input
             v-model.trim="performs2.username"
             placeholder="请输入手机号"
@@ -234,7 +234,7 @@
             </template>
           </t-input>
         </t-form-item>
-        <t-form-item field="code" :validate-trigger="['change', 'input']">
+        <t-form-item field="code" :validate-trigger="['change', 'blur']">
           <t-input
             v-model.trim="performs2.code"
             placeholder="请输入验证码"
