@@ -43,7 +43,18 @@
             >下载</t-link
           >
           <t-divider direction="vertical" />
-          <t-link :hoverable="false">预览</t-link>
+          <t-link
+            :hoverable="false"
+            @click="
+              preview(
+                item?.useExplain,
+                item?.orderSource,
+                item?.productServerId,
+                item?.useExplainOriginal
+              )
+            "
+            >预览</t-link
+          >
         </div>
       </div>
     </div>
@@ -52,6 +63,7 @@
 
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, PropType, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { authDetails } from '@/api/authentication';
@@ -61,6 +73,8 @@ import docxicon from '@/assets/images/idinside/docx-icon.png';
 import pdficon from '@/assets/images/idinside/pdf-icon.png';
 
 const userStore = useUserStore();
+const router = useRouter();
+const route = useRoute();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 interface dataList {
@@ -94,7 +108,7 @@ const imgType = (value: string) => {
 // 使用说明
 const instructionsuse = (
   fileurl: string,
-  orderSource: string,
+  orderSource: number,
   productServerId: string,
   useExplainOriginal: string
 ) => {
@@ -105,6 +119,23 @@ const instructionsuse = (
   link.download = fileName; //  下载的时候自定义的文件名
   link.click();
   window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+};
+
+const preview = (
+  fileurl: string,
+  orderSource: number,
+  productServerId: string
+) => {
+  const info = {
+    fileurl,
+    orderSource,
+    productServerId,
+  };
+  const routeData = router.resolve({
+    name: 'wowFileFreview',
+    query: { ...info },
+  });
+  window.open(routeData?.href, '_blank');
 };
 </script>
 

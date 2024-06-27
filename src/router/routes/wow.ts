@@ -48,6 +48,11 @@ const wowRoutesList = [
         name: 'wowMallDetail',
         component: () => import('@/views/wow/mall/detail/index.vue'),
       },
+      {
+        path: '/wow/filepreview/',
+        name: 'wowFileFreview',
+        component: () => import('@/views/wow/filepreview/index.vue'),
+      },
     ],
   },
 ];
