@@ -156,8 +156,7 @@ const goBuyer = () => {
 };
 
 const goDocCenter = () => {
-  // ? 对下最后一个数字传什么
-  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 19).then((res) => {
     console.log('前台文档中心打点', res);
   });
   router.push({ path: '/wow/doc' });
