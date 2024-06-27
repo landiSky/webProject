@@ -128,6 +128,7 @@
         show-arrow="never"
         indicator-position="outer"
         :current="carouselCurrent"
+        @change="currentChange"
       >
         <t-carousel-item v-for="(item, index) in caseList" :key="index">
           <div class="synopsis">
@@ -458,6 +459,9 @@ const caseList = ref([
 const carouselCurrent = ref(1 as number);
 const currentClick = (num: number) => {
   carouselCurrent.value = num;
+};
+const currentChange = (index: number) => {
+  carouselCurrent.value = index;
 };
 const { userInfo } = userStore;
 const about = (name: string, num: number) => {
