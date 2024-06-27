@@ -393,7 +393,7 @@ const platProductsList = [
         idKey: 'tnaas',
       },
       {
-        name: 'idpointer',
+        name: 'IDPointer',
         desc: '标识解析二级节点',
         bgImg: tab12,
         idKey: 'idpoint',
