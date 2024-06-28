@@ -51,7 +51,7 @@ const contents = ref([
     },
     icon: icon1,
     title: '平台集成文档',
-    desc: '平台集成文档，SaaS应用接入指南',
+    desc: '简单步骤，快速对接，全网推广。',
     url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose',
   },
   {
@@ -61,7 +61,7 @@ const contents = ref([
     },
     icon: icon2,
     title: '标识服务',
-    desc: '工业互联网标识开放文档，为应用开发者提供完善的应用集成标准流程规范、SDK下载及使用、API接口使用说明等，帮助开发者便捷的完成企业信息系统、平台等与标识体系对接，将企业及企业数据接入标识体系，开发标识应用等操作。',
+    desc: '应用集成标准流程规范、SDK、Open API等，帮助开发者便捷的完成企业信息系统、平台与标识体系对接，支撑标识应用开发落地。',
     url: 'http://id-pointer-sdk.pre.idx.space/docs/',
   },
   {
@@ -141,6 +141,7 @@ const handleSearch = (url: string) => {
       color: #4e5969;
       font-size: 16px;
       line-height: 24px;
+      text-align: justify;
     }
 
     .search-btn {
