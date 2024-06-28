@@ -51,7 +51,7 @@ const contents = ref([
     },
     icon: icon1,
     title: '平台集成文档',
-    desc: '平台集成文档，SaaS应用接入指南',
+    desc: '简单步骤，快速对接，全网推广',
     url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose',
   },
   {
