@@ -1039,8 +1039,7 @@ onUnmounted(() => {
       }
 
       .left-06 {
-        padding-left: 66px;
-
+        // padding-left: 66px;
         > ul > li {
           margin-top: 12px;
           color: #4e5969;
