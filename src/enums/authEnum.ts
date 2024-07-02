@@ -12,6 +12,7 @@ const BaseRouteAuth: { [name: string]: any } = {
   '/system/roles': 'ROUTE_SYSTEM_ROLES', // 企业管理-角色
   '/devCenter': 'ROUTE_SYSTEM_DEVELOPER', // 开发者中心
   '/devCenter/manage': 'ROUTE_SYSTEM_APP', // 开发者中心-应用接入管理
+  '/overview': 'ROUTE_OVERVIEW', // 标识服务-概览页
   // '/seller/dataoverview': 'ROUTE_SYSTEM_DATAOVERVIEW', // 企业管理-角色
 };
 

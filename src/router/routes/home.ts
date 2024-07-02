@@ -134,6 +134,25 @@ const homeRoutesList = [
       name: '订单确认页',
     },
   },
+  {
+    path: '/overview',
+    component: PAGE_LAYOUT,
+    redirect: '/overview/index',
+    children: [
+      {
+        path: '/overview/index',
+        name: 'overviewIndex',
+        component: () => import('@/views/home/overview/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: '概览',
+    },
+  },
 ];
 
 export default homeRoutesList;
