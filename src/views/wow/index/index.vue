@@ -22,7 +22,7 @@
         />
       </t-carousel-item>
     </t-carousel> -->
-      <div class="top-left-box">
+      <!-- <div class="top-left-box">
         <t-popover
           popup-container=".top-left-box"
           position="left"
@@ -37,9 +37,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span class="hover-desc"
-                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
-              </span>
+              <span class="hover-desc"> </span>
               <span class="hover-more">查看更多<icon-right /></span>
             </div>
           </template>
@@ -61,9 +59,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span class="hover-desc"
-                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
-              </span>
+              <span class="hover-desc"> </span>
               <span class="hover-more">查看更多<icon-right /></span>
             </div>
           </template>
@@ -84,9 +80,7 @@
           </template>
           <template #content>
             <div class="hover-content">
-              <span class="hover-desc"
-                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业
-              </span>
+              <span class="hover-desc"> </span>
               <span class="hover-more">查看更多<icon-right /></span>
             </div>
           </template>
@@ -103,23 +97,16 @@
           <template #title>
             <div class="content-header">
               <span>可信</span>
-              <!-- <img
-                src="../../../assets/images/home/top_left_icon1.png"
-                width="12px"
-                height="12px"
-              /> -->
             </div>
           </template>
           <template #content>
             <div class="hover-content">
-              <span class="hover-desc"
-                >智能工业智能工业智能工业智能工业智能智能工业智能工业智能工业智能工业智能工业工业智能工业工业智能工业
-              </span>
+              <span class="hover-desc">文案 </span>
               <span class="hover-more">查看更多<icon-right /></span>
             </div>
           </template>
         </t-popover>
-      </div>
+      </div> -->
       <div>
         <video
           src="../../../assets/video/home-bg.mp4"
@@ -706,8 +693,8 @@ onMounted(() => {
       top: 0;
       left: 0;
       z-index: 2000;
-      width: 300px;
-      height: 300px;
+      width: 240px;
+      height: 240px;
       background-color: transparent;
     }
   }
@@ -1061,6 +1048,37 @@ onMounted(() => {
   }
 }
 
+@media screen and (max-width: 1440px) {
+  .home-box {
+    .top-box {
+      .trigger-box {
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        width: 180px;
+        height: 180px;
+        background-color: transparent;
+      }
+    }
+  }
+}
+@media screen and (min-width: 2560px) {
+  .home-box {
+    .top-box {
+      .trigger-box {
+        position: relative;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+        width: 400px;
+        height: 400px;
+        background-color: transparent;
+      }
+    }
+  }
+}
+
 ::v-deep(.tele-trigger-popup) {
   .tele-trigger-popup-wrapper {
     .tele-popover-popup-content {
@@ -1100,7 +1118,7 @@ onMounted(() => {
           display: flex !important;
           flex-direction: column;
           align-items: flex-start !important;
-          justify-content: center !important;
+          justify-content: space-evenly !important;
           height: 100%;
           padding: 6px 10px 0 20px;
           color: #4e5969;
