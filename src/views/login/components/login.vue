@@ -547,6 +547,7 @@ const realLoginRequest = () => {
       password: formInput.value.value,
     })
       .then((data) => {
+        userStore.clearUserInfo();
         // orgFormRef.value.submit();
         setToken(data.tokenValue);
         const mallDetailPath = sessionStorage.getItem('mallDetailPath');
