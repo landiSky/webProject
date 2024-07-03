@@ -36,6 +36,8 @@ const infoRouteList = [
   'ROUTE_SYNC_CLASS',
   'ROUTE_SYNC_GOODS',
   'ROUTE_SYNC_LABEL',
+  'ROUTE_OVERVIEW',
+  'ROUTE_LICENSE',
 ];
 
 const opearationRouteList = [
@@ -50,7 +52,13 @@ watch(
   () => userStore.updateMenu,
   () => {
     const { isAdmin, source } = userStore.userInfo || {};
-    let authList = userStore.userInfoByCompany?.menuCodes || [];
+    let authList = userStore.userInfoByCompany?.menuCodes
+      ? [
+          ...userStore.userInfoByCompany?.menuCodes,
+          'ROUTE_OVERVIEW',
+          'ROUTE_LICENSE',
+        ]
+      : [];
     if (isAdmin) {
       authList = opearationRouteList;
 
