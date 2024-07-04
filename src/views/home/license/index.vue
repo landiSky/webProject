@@ -18,8 +18,7 @@ import Dataoverview from '@/components/dataoverview/index.vue';
 import Setindex from './setindex.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 </script>
 
 <style lang="less" scoped>

@@ -18,13 +18,13 @@ export const SaleType = {
 export const AccountType = {
   MAIN: 1,
   MEMBER: 2,
-  UNAUTH: 3,
+  UNAPT: 3,
 };
 
 export const AccountTypeDesc = {
   [AccountType.MAIN]: '主账号',
   [AccountType.MEMBER]: '子账号',
-  [AccountType.UNAUTH]: '未认证',
+  [AccountType.UNAPT]: '未认证',
 };
 // 企业认证状态
 export const CompanyAuthStatus = {

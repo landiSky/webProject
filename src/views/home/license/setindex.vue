@@ -11,7 +11,6 @@
       </t-row>
 
       <t-table
-        row-key="id"
         :loading="state.tableLoading"
         :columns="columns"
         :data="state.tableData"
@@ -72,7 +71,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 
-import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
@@ -205,8 +203,6 @@ const pagination = reactive<{
   total: 0,
 });
 
-const editModalVisible = ref(false);
-
 function fetchData() {
   const { current, pageSize } = pagination;
   memberList({
@@ -235,12 +231,12 @@ const onPageChange = (current: number) => {
 // 点击编辑按钮
 const clickEditBtn = (data: any) => {
   state.editData = data;
-  editModalVisible.value = true;
+  state.showDrawer = true;
 };
 
 // 点击新增按钮
 const clickAddBtn = () => {
-  editModalVisible.value = true;
+  state.showDrawer = true;
 };
 
 const handleDrawerCancel = () => {
