@@ -1,0 +1,30 @@
+<!-- 装饰工具 -->
+<template>
+  <editorToolBar :config-tools="configTools" @on-end="onEnd"></editorToolBar>
+</template>
+
+<script lang="ts" setup>
+import { defineProps, onMounted, ref } from 'vue';
+import configTools from '@/views/decoration/decorationTools/config/tools';
+import eventBus from '@/utils/bus';
+import editorToolBar from './editor-tool-bar.vue';
+
+const props = defineProps({
+  yyy: {
+    type: Object,
+    default() {
+      return {};
+    },
+  },
+});
+const selectIndex = ref(-1);
+
+// 左侧工具栏拖入后在列表中的位置
+const onEnd = (index: number) => {
+  selectIndex.value = index;
+  console.log('onEnd:', selectIndex.value);
+  eventBus.emit('insertIndex', index);
+};
+</script>
+
+<style scoped lang="less"></style>

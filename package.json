@@ -40,6 +40,8 @@
     "axios": "^0.24.0",
     "cross-env": "^7.0.3",
     "dayjs": "^1.10.7",
+    "mitt": "^3.0.1",
+    "vuedraggable": "4.1.0",
     "html2canvas": "^1.4.1",
     "increase-memory-limit": "^1.0.7",
     "jspdf": "^2.5.1",
