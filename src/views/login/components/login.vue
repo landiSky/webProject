@@ -541,21 +541,23 @@ const realLoginRequest = () => {
     form.value.password,
     configInfo?.publicKey ?? publicKey
   );
-
-  apiLogin({
-    username: form.value.username,
-    password: formInput.value.value,
-  })
-    .then((data) => {
-      // orgFormRef.value.submit();
-      setToken(data.tokenValue);
-      const mallDetailPath = sessionStorage.getItem('mallDetailPath');
-      const uriHash = mallDetailPath || '/buyer/index';
-      router.push({ path: uriHash });
+  setTimeout(() => {
+    apiLogin({
+      username: form.value.username,
+      password: formInput.value.value,
     })
-    .catch(() => {
-      loginLoading.value = false;
-    });
+      .then((data) => {
+        userStore.clearUserInfo();
+        // orgFormRef.value.submit();
+        setToken(data.tokenValue);
+        const mallDetailPath = sessionStorage.getItem('mallDetailPath');
+        const uriHash = mallDetailPath || '/buyer/index';
+        router.push({ path: uriHash });
+      })
+      .catch(() => {
+        loginLoading.value = false;
+      });
+  }, 100);
 };
 
 const onCaptchaCancel = () => {
