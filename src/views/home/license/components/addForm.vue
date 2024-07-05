@@ -57,8 +57,9 @@
             </template>
             <template #fingerprint="{ rowIndex }">
               <t-form-item
-                field="fingerprintsList"
+                :field="`fingerprintsList.${rowIndex}`"
                 class="item-display-none"
+                :rules="[{ required: true, validator: validatorCode }]"
                 hide-label
                 hide-asterisk
               >
@@ -87,61 +88,35 @@
           <div class="title-left"></div>
           <div class="title-right">选择企业前缀</div>
         </div>
-        <t-form-item
-          field="entPrefix"
-          label="企业前缀"
-          class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: '企业前缀不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过128个字符' },
-          ]"
-        >
+        <t-form-item field="entPrefix" label="企业前缀" class="item-top20">
           <t-select
             v-model="form.entPrefix"
             :style="{ width: '320px' }"
             :loading="loading"
             placeholder="请输入/选择企业前缀"
             :filter-option="false"
-            @search="handleSearch"
+            allow-create
+            @input-value-change="selectValueChange"
           >
-            <t-option v-for="item of options" :key="item" :value="item">
+            <t-option
+              v-for="(item, index) of options"
+              :key="index"
+              :value="item"
+            >
               {{ item }}
             </t-option>
           </t-select>
         </t-form-item>
       </div>
       <div v-if="current === 3" class="drawer-body">
-        <t-form-item
-          field="entPrefix"
-          label="企业前缀"
-          class="item-top20"
-          :rules="[
-            {
-              required: true,
-            },
-          ]"
-        >
-          88.100.9999
+        <t-form-item field="entPrefix" label="企业前缀" class="item-top20">
+          {{ form.entPrefix }}
         </t-form-item>
         <div class="title">
           <div class="title-left"></div>
           <div class="title-right">License申请信息</div>
         </div>
-        <t-form-item
-          field="idHubVersion"
-          label="IDHub版本"
-          class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: 'IDHub版本不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
-        >
+        <t-form-item field="idHubVersion" label="IDHub版本" class="item-top20">
           <t-select
             v-model="form.idHubVersion"
             :style="{ width: '320px' }"
@@ -151,26 +126,15 @@
             <t-option value="2">Wuhan</t-option>
           </t-select>
         </t-form-item>
-        <t-form-item
-          field="effectTime"
-          label="生效日期"
-          class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: '生效日期不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
-        >
-          <t-select
+        <t-form-item field="effectTime" label="生效日期" class="item-top20">
+          <t-date-picker
             v-model="form.effectTime"
             :style="{ width: '320px' }"
             placeholder="请选择日期"
-          >
-            <t-option>Beijing</t-option>
-            <t-option>Wuhan</t-option>
-          </t-select>
+            :disabled-date="
+              (current) => dayjs(current).isBefore(dayjs().subtract(1, 'day'))
+            "
+          />
         </t-form-item>
         <div class="title">
           <div class="title-left"></div>
@@ -180,36 +144,30 @@
           field="estimateRegisterCount"
           label="预估标识注册量"
           class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: '预估标识注册量不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
         >
-          <t-input
+          <t-input-number
             v-model="form.estimateRegisterCount"
             :style="{ width: '320px' }"
             placeholder="请输入"
+            class="input-demo"
+            :min="0"
+            :formatter="formatter"
+            :parser="parser"
           />
         </t-form-item>
         <t-form-item
           field="estimateParseCount"
           label="预估标识日解析量"
           class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: '预估标识日解析量不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
         >
-          <t-input
+          <t-input-number
             v-model="form.estimateParseCount"
             :style="{ width: '320px' }"
             placeholder="请输入"
+            class="input-demo"
+            :min="0"
+            :formatter="formatter"
+            :parser="parser"
           />
         </t-form-item>
 
@@ -218,52 +176,21 @@
           <div class="title-right">企业联系人信息</div>
         </div>
 
-        <t-form-item
-          field="name"
-          label="姓名"
-          class="item-top20"
-          :rules="[
-            {
-              required: true,
-              message: '姓名不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
-        >
+        <t-form-item field="name" label="姓名" class="item-top20">
           <t-input
             v-model="form.name"
             :style="{ width: '320px' }"
             placeholder="请输入"
           />
         </t-form-item>
-        <t-form-item
-          field="phone"
-          label="手机号"
-          :rules="[
-            {
-              required: true,
-              message: '手机号不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
-        >
+        <t-form-item field="phone" label="手机号">
           <t-input
             v-model="form.phone"
             :style="{ width: '320px' }"
             placeholder="请输入"
           />
         </t-form-item>
-        <t-form-item
-          field="email"
-          label="邮箱"
-          :rules="[
-            {
-              required: true,
-              message: '邮箱不允许为空',
-            },
-            { maxLength: 50, message: '不允许超过50个字符' },
-          ]"
-        >
+        <t-form-item field="email" label="邮箱">
           <t-input
             v-model="form.email"
             :style="{ width: '320px' }"
@@ -277,6 +204,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue';
+import dayjs from 'dayjs';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -336,7 +264,7 @@ const form = reactive<{
   fingerprintsList: [''],
 });
 
-const copyRules = {
+const copyRules = reactive({
   // 企业前缀
   entPrefix: [
     {
@@ -407,11 +335,12 @@ const copyRules = {
   // 手机号
   phone: [
     {
+      required: true,
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入手机号');
         const phoneTs = /^1[2|3|4|5|6|7|8|9][0-9]{9}$/; //  手机号正则
         if (!phoneTs.test(value)) {
-          return cb('手机号格式不正确,需要填写11位手机号');
+          return cb('手机号格式错误');
         }
         return cb();
       },
@@ -420,6 +349,7 @@ const copyRules = {
   // 邮箱
   email: [
     {
+      required: true,
       validator: (value: string, cb: (params?: any) => void) => {
         if (!value) return cb('请输入邮箱');
         if (value.length > 128) return cb('长度不超过128个字符');
@@ -429,7 +359,7 @@ const copyRules = {
         if (reata.test(value)) {
           return cb();
         }
-        return cb('邮箱格式不正确');
+        return cb('邮箱格式错误');
       },
     },
   ],
@@ -439,21 +369,16 @@ const copyRules = {
   registerTime: [],
   // 企业id
   companyId: [],
-  // 指纹码
-  fingerprintsList: [
-    {
-      required: true,
-      validator: (value: any, cb: (params?: any) => void) => {
-        console.log(value, '111111');
-        if (!value || value.length === 0) return cb('请输入设备指纹码');
-        if (!/^[^\u4e00-\u9fa5]$/g.test(value)) {
-          return cb('设备指纹码不能输入汉字!');
-        }
-        if (value.length > 128) return cb('长度不超过128个字符');
-        return cb();
-      },
-    },
-  ],
+});
+
+const validatorCode = (value: any, cb: (params?: any) => void) => {
+  if (!value || value.length === 0) return cb('请输入设备指纹码');
+  const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
+  if (reg.test(value)) {
+    return cb('设备指纹码不能输入汉字!');
+  }
+  if (value.length > 128) return cb('长度不超过128个字符');
+  return cb();
 };
 
 const props = defineProps({
@@ -489,32 +414,43 @@ const deleteCode = (index: any) => {
   form.fingerprintsList.splice(index, 1);
 };
 // 企业前缀
-const options = ref(['Option1', 'Option2', 'Option3']);
-const loading = ref(false);
-
-const handleSearch = (value: any) => {
-  if (value) {
-    loading.value = true;
-    window.setTimeout(() => {
-      options.value = [
-        `${value}-Option1`,
-        `${value}-Option2`,
-        `${value}-Option3`,
-      ];
-      loading.value = false;
-    }, 2000);
-  } else {
-    options.value = [];
-  }
+const options = ['123', '345', '567'];
+const selectValueChange = (inputValue: any) => {
+  console.log('11111', inputValue);
 };
+
+const formatter = (value: any) => {
+  const values = value.split('.');
+  values[0] = values[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  return values.join('.');
+};
+
+const parser = (value: any) => {
+  return value.replace(/,/g, '');
+};
+
+const loading = ref(false);
 
 const onPrev = () => {
   current.value = Math.max(1, current.value - 1);
 };
 
 const onNext = () => {
-  // current.value = Math.min(3, current.value + 1);
-  formRef.value.validateField('fingerprintsList');
+  if (current.value === 1) {
+    const typeIndex = form.fingerprintsList.findIndex((v) => {
+      return v === '' || v === null || v === undefined;
+    });
+    formRef.value.validateField(`fingerprintsList.${typeIndex}`);
+    if (typeIndex >= 0) return false;
+  }
+  if (current.value === 2) {
+    formRef.value.validateField(`entPrefix`);
+
+    if (form.entPrefix.length === 0) return false;
+  }
+  current.value = Math.min(3, current.value + 1);
+  return true;
 };
 
 onMounted(() => {});
