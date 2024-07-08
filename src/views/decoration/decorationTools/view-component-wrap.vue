@@ -37,14 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  toRefs,
-  computed,
-  defineAsyncComponent,
-  onMounted,
-  watch,
-} from 'vue';
+import { ref, toRefs, computed, onMounted } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 
 const emit = defineEmits(['confirm', 'close', 'select']);
@@ -166,7 +159,6 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  // height: 400px;
   width: 100%;
   height: auto;
 

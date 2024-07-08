@@ -1,6 +1,9 @@
 <!-- 装饰工具 -->
 <template>
-  <editorToolBar :config-tools="configTools" @on-end="onEnd"></editorToolBar>
+  <div class="bar-box">
+    <div class="bar-title">装修组件</div>
+    <editorToolBar :config-tools="configTools" @on-end="onEnd"></editorToolBar>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -27,4 +30,19 @@ const onEnd = (index: number) => {
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.bar-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .bar-title {
+    height: 54px;
+    color: #1d2129;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 54px;
+    text-align: center;
+  }
+}
+</style>

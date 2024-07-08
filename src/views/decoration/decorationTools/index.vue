@@ -2,7 +2,7 @@
   <div
     class="page-editor"
     :style="{
-      width: isPreview ? '100%' : '760px',
+      width: isPreview ? '100%' : '720px',
     }"
   >
     <t-layout>
@@ -38,21 +38,40 @@
                   v-if="selectIndex === index && !isPreview"
                   class="select_config-box"
                 >
-                  <icon-delete
-                    :size="24"
-                    style="color: #86909c"
+                  <iconpark-icon
+                    :size="12"
+                    name="componentDel"
+                    style="
+                      padding: 5px;
+                      border: 1px solid #86909c;
+                      border-radius: 2px;
+                    "
                     @click="deleteComponent(index)"
                   />
-                  <icon-copy
-                    :size="24"
-                    style="color: #86909c"
+                  <iconpark-icon
+                    name="componentCopy"
+                    :size="12"
+                    style="
+                      padding: 5px;
+                      border: 1px solid #86909c;
+                      border-radius: 2px;
+                    "
                     @click="copyComponent(index)"
                   />
                   <t-popover
                     trigger="click"
                     popup-container="select_config-box"
                   >
-                    <icon-bg-colors :size="24" style="color: #86909c" />
+                    <iconpark-icon
+                      name="componentBg"
+                      :size="12"
+                      style="
+                        padding: 5px;
+                        border: 1px solid #86909c;
+                        border-radius: 2px;
+                      "
+                    />
+
                     <template #content>
                       <div class="color-picker">
                         <div
@@ -87,8 +106,8 @@
       <t-space size="medium">
         <icon-eye v-if="!isPreview" :size="24" @click="clickPreview" />
         <icon-eye-invisible v-if="isPreview" :size="24" @click="notPreview" />
-        <icon-check-square :size="24" @click="clickSave" />
-        <icon-share-external :size="24" type="primary" @click="clickSave" />
+        <iconpark-icon name="saveLocal" :size="24" @click="clickSave" />
+        <iconpark-icon name="saveRemote" :size="24" @click="clickSaveRemote" />
       </t-space>
     </div>
   </div>
@@ -97,10 +116,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from 'vue';
 import draggable from 'vuedraggable';
-// import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import eventBus from '@/utils/bus';
-// import editorToolBar from '@/layout/decoration/editor-tool-bar.vue';
-// import configTools from '@/views/decoration/decorationTools/config/tools';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const componentsList = ref<any[]>([]);
@@ -112,6 +128,7 @@ const isPreview = ref(false);
 const viewComponentWrapRef = ref<any[]>([]);
 
 const colorIndex = ref(-1);
+
 // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
 const colorList = ref([
   { cssClass: 'bg_color-1', color0: '#ffffff' },
@@ -212,7 +229,7 @@ const setItemRef = (el: any, index: number) => {
   }
 };
 
-// 保存组件列表的json数据
+// 保存组件列表的json数据到本地
 const clickSave = () => {
   console.log('viewComponentWrapRef:', viewComponentWrapRef.value);
   const childForm = () => {
@@ -226,6 +243,23 @@ const clickSave = () => {
         'componentsList',
         JSON.stringify(componentsList.value)
       );
+      console.log('保存成功:', data);
+    })
+    .catch(() => {
+      console.log('保存失败');
+    });
+};
+// 保存组件列表的json数据到远程
+const clickSaveRemote = () => {
+  console.log('viewComponentWrapRef:', viewComponentWrapRef.value);
+  const childForm = () => {
+    return viewComponentWrapRef.value.map((item: any) => {
+      return item.validate();
+    });
+  };
+  Promise.all(childForm())
+    .then((data: any) => {
+      // TODO 远程保存接口
       console.log('保存成功:', data);
     })
     .catch(() => {
@@ -248,13 +282,13 @@ const close = () => {
   componentsList.value[selectIndex.value].visible = false;
 };
 
-// 选中一个组件
-const clickViewComponent = (index: number) => {
-  console.log('clickViewComponent:', index);
-  selectIndex.value = index;
-  // componentsList.value[index].visible = !componentsList.value[index].visible;
-  console.log('componentsList.value:', componentsList.value);
-};
+// // 选中一个组件
+// const clickViewComponent = (index: number) => {
+//   console.log('clickViewComponent:', index);
+//   selectIndex.value = index;
+//   // componentsList.value[index].visible = !componentsList.value[index].visible;
+//   console.log('componentsList.value:', componentsList.value);
+// };
 
 const clickPreview = () => {
   isPreview.value = true;
@@ -321,7 +355,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow-y: auto;
+  // overflow-y: auto;
   // background-color: #981313;
   .component-config {
     width: 442px;
@@ -394,7 +428,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 104px;
   height: 24px;
-  margin-top: 10px;
+  margin-top: 20px;
   cursor: pointer;
 }
 

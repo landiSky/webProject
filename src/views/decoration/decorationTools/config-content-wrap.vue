@@ -6,12 +6,11 @@
       ref="formComponentRef"
       :data="data"
     ></component>
-    <div v-if="data" class="btn-group">
+    <!-- <div v-if="data" class="btn-group">
       <t-space :size="60">
-        <!-- <t-button @click="$emit('cancel')">取消</t-button> -->
         <t-button type="primary" @click="clickConfirm">保存</t-button>
       </t-space>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -22,6 +21,7 @@ import {
   toRefs,
   onBeforeMount,
   onMounted,
+  watch,
   ref,
 } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
@@ -29,22 +29,18 @@ import eventBus from '@/utils/bus';
 
 const data = ref();
 const formComponentRef = ref();
-const clickConfirm = () => {
-  console.log(
-    '点击保存按钮：',
-    formComponentRef.value,
-    formComponentRef.value.form.title
-  );
 
-  // 不做校验，直接bus事件发出
-  eventBus.emit('config-event', formComponentRef.value.form);
-
-  //   formComponentRef.value.formRef.validate((valid: any) => {
-  //     if (!valid) {
-  //       emit('confirm', formComponentRef.value.form);
-  //     }
-  //   });
-};
+watch(
+  () => formComponentRef?.value?.form,
+  (val: any) => {
+    // 实时监测form数据变化
+    if (val) {
+      console.log('form配置数据变化：', val);
+      eventBus.emit('config-event', formComponentRef.value.form);
+    }
+  },
+  { deep: true }
+);
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {

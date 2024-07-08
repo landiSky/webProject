@@ -16,7 +16,7 @@
       <template #item="{ element }">
         <transition name="el-fade-in-linear">
           <div v-show="true" class="element-wrap">
-            <icon-image class="element-wrap-icon" />
+            <iconpark-icon :name="element.icon" size="18px"></iconpark-icon>
             <div class="element-wrap-text">{{ element.title }}</div>
           </div>
         </transition>

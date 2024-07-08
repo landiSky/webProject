@@ -5,7 +5,7 @@ const tools = [
       {
         title: '单图',
         maxNum: 3,
-        icon: 'el-icon-picture',
+        icon: 'singleImg',
         name: 'SigleImg',
         value: {
           title: '',
