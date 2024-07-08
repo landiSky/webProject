@@ -3,9 +3,11 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
+import { createHash } from 'crypto';
 
 export default defineConfig({
   mode: 'production',
+  base: '/zst',
   plugins: [
     vue({
       template: {
@@ -37,5 +39,26 @@ export default defineConfig({
   },
   define: {
     'process.env': {},
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].js',
+        chunkFileNames: (chunkInfo) => {
+          if (chunkInfo.isDynamicEntry) {
+            const hash = createHash('md5')
+              .update(
+                Object.values(chunkInfo.modules)
+                  .map((m) => m.code)
+                  .join()
+              )
+              .digest('hex')
+              .substr(0, 6);
+            return `assets/[name].${hash}.js`;
+          }
+          return 'assets/[name].[hash].js';
+        },
+      },
+    },
   },
 });

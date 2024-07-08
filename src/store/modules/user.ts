@@ -163,7 +163,12 @@ export const useUserStore = defineStore({
       //   ? import.meta.env.VITE_APP_DEV_HOST
       //   : this.configInfo?.redirectUri;
       // window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${serverUri}`;
-      window.location.href = window.location.origin;
+      console.log(
+        'logout',
+        window.location.origin,
+        JSON.stringify(window.location)
+      );
+      window.location.href = `${window.location.origin}/zst/`;
     },
 
     clearUserInfo(): void {
@@ -176,7 +181,12 @@ export const useUserStore = defineStore({
       if (routeName !== 'wowMallDetail') {
         sessionStorage.setItem('mallDetailPath', '');
       }
-      window.location.href = `${window.location.origin}/#/login`;
+      console.log(
+        'login',
+        window.location.origin,
+        JSON.stringify(window.location)
+      );
+      window.location.href = `${window.location.origin}/zst/#/login`;
 
       // window.location.href = loginUrl;
       // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
