@@ -27,17 +27,22 @@
             @click="gotoMall"
             >商城</t-link
           >
-          <t-tooltip content="敬请期待">
-            <t-link>平台产品</t-link>
-          </t-tooltip>
-          <t-tooltip content="敬请期待">
-            <t-link>平台服务</t-link>
-          </t-tooltip>
+          <t-link
+            :class="{ active: selectTab === TabPath.PROD }"
+            @click="goPlatProducts"
+            >平台产品
+          </t-link>
+
+          <t-link
+            :class="{ active: selectTab === TabPath.SERV }"
+            @click="goPlatServices"
+            >平台服务
+          </t-link>
           <t-link
             :class="{ active: selectTab === TabPath.DOC }"
             @click="goDocCenter"
-            >文档中心</t-link
-          >
+            >文档中心
+          </t-link>
 
           <!-- <t-tooltip content="敬请期待">
             <t-link>前沿政策</t-link>
@@ -104,6 +109,8 @@ const TabPath = {
   IDINSIDEZONE: '/wow/idInsideZone',
   MALL: '/wow/mall',
   DOC: '/wow/doc',
+  PROD: '/wow/platProducts',
+  SERV: '/wow/platServices',
 };
 const userStore = useUserStore();
 const router = useRouter();
@@ -160,6 +167,20 @@ const goDocCenter = () => {
     console.log('前台文档中心打点', res);
   });
   router.push({ path: '/wow/doc' });
+};
+
+const goPlatProducts = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+    console.log('前台导航栏点击平台产品打点', res);
+  });
+  router.push({ path: '/wow/platProducts' });
+};
+
+const goPlatServices = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+    console.log('前台导航栏点击平台服务打点', res);
+  });
+  router.push({ path: '/wow/platServices' });
 };
 
 const clickLogout = () => {

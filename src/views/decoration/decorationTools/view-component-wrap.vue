@@ -105,11 +105,9 @@ const clickClose = () => {
 };
 
 const clickComponent = () => {
-  console.log('选中组件:', isPreview.value);
+  console.log('选中组件:', componentIndex?.value);
   validateError.value = false;
-  // if (isPreview.value) return;
   emit('select', componentIndex?.value);
-  // drawerVisible.value = true;
 };
 
 const validate = () => {

@@ -1,4 +1,4 @@
-<!-- 平台产品页 -->
+<!-- 平台服务页 -->
 <template>
   <Container :components-list="componentList" />
 </template>

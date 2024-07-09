@@ -252,6 +252,8 @@ const clickSave = () => {
   };
   Promise.all(childForm())
     .then((data: any) => {
+      // 先清除本地存储
+      // localStorage.removeItem('componentsList');
       localStorage.setItem(
         'componentsList',
         JSON.stringify(componentsList.value)
@@ -276,7 +278,7 @@ const clickSaveRemote = () => {
       console.log('保存成功:', data);
     })
     .catch(() => {
-      console.log('保存失败');
+      console.log('保存失败111');
     });
 };
 
