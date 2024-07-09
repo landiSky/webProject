@@ -47,6 +47,7 @@
           </div>
         </template>
         <template #operations="{ record }">
+          <t-link @click="clickDetails(record)"> 审核 </t-link>
           <t-space v-if="record.status !== 0">
             <t-link @click="clickEditBtn(record)"> 重新申请 </t-link>
             <t-link v-if="record.status !== 2" @click="clickEditBtn(record)">
@@ -70,7 +71,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
-
+import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
@@ -79,6 +80,8 @@ import AddForm from './components/addForm.vue';
 
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const router = useRouter();
+const route = useRoute();
 
 const state = reactive<{
   tableLoading: boolean;
@@ -109,7 +112,7 @@ const state = reactive<{
     username: '',
   },
   tableData: [],
-  showDrawer: true,
+  showDrawer: false,
 });
 
 const columns = [
@@ -246,6 +249,16 @@ const handleDrawerCancel = () => {
 const handleDrawerConfirm = () => {
   handleDrawerCancel();
 };
+
+const clickDetails = (data: any) => {
+  router.push({
+    path: '/license/admin/reviewdetails',
+    query: {
+      id: data.id,
+    },
+  });
+};
+
 onMounted(() => {
   fetchData();
 });

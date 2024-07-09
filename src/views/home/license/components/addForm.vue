@@ -136,6 +136,15 @@
             "
           />
         </t-form-item>
+        <t-form-item label="备注" class="item-top20">
+          <t-input
+            v-model="form.remark"
+            :style="{ width: '320px' }"
+            placeholder="请输入(请备注说明首次申请，还是到期续约)"
+            class="input-demo"
+            :max-length="256"
+          />
+        </t-form-item>
         <div class="title">
           <div class="title-left"></div>
           <div class="title-right">运营规模</div>
@@ -241,6 +250,7 @@ const form = reactive<{
   entPrefix: string;
   idHubVersion: string;
   effectTime: string;
+  remark: string;
   estimateRegisterCount: string;
   estimateParseCount: string;
   name: string;
@@ -254,6 +264,7 @@ const form = reactive<{
   entPrefix: '',
   idHubVersion: '',
   effectTime: '',
+  remark: '',
   estimateRegisterCount: '',
   estimateParseCount: '',
   name: '',
@@ -385,6 +396,25 @@ const props = defineProps({
   visible: Boolean,
   title: String,
 });
+
+const editionList = ref([
+  {
+    label: '6个月',
+    value: '0',
+  },
+  {
+    label: '1年',
+    value: '1',
+  },
+  {
+    label: '2年',
+    value: '2',
+  },
+  {
+    label: '3年',
+    value: '3',
+  },
+]);
 
 const handleCancel = () => {
   emit('onCancel');

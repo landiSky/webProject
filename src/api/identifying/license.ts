@@ -15,6 +15,11 @@ export function userCreateLicense(data: Record<string, any>) {
   return $http.post('/server/web/license/create', data);
 }
 
+// license申请
+export function manageApproveDetail(data: Record<string, any>) {
+  return $http.post('/operation/web/license/approve', data);
+}
+
 // license详情-重新申请调用
 export function userLicenseDetail(params: Record<string, any>) {
   return $http.get('/server/web/license/detail', params);
