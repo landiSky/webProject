@@ -229,6 +229,12 @@ const onSearch = () => {
     },
   });
 };
+onMounted(() => {
+  // TODO 首页logo和项目名称接口获取
+  // apiGetLogoAndName().then((res) => {
+  //   console.log('首页logo和项目名称接口获取', res);
+  // });
+});
 </script>
 
 <style lang="less" scoped>

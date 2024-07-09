@@ -210,6 +210,10 @@ const clickIdService = () => {
 };
 
 onMounted(() => {
+  // TODO 首页logo和项目名称以及导航名称接口获取
+  // apiGetLogoAndName().then((res) => {
+  //   console.log('首页logo和项目名称接口获取', res);
+  // });
   if (route.name === 'wowMallDetail') {
     // 商品详情页也激活【商城】
     selectTab.value = TabPath.MALL;

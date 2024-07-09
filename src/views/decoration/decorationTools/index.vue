@@ -101,13 +101,20 @@
             ></component>
           </div>
         </t-layout-sider> -->
+      <!-- <t-layout-footer>Footer</t-layout-footer> -->
     </t-layout>
-    <div class="floating_btn-box">
+    <div v-if="openModel === 0" class="floating_btn-box">
       <t-space size="medium">
         <icon-eye v-if="!isPreview" :size="24" @click="clickPreview" />
         <icon-eye-invisible v-if="isPreview" :size="24" @click="notPreview" />
         <iconpark-icon name="saveLocal" :size="24" @click="clickSave" />
         <iconpark-icon name="saveRemote" :size="24" @click="clickSaveRemote" />
+      </t-space>
+    </div>
+    <div v-if="openModel === 1" class="floating_footer-box">
+      <t-space :size="12">
+        <t-button @click="edit">编辑</t-button>
+        <t-button type="primary" @click="publish">发布</t-button>
       </t-space>
     </div>
   </div>
@@ -117,7 +124,10 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
+import { parseQuery, useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
+
+const route = useRoute();
 
 const componentsList = ref<any[]>([]);
 
@@ -128,6 +138,9 @@ const isPreview = ref(false);
 const viewComponentWrapRef = ref<any[]>([]);
 
 const colorIndex = ref(-1);
+
+// 打开模式 0-普通编辑模式 1-外部预览模式
+const openModel = ref();
 
 // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
 const colorList = ref([
@@ -324,11 +337,40 @@ const selectComponent = (index: number) => {
     }
   }
 };
+
+// 进入编辑模式
+const edit = () => {
+  openModel.value = 0;
+  isPreview.value = false;
+  eventBus.emit('preview-event', false);
+};
+
+// 发布
+const publish = () => {
+  // openModel.value = 0;
+  // eventBus.emit('preview-event', false);
+  // TODO 发布接口
+};
+
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
   console.log('handleMyEvent:', payload);
   selectIndex.value = payload;
 };
+
+watch(
+  () => route.query.model,
+  (nV) => {
+    openModel.value = parseInt(`${nV}`, 10);
+    if (openModel.value === 1) {
+      isPreview.value = true;
+      setTimeout(() => {
+        eventBus.emit('preview-event', true);
+      }, 200);
+    }
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
   eventBus.on('insertIndex', handleMyEvent);
@@ -405,8 +447,21 @@ onMounted(() => {
     height: 42px;
     background-color: white;
     border-radius: 2px;
-    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
     cursor: pointer;
+  }
+
+  .floating_footer-box {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 68px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
   }
 
   ::v-deep(.tele-layout) {
@@ -417,7 +472,6 @@ onMounted(() => {
 .components-wrap {
   width: 100%;
   height: 100%;
-  // background-color: red;
 }
 
 .select_config-box {
