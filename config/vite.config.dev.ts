@@ -24,6 +24,7 @@ const hasMockPlugin = (isMock: boolean) => {
 export default defineConfig(({ command, mode }) => {
   return {
     mode: 'development',
+    base: '/zst',
     server: {
       open: true,
       fs: {
