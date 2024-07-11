@@ -162,9 +162,9 @@ const goDocCenter = () => {
 
   // 区分环境 目前还没有线上地址
   if (process.env.NODE_ENV !== 'production') {
-    window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+    window.open('http://id-pointer-sdk.test.idx.space/docs/');
   } else {
-    window.open('https://snms.teleinfo.cn/zst/#/wow/doc');
+    window.open('https://snms.teleinfo.cn/zst/#/wow/doc/');
   }
 };
 
