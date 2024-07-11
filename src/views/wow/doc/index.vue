@@ -52,7 +52,7 @@ const contents = ref([
     icon: icon1,
     title: '平台集成文档',
     desc: '简单步骤，快速对接，全网推广。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose',
+    url: 'https://snms.teleinfo.cn/zst-docs/saas/writing-purpose',
   },
   {
     bgImg: {
@@ -72,7 +72,7 @@ const contents = ref([
     icon: icon3,
     title: 'IDInside合作计划',
     desc: '加速标识应用贯通，从零开始，仅需五步，实现应用快速接入标识体系。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/idinside/document-overview',
+    url: 'https://snms.teleinfo.cn/zst-docs/idinside/document-overview',
   },
 ]);
 
