@@ -159,6 +159,15 @@ const goDocCenter = () => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 19).then((res) => {
     console.log('前台文档中心打点', res);
   });
+  if (!userInfo?.value?.source) {
+    // 区分环境 目前还没有线上地址
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+    } else {
+      window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+    }
+    return;
+  }
   router.push({ path: '/wow/doc' });
 };
 
@@ -189,7 +198,7 @@ const goLogin = () => {
 const onSearch = () => {
   // TODO w: 商城搜索打点
   apiDataPoint(null, searchContent.value, userInfo?.value?.id, 5, 9).then(
-    (res) => {
+    () => {
       console.log('主导航栏商品搜索打点', searchContent.value);
     }
   );
@@ -206,6 +215,15 @@ const clickIdService = () => {
     console.log('前台导航栏IDInside专区点击打点', res);
   });
   selectTab.value = TabPath.IDINSIDEZONE;
+  if (!userInfo?.value?.source) {
+    // 区分环境 目前还没有线上地址
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
+    } else {
+      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
+    }
+    return;
+  }
   router.push({ path: '/wow/idInsideZone' });
 };
 
