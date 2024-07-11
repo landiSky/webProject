@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@icon-park/vue-next": "1.3.6",
-    "@tele-design/web-vue": "1.0.23-beta.3",
+    "@tele-design/web-vue": "1.0.23-beta.4",
     "@vue-office/docx": "^1.6.2",
     "@vue-office/excel": "^1.7.8",
     "@vue-office/pdf": "^2.0.2",

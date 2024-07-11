@@ -6,7 +6,6 @@
     image-preview
     :limit="1"
     :on-before-remove="onBeforeRemove"
-    @change="handleChange"
   >
     <template #remove-icon>
       <iconpark-icon name="replace" size="16px"></iconpark-icon>
@@ -38,28 +37,17 @@ const fileList = ref([
   },
 ]);
 
-const onBeforeRemove = (fileItem: any) => {
-  console.log('onBeforeRemove', fileItem);
+const onBeforeRemove = () => {
   showSource.value = true;
 };
 
-const onConfirm = () => {
-  // console.log('onConfirm');
+// 成功
+const onConfirm = (value: object) => {
+  console.log('last onConfirm', value);
 };
 
 const onCancel = () => {
   showSource.value = false;
-};
-
-const handleChange = (info: any) => {
-  //   console.log('handleChange1', info);
-  //   if (info.file.status === 'removed') {
-  //     console.log('handleChange2', info);
-  //     // 当试图删除文件时阻止操作
-  //     fileList.value = [...fileList.value]; // 重新设置fileList状态以防止组件响应删除操作
-  //   } else {
-  //     fileList.value = info.fileList;
-  //   }
 };
 </script>
 

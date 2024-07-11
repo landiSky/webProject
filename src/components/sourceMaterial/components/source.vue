@@ -63,6 +63,7 @@
               :total="state.total"
               size="mini"
               :current="params.pageNum"
+              :page-size="params.pageSize"
               @change="onPageChange"
             />
           </div>
@@ -74,6 +75,7 @@
     :visible="uploadCropperVisible"
     :file-name="state.fileName"
     @on-close="uploadCropperClose"
+    @on-success="uploadCropperSuccess"
   />
 </template>
 
@@ -237,15 +239,20 @@ const onOk = () => {
   }
 
   console.log('onOk', uploadCropperVisible.value);
-  emits('onConfirm', state.imgList);
 };
 
 const onCancel = () => {
   emits('onCancel');
 };
 
+const uploadCropperSuccess = (value: any) => {
+  uploadCropperVisible.value = false;
+  emits('onConfirm', value);
+};
+
 const uploadCropperClose = () => {
   uploadCropperVisible.value = false;
+  // emits('onCancel');
 };
 
 onMounted(async () => {

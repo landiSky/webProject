@@ -3,6 +3,7 @@
     <t-upload-cropper
       v-if="visible"
       :cropper-props="cropperProps"
+      :name="props.fileName"
       :src="`/server/web/file/download?name=${props.fileName}`"
       :is-re-upload="false"
       :on-before-ok="onBeforeOk"
@@ -21,13 +22,14 @@ import { Message } from '@tele-design/web-vue';
 import $http from '@/utils/http';
 import { getToken } from '@/utils/auth';
 import axios from 'axios';
+import { emitKeypressEvents } from 'readline';
 
 const props = defineProps({
   visible: Boolean,
   fileName: String,
 });
 
-const emit = defineEmits(['onClose']);
+const emit = defineEmits(['onClose', 'onSuccess']);
 
 const visible = computed(() => props.visible);
 
@@ -39,27 +41,28 @@ const cropperProps = {
 };
 
 const error = (err: any) => {
-  Message.error(err);
+  console.log('error', err);
+  Message.error(err.message);
 };
 
 const cancel = () => {
-  visible.value = false;
+  emit('onClose');
 };
 
 const close = () => {
-  console.log('close');
   emit('onClose');
 };
 
 // 裁剪成功
-// const success = (currentFile) => {
-//   console.log('裁剪成功:', currentFile);
-//   const value = {
-//     ...currentFile,
-//     url: URL.createObjectURL(currentFile.file),
-//   };
-//   console.log('value', value);
-// };
+const success = (currentFile: any) => {
+  console.log('裁剪成功:', currentFile);
+  const value = {
+    ...currentFile,
+    url: URL.createObjectURL(currentFile.file),
+  };
+  emit('onSuccess', value);
+  console.log('value', value);
+};
 
 const onBeforeOk = (file: any) => {
   const form = new FormData();
@@ -69,21 +72,18 @@ const onBeforeOk = (file: any) => {
   //   type: blob.type,
   //   lastModified: Date.now(),
   // });
-  console.log('file', file);
   form.append('file', file);
   // form.append('fileField', 'image');
   // console.log('onBeforeOk', blob, newfile, form);
   return new Promise((resolve, reject) => {
     $http
-      .post('/server/web/file/upload', form, {
-        // headers: { Authorization: `${getToken()}` },
-      })
+      .post('/server/web/file/upload', form, {})
       .then(() => {
-        Message.error('上传成功');
+        Message.success('上传成功');
         resolve(true);
       })
       .catch(() => {
-        Message.error('上传失败');
+        // Message.error(e.message);
         reject();
       });
   });
