@@ -61,19 +61,6 @@ const selectIndex = ref(-1);
 
 const viewComponentWrapRef = ref<any[]>([]);
 
-// const colorIndex = ref(-1);
-
-// // 打开模式 0-普通编辑模式 1-外部预览模式
-// const openModel = ref();
-
-// // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
-// const colorList = ref([
-//   { cssClass: 'bg_color-1', color0: '#ffffff' },
-//   { cssClass: 'bg_color-2', color0: '#F5F6FB' },
-//   { cssClass: 'bg_color-3', color0: '#EBF0F4' },
-//   { cssClass: 'bg_color-4', color0: '#ffffff', color1: '#e2ecff' },
-// ]);
-
 watch(
   () => props.componentsList,
   (val: any) => {

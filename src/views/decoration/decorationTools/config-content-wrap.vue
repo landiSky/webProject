@@ -29,14 +29,19 @@ import eventBus from '@/utils/bus';
 
 const data = ref();
 const formComponentRef = ref();
+// 配置项是list的组件
+const listType = ['VerticalImageText'];
 
 watch(
   () => formComponentRef?.value?.form,
   (val: any) => {
     // 实时监测form数据变化
     if (val) {
-      console.log('form配置数据变化：', val);
-      eventBus.emit('config-event', formComponentRef.value.form);
+      console.log('form配置数据变化：', val, data.value.name);
+      eventBus.emit('config-event', {
+        type: !listType.includes(data.value.name),
+        msgData: formComponentRef.value.form,
+      });
     }
   },
   { deep: true }

@@ -17,6 +17,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  VerticalImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/vertival-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/vertival-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

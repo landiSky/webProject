@@ -17,7 +17,7 @@
         <transition name="el-fade-in-linear">
           <div v-show="true" class="element-wrap">
             <iconpark-icon :name="element.icon" size="18px"></iconpark-icon>
-            <div class="element-wrap-text">{{ element.title }}</div>
+            <div class="element-wrap-text">{{ element.chineseName }}</div>
           </div>
         </transition>
       </template>

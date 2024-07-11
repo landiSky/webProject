@@ -1,7 +1,7 @@
 <template>
   <div class="single-image">
     <div class="header">
-      {{ data?.title || '' }}
+      {{ data?.chineseName || '' }}
     </div>
     <t-form
       ref="formRef"
@@ -152,21 +152,20 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, reactive, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
   data: Object,
 });
 
-const emit = defineEmits(['success', 'cancel']);
-
 const { data } = toRefs(props);
 const file = ref();
 const formRef = ref();
 
-const form = reactive<Record<string, any>>({
+const form = ref({
   src: '',
   title: '',
+  desc: '',
   linkType: 0,
   linkUrl: '',
 });
@@ -188,14 +187,15 @@ const onChange = (_: any, currentFile: any) => {
 const goodList = ['123', '456', '789'];
 
 watch(
-  () => data?.value,
-  (val) => {
-    console.log('form:', JSON.stringify(form), val);
-    form.src = val?.src || '';
-    form.title = val?.value.title || '';
-    form.linkType = val?.value.linkType || 0;
-    form.linkUrl = val?.value.linkUrl || '';
-    form.desc = val?.value.desc || '';
+  () => data,
+  (val: any) => {
+    // console.log('form00000:', JSON.stringify(form), val);
+    // form.value.src = val?.value.configValue?.src || '';
+    // form.value.title = val?.value.configValue.title || '';
+    // form.value.linkType = val?.value.configValue.linkType || 0;
+    // form.value.linkUrl = val?.value.configValue.linkUrl || '';
+    // form.value.desc = val?.value.configValue.desc || '';
+    // console.log('form111111:', form);
   },
   {
     immediate: true,
@@ -203,13 +203,13 @@ watch(
   }
 );
 onMounted(() => {
-  console.log('mounted');
-  // form赋值
-  form.src = data?.value?.value.src || '';
-  form.title = data?.value?.value.title || '';
-  form.linkType = data?.value?.value.linkType || 0;
-  form.linkUrl = data?.value?.value.linkUrl || '';
-  form.desc = data?.value?.value.desc || '';
+  // console.log('mounted');
+  // // form赋值
+  form.value.src = data?.value?.configValue.src || '';
+  form.value.title = data?.value?.configValue.title || '';
+  form.value.linkType = data?.value?.configValue.linkType || 0;
+  form.value.linkUrl = data?.value?.configValue.linkUrl || '';
+  form.value.desc = data?.value?.configValue.desc || '';
 });
 
 defineExpose({

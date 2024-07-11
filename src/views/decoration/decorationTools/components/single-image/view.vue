@@ -1,13 +1,18 @@
 <template>
-  <div class="single-image" :class="{ 'is-preview': isPreview }">
-    <div class="single-image-title">{{ data?.title || '主标题' }}</div>
+  <div class="single-image">
+    <div class="single-image-title">{{
+      data?.configValue?.title || '主标题'
+    }}</div>
     <t-image
       :src="data?.src"
       fit="cover"
+      :preview="false"
       :width="imageBoxW"
       :height="imageBoxH"
     ></t-image>
-    <div class="single-image-desc">{{ data?.desc || '图片描述' }}</div>
+    <div class="single-image-desc">{{
+      data?.configValue?.desc || '图片描述'
+    }}</div>
   </div>
 </template>
 
@@ -35,10 +40,11 @@ const num = computed(() => {
 const validate = () => {
   return new Promise((resolve, reject) => {
     if (
-      // 可能需要完善校验逻辑
-      !data?.value?.title ||
-      !data?.value?.desc ||
-      (!data?.value?.linkUrl && data?.value?.linkType !== 2)
+      // TODO 可能需要完善校验逻辑
+      !data?.value?.configValue?.title ||
+      !data?.value?.configValue?.desc ||
+      (!data?.value?.configValue?.linkUrl &&
+        data?.value?.configValue?.linkType !== 2)
     ) {
       return reject();
     }
@@ -58,7 +64,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: calc(@factor * 720px);
   height: calc(@factor * 415px);
 

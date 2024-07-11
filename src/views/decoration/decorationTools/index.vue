@@ -31,7 +31,6 @@
                   :component-style="bgStyle(index)"
                   :select-component-index="selectIndex"
                   @select="selectComponent"
-                  @confirm="confirm"
                   @close="close"
                 ></ViewComponentWrap>
                 <div
@@ -58,10 +57,7 @@
                     "
                     @click="copyComponent(index)"
                   />
-                  <t-popover
-                    trigger="click"
-                    popup-container="select_config-box"
-                  >
+                  <t-popover trigger="hover">
                     <iconpark-icon
                       name="componentBg"
                       :size="12"
@@ -209,7 +205,7 @@ const changeColor = (val: number) => {
   componentsList.value[selectIndex.value].bgColor =
     colorList.value[colorIndex.value]?.color0 +
     (colorList.value[colorIndex.value]?.color1 ?? '');
-  console.log('changeColor:', val, componentsList.value);
+  console.log('changeColor:', val, selectIndex.value);
 };
 
 // 左侧工具栏拖入后在列表中的位置
@@ -221,17 +217,36 @@ const onEnd = (index: number) => {
 // 移除当前组件
 const deleteComponent = (index: number) => {
   componentsList.value.splice(index, 1);
+  // 删除ref对象
+  viewComponentWrapRef.value.splice(index, 1);
+  // 删除当前的组件,将下个组件数据传递给配置组件,直到删完所有组件
+  eventBus.emit('selectComponent', componentsList.value[index]);
   console.log('deleteComponent:', index);
+};
+
+const deepCopy = (obj: any) => {
+  if (Array.isArray(obj)) {
+    return obj.map(deepCopy);
+  }
+  if (obj && typeof obj === 'object') {
+    return Object.keys(obj).reduce(
+      (copy: any, key: string) => {
+        copy[key] = deepCopy(obj[key]);
+        return copy;
+      },
+      Array.isArray(obj) ? [] : {}
+    );
+  }
+  return obj;
 };
 
 // 复制当前组件，并插入到当前组件index后面
 const copyComponent = (index: number) => {
-  const component = componentsList.value[index];
-
+  const component = deepCopy(componentsList.value[index]) as any;
   const firstHalf = componentsList.value.slice(0, index);
   const secondHalf = componentsList.value.slice(index);
   componentsList.value = [...firstHalf, component, ...secondHalf];
-  selectIndex.value = index + 1;
+  selectIndex.value = index;
   console.log('componentsList:', componentsList.value);
 };
 
@@ -253,7 +268,7 @@ const clickSave = () => {
   Promise.all(childForm())
     .then((data: any) => {
       // 先清除本地存储
-      // localStorage.removeItem('componentsList');
+      localStorage.removeItem('componentsList');
       localStorage.setItem(
         'componentsList',
         JSON.stringify(componentsList.value)
@@ -287,23 +302,10 @@ const endSort = () => {
   console.log('endSort0000:', componentsList.value);
   clickSave();
 };
-// 从配置抽屉返回的数据
-const confirm = (data: any) => {
-  componentsList.value[selectIndex.value].value = { ...data };
-  console.log('配置完成:', selectIndex.value, data);
-};
 
 const close = () => {
   componentsList.value[selectIndex.value].visible = false;
 };
-
-// // 选中一个组件
-// const clickViewComponent = (index: number) => {
-//   console.log('clickViewComponent:', index);
-//   selectIndex.value = index;
-//   // componentsList.value[index].visible = !componentsList.value[index].visible;
-//   console.log('componentsList.value:', componentsList.value);
-// };
 
 const clickPreview = () => {
   isPreview.value = true;
@@ -325,12 +327,12 @@ const selectComponent = (index: number) => {
     // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
     console.log(
       '选中的组件:',
-      componentsList.value[selectIndex.value].value?.linkType
+      componentsList.value[selectIndex.value].configValue?.linkType
     );
-    const type = componentsList.value[selectIndex.value].value?.linkType;
+    const type = componentsList.value[selectIndex.value].configValue?.linkType;
     if (type === 0) {
       window.open(
-        componentsList.value[selectIndex.value].value?.linkUrl,
+        componentsList.value[selectIndex.value].configValue?.linkUrl,
         '_blank'
       );
     } else if (type === 1) {
@@ -378,11 +380,25 @@ onMounted(() => {
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('config-event', (data: any) => {
-    console.log('config-event:', data);
-    componentsList.value[selectIndex.value].value = { ...data };
-    console.log('配置完成:', selectIndex.value, data);
+    if (data.type) {
+      console.log('list 类型返回=0000');
+      componentsList.value[selectIndex.value].configValue = { ...data.msgData };
+    } else {
+      console.log('list 类型返回=', data.msgData.mainTitle);
+      componentsList.value[selectIndex.value].mainTitle =
+        data.msgData.mainTitle;
+      componentsList.value[selectIndex.value].configValue = {
+        ...data.msgData.list,
+      };
+    }
+
+    console.log(
+      '配置完成:',
+      selectIndex.value,
+      componentsList.value[selectIndex.value]
+    );
   });
-  // 从后台获取json数据
+  // TODO 模拟从后台获取json数据
   const localStorageData = localStorage.getItem('componentsList');
   if (localStorageData) {
     componentsList.value = JSON.parse(localStorageData);
@@ -484,7 +500,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 104px;
   height: 24px;
-  margin-top: 20px;
+  margin-top: 4px;
   cursor: pointer;
 }
 

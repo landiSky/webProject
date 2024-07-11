@@ -10,29 +10,12 @@
     <component
       :is="ComponentsMap[data?.name]?.view()"
       ref="viewComponentRef"
-      :data="data?.value"
+      :data="data"
       :is-preview="isPreview"
       :bg-color="data?.bgColor"
       :style="componentStyle"
       @click="clickComponent"
     ></component>
-
-    <!-- <t-drawer
-      :width="600"
-      :visible="visible"
-      unmount-on-close
-      @ok="clickConfirm"
-      @cancel="clickClose"
-    >
-      <template #title> {{ data?.name }} </template>
-      <div class="form-component-popover">
-        <component
-          :is="ComponentsMap[data?.name].uiConfig()"
-          ref="formComponentRef"
-          :data="data?.value"
-        ></component>
-      </div>
-    </t-drawer> -->
   </div>
 </template>
 
@@ -54,55 +37,37 @@ const { data, componentIndex, selectComponentIndex, isPreview } = toRefs(props);
 
 const drawerVisible = ref(false);
 
-const visible = computed(() => {
-  return (
-    componentIndex?.value === selectComponentIndex?.value && drawerVisible.value
-  );
-});
+// const visible = computed(() => {
+//   return (
+//     componentIndex?.value === selectComponentIndex?.value && drawerVisible.value
+//   );
+// });
 
-const formComponentRef = ref();
+// const formComponentRef = ref();
 
 const viewComponentRef = ref();
 
 const validateError = ref(false);
 
-// 需要加载的组件集合
-// const components = ref(new Map<string, any>());
-// components.value.set(
-//   'SingleImage',
-//   defineAsyncComponent(() => import('./components/single-image/view.vue'))
-// );
+// const clickConfirm = () => {
+//   console.log(
+//     '点击保存按钮：',
+//     formComponentRef.value,
+//     formComponentRef.value.form.title
+//   );
 
-// const componentsConfig = ref(new Map<string, any>());
-
-// componentsConfig.value.set(
-//   'SingleImageConfig',
-//   defineAsyncComponent(() => import('./components/single-image/ui-config.vue'))
-// );
-
-// const getConfig = (name: string) => {
-//   defineAsyncComponent(() => import(name));
+//   formComponentRef.value.formRef.validate((valid: any) => {
+//     if (!valid) {
+//       emit('confirm', formComponentRef.value.form);
+//       drawerVisible.value = false;
+//     }
+//   });
 // };
 
-const clickConfirm = () => {
-  console.log(
-    '点击保存按钮：',
-    formComponentRef.value,
-    formComponentRef.value.form.title
-  );
-
-  formComponentRef.value.formRef.validate((valid: any) => {
-    if (!valid) {
-      emit('confirm', formComponentRef.value.form);
-      drawerVisible.value = false;
-    }
-  });
-};
-
-const clickClose = () => {
-  drawerVisible.value = false;
-  emit('close');
-};
+// const clickClose = () => {
+//   drawerVisible.value = false;
+//   emit('close');
+// };
 
 const clickComponent = () => {
   console.log('选中组件:', componentIndex?.value);
@@ -126,17 +91,7 @@ const validate = () => {
       });
   });
 };
-onMounted(() => {
-  // console.log('data==', data);
-});
-
-// watch(
-//   () => data,
-//   (val) => {
-//     console.log('data11==', val);
-//   },
-//   { deep: true, immediate: true }
-// );
+onMounted(() => {});
 
 defineExpose({
   drawerVisible,
