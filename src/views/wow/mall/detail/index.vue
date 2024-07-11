@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="productIntro">
       <div class="baseInfo">
-        <div class="left">
+        <!-- <div class="left">
           <div class="bigImg">
             <img
               :src="
@@ -26,16 +26,10 @@
               />
             </li>
           </ul>
-        </div>
+        </div> -->
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span
-              v-for="(item, index) in prodDetail?.tagMap"
-              :key="index"
-              class="tag"
-              :class="{ 'tag-left': index === 0 }"
-            > -->
             <t-typography-paragraph
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
@@ -48,13 +42,12 @@
             >
               {{ item.tagName }}
             </t-typography-paragraph>
-            <!-- </span> -->
           </div>
           <div class="description">
             <t-typography-paragraph
               style="margin-bottom: 0"
               :ellipsis="{
-                rows: 7,
+                rows: 3,
                 showTooltip: {
                   type: 'tooltip',
                   props: {
@@ -761,9 +754,13 @@ onUnmounted(() => {
       display: flex;
       align-items: start;
       width: 100%;
+      height: 560px;
       margin-bottom: 16px;
       padding: 24px;
+      background: url('../../../../assets/images/wow/mall/mall-bg.png')
+        no-repeat;
       background-color: #fff;
+      background-size: cover;
       border-radius: 4px;
 
       .left {
@@ -795,11 +792,13 @@ onUnmounted(() => {
       }
 
       .right {
-        flex: 1;
+        width: 465px;
+        margin-left: 126px;
 
         .header {
           display: flex;
           align-items: center;
+          margin-top: 56px;
           margin-bottom: 16px;
           color: #1d2129;
           font-weight: 500;
