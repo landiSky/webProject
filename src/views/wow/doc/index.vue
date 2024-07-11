@@ -62,7 +62,7 @@ const contents = ref([
     icon: icon2,
     title: '标识服务',
     desc: '应用集成标准流程规范、SDK、Open API等，帮助开发者便捷的完成企业信息系统、平台与标识体系对接，支撑标识应用开发落地。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/',
+    url: 'https://snms.teleinfo.cn/docs/',
   },
   {
     bgImg: {

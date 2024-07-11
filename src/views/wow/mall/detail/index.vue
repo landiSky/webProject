@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="productIntro">
       <div class="baseInfo">
-        <div class="left">
+        <!-- <div class="left">
           <div class="bigImg">
             <img
               :src="
@@ -26,16 +26,10 @@
               />
             </li>
           </ul>
-        </div>
+        </div> -->
         <div class="right">
           <div class="header">
             <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span
-              v-for="(item, index) in prodDetail?.tagMap"
-              :key="index"
-              class="tag"
-              :class="{ 'tag-left': index === 0 }"
-            > -->
             <t-typography-paragraph
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
@@ -48,7 +42,6 @@
             >
               {{ item.tagName }}
             </t-typography-paragraph>
-            <!-- </span> -->
           </div>
           <div class="description">
             <t-typography-paragraph
@@ -795,7 +788,8 @@ onUnmounted(() => {
       }
 
       .right {
-        flex: 1;
+        width: 465px;
+        margin-left: 126px;
 
         .header {
           display: flex;
