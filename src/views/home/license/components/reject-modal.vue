@@ -42,17 +42,17 @@ import { defineProps, defineEmits, ref } from 'vue';
 import { manageApproveDetail } from '@/api/identifying/license';
 
 import { Message } from '@tele-design/web-vue';
-
+// 父组件数据集合
 const props = defineProps({
   id: {
     type: String,
   },
 });
-
+// 父组件函数集合
 const emit = defineEmits(['confirm', 'cancel']);
-
+// 表单ref
 const formRef = ref();
-
+// 表单正则校验
 const formRules = {
   reason: [
     { required: true, message: '请输入拒绝理由' },
@@ -61,10 +61,11 @@ const formRules = {
 };
 
 const visible = ref(true);
+// 表单数据集合
 const formModel = ref({
   reason: '',
 });
-
+// 表单确认拒绝函数
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
@@ -79,7 +80,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
           done(true);
         })
         .catch(() => {
-          Message.error('拒绝失败');
+          Message.error('申请失败');
           done(false);
         });
     } else {

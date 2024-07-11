@@ -168,6 +168,16 @@ const homeRoutesList = [
         },
       },
       {
+        path: '/license/addlicensedetail',
+        name: 'AddLicenseDetail',
+        component: () =>
+          import('@/views/home/license/components/addLicenseDetail.vue'),
+        meta: {
+          hideInMenu: true,
+          parentPath: '/license/index',
+        },
+      },
+      {
         path: '/license/admin/reviewdetails',
         name: 'licenseAdminReviewDetails',
         component: () =>

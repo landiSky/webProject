@@ -8,12 +8,21 @@
     @cancel="handleCancel"
   >
     <template #footer>
-      <t-button @click="handleCancel">取消</t-button>
-      <t-button v-if="current !== 1" @click="onPrev">上一步</t-button>
-      <t-button v-if="current !== 3" type="primary" @click="onNext">
+      <t-button :disabled="licenseLoading" @click="handleCancel">取消</t-button>
+      <t-button v-if="current !== 1" :disabled="licenseLoading" @click="onPrev"
+        >上一步</t-button
+      >
+      <t-button
+        v-if="current !== 3"
+        type="primary"
+        :loading="licenseLoading"
+        @click="onNext"
+      >
         下一步
       </t-button>
-      <t-button type="primary" @click="handleConfirm">确认</t-button>
+      <t-button v-if="current === 3" type="primary" @click="handleConfirm"
+        >确定</t-button
+      >
     </template>
     <div class="steps-width">
       <t-steps :current="current">
@@ -35,7 +44,7 @@
           点击下载按钮将指纹获取工具下载到本地，也可自行在网络上下载其他指纹提取工具。
         </div>
         <div class="steps-button">
-          <t-button type="primary">立即下载</t-button>
+          <t-button type="primary" @click="downloadTool">立即下载</t-button>
         </div>
         <div class="steps-title">第二步：指纹码采集</div>
         <div class="steps-illustrate">
@@ -73,7 +82,12 @@
               <t-link @click="deleteCode(rowIndex)"> 删除 </t-link>
             </template>
           </t-table>
-          <t-link :hoverable="false" class="link-button" @click="addCode">
+          <t-link
+            v-if="form.fingerprintsList.length < 10"
+            :hoverable="false"
+            class="link-button"
+            @click="addCode"
+          >
             <img
               class="link-button-left"
               src="@/assets/images/license/icon-plus.png"
@@ -96,7 +110,6 @@
             placeholder="请输入/选择企业前缀"
             :filter-option="false"
             allow-create
-            @input-value-change="selectValueChange"
           >
             <t-option
               v-for="(item, index) of options"
@@ -122,13 +135,18 @@
             :style="{ width: '320px' }"
             placeholder="请选择IDHub版本"
           >
-            <t-option value="1">Beijing</t-option>
-            <t-option value="2">Wuhan</t-option>
+            <t-option
+              v-for="(item, index) in editionList"
+              :key="index"
+              :value="item.value"
+              >{{ item.label }}</t-option
+            >
           </t-select>
         </t-form-item>
         <t-form-item field="effectTime" label="生效日期" class="item-top20">
           <t-date-picker
             v-model="form.effectTime"
+            format="YYYY-MM-DD HH:mm:ss"
             :style="{ width: '320px' }"
             placeholder="请选择日期"
             :disabled-date="
@@ -217,15 +235,24 @@ import dayjs from 'dayjs';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
-import { fetchApplicationAdd } from '@/api/devCenter/manage';
+import {
+  userCreateLicense,
+  userLicenseDetail,
+  userResolvePrefix,
+  userDownloadTool,
+  userGetAllPrefix,
+} from '@/api/identifying/license';
 
 const formRef = ref();
 
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const emit = defineEmits(['onConfirm', 'onCancel']);
 const current: Record<string, any> = ref(1);
+const licenseLoading: Record<string, any> = ref(false);
+
 const columns = [
   {
     title: '编号',
@@ -246,32 +273,32 @@ const columns = [
 ];
 
 const form = reactive<{
+  userId: string;
   companyId: string;
+  companyName: string;
   entPrefix: string;
-  idHubVersion: string;
+  idHubVersion: string | null;
   effectTime: string;
   remark: string;
-  estimateRegisterCount: string;
-  estimateParseCount: string;
-  name: string;
-  phone: string;
-  email: string;
-  belongSnms: string;
-  registerTime: string;
+  estimateRegisterCount: number | null;
+  estimateParseCount: number | null;
+  name: string | null;
+  phone: string | null;
+  email: string | null;
   fingerprintsList: Array<any>;
 }>({
+  userId: userInfo.value?.id,
   companyId: userInfoByCompany.value?.companyId,
+  companyName: userInfoByCompany.value?.companyName,
   entPrefix: '',
-  idHubVersion: '',
+  idHubVersion: null,
   effectTime: '',
   remark: '',
-  estimateRegisterCount: '',
-  estimateParseCount: '',
-  name: '',
-  phone: '',
-  email: '',
-  belongSnms: 'erji',
-  registerTime: '',
+  estimateRegisterCount: null,
+  estimateParseCount: null,
+  name: userInfoByCompany.value.username,
+  phone: userInfo.value.mobile,
+  email: userInfo.value.email,
   fingerprintsList: [''],
 });
 
@@ -281,7 +308,8 @@ const copyRules = reactive({
     {
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
-        if (!value || value.length === 0) return cb('请选择企业前缀');
+        if (!value || value.length === 0) return cb('请输入/选择企业前缀');
+        if (value.length > 128) return cb('长度不超过128个字符');
         return cb();
       },
     },
@@ -374,14 +402,19 @@ const copyRules = reactive({
       },
     },
   ],
-  // 所属二级
-  belongSnms: [],
-  // 前缀注册时间
-  registerTime: [],
-  // 企业id
-  companyId: [],
 });
 
+// 下载指纹获取工具
+const downloadTool = () => {
+  userDownloadTool().then((res: any) => {
+    const link = document.createElement('a');
+    const objectUrl = `/server/web/file/download?name=${res}`; // 创建一个新的url对象
+    link.href = objectUrl;
+    link.click();
+    window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+  });
+};
+// 设备指纹码单独校验
 const validatorCode = (value: any, cb: (params?: any) => void) => {
   if (!value || value.length === 0) return cb('请输入设备指纹码');
   const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
@@ -391,81 +424,110 @@ const validatorCode = (value: any, cb: (params?: any) => void) => {
   if (value.length > 128) return cb('长度不超过128个字符');
   return cb();
 };
-
+// 定义子组件参数
 const props = defineProps({
   visible: Boolean,
   title: String,
+  editId: String,
 });
-
+// IDHub版本
 const editionList = ref([
   {
-    label: '6个月',
-    value: '0',
-  },
-  {
-    label: '1年',
+    label: '标准版',
     value: '1',
   },
   {
-    label: '2年',
+    label: '社区版',
     value: '2',
   },
   {
-    label: '3年',
+    label: '中间件版',
     value: '3',
   },
 ]);
-
+// 取消
 const handleCancel = () => {
   emit('onCancel');
 };
-
+// 确定
 const handleConfirm = () => {
-  console.log(form);
+  const params = {
+    ...form,
+    estimateParseCount: String(form.estimateParseCount),
+    estimateRegisterCount: String(form.estimateRegisterCount),
+  };
+  licenseLoading.value = true;
   formRef.value.validate((errors: undefined) => {
     if (!errors) {
-      // fetchApplicationAdd(form).then((res) => {
-      //   emit('onConfirm', res);
-      // });
+      userCreateLicense(params)
+        .then((res) => {
+          licenseLoading.value = false;
+          Message.success('申请提交成功');
+          emit('onConfirm', res);
+        })
+        .catch(() => {
+          licenseLoading.value = false;
+          Message.success('申请提交失败');
+        });
     }
   });
 };
-
+// 指纹码新增
 const addCode = () => {
   if (form.fingerprintsList.length >= 10) {
     return;
   }
   form.fingerprintsList.push('');
 };
+// 指纹码删除
 const deleteCode = (index: any) => {
   if (form.fingerprintsList.length === 1) {
     return;
   }
   form.fingerprintsList.splice(index, 1);
 };
-// 企业前缀
-const options = ['123', '345', '567'];
-const selectValueChange = (inputValue: any) => {
-  console.log('11111', inputValue);
-};
+// 企业前缀集合
+const options: Record<string, any> = ref([]);
 
+// 企业前缀输入校验
+const selectValueChange = (inputValue: any) => {
+  if (inputValue) {
+    const reg = /^\d(.\d)*$/;
+    if (reg.test(inputValue)) {
+      Message.error('此企业前缀格式不合规，请重新输入');
+      return false;
+    }
+    const data = {
+      prefix: inputValue,
+    };
+    userResolvePrefix(data)
+      .then((res: any) => {
+        return true;
+      })
+      .catch((error: any) => {
+        return false;
+      });
+    return true;
+  }
+  return false;
+};
+// 数字框千位符展示
 const formatter = (value: any) => {
   const values = value.split('.');
   values[0] = values[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   return values.join('.');
 };
-
 const parser = (value: any) => {
   return value.replace(/,/g, '');
 };
-
+// 确定loading
 const loading = ref(false);
-
+// 上一步操作
 const onPrev = () => {
   current.value = Math.max(1, current.value - 1);
 };
-
+// 下一步操作
 const onNext = () => {
   if (current.value === 1) {
     const typeIndex = form.fingerprintsList.findIndex((v) => {
@@ -476,14 +538,43 @@ const onNext = () => {
   }
   if (current.value === 2) {
     formRef.value.validateField(`entPrefix`);
-
     if (form.entPrefix.length === 0) return false;
+    return selectValueChange(form.entPrefix);
   }
   current.value = Math.min(3, current.value + 1);
   return true;
 };
+// 编辑回显
+const getInfo = async () => {
+  const params = {
+    licenseId: props?.editId,
+  };
+  userLicenseDetail(params).then((res: any) => {
+    form.entPrefix = res.entPrefix;
+    form.idHubVersion = String(res.idHubVersion);
+    form.effectTime = res.effectTime;
+    form.remark = res.remark;
+    form.estimateRegisterCount = Number(res.estimateRegisterCount);
+    form.estimateParseCount = Number(res.estimateParseCount);
+    form.name = res.name;
+    form.phone = res.phone;
+    form.email = res.email;
+    form.fingerprintsList = res.fingerPrintList;
+  });
+};
+// 企业前缀列表
+const getPrefixList = async () => {
+  userGetAllPrefix().then((res: any) => {
+    options.value = res;
+  });
+};
 
-onMounted(() => {});
+onMounted(() => {
+  if (props?.editId) {
+    getInfo();
+  }
+  getPrefixList();
+});
 </script>
 
 <style lang="less" scoped>

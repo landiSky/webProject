@@ -47,21 +47,23 @@ import process from '@/assets/images/license/icon-process.png';
 
 import { Message } from '@tele-design/web-vue';
 
+// 父组件数据集合
 const props = defineProps({
   id: {
     type: String,
   },
 });
-
+// 父组件函数集合
 const emit = defineEmits(['confirm', 'cancel']);
-
+// 表单ref
 const formRef = ref();
-
+// 表单正则校验
 const formRules = {
   reason: [{ required: true, message: '请选择授权周期' }],
 };
 
 const visible = ref(true);
+// 授权周期 集合
 const cycleList = ref([
   {
     label: '6个月',
@@ -80,17 +82,18 @@ const cycleList = ref([
     value: '3',
   },
 ]);
+// 表单数据集合
 const formModel = ref({
   reason: null,
 });
-
+// 表单通过函数
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
     if (!errors) {
       manageApproveDetail({
         id: props.id ?? '',
         type: 0,
-        rejectRemark: formModel.value.reason,
+        authCycle: formModel.value.reason,
       })
         .then((res) => {
           emit('confirm');
@@ -98,7 +101,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
           done(true);
         })
         .catch(() => {
-          Message.error('通过失败');
+          Message.error('申请失败');
           done(false);
         });
     } else {

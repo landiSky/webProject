@@ -1,8 +1,7 @@
 <template>
   <div :loading="currentData.loading">
-    <t-page-header flex :show-back="true" @back="goBack">
-      <template #title> 审批 </template>
-      <template #breadcrumb>
+    <t-page-header flex :show-back="false" @back="goBack">
+      <template #title>
         <t-breadcrumb :routes="breadcrumbList" />
       </template>
     </t-page-header>
@@ -24,16 +23,6 @@
         >
           <t-descriptions-item label="企业前缀">
             {{ currentData.itemInfo.entPrefix || '-' }}
-            <t-tooltip
-              content="跳转国家顶级节点查询企业前缀注册时间、所属二级等信息"
-              position="bottom"
-            >
-              <t-link
-                :hoverable="false"
-                @click="query(currentData.itemInfo.entPrefix)"
-                >查询</t-link
-              >
-            </t-tooltip>
           </t-descriptions-item>
           <t-descriptions-item label="企业名称">
             {{ currentData.itemInfo.companyName || '-' }}
@@ -159,48 +148,9 @@
         </t-descriptions>
         <div class="line"></div>
         <t-descriptions
-          id="order"
-          class="content"
-          title="企业节点订单信息"
-          :title-style="{
-            fontSize: '14px',
-            lineHeight: '22px',
-            marginBottom: '16px',
-          }"
-          :title-divider-style="{ height: '12px' }"
-          :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
-          size="medium"
-          :column="1"
-        >
-          <t-table
-            :loading="tableLoading"
-            :columns="columnsOrder"
-            :data="currentData.itemInfo.orderList"
-            :pagination="false"
-            :scroll="{
-              y: 220,
-            }"
-          >
-            <template #deliveryType="{ record }">
-              {{ DeliveryTypeEnum[record.deliveryType] || '-' }}
-            </template>
-            <template #realityPrice="{ record }">
-              ¥{{ record.realityPrice || '0.00' }}
-            </template>
-            <template #orderStatus="{ record }">
-              <iconpark-icon
-                :name="orderStatusSelect[record.orderStatus]?.color"
-                size="10px"
-              />
-              {{ orderStatusSelect[record.orderStatus]?.label || '-' }}
-            </template>
-          </t-table>
-        </t-descriptions>
-        <div class="line"></div>
-        <t-descriptions
           id="history"
           class="content"
-          title="历史License申请信息"
+          title="license发放信息"
           :title-style="{
             fontSize: '14px',
             lineHeight: '22px',
@@ -214,15 +164,12 @@
           <t-table
             :loading="tableLoading"
             :columns="columnsHistory"
-            :data="currentData.itemInfo.historyLicenseList"
+            :data="state.dataHistory"
             :pagination="false"
             :scroll="{
               y: 220,
             }"
           >
-            <template #idHubVersion="{ record }">
-              {{ editionList[record.idHubVersion] }}
-            </template>
             <template #status="{ record }">
               <div class="state-center">
                 <span
@@ -239,6 +186,13 @@
                 </t-tooltip>
               </div>
             </template>
+            <template #authCycle="{ record }">
+              {{
+                record.authCycle >= 0 && record.authCycle != null
+                  ? stateType[record.authCycle]?.time
+                  : '-'
+              }}
+            </template>
           </t-table>
         </t-descriptions>
       </t-col>
@@ -249,48 +203,21 @@
             <t-anchor-link href="#operatingscale">运营规模</t-anchor-link>
             <t-anchor-link href="#contacts"> 企业联系人 </t-anchor-link>
             <t-anchor-link href="#code"> 设备指纹码 </t-anchor-link>
-            <t-anchor-link href="#order"> 企业节点订单信息 </t-anchor-link>
           </t-anchor>
         </div>
       </t-col>
     </t-row>
-    <div class="model-button">
-      <t-space>
-        <t-button type="primary" status="danger" @click="rejectVisible = true"
-          >拒绝</t-button
-        >
-        <t-button type="primary" @click="adoptVisible = true">通过</t-button>
-      </t-space>
-    </div>
   </div>
-
-  <AdoptModal
-    v-if="adoptVisible"
-    :id="(route.query.id as string)"
-    @cancel="adoptVisible = false"
-    @confirm="clickAdopt"
-  ></AdoptModal>
-
-  <RejectModal
-    v-if="rejectVisible"
-    :id="(route.query.id as string)"
-    @cancel="rejectVisible = false"
-    @confirm="clickReject"
-  ></RejectModal>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { Message } from '@tele-design/web-vue';
-import { manageLicenseInfoDetail } from '@/api/identifying/license';
-
-import AdoptModal from './adopt-model.vue';
-import RejectModal from './reject-modal.vue';
+import { manageLicenseDetail } from '@/api/identifying/license';
 
 const router = useRouter();
 const route = useRoute();
-// 面包屑
+// 面包屑展示
 const breadcrumbList = reactive([
   {
     path: '/license/index',
@@ -298,10 +225,9 @@ const breadcrumbList = reactive([
   },
   {
     path: null,
-    label: '审批',
+    label: '详情',
   },
 ]);
-// 审批旁边图标回退
 const goBack = () => {
   router.go(-1);
 };
@@ -320,43 +246,7 @@ const columnsCode = [
     tooltip: true,
   },
 ];
-// 企业节点订单信息
-const columnsOrder = [
-  {
-    title: '订单编号',
-    dataIndex: 'orderNum',
-    ellipsis: true,
-    tooltip: true,
-  },
-  {
-    title: '商品名称',
-    dataIndex: 'productName',
-    ellipsis: true,
-    tooltip: true,
-  },
-  {
-    title: '交付类型',
-    dataIndex: 'deliveryType',
-    slotName: 'deliveryType',
-  },
-  {
-    title: '实付金额',
-    dataIndex: 'realityPrice',
-    slotName: 'realityPrice',
-  },
-  {
-    title: '订单状态',
-    dataIndex: 'orderStatus',
-    slotName: 'orderStatus',
-  },
-  {
-    title: '下单时间',
-    dataIndex: 'createTime',
-    ellipsis: true,
-    tooltip: true,
-  },
-];
-// 历史License申请信息
+// License发放信息
 const columnsHistory = [
   {
     title: '编号',
@@ -365,65 +255,22 @@ const columnsHistory = [
     tooltip: true,
   },
   {
-    title: 'IDHub版本',
-    dataIndex: 'idHubVersion',
-    slotName: 'idHubVersion',
-  },
-  {
-    title: '剩余有效期',
-    dataIndex: 'remainingValidDate',
-  },
-  {
-    title: '申请状态',
+    title: 'License状态',
     dataIndex: 'status',
     slotName: 'status',
   },
   {
-    title: '生效时间',
-    dataIndex: 'effectTime',
+    title: '授权周期',
+    dataIndex: 'authCycle',
+    slotName: 'authCycle',
     width: 180,
   },
   {
-    title: '申请时间',
+    title: '发放时间',
     dataIndex: 'createTime',
     width: 180,
   },
 ];
-
-// 交付方式
-const DeliveryTypeEnum: { [name: string]: any } = {
-  SAAS: 0,
-  DLBS: 1,
-  0: 'SaaS（免费）',
-  1: '独立部署',
-};
-// 企业节点订单信息 集合
-const orderStatusSelect = ref({
-  0: {
-    label: '待支付',
-    color: 'wait',
-  },
-  1: {
-    label: '待审核',
-    color: 'waitblue',
-  },
-  2: {
-    label: '待交付',
-    color: 'waitblue',
-  },
-  3: {
-    label: '已交付',
-    color: 'success',
-  },
-  4: {
-    label: ' 已驳回',
-    color: 'error',
-  },
-  5: {
-    label: ' 待确认交付',
-    color: 'wait',
-  },
-});
 // License状态 授权周期 集合
 const stateType: any = {
   0: {
@@ -460,9 +307,11 @@ const editionList: any = {
 };
 
 const tableLoading = ref(false);
-
-const adoptVisible = ref(false);
-const rejectVisible = ref(false);
+const state = reactive<{
+  dataHistory: Array<any>;
+}>({
+  dataHistory: [],
+});
 // 详情数据集合
 const currentData = reactive<{
   loading: boolean;
@@ -477,38 +326,26 @@ const getInfo = async () => {
     licenseId: route.query.id,
   };
   currentData.loading = true;
-  manageLicenseInfoDetail(params)
+  manageLicenseDetail(params)
     .then((res: any) => {
       currentData.itemInfo = res.data;
+      state.dataHistory = [
+        {
+          code: res.data?.code,
+          status: res.data?.status,
+          authCycle: res.data?.authCycle,
+          createTime: res.data?.createTime,
+        },
+      ];
     })
     .finally(() => {
       currentData.loading = false;
     });
 };
-// 弹窗 通过
-const clickAdopt = () => {
-  adoptVisible.value = false;
-  // getInfo();
-  goBack();
-};
-// 弹窗 拒绝
-const clickReject = () => {
-  rejectVisible.value = false;
-  goBack();
-  // getInfo();
-};
-// 企业前缀 参看跳转
-const query = (value: any) => {
-  window.open(
-    `https://dms.idfactory.cn/whois/ui/searchResult?identity=${value}`
-  );
-};
 
 onMounted(() => {
   getInfo();
 });
-
-onUnmounted(() => {});
 </script>
 
 <style scoped lang="less">

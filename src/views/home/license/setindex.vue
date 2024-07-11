@@ -1,18 +1,38 @@
 <template>
-  <div>
-    <t-alert banner closable>
+  <div class="license_body">
+    <t-alert v-if="!userInfo.isAdmin" banner closable>
       自建企业节点IDHub在企业前缀申请成功后，需申请License用于企业节点的部署配置。
     </t-alert>
     <t-page-header flex title="License管理" :show-back="false">
       <t-row :wrap="false">
-        <t-col flex="auto">
-          <t-button type="primary" @click="clickAddBtn"> 申请License </t-button>
+        <t-col flex="auto" :class="{ 'manage-right': userInfo.isAdmin }">
+          <t-button
+            v-if="!userInfo.isAdmin"
+            type="primary"
+            @click="clickAddBtn"
+          >
+            申请License
+          </t-button>
+          <t-input-group v-if="userInfo.isAdmin">
+            <t-select
+              v-model.trim="state.formModel.type"
+              :options="selectOptions"
+              :style="{ width: '100px' }"
+              placeholder="请选择"
+            />
+            <t-input-search
+              v-model.trim="state.formModel.name"
+              :style="{ width: '220px' }"
+              :placeholder="`请输入${queryTypeName[state.formModel.type]}`"
+              @search="clickSearchBtn"
+            />
+          </t-input-group>
         </t-col>
       </t-row>
-
+      <t-row :wrap="false"> </t-row>
       <t-table
         :loading="state.tableLoading"
-        :columns="columns"
+        :columns="userInfo.isAdmin ? manageColumns : userColumns"
         :data="state.tableData"
         :empty="false"
         :pagination="{
@@ -26,9 +46,15 @@
         bordered
         @page-change="onPageChange"
         @page-size-change="onPageSizeChange"
+        @filter-change="filterChange"
+        @sorter-change="sorterChanged"
       >
         <template #authCycle="{ record }">
-          {{ stateType[record.status].time }}
+          {{
+            record.authCycle >= 0 && record.authCycle != null
+              ? stateType[record.authCycle]?.time
+              : '-'
+          }}
         </template>
         <template #status="{ record }">
           <div class="state-center">
@@ -47,20 +73,40 @@
           </div>
         </template>
         <template #operations="{ record }">
-          <t-link @click="clickDetails(record)"> 审核 </t-link>
-          <t-space v-if="record.status !== 0">
-            <t-link @click="clickEditBtn(record)"> 重新申请 </t-link>
-            <t-link v-if="record.status !== 2" @click="clickEditBtn(record)">
+          <t-space v-if="userInfo.isAdmin">
+            <t-link
+              v-if="record.status !== 0 && record.status !== 2"
+              @click="clickDetails(record, '1')"
+            >
+              详情
+            </t-link>
+            <div v-if="record.status === 2">-</div>
+            <t-link
+              v-if="record.status === 0"
+              @click="clickDetails(record, '2')"
+            >
+              审核
+            </t-link>
+          </t-space>
+          <t-space v-if="!userInfo.isAdmin">
+            <t-link v-if="record.status !== 0" @click="clickEditBtn(record)">
+              重新申请
+            </t-link>
+            <div v-if="record.status === 0">-</div>
+            <t-link
+              v-if="record.status !== 0 && record.status !== 2"
+              @click="downloadLicense(record)"
+            >
               下载License
             </t-link>
           </t-space>
-          <div v-if="record.status === 0">-</div>
         </template>
       </t-table>
 
       <AddForm
         v-if="state.showDrawer"
         :visible="state.showDrawer"
+        :edit-id="state.editId"
         title="申请License"
         @on-confirm="handleDrawerConfirm"
         @on-cancel="handleDrawerCancel"
@@ -70,52 +116,99 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
-import { memberList } from '@/api/system/member';
+import { userLicenseList, manageLicenseList } from '@/api/identifying/license';
 import AddForm from './components/addForm.vue';
 
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 const router = useRouter();
 const route = useRoute();
 
+const defaultFormModel: Record<string, any> = {
+  orderAsc: '',
+  status: '',
+  type: 1,
+  name: '',
+};
+
+const defaultFormData: Record<string, any> = {
+  code: '',
+  companyName: '',
+  entPrefix: '',
+};
+const typeName: Record<string, any> = {
+  1: 'code',
+  2: 'entPrefix',
+  3: 'companyName',
+};
+
+const queryTypeName: Record<string, any> = {
+  1: '编号',
+  2: '企业前缀',
+  3: '企业名称',
+};
+
 const state = reactive<{
   tableLoading: boolean;
-  editData: {
-    id: number | undefined;
-    memberId: number | undefined;
-    userId: number | undefined;
-    companyId: number | undefined;
-    phone: string;
-    roleList: number[];
-    status: number | undefined;
-    roleName: string;
-    username: string;
-  };
   tableData: Record<string, any>;
+  formModel: Record<string, any>;
+  formData: Record<string, any>;
   showDrawer: boolean;
+  editId: string;
 }>({
   tableLoading: false,
-  editData: {
-    id: undefined,
-    memberId: undefined,
-    userId: undefined,
-    companyId: undefined,
-    phone: '',
-    roleList: [],
-    status: undefined,
-    roleName: '', // 角色名称
-    username: '',
-  },
   tableData: [],
+  formModel: { ...defaultFormModel },
+  formData: { ...defaultFormData },
   showDrawer: false,
+  editId: '',
 });
 
-const columns = [
+const EntStatusList = [
+  {
+    text: '审核中',
+    value: 0,
+  },
+  {
+    text: '已拒绝',
+    value: 2,
+  },
+  {
+    text: '已过期',
+    value: 3,
+  },
+  {
+    text: '待生效',
+    value: 4,
+  },
+  {
+    text: '已生效',
+    value: 1,
+  },
+];
+
+const selectOptions = [
+  {
+    label: '编号',
+    value: 1,
+  },
+  {
+    label: '企业前缀',
+    value: 2,
+  },
+  {
+    label: '企业名称',
+    value: 3,
+  },
+];
+// 企业用户列表展示
+const userColumns = [
   {
     title: '编号',
     dataIndex: 'code',
@@ -167,6 +260,60 @@ const columns = [
     width: 200,
   },
 ];
+// 管理员列表展示
+const manageColumns = [
+  {
+    title: '编号',
+    dataIndex: 'code',
+    ellipsis: true,
+    tooltip: true,
+    width: 130,
+  },
+  {
+    title: '企业前缀',
+    dataIndex: 'entPrefix',
+    ellipsis: true,
+    tooltip: true,
+    width: 130,
+  },
+  {
+    title: '企业名称',
+    dataIndex: 'companyName',
+    ellipsis: true,
+    tooltip: true,
+    width: 130,
+  },
+  {
+    title: '授权周期',
+    dataIndex: 'authCycle',
+    slotName: 'authCycle',
+    width: 100,
+  },
+  {
+    title: 'License状态',
+    dataIndex: 'status',
+    slotName: 'status',
+    filterable: {
+      filters: EntStatusList,
+      multiple: true,
+    },
+    width: 108,
+  },
+  {
+    title: '申请时间',
+    dataIndex: 'createTime',
+    sortable: {
+      sortDirections: ['ascend', 'descend'],
+    },
+    width: 200,
+  },
+  {
+    title: '操作',
+    dataIndex: 'operations',
+    slotName: 'operations',
+    width: 120,
+  },
+];
 
 const stateType: any = {
   0: {
@@ -205,58 +352,112 @@ const pagination = reactive<{
   pageSize: 10,
   total: 0,
 });
-
+// 列表接口请求
 function fetchData() {
   const { current, pageSize } = pagination;
-  memberList({
-    pageSize: pagination.pageSize,
-    pageNum: pagination.current,
-    companyId: userInfoByCompany.value?.companyId,
+  const userList = userInfo.value?.isAdmin
+    ? manageLicenseList
+    : userLicenseList;
+  state.formData = { ...defaultFormData };
+  if (state.formModel.type && state.formModel.name) {
+    state.formData[typeName[state.formModel.type]] = state.formModel.name;
+  }
+  userList({
+    pageSize,
+    pageNum: current,
+    companyId: userInfo.value?.isAdmin
+      ? ''
+      : userInfoByCompany.value?.companyId,
+    ...state.formModel,
+    ...state.formData,
   }).then((res) => {
-    state.tableData = res.records || [];
-    pagination.total = res.total;
+    state.tableData = userInfo.value?.isAdmin
+      ? res.data.records
+      : res.records || [];
+    pagination.total = userInfo.value?.isAdmin ? res.data.total : res.total;
   });
 }
-
 // 每页显示条数发生变化
 const onPageSizeChange = (size: number) => {
   pagination.pageSize = size;
   pagination.current = 1;
   fetchData();
 };
-
 // 页码发生变化
 const onPageChange = (current: number) => {
   pagination.current = current;
   fetchData();
 };
-
 // 点击编辑按钮
 const clickEditBtn = (data: any) => {
-  state.editData = data;
+  state.editId = data.id;
   state.showDrawer = true;
 };
-
 // 点击新增按钮
 const clickAddBtn = () => {
+  state.editId = '';
   state.showDrawer = true;
 };
-
+// 取消License弹窗
 const handleDrawerCancel = () => {
   state.showDrawer = false;
 };
-
+// 打开申请License弹窗
 const handleDrawerConfirm = () => {
   handleDrawerCancel();
+  fetchData();
 };
-
-const clickDetails = (data: any) => {
+// 列表-License状态 多选
+const filterChange = (dataIndex: string, filteredValues: string[]) => {
+  if (filteredValues.length === 0) {
+    state.formModel[`${dataIndex}`] = '';
+  } else {
+    state.formModel[`${dataIndex}`] = filteredValues.join(',');
+  }
+  onPageChange(1);
+};
+// 列表排序
+const sorterChanged = (dataIndex: string, direction: string) => {
+  if (direction === 'descend') {
+    state.formModel.orderAsc = false;
+  } else if (direction === 'ascend') {
+    state.formModel.orderAsc = true;
+  } else {
+    state.formModel.orderAsc = '';
+  }
+  onPageChange(1);
+};
+// 搜素
+const clickSearchBtn = () => {
+  onPageChange(1);
+};
+// 详情和审核跳转
+const clickDetails = (data: any, typeindex: string) => {
+  if (typeindex === '1') {
+    router.push({
+      path: '/license/addlicensedetail',
+      query: {
+        id: data.id,
+      },
+    });
+    return;
+  }
   router.push({
     path: '/license/admin/reviewdetails',
     query: {
       id: data.id,
     },
   });
+};
+// 下载License文件
+const downloadLicense = (data: any) => {
+  const link = document.createElement('a');
+  const objectUrl = `/server/web/file/licenseDownload?name=${data?.licenseUrl}`; // 创建一个新的url对象
+  link.href = objectUrl;
+  const fileName = `${data.code}License.json`;
+  link.download = fileName; //  下载的时候自定义的文件名
+  link.click();
+  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
 };
 
 onMounted(() => {
@@ -265,49 +466,9 @@ onMounted(() => {
 </script>
 
 <style lang="less" scoped>
-.noClass {
+.manage-right {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 500px;
-  color: #86909c;
-  font-weight: 400;
-  font-size: 12px;
-  font-family: 'PingFang SC';
-  font-style: normal;
-  line-height: 20px;
-  text-align: center;
-
-  .zwclass {
-    color: #86909c;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
-    text-align: center;
-  }
-
-  .qkclass {
-    margin-left: 4px;
-    color: #1664ff;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
-    cursor: pointer;
-  }
-
-  .zwjg {
-    color: #86909c;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
-  }
+  justify-content: right;
 }
 
 :deep(.tele-alert) {
@@ -336,5 +497,11 @@ onMounted(() => {
   background: url(@/assets/images/license/info-circle.png) no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
+}
+
+.license_body {
+  :deep(.tele-form-item) {
+    margin-bottom: 0;
+  }
 }
 </style>
