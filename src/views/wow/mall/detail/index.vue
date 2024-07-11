@@ -47,7 +47,7 @@
             <t-typography-paragraph
               style="margin-bottom: 0"
               :ellipsis="{
-                rows: 7,
+                rows: 3,
                 showTooltip: {
                   type: 'tooltip',
                   props: {
@@ -754,9 +754,13 @@ onUnmounted(() => {
       display: flex;
       align-items: start;
       width: 100%;
+      height: 560px;
       margin-bottom: 16px;
       padding: 24px;
+      background: url('../../../../assets/images/wow/mall/mall-bg.png')
+        no-repeat;
       background-color: #fff;
+      background-size: cover;
       border-radius: 4px;
 
       .left {
@@ -794,6 +798,7 @@ onUnmounted(() => {
         .header {
           display: flex;
           align-items: center;
+          margin-top: 56px;
           margin-bottom: 16px;
           color: #1d2129;
           font-weight: 500;
