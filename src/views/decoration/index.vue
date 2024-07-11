@@ -1,6 +1,7 @@
 <!-- 基本信息 -->
 <template>
   <div>基本信息配置</div>
+  <SourceMaterial />
 </template>
 
 <script lang="ts" setup>
@@ -12,6 +13,7 @@ import {
   onMounted,
   ref,
 } from 'vue';
+import SourceMaterial from '@/components/sourceMaterial/index.vue';
 
 const props = defineProps({
   xxx: {
@@ -26,5 +28,3 @@ const props = defineProps({
   },
 });
 </script>
-
-<style scoped lang="less"></style>

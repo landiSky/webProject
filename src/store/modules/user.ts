@@ -50,6 +50,7 @@ export const useUserStore = defineStore({
 
       return apiUserProfile({ companyId, memberId })
         .then((data: Record<string, any>) => {
+          console.log('apiUserProfile', data);
           this.userInfoByCompany = data || {
             certificateStatus: CompanyAuthStatus.UNAUTH,
             nodeStatus: NodeAuthStatus.UNAUTH,

@@ -11,6 +11,7 @@ import { viteMockServe } from 'vite-plugin-mock';
 const https = require('node:http');
 
 const hasMockPlugin = (isMock: boolean) => {
+  console.log('hasMockPlugin', isMock);
   return isMock
     ? viteMockServe({
         mockPath: 'src/mock', // ↓解析根目录下的mock文件夹
