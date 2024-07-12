@@ -491,25 +491,21 @@ const options: Record<string, any> = ref([]);
 
 // 企业前缀输入校验
 const selectValueChange = (inputValue: any) => {
-  if (inputValue) {
-    const reg = /^\d(.\d)*$/;
-    if (reg.test(inputValue)) {
-      Message.error('此企业前缀格式不合规，请重新输入');
-      return false;
-    }
-    const data = {
-      prefix: inputValue,
-    };
-    userResolvePrefix(data)
-      .then((res: any) => {
-        return true;
-      })
-      .catch((error: any) => {
-        return false;
-      });
-    return true;
+  const reg = /^\d(.\d)*$/;
+  if (reg.test(inputValue)) {
+    Message.error('此企业前缀格式不合规，请重新输入');
+    return false;
   }
-  return false;
+  const data = {
+    prefix: inputValue,
+  };
+  return userResolvePrefix(data)
+    .then((res: any) => {
+      return true;
+    })
+    .catch((error: any) => {
+      return false;
+    });
 };
 // 数字框千位符展示
 const formatter = (value: any) => {
@@ -528,7 +524,7 @@ const onPrev = () => {
   current.value = Math.max(1, current.value - 1);
 };
 // 下一步操作
-const onNext = () => {
+const onNext = async () => {
   if (current.value === 1) {
     const typeIndex = form.fingerprintsList.findIndex((v) => {
       return v === '' || v === null || v === undefined;
@@ -539,7 +535,8 @@ const onNext = () => {
   if (current.value === 2) {
     formRef.value.validateField(`entPrefix`);
     if (form.entPrefix.length === 0) return false;
-    return selectValueChange(form.entPrefix);
+    const state = await selectValueChange(form.entPrefix);
+    if (!state) return false;
   }
   current.value = Math.min(3, current.value + 1);
   return true;
