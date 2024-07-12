@@ -6,7 +6,6 @@ import svgLoader from 'vite-svg-loader';
 
 export default defineConfig({
   mode: 'production',
-  base: '/zst',
   plugins: [
     vue({
       template: {
@@ -36,6 +35,7 @@ export default defineConfig({
     ],
     extensions: ['.ts', '.js', '.tsx'],
   },
+  base: '/zst',
   define: {
     'process.env': {},
   },
