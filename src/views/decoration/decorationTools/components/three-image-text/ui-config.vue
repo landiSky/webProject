@@ -32,6 +32,7 @@
           allow-clear
         />
       </t-form-item>
+
       <div
         v-for="(item, index) in form.list"
         :key="index"
@@ -133,7 +134,6 @@
           validate-trigger="blur"
           :rules="[{ required: true, message: '必填' }]"
         >
-          <!-- <t-input v-model="form.src" placeholder="请输入图片地址"> </t-input> -->
           <t-space direction="vertical" :style="{ width: '100%' }">
             <t-upload
               action="/"
@@ -193,7 +193,21 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, reactive, onMounted } from 'vue';
+
+// 每个子表单的配置项
+type ConfigItem = {
+  title: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  list: ConfigItem[];
+};
 
 const props = defineProps({
   data: Object,
@@ -202,9 +216,10 @@ const props = defineProps({
 const { data } = toRefs(props);
 const file = ref();
 const formRef = ref();
-const form = ref({
+
+const form = ref<ConfigData>({
   mainTitle: '',
-  list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
+  list: [],
 });
 
 const rules = {

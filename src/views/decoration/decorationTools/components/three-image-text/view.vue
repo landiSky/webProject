@@ -1,6 +1,6 @@
 <!-- 竖图文 -->
 <template>
-  <div class="vertical-image-text-box">
+  <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
     <div class="vertical-image-text-title">{{
       data?.mainTitle || '主标题'
     }}</div>
@@ -14,12 +14,6 @@
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
           <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
-          <span
-            v-if="item?.linkType !== 2"
-            class="image-link"
-            @click="clickLink(item?.linkType, item?.linkUrl)"
-            >详情>>
-          </span>
         </div>
       </div>
     </div>
@@ -112,113 +106,67 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    // flex-wrap: wrap;
-    height: calc(@factor * 230px);
+    // height: calc(@factor * 256px);
     // margin-top: calc(@factor * 29px);
+    // background-color: red;
     .image-item {
       position: relative;
-      display: block;
-      width: calc(@factor * 91px);
-      height: calc(@factor * 230px);
-      margin: 0 calc(@factor * 2px);
-      transition: width 0.8s;
+      display: flex;
+      flex-direction: column;
+      width: calc(@factor * 190px);
+      height: calc(@factor * 256px);
+      margin: 0 calc(@factor * 7px);
+      border-radius: 6px;
 
       .image-cls {
         width: 100%;
-        height: 100%;
+        height: calc(@factor * 114px);
+        border-radius: 6px;
       }
-      // .image-cls:hover {
-      // }
+
       .image-item-content {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        padding: 20px;
+        height: calc(@factor * 162px);
+        margin-top: -20px;
+        padding: 12px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);
+        border-radius: 6px;
 
         .image-title {
-          color: #fff;
+          color: #1d2129;
           font-weight: 500;
-          font-size: calc(@factor * 16px);
+          font-size: calc(@factor * 8px);
         }
 
         .image-desc {
           display: -webkit-box;
-          width: calc(@factor * 70px);
+          width: 100%;
           margin: 10px 0;
           overflow: hidden;
-          font-size: calc(@factor * 14px);
+          color: #4e5969;
+          font-size: calc(@factor * 7px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
           word-wrap: break-word;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 7;
           -webkit-box-orient: vertical;
         }
-
-        .image-link {
-          color: #fff;
-          font-size: calc(@factor * 14px);
-          cursor: pointer;
-        }
       }
-    }
-
-    .image-item:hover::before {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.9),
-        rgba(199, 221, 255, 0.9)
-      );
-      content: '';
     }
 
     .image-item:hover {
-      width: calc(@factor * 91px * 2.3);
-
-      .image-item-content {
-        .image-title,
-        .image-link {
-          color: #1d2129;
-        }
-
-        .image-desc {
-          display: -webkit-box;
-          width: calc(@factor * 70px * 2.3);
-          -webkit-line-clamp: 6;
-          color: #4e5969;
-        }
-      }
+      box-shadow: 6px 6px 20px 2px #7e7e7e40;
+      transform: scale(1.05);
+      transition: 0.5s;
     }
-  }
-
-  .vertical-image-text-desc {
-    display: -webkit-box;
-    width: calc(@factor * 600px);
-    margin-top: calc(@factor * 9px);
-    overflow: hidden;
-    color: #4e5969;
-    font-weight: 500;
-    font-size: calc(@factor * 8px);
-    white-space: normal;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 }
 // .is-preview {
 //   transform: scale(2); /* 将元素的尺寸放大2倍 */
-//   transform-origin: 0 0; /* 设置缩放中心点 */
+//   transform-origin: center center; /* 设置缩放中心点 */
 // }
 </style>

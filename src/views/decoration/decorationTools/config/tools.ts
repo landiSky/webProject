@@ -60,6 +60,36 @@ const tools = [
           },
         ],
       },
+      {
+        chineseName: '三图叠文',
+        maxNum: 5,
+        icon: 'threeImgTxt',
+        name: 'ThreeImageText',
+        mainTitle: '我是主标题',
+        configValue: [
+          {
+            title: '111',
+            desc: 'balabalabalabalabalabalabalabalabalabalabalabalabalabala',
+            src: 'https://inews.gtimg.com/om_bt/OHyQqgC_5oi4Vm0tlH49XvJzqNBHo2Zryxx5F_be5N2cIAA/1000',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '222',
+            desc: 'balabala',
+            src: 'https://inews.gtimg.com/om_bt/OHyQqgC_5oi4Vm0tlH49XvJzqNBHo2Zryxx5F_be5N2cIAA/1000',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '333',
+            desc: 'balabala',
+            src: 'https://inews.gtimg.com/om_bt/OHyQqgC_5oi4Vm0tlH49XvJzqNBHo2Zryxx5F_be5N2cIAA/1000',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+        ],
+      },
     ],
   },
 ];

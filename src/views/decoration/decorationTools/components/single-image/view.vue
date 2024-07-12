@@ -4,7 +4,7 @@
       data?.configValue?.title || '主标题'
     }}</div>
     <t-image
-      :src="data?.src"
+      :src="data?.configValue?.src"
       fit="cover"
       :preview="false"
       :width="imageBoxW"

@@ -104,8 +104,9 @@ onMounted(() => {
   }
 
   .element-wrap-text {
-    padding-top: 10px;
-    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 500;
+    font-size: 12px;
   }
 }
 

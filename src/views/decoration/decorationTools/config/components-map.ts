@@ -33,6 +33,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  ThreeImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/three-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/three-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;
