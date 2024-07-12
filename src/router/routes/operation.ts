@@ -61,20 +61,71 @@ const operationRoutesList = [
       hideInMenu: false,
     },
   },
+  // {
+  //   path: '/sync',
+  //   component: PAGE_LAYOUT,
+  //   children: [
+  //     {
+  //       path: '/sync/class',
+  //       name: 'classManage',
+  //       component: () => import('@/views/operation/sync/class/index.vue'),
+  //       meta: {
+  //         name: '商品分类管理',
+  //         keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
+  //         hideInMenu: false,
+  //       },
+  //     },
+  //     {
+  //       path: '/sync/goods',
+  //       name: 'syncGoodsManage',
+  //       component: () => import('@/views/operation/sync/goods/index.vue'),
+  //       meta: {
+  //         name: '商品管理',
+  //         keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
+  //         hideInMenu: false,
+  //       },
+  //     },
+  //     {
+  //       path: '/sync/label/manage',
+  //       name: 'syncLabelManage',
+  //       component: () => import('@/views/operation/sync/labelManage/index.vue'),
+  //       meta: {
+  //         name: '标签管理',
+  //         keepAlive: true,
+  //         hideInMenu: false,
+  //       },
+  //     },
+  //   ],
+  //   meta: {
+  //     name: '清单管理',
+  //     hideInMenu: false,
+  //   },
+  // },
   {
-    path: '/sync',
+    path: '/sync/class',
     component: PAGE_LAYOUT,
+    redirect: '/sync/class',
     children: [
       {
         path: '/sync/class',
         name: 'classManage',
         component: () => import('@/views/operation/sync/class/index.vue'),
         meta: {
-          name: '商品分类管理',
+          name: 'index',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-          hideInMenu: false,
+          hideInMenu: true,
         },
       },
+    ],
+    meta: {
+      name: '商品分类管理',
+    },
+  },
+  {
+    path: '/sync/goods',
+    component: PAGE_LAYOUT,
+    redirect: '/sync/goods',
+    children: [
       {
         path: '/sync/goods',
         name: 'syncGoodsManage',
@@ -82,9 +133,19 @@ const operationRoutesList = [
         meta: {
           name: '商品管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-          hideInMenu: false,
+          hideInMenu: true,
         },
       },
+    ],
+    meta: {
+      name: '商品管理',
+    },
+  },
+  {
+    path: '/sync/label/manage',
+    component: PAGE_LAYOUT,
+    redirect: '/sync/label/manage',
+    children: [
       {
         path: '/sync/label/manage',
         name: 'syncLabelManage',
@@ -92,13 +153,12 @@ const operationRoutesList = [
         meta: {
           name: '标签管理',
           keepAlive: true,
-          hideInMenu: false,
+          hideInMenu: true,
         },
       },
     ],
     meta: {
-      name: '清单管理',
-      hideInMenu: false,
+      name: '标签管理',
     },
   },
 ];

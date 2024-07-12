@@ -12,8 +12,9 @@ const BaseRouteAuth: { [name: string]: any } = {
   '/system/roles': 'ROUTE_SYSTEM_ROLES', // 企业管理-角色
   '/devCenter': 'ROUTE_SYSTEM_DEVELOPER', // 开发者中心
   '/devCenter/manage': 'ROUTE_SYSTEM_APP', // 开发者中心-应用接入管理
-  '/overview': 'ROUTE_OVERVIEW', // 标识服务-概览页
+
   '/license': 'ROUTE_LICENSE', // 标识服务-License管理
+  '/overview': 'ROUTE_OVERVIEW', // 标识服务-概览页
   // '/seller/dataoverview': 'ROUTE_SYSTEM_DATAOVERVIEW', // 企业管理-角色
 };
 
@@ -26,7 +27,7 @@ const operationAuth = {
   '/user': 'ROUTE_USER', // 用户管理
   '/user/verify': 'ROUTE_USER_VERIFY', // 认证管理
 
-  '/sync': 'ROUTE_SYNC', // 清单管理
+  // '/sync': 'ROUTE_SYNC', // 清单管理
   '/sync/class': 'ROUTE_SYNC_CLASS', // 商品分类管理
   '/sync/goods': 'ROUTE_SYNC_GOODS', // 商品管理
   '/sync/label/manage': 'ROUTE_SYNC_LABEL', // 标签管理
