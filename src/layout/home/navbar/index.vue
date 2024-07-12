@@ -255,9 +255,9 @@ const onChangeCompany = async (companyId: string) => {
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
   await userStore.changeSelectCompany(selectItem);
 
-  router.push({
-    path: '/buyer/index',
-  });
+  // router.push({
+  //   path: '/buyer/index',
+  // });
 
   // 要在 app.vue 中监听 userstore.的变化
 };
