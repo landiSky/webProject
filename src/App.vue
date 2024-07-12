@@ -53,8 +53,8 @@ watch(
   () => userStore.updateMenu,
   () => {
     const { isAdmin, source } = userStore.userInfo || {};
-    let authList = userStore.userInfoByCompany?.menuCodes
-      ? userMenu(menuStore.menuIndex)
+    let authList = menuStore.menuIndex
+      ? userStore.userInfoByCompany?.menuCodes
       : userMenu(menuStore.menuIndex);
     if (isAdmin) {
       authList = opearationRouteList;

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { appMenus } from '@/router';
 import { userMenu, manageMenu } from '@/enums/menuEnum';
+import { useUserStore } from '@/store/modules/user';
 
 export const useMenuStore = defineStore({
   id: 'app-menu',
@@ -13,7 +14,6 @@ export const useMenuStore = defineStore({
     firstRoutePath: '',
     menuIndex: 1,
   }),
-
   actions: {
     genLeftMenu(auths: string[]) {
       try {
@@ -35,7 +35,9 @@ export const useMenuStore = defineStore({
     },
     setMenuIndex(num: number, userInfo: any) {
       this.menuIndex = num;
-      const menuList = userInfo.isAdmin ? manageMenu(num) : userMenu(num);
+      const userMenuList =
+        num === 1 ? useUserStore().userInfoByCompany?.menuCodes : userMenu(num);
+      const menuList = userInfo.isAdmin ? manageMenu(num) : userMenuList;
       this.leftMenu = appMenus(menuList);
       // // 取第一个有权限的路由
       let menuItem = this.leftMenu[0];
