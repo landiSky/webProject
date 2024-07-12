@@ -78,6 +78,7 @@
       </t-space>
     </div>
   </t-form>
+  <SourceMaterial />
 </template>
 
 <script lang="ts" setup>
@@ -89,6 +90,7 @@ import {
   onMounted,
   ref,
 } from 'vue';
+import SourceMaterial from '@/components/sourceMaterial/index.vue';
 
 const props = defineProps({
   xxx: {
