@@ -13,6 +13,6 @@ export function fetchDownload(name: string, productId: string) {
 }
 
 // 文件删除
-export function fetchFileDel(data: Record<string, any>) {
-  return $http.post('/server/web/file/deleteByName', data);
+export function fetchFileDel(name: string) {
+  return $http.get(`/server/web/file/deleteByName?saveName=${name}`);
 }

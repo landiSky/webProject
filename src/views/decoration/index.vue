@@ -2,6 +2,7 @@
 <template>
   <div>基本信息配置</div>
   <SourceMaterial />
+  <IconMaterial />
 </template>
 
 <script lang="ts" setup>
@@ -14,6 +15,7 @@ import {
   ref,
 } from 'vue';
 import SourceMaterial from '@/components/sourceMaterial/index.vue';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 
 const props = defineProps({
   xxx: {
