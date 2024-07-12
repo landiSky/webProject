@@ -78,7 +78,6 @@
       </t-space>
     </div>
   </t-form>
-  <SourceMaterial />
 </template>
 
 <script lang="ts" setup>
