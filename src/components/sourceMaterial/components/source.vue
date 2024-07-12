@@ -188,7 +188,7 @@ const onBeforeRemove = (fileItem: any) => {
     title: '确认删除该素材',
     okText: '删除',
     titleAlign: 'start',
-    content: '确认删除该素材',
+    content: '',
     onOk: () => {
       fetchFileDel(saveName)
         .then(() => {
