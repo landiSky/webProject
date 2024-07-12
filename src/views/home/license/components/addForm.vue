@@ -150,7 +150,7 @@
             :style="{ width: '320px' }"
             placeholder="请选择日期"
             :disabled-date="
-              (current) => dayjs(current).isBefore(dayjs().subtract(1, 'day'))
+              (current?: Date) => dayjs(current).isBefore(dayjs().subtract(1, 'day'))
             "
           />
         </t-form-item>
@@ -250,7 +250,7 @@ const { userInfo, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 
 const emit = defineEmits(['onConfirm', 'onCancel']);
-const current: Record<string, any> = ref(1);
+const current = ref(1);
 const licenseLoading: Record<string, any> = ref(false);
 
 const columns = [

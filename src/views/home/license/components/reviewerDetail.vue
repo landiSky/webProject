@@ -398,7 +398,7 @@ const DeliveryTypeEnum: { [name: string]: any } = {
   1: '独立部署',
 };
 // 企业节点订单信息 集合
-const orderStatusSelect = ref({
+const orderStatusSelect: any = {
   0: {
     label: '待支付',
     color: 'wait',
@@ -423,7 +423,7 @@ const orderStatusSelect = ref({
     label: ' 待确认交付',
     color: 'wait',
   },
-});
+};
 // License状态 授权周期 集合
 const stateType: any = {
   0: {
