@@ -146,7 +146,8 @@
         <t-form-item field="effectTime" label="生效日期" class="item-top20">
           <t-date-picker
             v-model="form.effectTime"
-            format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD HH:mm:ss"
             :style="{ width: '320px' }"
             placeholder="请选择日期"
             :disabled-date="
@@ -467,7 +468,7 @@ const handleConfirm = () => {
         })
         .catch(() => {
           licenseLoading.value = false;
-          Message.success('申请提交失败');
+          Message.error('申请提交失败');
         });
     } else {
       licenseLoading.value = false;
