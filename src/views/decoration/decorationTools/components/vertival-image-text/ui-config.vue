@@ -39,7 +39,7 @@
       >
         <t-space style="margin-top: 10px; margin-bottom: 20px">
           <div class="vertical-line"></div>
-          <div>{{ `区块${++index}` }}</div>
+          <div>{{ `区块${UpperNumberList[index]}` }}</div>
         </t-space>
         <t-form-item
           label="标题"
@@ -187,6 +187,7 @@
 <script setup lang="ts">
 import { toRefs, ref, watch, onMounted } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
+import { UpperNumberList } from '@/enums/decoration';
 
 const props = defineProps({
   data: Object,
@@ -210,12 +211,13 @@ const form = ref({
 
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
+  console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
 const goodList = ['123', '456', '789'];
 
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value);
+  console.log('返回的图片信息', value, curIndex.value);
   form.value.list[curIndex.value].src = value;
   showSource.value = false;
 };

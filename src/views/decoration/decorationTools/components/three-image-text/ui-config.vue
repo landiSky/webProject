@@ -40,7 +40,7 @@
       >
         <t-space style="margin-top: 10px; margin-bottom: 20px">
           <div class="vertical-line"></div>
-          <div>{{ `区块${++index}` }}</div>
+          <div>{{ `区块${UpperNumberList[index]}` }}</div>
         </t-space>
         <t-form-item
           label="标题"
@@ -187,7 +187,7 @@
 <script setup lang="ts">
 import { toRefs, ref, watch, reactive, onMounted } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
-
+import { UpperNumberList } from '@/enums/decoration';
 // 每个子表单的配置项
 type ConfigItem = {
   title: string;
@@ -299,6 +299,15 @@ defineExpose({
 
   .single-image-desc {
     color: #1d1d1d;
+  }
+}
+
+::v-deep(.tele-upload-list-picture) {
+  width: 100px;
+  height: 100px;
+
+  img {
+    object-fit: cover;
   }
 }
 
