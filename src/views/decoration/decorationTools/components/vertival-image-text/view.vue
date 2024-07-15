@@ -10,7 +10,12 @@
         :key="index"
         class="image-item"
       >
-        <img :src="item?.src" fit="cover" :preview="false" class="image-cls" />
+        <img
+          :src="`/server/web/file/download?name=${item?.src}`"
+          fit="cover"
+          :preview="false"
+          class="image-cls"
+        />
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
           <span class="image-desc">{{ item?.desc || '图片简介' }}</span>

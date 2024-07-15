@@ -109,7 +109,7 @@ const operationRoutesList = [
       {
         path: '/decoration/base',
         name: 'baseSettings',
-        component: () => import('@/views/decoration/index.vue'),
+        component: () => import('@/components/sourceMaterial/index.vue'),
         meta: {
           name: '基础信息配置',
           keepAlive: true,

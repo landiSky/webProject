@@ -134,66 +134,59 @@
           validate-trigger="blur"
           :rules="[{ required: true, message: '必填' }]"
         >
-          <t-space direction="vertical" :style="{ width: '100%' }">
+          <t-space direction="vertical">
             <t-upload
+              list-type="picture-card"
+              :file-list="
+                item.src
+                  ? [
+                      {
+                        url: `/server/web/file/download?name=${item.src}`,
+                      },
+                    ]
+                  : []
+              "
               action="/"
-              :show-file-list="false"
-              accept=".jpg,.png,.bmp,.tif,.gif"
-              tip="建议图片尺寸：1200px * 520px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。"
               :limit="1"
               image-preview
+              :on-before-remove="
+                () => {
+                  return onBeforeRemove(index);
+                }
+              "
               style="width: 100px; height: 100px"
-              @change="onChange"
             >
-              <template #upload-button>
-                <div
-                  :class="`tele-upload-list-item${
-                    file && file.status === 'error'
-                      ? ' tele-upload-list-item-error'
-                      : ''
-                  }`"
-                >
-                  <div
-                    v-if="file && file.url"
-                    class="tele-upload-list-picture custom-upload-avatar"
-                  >
-                    <img :src="file.url" />
-                    <div class="tele-upload-list-picture-mask">
-                      <IconEdit />
-                    </div>
-                    <t-progress
-                      v-if="file.status === 'uploading' && file.percent < 100"
-                      :percent="file.percent"
-                      type="circle"
-                      size="mini"
-                      :style="{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        transform: 'translateX(-50%) translateY(-50%)',
-                      }"
-                    />
-                  </div>
-                  <div v-else class="tele-upload-picture-card">
-                    <div class="tele-upload-picture-card-text">
-                      <IconPlus />
-                      <div style="margin-top: 10px; font-weight: 600"
-                        >点击上传
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <template #remove-icon>
+                <iconpark-icon name="replace" size="16px"></iconpark-icon>
+              </template>
+              <template #preview-icon>
+                <icon-eye />
               </template>
             </t-upload>
+            <span style="margin-top: -20px; color: #86909c; font-size: 12px">
+              建议图片尺寸：456px *
+              264px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+            </span>
           </t-space>
         </t-form-item>
       </div>
+      <Source
+        v-if="showSource"
+        :visible="showSource"
+        :confirm-loading="confirmLoading"
+        :cut-width="stencilSize.width"
+        :cut-height="stencilSize.height"
+        title="素材库"
+        @on-confirm="onConfirm"
+        @on-cancel="onCancel"
+      />
     </t-form>
   </div>
 </template>
 
 <script setup lang="ts">
 import { toRefs, ref, watch, reactive, onMounted } from 'vue';
+import Source from '@/components/sourceMaterial/components/source.vue';
 
 // 每个子表单的配置项
 type ConfigItem = {
@@ -212,29 +205,25 @@ type ConfigData = {
 const props = defineProps({
   data: Object,
 });
-
+const confirmLoading = ref(false);
 const { data } = toRefs(props);
-const file = ref();
 const formRef = ref();
+// 截图尺寸
+const stencilSize = ref({
+  width: 456,
+  height: 264,
+});
+const curIndex = ref(-1);
+const showSource = ref(false);
 
 const form = ref<ConfigData>({
   mainTitle: '',
   list: [],
 });
 
-const rules = {
-  mainTitle: [{ required: true, message: '必填' }],
-  title: [{ required: true, message: '必填' }],
-  src: [{ required: false, message: '必填' }],
-  desc: [{ required: true, message: '必填' }],
-  linkType: [{ required: true, message: '必填' }],
-  linkUrl: [{ required: true, message: '必填' }],
-};
-
-const onChange = (_: any, currentFile: any) => {
-  file.value = {
-    ...currentFile,
-  };
+const onBeforeRemove = (index: number) => {
+  curIndex.value = index;
+  showSource.value = true;
 };
 const goodList = ['123', '456', '789'];
 
@@ -252,6 +241,15 @@ const goodList = ['123', '456', '789'];
 //     deep: true,
 //   }
 // );
+const onConfirm = (value: any) => {
+  console.log('返回的图片信息', value);
+  form.value.list[curIndex.value].src = value;
+  showSource.value = false;
+};
+
+const onCancel = () => {
+  showSource.value = false;
+};
 onMounted(() => {
   console.log('mounted');
   // form赋值

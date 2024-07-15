@@ -74,6 +74,7 @@
   <UploadCropperModal
     :visible="uploadCropperVisible"
     :file-name="state.fileName"
+    :cropper-props="{ stencilSize: { width: cutWidth, height: cutHeight } }"
     @on-close="uploadCropperClose"
     @on-success="uploadCropperSuccess"
   />
@@ -104,6 +105,8 @@ const props = defineProps({
   visible: Boolean,
   confirmLoading: Boolean,
   title: String,
+  cutWidth: Number,
+  cutHeight: Number,
 });
 
 const sidebarTitle = ref([

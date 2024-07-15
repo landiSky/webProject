@@ -3,6 +3,17 @@
     <t-upload-cropper
       v-if="visible"
       :cropper-props="cropperProps"
+      :modal-props="{
+        width:
+          cropperProps?.stencilSize?.width < 480
+            ? 480
+            : cropperProps?.stencilSize?.width,
+      }"
+      :area-height="
+        cropperProps?.stencilSize?.height < 240
+          ? 240
+          : cropperProps?.stencilSize?.height
+      "
       :name="props.fileName"
       :src="`/server/web/file/download?name=${props.fileName}`"
       :is-re-upload="false"
@@ -24,18 +35,22 @@ import $http from '@/utils/http';
 const props = defineProps({
   visible: Boolean,
   fileName: String,
+  cropperProps: {
+    type: Object,
+    dfault: () => {
+      return {
+        stencilSize: {
+          width: 120,
+          height: 120,
+        },
+      };
+    },
+  },
 });
 
 const emit = defineEmits(['onClose', 'onSuccess']);
 
 const visible = computed(() => props.visible);
-
-const cropperProps = {
-  stencilSize: {
-    width: 120,
-    height: 120,
-  },
-};
 
 const error = (err: any) => {
   console.log('error', err);
@@ -57,7 +72,7 @@ const success = (currentFile: any) => {
     ...currentFile,
     url: URL.createObjectURL(currentFile.file),
   };
-  emit('onSuccess', value);
+  // emit('onSuccess', value);
   console.log('value', value);
 };
 
@@ -75,7 +90,8 @@ const onBeforeOk = (file: any) => {
   return new Promise((resolve, reject) => {
     $http
       .post('/server/web/file/upload', form, {})
-      .then(() => {
+      .then((res: any) => {
+        emit('onSuccess', res);
         Message.success('上传成功');
         resolve(true);
       })
