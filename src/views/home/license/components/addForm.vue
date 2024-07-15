@@ -469,6 +469,8 @@ const handleConfirm = () => {
           licenseLoading.value = false;
           Message.success('申请提交失败');
         });
+    } else {
+      licenseLoading.value = false;
     }
   });
 };
@@ -526,11 +528,8 @@ const onPrev = () => {
 // 下一步操作
 const onNext = async () => {
   if (current.value === 1) {
-    const typeIndex = form.fingerprintsList.findIndex((v) => {
-      return v === '' || v === null || v === undefined;
-    });
-    formRef.value.validateField(`fingerprintsList.${typeIndex}`);
-    if (typeIndex >= 0) return false;
+    const result = await formRef.value.validate();
+    if (result) return false;
   }
   if (current.value === 2) {
     formRef.value.validateField(`entPrefix`);
