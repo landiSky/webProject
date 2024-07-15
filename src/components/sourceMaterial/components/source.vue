@@ -92,7 +92,7 @@ import {
 import { useUserStore } from '@/store/modules/user';
 import { getToken } from '@/utils/auth';
 import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import UploadCropperModal from './upload-cropper-modal.vue';
 
 const store = useUserStore();
@@ -187,14 +187,22 @@ const onBeforeRemove = (fileItem: any) => {
   const { url = '' } = fileItem;
   const urlString = url.split('?')[1] || '';
   const saveName = urlString.split('=')[1];
-  fetchFileDel({ saveName })
-    .then((res) => {
-      Message.success('删除成功');
-      getMaterialList();
-    })
-    .catch((e) => {
-      Message.warning(e.error);
-    });
+  Modal.warning({
+    title: '确认删除该素材',
+    okText: '删除',
+    titleAlign: 'start',
+    content: '确认删除该素材',
+    onOk: () => {
+      fetchFileDel(saveName)
+        .then(() => {
+          Message.success('删除成功');
+          getMaterialList();
+        })
+        .catch((e) => {
+          Message.warning(e.error);
+        });
+    },
+  });
 };
 
 const uploadSuccess = () => {
