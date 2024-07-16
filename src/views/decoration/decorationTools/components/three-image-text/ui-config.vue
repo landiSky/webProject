@@ -1,5 +1,5 @@
 <template>
-  <div class="single-image">
+  <div class="box">
     <div class="header">
       {{ data?.chineseName || '' }}
     </div>
@@ -264,7 +264,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-.single-image {
+.box {
   display: flex;
   // height: calc(100vh - 50px);
   // min-height: 500px;
@@ -297,7 +297,7 @@ defineExpose({
     height: 84px;
   }
 
-  .single-image-desc {
+  .box-desc {
     color: #1d1d1d;
   }
 }

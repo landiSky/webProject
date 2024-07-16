@@ -5,10 +5,7 @@
     }}</div>
     <t-image
       :src="`/server/web/file/download?name=${data?.configValue?.src}`"
-      fit="cover"
       :preview="false"
-      :width="imageBoxW"
-      :height="imageBoxH"
     ></t-image>
     <div class="single-image-desc">{{
       data?.configValue?.desc || '图片描述'
@@ -77,11 +74,10 @@ defineExpose({
     font-size: calc(@factor * 18px);
   }
 
-  .image-box {
-    width: 600px;
-    height: 260px;
-  }
-
+  // .image-box {
+  //   width: 600px;
+  //   height: 260px;
+  // }
   .single-image-desc {
     display: -webkit-box;
     width: calc(@factor * 600px);
@@ -95,6 +91,14 @@ defineExpose({
     word-wrap: break-word;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+  }
+}
+
+::v-deep(.tele-image) {
+  .tele-image-img {
+    width: calc(@factor * 600px) !important;
+    height: calc(@factor * 260px) !important;
+    object-fit: cover !important;
   }
 }
 // .is-preview {

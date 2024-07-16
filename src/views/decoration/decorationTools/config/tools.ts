@@ -90,6 +90,43 @@ const tools = [
           },
         ],
       },
+      {
+        chineseName: '多图文',
+        maxNum: 5,
+        icon: 'multiImgTxt',
+        name: 'MultiImageText',
+        mainTitle: '我是主标题',
+        configValue: [
+          {
+            title: '111',
+            desc: 'balabalabalabalabalabalabalabalaba',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '222',
+            desc: 'balabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '333',
+            desc: 'balabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '444',
+            desc: 'balabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+        ],
+      },
     ],
   },
 ];
