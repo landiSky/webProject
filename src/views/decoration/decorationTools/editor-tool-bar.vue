@@ -59,6 +59,7 @@ const onEnd = (evt: any) => {
     // &&
     // evt.to.className === 'components-wrap'
   ) {
+    // 内部拖拽
     // 左侧组件列表的下标
     sectionIndex.value = evt.oldIndex;
   }

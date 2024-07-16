@@ -91,7 +91,9 @@ const validate = () => {
       });
   });
 };
-onMounted(() => {});
+onMounted(() => {
+  console.log('view-component-wrap:', props?.data);
+});
 
 defineExpose({
   drawerVisible,

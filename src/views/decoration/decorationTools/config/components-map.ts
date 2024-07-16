@@ -49,6 +49,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  ImageOverlapText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/image-overlap-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/image-overlap-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;
