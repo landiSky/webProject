@@ -74,12 +74,12 @@ const showArrow = computed(() => {
 });
 
 const atEndOfList = computed(() => {
-  return (
-    currentOffset.value <=
+  const n =
     paginationFactor *
-      -1 *
-      (Object.values(data?.value?.configValue).length - windowSize.value)
-  );
+    -1 *
+    (Object.values(data?.value?.configValue).length - windowSize.value);
+  console.log('atEndOfList', atEndOfList, n);
+  return currentOffset.value <= n;
 });
 
 const atHeadOfList = computed(() => {
@@ -90,11 +90,9 @@ const moveCarousel = (direction: number) => {
   if (direction === 1 && !atEndOfList.value) {
     currentOffset.value -= paginationFactor;
     console.log('offset', currentOffset.value);
-    // this.butt_ok = 1;
   } else if (direction === -1 && !atHeadOfList.value) {
     currentOffset.value += paginationFactor;
     console.log('offset', currentOffset.value);
-    // this.butt_ok = 0;
   }
 };
 
@@ -213,11 +211,12 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: calc(@factor * 710px);
+    width: calc(@factor * 718px);
     height: calc(@factor * 260px);
+    padding-left: calc(@factor * 33px);
     // background-color: rgb(168, 158, 158);
     overflow: hidden;
-    // overflow-x: scroll;
+
     .image-item {
       position: relative;
       display: flex;
@@ -231,7 +230,7 @@ defineExpose({
       height: calc(@factor * 180px);
       margin: 0 calc(@factor * 7.5px);
       background-color: white;
-      transition: transform 200ms ease-out;
+      transition: transform 200ms ease-out, box-shadow 0.4s ease;
 
       .image-title {
         overflow: hidden;
@@ -288,7 +287,7 @@ defineExpose({
     }
 
     .image-item:hover {
-      box-shadow: 6px 6px 20px 2px #7e7e7e40;
+      box-shadow: 6px 6px 10px 6px #7e7e7e40;
       // transform: scale(1.05);//和平移效果冲突，暂时去掉
       // transition: 0.5s;
       // filter: blur(1px); /* 轻微模糊 */
