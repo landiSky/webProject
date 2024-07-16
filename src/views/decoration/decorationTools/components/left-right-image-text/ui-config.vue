@@ -260,6 +260,8 @@ const onCancel = () => {
 };
 
 const deleteSpace = (index: number) => {
+  console.log(form.value.list, '-------------------');
+  console.log(form.value.list.length, '-------------------');
   form.value.list.splice(index - 1, 1);
 };
 // watch(
@@ -280,6 +282,7 @@ onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = data?.value?.configValue || [];
+  console.log(form.value.list, '-------------------');
 });
 
 defineExpose({

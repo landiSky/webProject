@@ -188,11 +188,12 @@ defineExpose({
       border-radius: 1px;
     }
 
-    :deep(
-        .tele-carousel-indicator-item:hover,
-        .tele-carousel-indicator-item-active
-      ) {
-      background: #c6c4c4;
+    :deep(.tele-carousel-indicator-item:hover) {
+      background: #eaeaea;
+    }
+
+    :deep(.tele-carousel-indicator-item-active) {
+      background: #eaeaea;
     }
 
     :deep(.tele-carousel-indicator-wrapper-bottom) {
