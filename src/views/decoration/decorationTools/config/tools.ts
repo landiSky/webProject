@@ -90,6 +90,36 @@ const tools = [
           },
         ],
       },
+      {
+        chineseName: '左右图文',
+        maxNum: 5,
+        icon: 'leftRightImgTxt',
+        name: 'LeftRightImageText',
+        mainTitle: '我是主标题66',
+        configValue: [
+          {
+            title: '111',
+            desc: 'balabalabalabalabalabalabalabalabalabalabalabalabalabala',
+            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '222',
+            desc: 'balabala',
+            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '333',
+            desc: 'balabala',
+            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+        ],
+      },
     ],
   },
 ];

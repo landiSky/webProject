@@ -1,0 +1,307 @@
+<template>
+  <div class="single-image">
+    <div class="header">
+      {{ data?.chineseName || '' }}
+    </div>
+    <t-form
+      ref="formRef"
+      :model="form"
+      auto-label-width
+      :style="{
+        width: '90%',
+        marginTop: '30px',
+        paddingRight: '10px',
+      }"
+      label-align="left"
+    >
+      <t-form-item
+        label="主标题"
+        field="mainTitle"
+        :label-col-props="{
+          flex: '90px',
+          align: 'center',
+        }"
+        :validate-trigger="['blur', 'input']"
+        :rules="[{ required: true, message: '必填' }]"
+      >
+        <t-input
+          v-model="form.mainTitle"
+          placeholder="请输入"
+          :max-length="10"
+          show-word-limit
+          allow-clear
+        />
+      </t-form-item>
+      <div
+        v-for="(item, index) in form.list"
+        :key="index"
+        :style="{ width: '100%', marginTop: '0px' }"
+      >
+        <t-space style="margin-top: 10px; margin-bottom: 20px">
+          <div class="vertical-line"></div>
+          <div>{{ `区块${++index}` }}</div>
+        </t-space>
+        <t-form-item
+          label="标题"
+          :field="`list.${index}.title`"
+          :label-col-props="{
+            flex: '90px',
+            align: 'left',
+          }"
+          :validate-trigger="['blur']"
+          :rules="[{ required: true, message: '必填' }]"
+        >
+          <t-input
+            v-model="item.title"
+            placeholder="请输入"
+            :max-length="10"
+            show-word-limit
+            allow-clear
+          />
+        </t-form-item>
+        <t-form-item
+          label="简介"
+          :field="`list.${index}.desc`"
+          :label-col-props="{
+            flex: '90px',
+            align: 'center',
+          }"
+          validate-trigger="blur"
+          :rules="[{ required: true, message: '必填' }]"
+        >
+          <t-textarea
+            v-model="item.desc"
+            placeholder="请输入简介"
+            allow-clear
+            :max-length="100"
+            show-word-limit
+          />
+        </t-form-item>
+
+        <t-form-item
+          label="详情链接"
+          :field="`list.${index}.linkUrl`"
+          :label-col-props="{
+            flex: '90px',
+          }"
+          validate-trigger="blur"
+          :rules="[{ required: true, message: '必填' }]"
+        >
+          <t-textarea
+            v-model="item.linkUrl"
+            max-length="15"
+            show-word-limit
+            placeholder="请输入链接地址"
+          />
+        </t-form-item>
+
+        <t-form-item
+          label="图片"
+          :field="`list.${index}.src`"
+          :label-col-props="{
+            flex: '90px',
+          }"
+          validate-trigger="blur"
+          :rules="[{ required: true, message: '必填' }]"
+        >
+          <t-space direction="vertical">
+            <t-upload
+              list-type="picture-card"
+              :file-list="
+                item.src
+                  ? [
+                      {
+                        url: `/server/web/file/download?name=${item.src}`,
+                        // url: `${form.src}`,
+                      },
+                    ]
+                  : []
+              "
+              action="/"
+              :limit="1"
+              image-preview
+              :on-before-remove="
+                () => {
+                  return onBeforeRemove(index);
+                }
+              "
+              style="width: 100px; height: 100px"
+            >
+              <template #remove-icon>
+                <iconpark-icon name="replace" size="16px"></iconpark-icon>
+              </template>
+              <template #preview-icon>
+                <icon-eye />
+              </template>
+            </t-upload>
+            <span style="margin-top: -20px; color: #86909c; font-size: 12px">
+              建议图片尺寸：598px *
+              609px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+            </span>
+          </t-space>
+        </t-form-item>
+      </div>
+      <Source
+        v-if="showSource"
+        :visible="showSource"
+        :confirm-loading="confirmLoading"
+        :cut-width="stencilSize.width"
+        :cut-height="stencilSize.height"
+        title="素材库"
+        @on-confirm="onConfirm"
+        @on-cancel="onCancel"
+      />
+      <div v-show="form.list.length < 5" class="extraOpt">
+        <iconpark-icon
+          class="plusIcon"
+          name="squarePlus"
+          size="20px"
+          @click="addBlock"
+        ></iconpark-icon>
+        <span>{{ `添加区块 (最多支持${data?.maxNum}个区块)` }}</span>
+      </div>
+    </t-form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { toRefs, ref, watch, onMounted } from 'vue';
+import Source from '@/components/sourceMaterial/components/source.vue';
+
+const props = defineProps({
+  data: Object,
+});
+const confirmLoading = ref(false);
+
+// 截图尺寸
+const stencilSize = ref({
+  width: 598,
+  height: 609,
+});
+const curIndex = ref(-1);
+const showSource = ref(false);
+const { data } = toRefs(props);
+const formRef = ref();
+
+const form = ref({
+  mainTitle: '',
+  list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
+});
+const addBlock = () => {
+  form.value.list.push({});
+  console.log('form:add', form);
+};
+const onBeforeRemove = (index: number) => {
+  curIndex.value = index;
+  showSource.value = true;
+};
+
+const onConfirm = (value: any) => {
+  console.log('返回的图片信息', value);
+  console.log(curIndex.value, 'curIndex');
+  form.value.list[curIndex.value - 1].src = value;
+  console.log('form:', form.value.list);
+  showSource.value = false;
+};
+
+const onCancel = () => {
+  showSource.value = false;
+};
+// watch(
+//   () => data?.value,
+//   (val) => {
+//     console.log('右侧内容form:', JSON.stringify(form), val);
+//     // form.value.title = val?.value.title || '';
+//     // form.value.linkType = val?.value.linkType || 0;
+//     // form.value.linkUrl = val?.value.linkUrl || '';
+//     // form.value.desc = val?.value.desc || '';
+//   },
+//   {
+//     immediate: true,
+//     deep: true,
+//   }
+// );
+onMounted(() => {
+  console.log('mounted');
+  // form赋值
+  console.log('右侧内容data?.value:', data?.value);
+  form.value.mainTitle = data?.value?.mainTitle || '';
+  form.value.list = data?.value?.configValue || [];
+});
+
+defineExpose({
+  form,
+  formRef,
+});
+</script>
+
+<style scoped lang="less">
+.single-image {
+  display: flex;
+  // height: calc(100vh - 50px);
+  // min-height: 500px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+
+  .header {
+    width: 100%;
+    height: 54px;
+    padding-left: 24px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 54px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .vertical-line {
+    width: 2px;
+    height: 10px;
+    background: #1664ff;
+    border-radius: 1px;
+  }
+
+  .tele-image {
+    width: 100%;
+    height: 84px;
+  }
+
+  .single-image-desc {
+    color: #1d1d1d;
+  }
+}
+
+::v-deep(.tele-upload-list-picture) {
+  width: 100px;
+  height: 100px;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.extraOpt {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .plusIcon {
+    cursor: pointer;
+  }
+
+  span {
+    margin-left: 8px;
+    color: #1d2129;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 20px; /* 166.667% */
+  }
+}
+
+::v-deep(.tele-upload-tip) {
+  width: 190px;
+}
+</style>

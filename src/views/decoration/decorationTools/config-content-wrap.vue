@@ -30,7 +30,7 @@ import eventBus from '@/utils/bus';
 const data = ref();
 const formComponentRef = ref();
 // 配置项是list的组件
-const listType = ['VerticalImageText', 'ThreeImageText'];
+const listType = ['VerticalImageText', 'ThreeImageText', 'LeftRightImageText'];
 
 watch(
   () => formComponentRef?.value?.form,
