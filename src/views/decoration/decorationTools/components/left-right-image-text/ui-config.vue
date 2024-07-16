@@ -232,17 +232,27 @@ const showSource = ref(false);
 const { data } = toRefs(props);
 const formRef = ref();
 const goodList = ['123', '456', '789'];
-// const activeIndex = ref(-1);
-const form = ref({
+
+interface Form {
+  mainTitle: string;
+  list: any[];
+}
+const form = ref<Form>({
   mainTitle: '',
-  list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
+  list: [],
 });
 
 const changeRadio = (value: number) => {
   form.value.list[value - 1].linkUrl = '';
 };
 const addBlock = () => {
-  form.value.list.push({ linkType: 0 });
+  form.value.list.push({
+    title: '',
+    desc: '',
+    src: '',
+    linkType: 0,
+    linkUrl: '',
+  });
 };
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
