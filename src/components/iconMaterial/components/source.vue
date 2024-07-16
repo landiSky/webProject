@@ -1,102 +1,155 @@
 <template>
   <t-modal
     v-model:visible="showModal"
-    :width="1000"
+    :width="820"
+    :height="642"
     :title="props.title"
     :ok-loading="props.confirmLoading"
-    ok-text="下一步"
+    ok-text="创建"
     @ok="onOk"
     @cancel="onCancel"
   >
-    <t-spin size="24" :loading="state.loading">
-      <t-tabs direction="vertical" class="tabs-container" @change="onTabChange">
-        <t-tab-pane
-          v-for="item in sidebarTitle"
-          :key="item.id"
-          :title="item.title"
+    <div class="icon-group-content">
+      <div class="left-section">
+        <div ref="previweRef" class="preview-box">
+          <img
+            :src="state.isShowUpload ? state.imgUrl : state.bgPath"
+            class="icon-park-bg"
+          />
+          <iconpark-icon
+            v-if="!state.isShowUpload"
+            :name="state.iconPath"
+            :size="72"
+            class="icon-park-img"
+          />
+        </div>
+
+        <t-upload
+          ref="uploadRef"
+          class="upload-operation"
+          action="/"
+          :auto-upload="false"
+          :show-file-list="false"
+          :image-preview="false"
+          :file-list="state.fileList"
+          @change="onUploadChange"
         >
-          <div class="tabpane-header">
-            <span>共 {{ state.total }} 张图片</span>
-            <t-upload
-              v-if="state.type === 2"
-              :headers="uploadHeaders"
-              action="/server/web/file/upload"
-              accept=".jpg,.png,.bmp,.jpeg"
-              :data="uploadData"
-              @success="uploadSuccess"
-              @error="uploadError"
-            >
-              <template #upload-button>
-                <t-space>
-                  <t-button>上传素材</t-button>
-                </t-space>
-              </template>
-              <template #upload-item />
-            </t-upload>
-          </div>
-          <div class="list-content">
+          <template #upload-button>
+            <t-space>
+              <t-button>上传图标</t-button>
+            </t-space>
+          </template>
+        </t-upload>
+      </div>
+
+      <div class="right-section">
+        <div
+          v-for="item in iconGroupList"
+          :key="item.type"
+          class="right-content"
+        >
+          <span class="sub-title">{{ item.subtitle }}</span>
+          <div class="icon-group">
             <div
-              v-for="i in state.imgList"
-              :key="JSON.stringify(i.id)"
+              v-for="(path, idx) in item.pathList"
+              :key="path"
               class="list-item"
-              :class="i.active ? 'active' : ''"
-              @click="onListItemClick(i.id)"
+              :class="`${item.className} ${
+                item.active[idx] ? 'is-active' : ''
+              }`"
+              @click="onIconClick(item, path, idx)"
             >
-              <t-upload
-                class="picture-card"
-                list-type="picture-card"
-                :file-list="[
-                  {
-                    url: `/server/web/file/download?name=${i.name}`,
-                  },
-                ]"
-                action="/"
-                image-preview
-                :limit="1"
-                :on-before-remove="onBeforeRemove"
-              >
-              </t-upload>
+              <img v-if="item.type === 'bg'" :src="path" alt="" />
+              <iconpark-icon
+                v-else
+                :name="path"
+                :size="item.size"
+                class="icon-park"
+              />
             </div>
           </div>
-          <div class="list-pagination">
-            <t-pagination
-              :total="state.total"
-              size="mini"
-              :current="params.pageNum"
-              :page-size="params.pageSize"
-              @change="onPageChange"
-            />
-          </div>
-        </t-tab-pane>
-      </t-tabs>
-    </t-spin>
+        </div>
+      </div>
+    </div>
   </t-modal>
-  <UploadCropperModal
-    :visible="uploadCropperVisible"
-    :file-name="state.fileName"
-    @on-close="uploadCropperClose"
-    @on-success="uploadCropperSuccess"
-  />
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  computed,
-  reactive,
-  onMounted,
-  ref,
-  defineEmits,
-} from 'vue';
-import { useUserStore } from '@/store/modules/user';
-import { getToken } from '@/utils/auth';
-import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
-import { Message } from '@tele-design/web-vue';
-import UploadCropperModal from './upload-cropper-modal.vue';
+import { defineProps, computed, reactive, ref, defineEmits } from 'vue';
+import { FileItem, Message } from '@tele-design/web-vue';
+import $http from '@/utils/http';
+import html2canvas from 'html2canvas';
+import bg1 from '../../../assets/images/icongroup/bg1.png';
+import bg2 from '../../../assets/images/icongroup/bg2.png';
+import bg3 from '../../../assets/images/icongroup/bg3.png';
+import bg4 from '../../../assets/images/icongroup/bg4.png';
+import bg5 from '../../../assets/images/icongroup/bg5.png';
+import bg6 from '../../../assets/images/icongroup/bg6.png';
+import bg7 from '../../../assets/images/icongroup/bg7.png';
+import bg8 from '../../../assets/images/icongroup/bg8.png';
+import bg9 from '../../../assets/images/icongroup/bg9.png';
+import bg10 from '../../../assets/images/icongroup/bg10.png';
+import bg11 from '../../../assets/images/icongroup/bg11.png';
+import bg12 from '../../../assets/images/icongroup/bg12.png';
+import bg13 from '../../../assets/images/icongroup/bg13.png';
+import bg14 from '../../../assets/images/icongroup/bg14.png';
+import bg15 from '../../../assets/images/icongroup/bg15.png';
+import bg16 from '../../../assets/images/icongroup/bg16.png';
 
-const store = useUserStore();
+// const isActive = ref(false);
 
-const { userInfoByCompany } = store;
+const previweRef = ref();
+
+const iconGroupList = ref([
+  {
+    type: 'bg',
+    subtitle: '选择背景色',
+    size: 48,
+    className: 'bg-item',
+    active: [true],
+    pathList: [
+      bg1,
+      bg2,
+      bg3,
+      bg4,
+      bg5,
+      bg6,
+      bg7,
+      bg8,
+      bg9,
+      bg10,
+      bg11,
+      bg12,
+      bg13,
+      bg14,
+      bg15,
+      bg16,
+    ],
+  },
+  {
+    type: 'icon',
+    subtitle: '选择图标',
+    size: 24,
+    className: 'icon-item',
+    active: [true],
+    pathList: [
+      'i1',
+      'i2',
+      'i3',
+      'i4',
+      'i5',
+      'i6',
+      'i7',
+      'i8',
+      'i9',
+      'i10',
+      'i11',
+      'i12',
+      'i13',
+      'i14',
+    ],
+  },
+]);
 
 const emits = defineEmits(['onConfirm', 'onCancel']);
 
@@ -106,244 +159,216 @@ const props = defineProps({
   title: String,
 });
 
-const sidebarTitle = ref([
-  {
-    title: '系统素材',
-    id: 1,
-  },
-  {
-    title: '我的素材',
-    id: 2,
-  },
-]);
-
-const uploadCropperVisible = ref(false);
-
-const params = reactive<{
-  pageSize: number;
-  pageNum: number;
-  companyId: number | undefined;
-}>({
-  pageSize: 12,
-  pageNum: 1,
-  companyId: undefined, // 内置-1 我的-管理员不传/机构companyId
-});
-
 const state = reactive<{
-  imgList: Record<string, any>[];
-  loading: boolean;
-  total: number;
-  type: number;
-  fileName: string;
+  bgPath: string;
+  iconPath: string;
+  fileList: Record<string, any>;
+  isShowUpload: boolean;
+  imgUrl: string | undefined;
+  fileData: FileItem | any;
 }>({
-  imgList: [],
-  loading: false,
-  total: 0,
-  type: 1, // 1-系统素材，2-我的素材
-  fileName: '',
+  bgPath: bg1,
+  iconPath: 'i1',
+  fileList: [],
+  isShowUpload: false,
+  imgUrl: '',
+  fileData: {},
 });
 
 const showModal = computed(() => props.visible);
 
-const uploadHeaders = {
-  Authorization: `${getToken()}`,
+const onIconClick = (item: any, name: string, idx: number) => {
+  item.active = Array.from({ length: item.pathList.length }, () => false);
+  item.active[idx] = true;
+  state[item.type === 'bg' ? 'bgPath' : 'iconPath'] = name;
+  state.isShowUpload = false;
 };
 
-const uploadData = () => {
-  if (state.type === 2 && userInfoByCompany?.companyId) {
-    return {
-      companyId: userInfoByCompany?.companyId,
-    };
-  }
-  return {};
+const onUploadChange = (fileList: FileList, fileItem: FileItem) => {
+  console.log('onUploadChange', fileList, fileItem);
+  // 这里需要判断是成功状态
+  state.imgUrl = fileItem.url;
+  state.fileData = fileItem;
+  state.isShowUpload = true;
+  // 重置
+  // iconGroupList.value.forEach((item) => {
+  //   item.active = [true];
+  // });
+  // state.bgPath = bg1;
+  // state.iconPath = 'i1';
 };
-
-const getMaterialList = () => {
-  state.loading = true;
-  fetchMaterialList({
-    ...params,
-    companyId: state.type === 1 ? -1 : userInfoByCompany?.companyId,
-  })
-    .then((res) => {
-      state.loading = false;
-      state.total = res.total;
-      const recordData = res.records.map((name: string, idx: number) => ({
-        id: idx,
-        name,
-        active: false,
-      }));
-      state.imgList = recordData || [];
-    })
-    .catch(() => {
-      state.loading = false;
-      state.imgList = [];
-    });
-};
-
-const onBeforeRemove = (fileItem: any) => {
-  const { url = '' } = fileItem;
-  const urlString = url.split('?')[1] || '';
-  const saveName = urlString.split('=')[1];
-  fetchFileDel(saveName)
-    .then(() => {
-      Message.success('删除成功');
-      getMaterialList();
-    })
-    .catch((e) => {
-      Message.warning(e.error);
-    });
-};
-
-const uploadSuccess = () => {
-  getMaterialList();
-};
-
-const uploadError = () => {
-  Message.error('上传失败');
-};
-
-const onTabChange = (key: number) => {
-  params.pageNum = 1;
-  state.type = key;
-  getMaterialList();
-};
-
-const onListItemClick = (index: number) => {
-  state.imgList[index].active = true;
-  state.imgList.forEach((item, idx) => {
-    if (idx === index) {
-      item.active = true;
-    } else {
-      item.active = false;
-    }
+const uploadRequest = (formData: any) => {
+  return new Promise((resolve, reject) => {
+    $http
+      .post('/server/web/file/upload', formData, {})
+      .then((res) => {
+        // 在这里将最终值传递
+        console.log('res', res);
+        Message.success('上传成功');
+        resolve(true);
+      })
+      .catch((e) => {
+        Message.error(e);
+        reject();
+      });
   });
 };
 
-const onPageChange = (current: number) => {
-  params.pageNum = current;
-  getMaterialList();
+// 将svg和img合成一张图片
+const mergeImages = async () => {
+  html2canvas(previweRef.value).then((canvas) => {
+    // 将 canvas 转换为图片
+    canvas.toBlob((blob) => {
+      // 创建 File 对象
+      if (blob !== null) {
+        const file = new File([blob], 'merImage.png', { type: 'image/png' });
+        // 可以在这里使用 file 对象，例如上传
+        const formData = new FormData();
+        formData.append('file', file);
+        uploadRequest(formData);
+      } else {
+        Message.error('格式错误');
+      }
+    });
+  });
 };
 
-const onOk = () => {
-  // 用数据去循环，这样保证状态都是重新渲染的
-  state.fileName = '';
-  state.imgList.forEach((item) => {
-    if (item.active) {
-      state.fileName = item.name;
-    }
-  });
-  if (state.fileName) {
-    uploadCropperVisible.value = true;
+const onOk = async () => {
+  console.log('onOk');
+  const res = '';
+  // 点击创建之后将svg和img合成为一张图片并且上传到服务器，前提需要判断是正常上传还是拼接上传
+  if (state.isShowUpload) {
+    const formData = new FormData();
+    const files = state.fileData;
+    console.log('file', files, files.file);
+    formData.append('file', files.file || {});
+    uploadRequest(formData);
   } else {
-    Message.error('请选择图片');
+    mergeImages();
   }
-
-  console.log('onOk', uploadCropperVisible.value);
+  // 创建之后将res传到前台
+  return res;
 };
 
 const onCancel = () => {
   emits('onCancel');
 };
-
-const uploadCropperSuccess = (value: any) => {
-  uploadCropperVisible.value = false;
-  emits('onConfirm', value);
-};
-
-const uploadCropperClose = () => {
-  uploadCropperVisible.value = false;
-  // emits('onCancel');
-};
-
-onMounted(async () => {
-  await getMaterialList();
-});
 </script>
 
 <style scoped lang="less">
-.tabs-container {
-  :deep(.tele-tabs-nav-vertical .tele-tabs-nav-ink) {
-    left: 0;
-    width: 4px;
-    height: 18px;
-    background: #1664ff;
-  }
+.icon-group-content {
+  display: flex;
 
-  :deep(.tele-tabs-nav) {
-    width: 108px;
+  .left-section {
+    flex: 1;
     margin-right: 16px;
-  }
+    text-align: center;
 
-  :deep(.tele-tabs-nav-type-line) {
-    &::before {
-      display: none;
+    .tele-upload-wrapper {
+      text-align: center;
+
+      .tele-btn {
+        border-radius: 2px;
+      }
+    }
+
+    .preview-box {
+      position: relative;
+      width: 144px;
+      height: 144px;
+      margin-bottom: 16px;
+      overflow: hidden;
+
+      .icon-park-bg {
+        width: 144px;
+        height: 144px;
+      }
+
+      .icon-park-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 99;
+        transform: translate(-50%, -50%);
+      }
     }
   }
 
-  .list-content {
-    width: 836px;
-    height: 432px;
-    margin-bottom: 12px;
-    padding: 16px 24px;
-    overflow: auto;
-    background: #f7f7f7;
-  }
+  .right-section {
+    width: 620px;
+    padding-bottom: 32px;
+    background: #f8f8f8;
 
-  :deep(.tele-tabs-pane) {
-    .list-item {
+    .right-content {
+      padding-top: 24px;
+    }
+
+    .icon-group {
+      padding: 0 34px;
+    }
+
+    .sub-title {
       display: inline-block;
-      margin-right: 16px;
-      margin-bottom: 16px;
-      vertical-align: top;
-      border-radius: 2px;
+      margin-bottom: 20px;
+      margin-left: 24px;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+    }
 
-      &:nth-child(4n + 1) {
+    .list-item {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+      margin-right: 24px;
+      margin-bottom: 20px;
+      vertical-align: top;
+      // overflow: hidden;
+      .icon-park {
+        vertical-align: bottom;
+      }
+
+      img {
+        width: 48px;
+        height: 48px;
+        border: 2px solid transparent;
+      }
+
+      &:nth-child(8n) {
         margin-right: 0;
       }
 
-      &:nth-last-child(-n + 4) {
-        margin-bottom: 0;
+      &:nth-child(-n + 8) {
+        margin-bottom: 30px;
+      }
+
+      &.is-active {
+        img {
+          display: block;
+          border: 2px solid #1664ff;
+          border-radius: 8px;
+        }
       }
     }
 
-    .tabpane-header {
-      display: flex;
-      justify-content: space-between;
-      height: 32px;
-      margin-bottom: 14px;
-      line-height: 32px;
+    .icon-item {
+      position: relative;
+      background: #bbbfc5;
+      border-radius: 10px;
 
-      .tele-upload-wrapper {
-        width: 88px;
+      .icon-park {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
-    }
-  }
 
-  :deep(.tele-upload-list-picture) {
-    width: 185px;
-    height: 140px;
-    margin-right: 0;
-    margin-bottom: 0;
-    line-height: 140px;
-    border: 2px solid #f7f7f7;
-    border-radius: 2px;
-  }
-
-  .list-item.active {
-    :deep(.tele-upload-list-picture) {
-      border: 2px solid #1664ff;
-    }
-  }
-
-  :deep(.tele-upload-list-picture-mask .tele-upload-list-picture-operation) {
-    width: 100px;
-    margin: auto;
-    line-height: 140px;
-  }
-
-  .list-pagination {
-    .tele-pagination {
-      justify-content: flex-end;
+      &.is-active {
+        border: 2px solid #1664ff;
+        border-radius: 8px;
+      }
     }
   }
 }

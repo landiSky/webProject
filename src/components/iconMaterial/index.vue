@@ -1,21 +1,40 @@
 <template>
+  <div
+    class="tele-upload-picture-card picture-card-container"
+    @click="onButtonClick"
+  >
+    <div class="tele-upload-picture-card-text"
+      ><svg
+        viewBox="0 0 48 48"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        stroke="currentColor"
+        class="tele-icon tele-icon-plus"
+        stroke-width="4"
+        stroke-linecap="butt"
+        stroke-linejoin="miter"
+      >
+        <path d="M5 24h38M24 5v38"></path>
+      </svg>
+      <div style="margin-top: 10px; font-weight: 600">Upload</div></div
+    ></div
+  >
+
   <t-upload
-    list-type="picture-card"
+    v-if="previewList.length"
+    list-type="text"
     action="/"
     :default-file-list="fileList"
     image-preview
     :limit="1"
-    :on-before-remove="onBeforeRemove"
+    :on-button-click="onButtonClick"
   >
-    <template #remove-icon>
-      <iconpark-icon name="replace" size="16px"></iconpark-icon>
-    </template>
   </t-upload>
   <Source
     v-if="showSource"
     :visible="showSource"
     :confirm-loading="confirmLoading"
-    title="素材库"
+    title="应用图标"
     @on-confirm="onConfirm"
     @on-cancel="onCancel"
   />
@@ -23,9 +42,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { fetchClassList } from '@/api/goods-manage';
 import Source from './components/source.vue';
 
 const showSource = ref(false);
+
+const previewList = ref([]);
 
 const confirmLoading = ref(false);
 
@@ -37,8 +59,11 @@ const fileList = ref([
   },
 ]);
 
-const onBeforeRemove = () => {
+const onButtonClick = () => {
+  console.log('onButtonClick');
   showSource.value = true;
+  return false;
+  // showSource.value = true;
 };
 
 // 成功
@@ -51,4 +76,8 @@ const onCancel = () => {
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.tele-upload-picture-card {
+  width: 82px;
+}
+</style>
