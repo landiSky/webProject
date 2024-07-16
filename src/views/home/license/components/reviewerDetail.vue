@@ -1,7 +1,7 @@
 <template>
   <div :loading="currentData.loading">
     <t-page-header flex :show-back="true" @back="goBack">
-      <template #title> 审批 </template>
+      <template #title> 审核 </template>
       <template #breadcrumb>
         <t-breadcrumb :routes="breadcrumbList" />
       </template>
@@ -250,6 +250,7 @@
             <t-anchor-link href="#contacts"> 企业联系人 </t-anchor-link>
             <t-anchor-link href="#code"> 设备指纹码 </t-anchor-link>
             <t-anchor-link href="#order"> 企业节点订单信息 </t-anchor-link>
+            <t-anchor-link href="#history"> 历史License申请信息 </t-anchor-link>
           </t-anchor>
         </div>
       </t-col>
@@ -298,7 +299,7 @@ const breadcrumbList = reactive([
   },
   {
     path: null,
-    label: '审批',
+    label: '审核',
   },
 ]);
 // 审批旁边图标回退

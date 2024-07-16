@@ -310,6 +310,10 @@ const copyRules = reactive({
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入/选择企业前缀');
+        const reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g');
+        if (reg.test(value)) {
+          return cb('企业前缀不能包含汉字!');
+        }
         if (value.length > 128) return cb('长度不超过128个字符');
         return cb();
       },
@@ -353,8 +357,9 @@ const copyRules = reactive({
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入预估标识日解析量');
-        if (!/^[0-9]*$/.test(value)) return cb('只能输入数字');
         if (value.length > 20) return cb('长度不超过20个字符');
+        if (!/^[0-9]*$/.test(value)) return cb('只能输入数字');
+
         return cb();
       },
     },
@@ -528,13 +533,10 @@ const onPrev = () => {
 };
 // 下一步操作
 const onNext = async () => {
-  if (current.value === 1) {
-    const result = await formRef.value.validate();
-    if (result) return false;
-  }
+  const result = await formRef.value.validate();
+  if (result) return false;
+
   if (current.value === 2) {
-    formRef.value.validateField(`entPrefix`);
-    if (form.entPrefix.length === 0) return false;
     const state = await selectValueChange(form.entPrefix);
     if (!state) return false;
   }

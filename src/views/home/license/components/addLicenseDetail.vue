@@ -203,6 +203,7 @@
             <t-anchor-link href="#operatingscale">运营规模</t-anchor-link>
             <t-anchor-link href="#contacts"> 企业联系人 </t-anchor-link>
             <t-anchor-link href="#code"> 设备指纹码 </t-anchor-link>
+            <t-anchor-link href="#history"> license发放信息 </t-anchor-link>
           </t-anchor>
         </div>
       </t-col>
@@ -267,7 +268,7 @@ const columnsHistory = [
   },
   {
     title: '发放时间',
-    dataIndex: 'createTime',
+    dataIndex: 'approveTime',
     width: 180,
   },
 ];
