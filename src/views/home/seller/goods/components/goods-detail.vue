@@ -167,7 +167,7 @@
                   </div>
                 </div>
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示图">
+              <!-- <t-descriptions-item label="详情展示图">
                 <div v-if="detailImageList.length > 0" class="file-list">
                   <div
                     v-for="url of detailImageList"
@@ -206,7 +206,7 @@
                     </div>
                   </div>
                 </div>
-              </t-descriptions-item>
+              </t-descriptions-item> -->
               <t-descriptions-item label="商品分类">
                 {{ dataInfo.productTypeParentName }} /
                 {{ dataInfo.productTypeName }}
