@@ -335,7 +335,7 @@ const getInfo = async () => {
           code: res.data?.code,
           status: res.data?.status,
           authCycle: res.data?.authCycle,
-          createTime: res.data?.createTime,
+          approveTime: res.data?.approveTime,
         },
       ];
     })

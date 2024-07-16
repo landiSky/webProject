@@ -158,15 +158,21 @@ const findValueInColumns = (array: string | any[], value: any) => {
   return 1; // 如果没有找到值，则返回null
 };
 
+// 订单详情路由匹配
+const orderDetailReg = /^\/order\/detail\/(\d+)$/;
+
 watch(
   () => router,
   // eslint-disable-next-line consistent-return
   () => {
-    console.log('刷新了');
-    const currentPath = RouteAuthEnum[router.currentRoute.value.fullPath];
+    const currentFullPath = router.currentRoute.value.fullPath;
+
+    const currentPath = orderDetailReg.test(currentFullPath)
+      ? RouteAuthEnum['/buyer/order']
+      : RouteAuthEnum[router.currentRoute.value.fullPath];
+
     const userindex = findValueInColumns(usermenuList, currentPath);
     const manageindex = findValueInColumns(managemenuList, currentPath);
-    console.log(userindex, manageindex);
     useMenuStore().setMenuIndex(
       userInfo.value?.isAdmin ? manageindex + 1 : userindex + 1,
       userInfo.value
