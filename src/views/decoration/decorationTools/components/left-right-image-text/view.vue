@@ -17,6 +17,7 @@
 
             <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
             <span
+              v-if="item?.linkType !== 2"
               class="image-link"
               @click="clickLink(item?.linkType, item?.linkUrl)"
               >查看详情>>

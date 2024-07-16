@@ -37,9 +37,22 @@
         :key="index"
         :style="{ width: '100%', marginTop: '0px' }"
       >
-        <t-space style="margin-top: 10px; margin-bottom: 20px">
+        <t-space
+          style="
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+          "
+        >
           <div class="vertical-line"></div>
           <div>{{ `区块${++index}` }}</div>
+          <div
+            v-if="index === 4 || index === 5"
+            class="delete"
+            @click="deleteSpace(index)"
+            >删除</div
+          >
         </t-space>
         <t-form-item
           label="标题"
@@ -77,9 +90,26 @@
             show-word-limit
           />
         </t-form-item>
-
         <t-form-item
-          label="详情链接"
+          label="关联"
+          :field="`list.${index}.linkType`"
+          :label-col-props="{
+            flex: '90px',
+          }"
+          validate-trigger="blur"
+          :rules="[{ required: true, message: '必填' }]"
+        >
+          <t-radio-group v-model="item.linkType" @change="changeRadio(index)">
+            <t-radio :value="0">链接</t-radio>
+            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="2">无</t-radio>
+          </t-radio-group>
+        </t-form-item>
+        <t-form-item
+          v-if="item.linkType !== 2"
+          :label="
+            item.linkType === 0 ? '详情链接' : item.linkType === 1 ? '商品' : ''
+          "
           :field="`list.${index}.linkUrl`"
           :label-col-props="{
             flex: '90px',
@@ -88,11 +118,22 @@
           :rules="[{ required: true, message: '必填' }]"
         >
           <t-textarea
+            v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            max-length="15"
+            max-length="40"
             show-word-limit
             placeholder="请输入链接地址"
           />
+          <t-select
+            v-if="item.linkType === 1"
+            v-model="item.linkUrl"
+            placeholder="请选择"
+            allow-clear
+          >
+            <t-option v-for="itemg in goodList" :key="itemg">{{
+              itemg
+            }}</t-option>
+          </t-select>
         </t-form-item>
 
         <t-form-item
@@ -151,13 +192,21 @@
         @on-confirm="onConfirm"
         @on-cancel="onCancel"
       />
-      <div v-show="form.list.length < 5" class="extraOpt">
+      <div class="extraOpt">
         <iconpark-icon
+          v-if="form.list.length < 5"
           class="plusIcon"
           name="squarePlus"
           size="20px"
           @click="addBlock"
         ></iconpark-icon>
+        <t-tooltip v-else content="到达区块添加上限，删除后可操作" is-bright>
+          <iconpark-icon
+            class="plusIcon"
+            name="squarePlusGray"
+            size="20px"
+          ></iconpark-icon>
+        </t-tooltip>
         <span>{{ `添加区块 (最多支持${data?.maxNum}个区块)` }}</span>
       </div>
     </t-form>
@@ -182,14 +231,18 @@ const curIndex = ref(-1);
 const showSource = ref(false);
 const { data } = toRefs(props);
 const formRef = ref();
-
+const goodList = ['123', '456', '789'];
+// const activeIndex = ref(-1);
 const form = ref({
   mainTitle: '',
   list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
 });
+
+const changeRadio = (value: number) => {
+  form.value.list[value - 1].linkUrl = '';
+};
 const addBlock = () => {
-  form.value.list.push({});
-  console.log('form:add', form);
+  form.value.list.push({ linkType: 0 });
 };
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
@@ -197,8 +250,6 @@ const onBeforeRemove = (index: number) => {
 };
 
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value);
-  console.log(curIndex.value, 'curIndex');
   form.value.list[curIndex.value - 1].src = value;
   console.log('form:', form.value.list);
   showSource.value = false;
@@ -206,6 +257,10 @@ const onConfirm = (value: any) => {
 
 const onCancel = () => {
   showSource.value = false;
+};
+
+const deleteSpace = (index: number) => {
+  form.value.list.splice(index - 1, 1);
 };
 // watch(
 //   () => data?.value,
@@ -222,9 +277,7 @@ const onCancel = () => {
 //   }
 // );
 onMounted(() => {
-  console.log('mounted');
   // form赋值
-  console.log('右侧内容data?.value:', data?.value);
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = data?.value?.configValue || [];
 });
@@ -264,9 +317,25 @@ defineExpose({
     border-radius: 1px;
   }
 
+  .space-between {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   .tele-image {
     width: 100%;
     height: 84px;
+  }
+
+  .delete {
+    position: absolute;
+    right: 0;
+    color: #1664ff;
+    font-size: 14px;
+    cursor: pointer;
   }
 
   .single-image-desc {
