@@ -141,7 +141,6 @@
                   ? [
                       {
                         url: `/server/web/file/download?name=${item.src}`,
-                        // url: `${form.src}`,
                       },
                     ]
                   : []
@@ -164,8 +163,8 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：182px *
-              460px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+              建议图片尺寸：190px *
+              190px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
             </span>
           </t-space>
         </t-form-item>
@@ -181,14 +180,46 @@
         @on-cancel="onCancel"
       />
     </t-form>
+
+    <div class="area-add-box">
+      <t-divider margin="0" />
+      <div class="area-add-box-content">
+        <iconpark-icon
+          v-if="form.list.length < 8"
+          style="cursor: pointer"
+          name="squarePlus"
+          :size="20"
+          @click="addBlock"
+        />
+        <iconpark-icon
+          v-else
+          style="cursor: not-allowed"
+          name="squarePlusGray"
+          size="20"
+        />
+        <span>添加区块（最多支持8个区块）</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted, computed } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
-
+// 每个子表单的配置项
+type ConfigItem = {
+  title: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  list: ConfigItem[];
+};
 const props = defineProps({
   data: Object,
 });
@@ -196,17 +227,17 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 182,
-  height: 460,
+  width: 190,
+  height: 190,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
 const { data } = toRefs(props);
 const formRef = ref();
 
-const form = ref({
+const form = ref<ConfigData>({
   mainTitle: '',
-  list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
+  list: [],
 });
 
 const onBeforeRemove = (index: number) => {
@@ -225,25 +256,26 @@ const onConfirm = (value: any) => {
 const onCancel = () => {
   showSource.value = false;
 };
-// watch(
-//   () => data?.value,
-//   (val) => {
-//     // console.log('form:', JSON.stringify(form), val);
-//     // form.value.title = val?.value.title || '';
-//     // form.value.linkType = val?.value.linkType || 0;
-//     // form.value.linkUrl = val?.value.linkUrl || '';
-//     // form.value.desc = val?.value.desc || '';
-//   },
-//   {
-//     immediate: true,
-//     deep: true,
-//   }
-// );
+const addBlock = () => {
+  console.log('添加区块', form.value.list as any);
+  if (form.value.list.length >= 8) {
+    return;
+  }
+  const { list } = form.value;
+  list.push({
+    title: '',
+    desc: '',
+    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+    linkType: 0,
+    linkUrl: '',
+  });
+};
+
 onMounted(() => {
   console.log('mounted');
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
-  form.value.list = data?.value?.configValue || [];
+  form.value.list = Object.values(data?.value?.configValue) || [];
 });
 
 defineExpose({
@@ -255,14 +287,11 @@ defineExpose({
 <style scoped lang="less">
 .box {
   display: flex;
-  // height: calc(100vh - 50px);
-  // min-height: 500px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: 100%;
-
+  // height: 100%;
   .header {
     width: 100%;
     height: 54px;
@@ -288,6 +317,35 @@ defineExpose({
 
   .box-desc {
     color: #1d1d1d;
+  }
+
+  .divider-cls {
+    width: calc(100% - 40px);
+  }
+
+  .area-add-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 200px;
+    padding: 0 24px;
+
+    .area-add-box-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      margin-top: 20px;
+
+      span {
+        margin-left: 8px;
+        color: #1d2129;
+        font-size: 12px;
+      }
+    }
   }
 }
 

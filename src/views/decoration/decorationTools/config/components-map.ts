@@ -65,6 +65,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  MultiImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

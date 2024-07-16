@@ -10,11 +10,9 @@
         :key="index"
         class="image-item"
       >
-        <img
+        <t-image
           :src="`/server/web/file/download?name=${item?.src}`"
-          fit="cover"
           :preview="false"
-          class="image-cls"
         />
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
@@ -111,9 +109,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    // height: calc(@factor * 256px);
-    // margin-top: calc(@factor * 29px);
-    // background-color: red;
+
     .image-item {
       position: relative;
       display: flex;
@@ -123,13 +119,8 @@ defineExpose({
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
 
-      .image-cls {
-        width: 100%;
-        height: calc(@factor * 114px);
-        border-radius: 6px;
-      }
-
       .image-item-content {
+        z-index: 100;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -168,6 +159,15 @@ defineExpose({
       transform: scale(1.05);
       transition: 0.5s;
     }
+  }
+}
+
+::v-deep(.tele-image) {
+  .tele-image-img {
+    width: calc(@factor * 190px) !important;
+    height: calc(@factor * 114px) !important;
+    object-fit: cover !important;
+    border-radius: 6px;
   }
 }
 // .is-preview {

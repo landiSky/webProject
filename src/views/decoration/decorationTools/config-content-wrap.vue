@@ -30,7 +30,12 @@ import eventBus from '@/utils/bus';
 const data = ref();
 const formComponentRef = ref();
 // 配置项是list的组件
-const listType = ['VerticalImageText', 'ThreeImageText', 'LeftRightImageText'];
+const listType = [
+  'VerticalImageText',
+  'ThreeImageText',
+  'MultiImageText',
+  'LeftRightImageText',
+];
 
 watch(
   () => formComponentRef?.value?.form,
@@ -38,6 +43,7 @@ watch(
     // 实时监测form数据变化
     if (val) {
       console.log('form配置数据变化：', val, data.value.name);
+      // formComponentRef.value.validate();
       eventBus.emit('config-event', {
         type: !listType.includes(data.value.name),
         msgData: formComponentRef.value.form,
@@ -51,6 +57,7 @@ watch(
 const handleMyEvent = (payload: any) => {
   console.log('配置内容组件接收到事件:', payload);
   data.value = payload;
+  // formComponentRef.value.validate();
 };
 
 onMounted(() => {
