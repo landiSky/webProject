@@ -5,9 +5,8 @@
     }}</div>
     <t-carousel
       :auto-play="true"
-      indicator-type="dot"
       animation-name="fade"
-      show-arrow="hover"
+      show-arrow="never"
       class="image-box"
     >
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
