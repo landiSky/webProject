@@ -186,7 +186,7 @@ function handleBgColor(color: string) {
 // 设置组件背景样式
 const bgStyle = (index: number) => {
   const colorList = handleBgColor(componentsList.value[index]?.bgColor);
-  console.log(colorList, colorList);
+  // console.log(colorList, colorList);
   if (colorList.length === 2) {
     // 渐变色
     return {
@@ -320,8 +320,16 @@ const notPreview = () => {
 // 选中组件回调
 const selectComponent = (index: number) => {
   selectIndex.value = index;
-  console.log('selectComponent:', index);
+  console.log('收到选中组件事件:', index);
+  console.log(
+    '打印选中组件的值：',
+    JSON.parse(JSON.stringify(componentsList.value))
+  );
   if (!isPreview.value) {
+    console.log(
+      '开始发事件-selectComponent，组件的值:',
+      JSON.parse(JSON.stringify(componentsList.value[selectIndex.value]))
+    );
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
   } else {
     // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
@@ -358,7 +366,7 @@ const publish = () => {
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
-  console.log('handleMyEvent:', payload);
+  console.log('监听到insertIndex事件，获取到index:', payload);
   selectIndex.value = payload;
 };
 
