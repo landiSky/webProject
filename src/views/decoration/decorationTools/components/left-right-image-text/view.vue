@@ -14,7 +14,7 @@
           <div class="image-item-content">
             <span class="image-title">{{ item?.title || '小标题' }}</span>
 
-            <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+            <div class="image-desc">{{ item?.desc || '图片简介' }}</div>
             <span
               v-if="item?.linkType !== 2"
               class="image-link"
@@ -125,6 +125,8 @@ defineExpose({
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 100%;
+      height: 100%;
 
       .image-item-content {
         position: relative;
@@ -136,8 +138,8 @@ defineExpose({
         width: calc(@factor * 300px);
         height: calc(@factor * 192px);
         margin-right: 15.5px;
-        padding: 20px;
         padding: 5px;
+        overflow: auto;
         font-size: calc(@factor * 14px);
 
         .image-title {
