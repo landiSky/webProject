@@ -49,6 +49,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  LeftRightImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/left-right-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/left-right-image-text/ui-config.vue'
+          )
+      ),
+  },
   MultiImageText: {
     view: () =>
       defineAsyncComponent(
@@ -70,7 +86,7 @@ const ComponentsMap: Record<string, any> = {
       defineAsyncComponent(
         () =>
           import(
-            '@/views/decoration/decorationTools/components/herizontal-image-text/view.vue'
+            '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
           )
       ),
     uiConfig: () =>
@@ -78,6 +94,22 @@ const ComponentsMap: Record<string, any> = {
         () =>
           import(
             '@/views/decoration/decorationTools/components/herizontal-image-text/ui-config.vue'
+          )
+      ),
+  },
+  IconImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/icon-image-text/ui-config.vue'
           )
       ),
   },

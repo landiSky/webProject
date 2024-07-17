@@ -1,33 +1,35 @@
-<!-- 竖图文 -->
 <template>
   <div class="vertical-image-text-box">
     <div class="vertical-image-text-title">{{
       data?.mainTitle || '主标题'
     }}</div>
-    <div class="image-box">
-      <div
-        v-for="(item, index) in data?.configValue"
-        :key="index"
-        class="image-item"
-      >
-        <img
-          :src="`/server/web/file/download?name=${item?.src}`"
-          fit="cover"
-          :preview="false"
-          class="image-cls"
-        />
-        <div class="image-item-content">
-          <span class="image-title">{{ item?.title || '小标题' }}</span>
-          <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
-          <span
-            v-if="item?.linkType !== 2"
-            class="image-link"
-            @click="clickLink(item?.linkType, item?.linkUrl)"
-            >详情>>
-          </span>
+    <t-carousel
+      :auto-play="true"
+      animation-name="fade"
+      class="image-box"
+      show-arrow="hover"
+    >
+      <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
+        <div class="image-item">
+          <div class="image-item-content">
+            <span class="image-title">{{ item?.title || '小标题' }}</span>
+
+            <div class="image-desc">{{ item?.desc || '图片简介' }}</div>
+            <span
+              v-if="item?.linkType !== 2"
+              class="image-link"
+              @click="clickLink(item?.linkType, item?.linkUrl)"
+              >查看详情>>
+            </span>
+          </div>
+          <img
+            :src="`/server/web/file/download?name=${item?.src}`"
+            fit="cover"
+            class="image-cls"
+          />
         </div>
-      </div>
-    </div>
+      </t-carousel-item>
+    </t-carousel>
   </div>
 </template>
 
@@ -40,7 +42,7 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
-
+console.log('view-data左侧内容:', data.value);
 const clickLink = (type: number, url: string) => {
   if (type === 0) {
     // 外部链接
@@ -53,7 +55,7 @@ const clickLink = (type: number, url: string) => {
 watch(
   () => props.data,
   (val: any) => {
-    console.log('vertical image data', val);
+    console.log('vertical image data左侧内容', val);
   },
   { immediate: true, deep: true }
 );
@@ -62,7 +64,7 @@ watch(
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
-const checkConfigList = (list: any) => {
+const checkConfigList = (list: []) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     console.log('竖图遍历', item);
@@ -80,7 +82,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      checkConfigList(data?.value?.configValue.value)
     ) {
       return reject();
     }
@@ -114,96 +116,89 @@ defineExpose({
   }
 
   .image-box {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    // flex-wrap: wrap;
-    height: calc(@factor * 230px);
+    width: calc(@factor * 600px);
+    height: calc(@factor * 260px);
     // margin-top: calc(@factor * 29px);
     .image-item {
       position: relative;
-      display: block;
-      width: calc(@factor * 91px);
-      height: calc(@factor * 230px);
-      margin: 0 calc(@factor * 2px);
-      transition: width 0.8s;
+      // display: block;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
 
-      .image-cls {
-        width: 100%;
-        height: 100%;
-      }
-      // .image-cls:hover {
-      // }
       .image-item-content {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        padding: 20px;
+        box-sizing: border-box;
+        width: calc(@factor * 300px);
+        height: calc(@factor * 192px);
+        margin-right: 15.5px;
+        padding: 5px;
+        overflow: auto;
+        font-size: calc(@factor * 14px);
 
         .image-title {
-          color: #fff;
+          width: 100%;
+          height: calc(@factor * 34px);
+          color: #1d2129;
           font-weight: 500;
           font-size: calc(@factor * 16px);
+          text-align: left;
+          text-overflow: ellipsis;
+          border-bottom: 1px solid #e2e2e2;
         }
 
         .image-desc {
           display: -webkit-box;
-          width: calc(@factor * 70px);
+          width: 100%;
           margin: 10px 0;
           overflow: hidden;
+          color: #4e5969;
           font-size: calc(@factor * 14px);
-          white-space: normal;
+          line-height: calc(@factor * 18px);
+          white-space: pre-wrap;
           text-align: left;
           text-overflow: ellipsis;
           word-wrap: break-word;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 7;
           -webkit-box-orient: vertical;
         }
 
         .image-link {
-          color: #fff;
+          display: inline-block;
+          color: #1664ff;
           font-size: calc(@factor * 14px);
           cursor: pointer;
         }
       }
     }
 
-    .image-item:hover::before {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0.9),
-        rgba(199, 221, 255, 0.9)
-      );
-      content: '';
+    .image-cls {
+      width: calc(@factor * 324.5px);
+      height: calc(@factor * 301px);
     }
 
-    .image-item:hover {
-      width: calc(@factor * 91px * 2.3);
+    :deep(.tele-carousel-indicator-dot .tele-carousel-indicator-item) {
+      width: 57.5px;
+      height: 5px;
+      border-radius: 1px;
+    }
 
-      .image-item-content {
-        .image-title,
-        .image-link {
-          color: #1d2129;
-        }
+    :deep(.tele-carousel-indicator-item:hover) {
+      background: #eaeaea;
+    }
 
-        .image-desc {
-          display: -webkit-box;
-          width: calc(@factor * 70px * 2.3);
-          -webkit-line-clamp: 6;
-          color: #4e5969;
-        }
-      }
+    :deep(.tele-carousel-indicator-item-active) {
+      background: #eaeaea;
+    }
+
+    :deep(.tele-carousel-indicator-wrapper-bottom) {
+      background: transparent;
     }
   }
 

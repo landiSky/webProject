@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import NavBar from '@/layout/home/navbar/index.vue';
 import DecorationTools from '@/views/decoration/decorationTools/editor-tool-bar-wrap.vue';
 import ConfigContent from '@/views/decoration/decorationTools/config-content-wrap.vue';
@@ -47,7 +47,9 @@ import PageMain from '@/layout/home/main/index.vue';
 import eventBus from '@/utils/bus';
 
 const navbarHeight = '48px';
+const contentRef = ref<HTMLDivElement>();
 
+const scrollY = ref(0);
 const disable = ref(false);
 
 const data = ref({ name: 'SigleImg' });
@@ -56,6 +58,25 @@ const handleMyEvent = (payload: any) => {
   console.log('Event received:', payload);
   disable.value = payload;
 };
+const handleScroll = (e: any) => {
+  scrollY.value = e.target.scrollTop;
+};
+watch(
+  () => scrollY.value,
+  (n, o) => {
+    console.log('Scrollmain:', n, o);
+    if (Math.abs(n - o) > 200) {
+      // 此时说明是突变的，取旧值
+      setTimeout(() => {
+        if (contentRef.value) {
+          console.log('保持旧的', n, o);
+          contentRef.value?.scrollTo(0, o);
+        }
+      }, 10);
+    }
+  }
+);
+
 onMounted(() => {
   eventBus.on('preview-event', handleMyEvent);
 });

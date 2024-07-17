@@ -14,7 +14,7 @@
       :is-preview="isPreview"
       :bg-color="data?.bgColor"
       :style="componentStyle"
-      @click="clickComponent"
+      @click.stop="clickComponent"
     ></component>
   </div>
 </template>
