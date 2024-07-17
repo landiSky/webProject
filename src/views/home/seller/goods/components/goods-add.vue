@@ -185,7 +185,7 @@
               >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
             >
           </t-form-item>
-          <t-form-item
+          <!-- <t-form-item
             label="详情展示图"
             field="detailImg"
             class="pic-item"
@@ -273,7 +273,7 @@
             <div class="hint"
               >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
             >
-          </t-form-item>
+          </t-form-item> -->
           <t-form-item label="商品分类" field="productTypeId">
             <t-cascader
               v-model="formModel.productTypeId"
