@@ -127,6 +127,36 @@ const tools = [
           },
         ],
       },
+      {
+        chineseName: '横图叠文',
+        maxNum: 3,
+        icon: 'imgTxt',
+        name: 'HerizontalImageText',
+        mainTitle: '我是主标题',
+        configValue: [
+          {
+            title: '111',
+            desc: 'balabalabalabalabalabalabalabalabalabalabalabalabalabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '222',
+            desc: 'balabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '333',
+            desc: 'balabala',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+        ],
+      },
     ],
   },
 ];

@@ -65,6 +65,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  HerizontalImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/herizontal-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/herizontal-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;
