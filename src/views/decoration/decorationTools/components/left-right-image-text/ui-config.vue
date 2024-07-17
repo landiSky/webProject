@@ -261,7 +261,7 @@ const onBeforeRemove = (index: number) => {
 
 const onConfirm = (value: any) => {
   form.value.list[curIndex.value - 1].src = value;
-  console.log('form:', form.value.list);
+  // console.log('form:', form.value.list);
   showSource.value = false;
 };
 
