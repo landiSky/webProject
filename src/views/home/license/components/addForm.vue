@@ -129,7 +129,7 @@
           <div class="title-left"></div>
           <div class="title-right">License申请信息</div>
         </div>
-        <t-form-item field="idHubVersion" label="IDHub版本" class="item-top20">
+        <!-- <t-form-item field="idHubVersion" label="IDHub版本" class="item-top20">
           <t-select
             v-model="form.idHubVersion"
             :style="{ width: '320px' }"
@@ -142,7 +142,7 @@
               >{{ item.label }}</t-option
             >
           </t-select>
-        </t-form-item>
+        </t-form-item> -->
         <t-form-item field="effectTime" label="生效日期" class="item-top20">
           <t-date-picker
             v-model="form.effectTime"
