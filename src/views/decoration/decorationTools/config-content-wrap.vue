@@ -35,6 +35,7 @@ const listType = [
   'ThreeImageText',
   'MultiImageText',
   'IconImageText',
+  'LeftRightImageText',
 ];
 
 watch(

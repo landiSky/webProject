@@ -49,6 +49,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  LeftRightImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/left-right-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/left-right-image-text/ui-config.vue'
+          )
+      ),
+  },
   MultiImageText: {
     view: () =>
       defineAsyncComponent(
