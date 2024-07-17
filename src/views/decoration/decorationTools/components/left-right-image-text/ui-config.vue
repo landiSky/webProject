@@ -291,8 +291,9 @@ const deleteSpace = (index: number) => {
 onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
-  form.value.list = data?.value?.configValue || [];
-  console.log(form.value.list, '-------------------');
+  form.value.list = Array.isArray(data?.value?.configValue)
+    ? data?.value?.configValue
+    : Object.values(data?.value?.configValue);
 });
 
 defineExpose({
