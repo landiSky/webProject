@@ -148,26 +148,6 @@ const homeRoutesList = [
           hideInMenu: true,
         },
       },
-      {
-        path: '/license/addlicensedetail',
-        name: 'AddLicenseDetail',
-        component: () =>
-          import('@/views/home/license/components/addLicenseDetail.vue'),
-        meta: {
-          hideInMenu: true,
-          parentPath: '/license/index',
-        },
-      },
-      {
-        path: '/license/admin/reviewdetails',
-        name: 'licenseAdminReviewDetails',
-        component: () =>
-          import('@/views/home/license/components/reviewerDetail.vue'),
-        meta: {
-          hideInMenu: true,
-          parentPath: '/license/index',
-        },
-      },
     ],
     meta: {
       name: 'License管理',

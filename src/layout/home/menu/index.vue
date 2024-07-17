@@ -108,7 +108,7 @@ const clickIdService = () => {
   });
   const { primary, companyId } = userInfoByCompany || {};
   if (Number(primary) !== 2 || userInfo?.isAdmin) {
-    const { snmsUrls } = userInfo?.value || {};
+    const { snmsUrls } = userInfo || {};
     const params = {
       companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
       snmsLoginId: snmsUrls?.snmsLoginId,

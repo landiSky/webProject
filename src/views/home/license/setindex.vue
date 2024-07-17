@@ -435,7 +435,7 @@ const clickSearchBtn = () => {
 const clickDetails = (data: any, typeindex: string) => {
   if (typeindex === '1') {
     router.push({
-      path: '/license/addlicensedetail',
+      path: '/sync/license/addlicensedetail',
       query: {
         id: data.id,
       },
@@ -443,7 +443,7 @@ const clickDetails = (data: any, typeindex: string) => {
     return;
   }
   router.push({
-    path: '/license/admin/reviewdetails',
+    path: '/sync/license/admin/reviewdetails',
     query: {
       id: data.id,
     },

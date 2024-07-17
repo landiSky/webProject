@@ -28,13 +28,11 @@ export const managemenuList = [
 
     'ROUTE_USER', // 用户管理
     'ROUTE_USER_VERIFY', // 认证管理
-  ],
-  [
     'ROUTE_SYNC', // 清单管理
     'ROUTE_SYNC_CLASS', // 商品分类管理
     'ROUTE_SYNC_GOODS', // 商品管理
     'ROUTE_SYNC_LABEL', // 标签管理
-    'ROUTE_LICENSE', // 标识服务-License管理
+    'ROUTE_SYNC_LICENSE', // 标识服务-License管理
   ],
 ];
 export const userMenu = (num: number) => {

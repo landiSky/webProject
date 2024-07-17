@@ -124,20 +124,15 @@ const manageMenu = [
     name: '平台管理',
     key: 1,
   },
+  {
+    name: '标识管理',
+    key: 3,
+  },
 ];
 const menuChange = () => {
   let dataList = [];
   if (userInfo.value?.isAdmin) {
     dataList = manageMenu;
-    if (userInfo.value?.source) {
-      dataList = [
-        ...manageMenu,
-        {
-          name: '清单管理',
-          key: 2,
-        },
-      ];
-    }
   } else {
     dataList = userMenu;
   }
@@ -157,31 +152,6 @@ const findValueInColumns = (array: string | any[], value: any) => {
   }
   return 1; // 如果没有找到值，则返回null
 };
-
-// 订单详情路由匹配
-const orderDetailReg = /^\/order\/detail\/(\d+)$/;
-
-watch(
-  () => router,
-  // eslint-disable-next-line consistent-return
-  () => {
-    const currentFullPath = router.currentRoute.value.fullPath;
-
-    const currentPath = orderDetailReg.test(currentFullPath)
-      ? RouteAuthEnum['/buyer/order']
-      : RouteAuthEnum[router.currentRoute.value.fullPath];
-
-    const userindex = findValueInColumns(usermenuList, currentPath);
-    const manageindex = findValueInColumns(managemenuList, currentPath);
-    useMenuStore().setMenuIndex(
-      userInfo.value?.isAdmin ? manageindex + 1 : userindex + 1,
-      userInfo.value
-    );
-  },
-  {
-    immediate: true,
-  }
-);
 
 const handleLogout = async () => {
   try {
@@ -272,6 +242,11 @@ const setDot = (index: number) => {
   // TODO w:用户主导航平台管理打点,这个打点位置存疑？
   console.log('用户主导航平台管理打点');
   // apiDataPoint(null, null, 6, 10);
+  if (index === 3) {
+    // 点击标识管理，跳转到二级企业管理系统
+    clickIdService();
+    return;
+  }
   try {
     useMenuStore().setMenuIndex(index, userInfo.value);
   } catch (error: any) {
@@ -293,6 +268,22 @@ const onSearch = () => {
     },
   });
 };
+
+watch(
+  () => router,
+  // eslint-disable-next-line consistent-return
+  () => {
+    const currentFullPath = router.currentRoute.value.fullPath;
+
+    // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
+    if (currentFullPath === '/license/index' && menuStore.menuIndex !== 2) {
+      setDot(2);
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="less" scoped>

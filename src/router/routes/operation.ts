@@ -61,71 +61,87 @@ const operationRoutesList = [
       hideInMenu: false,
     },
   },
-  // {
-  //   path: '/sync',
-  //   component: PAGE_LAYOUT,
-  //   children: [
-  //     {
-  //       path: '/sync/class',
-  //       name: 'classManage',
-  //       component: () => import('@/views/operation/sync/class/index.vue'),
-  //       meta: {
-  //         name: '商品分类管理',
-  //         keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-  //         hideInMenu: false,
-  //       },
-  //     },
-  //     {
-  //       path: '/sync/goods',
-  //       name: 'syncGoodsManage',
-  //       component: () => import('@/views/operation/sync/goods/index.vue'),
-  //       meta: {
-  //         name: '商品管理',
-  //         keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-  //         hideInMenu: false,
-  //       },
-  //     },
-  //     {
-  //       path: '/sync/label/manage',
-  //       name: 'syncLabelManage',
-  //       component: () => import('@/views/operation/sync/labelManage/index.vue'),
-  //       meta: {
-  //         name: '标签管理',
-  //         keepAlive: true,
-  //         hideInMenu: false,
-  //       },
-  //     },
-  //   ],
-  //   meta: {
-  //     name: '清单管理',
-  //     hideInMenu: false,
-  //   },
-  // },
   {
-    path: '/sync/class',
+    path: '/sync',
     component: PAGE_LAYOUT,
-    redirect: '/sync/class',
     children: [
+      // {
+      //   path: '/license',
+      //   component: PAGE_LAYOUT,
+      //   redirect: '/license/index',
+      //   children: [
+      //     {
+      //       path: '/license/index',
+      //       name: 'licenseIndex',
+      //       component: () => import('@/views/home/license/index.vue'),
+      //       meta: {
+      //         name: 'index',
+      //         hideInMenu: true,
+      //       },
+      //     },
+      //     {
+      //       path: '/license/addlicensedetail',
+      //       name: 'AddLicenseDetail',
+      //       component: () =>
+      //         import('@/views/home/license/components/addLicenseDetail.vue'),
+      //       meta: {
+      //         hideInMenu: true,
+      //         parentPath: '/license/index',
+      //       },
+      //     },
+      //     {
+      //       path: '/license/admin/reviewdetails',
+      //       name: 'licenseAdminReviewDetails',
+      //       component: () =>
+      //         import('@/views/home/license/components/reviewerDetail.vue'),
+      //       meta: {
+      //         hideInMenu: true,
+      //         parentPath: '/license/index',
+      //       },
+      //     },
+      //   ],
+      //   meta: {
+      //     name: 'License管理',
+      //   },
+      // },
+      {
+        path: '/sync/license',
+        name: 'syncLicenseManage',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'License管理',
+          keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
+          hideInMenu: false,
+        },
+      },
+      {
+        path: '/sync/license/addlicensedetail',
+        name: 'AddLicenseDetail',
+        component: () =>
+          import('@/views/home/license/components/addLicenseDetail.vue'),
+        meta: {
+          hideInMenu: true,
+        },
+      },
+      {
+        path: '/sync/license/admin/reviewdetails',
+        name: 'licenseAdminReviewDetails',
+        component: () =>
+          import('@/views/home/license/components/reviewerDetail.vue'),
+        meta: {
+          hideInMenu: true,
+        },
+      },
       {
         path: '/sync/class',
         name: 'classManage',
         component: () => import('@/views/operation/sync/class/index.vue'),
         meta: {
-          name: 'index',
+          name: '商品分类管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-          hideInMenu: true,
+          hideInMenu: false,
         },
       },
-    ],
-    meta: {
-      name: '商品分类管理',
-    },
-  },
-  {
-    path: '/sync/goods',
-    component: PAGE_LAYOUT,
-    redirect: '/sync/goods',
-    children: [
       {
         path: '/sync/goods',
         name: 'syncGoodsManage',
@@ -133,19 +149,9 @@ const operationRoutesList = [
         meta: {
           name: '商品管理',
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
-          hideInMenu: true,
+          hideInMenu: false,
         },
       },
-    ],
-    meta: {
-      name: '商品管理',
-    },
-  },
-  {
-    path: '/sync/label/manage',
-    component: PAGE_LAYOUT,
-    redirect: '/sync/label/manage',
-    children: [
       {
         path: '/sync/label/manage',
         name: 'syncLabelManage',
@@ -153,12 +159,13 @@ const operationRoutesList = [
         meta: {
           name: '标签管理',
           keepAlive: true,
-          hideInMenu: true,
+          hideInMenu: false,
         },
       },
     ],
     meta: {
-      name: '标签管理',
+      name: '清单管理',
+      hideInMenu: false,
     },
   },
 ];

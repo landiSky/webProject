@@ -38,7 +38,7 @@ const infoRouteList = [
   'ROUTE_SYNC_CLASS',
   'ROUTE_SYNC_GOODS',
   'ROUTE_SYNC_LABEL',
-  'ROUTE_LICENSE',
+  'ROUTE_SYNC_LICENSE',
 ];
 
 const opearationRouteList = [

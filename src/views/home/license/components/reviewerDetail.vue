@@ -294,7 +294,7 @@ const route = useRoute();
 // 面包屑
 const breadcrumbList = reactive([
   {
-    path: '/license/index',
+    path: '/sync/license',
     label: 'License管理',
   },
   {
