@@ -65,6 +65,22 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  IconImageText: {
+    view: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+          )
+      ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/icon-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

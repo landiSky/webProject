@@ -54,7 +54,7 @@ watch(
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
-const checkConfigList = (list: []) => {
+const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     console.log('竖图遍历', item);
@@ -72,7 +72,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(data?.value?.configValue.value)
+      checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }
