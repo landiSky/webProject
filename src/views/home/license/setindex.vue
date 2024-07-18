@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, onActivated } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -459,6 +459,10 @@ const downloadLicense = (data: any) => {
 };
 
 onMounted(() => {
+  fetchData();
+});
+
+onActivated(() => {
   fetchData();
 });
 </script>
