@@ -8,7 +8,7 @@
     }"
   >
     <component
-      :is="ComponentsMap[data?.name]?.view()"
+      :is="ComponentsMap[data?.name]?.view"
       ref="viewComponentRef"
       :data="data"
       :is-preview="isPreview"

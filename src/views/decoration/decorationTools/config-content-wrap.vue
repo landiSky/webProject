@@ -2,7 +2,7 @@
 <template>
   <div class="component-config">
     <component
-      :is="ComponentsMap[data?.name]?.uiConfig()"
+      :is="ComponentsMap[data?.name]?.uiConfig"
       ref="formComponentRef"
       :data="data"
     ></component>

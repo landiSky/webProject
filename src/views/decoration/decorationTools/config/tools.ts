@@ -215,6 +215,65 @@ const tools = [
           },
         ],
       },
+      {
+        chineseName: '拼图文',
+        maxNum: 5,
+        icon: 'stitchingImgTxt',
+        name: 'SpliceImageText',
+        mainTitle: '我是主标题',
+        configValue1: {
+          subTitle: '左标题',
+          config: [
+            {
+              title: '111',
+              desc: 'balabalabalabalabalabalabalabalaba',
+              src: 'bce9ffc8-92a7-4969-b465-8e07431b5841.JPG',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+            {
+              title: '222',
+              desc: 'balabala',
+              src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+            {
+              title: '333',
+              desc: 'balabala',
+              src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+          ],
+        },
+        configValue2: {
+          subTitle: '右标题',
+          config: [
+            {
+              title: '111',
+              desc: 'balabalabalabalabalabalabalabalaba',
+              src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+            {
+              title: '222',
+              desc: 'balabala',
+              src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+            {
+              title: '333',
+              desc: 'balabala',
+              src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+              linkType: 0,
+              linkUrl: 'http://www.baidu.com',
+            },
+          ],
+        },
+      },
     ],
   },
 ];

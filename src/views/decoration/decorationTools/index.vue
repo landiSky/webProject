@@ -383,10 +383,22 @@ watch(
 );
 
 onMounted(() => {
-  console.log('装修页面mounted');
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('config-event', (data: any) => {
+    console.log(
+      '接收的config信息',
+      data.msgData,
+      componentsList.value[selectIndex.value]
+    );
+    // 平图文组件特殊处理
+    if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
+      const { mainTitle, configValue1, configValue2 } = data.msgData;
+      componentsList.value[selectIndex.value].mainTitle = mainTitle;
+      componentsList.value[selectIndex.value].configValue1 = configValue1;
+      componentsList.value[selectIndex.value].configValue2 = configValue2;
+      return;
+    }
     if (data.type) {
       componentsList.value[selectIndex.value].configValue = { ...data.msgData };
     } else {
