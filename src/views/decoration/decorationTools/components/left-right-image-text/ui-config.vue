@@ -176,8 +176,10 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：598px *
-              609px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+              {{
+                `建议图片尺寸：${stencilSize.width}px *
+              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              }}
             </span>
           </t-space>
         </t-form-item>
