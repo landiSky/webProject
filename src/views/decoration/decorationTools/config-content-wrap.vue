@@ -34,6 +34,7 @@ const listType = [
   'VerticalImageText',
   'ThreeImageText',
   'MultiImageText',
+  'HerizontalImageText',
   'IconImageText',
   'LeftRightImageText',
 ];

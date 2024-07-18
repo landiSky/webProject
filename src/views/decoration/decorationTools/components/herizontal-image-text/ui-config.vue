@@ -1,5 +1,5 @@
 <template>
-  <div class="single-image">
+  <div class="box">
     <div class="header">
       {{ data?.chineseName || '' }}
     </div>
@@ -32,27 +32,15 @@
           allow-clear
         />
       </t-form-item>
+
       <div
         v-for="(item, index) in form.list"
         :key="index"
         :style="{ width: '100%', marginTop: '0px' }"
       >
-        <t-space
-          style="
-            position: relative;
-            width: 100%;
-            margin-top: 10px;
-            margin-bottom: 20px;
-          "
-        >
+        <t-space style="margin-top: 10px; margin-bottom: 20px">
           <div class="vertical-line"></div>
-          <div>{{ `区块${++index}` }}</div>
-          <div
-            v-if="index === 4 || index === 5"
-            class="delete"
-            @click="deleteSpace(index)"
-            >删除</div
-          >
+          <div>{{ `区块${UpperNumberList[index]}` }}</div>
         </t-space>
         <t-form-item
           label="标题"
@@ -67,13 +55,13 @@
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="10"
+            :max-length="8"
             show-word-limit
             allow-clear
           />
         </t-form-item>
         <t-form-item
-          label="简介"
+          label="详情简介"
           :field="`list.${index}.desc`"
           :label-col-props="{
             flex: '90px',
@@ -84,12 +72,13 @@
         >
           <t-textarea
             v-model="item.desc"
-            placeholder="请输入简介"
+            placeholder="请输入图片简介"
             allow-clear
-            :max-length="100"
+            :max-length="40"
             show-word-limit
           />
         </t-form-item>
+
         <t-form-item
           label="关联"
           :field="`list.${index}.linkType`"
@@ -99,7 +88,7 @@
           validate-trigger="blur"
           :rules="[{ required: true, message: '必填' }]"
         >
-          <t-radio-group v-model="item.linkType" @change="changeRadio(index)">
+          <t-radio-group v-model="item.linkType">
             <t-radio :value="0">链接</t-radio>
             <t-radio :value="1">商品</t-radio>
             <t-radio :value="2">无</t-radio>
@@ -108,7 +97,7 @@
         <t-form-item
           v-if="item.linkType !== 2"
           :label="
-            item.linkType === 0 ? '详情链接' : item.linkType === 1 ? '商品' : ''
+            item.linkType === 0 ? '链接地址' : item.linkType === 1 ? '商品' : ''
           "
           :field="`list.${index}.linkUrl`"
           :label-col-props="{
@@ -137,7 +126,7 @@
         </t-form-item>
 
         <t-form-item
-          label="图片"
+          label="配图"
           :field="`list.${index}.src`"
           :label-col-props="{
             flex: '90px',
@@ -153,7 +142,6 @@
                   ? [
                       {
                         url: `/server/web/file/download?name=${item.src}`,
-                        // url: `${form.src}`,
                       },
                     ]
                   : []
@@ -176,8 +164,8 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：598px *
-              609px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+              建议图片尺寸：420px *
+              242px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
             </span>
           </t-space>
         </t-form-item>
@@ -192,92 +180,57 @@
         @on-confirm="onConfirm"
         @on-cancel="onCancel"
       />
-      <div class="extraOpt">
-        <iconpark-icon
-          v-if="form.list.length < 5"
-          class="plusIcon"
-          name="squarePlus"
-          size="20px"
-          @click="addBlock"
-        ></iconpark-icon>
-        <t-tooltip v-else content="到达区块添加上限，删除后可操作" is-bright>
-          <iconpark-icon
-            class="plusIcon"
-            name="squarePlusGray"
-            size="20px"
-          ></iconpark-icon>
-        </t-tooltip>
-        <span>{{ `添加区块 (最多支持${data?.maxNum}个区块)` }}</span>
-      </div>
     </t-form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, reactive, onMounted } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
+import { UpperNumberList } from '@/enums/decoration';
+// 每个子表单的配置项
+type ConfigItem = {
+  title: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  list: ConfigItem[];
+};
 
 const props = defineProps({
   data: Object,
 });
 const confirmLoading = ref(false);
-
+const { data } = toRefs(props);
+const formRef = ref();
 // 截图尺寸
 const stencilSize = ref({
-  width: 598,
-  height: 609,
+  width: 456,
+  height: 264,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
-const { data } = toRefs(props);
-const formRef = ref();
-const goodList = ['123', '456', '789'];
 
-interface Form {
-  mainTitle: string;
-  list: any[];
-}
-const form = ref<Form>({
+const form = ref<ConfigData>({
   mainTitle: '',
   list: [],
 });
 
-const changeRadio = (value: number) => {
-  form.value.list[value - 1].linkUrl = '';
-};
-const addBlock = () => {
-  form.value.list.push({
-    title: '',
-    desc: '',
-    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
-    linkType: 0,
-    linkUrl: '',
-  });
-};
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
   showSource.value = true;
 };
+const goodList = ['123', '456', '789'];
 
-const onConfirm = (value: any) => {
-  form.value.list[curIndex.value - 1].src = value;
-  // console.log('form:', form.value.list);
-  showSource.value = false;
-};
-
-const onCancel = () => {
-  showSource.value = false;
-};
-
-const deleteSpace = (index: number) => {
-  console.log(form.value.list, '-------------------');
-  console.log(form.value.list.length, '-------------------');
-  form.value.list.splice(index - 1, 1);
-};
 // watch(
 //   () => data?.value,
 //   (val) => {
-//     console.log('右侧内容form:', JSON.stringify(form), val);
+//     // console.log('form:', JSON.stringify(form), val);
 //     // form.value.title = val?.value.title || '';
 //     // form.value.linkType = val?.value.linkType || 0;
 //     // form.value.linkUrl = val?.value.linkUrl || '';
@@ -288,12 +241,20 @@ const deleteSpace = (index: number) => {
 //     deep: true,
 //   }
 // );
+const onConfirm = (value: any) => {
+  console.log('返回的图片信息', value);
+  form.value.list[curIndex.value].src = value;
+  showSource.value = false;
+};
+
+const onCancel = () => {
+  showSource.value = false;
+};
 onMounted(() => {
+  console.log('mounted');
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
-  form.value.list = Array.isArray(data?.value?.configValue)
-    ? data?.value?.configValue
-    : Object.values(data?.value?.configValue);
+  form.value.list = data?.value?.configValue || [];
 });
 
 defineExpose({
@@ -303,7 +264,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-.single-image {
+.box {
   display: flex;
   // height: calc(100vh - 50px);
   // min-height: 500px;
@@ -331,28 +292,12 @@ defineExpose({
     border-radius: 1px;
   }
 
-  .space-between {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
   .tele-image {
     width: 100%;
     height: 84px;
   }
 
-  .delete {
-    position: absolute;
-    right: 0;
-    color: #1664ff;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .single-image-desc {
+  .box-desc {
     color: #1d1d1d;
   }
 }
@@ -363,24 +308,6 @@ defineExpose({
 
   img {
     object-fit: cover;
-  }
-}
-
-.extraOpt {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-
-  .plusIcon {
-    cursor: pointer;
-  }
-
-  span {
-    margin-left: 8px;
-    color: #1d2129;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 20px; /* 166.667% */
   }
 }
 

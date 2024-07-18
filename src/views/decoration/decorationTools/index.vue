@@ -325,6 +325,7 @@ const selectComponent = (index: number) => {
   selectIndex.value = index;
   if (!isPreview.value) {
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
+    console.log('选中1111', componentsList.value[selectIndex.value]);
   } else {
     // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
     console.log(
@@ -400,6 +401,7 @@ onMounted(() => {
       return;
     }
     if (data.type) {
+      console.log('list 类型返回=0000');
       componentsList.value[selectIndex.value].configValue = { ...data.msgData };
     } else {
       componentsList.value[selectIndex.value].mainTitle =
