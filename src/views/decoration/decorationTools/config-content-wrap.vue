@@ -2,7 +2,7 @@
 <template>
   <div class="component-config">
     <component
-      :is="ComponentsMap[data?.name]?.uiConfig()"
+      :is="ComponentsMap[data?.name]?.uiConfig"
       ref="formComponentRef"
       :data="data"
     ></component>
@@ -30,14 +30,23 @@ import eventBus from '@/utils/bus';
 const data = ref();
 const formComponentRef = ref();
 // 配置项是list的组件
-const listType = ['VerticalImageText', 'ThreeImageText', 'ImageOverlapText'];
+const listType = [
+  'VerticalImageText',
+  'ThreeImageText',
+  'MultiImageText',
+  'HerizontalImageText',
+  'IconImageText',
+  'LeftRightImageText',
+  'ImageOverlapText',
+];
 
 watch(
   () => formComponentRef?.value?.form,
   (val: any) => {
     // 实时监测form数据变化
     if (val) {
-      console.log('form配置数据变化：', val, data.value);
+      console.log('form配置数据变化：', val, data.value.name);
+      // formComponentRef.value.validate();
       eventBus.emit('config-event', {
         type: !listType.includes(data.value.name),
         msgData: formComponentRef.value.form,
@@ -54,6 +63,7 @@ const handleMyEvent = (payload: any) => {
     JSON.parse(JSON.stringify(payload))
   );
   data.value = payload;
+  // formComponentRef.value.validate();
 };
 
 onMounted(() => {

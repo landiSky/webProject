@@ -1,5 +1,5 @@
 <template>
-  <div class="single-image">
+  <div class="box">
     <div class="header">
       {{ data?.chineseName || '' }}
     </div>
@@ -80,8 +80,10 @@
             </template>
           </t-upload>
           <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-            建议图片尺寸：1200px *
-            520px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+            {{
+              `建议图片尺寸：${stencilSize.width}px *
+              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+            }}
           </span>
         </t-space>
       </t-form-item>
@@ -222,7 +224,7 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-.single-image {
+.box {
   display: flex;
   // height: calc(100vh - 50px);
   // min-height: 500px;
@@ -248,7 +250,7 @@ defineExpose({
     height: 84px;
   }
 
-  .single-image-desc {
+  .box-desc {
     color: #1d1d1d;
   }
 }

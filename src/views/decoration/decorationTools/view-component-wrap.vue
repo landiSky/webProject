@@ -8,13 +8,13 @@
     }"
   >
     <component
-      :is="ComponentsMap[data?.name]?.view()"
+      :is="ComponentsMap[data?.name]?.view"
       ref="viewComponentRef"
       :data="data"
       :is-preview="isPreview"
       :bg-color="data?.bgColor"
       :style="componentStyle"
-      @click="clickComponent"
+      @click.stop="clickComponent"
     ></component>
   </div>
 </template>

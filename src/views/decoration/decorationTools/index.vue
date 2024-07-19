@@ -18,6 +18,7 @@
           :disabled="isPreview"
           :group="{ name: 'vehicle-station' }"
           :list="componentsList"
+          :move-threshold="20"
           @end="endSort"
         >
           <template #item="{ element, index }">
@@ -117,16 +118,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed, nextTick } from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
 import { parseQuery, useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const route = useRoute();
-
+// const pageEditorRef = ref<HTMLDivElement>();
 const componentsList = ref<any[]>([]);
 
+// const scrollY = ref(-1);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
@@ -149,13 +151,20 @@ const colorList = ref([
 watch(
   () => componentsList.value,
   (val: any) => {
-    console.log('watch componentsList:', val);
+    // console.log('watch componentsList:', val);
   },
   {
     deep: true,
     immediate: true,
   }
 );
+
+const handleScroll = (e: any) => {
+  console.log('handleScroll1111:', e.target.scrollTop);
+  // if (e.target.scrollTop !== 0) {
+  //   scrollY.value = e.target.scrollTop;
+  // }
+};
 
 const curSelectedComponent = computed(() => {
   return componentsList.value[selectIndex.value];
@@ -186,7 +195,6 @@ function handleBgColor(color: string) {
 // 设置组件背景样式
 const bgStyle = (index: number) => {
   const colorList = handleBgColor(componentsList.value[index]?.bgColor);
-  // console.log(colorList, colorList);
   if (colorList.length === 2) {
     // 渐变色
     return {
@@ -205,13 +213,11 @@ const changeColor = (val: number) => {
   componentsList.value[selectIndex.value].bgColor =
     colorList.value[colorIndex.value]?.color0 +
     (colorList.value[colorIndex.value]?.color1 ?? '');
-  console.log('changeColor:', val, selectIndex.value);
 };
 
 // 左侧工具栏拖入后在列表中的位置
 const onEnd = (index: number) => {
   selectIndex.value = index;
-  console.log('onEnd:', selectIndex.value);
 };
 
 // 移除当前组件
@@ -221,7 +227,6 @@ const deleteComponent = (index: number) => {
   viewComponentWrapRef.value.splice(index, 1);
   // 删除当前的组件,将下个组件数据传递给配置组件,直到删完所有组件
   eventBus.emit('selectComponent', componentsList.value[index]);
-  console.log('deleteComponent:', index);
 };
 
 const deepCopy = (obj: any) => {
@@ -247,7 +252,6 @@ const copyComponent = (index: number) => {
   const secondHalf = componentsList.value.slice(index);
   componentsList.value = [...firstHalf, component, ...secondHalf];
   selectIndex.value = index;
-  console.log('componentsList:', componentsList.value);
 };
 
 // 动态设置组件的ref
@@ -259,7 +263,6 @@ const setItemRef = (el: any, index: number) => {
 
 // 保存组件列表的json数据到本地
 const clickSave = () => {
-  console.log('viewComponentWrapRef:', viewComponentWrapRef.value);
   const childForm = () => {
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
@@ -273,15 +276,11 @@ const clickSave = () => {
         'componentsList',
         JSON.stringify(componentsList.value)
       );
-      console.log('保存成功:', data);
     })
-    .catch(() => {
-      console.log('保存失败');
-    });
+    .catch(() => {});
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
-  console.log('viewComponentWrapRef:', viewComponentWrapRef.value);
   const childForm = () => {
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
@@ -302,6 +301,9 @@ const endSort = () => {
   console.log('endSort0000:', componentsList.value);
   clickSave();
 };
+const scrollFn = (e: any) => {
+  console.log('scrollFn000', e.target.scrollTop);
+};
 
 const close = () => {
   componentsList.value[selectIndex.value].visible = false;
@@ -319,6 +321,7 @@ const notPreview = () => {
 
 // 选中组件回调
 const selectComponent = (index: number) => {
+  console.log('select 回调', index);
   selectIndex.value = index;
   console.log('收到选中组件事件:', index);
   console.log(
@@ -331,10 +334,11 @@ const selectComponent = (index: number) => {
       JSON.parse(JSON.stringify(componentsList.value[selectIndex.value]))
     );
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
+    console.log('选中1111', componentsList.value[selectIndex.value]);
   } else {
     // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
     console.log(
-      '选中的组件:',
+      '选中的组件00:',
       componentsList.value[selectIndex.value].configValue?.linkType
     );
     const type = componentsList.value[selectIndex.value].configValue?.linkType;
@@ -348,6 +352,11 @@ const selectComponent = (index: number) => {
       console.log('跳转到搜索产品结果页');
     }
   }
+  // setTimeout(() => {
+  //   if (pageEditorRef?.value) {
+  //     pageEditorRef?.value?.scrollTo(0, scrollY.value);
+  //   }
+  // }, 10);
 };
 
 // 进入编辑模式
@@ -388,29 +397,34 @@ onMounted(() => {
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('config-event', (data: any) => {
+    console.log(
+      '接收的config信息',
+      data.msgData,
+      componentsList.value[selectIndex.value]
+    );
+    // 平图文组件特殊处理
+    if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
+      const { mainTitle, configValue1, configValue2 } = data.msgData;
+      componentsList.value[selectIndex.value].mainTitle = mainTitle;
+      componentsList.value[selectIndex.value].configValue1 = configValue1;
+      componentsList.value[selectIndex.value].configValue2 = configValue2;
+      return;
+    }
     if (data.type) {
       console.log('list 类型返回=0000');
       componentsList.value[selectIndex.value].configValue = { ...data.msgData };
     } else {
-      console.log('list 类型返回=', data.msgData.mainTitle);
       componentsList.value[selectIndex.value].mainTitle =
         data.msgData.mainTitle;
       componentsList.value[selectIndex.value].configValue = {
         ...data.msgData.list,
       };
     }
-
-    console.log(
-      '配置完成:',
-      selectIndex.value,
-      componentsList.value[selectIndex.value]
-    );
   });
   // TODO 模拟从后台获取json数据
   const localStorageData = localStorage.getItem('componentsList');
   if (localStorageData) {
     componentsList.value = JSON.parse(localStorageData);
-    console.log('获得的json数据:', componentsList.value);
   }
 });
 </script>
@@ -503,6 +517,7 @@ onMounted(() => {
 .select_config-box {
   position: absolute;
   left: 42%;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;

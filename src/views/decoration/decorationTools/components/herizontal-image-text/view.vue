@@ -1,4 +1,4 @@
-<!-- 竖图文 -->
+<!-- 横图叠文 -->
 <template>
   <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
     <div class="vertical-image-text-title">{{
@@ -17,6 +17,12 @@
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
           <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+          <span
+            v-if="item?.linkType !== 2"
+            class="image-link"
+            @click="clickLink(item?.linkType, item?.linkUrl)"
+            >查看详情>>
+          </span>
         </div>
       </div>
     </div>
@@ -54,7 +60,8 @@ watch(
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
-const checkConfigList = (list: any) => {
+
+const checkConfigList = (list: []) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     console.log('竖图遍历', item);
@@ -72,7 +79,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      checkConfigList(data?.value?.configValue.value)
     ) {
       return reject();
     }
@@ -94,10 +101,9 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: calc(@factor * 720px);
-  height: calc(@factor * 380px);
+  height: calc(@factor * 280px);
 
   .vertical-image-text-title {
-    width: calc(@factor * 600px);
     margin: calc(@factor * 29px) 0;
     overflow: hidden;
     color: #1d2129;
@@ -107,6 +113,7 @@ defineExpose({
 
   .image-box {
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: flex-start;
 
@@ -114,21 +121,22 @@ defineExpose({
       position: relative;
       display: flex;
       flex-direction: column;
-      width: calc(@factor * 190px);
-      height: calc(@factor * 256px);
+      width: calc(@factor * 210px);
+      height: calc(@factor * 121px);
       margin: 0 calc(@factor * 7px);
-      border-radius: 6px;
 
       .image-item-content {
+        position: absolute;
+        top: calc(@factor * 32px);
         z-index: 100;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
+        width: calc(@factor * 124px);
         height: calc(@factor * 162px);
         margin-top: -20px;
         padding: 12px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);
         border-radius: 6px;
 
         .image-title {
@@ -151,6 +159,12 @@ defineExpose({
           -webkit-line-clamp: 7;
           -webkit-box-orient: vertical;
         }
+
+        .image-link {
+          color: #1664ff;
+          font-size: calc(@factor * 7px);
+          cursor: pointer;
+        }
       }
     }
 
@@ -164,10 +178,8 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 190px) !important;
-    height: calc(@factor * 114px) !important;
+    width: 100%;
     object-fit: cover !important;
-    border-radius: 6px;
   }
 }
 // .is-preview {
