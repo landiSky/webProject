@@ -25,7 +25,8 @@ const selectIndex = ref(-1);
 // 左侧工具栏拖入后在列表中的位置
 const onEnd = (index: number) => {
   selectIndex.value = index;
-  console.log('onEnd:', selectIndex.value);
+  console.log('收到onEnd事件:', selectIndex.value);
+  console.log('开始广播insertIndex事件:', selectIndex.value);
   eventBus.emit('insertIndex', index);
 };
 </script>

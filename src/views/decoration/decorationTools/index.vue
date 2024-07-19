@@ -323,7 +323,16 @@ const notPreview = () => {
 const selectComponent = (index: number) => {
   console.log('select 回调', index);
   selectIndex.value = index;
+  console.log('收到选中组件事件:', index);
+  console.log(
+    '打印选中组件的值：',
+    JSON.parse(JSON.stringify(componentsList.value))
+  );
   if (!isPreview.value) {
+    console.log(
+      '开始发事件-selectComponent，组件的值:',
+      JSON.parse(JSON.stringify(componentsList.value[selectIndex.value]))
+    );
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
     console.log('选中1111', componentsList.value[selectIndex.value]);
   } else {
@@ -366,6 +375,7 @@ const publish = () => {
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
+  console.log('监听到insertIndex事件，获取到index:', payload);
   selectIndex.value = payload;
 };
 

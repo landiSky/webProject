@@ -70,7 +70,7 @@ const validateError = ref(false);
 // };
 
 const clickComponent = () => {
-  console.log('选中组件:', componentIndex?.value);
+  console.log('选中组件-view-component-wrap:', componentIndex?.value);
   validateError.value = false;
   emit('select', componentIndex?.value);
 };
@@ -91,7 +91,9 @@ const validate = () => {
       });
   });
 };
-onMounted(() => {});
+onMounted(() => {
+  console.log('渲染组件:', props?.data);
+});
 
 defineExpose({
   drawerVisible,
