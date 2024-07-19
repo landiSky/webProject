@@ -53,29 +53,30 @@ const props = defineProps(['configTools']);
 const sectionIndex = ref<number>(0);
 
 const onEnd = (evt: any) => {
-  console.log('拖拽结束000');
   if (
     evt.target.className === 'components-view'
     // &&
     // evt.to.className === 'components-wrap'
   ) {
+    // 内部拖拽
     // 左侧组件列表的下标
     sectionIndex.value = evt.oldIndex;
   }
-  console.log(
-    'evt:',
-    evt,
-    ',newIndex:',
-    evt.newIndex,
-    ',oldIndex:',
-    evt.oldIndex
-  );
+  // console.log(
+  //   'evt:',
+  //   evt,
+  //   ',newIndex:',
+  //   evt.newIndex,
+  //   ',oldIndex:',
+  //   evt.oldIndex
+  // );
+  console.log('拖拽结束，广播时间onEnd:', evt.newIndex);
 
   emit('onEnd', evt.newIndex);
 };
 
 onMounted(() => {
-  console.log('onMounted', props.configTools);
+  // console.log('onMounted', props.configTools);
 });
 </script>
 

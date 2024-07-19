@@ -37,6 +37,8 @@ const listType = [
   'HerizontalImageText',
   'IconImageText',
   'LeftRightImageText',
+  'CarouselImageText',
+  'ImageOverlapText',
 ];
 
 watch(
@@ -57,7 +59,10 @@ watch(
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
-  console.log('配置内容组件接收到事件:', payload);
+  console.log(
+    '收到事件’selectComponent‘，配置表单内容:',
+    JSON.parse(JSON.stringify(payload))
+  );
   data.value = payload;
   // formComponentRef.value.validate();
 };

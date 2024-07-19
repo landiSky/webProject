@@ -1,3 +1,5 @@
+import { LinkType } from '../constant';
+
 const tools = [
   {
     groupName: '图文类',
@@ -87,6 +89,36 @@ const tools = [
             src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
             linkType: 0,
             linkUrl: 'http://www.baidu.com',
+          },
+        ],
+      },
+      {
+        chineseName: '图叠文',
+        maxNum: 3,
+        icon: 'imgTxt',
+        name: 'ImageOverlapText',
+        mainTitle: '我是主标题',
+        configValue: [
+          {
+            title: '区块1',
+            src: '',
+            desc: 'balabala',
+            linkType: LinkType.LINK,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '区块2',
+            src: '',
+            desc: 'balabala',
+            linkType: LinkType.PRODUCT,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '区块3',
+            src: '',
+            desc: 'balabala',
+            linkType: LinkType.BLANK,
+            linkUrl: '',
           },
         ],
       },
@@ -273,6 +305,36 @@ const tools = [
             },
           ],
         },
+      },
+      {
+        chineseName: '轮播图',
+        maxNum: 5,
+        icon: 'slideshow',
+        name: 'CarouselImageText',
+        mainTitle: '我是主标题',
+        configValue: [
+          {
+            title: '111',
+            desc: 'balabalabalabalabalabalabalabalaba',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '222',
+            desc: 'balabala',
+            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+          {
+            title: '333',
+            desc: 'balabala',
+            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+            linkType: 0,
+            linkUrl: 'http://www.baidu.com',
+          },
+        ],
       },
     ],
   },

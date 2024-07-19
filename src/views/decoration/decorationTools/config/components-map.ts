@@ -87,6 +87,20 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  ImageOverlapText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/image-overlap-text/view.vue'
+        )
+    ),
+    uiConfig: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/image-overlap-text/ui-config.vue'
+        )
+    ),
+  },
   IconImageText: {
     view: defineAsyncComponent(
       () =>
@@ -112,6 +126,20 @@ const ComponentsMap: Record<string, any> = {
       () =>
         import(
           '@/views/decoration/decorationTools/components/splice-image-text/ui-config.vue'
+        )
+    ),
+  },
+  CarouselImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/carousel-image-text/view.vue'
+        )
+    ),
+    uiConfig: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/carousel-image-text/ui-config.vue'
         )
     ),
   },
