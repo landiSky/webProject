@@ -248,7 +248,7 @@
                 :key="index"
                 class="comment-list"
               >
-                <t-comment :author="item?.nickname || '-'">
+                <t-comment class="author-text" :author="item?.nickname || '-'">
                   <template #avatar>
                     <t-image
                       width="52"
@@ -1047,6 +1047,10 @@ onUnmounted(() => {
               font-family: PingFang SC;
               line-height: 22px;
               border-bottom: 1px solid rgba(229, 232, 239, 1);
+
+              .author-text {
+                word-break: break-all;
+              }
 
               .count {
                 margin-top: 4px;
