@@ -41,6 +41,12 @@
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
         </t-space>
+        <span
+          v-if="form.list.length > 4"
+          class="delete-btn"
+          @click="form.list.splice(index, 1)"
+          >删除
+        </span>
         <t-form-item
           label="标题"
           :field="`list.${index}.title`"
@@ -273,6 +279,14 @@ const addBlock = () => {
   });
 };
 
+watch(
+  () => props.data,
+  () => {
+    form.value.mainTitle = data?.value?.mainTitle || '';
+    form.value.list = Object.values(data?.value?.configValue) || [];
+  }
+);
+
 onMounted(() => {
   console.log('mounted');
   // form赋值
@@ -303,6 +317,14 @@ defineExpose({
     line-height: 54px;
     text-align: left;
     border-bottom: 1px solid #ccc;
+  }
+
+  .delete-btn {
+    float: right;
+    margin-top: 10px;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .vertical-line {

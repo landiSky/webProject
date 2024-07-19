@@ -74,6 +74,12 @@
               <div class="vertical-line"></div>
               <div>{{ `区块${UpperNumberList[index]}` }}</div>
             </t-space>
+            <span
+              v-if="form.configValue1.config.length > 2"
+              class="delete-btn"
+              @click="form.configValue1.config.splice(index, 1)"
+              >删除
+            </span>
             <t-form-item
               label="标题"
               :field="`config.${index}.title`"
@@ -280,6 +286,12 @@
               <div class="vertical-line"></div>
               <div>{{ `区块${UpperNumberList[index]}` }}</div>
             </t-space>
+            <span
+              v-if="form.configValue2.config.length > 2"
+              class="delete-btn"
+              @click="form.configValue2.config.splice(index, 1)"
+              >删除
+            </span>
             <t-form-item
               label="标题"
               :field="`config.${index}.title`"
@@ -431,7 +443,7 @@
           <t-divider margin="0" />
           <div class="area-add-box-content">
             <iconpark-icon
-              v-if="0"
+              v-if="form.configValue2.config.length < 4"
               style="cursor: pointer"
               name="squarePlus"
               :size="20"
@@ -584,6 +596,14 @@ defineExpose({
     height: 10px;
     background: #1664ff;
     border-radius: 1px;
+  }
+
+  .delete-btn {
+    float: right;
+    margin-top: 10px;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .tele-image {

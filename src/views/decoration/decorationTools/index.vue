@@ -159,13 +159,6 @@ watch(
   }
 );
 
-const handleScroll = (e: any) => {
-  console.log('handleScroll1111:', e.target.scrollTop);
-  // if (e.target.scrollTop !== 0) {
-  //   scrollY.value = e.target.scrollTop;
-  // }
-};
-
 const curSelectedComponent = computed(() => {
   return componentsList.value[selectIndex.value];
 });
@@ -343,11 +336,6 @@ const selectComponent = (index: number) => {
       console.log('跳转到搜索产品结果页');
     }
   }
-  // setTimeout(() => {
-  //   if (pageEditorRef?.value) {
-  //     pageEditorRef?.value?.scrollTo(0, scrollY.value);
-  //   }
-  // }, 10);
 };
 
 // 进入编辑模式
@@ -401,14 +389,15 @@ onMounted(() => {
       return;
     }
     if (data.type) {
-      console.log('list 类型返回=0000');
+      // 对象类型的配置项
       componentsList.value[selectIndex.value].configValue = { ...data.msgData };
     } else {
+      // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
         data.msgData.mainTitle;
-      componentsList.value[selectIndex.value].configValue = {
+      componentsList.value[selectIndex.value].configValue = [
         ...data.msgData.list,
-      };
+      ];
     }
   });
   // TODO 模拟从后台获取json数据
