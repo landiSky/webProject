@@ -1056,6 +1056,7 @@ onUnmounted(() => {
                 margin-top: 12px;
                 color: rgba(78, 89, 105, 1);
                 font-weight: 400;
+                word-break: break-all;
               }
 
               .time {
