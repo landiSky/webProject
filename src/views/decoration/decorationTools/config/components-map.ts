@@ -115,6 +115,20 @@ const ComponentsMap: Record<string, any> = {
         )
     ),
   },
+  CarouselImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/carousel-image-text/view.vue'
+        )
+    ),
+    uiConfig: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/carousel-image-text/ui-config.vue'
+        )
+    ),
+  },
 };
 
 export default ComponentsMap;

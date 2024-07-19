@@ -37,6 +37,7 @@ const listType = [
   'HerizontalImageText',
   'IconImageText',
   'LeftRightImageText',
+  'CarouselImageText',
 ];
 
 watch(

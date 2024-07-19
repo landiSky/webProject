@@ -34,7 +34,7 @@ export default defineConfig(({ command, mode }) => {
       proxy: {
         '/server': {
           // target: 'http://zhishutong.dev.idx.space',
-          target: `http://10.14.148.167:18080/`,
+          target: `http://zhishutong.dev.idx.space`,
           changeOrigin: true,
           agent: new https.Agent(),
           followRedirects: true,
