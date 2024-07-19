@@ -280,7 +280,9 @@
                 {{ formModel.companyName || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="所属平台">
-                {{ formModel.platformOperationCompany || '-' }}
+                {{ formModel.platformOperationCompany || '-' }}({{
+                  formModel.platformPrefix || '-'
+                }})
               </t-descriptions-item>
             </t-descriptions>
             <div class="line"></div>
@@ -511,12 +513,11 @@ const formModel = ref<Record<string, any>>({});
 
 const getDetail = () => {
   goodsDetail(props.data?.id).then((res) => {
-    if (res.code === 200) {
-      formModel.value = res.data || {};
-      detailImageList.value = res.data.detailImg
-        ? (res.data.detailImg as string).split(',')
-        : [];
-    }
+    console.log('---res---:', res);
+    formModel.value = res || {};
+    detailImageList.value = res.detailImg
+      ? (res.detailImg as string).split(',')
+      : [];
   });
 };
 

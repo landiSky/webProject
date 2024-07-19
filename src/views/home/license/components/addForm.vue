@@ -314,6 +314,11 @@ const copyRules = reactive({
         if (reg.test(value)) {
           return cb('企业前缀不能包含汉字!');
         }
+        const regex = /^[^A-Za-z]+$/;
+        if (!regex.test(value)) {
+          return cb('企业前缀不能包含字母!');
+        }
+
         if (value.length > 128) return cb('长度不超过128个字符');
         return cb();
       },

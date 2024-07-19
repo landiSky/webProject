@@ -37,7 +37,7 @@ export function downGoods(id: number) {
 
 // 详情
 export function goodsDetail(id: number) {
-  return $http.get(`/operation/web/product/selectById?id=${id}`);
+  return $http.get(`/server/web/product/selectById?id=${id}`);
 }
 
 // 审核
