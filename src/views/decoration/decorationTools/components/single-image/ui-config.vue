@@ -94,7 +94,7 @@
           flex: '90px',
         }"
       >
-        <t-radio-group v-model="form.linkType">
+        <t-radio-group v-model="form.linkType" @change="radioChange">
           <t-radio :value="0">链接</t-radio>
           <t-radio :value="1">商品</t-radio>
           <t-radio :value="2">无</t-radio>
@@ -124,7 +124,9 @@
           placeholder="请选择"
           allow-clear
         >
-          <t-option v-for="item in goodList" :key="item">{{ item }}</t-option>
+          <t-option v-for="item in goodsList" :key="item">{{
+            item.name
+          }}</t-option>
         </t-select>
       </t-form-item>
     </t-form>
@@ -142,15 +144,19 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 
-const { data } = toRefs(props);
-const file = ref();
+const { data, goodsList } = toRefs(props);
 const formRef = ref();
 const showSource = ref(false);
 const confirmLoading = ref(false);
@@ -177,7 +183,10 @@ const rules = {
   linkUrl: [{ required: true, message: '必填' }],
 };
 
-const goodList = ['123', '456', '789'];
+const radioChange = () => {
+  form.value.linkUrl = '';
+};
+
 const onBeforeRemove = () => {
   showSource.value = true;
 };

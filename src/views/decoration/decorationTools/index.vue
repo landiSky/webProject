@@ -89,16 +89,6 @@
           </template>
         </draggable>
       </t-layout-content>
-      <!-- <t-layout-sider style="width: 442px; overflow: hidden">
-          <div class="component-config">
-            <component
-              :is="ComponentsMap[curSelectedComponent?.name]?.uiConfig()"
-              ref="formComponentRef"
-              :data="curSelectedComponent?.value"
-            ></component>
-          </div>
-        </t-layout-sider> -->
-      <!-- <t-layout-footer>Footer</t-layout-footer> -->
     </t-layout>
     <div v-if="openModel === 0" class="floating_btn-box">
       <t-space size="medium">
@@ -125,10 +115,8 @@ import { parseQuery, useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const route = useRoute();
-// const pageEditorRef = ref<HTMLDivElement>();
 const componentsList = ref<any[]>([]);
 
-// const scrollY = ref(-1);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);

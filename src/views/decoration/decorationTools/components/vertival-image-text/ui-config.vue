@@ -87,7 +87,7 @@
           validate-trigger="blur"
           :rules="[{ required: true, message: '必填' }]"
         >
-          <t-radio-group v-model="item.linkType">
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
             <t-radio :value="1">商品</t-radio>
             <t-radio :value="2">无</t-radio>
@@ -118,7 +118,7 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodList" :key="itemg">{{
+            <t-option v-for="itemg in goodsList" :key="itemg">{{
               itemg
             }}</t-option>
           </t-select>
@@ -187,15 +187,32 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 
+type GoodsItem = {
+  name: string;
+  id: string;
+};
+// 每个子表单的配置项
+type ConfigItem = {
+  title: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  list: ConfigItem[];
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);
-
 // 截图尺寸
 const stencilSize = ref({
   width: 182,
@@ -203,12 +220,12 @@ const stencilSize = ref({
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
-const { data } = toRefs(props);
+const { data, goodsList } = toRefs(props);
 const formRef = ref();
 
-const form = ref({
+const form = ref<ConfigData>({
   mainTitle: '',
-  list: [{ title: '', desc: '', src: '', linkType: 0, linkUrl: '' }],
+  list: [],
 });
 
 const onBeforeRemove = (index: number) => {
@@ -216,7 +233,6 @@ const onBeforeRemove = (index: number) => {
   console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
-const goodList = ['123', '456', '789'];
 
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value, curIndex.value);
@@ -241,8 +257,10 @@ const onCancel = () => {
 //     deep: true,
 //   }
 // );
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
 onMounted(() => {
-  console.log('mounted');
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = data?.value?.configValue || [];

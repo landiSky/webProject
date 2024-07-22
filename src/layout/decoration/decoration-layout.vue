@@ -7,7 +7,7 @@
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
-        :width="90"
+        :width="110"
         :collapsed="disable"
         :collapsible="true"
         collapsed-width="0"
