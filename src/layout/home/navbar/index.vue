@@ -231,6 +231,10 @@ const onChangeCompany = async (companyId: string) => {
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
   await userStore.changeSelectCompany(selectItem);
 
+  const { primary } = userInfoByCompany.value || {};
+  if (Number(primary) === 2) {
+    useMenuStore().setMenuIndex(1, userInfo.value);
+  }
   // router.push({
   //   path: '/buyer/index',
   // });
@@ -245,6 +249,17 @@ const setDot = (index: number) => {
   if (index === 3) {
     // 点击标识管理，跳转到二级企业管理系统
     clickIdService();
+    return;
+  }
+  const { primary } = userInfoByCompany.value || {};
+  if (index === 2 && Number(primary) === 2) {
+    // 点击标识管理，跳转到二级企业管理系统
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
     return;
   }
   try {
