@@ -792,7 +792,7 @@ onUnmounted(() => {
       }
 
       .right {
-        width: 465px;
+        // width: 465px;
         margin-left: 126px;
 
         .header {
@@ -827,13 +827,15 @@ onUnmounted(() => {
         }
 
         .description {
-          margin-bottom: 42px;
+          width: 465px;
+          margin-bottom: 36px;
           color: #1d2129;
           line-height: 22px; /* 157.143% */
           word-break: break-all;
         }
 
         .price {
+          width: 465px;
           margin-bottom: 20px;
           padding: 12px;
           line-height: 22px;
