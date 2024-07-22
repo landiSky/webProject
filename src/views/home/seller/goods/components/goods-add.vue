@@ -996,12 +996,18 @@ const formModel2 = ref({
   productDeliveryList: [] as any,
 });
 const formRules = {
-  name: [{ required: true, message: '请输入商品名称' }],
+  name: [
+    { required: true, message: '请输入商品名称' },
+    { maxLength: 20, message: '最多允许输入20个字符' },
+  ],
   logo: [{ required: true, message: '请上传logo图' }],
   detailImg: [{ required: true, message: '请至少上传一张详情图' }],
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
-  introduction: [{ required: true, message: '请输入商品简介' }],
+  introduction: [
+    { required: true, message: '请输入商品简介' },
+    { maxLength: 300, message: '最多允许输入300个字符' },
+  ],
   // useExplain: [{ required: true, message: '请上传产品使用说明' }],
   useExplain: [
     {
