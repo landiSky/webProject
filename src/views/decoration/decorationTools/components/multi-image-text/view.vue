@@ -48,26 +48,16 @@ const num = computed(() => {
 });
 const currentOffset = ref(0);
 const windowSize = ref(4);
-const paginationFactor = 163 * num.value;
 
 const boxStyle = computed(() => {
   return {
     transform: `translateX(${currentOffset.value}px)`,
   };
 });
-// 当前开始的索引，展示往后4张图片
-// const curShowIndex = ref(0);
-// const listLength = computed(() => {
-//   const list: any[] = Object.values(data?.value?.configValue);
-//   console.log('list0000000', list, data?.value?.configValue);
-//   return list.length;
-// });
 
-// const currentOffset = computed(() => {
-//   return (
-
-//   );
-// });
+const paginationFactor = computed(() => {
+  return 163 * (isPreview.value ? 2 : 1);
+});
 
 const showArrow = computed(() => {
   return Object.values(data?.value?.configValue).length > 4;
@@ -75,10 +65,10 @@ const showArrow = computed(() => {
 
 const atEndOfList = computed(() => {
   const n =
-    paginationFactor *
+    paginationFactor.value *
     -1 *
     (Object.values(data?.value?.configValue).length - windowSize.value);
-  console.log('atEndOfList', atEndOfList, n);
+  console.log('atEndOfList', currentOffset.value, n, currentOffset.value <= n);
   return currentOffset.value <= n;
 });
 
@@ -88,10 +78,10 @@ const atHeadOfList = computed(() => {
 
 const moveCarousel = (direction: number) => {
   if (direction === 1 && !atEndOfList.value) {
-    currentOffset.value -= paginationFactor;
+    currentOffset.value -= paginationFactor.value;
     console.log('offset', currentOffset.value);
   } else if (direction === -1 && !atHeadOfList.value) {
-    currentOffset.value += paginationFactor;
+    currentOffset.value += paginationFactor.value;
     console.log('offset', currentOffset.value);
   }
 };
@@ -106,45 +96,23 @@ const clickLink = (type: number, url: string) => {
 };
 
 watch(
+  () => isPreview.value,
+  () => {
+    console.log('isPreview00', isPreview.value);
+    currentOffset.value = 0;
+  }
+);
+
+watch(
   () => props.data,
-  (val: any) => {
-    console.log('multi image data', val);
+  () => {
     currentOffset.value =
-      paginationFactor *
+      paginationFactor.value *
       -1 *
       (Object.values(data?.value?.configValue).length - windowSize.value);
   },
   { immediate: true, deep: true }
 );
-
-// const initTranslateXList = () => {
-//   const list: number[] = [];
-//   let n = 0;
-//   Object.values(data?.value?.configValue).forEach(
-//     (item: any, index: number) => {
-//       n += index * 30 * num.value;
-//       list.push(n);
-//     }
-//   );
-//   return list;
-// };
-
-// const dataListChangeRight = () => {
-//   console.log('9090901111000000', translateXList.value);
-//   intervalId = setInterval(() => {
-//     translateXList.value.forEach((item, i) => {
-//       console.log('9090901111000000', item, i);
-//       if (item <= 148 * num.value) {
-//         console.log('移动到位了');
-//         // 跳出定时循环
-//         clearInterval(intervalId);
-//       } else {
-//         translateXList.value[i] = item + 10;
-//         console.log('移动中。。。', translateXList.value);
-//       }
-//     });
-//   }, 10);
-// };
 
 const clickLeft = () => {
   moveCarousel(1);
@@ -157,12 +125,8 @@ const checkConfigList = (list: any) => {
   console.log('竖图遍历000', list.length);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历000', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title && item.desc && item.src && item.linkType !== 2 && item.linkUrl
     );
   });
 };
@@ -172,7 +136,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }

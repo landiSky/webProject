@@ -35,7 +35,11 @@ const onEnd = (index: number) => {
 .bar-box {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
+  user-select: none; /* 标准语法 */
 
   .bar-title {
     height: 54px;

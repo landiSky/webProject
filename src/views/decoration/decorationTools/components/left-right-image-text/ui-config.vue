@@ -46,7 +46,7 @@
           "
         >
           <div class="vertical-line"></div>
-          <div>{{ `区块${++index}` }}</div>
+          <div>{{ `区块${UpperNumberList[index]}` }}</div>
           <div
             v-if="index === 4 || index === 5"
             class="delete"
@@ -130,7 +130,7 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodList" :key="itemg">{{
+            <t-option v-for="itemg in goodsList" :key="itemg">{{
               itemg
             }}</t-option>
           </t-select>
@@ -216,11 +216,17 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
+import { UpperNumberList } from '@/enums/decoration';
 
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);
 
@@ -231,21 +237,21 @@ const stencilSize = ref({
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
-const { data } = toRefs(props);
+const { data, goodsList } = toRefs(props);
 const formRef = ref();
-const goodList = ['123', '456', '789'];
 
 interface Form {
   mainTitle: string;
   list: any[];
 }
+
 const form = ref<Form>({
   mainTitle: '',
   list: [],
 });
 
 const changeRadio = (value: number) => {
-  form.value.list[value - 1].linkUrl = '';
+  form.value.list[value].linkUrl = '';
 };
 const addBlock = () => {
   form.value.list.push({

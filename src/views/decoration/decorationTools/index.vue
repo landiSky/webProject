@@ -89,16 +89,6 @@
           </template>
         </draggable>
       </t-layout-content>
-      <!-- <t-layout-sider style="width: 442px; overflow: hidden">
-          <div class="component-config">
-            <component
-              :is="ComponentsMap[curSelectedComponent?.name]?.uiConfig()"
-              ref="formComponentRef"
-              :data="curSelectedComponent?.value"
-            ></component>
-          </div>
-        </t-layout-sider> -->
-      <!-- <t-layout-footer>Footer</t-layout-footer> -->
     </t-layout>
     <div v-if="openModel === 0" class="floating_btn-box">
       <t-space size="medium">
@@ -125,10 +115,8 @@ import { parseQuery, useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const route = useRoute();
-// const pageEditorRef = ref<HTMLDivElement>();
 const componentsList = ref<any[]>([]);
 
-// const scrollY = ref(-1);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
@@ -158,13 +146,6 @@ watch(
     immediate: true,
   }
 );
-
-const handleScroll = (e: any) => {
-  console.log('handleScroll1111:', e.target.scrollTop);
-  // if (e.target.scrollTop !== 0) {
-  //   scrollY.value = e.target.scrollTop;
-  // }
-};
 
 const curSelectedComponent = computed(() => {
   return componentsList.value[selectIndex.value];
@@ -352,11 +333,6 @@ const selectComponent = (index: number) => {
       console.log('跳转到搜索产品结果页');
     }
   }
-  // setTimeout(() => {
-  //   if (pageEditorRef?.value) {
-  //     pageEditorRef?.value?.scrollTo(0, scrollY.value);
-  //   }
-  // }, 10);
 };
 
 // 进入编辑模式
@@ -411,14 +387,15 @@ onMounted(() => {
       return;
     }
     if (data.type) {
-      console.log('list 类型返回=0000');
+      // 对象类型的配置项
       componentsList.value[selectIndex.value].configValue = { ...data.msgData };
     } else {
+      // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
         data.msgData.mainTitle;
-      componentsList.value[selectIndex.value].configValue = {
+      componentsList.value[selectIndex.value].configValue = [
         ...data.msgData.list,
-      };
+      ];
     }
   });
   // TODO 模拟从后台获取json数据

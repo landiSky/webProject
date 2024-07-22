@@ -7,7 +7,7 @@
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
-        :width="90"
+        :width="110"
         :collapsed="disable"
         :collapsible="true"
         collapsed-width="0"
@@ -114,7 +114,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   height: calc(100vh - 48px);
-  overflow-y: scroll;
+  overflow-y: auto;
   background-color: #f6f7f9;
 }
 

@@ -104,8 +104,10 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：1200px *
-              520px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+              {{
+                `建议图片尺寸：${stencilSize.width}px *
+              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              }}
             </span>
           </t-space>
         </t-form-item>
@@ -117,7 +119,7 @@
             flex: '90px',
           }"
         >
-          <t-radio-group v-model="item.linkType">
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
             <t-radio :value="1">商品</t-radio>
             <t-radio :value="2">无</t-radio>
@@ -158,7 +160,9 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="item in goodList" :key="item">{{ item }}</t-option>
+            <t-option v-for="itemg in goodsList" :key="itemg">{{
+              itemg.name
+            }}</t-option>
           </t-select>
         </t-form-item>
       </template>
@@ -177,17 +181,21 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted } from 'vue';
+import { toRefs, ref, watch, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { LinkType } from '../../constant';
 import type { IList } from './type';
 
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 
-const { data } = toRefs(props);
-const file = ref();
+const { data, goodsList } = toRefs(props);
 const formRef = ref();
 const showSource = ref(false);
 const confirmLoading = ref(false);
@@ -240,7 +248,6 @@ const rules = {
   mainTitle: [{ required: true, message: '请输入主标题' }],
 };
 
-const goodList = ['123', '456', '789'];
 const onBeforeRemove = () => {
   showSource.value = true;
 };
@@ -255,6 +262,9 @@ const onCancel = () => {
   showSource.value = false;
 };
 
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
 onMounted(() => {
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list =

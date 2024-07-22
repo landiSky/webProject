@@ -5,12 +5,8 @@
       :is="ComponentsMap[data?.name]?.uiConfig"
       ref="formComponentRef"
       :data="data"
+      :goods-list="goodsList"
     ></component>
-    <!-- <div v-if="data" class="btn-group">
-      <t-space :size="60">
-        <t-button type="primary" @click="clickConfirm">保存</t-button>
-      </t-space>
-    </div> -->
   </div>
 </template>
 
@@ -26,8 +22,14 @@ import {
 } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import eventBus from '@/utils/bus';
+import { apiGetProductList } from '@/api/decoration/decoration-tools';
 
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const data = ref();
+const goodsList = ref<GoodsItem[]>([]);
 const formComponentRef = ref();
 // 配置项是list的组件
 const listType = [
@@ -57,14 +59,17 @@ watch(
   { deep: true }
 );
 
+const getGoodsList = () => {
+  apiGetProductList().then((res: any) => {
+    goodsList.value = res;
+  });
+};
+
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
-  console.log(
-    '收到事件’selectComponent‘，配置表单内容:',
-    JSON.parse(JSON.stringify(payload))
-  );
-  data.value = payload;
-  // formComponentRef.value.validate();
+  data.value = payload || {};
+  //
+  getGoodsList();
 };
 
 onMounted(() => {

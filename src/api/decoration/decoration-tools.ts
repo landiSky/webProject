@@ -9,3 +9,8 @@ export function apiGetNavData(params: Record<string, any>) {
 export function apiUpdateNavData(data: Record<string, any>) {
   return $http.post('/server/web/renovation/update', data);
 }
+
+// 获取所有产品列表数据
+export function apiGetProductList() {
+  return $http.get('/server/web/product/selectProductList');
+}

@@ -74,6 +74,12 @@
               <div class="vertical-line"></div>
               <div>{{ `区块${UpperNumberList[index]}` }}</div>
             </t-space>
+            <span
+              v-if="form.configValue1.config.length > 2"
+              class="delete-btn"
+              @click="form.configValue1.config.splice(index, 1)"
+              >删除
+            </span>
             <t-form-item
               label="标题"
               :field="`config.${index}.title`"
@@ -120,7 +126,10 @@
               validate-trigger="blur"
               :rules="[{ required: true, message: '必填' }]"
             >
-              <t-radio-group v-model="item.linkType">
+              <t-radio-group
+                v-model="item.linkType"
+                @change="radioChange1(index)"
+              >
                 <t-radio :value="0">链接</t-radio>
                 <t-radio :value="1">商品</t-radio>
                 <t-radio :value="2">无</t-radio>
@@ -155,8 +164,8 @@
                 placeholder="请选择"
                 allow-clear
               >
-                <t-option v-for="itemg in goodList" :key="itemg">{{
-                  itemg
+                <t-option v-for="itemg in goodsList" :key="itemg">{{
+                  itemg.name
                 }}</t-option>
               </t-select>
             </t-form-item>
@@ -280,6 +289,12 @@
               <div class="vertical-line"></div>
               <div>{{ `区块${UpperNumberList[index]}` }}</div>
             </t-space>
+            <span
+              v-if="form.configValue2.config.length > 2"
+              class="delete-btn"
+              @click="form.configValue2.config.splice(index, 1)"
+              >删除
+            </span>
             <t-form-item
               label="标题"
               :field="`config.${index}.title`"
@@ -326,7 +341,10 @@
               validate-trigger="blur"
               :rules="[{ required: true, message: '必填' }]"
             >
-              <t-radio-group v-model="item.linkType">
+              <t-radio-group
+                v-model="item.linkType"
+                @change="radioChange2(index)"
+              >
                 <t-radio :value="0">链接</t-radio>
                 <t-radio :value="1">商品</t-radio>
                 <t-radio :value="2">无</t-radio>
@@ -361,8 +379,8 @@
                 placeholder="请选择"
                 allow-clear
               >
-                <t-option v-for="itemg in goodList" :key="itemg">{{
-                  itemg
+                <t-option v-for="itemg in goodsList" :key="itemg">{{
+                  itemg.name
                 }}</t-option>
               </t-select>
             </t-form-item>
@@ -431,7 +449,7 @@
           <t-divider margin="0" />
           <div class="area-add-box-content">
             <iconpark-icon
-              v-if="0"
+              v-if="form.configValue2.config.length < 4"
               style="cursor: pointer"
               name="squarePlus"
               :size="20"
@@ -452,7 +470,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted, computed } from 'vue';
+import { toRefs, ref, watch, onMounted, computed, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 // 每个子表单的配置项
@@ -474,8 +492,14 @@ type ConfigData = {
   configValue1: ConfigForm;
   configValue2: ConfigForm;
 };
+
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);
 
@@ -486,9 +510,8 @@ const stencilSize = ref({
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
-const { data } = toRefs(props);
+const { data, goodsList } = toRefs(props);
 const formRef = ref();
-
 const form = ref<ConfigData>({
   mainTitle: '',
   configValue1: {
@@ -506,7 +529,6 @@ const onBeforeRemove = (index: number) => {
   console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
-const goodList = ['123', '456', '789'];
 
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value, curIndex.value);
@@ -533,7 +555,6 @@ const addBlock1 = () => {
 };
 
 const addBlock2 = () => {
-  // console.log('添加区块', form.value.list as any);
   if (form.value.configValue2.config.length >= 4) {
     return;
   }
@@ -545,6 +566,12 @@ const addBlock2 = () => {
     linkType: 0,
     linkUrl: '',
   });
+};
+const radioChange1 = (index: number) => {
+  form.value.configValue1.config[index].linkUrl = '';
+};
+const radioChange2 = (index: number) => {
+  form.value.configValue2.config[index].linkUrl = '';
 };
 
 onMounted(() => {
@@ -584,6 +611,14 @@ defineExpose({
     height: 10px;
     background: #1664ff;
     border-radius: 1px;
+  }
+
+  .delete-btn {
+    float: right;
+    margin-top: 10px;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .tele-image {
