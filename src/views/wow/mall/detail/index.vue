@@ -29,7 +29,17 @@
         </div> -->
         <div class="right">
           <div class="header">
-            <span class="productName">{{ prodDetail.name }}</span>
+            <span class="productName">
+              <!-- <t-typography-paragraph
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ prodDetail.name }}
+              </t-typography-paragraph> -->
+              {{ prodDetail.name }}
+            </span>
             <t-typography-paragraph
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
@@ -685,7 +695,11 @@ onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
-      prodDetail.value = data;
+      const tagMap = data.tagMap.filter(
+        // (tag: any) => String(tag.id) !== '2'
+        (tag: any) => String(tag.tagName) !== '公共服务'
+      );
+      prodDetail.value = { ...data, tagMap };
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
