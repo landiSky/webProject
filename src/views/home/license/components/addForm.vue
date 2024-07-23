@@ -514,7 +514,11 @@ const selectValueChange = (inputValue: any) => {
   };
   return userResolvePrefix(data)
     .then((res: any) => {
-      return true;
+      if (res) {
+        return true;
+      }
+      Message.error('此企业前缀不存在，请重新输入');
+      return false;
     })
     .catch((error: any) => {
       return false;
