@@ -3,6 +3,8 @@ import { defineStore } from 'pinia';
 export const useDecorationStore = defineStore({
   id: 'app-decorarion',
   state: (): {
+    platFormName: string; // 平台名称
+    platFormLogo: string; // 平台logo
     chnnelPageRefresh: boolean; // 频道页刷新
     curComponentData: any; // 当前选中组件数据
     curConfigData: any; // 当前选中组件配置数据
@@ -10,6 +12,8 @@ export const useDecorationStore = defineStore({
     isSourceRefresh: boolean; // 是否源页面刷新
     curSelectIndex: number; // 选择的组件索引
   } => ({
+    platFormName: '',
+    platFormLogo: '',
     chnnelPageRefresh: false,
     curComponentData: {},
     curConfigData: {},
@@ -19,6 +23,14 @@ export const useDecorationStore = defineStore({
   }),
 
   actions: {
+    // 设置平台名称
+    setPlatFormName(name: string) {
+      this.platFormName = name;
+    },
+    // 设置平台logo
+    setPlatFormLogo(logo: string) {
+      this.platFormLogo = logo;
+    },
     // 设置频道页刷新状态
     setChannelPageRefresh(state: boolean) {
       this.chnnelPageRefresh = state;
