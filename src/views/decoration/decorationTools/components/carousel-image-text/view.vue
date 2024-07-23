@@ -6,7 +6,7 @@
     <t-carousel
       class="image-box"
       animation-name="card"
-      :auto-play="true"
+      :auto-play="false"
       indicator-type="outer"
       show-arrow="hover"
     >
@@ -130,6 +130,7 @@ defineExpose({
 
 .carousel-image-text-box {
   width: calc(@factor * 720px);
+  // background: #fff;
   // height: calc(@factor * 340px);
   .carousel-image-text-title {
     margin: calc(@factor * 29px) 0 calc(@factor * 54px);
@@ -141,10 +142,9 @@ defineExpose({
   .image-box {
     width: 100%;
     height: calc(@factor * 308px);
-    background: #fff;
-
+    // background: #fff;
     .image-item {
-      width: calc(@factor * 480px);
+      width: calc(@factor * 510px);
       height: calc(@factor * 260px);
       padding: 0 calc(@factor * 15px);
       overflow: hidden;
@@ -197,7 +197,7 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 450px) !important;
+    width: calc(@factor * 480px) !important;
     height: calc(@factor * 260px) !important;
     object-fit: cover !important;
   }
