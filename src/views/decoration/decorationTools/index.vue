@@ -101,22 +101,35 @@
     <div v-if="openModel === 1" class="floating_footer-box">
       <t-space :size="12">
         <t-button @click="edit">编辑</t-button>
-        <t-button type="primary" @click="publish">发布</t-button>
+        <t-button type="primary" @click="clickSaveRemote">发布</t-button>
       </t-space>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed, nextTick } from 'vue';
+import {
+  ref,
+  watch,
+  onMounted,
+  computed,
+  nextTick,
+  onBeforeUnmount,
+} from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
-import { parseQuery, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
+import {
+  apiGetNavData,
+  apiUpdateNavData,
+} from '@/api/decoration/decoration-tools';
+import { Message, Modal } from '@tele-design/web-vue';
 import ViewComponentWrap from './view-component-wrap.vue';
+import { channelName } from './constant';
 
+const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
 const componentsList = ref<any[]>([]);
-
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
@@ -124,6 +137,8 @@ const isPreview = ref(false);
 const viewComponentWrapRef = ref<any[]>([]);
 
 const colorIndex = ref(-1);
+
+const decorationJson = ref('');
 
 // 打开模式 0-普通编辑模式 1-外部预览模式
 const openModel = ref();
@@ -135,17 +150,6 @@ const colorList = ref([
   { cssClass: 'bg_color-3', color0: '#EBF0F4' },
   { cssClass: 'bg_color-4', color0: '#ffffff', color1: '#e2ecff' },
 ]);
-
-watch(
-  () => componentsList.value,
-  (val: any) => {
-    // console.log('watch componentsList:', val);
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-);
 
 const curSelectedComponent = computed(() => {
   return componentsList.value[selectIndex.value];
@@ -244,21 +248,15 @@ const setItemRef = (el: any, index: number) => {
 
 // 保存组件列表的json数据到本地
 const clickSave = () => {
-  const childForm = () => {
-    return viewComponentWrapRef.value.map((item: any) => {
-      return item.validate();
-    });
-  };
-  Promise.all(childForm())
-    .then((data: any) => {
-      // 先清除本地存储
-      localStorage.removeItem('componentsList');
-      localStorage.setItem(
-        'componentsList',
-        JSON.stringify(componentsList.value)
-      );
-    })
-    .catch(() => {});
+  // 先清除本地存储
+  const { type } = route.query;
+  localStorage.removeItem(`componentsList${type}`);
+  localStorage.setItem(
+    `componentsList${type}`,
+    JSON.stringify(componentsList.value)
+  );
+  console.log('保存成功:', componentsList.value);
+  broadcastChannel.postMessage('chnnelPageRefresh');
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
@@ -269,11 +267,35 @@ const clickSaveRemote = () => {
   };
   Promise.all(childForm())
     .then((data: any) => {
-      // TODO 远程保存接口
-      console.log('保存成功:', data);
+      console.log('校验成功:', data);
+      const { id } = route.query;
+      const json = JSON.stringify(componentsList.value);
+      // 二次弹框
+      Modal.info({
+        title: '确认保存并发布',
+        content: '发布后，当前编辑内容将发布到网站前台',
+        titleAlign: 'start',
+        hideCancel: false,
+        okText: '保存并发布',
+        onOk: () => {
+          // 保存本地
+          clickSave();
+          // 保存远程
+          apiUpdateNavData({
+            id,
+            detail: json,
+          }).then((res: any) => {
+            Message.success('保存成功');
+            // 通知主tab页刷新
+            broadcastChannel.postMessage('chnnelPageRefresh');
+          });
+        },
+        onCancel: () => {},
+      });
     })
     .catch(() => {
-      console.log('保存失败111');
+      console.log('保存失败');
+      Message.error('保存失败');
     });
 };
 
@@ -281,9 +303,6 @@ const clickSaveRemote = () => {
 const endSort = () => {
   console.log('endSort0000:', componentsList.value);
   clickSave();
-};
-const scrollFn = (e: any) => {
-  console.log('scrollFn000', e.target.scrollTop);
 };
 
 const close = () => {
@@ -342,13 +361,6 @@ const edit = () => {
   eventBus.emit('preview-event', false);
 };
 
-// 发布
-const publish = () => {
-  // openModel.value = 0;
-  // eventBus.emit('preview-event', false);
-  // TODO 发布接口
-};
-
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
   console.log('监听到insertIndex事件，获取到index:', payload);
@@ -362,14 +374,18 @@ watch(
     if (openModel.value === 1) {
       isPreview.value = true;
       setTimeout(() => {
-        eventBus.emit('preview-event', true);
-      }, 200);
+        eventBus.emit('preview-event', isPreview.value);
+      }, 10);
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 onMounted(() => {
+  // 二次弹框不能定制，只有系统弹框
+  window.addEventListener('beforeunload', (event) => {
+    event.preventDefault();
+  });
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('config-event', (data: any) => {
@@ -399,10 +415,34 @@ onMounted(() => {
     }
   });
   // TODO 模拟从后台获取json数据
-  const localStorageData = localStorage.getItem('componentsList');
-  if (localStorageData) {
-    componentsList.value = JSON.parse(localStorageData);
-  }
+  console.log('装修开始', route.query.type);
+  // 拉取type的装修信息
+  const { type } = route.query;
+  apiGetNavData({ type })
+    .then((res: any) => {
+      decorationJson.value = res.data[0].detail;
+      console.log('装修数据000', res.data[0].detail);
+      if (decorationJson.value && decorationJson.value !== '[]') {
+        componentsList.value = JSON.parse(decorationJson.value);
+        console.log('有装修数据', componentsList.value);
+      } else {
+        console.log(
+          '没有装修数据',
+          decorationJson.value,
+          typeof decorationJson.value,
+          componentsList.value
+        );
+        const localStorageData = localStorage.getItem(`componentsList${type}`);
+        if (localStorageData) {
+          componentsList.value = JSON.parse(localStorageData);
+        }
+      }
+    })
+    .catch();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('beforeunload', (event) => {});
 });
 </script>
 

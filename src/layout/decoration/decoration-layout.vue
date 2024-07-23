@@ -78,6 +78,7 @@ watch(
 );
 
 onMounted(() => {
+  console.log('preview-event 开始监听--');
   eventBus.on('preview-event', handleMyEvent);
 });
 </script>

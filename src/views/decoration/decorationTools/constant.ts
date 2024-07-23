@@ -3,3 +3,5 @@ export const LinkType = {
   PRODUCT: 1,
   BLANK: 2,
 };
+
+export const channelName = 'messageChannel';

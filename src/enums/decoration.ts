@@ -10,3 +10,14 @@ export const UpperNumberList = [
   '九',
   '十',
 ];
+// 频道类型
+export const ChannelType = {
+  // 修改平台名称
+  PLATFORM_NAME: 1,
+  // 修改首页装修
+  PLATFORM_HOME: 2,
+  // 修改产品页装修
+  PLATFORM_PRODUCT: 3,
+  // 修改服务页装修
+  PLATFORM_SERVE: 4,
+};

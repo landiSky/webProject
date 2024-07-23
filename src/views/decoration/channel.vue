@@ -12,7 +12,8 @@
           <div class="input-title">名称配置</div>
           <div v-if="nav1NameEdit" class="input-box-edit">
             <t-input
-              placeholder="Please enter something"
+              v-model="form1.name"
+              placeholder="请输入"
               allow-clear
               max-length="5"
               show-word-limit
@@ -21,13 +22,13 @@
             <div
               style="margin: 0 16px"
               class="save-btn"
-              @click="nav1NameEdit = false"
-              >保存并发布</div
-            >
+              @click="publishName(form1)"
+              >保存并发布
+            </div>
             <div class="cancel-btn" @click="nav1NameEdit = false">取消</div>
           </div>
           <div v-else class="input-box-show">
-            <span class="input-value">首页</span>
+            <span class="input-value">{{ form1?.name || '-' }}</span>
             <icon-edit
               style="color: #1664ff; cursor: pointer"
               :size="16"
@@ -38,16 +39,21 @@
         <div class="row-cls">
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
-          <div v-if="nav1Publish" class="save-btn" @click="goDecoration">
+          <div
+            v-if="form1?.detail || !nav1DecorationJson"
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form1)"
+          >
             去装修>>
           </div>
-          <div v-else>
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >预览效果</t-tag
-            >
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >发布</t-tag
-            >
+          <div v-else style="margin-left: 8px">
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form1)"
+              >预览效果
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form1)"
+              >发布
+            </t-tag>
           </div>
         </div>
       </div>
@@ -61,7 +67,8 @@
           <div class="input-title">名称配置</div>
           <div v-if="nav2NameEdit" class="input-box-edit">
             <t-input
-              placeholder="Please enter something"
+              v-model="form2.name"
+              placeholder="请输入"
               allow-clear
               max-length="5"
               show-word-limit
@@ -70,13 +77,13 @@
             <div
               style="margin: 0 16px"
               class="save-btn"
-              @click="nav2NameEdit = false"
-              >保存并发布</div
-            >
+              @click="publishName(form2)"
+              >保存并发布
+            </div>
             <div class="cancel-btn" @click="nav2NameEdit = false">取消</div>
           </div>
           <div v-else class="input-box-show">
-            <span class="input-value">平台服务</span>
+            <span class="input-value">{{ form2?.name || '-' }}</span>
             <icon-edit
               style="color: #1664ff; cursor: pointer"
               :size="16"
@@ -87,16 +94,21 @@
         <div class="row-cls">
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
-          <div v-if="nav2Publish" class="save-btn" @click="goDecoration">
+          <div
+            v-if="form2?.detail || !nav2DecorationJson"
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form2)"
+          >
             去装修>>
           </div>
-          <div v-else>
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >预览效果</t-tag
-            >
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >发布</t-tag
-            >
+          <div v-else style="margin-left: 8px">
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form2)"
+              >预览效果
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form2)"
+              >发布
+            </t-tag>
           </div>
         </div>
       </div>
@@ -110,7 +122,8 @@
           <div class="input-title">名称配置</div>
           <div v-if="nav3NameEdit" class="input-box-edit">
             <t-input
-              placeholder="Please enter something"
+              v-model="form3.name"
+              placeholder="请输入"
               allow-clear
               max-length="5"
               show-word-limit
@@ -119,13 +132,13 @@
             <div
               style="margin: 0 16px"
               class="save-btn"
-              @click="nav3NameEdit = false"
-              >保存并发布</div
-            >
+              @click="publishName(form3)"
+              >保存并发布
+            </div>
             <div class="cancel-btn" @click="nav3NameEdit = false">取消</div>
           </div>
           <div v-else class="input-box-show">
-            <span class="input-value">平台产品</span>
+            <span class="input-value">{{ form3?.name || '-' }}</span>
             <icon-edit
               style="color: #1664ff; cursor: pointer"
               :size="16"
@@ -136,16 +149,21 @@
         <div class="row-cls">
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
-          <div v-if="nav3Publish" class="save-btn" @click="goDecoration">
+          <div
+            v-if="form3?.detail || !nav3DecorationJson"
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form3)"
+          >
             去装修>>
           </div>
-          <div v-else>
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >预览效果</t-tag
-            >
-            <t-tag bordered style="cursor: pointer" @click="goPreview"
-              >发布</t-tag
-            >
+          <div v-else style="margin-left: 8px">
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form3)"
+              >预览效果
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goPreview(form3)"
+              >发布
+            </t-tag>
           </div>
         </div>
       </div>
@@ -154,15 +172,21 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  ref,
-} from 'vue';
+import { defineProps, toRefs, onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import {
+  apiUpdateNavData,
+  apiGetNavData,
+} from '@/api/decoration/decoration-tools';
+import { isArray } from 'lodash';
+import { ChannelType } from '@/enums/decoration';
+import eventBus from '@/utils/bus';
+import { useDecorationStore } from '@/store/modules/decoration';
+import { storeToRefs } from 'pinia';
+import { channelName } from './decorationTools/constant';
+
+// 创建tabs通信通道
+const broadcastChannel = new BroadcastChannel(channelName);
 
 const router = useRouter();
 const props = defineProps({
@@ -177,37 +201,129 @@ const props = defineProps({
     },
   },
 });
+
 // 导航1名称编辑状态
 const nav1NameEdit = ref(false);
 // 导航1装修状态
-const nav1Publish = ref(false);
+// const nav1Publish = ref(false);
 
 // 导航2名称编辑状态
 const nav2NameEdit = ref(false);
 // 导航2装修状态
-const nav2Publish = ref(false);
+// const nav2Publish = ref(false);
 
 // 导航3名称编辑状态
 const nav3NameEdit = ref(false);
 // 导航3装修状态
-const nav3Publish = ref(false);
+// const nav3Publish = ref(false);
 
-const goDecoration = () => {
-  // router.push({ path: '/decoration/tools' });
-  // window.open('/decoration/tools', '_blank');
+const nav1DecorationJson = ref('');
+const nav2DecorationJson = ref('');
+const nav3DecorationJson = ref('');
+
+type FormItem = {
+  name: string;
+  id: number;
+  logo: string;
+  type: number;
+  detail: string;
+};
+
+const form1 = ref<FormItem>({
+  name: '',
+  id: 0,
+  logo: '',
+  type: ChannelType.PLATFORM_HOME,
+  detail: '',
+});
+const form2 = ref<FormItem>({
+  name: '',
+  id: 0,
+  logo: '',
+  type: ChannelType.PLATFORM_PRODUCT,
+  detail: '',
+});
+const form3 = ref<FormItem>({
+  name: '',
+  id: 0,
+  logo: '',
+  type: ChannelType.PLATFORM_SERVE,
+  detail: '',
+});
+
+const publishName = (form: FormItem | null | undefined) => {
+  console.log('publishName');
+  if (!form) return;
+  const { id, name } = form;
+  apiUpdateNavData({ id, name }).then((res: any) => {
+    console.log('publishName success', res);
+    if (form.type === ChannelType.PLATFORM_HOME) {
+      nav1NameEdit.value = false;
+    } else if (form.type === ChannelType.PLATFORM_PRODUCT) {
+      nav2NameEdit.value = false;
+    } else if (form.type === ChannelType.PLATFORM_SERVE) {
+      nav3NameEdit.value = false;
+    }
+  });
+};
+
+const goDecoration = (form: FormItem | null | undefined) => {
+  if (!form) return;
+  const { id, type } = form;
   const routeUrl = router.resolve({
     name: 'decorationTools',
-    query: { model: 0 },
+    query: { model: 0, type, id },
   });
   window.open(routeUrl.href, '_blank');
 };
-const goPreview = () => {
+const goPreview = (form: FormItem | null | undefined) => {
+  if (!form) return;
+  const { type, id } = form;
   const routeUrl = router.resolve({
     name: 'decorationTools',
-    query: { model: 1 },
+    query: { model: 1, type, id },
   });
   window.open(routeUrl.href, '_blank');
 };
+
+const getPageData = () => {
+  // 拉取所有导航数据
+  apiGetNavData({}).then((res) => {
+    // Form.value = res.data;
+    if (isArray(res.data)) {
+      res.data.forEach((item) => {
+        switch (item.type) {
+          case ChannelType.PLATFORM_HOME:
+            form1.value = item;
+            break;
+          case ChannelType.PLATFORM_PRODUCT:
+            form2.value = item;
+            break;
+          case ChannelType.PLATFORM_SERVE:
+            form3.value = item;
+            break;
+          default:
+            break;
+        }
+      });
+    }
+  });
+  // 获取本地缓存的装修数据,注意key值！！！
+  nav1DecorationJson.value = localStorage.getItem('componentsList2') || '';
+  nav2DecorationJson.value = localStorage.getItem('componentsList3') || '';
+  nav3DecorationJson.value = localStorage.getItem('componentsList4') || '';
+};
+
+onMounted(() => {
+  broadcastChannel.addEventListener('message', (event) => {
+    console.log('Received message:', event.data);
+    // 其他tab发送的消息
+    if (event.data === 'chnnelPageRefresh') {
+      getPageData();
+    }
+  });
+  getPageData();
+});
 </script>
 
 <style scoped lang="less">
@@ -247,12 +363,12 @@ const goPreview = () => {
         align-items: center;
         width: 376px;
         margin-left: 16px;
+      }
 
-        .save-btn,
-        .cancel-btn {
-          color: #1664ff;
-          cursor: pointer;
-        }
+      .save-btn,
+      .cancel-btn {
+        color: #1664ff;
+        cursor: pointer;
       }
 
       .input-box-show {

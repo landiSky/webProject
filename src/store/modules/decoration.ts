@@ -3,12 +3,14 @@ import { defineStore } from 'pinia';
 export const useDecorationStore = defineStore({
   id: 'app-decorarion',
   state: (): {
+    chnnelPageRefresh: boolean; // 频道页刷新
     curComponentData: any; // 当前选中组件数据
     curConfigData: any; // 当前选中组件配置数据
     isPreview: boolean; // 是否预览
     isSourceRefresh: boolean; // 是否源页面刷新
     curSelectIndex: number; // 选择的组件索引
   } => ({
+    chnnelPageRefresh: false,
     curComponentData: {},
     curConfigData: {},
     isPreview: false,
@@ -17,6 +19,10 @@ export const useDecorationStore = defineStore({
   }),
 
   actions: {
+    // 设置频道页刷新状态
+    setChannelPageRefresh(state: boolean) {
+      this.chnnelPageRefresh = state;
+    },
     // 设置当前装修组件数据
     setcurComponentData(data: any) {
       this.curComponentData = data;
