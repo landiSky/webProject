@@ -234,10 +234,10 @@ const onChangeCompany = async (companyId: string) => {
   const { primary } = userInfoByCompany.value || {};
   if (Number(primary) === 2) {
     useMenuStore().setMenuIndex(1, userInfo.value);
+    router.push({
+      path: '/buyer/index',
+    });
   }
-  // router.push({
-  //   path: '/buyer/index',
-  // });
 
   // 要在 app.vue 中监听 userstore.的变化
 };
