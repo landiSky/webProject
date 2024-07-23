@@ -6,7 +6,7 @@
     <t-carousel
       class="image-box"
       animation-name="card"
-      :auto-play="false"
+      :auto-play="true"
       indicator-type="outer"
       show-arrow="hover"
     >
@@ -167,12 +167,13 @@ defineExpose({
 
           .image-desc {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: calc(@factor * 110px);
+            // align-items: center;
+            // justify-content: center;
+            width: calc(@factor * 370px);
             margin: calc(@factor * 5px) 0;
             overflow: hidden;
             color: #4e5969;
+            color: #fff;
             font-size: calc(@factor * 7px);
             white-space: normal;
             text-align: left;
@@ -180,7 +181,7 @@ defineExpose({
           }
 
           .image-link {
-            color: #1664ff;
+            color: #fff;
             font-size: calc(@factor * 7px);
             cursor: pointer;
           }
