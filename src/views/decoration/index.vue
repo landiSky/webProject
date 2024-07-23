@@ -11,6 +11,9 @@
       <t-input
         v-model="form.name"
         :style="{ width: '532px' }"
+        :max-length="10"
+        show-word-limit
+        allow-clear
         placeholder="请输入"
       />
     </t-form-item>
@@ -89,9 +92,12 @@ import {
   apiUpdateNavData,
   apiGetNavData,
 } from '@/api/decoration/decoration-tools';
+import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
 import { Message } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+
+const decoration = useDecorationStore();
 
 const props = defineProps({
   xxx: {
@@ -127,6 +133,9 @@ const handleSubmit = (data: any) => {
         logo: data.logo,
       }).then((res) => {
         console.log(res);
+        // 暂时不用
+        // decoration.setPlatFormLogo(data.logo);
+        // decoration.setPlatFormName(data.name);
         Message.success('保存成功');
       });
     }

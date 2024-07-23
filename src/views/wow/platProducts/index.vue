@@ -4,16 +4,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  ref,
-} from 'vue';
+import { defineProps, onMounted, ref } from 'vue';
 
 import Container from '@/views/decoration/decorationTools/pageContainer.vue';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { ChannelType } from '@/enums/decoration';
 
 const props = defineProps({
   xxx: {
@@ -27,25 +22,15 @@ const props = defineProps({
     },
   },
 });
-const componentList = ref([
-  {
-    title: '单图',
-    maxNum: 3,
-    icon: 'singleImg',
-    name: 'SigleImg',
-    value: {
-      src: '',
-      title: '2222',
-      linkType: 0,
-      linkUrl: 'http://www.baidu.com',
-      desc: 'balabala',
-    },
-    bgColor: '#ffffff#e2ecff',
-  },
-]);
+const componentList = ref([]);
 onMounted(() => {
-  // TODO 获取本模块的组件列表数据
-  // componentList.value = [];
+  apiGetNavData({ type: ChannelType.PLATFORM_PRODUCT }).then((res: any) => {
+    if (res.data.length > 0) {
+      const { detail } = res.data[0];
+      if (!detail) return;
+      componentList.value = JSON.parse(res.data[0].detail);
+    }
+  });
 });
 </script>
 

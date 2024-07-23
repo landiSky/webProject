@@ -3,8 +3,13 @@
     <div class="left-side">
       <div class="left">
         <t-space :size="[4]">
-          <iconpark-icon name="logo" size="36px"></iconpark-icon>
-          <span class="title"> IDSphere </span>
+          <t-image
+            v-if="logo"
+            :src="`/server/web/file/download?name=${logo}`"
+            :preview="false"
+          />
+          <iconpark-icon v-else name="logo" size="36px"></iconpark-icon>
+          <span class="title"> {{ platformName || 'IDSphere' }} </span>
         </t-space>
       </div>
       <div class="right">
@@ -12,8 +17,8 @@
           <t-link
             :class="{ active: selectTab === TabPath.INDEX }"
             @click="goIndex"
-            >首页</t-link
-          >
+            >{{ channel1Name || '首页' }}
+          </t-link>
           <!-- <t-tooltip content="敬请期待">
             <t-link>限免应用</t-link>
           </t-tooltip> -->
@@ -30,13 +35,13 @@
           <t-link
             :class="{ active: selectTab === TabPath.PROD }"
             @click="goPlatProducts"
-            >平台产品
+            >{{ channel2Name || '平台产品' }}
           </t-link>
 
           <t-link
             :class="{ active: selectTab === TabPath.SERV }"
             @click="goPlatServices"
-            >平台服务
+            >{{ channel3Name || '平台服务' }}
           </t-link>
           <t-link
             :class="{ active: selectTab === TabPath.DOC }"
@@ -103,6 +108,8 @@ import { getToken } from '@/utils/auth';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { ChannelType } from '@/enums/decoration';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -117,6 +124,15 @@ const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
+
+const logo = ref('');
+const platformName = ref('');
+// 首页导航栏
+const channel1Name = ref('');
+// 平台产品导航栏
+const channel2Name = ref('');
+// 平台服务导航栏
+const channel3Name = ref('');
 
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
@@ -232,9 +248,23 @@ const clickIdService = () => {
 
 onMounted(() => {
   // TODO 首页logo和项目名称以及导航名称接口获取
-  // apiGetLogoAndName().then((res) => {
-  //   console.log('首页logo和项目名称接口获取', res);
-  // });
+  apiGetNavData({}).then((res) => {
+    console.log('首页logo和项目名称接口获取', res);
+    if (res.data) {
+      res.data.forEach((item: any) => {
+        if (item.type === ChannelType.PLATFORM_NAME) {
+          logo.value = item.logo;
+          platformName.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_HOME) {
+          channel1Name.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_PRODUCT) {
+          channel2Name.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_SERVE) {
+          channel3Name.value = item.name;
+        }
+      });
+    }
+  });
   if (route.name === 'wowMallDetail') {
     // 商品详情页也激活【商城】
     selectTab.value = TabPath.MALL;
@@ -265,7 +295,17 @@ onMounted(() => {
     height: 100%;
     // padding-left: 24px;
     .left {
+      // display: flex;
+      // align-items: center;
       margin-right: 32px;
+
+      ::v-deep(.tele-image) {
+        .tele-image-img {
+          width: 36px !important;
+          height: 36px !important;
+          object-fit: cover !important;
+        }
+      }
     }
 
     .right {
