@@ -6,7 +6,7 @@
     <t-carousel
       class="image-box"
       animation-name="card"
-      :auto-play="true"
+      :auto-play="false"
       indicator-type="outer"
       show-arrow="hover"
     >
@@ -16,21 +16,25 @@
         class="image-item"
       >
         <!-- <span class="image-title">{{ item?.title || '小标题' }}</span> -->
-        <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
-          :preview="false"
-          :style="{
-            width: '100%',
-          }"
-          class="image-cls"
-        />
-        <!-- <span class="image-desc">{{ item?.desc || '图片简介' }}</span> -->
-        <!-- <span
-          v-if="item?.linkType !== 2"
-          class="image-link"
-          @click="clickLink(item?.linkType, item?.linkUrl)"
-          >查看详情>>
-        </span> -->
+        <div class="content-area">
+          <t-image
+            :src="`/server/web/file/download?name=${item?.src}`"
+            :preview="false"
+            :style="{
+              width: '100%',
+            }"
+            class="image-cls"
+          />
+          <div class="image-content">
+            <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+            <span
+              v-if="item?.linkType !== 2"
+              class="image-link"
+              @click="clickLink(item?.linkType, item?.linkUrl)"
+              >查看详情>>
+            </span>
+          </div>
+        </div>
       </t-carousel-item>
     </t-carousel>
   </div>
@@ -149,47 +153,39 @@ defineExpose({
       .image-cls {
         height: calc(@factor * 260px);
       }
-      // .image-title {
-      //   overflow: hidden;
-      //   color: #1d2129;
-      //   font-weight: 500;
-      //   font-size: calc(@factor * 8px);
-      //   line-height: calc(@factor * 26px);
-      //   white-space: normal;
-      //   text-align: center;
-      // }
 
-      // .image-desc {
-      //   display: flex;
-      //   align-items: center;
-      //   justify-content: center;
-      //   width: calc(@factor * 110px);
-      //   margin: calc(@factor * 5px) 0;
-      //   overflow: hidden;
-      //   color: #4e5969;
-      //   font-size: calc(@factor * 7px);
-      //   white-space: normal;
-      //   text-align: left;
-      //   text-overflow: ellipsis;
-      // }
+      .content-area {
+        position: relative;
 
-      // .image-link {
-      //   color: #1664ff;
-      //   font-size: calc(@factor * 7px);
-      //   cursor: pointer;
-      // }
-      // .image-item-content {
-      //   position: absolute;
-      //   top: 0;
-      //   right: 0;
-      //   bottom: 0;
-      //   left: 0;
-      //   display: flex;
-      //   flex-direction: column;
-      //   align-items: flex-start;
-      //   justify-content: flex-start;
-      //   padding: 20px;
-      // }
+        .image-content {
+          position: absolute;
+          bottom: calc(@factor * 24px);
+          left: calc(@factor * 24px);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+
+          .image-desc {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(@factor * 110px);
+            margin: calc(@factor * 5px) 0;
+            overflow: hidden;
+            color: #4e5969;
+            font-size: calc(@factor * 7px);
+            white-space: normal;
+            text-align: left;
+            text-overflow: ellipsis;
+          }
+
+          .image-link {
+            color: #1664ff;
+            font-size: calc(@factor * 7px);
+            cursor: pointer;
+          }
+        }
+      }
     }
 
     ::v-deep(.tele-carousel-indicator-wrapper-bottom) {
