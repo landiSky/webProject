@@ -288,10 +288,10 @@ watch(
   () => router,
   // eslint-disable-next-line consistent-return
   () => {
-    const currentFullPath = router.currentRoute.value.fullPath;
+    const currentPath = router.currentRoute.value.path;
 
     // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
-    if (currentFullPath === '/license/index' && menuStore.menuIndex !== 2) {
+    if (currentPath === '/license/index' && menuStore.menuIndex !== 2) {
       setDot(2);
     }
   },

@@ -101,6 +101,7 @@ export function JumpToLogin() {
 // 全部左侧menu，在store中根据permission动态生成左侧菜单
 export const appMenus = (authsList: Array<string> = []) => {
   const { isAdmin } = useUserStore().userInfo || {};
+
   const pathList: string[] = [];
 
   // TODO 优化迭代逻辑
@@ -118,7 +119,8 @@ export const appMenus = (authsList: Array<string> = []) => {
       // TODO mock环境先去掉路由权限显示 && authsList.includes(RouteAuthEnum[path])
       if (
         !meta.hideInMenu &&
-        (authsList.includes(RouteAuthEnum[path]) || (!isAdmin && meta.noAuth))
+        (authsList.includes(RouteAuthEnum[path]) ||
+          (!isAdmin && meta.noAuth && useUserStore().menuIndex !== 2))
       ) {
         const menuItem = {
           name: meta.name,
