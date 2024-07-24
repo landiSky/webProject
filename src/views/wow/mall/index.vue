@@ -222,17 +222,21 @@
                   <t-tag color="#E8F4FF">{{
                     DeliverTypeDesc[item.deliveryType]
                   }}</t-tag>
-                  <t-typography-paragraph
+                  <div
                     v-for="(item2, index) in item?.tagList"
                     :key="index"
                     class="tagList"
-                    :ellipsis="{
-                      rows: 1,
-                      showTooltip: true,
-                    }"
                   >
-                    {{ item2.name }}
-                  </t-typography-paragraph>
+                    <t-typography-paragraph
+                      class="tagList-color"
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                    >
+                      {{ item2.name }}
+                    </t-typography-paragraph>
+                  </div>
                 </span>
                 <span class="desc">
                   <t-typography-paragraph
@@ -376,7 +380,14 @@ const getProductList = () => {
   apiProductList(params) // TODO 添加查询参数
     .then((response) => {
       const { total, records } = response || {};
-      productsList.value = records || [];
+      const dataList = records.map((item: any) => {
+        const params = item;
+        const tagList = params.tagList.filter(
+          (tag: any) => String(tag.id) !== '2'
+        );
+        return { ...params, tagList };
+      });
+      productsList.value = dataList || [];
       pagination.total = total;
     })
     .catch(() => {})
@@ -789,5 +800,10 @@ onMounted(() => {
   font-family: PingFang SC;
   background: rgba(232, 244, 255, 1);
   border-radius: 2px;
+
+  .tagList-color {
+    width: 100%;
+    color: rgba(22, 100, 255, 1);
+  }
 }
 </style>

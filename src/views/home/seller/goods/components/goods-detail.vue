@@ -167,7 +167,7 @@
                   </div>
                 </div>
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示图">
+              <!-- <t-descriptions-item label="详情展示图">
                 <div v-if="detailImageList.length > 0" class="file-list">
                   <div
                     v-for="url of detailImageList"
@@ -206,7 +206,7 @@
                     </div>
                   </div>
                 </div>
-              </t-descriptions-item>
+              </t-descriptions-item> -->
               <t-descriptions-item label="商品分类">
                 {{ dataInfo.productTypeParentName }} /
                 {{ dataInfo.productTypeName }}
@@ -495,7 +495,12 @@ const desDeuration = (array: any[]) => {
 };
 
 const refreshData = async () => {
-  dataInfo.value = await goodsDetail(props.data?.id);
+  const data = await goodsDetail(props.data?.id);
+  const tagMap = data.tagMap.filter(
+    // (tag: any) => String(tag.id) !== '2'
+    (tag: any) => String(tag.tagName) !== '公共服务'
+  );
+  dataInfo.value = { ...data, tagMap };
   detailImageList.value = dataInfo.value.detailImg
     ? dataInfo.value.detailImg.split(',')
     : [];

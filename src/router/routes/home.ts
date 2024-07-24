@@ -134,6 +134,44 @@ const homeRoutesList = [
       name: '订单确认页',
     },
   },
+  {
+    path: '/license',
+    component: PAGE_LAYOUT,
+    redirect: '/license/index',
+    children: [
+      {
+        path: '/license/index',
+        name: 'licenseIndex',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: 'License管理',
+    },
+  },
+  {
+    path: '/overview',
+    component: PAGE_LAYOUT,
+    redirect: '/overview/index',
+    children: [
+      {
+        path: '/overview/index',
+        name: 'overviewIndex',
+        component: () => import('@/views/home/overview/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: '二级节点业务管理系统',
+    },
+  },
 ];
 
 export default homeRoutesList;

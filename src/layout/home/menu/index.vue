@@ -41,17 +41,20 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMenuStore } from '@/store/modules/menu';
 import { apiDataPoint } from '@/api/data-point';
 import { useUserStore } from '@/store/modules/user';
+import { snmsClientLogin } from '@/api/login';
+import { sm2 } from '@/utils/encrypt';
 
 const router = useRouter();
 const route = useRoute();
 const collapsed = ref(false);
 
 const userStore = useUserStore();
-const { userInfo } = userStore;
+const { userInfo, userInfoByCompany } = userStore;
 
 const menuStore = useMenuStore();
 
@@ -98,6 +101,45 @@ const findKeyByValue = (obj: { [key: string]: any }, value: string) => {
   return Object.keys(obj).find((key) => obj[key] === value);
 };
 
+const clickIdService = () => {
+  // TODO w:用户标识服务打点
+  apiDataPoint(null, null, userInfo?.id, 6, 11).then((res) => {
+    console.log('用户主导航点击标识服务打点');
+  });
+  const { primary, companyId } = userInfoByCompany || {};
+  if (Number(primary) !== 2 || userInfo?.isAdmin) {
+    const { snmsUrls } = userInfo || {};
+    const params = {
+      companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+      snmsLoginId: snmsUrls?.snmsLoginId,
+    };
+    snmsClientLogin(params).then((res: any) => {
+      if (res?.data?.code === 102006) {
+        Message.error(res?.data?.message);
+      }
+      if (!res?.data?.data) {
+        return;
+      }
+      const data = {
+        type: 'snms',
+        companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res?.data?.data}&data=${sm2data}`);
+    });
+  } else {
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
+  }
+};
+
 /**
  * 路由跳转至该路径
  * @param key 被点击的三级菜单的key
@@ -106,6 +148,11 @@ const clickMenuItem = (key: string) => {
   if (/http(s)?:/.test(key)) {
     window.open(key);
   } else {
+    if (key === '/overview') {
+      // 二级节点业务管理系统
+      clickIdService();
+      return;
+    }
     router.push({ path: key });
     // TODO w: 各个菜单的打点统计
     const num = findKeyByValue(pathMap, key);

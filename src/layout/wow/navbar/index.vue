@@ -226,7 +226,7 @@ const goLogin = () => {
 const onSearch = () => {
   // TODO w: 商城搜索打点
   apiDataPoint(null, searchContent.value, userInfo?.value?.id, 5, 9).then(
-    (res) => {
+    () => {
       console.log('主导航栏商品搜索打点', searchContent.value);
     }
   );

@@ -66,6 +66,73 @@ const operationRoutesList = [
     path: '/sync',
     component: PAGE_LAYOUT,
     children: [
+      // {
+      //   path: '/license',
+      //   component: PAGE_LAYOUT,
+      //   redirect: '/license/index',
+      //   children: [
+      //     {
+      //       path: '/license/index',
+      //       name: 'licenseIndex',
+      //       component: () => import('@/views/home/license/index.vue'),
+      //       meta: {
+      //         name: 'index',
+      //         hideInMenu: true,
+      //       },
+      //     },
+      //     {
+      //       path: '/license/addlicensedetail',
+      //       name: 'AddLicenseDetail',
+      //       component: () =>
+      //         import('@/views/home/license/components/addLicenseDetail.vue'),
+      //       meta: {
+      //         hideInMenu: true,
+      //         parentPath: '/license/index',
+      //       },
+      //     },
+      //     {
+      //       path: '/license/admin/reviewdetails',
+      //       name: 'licenseAdminReviewDetails',
+      //       component: () =>
+      //         import('@/views/home/license/components/reviewerDetail.vue'),
+      //       meta: {
+      //         hideInMenu: true,
+      //         parentPath: '/license/index',
+      //       },
+      //     },
+      //   ],
+      //   meta: {
+      //     name: 'License管理',
+      //   },
+      // },
+      {
+        path: '/sync/license',
+        name: 'syncLicenseManage',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'License管理',
+          keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
+          hideInMenu: false,
+        },
+      },
+      {
+        path: '/sync/license/addlicensedetail',
+        name: 'AddLicenseDetail',
+        component: () =>
+          import('@/views/home/license/components/addLicenseDetail.vue'),
+        meta: {
+          hideInMenu: true,
+        },
+      },
+      {
+        path: '/sync/license/admin/reviewdetails',
+        name: 'licenseAdminReviewDetails',
+        component: () =>
+          import('@/views/home/license/components/reviewerDetail.vue'),
+        meta: {
+          hideInMenu: true,
+        },
+      },
       {
         path: '/sync/class',
         name: 'classManage',

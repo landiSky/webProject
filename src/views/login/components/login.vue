@@ -308,19 +308,24 @@ const loginLoading = ref(false);
 let configInfo: Record<string, any> = {};
 const phoneTs = /^1[2|3|4|5|6|7|8|9][0-9]{9}$/; //  手机号正则
 const captchaType = ref(1);
-const formRef = ref();
-const form = ref({
-  username: '',
-  password: '',
-});
 
-const performsRef = ref();
-const performs = ref({
+const dataSet: Record<string, any> = {
   username: '',
   code: '',
   password: '',
   confirmPassword: '',
-});
+};
+const loginDataSet: Record<string, any> = {
+  username: '',
+  password: '',
+};
+
+const formRef = ref();
+const form = ref({ ...loginDataSet });
+
+const performsRef = ref();
+
+const performs: Record<string, any> = ref({ ...dataSet });
 
 const performsRef2 = ref();
 const performs2 = ref({
@@ -470,9 +475,11 @@ const goRegister = () => {
 };
 
 const forgotPassword = () => {
+  performs.value = { ...dataSet };
   state.value = 2;
 };
 const getLog = () => {
+  form.value = { ...loginDataSet };
   state.value = 1;
 };
 const clickLoginBtn = () => {

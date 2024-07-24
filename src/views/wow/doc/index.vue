@@ -52,7 +52,10 @@ const contents = ref([
     icon: icon1,
     title: '平台集成文档',
     desc: '简单步骤，快速对接，全网推广。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose',
+    url:
+      process.env.NODE_ENV !== 'production'
+        ? 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose'
+        : 'https://snms.teleinfo.cn/zst-docs/saas/writing-purpose',
   },
   {
     bgImg: {
@@ -62,7 +65,10 @@ const contents = ref([
     icon: icon2,
     title: '标识服务',
     desc: '应用集成标准流程规范、SDK、Open API等，帮助开发者便捷的完成企业信息系统、平台与标识体系对接，支撑标识应用开发落地。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/',
+    url:
+      process.env.NODE_ENV !== 'production'
+        ? 'http://id-pointer-sdk.test.idx.space/docs/'
+        : 'https://snms.teleinfo.cn/docs/',
   },
   {
     bgImg: {
@@ -72,7 +78,10 @@ const contents = ref([
     icon: icon3,
     title: 'IDInside合作计划',
     desc: '加速标识应用贯通，从零开始，仅需五步，实现应用快速接入标识体系。',
-    url: 'http://id-pointer-sdk.pre.idx.space/docs/idinside/document-overview',
+    url:
+      process.env.NODE_ENV !== 'production'
+        ? 'http://id-pointer-sdk.pre.idx.space/docs/idinside/document-overview'
+        : 'https://snms.teleinfo.cn/zst-docs/idinside/document-overview',
   },
 ]);
 

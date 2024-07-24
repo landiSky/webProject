@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="productIntro">
       <div class="baseInfo">
-        <div class="left">
+        <!-- <div class="left">
           <div class="bigImg">
             <img
               :src="
@@ -26,16 +26,20 @@
               />
             </li>
           </ul>
-        </div>
+        </div> -->
         <div class="right">
           <div class="header">
-            <span class="productName">{{ prodDetail.name }}</span>
-            <!-- <span
-              v-for="(item, index) in prodDetail?.tagMap"
-              :key="index"
-              class="tag"
-              :class="{ 'tag-left': index === 0 }"
-            > -->
+            <span class="productName">
+              <!-- <t-typography-paragraph
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ prodDetail.name }}
+              </t-typography-paragraph> -->
+              {{ prodDetail.name }}
+            </span>
             <t-typography-paragraph
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
@@ -48,13 +52,12 @@
             >
               {{ item.tagName }}
             </t-typography-paragraph>
-            <!-- </span> -->
           </div>
           <div class="description">
             <t-typography-paragraph
               style="margin-bottom: 0"
               :ellipsis="{
-                rows: 7,
+                rows: 3,
                 showTooltip: {
                   type: 'tooltip',
                   props: {
@@ -255,7 +258,7 @@
                 :key="index"
                 class="comment-list"
               >
-                <t-comment :author="item?.nickname || '-'">
+                <t-comment class="author-text" :author="item?.nickname || '-'">
                   <template #avatar>
                     <t-image
                       width="52"
@@ -692,7 +695,11 @@ onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
-      prodDetail.value = data;
+      const tagMap = data.tagMap.filter(
+        // (tag: any) => String(tag.id) !== '2'
+        (tag: any) => String(tag.tagName) !== '公共服务'
+      );
+      prodDetail.value = { ...data, tagMap };
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
@@ -761,9 +768,13 @@ onUnmounted(() => {
       display: flex;
       align-items: start;
       width: 100%;
+      height: 560px;
       margin-bottom: 16px;
       padding: 24px;
+      background: url('../../../../assets/images/wow/mall/mall-bg.png')
+        no-repeat;
       background-color: #fff;
+      background-size: cover;
       border-radius: 4px;
 
       .left {
@@ -795,11 +806,13 @@ onUnmounted(() => {
       }
 
       .right {
-        flex: 1;
+        // width: 465px;
+        margin-left: 126px;
 
         .header {
           display: flex;
           align-items: center;
+          margin-top: 56px;
           margin-bottom: 16px;
           color: #1d2129;
           font-weight: 500;
@@ -828,13 +841,15 @@ onUnmounted(() => {
         }
 
         .description {
-          margin-bottom: 42px;
+          width: 465px;
+          margin-bottom: 36px;
           color: #1d2129;
           line-height: 22px; /* 157.143% */
           word-break: break-all;
         }
 
         .price {
+          width: 465px;
           margin-bottom: 20px;
           padding: 12px;
           line-height: 22px;
@@ -1049,6 +1064,10 @@ onUnmounted(() => {
               line-height: 22px;
               border-bottom: 1px solid rgba(229, 232, 239, 1);
 
+              .author-text {
+                word-break: break-all;
+              }
+
               .count {
                 margin-top: 4px;
               }
@@ -1057,6 +1076,7 @@ onUnmounted(() => {
                 margin-top: 12px;
                 color: rgba(78, 89, 105, 1);
                 font-weight: 400;
+                word-break: break-all;
               }
 
               .time {

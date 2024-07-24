@@ -9,11 +9,13 @@ import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
 import { useRouter } from 'vue-router';
+import { userMenu, manageMenu } from '@/enums/menuEnum';
 import { clearToken } from './utils/auth';
 
 const router = useRouter();
 
 const userStore = useUserStore();
+const menuStore = useMenuStore();
 
 const isRouterAlive = ref(true);
 
@@ -41,6 +43,7 @@ const infoRouteList = [
   'ROUTE_DECORATION_CHANNEL',
   'ROUTE_DECORATION_TOOLS',
   'ROUTE_DECORATION_TOOLS_INDEX',
+  'ROUTE_SYNC_LICENSE',
 ];
 
 const opearationRouteList = [
@@ -55,15 +58,29 @@ watch(
   () => userStore.updateMenu,
   () => {
     const { isAdmin, source } = userStore.userInfo || {};
-    let authList = userStore.userInfoByCompany?.menuCodes || [];
+    let authList =
+      menuStore.menuIndex === 1
+        ? userStore.userInfoByCompany?.menuCodes
+        : userMenu(menuStore.menuIndex);
     if (isAdmin) {
       authList = opearationRouteList;
       if (source) {
-        authList = infoRouteList;
+        // authList = infoRouteList;
+        authList = manageMenu(menuStore.menuIndex);
       }
     }
 
     useMenuStore().genLeftMenu(authList);
+  },
+  {
+    immediate: true,
+  }
+);
+
+watch(
+  () => menuStore.menuIndex,
+  () => {
+    router.push({ path: menuStore.firstRoutePath });
   },
   {
     immediate: true,

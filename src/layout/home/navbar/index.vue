@@ -16,8 +16,16 @@
       </div>
       <div class="right">
         <t-space>
-          <t-link class="active" @click="setDot">平台管理</t-link>
-          <t-link @click="clickIdService">标识管理</t-link>
+          <t-link
+            v-for="item in menuList"
+            :key="item.key"
+            :class="{ active: item.key === menuStore.menuIndex }"
+            @click="setDot(item.key)"
+          >
+            {{ item.name }}
+          </t-link>
+          <!-- <t-link class="active" @click="setDot">平台管理</t-link>
+          <t-link @click="clickIdService">标识管理</t-link> -->
         </t-space>
       </div>
     </div>
@@ -87,16 +95,19 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useDecorationStore } from '@/store/modules/decoration';
+import { useMenuStore } from '@/store/modules/menu';
 import { NodeAuthStatus } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
+import { RouteAuthEnum } from '@/enums/authEnum';
+import { usermenuList, managemenuList } from '@/enums/menuEnum';
 
 const userStore = useUserStore();
 // const decoration = useDecorationStore();
@@ -107,6 +118,53 @@ const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 // const { platFormLogo, platFormName } = storeToRefs(decoration);
 const logo = ref('');
 const platformName = ref('');
+const menuStore = useMenuStore();
+
+const userMenu = [
+  {
+    name: '平台管理',
+    key: 1,
+  },
+  {
+    name: '标识管理',
+    key: 2,
+  },
+];
+
+const manageMenu = [
+  {
+    name: '平台管理',
+    key: 1,
+  },
+  {
+    name: '标识管理',
+    key: 3,
+  },
+];
+const menuChange = () => {
+  let dataList = [];
+  if (userInfo.value?.isAdmin) {
+    dataList = manageMenu;
+  } else {
+    dataList = userMenu;
+  }
+  return dataList;
+};
+const menuList = [...menuChange()];
+const findValueInColumns = (array: string | any[], value: any) => {
+  // eslint-disable-next-line no-plusplus
+  for (let col = 0; col < array[0].length; col++) {
+    // eslint-disable-next-line no-plusplus
+    for (let row = 0; row < array.length; row++) {
+      if (array[row][col] === value) {
+        return row;
+        // return { row, column: col };
+      }
+    }
+  }
+  return 1; // 如果没有找到值，则返回null
+};
+
 const handleLogout = async () => {
   try {
     await userStore.logout();
@@ -128,34 +186,6 @@ const clickLogout = () => {
     },
   });
 };
-// 以前的
-// const clickIdService = () => {
-//   const { nodeStatus } = userInfoByCompany.value || {};
-//   if (userInfo.value?.isAdmin || nodeStatus === NodeAuthStatus.AUTHED) {
-//     const { snmsUrls } = userInfo.value || {};
-//     window.open(snmsUrls.idPointer, '_blank'); // 跳转到二级首页
-//   } else {
-//     Modal.info({
-//       title: '使用提醒',
-//       content: '使用本服务需申请企业节点后使用，请先开通或绑定企业节点。',
-//       titleAlign: 'start',
-//       hideCancel: false,
-//       cancelText: '暂不开通',
-//       okText: '去开通',
-//       onOk: () => {
-//         // 变更不同的值，再卖家首页才可以多次点击
-//         const curAuthValue = route.query.openAuthModal;
-//         router.push({
-//           path: '/buyer/index',
-//           query: {
-//             openAuthModal: curAuthValue ? Number(curAuthValue) + 1 : 1,
-//           },
-//         });
-//       },
-//     });
-//   }
-// };
-// 现在的
 const clickIdService = () => {
   // TODO w:用户标识服务打点
   apiDataPoint(null, null, userInfo?.value?.id, 6, 11).then((res) => {
@@ -213,17 +243,42 @@ const onChangeCompany = async (companyId: string) => {
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
   await userStore.changeSelectCompany(selectItem);
 
-  router.push({
-    path: '/buyer/index',
-  });
+  const { primary } = userInfoByCompany.value || {};
+  if (Number(primary) === 2) {
+    useMenuStore().setMenuIndex(1, userInfo.value);
+    router.push({
+      path: '/buyer/index',
+    });
+  }
 
   // 要在 app.vue 中监听 userstore.的变化
 };
 
-const setDot = () => {
+const setDot = (index: number) => {
   // TODO w:用户主导航平台管理打点,这个打点位置存疑？
   console.log('用户主导航平台管理打点');
   // apiDataPoint(null, null, 6, 10);
+  if (index === 3) {
+    // 点击标识管理，跳转到二级企业管理系统
+    clickIdService();
+    return;
+  }
+  const { primary } = userInfoByCompany.value || {};
+  if (index === 2 && Number(primary) === 2) {
+    // 点击标识管理，跳转到二级企业管理系统
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
+    return;
+  }
+  try {
+    useMenuStore().setMenuIndex(index, userInfo.value);
+  } catch (error: any) {
+    console.log(error);
+  }
 };
 
 const onSearch = () => {
@@ -249,6 +304,22 @@ onMounted(() => {
     }
   });
 });
+
+watch(
+  () => router,
+  // eslint-disable-next-line consistent-return
+  () => {
+    const currentPath = router.currentRoute.value.path;
+
+    // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
+    if (currentPath === '/license/index' && menuStore.menuIndex !== 2) {
+      setDot(2);
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="less" scoped>
