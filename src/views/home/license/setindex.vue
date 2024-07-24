@@ -116,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, onActivated } from 'vue';
+import { reactive, onMounted, onActivated, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -465,6 +465,20 @@ onMounted(() => {
 onActivated(() => {
   fetchData();
 });
+
+watch(
+  () => route.query.type,
+  (newVal) => {
+    if (newVal) {
+      clickAddBtn();
+    } else {
+      handleDrawerCancel();
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <style lang="less" scoped>

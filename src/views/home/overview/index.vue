@@ -4,11 +4,45 @@
     <div class="information">
       <img class="img" :src="avatar" alt="" />
       <div class="text">
-        <div class="user">张伟</div>
+        <div class="user">
+          <t-typography-paragraph
+            :ellipsis="{
+              rows: 1,
+              showTooltip: true,
+            }"
+            class="name user"
+            >{{ userInfoByCompany?.username || userInfo?.mobile }}
+          </t-typography-paragraph>
+        </div>
         <div class="list">
-          <div class="title">北京泰尔英福有限公司</div>
-          <div class="line"></div>
-          <div class="title">主帐号</div>
+          <div class="title">
+            <ellipsis
+              :copy="false"
+              :value="userInfoByCompany.companyName || '暂未认证'"
+            >
+            </ellipsis>
+          </div>
+          <div
+            v-if="
+              userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+              userInfoByCompany.certificateStatus === CompanyAuthStatus.AUTHED
+            "
+            class="line"
+          >
+          </div>
+          <div
+            v-if="
+              userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+              userInfoByCompany.certificateStatus === CompanyAuthStatus.AUTHED
+            "
+            class="title"
+          >
+            {{
+              userInfoByCompany.companyId
+                ? AccountTypeDesc[userInfoByCompany.primary]
+                : '-'
+            }}
+          </div>
           <div class="buttom-blue">自建（2）</div>
           <div class="title">88.111.3223123、88.111.3223...</div>
           <div class="prefix">前缀管理>></div>
@@ -44,15 +78,50 @@
                   item.text
                 }}</div>
                 <div v-if="index === 0" class="buttom-body">
-                  <t-link :hoverable="false" @click="registerJump">
+                  <t-link
+                    v-if="!productData?.entSubmitStatus"
+                    :hoverable="false"
+                    @click="registerJump"
+                  >
                     立即注册
+                  </t-link>
+                  <t-link
+                    v-if="productData?.entSubmitStatus"
+                    :hoverable="false"
+                    @click="prefixJump"
+                  >
+                    查看前缀
                   </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false" @click="buyNow">立即购买</t-link>
+                  <t-link
+                    v-if="!productData?.idHubBuyStatus"
+                    :hoverable="false"
+                    @click="buyNow"
+                    >立即购买</t-link
+                  >
+                  <t-link
+                    v-if="productData?.idHubBuyStatus"
+                    :hoverable="false"
+                    @click="viewOrder"
+                  >
+                    查看订单
+                  </t-link>
                 </div>
                 <div v-if="index === 2" class="buttom-body">
-                  <t-link :hoverable="false" @click="applyNow">立即申请</t-link>
+                  <t-link
+                    v-if="!productData?.licenseApplyStatus"
+                    :hoverable="false"
+                    @click="applyNow"
+                    >立即申请</t-link
+                  >
+                  <t-link
+                    v-if="productData?.licenseApplyStatus"
+                    :hoverable="false"
+                    @click="viewLicense"
+                  >
+                    查看License
+                  </t-link>
                 </div>
                 <div v-if="index === 3" class="buttom-body"></div>
               </div>
@@ -86,10 +155,34 @@
                   item.text
                 }}</div>
                 <div v-if="index === 0" class="buttom-body">
-                  <t-link :hoverable="false">立即注册</t-link>
+                  <t-link
+                    v-if="!productData?.entSubmitStatus"
+                    :hoverable="false"
+                    >立即注册</t-link
+                  >
+                  <t-link
+                    v-if="productData?.entSubmitStatus"
+                    :hoverable="false"
+                    @click="prefixJump"
+                  >
+                    查看前缀
+                  </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false">立即托管</t-link>
+                  <t-link
+                    v-if="!productData?.hostingSubmitStatus"
+                    :hoverable="false"
+                    @click="instantHosting"
+                  >
+                    立即托管
+                  </t-link>
+                  <t-link
+                    v-if="productData?.hostingSubmitStatus"
+                    :hoverable="false"
+                    @click="viewDetail"
+                  >
+                    查看详情
+                  </t-link>
                 </div>
                 <div v-if="index === 2" class="buttom-body">
                   <t-link :hoverable="false"></t-link>
@@ -125,10 +218,17 @@
                   {{ item.text }}
                 </div>
                 <div v-if="index === 0" class="buttom-body">
-                  <t-link :hoverable="false">0元购买</t-link>
+                  <t-link :hoverable="false" @click="zeroPurchase">
+                    0元购买
+                  </t-link>
+                  <!-- <t-link :hoverable="false" @click="viewOrder">
+                    查看订单
+                  </t-link> -->
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false">立即使用</t-link>
+                  <t-link :hoverable="false" @click="immediateUse">
+                    立即使用
+                  </t-link>
                 </div>
                 <div v-if="index === 2" class="buttom-body">
                   <t-link :hoverable="false"></t-link>
@@ -142,11 +242,15 @@
       <div class="manual">
         <div class="manual-top">
           <div class="title">帮助手册&开发参考</div>
-          <t-link :hoverable="false" @click="moreJump">更多</t-link>
+          <t-link :hoverable="false" @click="moreJump('')">更多</t-link>
         </div>
         <div class="manual-ul">
           <ul>
-            <li v-for="(item, index) in manualList" :key="index">
+            <li
+              v-for="(item, index) in manualList"
+              :key="index"
+              @click="moreJump(item.url)"
+            >
               {{ item.name }}
             </li>
           </ul>
@@ -162,7 +266,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { Message } from '@tele-design/web-vue';
+import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/modules/user';
+import {
+  AppType,
+  AccountType,
+  AccountTypeDesc,
+  CompanyAuthStatus,
+  CompanyAuthStatusDESC,
+  NodeAuthStatus,
+  NodeAuthStatusDESC,
+} from '@/enums/common';
 
 import avatar from '@/assets/images/overview/avatar.png';
 
@@ -170,7 +287,25 @@ import icon1 from '@/assets/images/overview/icon-01.png';
 import icon2 from '@/assets/images/overview/icon-02.png';
 import icon3 from '@/assets/images/overview/icon-03.png';
 import icon4 from '@/assets/images/overview/icon-04.png';
-import { Message } from '@tele-design/web-vue';
+
+import ellipsis from '@/components/ellipsis/index.vue';
+
+const router = useRouter();
+
+const userStore = useUserStore();
+const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
+
+// 概览商品数据
+const productData = ref<Record<string, any>>({
+  licenseApplyStatus: null, // license申请状态 0-未申请 1-已申请
+  idTestProductId: null, // 沙盒商品id
+  idHubProductId: null, // 节点商品id
+  idTestBuyStatus: null, // 沙盒商品购买状态 0-未购买 1-已购买
+  idHubBuyStatus: null, // 节点商品购买状态 0-未购买 1-已购买
+  entSubmitStatus: null, // 是否提交前缀 0-未提交 1-已提交
+  hostingSubmitStatus: null, // 是否提交托管 0-未提交 1-已提交
+});
 
 const stepsList = ref([
   {
@@ -255,20 +390,16 @@ const toolList = ref([
 
 const manualList = ref([
   {
-    name: '二级节点OpenAPI',
-    url: '',
-  },
-  {
-    name: '企业节点OpenAPI',
-    url: '',
+    name: 'OpenAPI',
+    url: 'https://snms.teleinfo.cn/docs/idhub/standard/introduce',
   },
   {
     name: '标识解析SDK',
-    url: '',
+    url: 'https://snms.teleinfo.cn/docs/sdk/v1/introduction',
   },
   {
     name: '应用集成SOP',
-    url: '',
+    url: 'https://snms.teleinfo.cn/docs/handle-app-sop/1-introduce/purpose',
   },
 ]);
 
@@ -278,6 +409,10 @@ const registerJump = () => {};
 // 立即购买
 const buyNow = (obj: any) => {
   if (obj?.status === 1) {
+    router.push({
+      name: 'wowMallDetail',
+      params: { id: obj?.id },
+    });
     return true;
   }
   Message.warning('商品已下架，无法继续购买');
@@ -285,31 +420,72 @@ const buyNow = (obj: any) => {
 };
 
 // 立即申请
-const applyNow = () => {};
+const applyNow = () => {
+  router.push({
+    path: '/license/index',
+    query: {
+      type: '1',
+    },
+  });
+};
 
 // 立即托管
 const instantHosting = () => {};
 
 // 0元购买
-const zeroPurchase = () => {};
+const zeroPurchase = (obj: any) => {
+  if (obj?.status === 1) {
+    return true;
+  }
+  Message.warning('商品已下架，无法继续购买');
+  return false;
+};
 
 // 立即使用
-const immediateUse = () => {};
+const immediateUse = (obj: any) => {
+  if (obj?.status === 1) {
+    return true;
+  }
+  Message.warning('请先开通沙盒服务');
+  return false;
+};
 
-// 帮助手册/开发参考  更多
-const moreJump = () => {};
+// 帮助手册/开发参考  更多 文档对应地址
+const moreJump = (url: string) => {
+  if (!url) {
+    const routeData = router.resolve({
+      name: 'wowDoc',
+      query: {},
+    });
+    window.open(routeData?.href, '_blank');
+    return;
+  }
+  window.open(url);
+};
 
 // 前缀管理（前缀申请页面/托管申请页面）
 const prefixJump = () => {};
 
 // 查看订单
-const viewOrder = () => {};
+const viewOrder = () => {
+  router.push({
+    path: '/buyer/order',
+    query: {},
+  });
+};
 
 // 查看License
-const viewLicense = () => {};
+const viewLicense = () => {
+  router.push({
+    path: '/license/index',
+    query: {},
+  });
+};
 
 // 查看详情
 const viewDetail = () => {};
+
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>
@@ -347,6 +523,10 @@ const viewDetail = () => {};
       font-family: PingFang SC;
       line-height: 34px;
       text-align: left;
+
+      .name {
+        margin-bottom: 0;
+      }
     }
 
     .list {
@@ -365,7 +545,7 @@ const viewDetail = () => {};
       }
 
       .line {
-        width: 1;
+        width: 1px;
         height: 12px;
         border: 1px solid rgba(140, 149, 167, 1);
       }
@@ -396,6 +576,7 @@ const viewDetail = () => {};
         font-family: PingFang SC;
         line-height: 20px;
         text-align: left;
+        cursor: pointer;
       }
     }
   }
