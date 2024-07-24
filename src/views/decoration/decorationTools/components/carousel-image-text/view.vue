@@ -6,7 +6,7 @@
     <t-carousel
       class="image-box"
       animation-name="card"
-      :auto-play="false"
+      :auto-play="true"
       indicator-type="outer"
       show-arrow="hover"
     >
@@ -130,6 +130,7 @@ defineExpose({
 
 .carousel-image-text-box {
   width: calc(@factor * 720px);
+  // background: #fff;
   // height: calc(@factor * 340px);
   .carousel-image-text-title {
     margin: calc(@factor * 29px) 0 calc(@factor * 54px);
@@ -141,10 +142,9 @@ defineExpose({
   .image-box {
     width: 100%;
     height: calc(@factor * 308px);
-    background: #fff;
-
+    // background: #fff;
     .image-item {
-      width: calc(@factor * 480px);
+      width: calc(@factor * 510px);
       height: calc(@factor * 260px);
       padding: 0 calc(@factor * 15px);
       overflow: hidden;
@@ -167,12 +167,13 @@ defineExpose({
 
           .image-desc {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            width: calc(@factor * 110px);
+            // align-items: center;
+            // justify-content: center;
+            width: calc(@factor * 370px);
             margin: calc(@factor * 5px) 0;
             overflow: hidden;
             color: #4e5969;
+            color: #fff;
             font-size: calc(@factor * 7px);
             white-space: normal;
             text-align: left;
@@ -180,7 +181,7 @@ defineExpose({
           }
 
           .image-link {
-            color: #1664ff;
+            color: #fff;
             font-size: calc(@factor * 7px);
             cursor: pointer;
           }
@@ -196,7 +197,7 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 450px) !important;
+    width: calc(@factor * 480px) !important;
     height: calc(@factor * 260px) !important;
     object-fit: cover !important;
   }
