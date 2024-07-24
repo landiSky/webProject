@@ -6,7 +6,7 @@
     <t-carousel
       class="image-box"
       animation-name="card"
-      :auto-play="false"
+      :auto-play="true"
       indicator-type="outer"
       show-arrow="hover"
     >
