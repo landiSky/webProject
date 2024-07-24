@@ -151,7 +151,7 @@
           审核
         </t-link>
         <t-link
-          v-if="record.status === StatusEnum.YSJ"
+          v-if="record.status === StatusEnum.YSJ && !record?.publicService"
           class="action-down action-list"
           @click="clickDownBtn(record)"
         >
@@ -160,7 +160,8 @@
         <t-link
           v-if="
             record.status === StatusEnum.WSJ &&
-            record.source === PlatformEnum.OTHER
+            record.source === PlatformEnum.OTHER &&
+            !record?.publicService
           "
           class="action-list"
           @click="clickUpBtn(record)"
@@ -170,7 +171,8 @@
         <t-link
           v-if="
             record.status === StatusEnum.WSJ &&
-            record.source === PlatformEnum.OTHER
+            record.source === PlatformEnum.OTHER &&
+            !record?.publicService
           "
           class="action-list"
           @click="clickDeleteBtn(record)"

@@ -14,7 +14,7 @@ const homeRoutesList = [
         component: () => import('@/views/home/buyer/index/index.vue'),
         meta: {
           name: '概览',
-          noAuth: true,
+          // noAuth: true,
           keepAlive: true, // 从列表页进入详情页，再从详情页返回列表页，列表页要保存状态时使用
         },
       },
@@ -29,7 +29,7 @@ const homeRoutesList = [
     ],
     meta: {
       name: '买家中心',
-      noAuth: true,
+      // noAuth: true,
     },
   },
   {
@@ -132,6 +132,44 @@ const homeRoutesList = [
     ],
     meta: {
       name: '订单确认页',
+    },
+  },
+  {
+    path: '/license',
+    component: PAGE_LAYOUT,
+    redirect: '/license/index',
+    children: [
+      {
+        path: '/license/index',
+        name: 'licenseIndex',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: 'License管理',
+    },
+  },
+  {
+    path: '/overview',
+    component: PAGE_LAYOUT,
+    redirect: '/overview/index',
+    children: [
+      {
+        path: '/overview/index',
+        name: 'overviewIndex',
+        component: () => import('@/views/home/overview/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: '二级节点业务管理系统',
     },
   },
 ];

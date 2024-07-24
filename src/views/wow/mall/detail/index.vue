@@ -29,7 +29,17 @@
         </div> -->
         <div class="right">
           <div class="header">
-            <span class="productName">{{ prodDetail.name }}</span>
+            <span class="productName">
+              <!-- <t-typography-paragraph
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ prodDetail.name }}
+              </t-typography-paragraph> -->
+              {{ prodDetail.name }}
+            </span>
             <t-typography-paragraph
               v-for="(item, index) in prodDetail?.tagMap"
               :key="index"
@@ -248,7 +258,7 @@
                 :key="index"
                 class="comment-list"
               >
-                <t-comment :author="item?.nickname || '-'">
+                <t-comment class="author-text" :author="item?.nickname || '-'">
                   <template #avatar>
                     <t-image
                       width="52"
@@ -685,7 +695,11 @@ onMounted(() => {
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
-      prodDetail.value = data;
+      const tagMap = data.tagMap.filter(
+        // (tag: any) => String(tag.id) !== '2'
+        (tag: any) => String(tag.tagName) !== '公共服务'
+      );
+      prodDetail.value = { ...data, tagMap };
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
@@ -1050,6 +1064,10 @@ onUnmounted(() => {
               line-height: 22px;
               border-bottom: 1px solid rgba(229, 232, 239, 1);
 
+              .author-text {
+                word-break: break-all;
+              }
+
               .count {
                 margin-top: 4px;
               }
@@ -1058,6 +1076,7 @@ onUnmounted(() => {
                 margin-top: 12px;
                 color: rgba(78, 89, 105, 1);
                 font-weight: 400;
+                word-break: break-all;
               }
 
               .time {

@@ -158,7 +158,10 @@
               </template>
               编辑
             </t-doption>
-            <t-doption @click="clickDelBtn(record)">
+            <t-doption
+              v-if="!record?.publicService"
+              @click="clickDelBtn(record)"
+            >
               <template #icon>
                 <icon-delete />
               </template>
