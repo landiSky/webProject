@@ -172,7 +172,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, toRefs, onMounted, ref, watch } from 'vue';
+import { defineProps, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   apiUpdateNavData,
@@ -317,12 +317,17 @@ const getPageData = () => {
 onMounted(() => {
   broadcastChannel.addEventListener('message', (event) => {
     console.log('Received message:', event.data);
+    const { name, data } = JSON.parse(event.data);
     // 其他tab发送的消息
-    if (event.data === 'chnnelPageRefresh') {
+    if (name === 'chnnelPageRefresh') {
       getPageData();
     }
   });
   getPageData();
+});
+
+onBeforeUnmount(() => {
+  broadcastChannel.close();
 });
 </script>
 

@@ -5,6 +5,10 @@
       width: isPreview ? '100%' : '720px',
     }"
   >
+    <div v-if="openType === 5" class="product-bg"></div>
+    <div v-if="!componentsList.length && !isPreview" class="empty-box"
+      >拖动左侧组件，到当前区域进行楼层配置
+    </div>
     <t-layout>
       <t-layout-content>
         <draggable
@@ -124,6 +128,7 @@ import {
   apiUpdateNavData,
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
+import { ChannelType } from '@/enums/decoration';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName } from './constant';
 
@@ -134,14 +139,22 @@ const selectIndex = ref(-1);
 
 const isPreview = ref(false);
 
+const draging = ref(false);
+
 const viewComponentWrapRef = ref<any[]>([]);
 
 const colorIndex = ref(-1);
 
 const decorationJson = ref('');
 
+const openType = ref(-1);
+
+const interceptFlag = ref(true);
+
+const proId = ref('');
+
 // 打开模式 0-普通编辑模式 1-外部预览模式
-const openModel = ref();
+const openModel = ref(-1);
 
 // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
 const colorList = ref([
@@ -150,6 +163,11 @@ const colorList = ref([
   { cssClass: 'bg_color-3', color0: '#EBF0F4' },
   { cssClass: 'bg_color-4', color0: '#ffffff', color1: '#e2ecff' },
 ]);
+
+// 动态倍数
+const num = computed(() => {
+  return isPreview.value ? 2 : 1;
+});
 
 const curSelectedComponent = computed(() => {
   return componentsList.value[selectIndex.value];
@@ -256,7 +274,10 @@ const clickSave = () => {
     JSON.stringify(componentsList.value)
   );
   console.log('保存成功:', componentsList.value);
-  broadcastChannel.postMessage('chnnelPageRefresh');
+
+  broadcastChannel.postMessage(
+    JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+  );
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
@@ -270,6 +291,18 @@ const clickSaveRemote = () => {
       console.log('校验成功:', data);
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
+      // 分情况处理：普通渠道装修；商品详情装修
+      if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+        // 商品详情装修
+        // tab间通信，发送json数据到tab页
+        localStorage.setItem(proId.value, json);
+        broadcastChannel.postMessage(
+          JSON.stringify({ name: 'product_detail', data: '' })
+        );
+        window.close();
+        return;
+      }
+
       // 二次弹框
       Modal.info({
         title: '确认保存并发布',
@@ -287,7 +320,9 @@ const clickSaveRemote = () => {
           }).then((res: any) => {
             Message.success('保存成功');
             // 通知主tab页刷新
-            broadcastChannel.postMessage('chnnelPageRefresh');
+            broadcastChannel.postMessage(
+              JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+            );
           });
         },
         onCancel: () => {},
@@ -381,10 +416,58 @@ watch(
   { immediate: true, deep: true }
 );
 
+watch(
+  () => route.query.type,
+  () => {
+    const { type } = route.query;
+    console.log('open model', openModel.value);
+    openType.value = parseInt(`${type}`, 10);
+    if (openType.value === 5) {
+      console.log('open model', openModel.value);
+      interceptFlag.value = false;
+    } else {
+      interceptFlag.value = true;
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
+const getNavData = (type: number) => {
+  apiGetNavData({ type })
+    .then((res: any) => {
+      decorationJson.value = res.data[0].detail;
+      console.log('装修数据000', res.data[0].detail);
+      if (decorationJson.value && decorationJson.value !== '[]') {
+        componentsList.value = JSON.parse(decorationJson.value);
+        console.log('有装修数据', componentsList.value);
+      } else {
+        console.log(
+          '没有装修数据',
+          decorationJson.value,
+          typeof decorationJson.value,
+          componentsList.value
+        );
+        const localStorageData = localStorage.getItem(
+          `componentsList${openType.value}`
+        );
+        if (localStorageData) {
+          componentsList.value = JSON.parse(localStorageData);
+        }
+      }
+    })
+    .catch();
+};
+
 onMounted(() => {
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
-    event.preventDefault();
+    if (interceptFlag.value) {
+      console.log('有装修数据，是否确认离开？');
+      event.preventDefault();
+    }
   });
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
@@ -414,39 +497,37 @@ onMounted(() => {
       ];
     }
   });
-  // TODO 模拟从后台获取json数据
-  console.log('装修开始', route.query.type);
-  // 拉取type的装修信息
-  const { type } = route.query;
-  apiGetNavData({ type })
-    .then((res: any) => {
-      decorationJson.value = res.data[0].detail;
-      console.log('装修数据000', res.data[0].detail);
-      if (decorationJson.value && decorationJson.value !== '[]') {
-        componentsList.value = JSON.parse(decorationJson.value);
-        console.log('有装修数据', componentsList.value);
-      } else {
-        console.log(
-          '没有装修数据',
-          decorationJson.value,
-          typeof decorationJson.value,
-          componentsList.value
-        );
-        const localStorageData = localStorage.getItem(`componentsList${type}`);
-        if (localStorageData) {
-          componentsList.value = JSON.parse(localStorageData);
-        }
-      }
-    })
-    .catch();
+  openType.value = parseInt(`${route.query.type}`, 10);
+  if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
+    // 非商品详情装修的情况
+    getNavData(openType.value);
+  } else {
+    // 商品详情装修的情况，注意监听时机，如果监听晚于发送可能收不到
+    // broadcastChannel.addEventListener('message', (event) => {
+    //   const { name, data } = JSON.parse(event.data);
+    //   if (name === 'product_detail') {
+    //     console.log('商品详情装修数据', data);
+    //     componentsList.value = JSON.parse(data);
+    //   }
+    // });
+    proId.value = `pro_${route.query.pro_id}`;
+    const storage = localStorage.getItem(proId.value);
+    if (storage) {
+      componentsList.value = JSON.parse(storage);
+    }
+  }
 });
 
 onBeforeUnmount(() => {
+  // 释放资源
   window.removeEventListener('beforeunload', (event) => {});
+  broadcastChannel.close();
 });
 </script>
 
 <style scoped lang="less">
+@factor: v-bind(num);
+
 .page-editor {
   position: relative;
   display: flex;
@@ -456,6 +537,31 @@ onBeforeUnmount(() => {
   justify-content: center;
   // overflow-y: auto;
   // background-color: #981313;
+  .product-bg {
+    width: calc(@factor * 720px);
+    height: calc(@factor * 280px);
+    margin-top: 20px;
+    background: url(../../../assets/images/decoration/product_bg.png);
+    background-size: cover;
+  }
+
+  .empty-box {
+    position: fixed;
+    top: 40%;
+    width: 614px;
+    height: 134px;
+    margin-top: 20px;
+    padding: 60px 0;
+    color: #1d2129;
+    font-weight: 500;
+    font-size: 16px;
+    text-align: center;
+    background-color: white;
+    //虚线
+    border: 1px dashed #c9cdd4;
+    border-radius: 8px;
+  }
+
   .component-config {
     width: 442px;
     height: 100%;
