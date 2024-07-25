@@ -204,6 +204,7 @@ const uploadRequest = (formData: any) => {
       .then((res) => {
         // 在这里将最终值传递
         console.log('res', res);
+        emits('onConfirm', res);
         Message.success('上传成功');
         resolve(true);
       })
@@ -247,6 +248,7 @@ const onOk = async () => {
     mergeImages();
   }
   // 创建之后将res传到前台
+  console.log('onok', res);
   return res;
 };
 

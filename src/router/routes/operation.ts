@@ -193,16 +193,16 @@ const operationRoutesList = [
           hideInMenu: false,
         },
       },
-      {
-        path: '/decoration/tools',
-        name: 'decorationTools',
-        component: () => import('@/views/decoration/decorationTools/index.vue'),
-        meta: {
-          name: '装修页',
-          keepAlive: true,
-          hideInMenu: false,
-        },
-      },
+      // {
+      //   path: '/decoration/tools',
+      //   name: 'decorationTools',
+      //   component: () => import('@/views/decoration/decorationTools/index.vue'),
+      //   meta: {
+      //     name: '装修页',
+      //     keepAlive: true,
+      //     hideInMenu: false,
+      //   },
+      // },
     ],
     meta: {
       name: '平台装修',

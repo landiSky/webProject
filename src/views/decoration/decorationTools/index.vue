@@ -268,16 +268,32 @@ const setItemRef = (el: any, index: number) => {
 const clickSave = () => {
   // 先清除本地存储
   const { type } = route.query;
-  localStorage.removeItem(`componentsList${type}`);
-  localStorage.setItem(
-    `componentsList${type}`,
-    JSON.stringify(componentsList.value)
-  );
-  console.log('保存成功:', componentsList.value);
+  if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+    const json =
+      componentsList.value.length > 0
+        ? JSON.stringify(componentsList.value)
+        : '';
+    // 保存草稿
+    localStorage.setItem(
+      proId.value,
+      JSON.stringify({ setOk: false, data: json })
+    );
+    broadcastChannel.postMessage(
+      JSON.stringify({ name: 'product_detail', data: '' })
+    );
+    window.close();
+  } else {
+    localStorage.removeItem(`componentsList${type}`);
+    localStorage.setItem(
+      `componentsList${type}`,
+      JSON.stringify(componentsList.value)
+    );
+    console.log('保存成功:', componentsList.value);
 
-  broadcastChannel.postMessage(
-    JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
-  );
+    broadcastChannel.postMessage(
+      JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+    );
+  }
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
@@ -289,13 +305,20 @@ const clickSaveRemote = () => {
   Promise.all(childForm())
     .then((data: any) => {
       console.log('校验成功:', data);
+      if (componentsList.value.length === 0) {
+        Message.error('请先添加组件');
+        return;
+      }
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
       if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
         // 商品详情装修
         // tab间通信，发送json数据到tab页
-        localStorage.setItem(proId.value, json);
+        localStorage.setItem(
+          proId.value,
+          JSON.stringify({ setOk: true, data: json })
+        );
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', data: '' })
         );
@@ -417,13 +440,13 @@ watch(
 );
 
 watch(
-  () => route.query.type,
+  () => route.query,
   () => {
     const { type } = route.query;
-    console.log('open model', openModel.value);
+    console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
     if (openType.value === 5) {
-      console.log('open model', openModel.value);
+      console.log('open model1', openModel.value);
       interceptFlag.value = false;
     } else {
       interceptFlag.value = true;
@@ -462,6 +485,7 @@ const getNavData = (type: number) => {
 };
 
 onMounted(() => {
+  console.log('装修index页面');
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
     if (interceptFlag.value) {

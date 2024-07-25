@@ -80,7 +80,7 @@ watch(
 watch(
   () => menuStore.menuIndex,
   () => {
-    router.push({ path: menuStore.firstRoutePath });
+    // router.push({ path: menuStore.firstRoutePath });
   },
   {
     immediate: true,

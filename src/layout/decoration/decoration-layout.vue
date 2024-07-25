@@ -1,8 +1,5 @@
 <template>
   <t-layout class="layout">
-    <div class="layout-navbar">
-      <nav-bar />
-    </div>
     <t-layout>
       <t-layout-sider
         class="layout-sider"

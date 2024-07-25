@@ -3,8 +3,8 @@
     class="tele-upload-picture-card picture-card-container"
     @click="onButtonClick"
   >
-    <div class="tele-upload-picture-card-text"
-      ><svg
+    <div class="tele-upload-picture-card-text">
+      <svg
         viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -16,9 +16,9 @@
       >
         <path d="M5 24h38M24 5v38"></path>
       </svg>
-      <div style="margin-top: 10px; font-weight: 600">Upload</div></div
-    ></div
-  >
+      <div style="margin-top: 10px; font-weight: 600">点击上传</div>
+    </div>
+  </div>
 
   <t-upload
     v-if="previewList.length"
@@ -45,6 +45,7 @@ import { ref } from 'vue';
 import { fetchClassList } from '@/api/goods-manage';
 import Source from './components/source.vue';
 
+const emits = defineEmits(['onConfirm']);
 const showSource = ref(false);
 
 const previewList = ref([]);
@@ -69,6 +70,8 @@ const onButtonClick = () => {
 // 成功
 const onConfirm = (value: object) => {
   console.log('last onConfirm', value);
+  emits('onConfirm', value);
+  showSource.value = false;
 };
 
 const onCancel = () => {
@@ -78,6 +81,7 @@ const onCancel = () => {
 
 <style scoped lang="less">
 .tele-upload-picture-card {
-  width: 82px;
+  width: 100px;
+  height: 100px;
 }
 </style>

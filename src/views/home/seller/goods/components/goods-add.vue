@@ -142,8 +142,10 @@
                   </div>
                 </div>
               </div>
+              <IconMaterial v-else @on-confirm="finishedUploadLogo" />
             </div>
-            <t-upload
+
+            <!-- <t-upload
               v-if="formModel.logo == ''"
               :ref="logoRef"
               :file-list="logoList"
@@ -178,7 +180,7 @@
                   </div>
                 </t-spin>
               </template>
-            </t-upload>
+            </t-upload> -->
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -336,9 +338,11 @@
             <div v-if="formModel.detail" class="templateItem">
               <div style="display: flex">
                 <div>装修模块：</div>
-                <div style="color: #1d2129">{{ '已有模块' }} </div>
+                <div style="color: #1d2129"
+                  >{{ `${detailSetOk ? '已配置模块' : '草稿状态'}` }}
+                </div>
               </div>
-              <div>
+              <div style="margin-left: 30px">
                 <t-button
                   type="text"
                   style="padding: 0"
@@ -942,7 +946,8 @@ import { storeToRefs } from 'pinia';
 import router from '@/router';
 import { ChannelType } from '@/enums/decoration';
 import { channelName } from '@/views/decoration/decorationTools/constant';
-import TemplateDrawer from './template.vue';
+// import TemplateDrawer from './template.vue';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const emit = defineEmits(['cancel', 'preview']);
@@ -965,6 +970,9 @@ const appTypeList = ref([
   { label: '普通应用', value: 0 },
   { label: '标识应用（用户使用前需开通企业节点）', value: 1 },
 ]);
+
+// 详情是否配置完成
+const detailSetOk = ref(true);
 
 // 分类
 const classList = ref<any[]>([]);
@@ -1698,11 +1706,20 @@ const getDetail = (id: any) => {
     modalJsonString.value = getModalJson();
   });
 };
+
+const finishedUploadLogo = (logo: string) => {
+  formModel.value.logo = logo;
+};
+
 // 增加详情内容，跳转装修工具
 const addTemplateDetail = () => {
   const routeUrl = router.resolve({
     name: 'decorationTools',
-    query: { model: 0, type: ChannelType.PLATFORM_PRODUCT_DETAIL, pro_id: -1 },
+    query: {
+      model: 0,
+      type: ChannelType.PLATFORM_PRODUCT_DETAIL,
+      pro_id: formModel.value.id,
+    },
   });
   window.open(routeUrl.href, '_blank');
 };
@@ -1734,8 +1751,8 @@ const editTemplateDetail = () => {
 
 // 删除详情内容
 const delTemplateDetail = () => {
-  // templateDetail.value = '';
   formModel.value.detail = '';
+  localStorage.removeItem(`pro_${formModel.value.id}`);
 };
 
 const getGoodsId = () => {
@@ -1853,6 +1870,17 @@ const getSelectApplication = () => {
   });
 };
 
+const getLocalDetail = () => {
+  const json = localStorage.getItem(`pro_${formModel.value.id}`);
+  if (json) {
+    const { setOk, data } = JSON.parse(json);
+    // true:已经配置好了;false:只是草稿
+    detailSetOk.value = setOk;
+    formModel.value.detail = data ?? '';
+    formRef.value.validateField('detail');
+  }
+};
+
 onMounted(() => {
   window.addEventListener('online', () => {
     online.value = true;
@@ -1863,16 +1891,12 @@ onMounted(() => {
   });
   broadcastChannel.addEventListener('message', (event) => {
     console.log('返回商品装修信息detail', event.data);
-    const { name, data } = JSON.parse(event.data);
+    const { name } = JSON.parse(event.data);
     if (name === 'product_detail') {
-      // formModel.value.detail = data;
-      formModel.value.detail =
-        localStorage.getItem(`pro_${formModel.value.id}`) ?? '';
-      formRef.value.validateField('detail');
+      getLocalDetail();
     }
   });
-  formModel.value.detail =
-    localStorage.getItem(`pro_${formModel.value.id}`) ?? '';
+
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
   getSelectApplication();
@@ -1887,12 +1911,13 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   broadcastChannel.close();
+  localStorage.removeItem(`pro_${formModel.value.id}`);
 });
 
-const templateChanged = () => {
-  // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
-  // formRef.value.validateField('detail');
-};
+// const templateChanged = () => {
+//   // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+//   // formRef.value.validateField('detail');
+// };
 
 const doSave = async () => {
   let res;
@@ -1966,6 +1991,11 @@ const onBack = (done: (closed: boolean) => void) => {
 
 // 保存
 const clickSave = async () => {
+  // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
+  if (!detailSetOk.value && step.value === 1) {
+    Message.error('请先在装修模块确认发布');
+    return;
+  }
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
@@ -2277,7 +2307,7 @@ const validateAP = (index: number, key: string) => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -2288,7 +2318,7 @@ const validateAP = (index: number, key: string) => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
