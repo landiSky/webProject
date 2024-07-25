@@ -169,7 +169,7 @@ export const useUserStore = defineStore({
       //   : this.configInfo?.redirectUri;
       // window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${serverUri}`;
       // /zst
-      window.location.href = `${window.location.origin}/`;
+      window.location.href = `${window.location.origin}/zst/`;
     },
 
     clearUserInfo(): void {
@@ -183,7 +183,7 @@ export const useUserStore = defineStore({
         sessionStorage.setItem('mallDetailPath', '');
       }
       // /zst
-      window.location.href = `${window.location.origin}/#/login`;
+      window.location.href = `${window.location.origin}/zst/#/login`;
 
       // window.location.href = loginUrl;
       // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
