@@ -77,16 +77,6 @@ watch(
   }
 );
 
-watch(
-  () => menuStore.menuIndex,
-  () => {
-    router.push({ path: menuStore.firstRoutePath });
-  },
-  {
-    immediate: true,
-  }
-);
-
 onMounted(() => {
   userStore.getConfigInfo();
   // 统一添加网络异常提示
