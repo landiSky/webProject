@@ -1,6 +1,9 @@
 <template>
   <div class="wrap">
-    <div class="productIntro">
+    <div
+      class="productIntro"
+      :class="{ decorationIntroCls: versionType === 1 }"
+    >
       <div class="baseInfo">
         <!-- <div class="left">
           <div class="bigImg">
@@ -176,7 +179,7 @@
           </t-button>
         </div>
       </div>
-      <div class="intro">
+      <div v-if="versionType === 0" class="intro">
         <div ref="introParentRef" class="template">
           <template v-if="templateList.length">
             <div class="nav" :class="{ fixed: fixedTop }">
@@ -217,9 +220,12 @@
           >
         </div>
       </div>
+      <div v-else class="newIntro">
+        <DecorationBox :components-list="templateList"></DecorationBox>
+      </div>
 
       <!-- 产品评价 -->
-      <div class="evaluate">
+      <div class="evaluate" :class="{ decorationCls: versionType === 1 }">
         <div class="top">产品评价（{{ evaluateDatail?.total ?? 0 }}）</div>
         <div class="body">
           <div class="score">
@@ -239,8 +245,8 @@
               <div
                 :class="appraiseIndex === 3 ? 'appraise' : ''"
                 @click="appraiseClick(3)"
-                >好评 ({{ evaluateDatail?.totalH ?? 0 }})</div
-              >
+                >好评 ({{ evaluateDatail?.totalH ?? 0 }})
+              </div>
               <div
                 :class="appraiseIndex === 2 ? 'appraise' : ''"
                 @click="appraiseClick(2)"
@@ -316,7 +322,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive, watch, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -335,6 +341,7 @@ import { apiDataPoint } from '@/api/data-point';
 import { copyToClipboard } from '@/utils/index';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
+import DecorationBox from '@/views/decoration/decorationTools/pageContainer.vue';
 import Template1 from './layout/template1.vue';
 import Template2 from './layout/template2.vue';
 import Template3 from './layout/template3.vue';
@@ -350,6 +357,8 @@ const userStore = useUserStore();
 const orderStore = useOrderStore();
 const { userInfo } = userStore;
 const authModalVisible = ref(false);
+// 是否装修
+const versionType = ref(0);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
   accountId: null,
@@ -685,6 +694,14 @@ const paginationchange = (current: number) => {
   BypageList();
 };
 
+// watch(
+//   () => versionType.value,
+//   () => {}
+// );
+// const factor = computed(() => {
+//   return versionType.value === 0?
+// });
+
 onMounted(() => {
   // TODO w: 商品详情打点
   apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(
@@ -705,6 +722,7 @@ onMounted(() => {
       bigImgPath.value = previewImgList.value?.[0];
 
       templateList.value = JSON.parse(data.detail);
+      versionType.value = data.versionType;
 
       const { saleType } = data;
 
@@ -973,6 +991,13 @@ onUnmounted(() => {
       }
     }
 
+    .newIntro {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 1440px;
+    }
+
     .evaluate {
       width: 900px;
       padding: 20px 24px;
@@ -1111,6 +1136,27 @@ onUnmounted(() => {
         }
       }
     }
+
+    .decorationCls {
+      width: 1440px;
+
+      .body {
+        justify-content: center;
+
+        .evaluate-list {
+          .top-list {
+            width: 1000px;
+          }
+        }
+      }
+    }
+  }
+
+  .decorationIntroCls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
 }
 

@@ -1003,6 +1003,7 @@ const formModel = ref<Record<string, any>>({
   useExplain: [],
   introduction: '',
   detail: '[]',
+  versionType: 0,
   companyId: '',
 });
 
@@ -1557,6 +1558,7 @@ const getDetail = (id: any) => {
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
+    formModel.value.versionType = res.versionType;
     formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
     formModel.value.productTypeId = res.productTypeId;
@@ -1745,8 +1747,10 @@ const editTemplateDetail = () => {
   // }, 100);
   // 方案二 路由传递商品id，去装修页通过接口重新拉取商品信息，包含detail数据
   // 方案三 路由传递商品id并存本地，去装修页面获取本地存储，包含detai数据
-
-  localStorage.setItem(`pro_${formModel.value.id}`, formModel.value.detail);
+  if (formModel.value.versionType === 1) {
+    // 新版的装修信息才会存storage，传给装修工具
+    localStorage.setItem(`pro_${formModel.value.id}`, formModel.value.detail);
+  }
 };
 
 // 删除详情内容
@@ -1986,6 +1990,7 @@ const clickCancel = (done: (closed: boolean) => void) => {
 };
 
 const onBack = (done: (closed: boolean) => void) => {
+  // TODO:报错？？？
   clickCancel(done);
 };
 

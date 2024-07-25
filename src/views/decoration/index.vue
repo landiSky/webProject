@@ -35,8 +35,7 @@
           :limit="1"
           image-preview
           style="width: 100px; height: 100px"
-          accept=".jpg,.png,.bmp,.tif,.gif"
-          tip="支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。"
+          accept=".jpg,.png,.bmp,.gif"
           @before-upload="beforeUpload"
           @change="(fileList: any) => onUploadChange(fileList)"
         >
@@ -68,7 +67,11 @@
         </t-upload>
       </t-space>
     </t-form-item>
-    <div style="width: 100%; height: 100%"> </div>
+    <p style="margin: 0 0 20px 110px; color: #86909c">
+      支持jpg、png、bmp、gif文件格式,文件大小限制10M以内。
+      <!-- 支持png和jpg,要求5M以内 -->
+    </p>
+    <!-- <div style="width: 100%; height: 100%"> </div> -->
 
     <div class="submit-btn">
       <t-space :size="19">
@@ -159,7 +162,6 @@ const beforeUpload = (file: File) => {
       type !== 'jpg' &&
       type !== 'png' &&
       type !== 'bmp' &&
-      type !== 'tif' &&
       type !== 'gif'
     ) {
       Message.warning('请上传正确的文件格式');
