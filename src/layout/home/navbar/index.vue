@@ -276,6 +276,7 @@ const setDot = (index: number) => {
   }
   try {
     useMenuStore().setMenuIndex(index, userInfo.value);
+    router.push({ path: menuStore.firstRoutePath });
   } catch (error: any) {
     console.log(error);
   }
