@@ -218,12 +218,20 @@
                   {{ item.text }}
                 </div>
                 <div v-if="index === 0" class="buttom-body">
-                  <t-link :hoverable="false" @click="zeroPurchase">
+                  <t-link
+                    v-if="!productData?.idTestBuyStatus"
+                    :hoverable="false"
+                    @click="zeroPurchase"
+                  >
                     0元购买
                   </t-link>
-                  <!-- <t-link :hoverable="false" @click="viewOrder">
+                  <t-link
+                    v-if="productData?.idTestBuyStatus"
+                    :hoverable="false"
+                    @click="viewOrder"
+                  >
                     查看订单
-                  </t-link> -->
+                  </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
                   <t-link :hoverable="false" @click="immediateUse">
@@ -390,15 +398,15 @@ const toolList = ref([
 
 const manualList = ref([
   {
-    name: 'OpenAPI',
+    name: 'IDHub标准版API',
     url: 'https://snms.teleinfo.cn/docs/idhub/standard/introduce',
   },
   {
-    name: '标识解析SDK',
+    name: '工业互联网标识解析SDK',
     url: 'https://snms.teleinfo.cn/docs/sdk/v1/introduction',
   },
   {
-    name: '应用集成SOP',
+    name: '标识应用开发指南',
     url: 'https://snms.teleinfo.cn/docs/handle-app-sop/1-introduce/purpose',
   },
 ]);
@@ -408,7 +416,7 @@ const registerJump = () => {};
 
 // 立即购买
 const buyNow = (obj: any) => {
-  if (obj?.status === 1) {
+  if (obj?.idHubProductStatus === 1) {
     router.push({
       name: 'wowMallDetail',
       params: { id: obj?.id },
@@ -434,7 +442,7 @@ const instantHosting = () => {};
 
 // 0元购买
 const zeroPurchase = (obj: any) => {
-  if (obj?.status === 1) {
+  if (obj?.idTestProductStatus === 1) {
     return true;
   }
   Message.warning('商品已下架，无法继续购买');
@@ -443,7 +451,7 @@ const zeroPurchase = (obj: any) => {
 
 // 立即使用
 const immediateUse = (obj: any) => {
-  if (obj?.status === 1) {
+  if (obj?.idTestBuyStatus === 1) {
     return true;
   }
   Message.warning('请先开通沙盒服务');
