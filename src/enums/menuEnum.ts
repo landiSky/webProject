@@ -33,6 +33,11 @@ export const managemenuList = [
     'ROUTE_SYNC_GOODS', // 商品管理
     'ROUTE_SYNC_LABEL', // 标签管理
     'ROUTE_SYNC_LICENSE', // 标识服务-License管理
+    'ROUTE_DECORATION',
+    'ROUTE_DECORATION_BASE',
+    'ROUTE_DECORATION_CHANNEL',
+    'ROUTE_DECORATION_TOOLS',
+    'ROUTE_DECORATION_TOOLS_INDEX',
   ],
 ];
 export const userMenu = (num: number) => {

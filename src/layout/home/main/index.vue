@@ -45,7 +45,6 @@ router.afterEach((to, from) => {
   flex: 1;
   flex-direction: column;
   height: 100%; // 页面滚动
-  overflow-y: auto;
   // overflow-x: hidden; 滚动不要在这里加
   // overflow-y: auto; 滚动不要在这里加
   :deep(.tele-tabs-content) {

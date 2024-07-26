@@ -34,8 +34,8 @@ export default defineConfig(({ command, mode }) => {
       port: 3001,
       proxy: {
         '/server': {
-          target: 'http://zhishutong.dev.idx.space',
-          // target: `http://10.14.150.182:9191/`,
+          // target: 'http://10.14.148.167:18080',
+          target: `http://zhishutong.dev.idx.space`,
           changeOrigin: true,
           agent: new https.Agent(),
           followRedirects: true,
@@ -62,6 +62,7 @@ export default defineConfig(({ command, mode }) => {
         },
         '/operation': {
           target: 'http://zhishutong.dev.idx.space',
+          // target: 'http://10.14.148.167:18080',
           // target: `http://10.14.150.182:9091`, // 亚涛
           // target: `http://10.14.148.103:9191`, // 凯文
           // target: `http://10.14.150.253:9092`, // 鹏飞
