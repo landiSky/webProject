@@ -38,6 +38,11 @@ const infoRouteList = [
   'ROUTE_SYNC_CLASS',
   'ROUTE_SYNC_GOODS',
   'ROUTE_SYNC_LABEL',
+  'ROUTE_DECORATION',
+  'ROUTE_DECORATION_BASE',
+  'ROUTE_DECORATION_CHANNEL',
+  'ROUTE_DECORATION_TOOLS',
+  'ROUTE_DECORATION_TOOLS_INDEX',
   'ROUTE_SYNC_LICENSE',
 ];
 
@@ -59,7 +64,6 @@ watch(
         : userMenu(menuStore.menuIndex);
     if (isAdmin) {
       authList = opearationRouteList;
-
       if (source) {
         // authList = infoRouteList;
         authList = manageMenu(menuStore.menuIndex);

@@ -3,8 +3,13 @@
     <div class="left-side">
       <div class="left">
         <t-space :size="[4]">
-          <iconpark-icon name="logo" size="36px"></iconpark-icon>
-          <span class="title"> IDSphere </span>
+          <t-image
+            v-if="logo"
+            :src="`/server/web/file/download?name=${logo}`"
+            :preview="false"
+          />
+          <iconpark-icon v-else name="logo" size="36px"></iconpark-icon>
+          <span class="title"> {{ platformName || 'IDSphere' }} </span>
         </t-space>
       </div>
       <div class="right">
@@ -12,8 +17,8 @@
           <t-link
             :class="{ active: selectTab === TabPath.INDEX }"
             @click="goIndex"
-            >首页</t-link
-          >
+            >{{ channel1Name || '首页' }}
+          </t-link>
           <!-- <t-tooltip content="敬请期待">
             <t-link>限免应用</t-link>
           </t-tooltip> -->
@@ -27,17 +32,22 @@
             @click="gotoMall"
             >商城</t-link
           >
-          <t-tooltip content="敬请期待">
-            <t-link>平台产品</t-link>
-          </t-tooltip>
-          <t-tooltip content="敬请期待">
-            <t-link>平台服务</t-link>
-          </t-tooltip>
+          <t-link
+            :class="{ active: selectTab === TabPath.PROD }"
+            @click="goPlatProducts"
+            >{{ channel2Name || '平台产品' }}
+          </t-link>
+
+          <t-link
+            :class="{ active: selectTab === TabPath.SERV }"
+            @click="goPlatServices"
+            >{{ channel3Name || '平台服务' }}
+          </t-link>
           <t-link
             :class="{ active: selectTab === TabPath.DOC }"
             @click="goDocCenter"
-            >文档中心</t-link
-          >
+            >文档中心
+          </t-link>
 
           <!-- <t-tooltip content="敬请期待">
             <t-link>前沿政策</t-link>
@@ -98,18 +108,31 @@ import { getToken } from '@/utils/auth';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { ChannelType } from '@/enums/decoration';
 
 const TabPath = {
   INDEX: '/wow/index',
   IDINSIDEZONE: '/wow/idInsideZone',
   MALL: '/wow/mall',
   DOC: '/wow/doc',
+  PROD: '/wow/platProducts',
+  SERV: '/wow/platServices',
 };
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
+
+const logo = ref('');
+const platformName = ref('');
+// 首页导航栏
+const channel1Name = ref('');
+// 平台产品导航栏
+const channel2Name = ref('');
+// 平台服务导航栏
+const channel3Name = ref('');
 
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
@@ -162,6 +185,20 @@ const goDocCenter = () => {
   router.push({ path: '/wow/doc' });
 };
 
+const goPlatProducts = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+    console.log('前台导航栏点击平台产品打点', res);
+  });
+  router.push({ path: '/wow/platProducts' });
+};
+
+const goPlatServices = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
+    console.log('前台导航栏点击平台服务打点', res);
+  });
+  router.push({ path: '/wow/platServices' });
+};
+
 const clickLogout = () => {
   Modal.warning({
     title: '确定退出登录当前账号吗？',
@@ -210,6 +247,24 @@ const clickIdService = () => {
 };
 
 onMounted(() => {
+  // TODO 首页logo和项目名称以及导航名称接口获取
+  apiGetNavData({}).then((res) => {
+    console.log('首页logo和项目名称接口获取', res);
+    if (res.data) {
+      res.data.forEach((item: any) => {
+        if (item.type === ChannelType.PLATFORM_NAME) {
+          logo.value = item.logo;
+          platformName.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_HOME) {
+          channel1Name.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_PRODUCT) {
+          channel2Name.value = item.name;
+        } else if (item.type === ChannelType.PLATFORM_SERVE) {
+          channel3Name.value = item.name;
+        }
+      });
+    }
+  });
   if (route.name === 'wowMallDetail') {
     // 商品详情页也激活【商城】
     selectTab.value = TabPath.MALL;
@@ -240,7 +295,17 @@ onMounted(() => {
     height: 100%;
     // padding-left: 24px;
     .left {
+      // display: flex;
+      // align-items: center;
       margin-right: 32px;
+
+      ::v-deep(.tele-image) {
+        .tele-image-img {
+          width: 36px !important;
+          height: 36px !important;
+          object-fit: cover !important;
+        }
+      }
     }
 
     .right {

@@ -21,6 +21,11 @@ const wowRoutesList = [
         name: 'wowPlatProducts',
         component: () => import('@/views/wow/platProducts/index.vue'),
       },
+      {
+        path: '/wow/platServices',
+        name: 'wowPlatServices',
+        component: () => import('@/views/wow/platServices/index.vue'),
+      },
       // IDInside专区
       {
         path: '/wow/idInsideZone',
