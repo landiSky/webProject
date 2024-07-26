@@ -16,6 +16,7 @@ interface UserState {
   configInfo: Record<string, any> | null;
   updateMenu: boolean;
   authPathList: string[];
+  menuIndex: number;
 }
 
 export const useUserStore = defineStore({
@@ -32,6 +33,7 @@ export const useUserStore = defineStore({
     configInfo: {},
     updateMenu: false,
     authPathList: [], // 存放已有权限的 path 列表
+    menuIndex: 1,
   }),
   getters: {
     // 获取用户信息
@@ -45,6 +47,9 @@ export const useUserStore = defineStore({
     },
   },
   actions: {
+    setUserMenuIndex(index: number) {
+      this.menuIndex = index;
+    },
     getUserByCompany() {
       const { companyId, memberId } = this.selectCompany || {};
 
@@ -163,6 +168,7 @@ export const useUserStore = defineStore({
       //   ? import.meta.env.VITE_APP_DEV_HOST
       //   : this.configInfo?.redirectUri;
       // window.location.href = `${this.configInfo?.logoutUrl}?server_uri=${serverUri}`;
+      // /zst
       window.location.href = `${window.location.origin}/zst/`;
     },
 
@@ -176,6 +182,7 @@ export const useUserStore = defineStore({
       if (routeName !== 'wowMallDetail') {
         sessionStorage.setItem('mallDetailPath', '');
       }
+      // /zst
       window.location.href = `${window.location.origin}/zst/#/login`;
 
       // window.location.href = loginUrl;

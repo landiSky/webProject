@@ -495,7 +495,12 @@ const desDeuration = (array: any[]) => {
 };
 
 const refreshData = async () => {
-  dataInfo.value = await goodsDetail(props.data?.id);
+  const data = await goodsDetail(props.data?.id);
+  const tagMap = data.tagMap.filter(
+    // (tag: any) => String(tag.id) !== '2'
+    (tag: any) => String(tag.tagName) !== '公共服务'
+  );
+  dataInfo.value = { ...data, tagMap };
   detailImageList.value = dataInfo.value.detailImg
     ? dataInfo.value.detailImg.split(',')
     : [];

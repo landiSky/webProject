@@ -44,13 +44,15 @@
                   item.text
                 }}</div>
                 <div v-if="index === 0" class="buttom-body">
-                  <t-link :hoverable="false">立即注册</t-link>
+                  <t-link :hoverable="false" @click="registerJump">
+                    立即注册
+                  </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false">立即购买</t-link>
+                  <t-link :hoverable="false" @click="buyNow">立即购买</t-link>
                 </div>
                 <div v-if="index === 2" class="buttom-body">
-                  <t-link :hoverable="false">立即申请</t-link>
+                  <t-link :hoverable="false" @click="applyNow">立即申请</t-link>
                 </div>
                 <div v-if="index === 3" class="buttom-body"></div>
               </div>
@@ -140,7 +142,7 @@
       <div class="manual">
         <div class="manual-top">
           <div class="title">帮助手册&开发参考</div>
-          <t-link :hoverable="false">更多</t-link>
+          <t-link :hoverable="false" @click="moreJump">更多</t-link>
         </div>
         <div class="manual-ul">
           <ul>
@@ -168,6 +170,7 @@ import icon1 from '@/assets/images/overview/icon-01.png';
 import icon2 from '@/assets/images/overview/icon-02.png';
 import icon3 from '@/assets/images/overview/icon-03.png';
 import icon4 from '@/assets/images/overview/icon-04.png';
+import { Message } from '@tele-design/web-vue';
 
 const stepsList = ref([
   {
@@ -268,6 +271,45 @@ const manualList = ref([
     url: '',
   },
 ]);
+
+// 立即注册
+const registerJump = () => {};
+
+// 立即购买
+const buyNow = (obj: any) => {
+  if (obj?.status === 1) {
+    return true;
+  }
+  Message.warning('商品已下架，无法继续购买');
+  return false;
+};
+
+// 立即申请
+const applyNow = () => {};
+
+// 立即托管
+const instantHosting = () => {};
+
+// 0元购买
+const zeroPurchase = () => {};
+
+// 立即使用
+const immediateUse = () => {};
+
+// 帮助手册/开发参考  更多
+const moreJump = () => {};
+
+// 前缀管理（前缀申请页面/托管申请页面）
+const prefixJump = () => {};
+
+// 查看订单
+const viewOrder = () => {};
+
+// 查看License
+const viewLicense = () => {};
+
+// 查看详情
+const viewDetail = () => {};
 </script>
 
 <style lang="less" scoped>

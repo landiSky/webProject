@@ -231,9 +231,13 @@ const onChangeCompany = async (companyId: string) => {
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
   await userStore.changeSelectCompany(selectItem);
 
-  // router.push({
-  //   path: '/buyer/index',
-  // });
+  const { primary } = userInfoByCompany.value || {};
+  if (Number(primary) === 2) {
+    useMenuStore().setMenuIndex(1, userInfo.value);
+    router.push({
+      path: '/buyer/index',
+    });
+  }
 
   // 要在 app.vue 中监听 userstore.的变化
 };
@@ -247,8 +251,20 @@ const setDot = (index: number) => {
     clickIdService();
     return;
   }
+  const { primary } = userInfoByCompany.value || {};
+  if (index === 2 && Number(primary) === 2) {
+    // 点击标识管理，跳转到二级企业管理系统
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
+    return;
+  }
   try {
     useMenuStore().setMenuIndex(index, userInfo.value);
+    router.push({ path: menuStore.firstRoutePath });
   } catch (error: any) {
     console.log(error);
   }
@@ -273,10 +289,10 @@ watch(
   () => router,
   // eslint-disable-next-line consistent-return
   () => {
-    const currentFullPath = router.currentRoute.value.fullPath;
+    const currentPath = router.currentRoute.value.path;
 
     // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
-    if (currentFullPath === '/license/index' && menuStore.menuIndex !== 2) {
+    if (currentPath === '/license/index' && menuStore.menuIndex !== 2) {
       setDot(2);
     }
   },

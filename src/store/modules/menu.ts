@@ -35,10 +35,12 @@ export const useMenuStore = defineStore({
     },
     setMenuIndex(num: number, userInfo: any) {
       this.menuIndex = num;
+      useUserStore().setUserMenuIndex(num);
       const userMenuList =
         num === 1 ? useUserStore().userInfoByCompany?.menuCodes : userMenu(num);
       const menuList = userInfo.isAdmin ? manageMenu(num) : userMenuList;
       this.leftMenu = appMenus(menuList);
+
       // // 取第一个有权限的路由
       let menuItem = this.leftMenu[0];
       while (menuItem.children?.length) {
