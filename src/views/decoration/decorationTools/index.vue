@@ -232,7 +232,7 @@ const deleteComponent = (index: number) => {
   eventBus.emit('selectComponent', componentsList.value[index]);
 };
 
-const deepCopy = (obj: any) => {
+const deepCopy: any = (obj: any) => {
   if (Array.isArray(obj)) {
     return obj.map(deepCopy);
   }

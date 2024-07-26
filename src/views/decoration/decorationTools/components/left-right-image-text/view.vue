@@ -37,7 +37,12 @@
 import { toRefs, computed, ref, watch } from 'vue';
 
 const props = defineProps({
-  data: Object,
+  data: {
+    type: Object,
+    default() {
+      return {};
+    },
+  },
   isPreview: Boolean,
 });
 

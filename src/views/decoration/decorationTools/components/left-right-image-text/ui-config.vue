@@ -300,7 +300,7 @@ onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = Array.isArray(data?.value?.configValue)
-    ? data?.value?.configValue
+    ? data?.value?.configValue || []
     : Object.values(data?.value?.configValue);
 });
 
