@@ -91,7 +91,7 @@ Axios.prototype.request = function (reqConfig: AxiosRequestConfig) {
           //   ? import.meta.env.VITE_APP_DEV_HOST
           //   : redirectUri;
           // /zst
-          const serverUri = `${window.location.origin}/#/login`;
+          const serverUri = `${window.location.origin}/zst/#/login`;
           window.location.href = `${serverUri}`;
           // if (logoutUrl) {
           // window.location.href = `${logoutUrl}?server_uri=${serverUri}`;
