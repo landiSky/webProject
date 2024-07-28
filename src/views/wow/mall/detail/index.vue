@@ -6,9 +6,9 @@
     >
       <div
         class="baseInfo"
-        :class="prodDetail.versionType ? 'new-baseInfo' : ''"
+        :class="!prodDetail.versionType ? 'new-baseInfo' : ''"
       >
-        <template v-if="!prodDetail.versionType">
+        <template v-if="prodDetail.versionType">
           <div class="left">
             <div class="bigImg">
               <img
@@ -331,7 +331,8 @@
           <t-button
             type="primary"
             size="large"
-            style="width: 296px"
+            style="width: 270px"
+            status="danger"
             :disabled="isPreview"
             @click="clickAddCart"
             >立即购买
@@ -1096,10 +1097,10 @@ onUnmounted(() => {
       }
 
       &.new-baseInfo {
-        height: 560px;
+        height: 600px;
         background: url('../../../../assets/images/wow/mall/mall-bg.png')
           no-repeat;
-        background-size: cover;
+        background-size: 100%;
 
         .right {
           flex: none;
@@ -1146,6 +1147,9 @@ onUnmounted(() => {
               font-size: 14px;
             }
           }
+        }
+
+        button {
         }
       }
     }
