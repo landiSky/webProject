@@ -6,9 +6,9 @@
     >
       <div
         class="baseInfo"
-        :class="prodDetail.versionType ? '' : 'new-baseInfo'"
+        :class="prodDetail.versionType ? 'new-baseInfo' : ''"
       >
-        <template v-if="prodDetail.versionType">
+        <template v-if="!prodDetail.versionType">
           <div class="left">
             <div class="bigImg">
               <img
