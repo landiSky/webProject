@@ -43,13 +43,36 @@
                 : '-'
             }}
           </div>
-          <div class="buttom-blue">自建（2）</div>
-          <div class="title">88.111.3223123、88.111.3223...</div>
-          <div class="prefix">前缀管理>></div>
-          <div class="line"></div>
-          <div class="buttom-blue buttom-yellow">托管（2）</div>
-          <div class="title">88.111.3223123、88.111.3223...</div>
-          <div class="prefix">前缀管理>></div>
+          <div
+            v-if="userInfoByCompany.selfPrefixList?.length"
+            class="buttom-blue"
+            >自建（{{ userInfoByCompany.selfPrefixList?.length }}）</div
+          >
+          <div v-if="userInfoByCompany.selfPrefixList?.length" class="title">{{
+            userInfoByCompany.selfPrefixList.join('、')
+          }}</div>
+          <div v-if="userInfoByCompany.selfPrefixList?.length" class="prefix"
+            >前缀管理>></div
+          >
+          <div
+            v-if="userInfoByCompany.hostingEntPrefixList?.length"
+            class="line"
+          ></div>
+          <div
+            v-if="userInfoByCompany.hostingEntPrefixList?.length"
+            class="buttom-blue buttom-yellow"
+            >托管（{{ userInfoByCompany.hostingEntPrefixList?.length }}）</div
+          >
+          <div
+            v-if="userInfoByCompany.hostingEntPrefixList?.length"
+            class="title"
+            >{{ userInfoByCompany.hostingEntPrefixList.join('、') }}</div
+          >
+          <div
+            v-if="userInfoByCompany.hostingEntPrefixList?.length"
+            class="prefix"
+            >前缀管理>></div
+          >
         </div>
       </div>
     </div>
@@ -274,21 +297,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
+import { useOrderStore } from '@/store/modules/order';
+import { sm2 } from '@/utils/encrypt';
 import {
-  AppType,
+  userLicensePreview,
+  alreadyBuyClientLogin,
+  apiProductDetail,
+  apiComputePrice,
+} from '@/api/identifying/overview';
+import {
+  SaleType,
   AccountType,
   AccountTypeDesc,
   CompanyAuthStatus,
-  CompanyAuthStatusDESC,
   NodeAuthStatus,
-  NodeAuthStatusDESC,
 } from '@/enums/common';
-
+import { apiDataPoint } from '@/api/data-point';
 import avatar from '@/assets/images/overview/avatar.png';
 
 import icon1 from '@/assets/images/overview/icon-01.png';
@@ -303,6 +332,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
+const orderStore = useOrderStore();
 
 // 概览商品数据
 const productData = ref<Record<string, any>>({
@@ -313,7 +343,28 @@ const productData = ref<Record<string, any>>({
   idHubBuyStatus: null, // 节点商品购买状态 0-未购买 1-已购买
   entSubmitStatus: null, // 是否提交前缀 0-未提交 1-已提交
   hostingSubmitStatus: null, // 是否提交托管 0-未提交 1-已提交
+  idTestProductStatus: null, // 沙盒商品状态:0-待审节点商品状态:0-待审核,1-已上架,2-已驳回,3-未上架核,1-已上架,2-已驳回,3-未上架
+  idHubProductStatus: null, // 节点商品状态:0-待审核,1-已上架,2-已驳回,3-未上架
+  idTestOrderId: null, // 沙盒订单id
+  productDeliverySetId: null, // 沙盒商品交付版本id
 });
+// ------  0元购买数据
+const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
+const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
+const deliveryList = ref<Record<string, any>[]>([]);
+const selectVersion = ref<Record<string, any>>({});
+const previewImgList = ref<string[]>([]);
+const bigImgPath = ref();
+const templateList = ref<Record<string, any>[]>([]);
+const priceParams = ref<Record<string, any>>({
+  deliveryVersionId: null,
+  accountId: null,
+  durationId: null,
+});
+const price = ref();
+// 是否装修
+const versionType = ref(0);
+// ------
 
 const stepsList = ref([
   {
@@ -412,23 +463,36 @@ const manualList = ref([
 ]);
 
 // 立即注册
-const registerJump = () => {};
+const registerJump = () => {
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
+  console.log(1111);
+};
 
 // 立即购买
 const buyNow = (obj: any) => {
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
   if (obj?.idHubProductStatus === 1) {
     router.push({
       name: 'wowMallDetail',
       params: { id: obj?.id },
     });
-    return true;
+    return;
   }
   Message.warning('商品已下架，无法继续购买');
-  return false;
 };
 
 // 立即申请
 const applyNow = () => {
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
   router.push({
     path: '/license/index',
     query: {
@@ -438,24 +502,145 @@ const applyNow = () => {
 };
 
 // 立即托管
-const instantHosting = () => {};
+const instantHosting = () => {
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
+  console.log(1111);
+};
+
+const onAuthConfirm = (memberIdList: string[]): any => {
+  const {
+    companyId,
+    id,
+    companyName,
+    name,
+    deliveryType,
+    saleType,
+    logo,
+    source,
+  } = prodDetail.value;
+  const { accountNumList, durationList } = selectVersion.value;
+  const { accountId, durationId } = priceParams.value;
+
+  let accountDesc = '不限';
+  let durationDesc = '不限';
+
+  let accountItem = null;
+  if (saleType === SaleType.PACKAGE) {
+    accountItem = accountNumList.find(
+      (item: Record<string, any>) => item.id === accountId
+    );
+    const durationItem = durationList.find(
+      (item: Record<string, any>) => item.id === durationId
+    );
+    accountDesc = `${accountItem.accountNum}个`;
+    durationDesc =
+      durationItem.duration > 0 ? `${durationItem.duration}个月` : '不限'; // 套餐里时长有不限
+  }
+
+  if (
+    (accountItem?.accountNum || 0) > 0 &&
+    memberIdList?.length > accountItem?.accountNum
+  ) {
+    Message.warning('已超出购买账号数');
+    return;
+  }
+
+  // authModalVisible.value = false;
+
+  // TODO 封装确认订单需要的字段
+  orderStore.createOrderInfo = {
+    companyId,
+    productId: id,
+    deliveryVersionId: selectVersion.value.id,
+    saasAppId: selectVersion.value.saasAppId,
+    price: price.value,
+    accountDesc,
+    durationDesc,
+    accountId,
+    durationId,
+    companyName,
+    name,
+    deliveryType,
+    logo,
+    orderSource: source,
+    saleType,
+    memberIdList,
+  };
+
+  router.push({
+    path: '/order/confirm',
+  });
+};
 
 // 0元购买
 const zeroPurchase = (obj: any) => {
-  if (obj?.idTestProductStatus === 1) {
-    return true;
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
+  const { idTestProductStatus, idTestProductId } = obj;
+  if (idTestProductStatus === 1) {
+    apiDataPoint(idTestProductId as string, null, userInfo?.id, 4, 4).then(
+      () => {
+        console.log('立即购买打点', idTestProductId);
+      }
+    );
+    if (userInfoByCompany?.companyId === prodDetail.value.companyId) {
+      Message.warning('无法购买本企业商品!');
+      return;
+    }
+    if (userInfoByCompany?.primary === AccountType.MAIN) {
+      onAuthConfirm([]);
+      return;
+    }
   }
   Message.warning('商品已下架，无法继续购买');
-  return false;
 };
 
 // 立即使用
 const immediateUse = (obj: any) => {
-  if (obj?.idTestBuyStatus === 1) {
-    return true;
+  if (userInfoByCompany?.value?.primary === 3) {
+    Message.error('请先完成企业认证');
+    return;
+  }
+  const {
+    idTestProductStatus,
+    idTestProductId,
+    idTestOrderId,
+    productDeliverySetId,
+  } = obj;
+  if (idTestProductStatus === 1) {
+    const params = {
+      productId: idTestProductId,
+      productDeliverySetId,
+      memberId: selectCompany.value?.memberId,
+      orderId: idTestOrderId,
+    };
+
+    alreadyBuyClientLogin(params).then((res: any) => {
+      const data = {
+        type: 'productApp',
+        productId: idTestProductId,
+        productDeliverySetId,
+        memberId: selectCompany.value?.memberId,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      if (res.code === 102008) {
+        return Message.warning(res?.message);
+      }
+      if (res.code !== 200) {
+        return Message.error(res?.message);
+      }
+      return window.open(`${res.data}&data=${sm2data}`);
+    });
   }
   Message.warning('请先开通沙盒服务');
-  return false;
 };
 
 // 帮助手册/开发参考  更多 文档对应地址
@@ -493,7 +678,98 @@ const viewLicense = () => {
 // 查看详情
 const viewDetail = () => {};
 
-onMounted(() => {});
+const getPrice = () => {
+  if (
+    prodDetail.value.saleType === SaleType.CONSULT ||
+    prodDetail.value.saleType === SaleType.FREE
+  ) {
+    return;
+  }
+  apiComputePrice({
+    productId: prodDetail.value.id,
+    ...priceParams.value,
+  })
+    .then((data: any) => {
+      price.value = data;
+    })
+    .catch(() => {})
+    .finally(() => {});
+};
+
+// 获取概览相关数据
+const initData = () => {
+  userLicensePreview({}).then((res) => {
+    productData.value = res;
+    if (res.idTestProductId) {
+      // TODO w: 商品详情打点
+      apiDataPoint(
+        res.idTestProductId as string,
+        null,
+        userInfo?.id,
+        4,
+        3
+      ).then(() => {
+        console.log('商品详情打点', res.idTestProductId);
+      });
+
+      apiProductDetail({ id: res.idTestProductId })
+        .then((data: Record<string, any>) => {
+          const tagMap = data.tagMap.filter(
+            // (tag: any) => String(tag.id) !== '2'
+            (tag: any) => String(tag.tagName) !== '公共服务'
+          );
+          prodDetail.value = { ...data, tagMap };
+          deliveryList.value = data.productDeliverySetList || [];
+          previewImgList.value = data.detailImg.split(',');
+          bigImgPath.value = previewImgList.value?.[0];
+
+          templateList.value = JSON.parse(data.detail);
+          versionType.value = data.versionType;
+
+          const { saleType } = data;
+
+          if (Array.isArray(deliveryList.value) && deliveryList.value.length) {
+            if (
+              [SaleType.ONEOFF, SaleType.PACKAGE, SaleType.FREE].includes(
+                saleType
+              )
+            ) {
+              // 一口价
+              //   priceParams.value.deliveryVersionId = deliveryList.value[0].id;
+              //   getPrice();
+              // } else if (saleType === SaleType.PACKAGE) {
+              deliveryList.value.forEach((item: Record<string, any>) => {
+                versionObj[item.id] = item;
+              });
+
+              //  套餐，初始化去计算
+              selectVersion.value = deliveryList.value?.[0];
+              const { id, accountNumList, durationList } = selectVersion.value;
+
+              priceParams.value.deliveryVersionId = id;
+              priceParams.value.accountId = accountNumList?.[0].id;
+              priceParams.value.durationId = durationList?.[0].id;
+              getPrice();
+            } else if (saleType === SaleType.CONSULT) {
+              deliveryList.value.forEach((item: Record<string, any>) => {
+                versionObj[item.id] = item;
+              });
+
+              selectVersion.value = deliveryList.value?.[0];
+              const { id } = selectVersion.value;
+
+              priceParams.value.deliveryVersionId = id;
+            }
+          }
+        })
+        .catch(() => {});
+    }
+  });
+};
+onMounted(() => {
+  // 获取概览相关数据
+  initData();
+});
 </script>
 
 <style lang="less" scoped>
@@ -502,6 +778,7 @@ onMounted(() => {});
   flex-direction: column;
   align-items: center;
   padding: 24px 0;
+  overflow-y: auto;
   background: url(@/assets/images/overview/overview-bg.png) no-repeat scroll top
     center #f2f3f8;
   background-size: 100% auto;
@@ -543,13 +820,18 @@ onMounted(() => {});
       align-items: center;
 
       .title {
+        max-width: 170px;
         color: rgba(134, 144, 156, 1);
         font-weight: 400;
         font-size: 12px;
         //styleName: CN/正文/12-Regular-小;
         font-family: PingFang SC;
         line-height: 20px;
+        // overflow: hidden;
+        white-space: nowrap;
         text-align: left;
+        -0-text-overflow: ellipsis;
+        text-overflow: ellipsis;
       }
 
       .line {
