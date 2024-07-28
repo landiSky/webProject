@@ -4,43 +4,185 @@
       class="productIntro"
       :class="{ decorationIntroCls: versionType === 1 }"
     >
-      <div class="baseInfo">
-        <!-- <div class="left">
-          <div class="bigImg">
-            <img
-              :src="
-                bigImgPath
-                  ? `/server/web/file/download?name=${bigImgPath}&productId=${prodDetail.id}`
-                  : defaultImg
-              "
-            />
-          </div>
-
-          <ul class="imgList">
-            <li
-              v-for="(imgPath, index) in previewImgList"
-              :key="index"
-              @mouseenter="bigImgPath = imgPath"
-            >
+      <div
+        class="baseInfo"
+        :class="prodDetail.versionType ? '' : 'new-baseInfo'"
+      >
+        <template v-if="prodDetail.versionType">
+          <div class="left">
+            <div class="bigImg">
               <img
-                :src="`/server/web/file/download?name=${imgPath}&productId=${prodDetail.id}`"
-                alt=""
-                :class="{ active: bigImgPath === imgPath }"
+                :src="
+                  bigImgPath
+                    ? `/server/web/file/download?name=${bigImgPath}&productId=${prodDetail.id}`
+                    : defaultImg
+                "
               />
-            </li>
-          </ul>
-        </div> -->
-        <div class="right">
-          <div class="header">
-            <span class="productName">
-              <!-- <t-typography-paragraph
+            </div>
+
+            <ul class="imgList">
+              <li
+                v-for="(imgPath, index) in previewImgList"
+                :key="index"
+                @mouseenter="bigImgPath = imgPath"
+              >
+                <img
+                  :src="`/server/web/file/download?name=${imgPath}&productId=${prodDetail.id}`"
+                  alt=""
+                  :class="{ active: bigImgPath === imgPath }"
+                />
+              </li>
+            </ul>
+          </div>
+          <div class="right">
+            <div class="header">
+              <span class="productName">{{ prodDetail.name }}</span>
+              <!-- <span
+              v-for="(item, index) in prodDetail?.tagMap"
+              :key="index"
+              class="tag"
+              :class="{ 'tag-left': index === 0 }"
+            > -->
+              <t-typography-paragraph
+                v-for="(item, index) in prodDetail?.tagMap"
+                :key="index"
+                class="tag"
+                :class="{ 'tag-left': index === 0 }"
                 :ellipsis="{
                   rows: 1,
                   showTooltip: true,
                 }"
               >
-                {{ prodDetail.name }}
-              </t-typography-paragraph> -->
+                {{ item.tagName }}
+              </t-typography-paragraph>
+              <!-- </span> -->
+            </div>
+            <div class="description">
+              <t-typography-paragraph
+                style="margin-bottom: 0"
+                :ellipsis="{
+                  rows: 7,
+                  showTooltip: {
+                    type: 'tooltip',
+                    props: {
+                      isBright: true,
+                    },
+                  },
+                }"
+              >
+                {{ prodDetail.introduction }}
+              </t-typography-paragraph>
+            </div>
+            <div class="price">
+              <span>产品价格:</span>
+              <span v-if="computing">计算中...</span>
+              <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
+                价格面议
+              </span>
+              <span v-else-if="prodDetail.saleType === SaleType.FREE">
+                免费
+              </span>
+              <span v-else>¥ {{ price || '-' }}</span>
+            </div>
+
+            <div class="custom">
+              <span class="label">版本:</span>
+              <span>
+                <template v-if="deliveryList?.length">
+                  <t-radio-group
+                    v-model="priceParams.deliveryVersionId"
+                    type="button"
+                    @change="onVersionChange"
+                  >
+                    <t-radio
+                      v-for="version in deliveryList"
+                      :key="version.id"
+                      :value="version.id"
+                      >{{ version.name }}
+                    </t-radio>
+                  </t-radio-group>
+                </template>
+                <span v-else>-</span>
+              </span>
+            </div>
+            <div class="custom">
+              <span class="label">交付方式:</span>
+              <span>{{ DeliverTypeDesc[prodDetail.deliveryType] ?? '-' }}</span>
+            </div>
+            <div
+              v-if="
+                prodDetail.saleType !== SaleType.CONSULT &&
+                prodDetail.saleType !== SaleType.FREE
+              "
+              class="custom"
+            >
+              <span class="label">账号数:</span>
+              <span v-if="prodDetail.saleType === SaleType.PACKAGE">
+                <t-radio-group
+                  v-model="priceParams.accountId"
+                  type="button"
+                  @change="onRadioChange"
+                >
+                  <t-radio
+                    v-for="account in selectVersion.accountNumList"
+                    :key="account.id"
+                    :value="account.id"
+                  >
+                    {{ account.accountNum }}个账号
+                  </t-radio>
+                </t-radio-group>
+              </span>
+              <span v-else>不限</span>
+            </div>
+            <div
+              v-if="
+                prodDetail.saleType !== SaleType.CONSULT &&
+                prodDetail.saleType !== SaleType.FREE
+              "
+              class="custom"
+            >
+              <span class="label">选择时长:</span>
+              <span v-if="prodDetail.saleType === SaleType.PACKAGE">
+                <t-radio-group
+                  v-model="priceParams.durationId"
+                  type="button"
+                  @change="onRadioChange"
+                >
+                  <t-radio
+                    v-for="durationItem in selectVersion.durationList"
+                    :key="durationItem.id"
+                    :value="durationItem.id"
+                  >
+                    <span v-if="durationItem.duration > 0">
+                      {{ durationItem.duration }}个月
+                    </span>
+                    <span v-else>不限</span>
+                  </t-radio>
+                </t-radio-group>
+              </span>
+              <span v-else>不限</span>
+            </div>
+            <t-button
+              v-if="Number(selectVersion.isTry) === 1"
+              type="outline"
+              size="large"
+              style="width: 140px; margin-right: 12px"
+              @click="clickProbation"
+              >0元试用</t-button
+            >
+            <t-button
+              type="primary"
+              size="large"
+              style="width: 296px"
+              :disabled="isPreview"
+              @click="clickAddCart"
+              >立即购买
+            </t-button>
+          </div>
+        </template>
+        <div v-else class="right">
+          <div class="header">
+            <span class="productName">
               {{ prodDetail.name }}
             </span>
             <t-typography-paragraph
@@ -72,8 +214,8 @@
               {{ prodDetail.introduction }}
             </t-typography-paragraph>
           </div>
-          <div class="price">
-            <span>产品价格:</span>
+          <div class="price custom">
+            <span class="label">产品价格</span>
             <span v-if="computing">计算中...</span>
             <span v-else-if="prodDetail.saleType === SaleType.CONSULT">
               价格面议
@@ -85,19 +227,25 @@
           </div>
 
           <div class="custom">
-            <span class="label">版本:</span>
+            <span class="label">版本</span>
             <span>
               <template v-if="deliveryList?.length">
                 <t-radio-group
                   v-model="priceParams.deliveryVersionId"
-                  type="button"
+                  class="self-radio-group"
                   @change="onVersionChange"
                 >
                   <t-radio
                     v-for="version in deliveryList"
                     :key="version.id"
                     :value="version.id"
-                    >{{ version.name }}
+                    class="self-radio-item"
+                  >
+                    <template #radio>
+                      <div>
+                        {{ version.name }}
+                      </div>
+                    </template>
                   </t-radio>
                 </t-radio-group>
               </template>
@@ -105,7 +253,7 @@
             </span>
           </div>
           <div class="custom">
-            <span class="label">交付方式:</span>
+            <span class="label">交付方式</span>
             <span>{{ DeliverTypeDesc[prodDetail.deliveryType] ?? '-' }}</span>
           </div>
           <div
@@ -115,19 +263,24 @@
             "
             class="custom"
           >
-            <span class="label">账号数:</span>
+            <span class="label">账号数</span>
             <span v-if="prodDetail.saleType === SaleType.PACKAGE">
               <t-radio-group
                 v-model="priceParams.accountId"
-                type="button"
+                class="self-radio-group"
                 @change="onRadioChange"
               >
                 <t-radio
                   v-for="account in selectVersion.accountNumList"
                   :key="account.id"
                   :value="account.id"
+                  class="self-radio-item"
                 >
-                  {{ account.accountNum }}个账号
+                  <template #radio>
+                    <div class="self-radio-checked">
+                      {{ account.accountNum }}个账号
+                    </div>
+                  </template>
                 </t-radio>
               </t-radio-group>
             </span>
@@ -140,22 +293,28 @@
             "
             class="custom"
           >
-            <span class="label">选择时长:</span>
+            <span class="label">选择时长</span>
             <span v-if="prodDetail.saleType === SaleType.PACKAGE">
               <t-radio-group
                 v-model="priceParams.durationId"
-                type="button"
+                class="self-radio-group"
                 @change="onRadioChange"
               >
                 <t-radio
                   v-for="durationItem in selectVersion.durationList"
                   :key="durationItem.id"
                   :value="durationItem.id"
+                  class="self-radio-item"
                 >
-                  <span v-if="durationItem.duration > 0">
-                    {{ durationItem.duration }}个月
-                  </span>
-                  <span v-else>不限</span>
+                  <template #radio>
+                    <span
+                      v-if="durationItem.duration > 0"
+                      class="self-radio-checked"
+                    >
+                      {{ durationItem.duration }}个月
+                    </span>
+                    <span v-else>不限</span>
+                  </template>
                 </t-radio>
               </t-radio-group>
             </span>
@@ -322,7 +481,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h, reactive, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -534,11 +693,9 @@ const clickProbation = () => {
 const clickAddCart = (): void => {
   const { userInfo, userInfoByCompany } = userStore;
   // TODO w: 立即购买打点
-  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 4).then(
-    (res) => {
-      console.log('立即购买打点', route.params.id);
-    }
-  );
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 4).then(() => {
+    console.log('立即购买打点', route.params.id);
+  });
 
   if (!userInfo?.id) {
     console.log(route.fullPath, 'route.fullPath');
@@ -639,11 +796,9 @@ const clickNav = (index: number) => {
 
 const buyConsult = () => {
   // TODO w: 购买咨询打点
-  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 5).then(
-    (res) => {
-      console.log('购买咨询打点', route.params.id);
-    }
-  );
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 5).then(() => {
+    console.log('购买咨询打点', route.params.id);
+  });
   window.open('https://www.wjx.top/vm/rZCiupC.aspx#', '_blank');
 };
 
@@ -704,11 +859,9 @@ const paginationchange = (current: number) => {
 
 onMounted(() => {
   // TODO w: 商品详情打点
-  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(
-    (res) => {
-      console.log('商品详情打点', route.params.id);
-    }
-  );
+  apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(() => {
+    console.log('商品详情打点', route.params.id);
+  });
   isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即购买】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
@@ -720,6 +873,8 @@ onMounted(() => {
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
+
+      console.log('prodDetail', prodDetail.value);
 
       templateList.value = JSON.parse(data.detail);
       versionType.value = data.versionType;
@@ -786,13 +941,9 @@ onUnmounted(() => {
       display: flex;
       align-items: start;
       width: 100%;
-      height: 560px;
       margin-bottom: 16px;
       padding: 24px;
-      background: url('../../../../assets/images/wow/mall/mall-bg.png')
-        no-repeat;
       background-color: #fff;
-      background-size: cover;
       border-radius: 4px;
 
       .left {
@@ -824,14 +975,13 @@ onUnmounted(() => {
       }
 
       .right {
-        // width: 465px;
-        margin-left: 126px;
+        flex: 1;
 
         .header {
           display: flex;
           align-items: center;
-          margin-top: 56px;
-          margin-bottom: 16px;
+          // margin-top: 56px;
+          // margin-bottom: 16px;
           color: #1d2129;
           font-weight: 500;
           font-size: 24px;
@@ -859,15 +1009,15 @@ onUnmounted(() => {
         }
 
         .description {
-          width: 465px;
-          margin-bottom: 36px;
+          // width: 465px;
+          // margin-bottom: 36px;
+          margin-bottom: 42px;
           color: #1d2129;
           line-height: 22px; /* 157.143% */
           word-break: break-all;
         }
-
+        // 之前的样式不要改
         .price {
-          width: 465px;
           margin-bottom: 20px;
           padding: 12px;
           line-height: 22px;
@@ -895,16 +1045,106 @@ onUnmounted(() => {
           }
 
           .label {
+            // font-size: 14px;
+            // font-weight: 400;
             display: inline-block;
             width: 60px;
             margin-right: 16px;
           }
 
+          .self-radio-group {
+            background: none;
+
+            .self-radio-item {
+              margin-right: 30px;
+              padding: 10px;
+              font-weight: 500;
+              font-size: 16px;
+              background: #fff;
+              border-radius: 4px;
+
+              &.tele-radio-checked {
+                color: #1d2129;
+                border: 1px solid #1664ff;
+
+                &::after {
+                  position: absolute;
+                  right: -1px;
+                  bottom: 0;
+                  display: inline-block;
+                  width: 13px;
+                  height: 13px;
+                  background: url('../../../../assets/images/decoration/radio-checked.jpg')
+                    no-repeat;
+                  background-size: cover;
+                  border-bottom-right-radius: 4px;
+                  content: '';
+                }
+              }
+            }
+          }
+
           :deep(.tele-radio-button-content) {
+            // padding: 15px 35px;
+            // font-size: 18px;
             color: #1664ff;
             font-weight: 500;
             font-size: 12px;
             line-height: 20px; /* 166.667% */
+          }
+        }
+      }
+
+      &.new-baseInfo {
+        height: 560px;
+        background: url('../../../../assets/images/wow/mall/mall-bg.png')
+          no-repeat;
+        background-size: cover;
+
+        .right {
+          flex: none;
+          margin-left: 126px;
+
+          .header {
+            margin-top: 56px;
+            margin-bottom: 16px;
+          }
+
+          .description {
+            width: 465px;
+            margin-bottom: 36px;
+          }
+
+          .price {
+            background: transparent;
+          }
+
+          .custom {
+            font-weight: 500;
+            font-size: 16px;
+
+            &.price {
+              margin-bottom: 20px;
+              line-height: 20px;
+              border-radius: 4px;
+
+              span:first-child {
+                margin-right: 24px;
+                color: #4e5969;
+              }
+
+              span:last-child {
+                color: #e63f3f;
+                font-weight: 700;
+                font-size: 20px;
+              }
+            }
+
+            .label {
+              width: 124px;
+              font-weight: 400;
+              font-size: 14px;
+            }
           }
         }
       }
