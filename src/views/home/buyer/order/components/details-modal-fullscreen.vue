@@ -535,9 +535,10 @@ const editModalVisible = ref(false);
 
 const goback = () => {
   // emit('cancel');
-  router.push({
-    name: 'buyerOrder',
-  });
+  // router.push({
+  //   name: 'buyerOrder',
+  // });
+  router.push({ path: '/buyer/order' });
 };
 
 const init = () => {
