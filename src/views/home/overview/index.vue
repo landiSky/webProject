@@ -51,7 +51,10 @@
           <div v-if="userInfoByCompany.selfPrefixList?.length" class="title">{{
             userInfoByCompany.selfPrefixList.join('、')
           }}</div>
-          <div v-if="userInfoByCompany.selfPrefixList?.length" class="prefix"
+          <div
+            v-if="userInfoByCompany.selfPrefixList?.length"
+            class="prefix"
+            @click="prefixJump(1)"
             >前缀管理>></div
           >
           <div
@@ -71,6 +74,7 @@
           <div
             v-if="userInfoByCompany.hostingEntPrefixList?.length"
             class="prefix"
+            @click="prefixJump(1)"
             >前缀管理>></div
           >
         </div>
@@ -111,7 +115,7 @@
                   <t-link
                     v-if="productData?.entSubmitStatus"
                     :hoverable="false"
-                    @click="prefixJump"
+                    @click="prefixJump(1)"
                   >
                     查看前缀
                   </t-link>
@@ -186,7 +190,7 @@
                   <t-link
                     v-if="productData?.entSubmitStatus"
                     :hoverable="false"
-                    @click="prefixJump"
+                    @click="prefixJump(1)"
                   >
                     查看前缀
                   </t-link>
@@ -297,8 +301,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import { Message } from '@tele-design/web-vue';
+import { ref, onMounted } from 'vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
@@ -318,6 +322,7 @@ import {
   NodeAuthStatus,
 } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
+import { snmsClientLogin } from '@/api/login';
 import avatar from '@/assets/images/overview/avatar.png';
 
 import icon1 from '@/assets/images/overview/icon-01.png';
@@ -462,13 +467,54 @@ const manualList = ref([
   },
 ]);
 
+// 跳转二级公共方法
+const clickIdService = (pageUrl: any) => {
+  const { primary, companyId } = userInfoByCompany.value || {};
+  if (Number(primary) !== 2 || userInfo.value?.isAdmin) {
+    const { snmsUrls } = userInfo.value || {};
+    const params = {
+      companyId: userInfo.value?.isAdmin
+        ? userInfo.value?.companyId
+        : companyId,
+      snmsLoginId: snmsUrls?.snmsLoginId,
+    };
+    snmsClientLogin(params).then((res: any) => {
+      if (res?.data?.code === 102006) {
+        Message.error(res?.data?.message);
+      }
+      if (!res?.data?.data) {
+        return;
+      }
+      const data = {
+        type: 'snms',
+        companyId: userInfo.value?.isAdmin
+          ? userInfo.value?.companyId
+          : companyId,
+        pageUrl,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res?.data?.data}&data=${sm2data}`);
+    });
+  } else {
+    Modal.warning({
+      title: '仅企业管理员可操作',
+      content: '',
+      titleAlign: 'start',
+      okText: '好的',
+    });
+  }
+};
+
 // 立即注册
 const registerJump = () => {
   if (userInfoByCompany?.value?.primary === 3) {
     Message.error('请先完成企业认证');
     return;
   }
-  console.log(1111);
+  clickIdService('/snms/ui/ent/apply');
 };
 
 // 立即购买
@@ -507,7 +553,7 @@ const instantHosting = () => {
     Message.error('请先完成企业认证');
     return;
   }
-  console.log(1111);
+  clickIdService('/snms/ui/entPrefix/proxy');
 };
 
 const onAuthConfirm = (memberIdList: string[]): any => {
@@ -583,16 +629,20 @@ const zeroPurchase = (obj: any) => {
   }
   const { idTestProductStatus, idTestProductId } = obj;
   if (idTestProductStatus === 1) {
-    apiDataPoint(idTestProductId as string, null, userInfo?.id, 4, 4).then(
-      () => {
-        console.log('立即购买打点', idTestProductId);
-      }
-    );
-    if (userInfoByCompany?.companyId === prodDetail.value.companyId) {
+    apiDataPoint(
+      idTestProductId as string,
+      null,
+      userInfo.value?.id,
+      4,
+      4
+    ).then(() => {
+      console.log('立即购买打点', idTestProductId);
+    });
+    if (userInfoByCompany.value?.companyId === prodDetail.value.companyId) {
       Message.warning('无法购买本企业商品!');
       return;
     }
-    if (userInfoByCompany?.primary === AccountType.MAIN) {
+    if (userInfoByCompany.value?.primary === AccountType.MAIN) {
       onAuthConfirm([]);
       return;
     }
@@ -656,8 +706,14 @@ const moreJump = (url: string) => {
   window.open(url);
 };
 
-// 前缀管理（前缀申请页面/托管申请页面）
-const prefixJump = () => {};
+// 前缀（前缀申请页面/托管申请页面）
+const prefixJump = (num: number) => {
+  if (num === 1) {
+    clickIdService('/snms/ui/ent/apply');
+    return;
+  }
+  clickIdService('/snms/ui/entPrefix/proxy');
+};
 
 // 查看订单
 const viewOrder = () => {
@@ -676,7 +732,9 @@ const viewLicense = () => {
 };
 
 // 查看详情
-const viewDetail = () => {};
+const viewDetail = () => {
+  clickIdService('/snms/ui/entPrefix/proxy');
+};
 
 const getPrice = () => {
   if (
@@ -705,7 +763,7 @@ const initData = () => {
       apiDataPoint(
         res.idTestProductId as string,
         null,
-        userInfo?.id,
+        userInfo.value?.id,
         4,
         3
       ).then(() => {
