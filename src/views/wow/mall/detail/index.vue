@@ -6,9 +6,9 @@
     >
       <div
         class="baseInfo"
-        :class="!prodDetail.versionType ? 'new-baseInfo' : ''"
+        :class="prodDetail.versionType ? 'new-baseInfo' : ''"
       >
-        <template v-if="prodDetail.versionType">
+        <template v-if="!prodDetail.versionType">
           <div class="left">
             <div class="bigImg">
               <img
@@ -372,7 +372,7 @@
             </template>
           </t-empty>
         </div>
-        <div class="consult">
+        <div v-if="!prodDetail.versionType" class="consult">
           <span class="title">服务商资质</span>
           <span class="header">服务商名称：{{ prodDetail?.companyName }}</span>
           <t-button type="primary" size="large" @click="buyConsult"
@@ -468,6 +468,17 @@
             </div>
           </div>
         </div>
+      </div>
+      <div
+        v-if="prodDetail.versionType"
+        :class="prodDetail.versionType ? 'new-consult' : ''"
+      >
+        <span class="title">服务商资质</span>
+        <span class="header">服务商名称：{{ prodDetail?.companyName }}</span>
+        <span class="online-consult" @click="buyConsult">
+          <iconpark-icon size="18" name="message" class="icon-message" />
+          在线咨询</span
+        >
       </div>
     </div>
   </div>
@@ -879,6 +890,7 @@ onMounted(() => {
 
       templateList.value = JSON.parse(data.detail);
       versionType.value = data.versionType;
+      // prodDetail.value.versionType = 1; // 模拟？？？
 
       const { saleType } = data;
 
@@ -1391,6 +1403,41 @@ onUnmounted(() => {
           .top-list {
             width: 1000px;
           }
+        }
+      }
+    }
+
+    .new-consult {
+      position: fixed;
+      top: 229px;
+      right: 15px;
+      display: flex;
+      flex-direction: column;
+      width: 140px;
+      // height: 196px;
+      padding: 20px 18px;
+      font-size: 12px;
+      line-height: 20px;
+      background: #fff;
+      border-radius: 4px;
+
+      > span {
+        margin-bottom: 20px;
+      }
+
+      .title {
+        color: #86909c;
+      }
+
+      .online-consult {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        color: #86909c;
+        cursor: pointer;
+
+        .icon-message {
+          margin-right: 4px;
         }
       }
     }
