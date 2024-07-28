@@ -124,7 +124,7 @@
                   <t-link
                     v-if="!productData?.idHubBuyStatus"
                     :hoverable="false"
-                    @click="buyNow"
+                    @click="buyNow(productData)"
                     >立即购买</t-link
                   >
                   <t-link
@@ -526,7 +526,7 @@ const buyNow = (obj: any) => {
   if (obj?.idHubProductStatus === 1) {
     router.push({
       name: 'wowMallDetail',
-      params: { id: obj?.id },
+      params: { id: obj?.idHubProductId },
     });
     return;
   }
