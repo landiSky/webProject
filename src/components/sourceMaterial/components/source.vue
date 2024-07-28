@@ -60,6 +60,7 @@
           </div>
           <div class="list-pagination">
             <t-pagination
+              v-if="state.total > 12"
               :total="state.total"
               size="mini"
               :current="params.pageNum"
@@ -191,6 +192,7 @@ const onBeforeRemove = (fileItem: any) => {
     title: '确认删除该素材',
     okText: '删除',
     titleAlign: 'start',
+    hideCancel: false,
     content: '',
     onOk: () => {
       fetchFileDel(saveName)
@@ -282,7 +284,7 @@ onMounted(async () => {
 
   :deep(.tele-tabs-nav) {
     width: 108px;
-    margin-right: 16px;
+    // margin-right: 16px;
   }
 
   :deep(.tele-tabs-nav-type-line) {
@@ -297,7 +299,7 @@ onMounted(async () => {
     margin-bottom: 12px;
     padding: 16px 24px;
     overflow: auto;
-    background: #f7f7f7;
+    background: #f8f8f8;
   }
 
   :deep(.tele-tabs-pane) {
@@ -306,9 +308,10 @@ onMounted(async () => {
       margin-right: 16px;
       margin-bottom: 16px;
       vertical-align: top;
+      background: #d9d9d9;
       border-radius: 2px;
 
-      &:nth-child(4n + 1) {
+      &:nth-child(4n) {
         margin-right: 0;
       }
 
@@ -319,10 +322,11 @@ onMounted(async () => {
 
     .tabpane-header {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      height: 32px;
-      margin-bottom: 14px;
-      line-height: 32px;
+      height: 42px;
+      padding: 10px 24px 0;
+      background: #f8f8f8;
 
       .tele-upload-wrapper {
         width: 88px;

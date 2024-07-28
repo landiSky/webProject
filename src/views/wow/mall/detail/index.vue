@@ -886,8 +886,6 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
 
-      console.log('prodDetail', prodDetail.value);
-
       templateList.value = JSON.parse(data.detail);
       versionType.value = data.versionType;
       // prodDetail.value.versionType = 1; // 模拟？？？
