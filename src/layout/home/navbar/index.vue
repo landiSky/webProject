@@ -232,6 +232,7 @@ const goWow = () => {
   router.push({
     path: '/wow',
   });
+  useMenuStore().setMenuIndex(1, userInfo.value);
 };
 
 const onChangeCompany = async (companyId: string) => {
