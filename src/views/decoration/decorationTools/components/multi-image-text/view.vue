@@ -106,10 +106,11 @@ watch(
 watch(
   () => props.data,
   () => {
-    currentOffset.value =
-      paginationFactor.value *
-      -1 *
-      (Object.values(data?.value?.configValue).length - windowSize.value);
+    console.log('多图文数据更新');
+    // currentOffset.value =
+    //   paginationFactor.value *
+    //   -1 *
+    //   (Object.values(data?.value?.configValue).length - windowSize.value);
   },
   { immediate: true, deep: true }
 );
