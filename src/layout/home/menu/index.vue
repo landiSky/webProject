@@ -148,11 +148,11 @@ const clickMenuItem = (key: string) => {
   if (/http(s)?:/.test(key)) {
     window.open(key);
   } else {
-    if (key === '/overview') {
-      // 二级节点业务管理系统
-      clickIdService();
-      return;
-    }
+    // if (key === '/overview') {
+    //   // 二级节点业务管理系统
+    //   clickIdService();
+    //   return;
+    // }
     router.push({ path: key });
     // TODO w: 各个菜单的打点统计
     const num = findKeyByValue(pathMap, key);

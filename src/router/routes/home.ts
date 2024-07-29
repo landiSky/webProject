@@ -169,7 +169,8 @@ const homeRoutesList = [
       },
     ],
     meta: {
-      name: '二级节点业务管理系统',
+      // name: '二级节点业务管理系统',
+      name: '概览',
     },
   },
 ];
