@@ -311,6 +311,13 @@ const setItemRef = (el: any, index: number) => {
   }
 };
 
+const closeTip = (msg: string) => {
+  Message.info(msg);
+  setTimeout(() => {
+    window.close();
+  }, 900);
+};
+
 // 保存组件列表的json数据到本地
 const clickSave = () => {
   // 先清除本地存储
@@ -328,7 +335,6 @@ const clickSave = () => {
     broadcastChannel.postMessage(
       JSON.stringify({ name: 'product_detail', data: '' })
     );
-    window.close();
   } else {
     localStorage.removeItem(`componentsList${type}`);
     localStorage.setItem(
@@ -341,6 +347,7 @@ const clickSave = () => {
       JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
     );
   }
+  closeTip('保存成功');
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
@@ -351,7 +358,6 @@ const clickSaveRemote = () => {
   };
   Promise.all(childForm())
     .then((data: any) => {
-      console.log('校验成功:', data);
       if (componentsList.value.length === 0) {
         Message.error('请先添加组件');
         return;
@@ -369,7 +375,7 @@ const clickSaveRemote = () => {
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', data: '' })
         );
-        window.close();
+        closeTip('发布成功');
         return;
       }
 
@@ -388,13 +394,14 @@ const clickSaveRemote = () => {
             id,
             detail: json,
           }).then((res: any) => {
-            Message.success('保存成功');
             // 通知主tab页刷新
             broadcastChannel.postMessage(
               JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
             );
+            closeTip('发布成功');
           });
         },
+
         onCancel: () => {},
       });
     })

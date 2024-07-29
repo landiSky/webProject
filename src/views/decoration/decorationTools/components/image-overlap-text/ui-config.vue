@@ -93,7 +93,11 @@
               action="/"
               :limit="1"
               image-preview
-              :on-before-remove="onBeforeRemove"
+              :on-before-remove="
+                () => {
+                  return onBeforeRemove(index);
+                }
+              "
               style="width: 100px; height: 100px"
             >
               <template #remove-icon>
@@ -199,7 +203,7 @@ const { data, goodsList } = toRefs(props);
 const formRef = ref();
 const showSource = ref(false);
 const confirmLoading = ref(false);
-
+const curIndex = ref(-1);
 const numberToChiness = (index: number) => {
   if (index === 0) return '一';
   if (index === 1) return '二';
@@ -248,13 +252,20 @@ const rules = {
   mainTitle: [{ required: true, message: '请输入主标题' }],
 };
 
-const onBeforeRemove = () => {
+const onBeforeRemove = (index: number) => {
+  curIndex.value = index;
   showSource.value = true;
 };
 
+// const onConfirm = (value: any) => {
+//   console.log('返回的图片信息', value);
+//   form.value.src = value;
+
+//   showSource.value = false;
+// };
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value);
-  // form.value.src = value;
+  console.log('返回的图片信息', value, curIndex.value);
+  form.value.list[curIndex.value].src = value;
   showSource.value = false;
 };
 
