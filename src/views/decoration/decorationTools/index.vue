@@ -621,7 +621,8 @@ onMounted(() => {
     proId.value = `pro_${route.query.pro_id}`;
     const storage = localStorage.getItem(proId.value);
     if (storage) {
-      componentsList.value = JSON.parse(storage);
+      const { data } = JSON.parse(storage);
+      componentsList.value = JSON.parse(data);
     }
   }
   console.log('2222222222222222222');

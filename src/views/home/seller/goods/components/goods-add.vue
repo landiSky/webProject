@@ -1747,9 +1747,13 @@ const editTemplateDetail = () => {
   // }, 100);
   // 方案二 路由传递商品id，去装修页通过接口重新拉取商品信息，包含detail数据
   // 方案三 路由传递商品id并存本地，去装修页面获取本地存储，包含detai数据
+  // const json = localStorage.getItem(`pro_${formModel.value.id}`);
   if (formModel.value.versionType === 1) {
     // 新版的装修信息才会存storage，传给装修工具
-    localStorage.setItem(`pro_${formModel.value.id}`, formModel.value.detail);
+    localStorage.setItem(
+      `pro_${formModel.value.id}`,
+      JSON.stringify({ setOk: true, data: formModel.value.detail })
+    );
   }
 };
 
