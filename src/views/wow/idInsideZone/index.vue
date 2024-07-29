@@ -480,9 +480,9 @@ const currentChange = (index: number) => {
 const { userInfo } = userStore;
 const about = (name: string, num: number) => {
   if (name === 'Left') {
-    carouselCurrent.value = num === 1 ? num : num - 1;
+    carouselCurrent.value = num === 1 ? 4 : num - 1;
   } else if (name === 'right') {
-    carouselCurrent.value = num === 4 ? num : num + 1;
+    carouselCurrent.value = num === 4 ? 1 : num + 1;
   }
 };
 
@@ -570,12 +570,14 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll, true);
   apiGetProductId().then((data) => {
     accessProductIds.value = data;
-    apiProductDetail({ id: data?.idInside })
-      .then((data) => {
-        prodDetail.value = data;
-        previewImgList.value = data.detailImg.split(',');
-      })
-      .catch(() => {});
+    if (data?.idInside) {
+      apiProductDetail({ id: data?.idInside })
+        .then((data) => {
+          prodDetail.value = data;
+          previewImgList.value = data.detailImg.split(',');
+        })
+        .catch(() => {});
+    }
   });
 });
 

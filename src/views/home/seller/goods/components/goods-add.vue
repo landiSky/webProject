@@ -1002,7 +1002,7 @@ const formModel = ref<Record<string, any>>({
   detailImg: '',
   useExplain: [],
   introduction: '',
-  detail: '[]',
+  detail: '',
   versionType: 0,
   companyId: '',
 });
