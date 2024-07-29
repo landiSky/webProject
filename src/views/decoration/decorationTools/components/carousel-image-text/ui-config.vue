@@ -37,9 +37,22 @@
         :key="index"
         :style="{ width: '100%', marginTop: '0px' }"
       >
-        <t-space style="margin-top: 10px; margin-bottom: 20px">
+        <t-space
+          style="
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+          "
+        >
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
+          <div
+            v-if="index === 3 || index === 4"
+            class="delete"
+            @click="deleteSpace(index)"
+            >删除</div
+          >
         </t-space>
         <t-form-item
           label="标题"
@@ -185,7 +198,7 @@
       <t-divider margin="0" />
       <div class="area-add-box-content">
         <iconpark-icon
-          v-if="form.list.length < 8"
+          v-if="form.list.length < 5"
           style="cursor: pointer"
           name="squarePlus"
           :size="20"
@@ -197,7 +210,7 @@
           name="squarePlusGray"
           size="20"
         />
-        <span>添加区块（最多支持8个区块）</span>
+        <span>添加区块（最多支持5个区块）</span>
       </div>
     </div>
   </div>
@@ -258,24 +271,28 @@ const onCancel = () => {
 };
 const addBlock = () => {
   console.log('添加区块', form.value.list as any);
-  if (form.value.list.length >= 8) {
+  if (form.value.list.length >= 5) {
     return;
   }
   const { list } = form.value;
   list.push({
     title: '',
     desc: '',
-    src: '909d785b-d3fa-4812-b117-557dfe8270e1',
+    src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
     linkType: 0,
     linkUrl: '',
   });
 };
 
+const deleteSpace = (index: number) => {
+  form.value.list.splice(index, 1);
+};
+
 onMounted(() => {
-  console.log('mounted');
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = Object.values(data?.value?.configValue) || [];
+  console.log('mounted', form.value.list);
 });
 
 defineExpose({
@@ -308,6 +325,14 @@ defineExpose({
     height: 10px;
     background: #1664ff;
     border-radius: 1px;
+  }
+
+  .delete {
+    position: absolute;
+    right: 0;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .tele-image {
