@@ -16,7 +16,7 @@
         />
         <t-space class="item-card" :size="5 * num" direction="vertical">
           <div class="image-overlap-item-icon">
-            <img :src="item?.src || getDefaultImg(index + 1)" alt="" />
+            <img :src="`/server/web/file/download?name=${item?.src}`" alt="" />
           </div>
           <div class="image-overlap-item-title">{{ item?.title }}</div>
           <div class="image-overlap-item-desc">{{ item?.desc }}</div>
@@ -80,14 +80,23 @@ const validateConfigValue = () => {
   return flag;
 };
 
+const checkConfigList = (list: []) => {
+  if (!list || list.length === 0) return false;
+  return list.every((item: any) => {
+    console.log('竖图遍历', item);
+    return (
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+    );
+  });
+};
+
 const validate = () => {
+  console.log('图叠', data?.value);
   return new Promise((resolve, reject) => {
-    if (
-      // TODO 可能需要完善校验逻辑
-      !data?.value?.mainTitle ||
-      !data?.value?.configValue?.length ||
-      !validateConfigValue()
-    ) {
+    if (!data?.value?.mainTitle || !checkConfigList(data?.value?.configValue)) {
       return reject();
     }
     return resolve('');
@@ -223,8 +232,9 @@ defineExpose({
     box-shadow: 0 calc(@factor * 2px) calc(@factor * 2px) 0 #4ce9ff63 inset;
 
     img {
-      width: calc(@factor * 70px);
-      height: calc(@factor * 70px);
+      width: calc(@factor * 56px);
+      height: calc(@factor * 56px);
+      // border-radius: 50%;
     }
   }
 
