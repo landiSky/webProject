@@ -209,7 +209,7 @@ const uploadRequest = (formData: any) => {
         resolve(true);
       })
       .catch((e) => {
-        Message.error(e);
+        Message.error(e.message);
         reject();
       });
   });
