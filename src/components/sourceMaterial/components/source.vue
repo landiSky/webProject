@@ -45,6 +45,7 @@
               <t-upload
                 class="picture-card"
                 list-type="picture-card"
+                :show-remove-button="state.type === 2"
                 :file-list="[
                   {
                     url: `/server/web/file/download?name=${i.name}`,
