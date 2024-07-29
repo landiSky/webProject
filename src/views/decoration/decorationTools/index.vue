@@ -369,7 +369,7 @@ const clickSaveRemote = () => {
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', data: '' })
         );
-        // window.close();
+        window.close();
         return;
       }
 
@@ -622,7 +622,9 @@ onMounted(() => {
     const storage = localStorage.getItem(proId.value);
     if (storage) {
       const { data } = JSON.parse(storage);
-      componentsList.value = JSON.parse(data);
+      if (data) {
+        componentsList.value = JSON.parse(data);
+      }
     }
   }
   console.log('2222222222222222222');

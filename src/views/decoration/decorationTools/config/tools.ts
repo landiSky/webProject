@@ -183,24 +183,24 @@ const tools = [
         configValue: [
           {
             title: '区块1',
-            src: '',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
             desc: 'balabala',
             linkType: LinkType.LINK,
             linkUrl: 'http://www.baidu.com',
           },
           {
             title: '区块2',
-            src: '',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
             desc: 'balabala',
             linkType: LinkType.LINK,
             linkUrl: 'http://www.baidu.com',
           },
           {
             title: '区块3',
-            src: '',
+            src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
             desc: 'balabala',
             linkType: LinkType.LINK,
-            linkUrl: '',
+            linkUrl: 'http://www.baidu.com',
           },
         ],
       },

@@ -79,7 +79,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      !checkConfigList(data?.value?.configValue.value)
+      !checkConfigList(data?.value?.configValue)
     ) {
       return reject();
     }
