@@ -1,5 +1,6 @@
 export const PAGE_LAYOUT = () => import('@/layout/home/layout.vue');
-
+export const DECORATION_LAYOUT = () =>
+  import('@/layout/decoration/decoration-layout.vue');
 const operationRoutesList = [
   {
     path: '/goods',
@@ -166,6 +167,66 @@ const operationRoutesList = [
     meta: {
       name: '清单管理',
       hideInMenu: false,
+    },
+  },
+  {
+    path: '/decoration',
+    component: PAGE_LAYOUT,
+    children: [
+      {
+        path: '/decoration/base',
+        name: 'baseSettings',
+        component: () => import('@/views/decoration/index.vue'),
+        meta: {
+          name: '基础信息配置',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
+      {
+        path: '/decoration/channel',
+        name: 'channelSettings',
+        component: () => import('@/views/decoration/channel.vue'),
+        meta: {
+          name: '频道页面配置',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
+      // {
+      //   path: '/decoration/tools',
+      //   name: 'decorationTools',
+      //   component: () => import('@/views/decoration/decorationTools/index.vue'),
+      //   meta: {
+      //     name: '装修页',
+      //     keepAlive: true,
+      //     hideInMenu: false,
+      //   },
+      // },
+    ],
+    meta: {
+      name: '平台装修',
+      hideInMenu: false,
+    },
+  },
+  {
+    path: '/decoration-tools',
+    component: DECORATION_LAYOUT,
+    children: [
+      {
+        path: '/decoration-tools/index',
+        name: 'decorationTools',
+        component: () => import('@/views/decoration/decorationTools/index.vue'),
+        meta: {
+          name: '装修页',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
+    ],
+    meta: {
+      name: '平台装修页',
+      hideInMenu: true,
     },
   },
 ];

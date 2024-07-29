@@ -4,8 +4,13 @@
       <div class="left">
         <!-- <t-space :size="[0]"> -->
         <t-link class="link" @click="goWow">
-          <iconpark-icon name="logo-gray" size="28px"></iconpark-icon>
-          <span class="title"> IDSphere </span>
+          <t-image
+            v-if="logo"
+            :src="`/server/web/file/download?name=${logo}`"
+            :preview="false"
+          />
+          <iconpark-icon v-else name="logo-gray" size="28px"></iconpark-icon>
+          <span class="title"> {{ platformName || 'IDSphere' }} </span>
         </t-link>
         <!-- </t-space> -->
       </div>
@@ -93,19 +98,26 @@ import { storeToRefs } from 'pinia';
 import { onMounted, ref, watch } from 'vue';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { useDecorationStore } from '@/store/modules/decoration';
 import { useMenuStore } from '@/store/modules/menu';
 import { NodeAuthStatus } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { ChannelType } from '@/enums/decoration';
 import { RouteAuthEnum } from '@/enums/authEnum';
 import { usermenuList, managemenuList } from '@/enums/menuEnum';
 
 const userStore = useUserStore();
+// const decoration = useDecorationStore();
 const router = useRouter();
 const route = useRoute();
 const searchContent = ref();
 const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
+// const { platFormLogo, platFormName } = storeToRefs(decoration);
+const logo = ref('');
+const platformName = ref('');
 const menuStore = useMenuStore();
 
 const userMenu = [
@@ -220,6 +232,7 @@ const goWow = () => {
   router.push({
     path: '/wow',
   });
+  useMenuStore().setMenuIndex(1, userInfo.value);
 };
 
 const onChangeCompany = async (companyId: string) => {
@@ -284,16 +297,29 @@ const onSearch = () => {
     },
   });
 };
+onMounted(() => {
+  apiGetNavData({ type: ChannelType.PLATFORM_NAME }).then((res) => {
+    console.log('首页logo和项目名称接口获取', res.data[0]);
+    if (res?.data?.length > 0) {
+      logo.value = res.data[0]?.logo;
+      platformName.value = res.data[0]?.name;
+    }
+  });
+});
 
 watch(
   () => router,
-  // eslint-disable-next-line consistent-return
   () => {
     const currentPath = router.currentRoute.value.path;
 
     // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
-    if (currentPath === '/license/index' && menuStore.menuIndex !== 2) {
-      setDot(2);
+    if (
+      (currentPath === '/license/index' || currentPath === '/overview/index') &&
+      menuStore.menuIndex !== 2
+    ) {
+      useMenuStore().setMenuIndex(2, userInfo.value);
+    } else {
+      useMenuStore().setMenuIndex(1, userInfo.value);
     }
   },
   {
@@ -331,6 +357,14 @@ watch(
 
         &:hover {
           background: none;
+        }
+
+        ::v-deep(.tele-image) {
+          .tele-image-img {
+            width: 28px !important;
+            height: 28px !important;
+            object-fit: cover !important;
+          }
         }
       }
     }

@@ -142,8 +142,10 @@
                   </div>
                 </div>
               </div>
+              <IconMaterial v-else @on-confirm="finishedUploadLogo" />
             </div>
-            <t-upload
+
+            <!-- <t-upload
               v-if="formModel.logo == ''"
               :ref="logoRef"
               :file-list="logoList"
@@ -178,7 +180,7 @@
                   </div>
                 </t-spin>
               </template>
-            </t-upload>
+            </t-upload> -->
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -328,11 +330,41 @@
             <div class="hint">文件大小限制50M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
-            <TemplateDrawer
+            <!-- <TemplateDrawer
               ref="templateRef"
               :template-data="templateDetail"
               @confirm="templateChanged"
-            ></TemplateDrawer>
+            ></TemplateDrawer> -->
+            <div v-if="formModel.detail" class="templateItem">
+              <div style="display: flex">
+                <div>装修模块：</div>
+                <div style="color: #1d2129"
+                  >{{ `${detailSetOk ? '已配置模块' : '草稿状态'}` }}
+                </div>
+              </div>
+              <div style="margin-left: 30px">
+                <t-button
+                  type="text"
+                  style="padding: 0"
+                  @click="editTemplateDetail"
+                  >编辑
+                </t-button>
+                <t-button
+                  type="text"
+                  style="margin-left: 16px; padding: 0; color: #4e5969"
+                  @click="delTemplateDetail"
+                  >删除
+                </t-button>
+              </div>
+            </div>
+            <div v-else class="templateAdd" @click="addTemplateDetail">
+              <iconpark-icon
+                class="plusIcon"
+                name="squarePlus"
+                size="20px"
+              ></iconpark-icon>
+              <span>添加详情模块</span>
+            </div>
           </t-form-item>
         </t-form>
       </div>
@@ -892,6 +924,7 @@ import {
   defineEmits,
   ref,
   onMounted,
+  onBeforeUnmount,
   computed,
   nextTick,
 } from 'vue';
@@ -910,8 +943,13 @@ import {
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
-import TemplateDrawer from './template.vue';
+import router from '@/router';
+import { ChannelType } from '@/enums/decoration';
+import { channelName } from '@/views/decoration/decorationTools/constant';
+// import TemplateDrawer from './template.vue';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 
+const broadcastChannel = new BroadcastChannel(channelName);
 const emit = defineEmits(['cancel', 'preview']);
 
 let needSave = false;
@@ -919,7 +957,7 @@ const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 const visible: Record<string, any> = ref(true);
-const templateRef: Record<string, any> = ref();
+// const templateRef: Record<string, any> = ref();
 const step = ref(1);
 
 const uploadHeaders = {
@@ -932,6 +970,9 @@ const appTypeList = ref([
   { label: '普通应用', value: 0 },
   { label: '标识应用（用户使用前需开通企业节点）', value: 1 },
 ]);
+
+// 详情是否配置完成
+const detailSetOk = ref(true);
 
 // 分类
 const classList = ref<any[]>([]);
@@ -962,10 +1003,11 @@ const formModel = ref<Record<string, any>>({
   useExplain: [],
   introduction: '',
   detail: '[]',
+  versionType: 0,
   companyId: '',
 });
 
-const templateDetail = ref(); // 存放原始的模板详情，为了点击取消时判断是否弹窗
+// const templateDetail = ref(); // 存放原始的模板详情，为了点击取消时判断是否弹窗
 
 const logoList = ref<any[]>([]);
 const detailList = ref<any[]>([]);
@@ -1516,6 +1558,7 @@ const getDetail = (id: any) => {
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
+    formModel.value.versionType = res.versionType;
     formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
     formModel.value.productTypeId = res.productTypeId;
@@ -1523,8 +1566,8 @@ const getDetail = (id: any) => {
     formModel2.value.productId = res.id;
     formModel2.value.deliveryType = res.deliveryType ?? 0;
     formModel2.value.saleType = res.saleType ?? 3;
-    templateDetail.value = JSON.parse(res.detail);
-    templateRef.value.templateData = JSON.parse(res.detail);
+    // templateDetail.value = JSON.parse(res.detail);
+    // templateRef.value.templateData = JSON.parse(res.detail);
     imageList.value = res.detailImg ? res.detailImg.split(',') : [];
     if (res.useExplain) {
       const useExplainMap = res.useExplainMap.map((item: any) => {
@@ -1666,6 +1709,60 @@ const getDetail = (id: any) => {
   });
 };
 
+const finishedUploadLogo = (logo: string) => {
+  formModel.value.logo = logo;
+};
+
+// 增加详情内容，跳转装修工具
+const addTemplateDetail = () => {
+  const routeUrl = router.resolve({
+    name: 'decorationTools',
+    query: {
+      model: 0,
+      type: ChannelType.PLATFORM_PRODUCT_DETAIL,
+      pro_id: formModel.value.id,
+    },
+  });
+  window.open(routeUrl.href, '_blank');
+};
+// 编辑详情内容，跳转装修工具
+const editTemplateDetail = () => {
+  const routeUrl = router.resolve({
+    name: 'decorationTools',
+    query: {
+      model: 0,
+      type: ChannelType.PLATFORM_PRODUCT_DETAIL,
+      pro_id: formModel.value.id,
+    },
+  });
+  window.open(routeUrl.href, '_blank');
+  // 方案一 使用tab通信发送detail数据
+  // setTimeout(() => {
+  //   broadcastChannel.postMessage(
+  //     JSON.stringify({
+  //       name: 'product_detail',
+  //       data: formModel.value.detail,
+  //     })
+  //   );
+  // }, 100);
+  // 方案二 路由传递商品id，去装修页通过接口重新拉取商品信息，包含detail数据
+  // 方案三 路由传递商品id并存本地，去装修页面获取本地存储，包含detai数据
+  // const json = localStorage.getItem(`pro_${formModel.value.id}`);
+  if (formModel.value.versionType === 1) {
+    // 新版的装修信息才会存storage，传给装修工具
+    localStorage.setItem(
+      `pro_${formModel.value.id}`,
+      JSON.stringify({ setOk: true, data: formModel.value.detail })
+    );
+  }
+};
+
+// 删除详情内容
+const delTemplateDetail = () => {
+  formModel.value.detail = '';
+  localStorage.removeItem(`pro_${formModel.value.id}`);
+};
+
 const getGoodsId = () => {
   genGoodsId().then((data: any) => {
     needSave = true;
@@ -1781,6 +1878,17 @@ const getSelectApplication = () => {
   });
 };
 
+const getLocalDetail = () => {
+  const json = localStorage.getItem(`pro_${formModel.value.id}`);
+  if (json) {
+    const { setOk, data } = JSON.parse(json);
+    // true:已经配置好了;false:只是草稿
+    detailSetOk.value = setOk;
+    formModel.value.detail = data ?? '';
+    formRef.value.validateField('detail');
+  }
+};
+
 onMounted(() => {
   window.addEventListener('online', () => {
     online.value = true;
@@ -1789,6 +1897,14 @@ onMounted(() => {
     cancelUploadingFiles();
     online.value = false;
   });
+  broadcastChannel.addEventListener('message', (event) => {
+    console.log('返回商品装修信息detail', event.data);
+    const { name } = JSON.parse(event.data);
+    if (name === 'product_detail') {
+      getLocalDetail();
+    }
+  });
+
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
   getSelectApplication();
@@ -1801,15 +1917,20 @@ onMounted(() => {
   }
 });
 
-const templateChanged = () => {
-  formModel.value.detail = JSON.stringify(templateRef.value.templateData);
-  formRef.value.validateField('detail');
-};
+onBeforeUnmount(() => {
+  broadcastChannel.close();
+  localStorage.removeItem(`pro_${formModel.value.id}`);
+});
+
+// const templateChanged = () => {
+//   // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+//   // formRef.value.validateField('detail');
+// };
 
 const doSave = async () => {
   let res;
   if (step.value === 1) {
-    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
@@ -1839,7 +1960,7 @@ const doSave = async () => {
 // 取消
 const clickCancel = (done: (closed: boolean) => void) => {
   if (step.value === 1) {
-    formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+    // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
   }
   const nowString = getModalJson();
   if (nowString !== modalJsonString.value) {
@@ -1873,11 +1994,17 @@ const clickCancel = (done: (closed: boolean) => void) => {
 };
 
 const onBack = (done: (closed: boolean) => void) => {
+  // TODO:报错？？？
   clickCancel(done);
 };
 
 // 保存
 const clickSave = async () => {
+  // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
+  if (!detailSetOk.value && step.value === 1) {
+    Message.error('请先在装修模块确认发布');
+    return;
+  }
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
@@ -1888,7 +2015,7 @@ const clickSave = async () => {
 
 // 下一步
 const clickNext = async () => {
-  formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
   formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
@@ -1909,11 +2036,11 @@ const clickNext = async () => {
 // 上一步
 const clickPrevious = () => {
   step.value = 1;
-  nextTick(() => {
-    templateRef.value.templateData = formModel.value.detail
-      ? JSON.parse(formModel.value.detail)
-      : '[]';
-  });
+  // nextTick(() => {
+  //   templateRef.value.templateData = formModel.value.detail
+  //     ? JSON.parse(formModel.value.detail)
+  //     : '[]';
+  // });
 };
 
 // 预览
@@ -2189,7 +2316,7 @@ const validateAP = (index: number, key: string) => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -2200,7 +2327,7 @@ const validateAP = (index: number, key: string) => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
@@ -2249,6 +2376,34 @@ const validateAP = (index: number, key: string) => {
 .hint-item {
   margin-top: 2px !important;
   margin-bottom: 14px !important;
+}
+
+.templateItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  margin-bottom: 4px;
+  padding: 12px 16px;
+  color: #4e5969;
+  font-size: 12px;
+  border: 1px solid #e5e8ef;
+  border-radius: 2px;
+}
+
+.templateAdd {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px 16px;
+  background: #f6f7fb;
+  border: 1px solid #e5e8ef;
+  border-radius: 2px;
+  cursor: pointer;
+
+  .plusIcon {
+    margin-right: 8px;
+  }
 }
 
 .pic-item {

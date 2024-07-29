@@ -483,7 +483,7 @@ const platProductsList = [
     desc: '推动工业互联网标识解析体系和“星火· 链网”国家级区块链基础设施在产业、区域和企业落地应用，赋能数字经济高质量发展。',
     cards: [
       {
-        name: 'TNaas',
+        name: 'TNaaS',
         desc: '星火·链网”骨干节点',
         bgImg: tab11,
         idKey: 'tnaas',
@@ -539,13 +539,13 @@ const platProductsList = [
       },
 
       {
-        name: 'TBaas',
+        name: 'TBaaS',
         desc: '区块链服务平台',
         bgImg: tab32,
         idKey: 'tbaas',
       },
       {
-        name: 'TPaas',
+        name: 'TPaaS',
         desc: '有象账户',
         bgImg: tab33,
         idKey: 'tpasss',

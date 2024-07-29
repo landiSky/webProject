@@ -31,6 +31,13 @@ const operationAuth = {
   '/sync/class': 'ROUTE_SYNC_CLASS', // 商品分类管理
   '/sync/goods': 'ROUTE_SYNC_GOODS', // 商品管理
   '/sync/label/manage': 'ROUTE_SYNC_LABEL', // 标签管理
+
+  '/decoration': 'ROUTE_DECORATION', // 平台装修
+  '/decoration/base': 'ROUTE_DECORATION_BASE', // 基本信息配置
+  '/decoration/channel': 'ROUTE_DECORATION_CHANNEL', // 频道装修配置
+
+  '/decoration-tools': 'ROUTE_DECORATION_TOOLS', // 装修工具页
+  '/decoration-tools/index': 'ROUTE_DECORATION_TOOLS_INDEX', // 首页装修工具
   '/sync/license': 'ROUTE_SYNC_LICENSE', // 标识服务-License管理
 };
 export const RouteAuthEnum = { ...BaseRouteAuth, ...operationAuth } as Record<
