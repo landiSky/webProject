@@ -120,7 +120,7 @@
       </div>
       <t-carousel
         :style="{
-          width: '1398px',
+          width: '1582px',
           height: '760px',
         }"
         :auto-play="true"
@@ -586,6 +586,7 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .bodyT {
+  min-width: 1640px;
   background-color: #fff;
 }
 
@@ -610,7 +611,7 @@ onUnmounted(() => {
     height: 700px;
     background: linear-gradient(
       270deg,
-      rgba(188, 200, 238, 0.18) 0%,
+      rgba(188, 200, 238, 0) 0%,
       rgba(216, 227, 255, 0.8) 42.5%,
       #e9f0ff 96%
     );
@@ -628,7 +629,7 @@ onUnmounted(() => {
         margin-left: -134px;
         color: rgba(29, 33, 41, 1);
         font-weight: 500;
-        font-size: 36px;
+        font-size: 30px;
         font-family: PingFang SC;
         line-height: 44px;
         text-align: left;
@@ -652,7 +653,7 @@ onUnmounted(() => {
           margin-left: 12px;
           color: rgba(71, 83, 109, 1);
           font-weight: 400;
-          font-size: 20px;
+          font-size: 16px;
           font-family: PingFang SC;
           line-height: 28px;
           text-align: left;
@@ -957,7 +958,7 @@ onUnmounted(() => {
     position: relative;
     display: flex;
     // width: 1398px;
-    width: 1198px;
+    width: 1398px;
     height: 660px;
     margin: 0 auto;
 
