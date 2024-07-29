@@ -185,6 +185,7 @@
                   <t-link
                     v-if="!productData?.entSubmitStatus"
                     :hoverable="false"
+                    @click="registerJump"
                     >立即注册</t-link
                   >
                   <t-link
