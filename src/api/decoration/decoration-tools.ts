@@ -14,3 +14,8 @@ export function apiUpdateNavData(data: Record<string, any>) {
 export function apiGetProductList() {
   return $http.get('/server/web/product/selectProductList');
 }
+
+// 获取用户是否是第一次使用装修功能
+export function apiGetIsFirstUseDecoration() {
+  return $http.get('/server/web/user/getRenovationStatusByUserId');
+}

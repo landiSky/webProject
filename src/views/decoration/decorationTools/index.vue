@@ -1,10 +1,28 @@
 <template>
   <div
     class="page-editor"
+    :class="{ blueBorder: flickering }"
     :style="{
       width: isPreview ? '100%' : '720px',
     }"
   >
+    <t-popover position="rt" :popup-visible="isFirstUse">
+      <div
+        :style="{
+          position: 'absolute',
+          top: '50px',
+          left: '-230px',
+          color: 'transparent',
+        }"
+      >
+        .
+      </div>
+      <template #title> 操作引导 </template>
+      <template #content>
+        <p>拖动左侧icon到指定区域，松开</p>
+        <p>鼠标完成模版添加</p>
+      </template>
+    </t-popover>
     <div v-if="openType === 5" class="product-bg"></div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
       >拖动左侧组件，到当前区域进行楼层配置
@@ -24,6 +42,7 @@
           :list="componentsList"
           :move-threshold="20"
           @end="endSort"
+          @add="insertSort"
         >
           <template #item="{ element, index }">
             <transition name="el-fade-in-linear">
@@ -124,11 +143,13 @@ import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
 import { useRoute } from 'vue-router';
 import {
+  apiGetIsFirstUseDecoration,
   apiGetNavData,
   apiUpdateNavData,
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
+import { Translate } from '@icon-park/vue-next';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName } from './constant';
 
@@ -139,7 +160,14 @@ const selectIndex = ref(-1);
 
 const isPreview = ref(false);
 
-const draging = ref(false);
+// 是否是第一次使用
+const isFirstUse = ref(false);
+
+const flickering = ref(false);
+
+// const popupShow = ref(false);
+// 定时器
+const timer = ref();
 
 const viewComponentWrapRef = ref<any[]>([]);
 
@@ -194,6 +222,25 @@ function handleBgColor(color: string) {
   // 如果不包含两个 '#'，返回 原字符串 或抛出错误
   return [color];
 }
+
+// 让边框闪烁
+const flickerBorder = (n: number) => {
+  let count = n;
+  // 800毫秒循环一次
+  timer.value = setInterval(() => {
+    if (count > 0) {
+      if (flickering.value) {
+        count -= 1;
+      }
+      flickering.value = !flickering.value;
+    } else {
+      console.log('闪烁停止');
+      clearInterval(timer.value);
+      flickering.value = false;
+      // popupShow.value = false;
+    }
+  }, 800);
+};
 
 // 设置组件背景样式
 const bgStyle = (index: number) => {
@@ -360,7 +407,14 @@ const clickSaveRemote = () => {
 // 从新排序
 const endSort = () => {
   console.log('endSort0000:', componentsList.value);
-  clickSave();
+  // clickSave();
+};
+
+const insertSort = (event: any) => {
+  if (!isPreview.value) {
+    console.log('endSort11111:', event.newIndex);
+    eventBus.emit('selectComponent', componentsList.value[event.newIndex]);
+  }
 };
 
 const close = () => {
@@ -379,7 +433,6 @@ const notPreview = () => {
 
 // 选中组件回调
 const selectComponent = (index: number) => {
-  console.log('select 回调', index);
   selectIndex.value = index;
   console.log('收到选中组件事件:', index);
   console.log(
@@ -387,12 +440,12 @@ const selectComponent = (index: number) => {
     JSON.parse(JSON.stringify(componentsList.value))
   );
   if (!isPreview.value) {
-    console.log(
-      '开始发事件-selectComponent，组件的值:',
-      JSON.parse(JSON.stringify(componentsList.value[selectIndex.value]))
-    );
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
-    console.log('选中1111', componentsList.value[selectIndex.value]);
+    console.log(
+      '选中1111',
+      componentsList.value[selectIndex.value],
+      selectIndex.value
+    );
   } else {
     // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
     console.log(
@@ -484,6 +537,36 @@ const getNavData = (type: number) => {
     .catch();
 };
 
+// 开场第一次闪烁两次
+const firstFlicker = () => {
+  // popupShow.value = true;
+  flickering.value = true;
+  setTimeout(() => {
+    flickerBorder(2);
+  }, 2000);
+};
+// 拖入组件后闪烁一次
+const secondFlicker = () => {
+  flickering.value = true;
+  setTimeout(() => {
+    flickerBorder(2);
+  }, 1000);
+  isFirstUse.value = false;
+};
+
+watch(
+  () => componentsList.value.length,
+  (vn, vo) => {
+    if (isFirstUse.value && vn > 0) {
+      secondFlicker();
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
+
 onMounted(() => {
   console.log('装修index页面');
   // 二次弹框不能定制，只有系统弹框
@@ -522,6 +605,7 @@ onMounted(() => {
     }
   });
   openType.value = parseInt(`${route.query.type}`, 10);
+  console.log('1111111111111111');
   if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
     // 非商品详情装修的情况
     getNavData(openType.value);
@@ -540,6 +624,14 @@ onMounted(() => {
       componentsList.value = JSON.parse(storage);
     }
   }
+  console.log('2222222222222222222');
+  apiGetIsFirstUseDecoration().then((res: any) => {
+    if (!res) {
+      console.log('第一次使用装修', res);
+      isFirstUse.value = true;
+      firstFlicker();
+    }
+  });
 });
 
 onBeforeUnmount(() => {
@@ -559,10 +651,11 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {
-    width: calc(@factor * 720px);
+    width: calc(@factor * 718px);
     height: calc(@factor * 280px);
     margin-top: 20px;
     background: url(../../../assets/images/decoration/product_bg.png);
@@ -581,6 +674,7 @@ onBeforeUnmount(() => {
     font-size: 16px;
     text-align: center;
     background-color: white;
+    // z-index: -1;
     //虚线
     border: 1px dashed #c9cdd4;
     border-radius: 8px;
@@ -654,6 +748,11 @@ onBeforeUnmount(() => {
   ::v-deep(.tele-layout) {
     width: 100%;
   }
+}
+
+.blueBorder {
+  border: 1px solid #1664ff;
+  border-radius: 4px;
 }
 
 .components-wrap {
