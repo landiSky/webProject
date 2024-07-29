@@ -66,10 +66,10 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     console.log('竖图遍历', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -79,7 +79,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(data?.value?.configValue.value)
+      !checkConfigList(data?.value?.configValue.value)
     ) {
       return reject();
     }

@@ -369,7 +369,7 @@ const clickSaveRemote = () => {
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', data: '' })
         );
-        window.close();
+        // window.close();
         return;
       }
 

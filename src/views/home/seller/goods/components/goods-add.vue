@@ -2002,7 +2002,7 @@ const onBack = (done: (closed: boolean) => void) => {
 const clickSave = async () => {
   // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
   if (!detailSetOk.value && step.value === 1) {
-    Message.error('请先在装修模块确认发布');
+    Message.warning('详情未配置发布，配置发布完成可进行商品发布');
     return;
   }
   const res = await doSave();
