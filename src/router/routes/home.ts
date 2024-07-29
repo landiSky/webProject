@@ -135,25 +135,6 @@ const homeRoutesList = [
     },
   },
   {
-    path: '/license',
-    component: PAGE_LAYOUT,
-    redirect: '/license/index',
-    children: [
-      {
-        path: '/license/index',
-        name: 'licenseIndex',
-        component: () => import('@/views/home/license/index.vue'),
-        meta: {
-          name: 'index',
-          hideInMenu: true,
-        },
-      },
-    ],
-    meta: {
-      name: 'License管理',
-    },
-  },
-  {
     path: '/overview',
     component: PAGE_LAYOUT,
     redirect: '/overview/index',
@@ -171,6 +152,25 @@ const homeRoutesList = [
     meta: {
       // name: '二级节点业务管理系统',
       name: '概览',
+    },
+  },
+  {
+    path: '/license',
+    component: PAGE_LAYOUT,
+    redirect: '/license/index',
+    children: [
+      {
+        path: '/license/index',
+        name: 'licenseIndex',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: 'License管理',
     },
   },
 ];
