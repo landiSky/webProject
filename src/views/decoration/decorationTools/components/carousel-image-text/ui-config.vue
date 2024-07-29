@@ -292,7 +292,6 @@ onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = Object.values(data?.value?.configValue) || [];
-  console.log('mounted', form.value.list);
 });
 
 defineExpose({

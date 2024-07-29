@@ -244,7 +244,10 @@
                   >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示信息">
+              <t-descriptions-item
+                v-if="!dataInfo.versionType"
+                label="详情展示信息"
+              >
                 {{
                   dataInfo.detail
                     ? JSON.parse(dataInfo.detail)
