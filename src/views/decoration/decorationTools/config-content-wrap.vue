@@ -2,7 +2,7 @@
 <template>
   <div class="component-config">
     <component
-      :is="ComponentsMap[data?.name]?.uiConfig"
+      :is="ComponentsMap[data?.name]?.uiConfig()"
       ref="formComponentRef"
       :data="data"
       :goods-list="goodsList"
@@ -19,6 +19,7 @@ import {
   onMounted,
   watch,
   ref,
+  onUnmounted,
 } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import eventBus from '@/utils/bus';
@@ -67,13 +68,17 @@ const getGoodsList = () => {
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
+  console.log('收到配置消息', payload);
   data.value = payload || {};
-  //
   getGoodsList();
 };
 
 onMounted(() => {
   eventBus.on('selectComponent', handleMyEvent);
+});
+onUnmounted(() => {
+  // 组件销毁时，移除监听
+  eventBus.off('selectComponent');
 });
 </script>
 

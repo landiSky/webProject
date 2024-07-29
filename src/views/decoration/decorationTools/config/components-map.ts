@@ -8,12 +8,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/single-image/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
+          )
+      ),
   },
   VerticalImageText: {
     view: defineAsyncComponent(
@@ -22,12 +23,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/vertival-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/vertival-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/vertival-image-text/ui-config.vue'
+          )
+      ),
   },
   ThreeImageText: {
     view: defineAsyncComponent(
@@ -36,12 +38,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/three-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/three-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/three-image-text/ui-config.vue'
+          )
+      ),
   },
   LeftRightImageText: {
     view: defineAsyncComponent(
@@ -50,12 +53,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/left-right-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/left-right-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/left-right-image-text/ui-config.vue'
+          )
+      ),
   },
   MultiImageText: {
     view: defineAsyncComponent(
@@ -64,21 +68,21 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/multi-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/multi-image-text/ui-config.vue'
-        )
-    ),
-  },
-  HerizontalImageText: {
-    view: () =>
+    uiConfig: () =>
       defineAsyncComponent(
         () =>
           import(
-            '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+            '@/views/decoration/decorationTools/components/multi-image-text/ui-config.vue'
           )
       ),
+  },
+  HerizontalImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+        )
+    ),
     uiConfig: () =>
       defineAsyncComponent(
         () =>
@@ -94,12 +98,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/image-overlap-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/image-overlap-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/image-overlap-text/ui-config.vue'
+          )
+      ),
   },
   IconImageText: {
     view: defineAsyncComponent(
@@ -108,12 +113,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/icon-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/icon-image-text/ui-config.vue'
+          )
+      ),
   },
   SpliceImageText: {
     view: defineAsyncComponent(
@@ -122,12 +128,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/splice-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/splice-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/splice-image-text/ui-config.vue'
+          )
+      ),
   },
   CarouselImageText: {
     view: defineAsyncComponent(
@@ -136,12 +143,13 @@ const ComponentsMap: Record<string, any> = {
           '@/views/decoration/decorationTools/components/carousel-image-text/view.vue'
         )
     ),
-    uiConfig: defineAsyncComponent(
-      () =>
-        import(
-          '@/views/decoration/decorationTools/components/carousel-image-text/ui-config.vue'
-        )
-    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/carousel-image-text/ui-config.vue'
+          )
+      ),
   },
 };
 
