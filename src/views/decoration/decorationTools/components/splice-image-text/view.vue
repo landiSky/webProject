@@ -201,14 +201,11 @@ const clickLink = (type: number, url: string) => {
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历000', item, typeof list, Array.isArray(list));
     return (
-      (item.title &&
-        item.desc &&
-        item.src &&
-        item.linkType === 2 &&
-        !item.linkUrl) ||
-      (item.linkType !== 2 && item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };

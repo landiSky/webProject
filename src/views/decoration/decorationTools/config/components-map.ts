@@ -80,7 +80,7 @@ const ComponentsMap: Record<string, any> = {
     view: defineAsyncComponent(
       () =>
         import(
-          '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+          '@/views/decoration/decorationTools/components/herizontal-image-text/view.vue'
         )
     ),
     uiConfig: () =>

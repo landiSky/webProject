@@ -122,11 +122,13 @@ const clickRight = () => {
 };
 
 const checkConfigList = (list: any) => {
-  console.log('竖图遍历000', list.length);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     return (
-      item.title && item.desc && item.src && item.linkType !== 2 && item.linkUrl
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
