@@ -21,7 +21,7 @@
               v-if="state.type === 2"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".jpg,.png,.bmp,.jpeg"
+              accept=".jpg,.png,.bmp,.jpeg,gif"
               :data="uploadData"
               @success="uploadSuccess"
               @error="uploadError"
