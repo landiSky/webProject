@@ -512,19 +512,11 @@ const clickIdService = (pageUrl: any) => {
 
 // 立即注册
 const registerJump = () => {
-  if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
-    return;
-  }
   clickIdService('/ent/apply');
 };
 
 // 立即购买
 const buyNow = (obj: any) => {
-  if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
-    return;
-  }
   if (obj?.idHubProductStatus === 1) {
     router.push({
       name: 'wowMallDetail',
@@ -538,7 +530,10 @@ const buyNow = (obj: any) => {
 // 立即申请
 const applyNow = () => {
   if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
+    router.push({
+      path: '/license/index',
+      query: {},
+    });
     return;
   }
   router.push({
@@ -551,8 +546,8 @@ const applyNow = () => {
 
 // 立即托管
 const instantHosting = () => {
-  if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
+  if (!productData.value?.entSubmitStatus) {
+    clickIdService('/ent/apply');
     return;
   }
   clickIdService('/entPrefix/proxy');
@@ -625,10 +620,6 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
 // 0元购买
 const zeroPurchase = (obj: any) => {
-  if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
-    return;
-  }
   const { idTestProductStatus, idTestProductId } = obj;
   if (idTestProductStatus === 1) {
     apiDataPoint(
@@ -654,10 +645,6 @@ const zeroPurchase = (obj: any) => {
 
 // 立即使用
 const immediateUse = (obj: any) => {
-  if (userInfoByCompany?.value?.primary === 3) {
-    Message.error('请先完成企业认证');
-    return;
-  }
   const {
     idTestProductStatus,
     idTestProductId,
