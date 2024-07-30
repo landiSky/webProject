@@ -216,7 +216,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted, PropType } from 'vue';
+import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 
@@ -235,7 +235,7 @@ const stencilSize = ref({
   width: 598,
   height: 609,
 });
-const curIndex = ref(-1);
+const curIndex = ref(0);
 const showSource = ref(false);
 const { data, goodsList } = toRefs(props);
 const formRef = ref();
@@ -268,7 +268,7 @@ const onBeforeRemove = (index: number) => {
 };
 
 const onConfirm = (value: any) => {
-  form.value.list[curIndex.value - 1].src = value;
+  form.value.list[curIndex.value].src = value;
   // console.log('form:', form.value.list);
   showSource.value = false;
 };
