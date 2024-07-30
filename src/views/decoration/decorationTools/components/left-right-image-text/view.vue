@@ -7,7 +7,7 @@
       :auto-play="true"
       animation-name="fade"
       class="image-box"
-      show-arrow="hover"
+      show-arrow="never"
     >
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
