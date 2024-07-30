@@ -145,14 +145,14 @@ defineExpose({
         margin-right: 15.5px;
         padding: 5px;
         overflow: auto;
-        font-size: calc(@factor * 14px);
+        font-size: calc(@factor * 7px);
 
         .image-title {
           width: 100%;
           height: calc(@factor * 34px);
           color: #1d2129;
           font-weight: 500;
-          font-size: calc(@factor * 16px);
+          font-size: calc(@factor * 8px);
           text-align: left;
           text-overflow: ellipsis;
           border-bottom: 1px solid #e2e2e2;
@@ -164,7 +164,7 @@ defineExpose({
           margin: 10px 0;
           overflow: hidden;
           color: #4e5969;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           line-height: calc(@factor * 18px);
           white-space: pre-wrap;
           text-align: left;
@@ -177,7 +177,7 @@ defineExpose({
         .image-link {
           display: inline-block;
           color: #1664ff;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           cursor: pointer;
         }
       }
@@ -192,6 +192,14 @@ defineExpose({
       width: 57.5px;
       height: 5px;
       border-radius: 1px;
+    }
+
+    :deep(.tele-carousel-indicator-item) {
+      background-color: rgba(233, 233, 233, 0.4);
+    }
+
+    :deep(.tele-carousel-indicator-wrapper-bottom) {
+      bottom: -35px;
     }
 
     :deep(.tele-carousel-indicator-item:hover) {
