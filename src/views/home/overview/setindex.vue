@@ -309,6 +309,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import { sm2 } from '@/utils/encrypt';
+import { useMenuStore } from '@/store/modules/menu';
 import {
   userLicensePreview,
   alreadyBuyClientLogin,
@@ -718,6 +719,7 @@ const prefixJump = (num: number) => {
 
 // 查看订单
 const viewOrder = () => {
+  useMenuStore().setMenuIndex(1, userInfo.value);
   router.push({
     path: '/buyer/order',
     query: {},
