@@ -28,6 +28,7 @@
           ref="uploadRef"
           class="upload-operation"
           action="/"
+          accept=".jpg,.png,.bmp,.jpeg,gif"
           :auto-upload="false"
           :show-file-list="false"
           :image-preview="false"
@@ -203,7 +204,6 @@ const uploadRequest = (formData: any) => {
       .post('/server/web/file/upload', formData, {})
       .then((res) => {
         // 在这里将最终值传递
-        console.log('res', res);
         emits('onConfirm', res);
         Message.success('上传成功');
         resolve(true);
