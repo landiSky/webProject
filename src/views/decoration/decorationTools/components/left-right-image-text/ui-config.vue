@@ -48,7 +48,7 @@
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
           <div
-            v-if="index === 4 || index === 5"
+            v-if="index === 3 || index === 4"
             class="delete"
             @click="deleteSpace(index)"
             >删除</div
