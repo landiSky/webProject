@@ -131,7 +131,7 @@
             allow-clear
           >
             <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg
+              itemg.name
             }}</t-option>
           </t-select>
         </t-form-item>
@@ -278,9 +278,7 @@ const onCancel = () => {
 };
 
 const deleteSpace = (index: number) => {
-  console.log(form.value.list, '-------------------');
-  console.log(form.value.list.length, '-------------------');
-  form.value.list.splice(index - 1, 1);
+  form.value.list.splice(index, 1);
 };
 // watch(
 //   () => data?.value,
