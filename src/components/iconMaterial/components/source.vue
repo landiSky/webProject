@@ -34,6 +34,7 @@
           :image-preview="false"
           :file-list="state.fileList"
           @change="onUploadChange"
+          @before-upload="onBeforeUpload"
         >
           <template #upload-button>
             <t-space>
@@ -183,6 +184,43 @@ const onIconClick = (item: any, name: string, idx: number) => {
   item.active[idx] = true;
   state[item.type === 'bg' ? 'bgPath' : 'iconPath'] = name;
   state.isShowUpload = false;
+};
+
+const validateImageSize = (file: any) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const image = new Image();
+      // eslint-disable-next-line func-names
+      image.onload = function () {
+        const { width, height } = this as any;
+        if (width === 144 && height === 144) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      };
+      image.onerror = reject;
+      image.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
+const onBeforeUpload = async (currentFile: Record<string, any>) => {
+  const limitSize = await validateImageSize(currentFile);
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      Message.error(`上传失败，文件大小不要超过10M`);
+      reject();
+    } else if (!limitSize) {
+      Message.error(`上传尺寸要求144X144`);
+      reject();
+    } else {
+      resolve(true);
+    }
+  });
 };
 
 const onUploadChange = (fileList: FileList, fileItem: FileItem) => {
