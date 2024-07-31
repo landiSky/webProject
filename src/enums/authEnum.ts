@@ -39,6 +39,7 @@ const operationAuth = {
   '/decoration-tools': 'ROUTE_DECORATION_TOOLS', // 装修工具页
   '/decoration-tools/index': 'ROUTE_DECORATION_TOOLS_INDEX', // 首页装修工具
   '/sync/license': 'ROUTE_SYNC_LICENSE', // 标识服务-License管理
+  '/useragreement': 'ROUTE_USERAGREEMENT', // 用户协议配置
 };
 export const RouteAuthEnum = { ...BaseRouteAuth, ...operationAuth } as Record<
   string,

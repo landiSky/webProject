@@ -229,6 +229,27 @@ const operationRoutesList = [
       hideInMenu: true,
     },
   },
+  {
+    path: '/useragreement',
+    component: PAGE_LAYOUT,
+    redirect: '/useragreement/configuration',
+    children: [
+      {
+        path: '/useragreement/configuration',
+        name: 'agreementConfig',
+        component: () => import('@/views/agreement/index.vue'),
+        meta: {
+          name: '用户协议',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
+    ],
+    meta: {
+      name: '用户协议',
+      hideInMenu: false,
+    },
+  },
 ];
 
 export default operationRoutesList;
