@@ -38,6 +38,7 @@ export const managemenuList = [
     'ROUTE_DECORATION_CHANNEL',
     'ROUTE_DECORATION_TOOLS',
     'ROUTE_DECORATION_TOOLS_INDEX',
+    'ROUTE_USERAGREEMENT',
   ],
 ];
 export const userMenu = (num: number) => {

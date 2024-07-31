@@ -1,0 +1,11 @@
+body.tox-dialog__disable-scroll{overflow:hidden}
+
+.tox-fullscreen{width:100%;height:100%;margin:0;padding:0;overflow:hidden;border:0;touch-action:pinch-zoom;overscroll-behavior:none}
+
+.tox.tox-tinymce.tox-fullscreen .tox-statusbar__resize-handle{display:none}
+
+.tox-shadowhost.tox-fullscreen,.tox.tox-tinymce.tox-fullscreen{position:fixed;top:0;left:0;z-index:1200}
+
+.tox.tox-tinymce.tox-fullscreen{background-color:transparent}
+
+.tox-fullscreen .tox.tox-tinymce-aux,.tox-fullscreen~.tox.tox-tinymce-aux{z-index:1201}
