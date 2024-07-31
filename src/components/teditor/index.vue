@@ -56,7 +56,7 @@ import 'tinymce/plugins/fullscreen';
 const emits = defineEmits(['update:modelValue', 'setHtml']);
 // 这里我选择将数据定义在props里面，方便在不同的页面也可以配置出不同的编辑器，当然也可以直接在组件中直接定义
 const props = defineProps({
-  value: {
+  modelValue: {
     type: String,
     default: () => {
       return '';
@@ -167,38 +167,41 @@ const init = reactive({
   // setup: function (editor) {
   // },
   // 图片上传  -实列 具体请根据官网补充-
-  images_upload_handler: (blobInfo, progress) => {
-    /* eslint-disable no-new */
-    new Promise((resolve, reject) => {
-      const file = blobInfo.blob();
-      if (file.size / 1024 / 1024 > 200) {
-        reject(
-          new Error({
-            message: '上传失败，图片大小请控制在 200M 以内',
-            remove: true,
-          })
-        );
-      }
-      const formData = new FormData();
-      formData.append('file', file);
-      console.log(formData);
-      axios
-        .post('/api/upload/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress: (progressEvent) => {
-            progress(
-              Math.round((progressEvent.loaded / progressEvent.total) * 100)
-            );
-          },
-        })
-        .then((res) => {
-          resolve(res.data.url);
-        })
-        .catch();
-    });
-  },
+  //   images_upload_handler: (
+  //     blobInfo: { blob: () => any },
+  //     progress: (arg0: number) => void
+  //   ) => {
+  //     /* eslint-disable no-new */
+  //     new Promise((resolve, reject) => {
+  //       const file = blobInfo.blob();
+  //       if (file.size / 1024 / 1024 > 200) {
+  //         reject(
+  //           new Error({
+  //             message: '上传失败，图片大小请控制在 200M 以内',
+  //             remove: true,
+  //           })
+  //         );
+  //       }
+  //       const formData = new FormData();
+  //       formData.append('file', file);
+  //       console.log(formData);
+  //       axios
+  //         .post('/api/upload/upload', formData, {
+  //           headers: {
+  //             'Content-Type': 'multipart/form-data',
+  //           },
+  //           onUploadProgress: (progressEvent) => {
+  //             progress(
+  //               Math.round((progressEvent.loaded / progressEvent.total) * 100)
+  //             );
+  //           },
+  //         })
+  //         .then((res) => {
+  //           resolve(res.data.url);
+  //         })
+  //         .catch();
+  //     });
+  //   },
 });
 
 // 外部传递进来的数据变化
@@ -216,11 +219,13 @@ watch(
   () => myValue.value,
   () => {
     nextTick(() => {
-      emits(
-        'setHtml',
-        tinymce.activeEditor.getContent({ format: 'text' }),
-        myValue.value
-      );
+      if (tinymce.activeEditor != null) {
+        emits(
+          'setHtml',
+          tinymce.activeEditor.getContent({ format: 'text' }),
+          myValue.value
+        );
+      }
     });
   }
 );
@@ -230,12 +235,14 @@ watch(
   () => props.readonly,
   (newValue) => {
     nextTick(() => {
-      tinymce.activeEditor.mode.set(newValue ? 'readonly' : 'design');
+      tinymce.activeEditor &&
+        tinymce.activeEditor.mode.set(newValue ? 'readonly' : 'design');
       const iframeDom = document.querySelector('iframe');
-      iframeDom &&
-        (iframeDom.contentWindow.document.body.style.margin = newValue
-          ? 0
-          : '16px');
+      if (iframeDom && iframeDom.contentWindow) {
+        iframeDom.contentWindow.document.body.style.margin = newValue
+          ? '0'
+          : '16px';
+      }
     });
   },
   { immediate: true }
@@ -243,23 +250,23 @@ watch(
 
 // 初始化编辑器
 onMounted(() => {
-  tinymce.init({});
+  tinymce && tinymce.init({});
 });
 // 销毁编辑器
 onUnmounted(() => {
-  tinymce.remove();
+  tinymce && tinymce.remove();
 });
 
 // 设置值
-const handleSetContent = (content) => {
+const handleSetContent = (content: string) => {
   setTimeout(() => {
-    tinymce.activeEditor.setContent(content);
+    tinymce.activeEditor && tinymce.activeEditor.setContent(content);
   }, 500);
 };
 
 // 获取值
 const handleGetContent = () => {
-  return tinymce.activeEditor.getContent();
+  return tinymce.activeEditor && tinymce.activeEditor.getContent();
 };
 
 defineExpose({
