@@ -60,13 +60,13 @@
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="8"
+            :max-length="10"
             show-word-limit
             allow-clear
           />
         </t-form-item>
         <t-form-item
-          label="详情简介"
+          label="简介"
           :field="`list.${index}.desc`"
           :label-col-props="{
             flex: '90px',
@@ -79,7 +79,7 @@
             v-model="item.desc"
             placeholder="请输入图片简介"
             allow-clear
-            :max-length="40"
+            :max-length="15"
             show-word-limit
           />
         </t-form-item>
