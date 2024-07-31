@@ -241,8 +241,8 @@ const listDefault = [
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 1200,
-  height: 520,
+  width: 140,
+  height: 140,
 });
 
 const form = ref<{
