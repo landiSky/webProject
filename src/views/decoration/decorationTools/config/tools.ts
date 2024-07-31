@@ -95,7 +95,7 @@ const tools = [
 
       {
         chineseName: '多图文',
-        maxNum: 5,
+        maxNum: 4,
         icon: 'multiImgTxt',
         name: 'MultiImageText',
         mainTitle: '我是主标题',
@@ -104,13 +104,6 @@ const tools = [
             title: '小标题',
             desc: '图片描述图片描述',
             src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
-            linkType: LinkType.LINK,
-            linkUrl: 'http://www.baidu.com',
-          },
-          {
-            title: '小标题',
-            desc: '图片描述图片描述',
-            src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
             linkType: LinkType.LINK,
             linkUrl: 'http://www.baidu.com',
           },
