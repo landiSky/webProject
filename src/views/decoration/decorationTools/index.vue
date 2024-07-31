@@ -39,7 +39,7 @@
           :scroll="true"
           :disabled="isPreview"
           :group="{ name: 'vehicle-station' }"
-          :list="componentsList"
+          :list="toolList"
           :move-threshold="20"
           @end="endSort"
           @add="insertSort"
@@ -50,19 +50,19 @@
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
                   :is-preview="isPreview"
-                  :data="element"
+                  :data="componentsList[index]"
                   :component-index="index"
                   :component-style="bgStyle(index)"
                   :select-component-index="selectIndex"
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
-                <!-- element.name !== 'HomeHeader' 后续可以考虑写个方法 -->
-                <div
+                <!-- element !== 'HomeHeader' 后续可以考虑写个方法 -->
+                <t-space
                   v-if="
                     selectIndex === index &&
                     !isPreview &&
-                    element.name !== 'HomeHeader'
+                    element !== 'HomeHeader'
                   "
                   class="select_config-box"
                 >
@@ -87,7 +87,10 @@
                     }"
                     @click="copyComponent(index)"
                   />
-                  <t-popover trigger="hover">
+                  <t-popover
+                    v-if="element !== 'ImageOverlapText'"
+                    trigger="hover"
+                  >
                     <iconpark-icon
                       name="componentBg"
                       :size="12"
@@ -112,7 +115,7 @@
                       </div>
                     </template>
                   </t-popover>
-                </div>
+                </t-space>
               </div>
             </transition>
           </template>
@@ -158,10 +161,12 @@ import { ChannelType } from '@/enums/decoration';
 import { Translate } from '@icon-park/vue-next';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
+import { ToolData, tools } from './config/tools';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
 const componentsList = ref<any[]>([]);
+const toolList = ref<any[]>([]);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
@@ -284,6 +289,7 @@ const isMaxNum = computed(() => {
 // 移除当前组件
 const deleteComponent = (index: number) => {
   componentsList.value.splice(index, 1);
+  toolList.value.splice(index, 1);
   // 删除ref对象
   viewComponentWrapRef.value.splice(index, 1);
   // 删除当前的组件,将下个组件数据传递给配置组件,直到删完所有组件
@@ -312,6 +318,9 @@ const copyComponent = (index: number) => {
   const firstHalf = componentsList.value.slice(0, index);
   const secondHalf = componentsList.value.slice(index);
   componentsList.value = [...firstHalf, component, ...secondHalf];
+  const firstHalfTool = toolList.value.slice(0, index);
+  const secondHalfTool = toolList.value.slice(index);
+  toolList.value = [...firstHalfTool, component.name, ...secondHalfTool];
   selectIndex.value = index;
 };
 
@@ -346,13 +355,6 @@ const clickSave = () => {
       JSON.stringify({ name: 'product_detail', data: '' })
     );
   } else {
-    // localStorage.removeItem(`componentsList${type}`);
-    // localStorage.setItem(
-    //   `componentsList${type}`,
-    //   JSON.stringify(componentsList.value)
-    // );
-    // console.log('保存成功:', componentsList.value);
-
     // 二次弹框
     Modal.info({
       title: '确认保存',
@@ -448,15 +450,33 @@ const clickSaveRemote = () => {
 };
 
 // 从新排序
-const endSort = () => {
-  console.log('endSort0000:', componentsList.value);
-  // clickSave();
+const endSort = (event: any) => {
+  const { newIndex, oldIndex } = event;
+  const newIndexData = JSON.parse(
+    JSON.stringify(componentsList.value[oldIndex])
+  );
+  const oldIndexData = JSON.parse(
+    JSON.stringify(componentsList.value[newIndex])
+  );
+  componentsList.value[newIndex] = newIndexData;
+  componentsList.value[oldIndex] = oldIndexData;
 };
 
 const insertSort = (event: any) => {
+  const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
+
+  const addToolData = JSON.parse(JSON.stringify(ToolData[tools[oldIndex]]));
+  componentsList.value.splice(newIndex, 0, addToolData);
+  console.log(
+    '----被拖拽区域收到新增组件事件 触发选中组件--：',
+    event.newIndex,
+    componentsList.value
+  );
   if (!isPreview.value) {
-    console.log('endSort11111:', event.newIndex);
-    eventBus.emit('selectComponent', componentsList.value[event.newIndex]);
+    eventBus.emit(
+      'selectComponent',
+      JSON.parse(JSON.stringify(componentsList.value[newIndex]))
+    );
   }
 };
 
@@ -517,7 +537,7 @@ const edit = () => {
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
-  console.log('监听到insertIndex事件，获取到index:', payload);
+  console.log('index.vue 监听到insertIndex事件，获取到index:', payload);
   selectIndex.value = payload;
 };
 
@@ -603,8 +623,11 @@ const getNavData = (type: number) => {
       if (status) {
         if (detail && detail !== '[]') {
           componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
         }
-        console.log('有装修数据', componentsList.value);
+        console.log('有装修数据', componentsList.value, toolList.value);
       } else {
         console.log(
           '没有装修数据',
@@ -620,6 +643,9 @@ const getNavData = (type: number) => {
         // }
         if (draftDetail && draftDetail !== '[]') {
           componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
         }
       }
     })
@@ -680,33 +706,40 @@ onMounted(() => {
   eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('config-event', (data: any) => {
+    const jsonData = JSON.parse(JSON.stringify(data));
     console.log(
-      '接收的config信息',
-      data.msgData,
-      componentsList.value[selectIndex.value]
+      'index 接收的config信息',
+      jsonData,
+      selectIndex.value,
+      JSON.parse(JSON.stringify(componentsList.value))
     );
     // 平图文组件特殊处理
     if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
-      const { mainTitle, configValue1, configValue2 } = data.msgData;
+      const { mainTitle, configValue1, configValue2 } = jsonData.msgData;
       componentsList.value[selectIndex.value].mainTitle = mainTitle;
       componentsList.value[selectIndex.value].configValue1 = configValue1;
       componentsList.value[selectIndex.value].configValue2 = configValue2;
       return;
     }
-    if (data.type) {
+    if (jsonData.type) {
       // 对象类型的配置项
-      componentsList.value[selectIndex.value].configValue = { ...data.msgData };
+      componentsList.value[selectIndex.value].configValue = {
+        ...jsonData.msgData,
+      };
     } else {
       // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
-        data.msgData.mainTitle;
+        jsonData.msgData.mainTitle;
       componentsList.value[selectIndex.value].configValue = [
-        ...data.msgData.list,
+        ...jsonData.msgData.list,
       ];
+      console.log(
+        'index 接收的config信息end',
+        JSON.parse(JSON.stringify(componentsList.value))
+      );
     }
   });
   openType.value = parseInt(`${route.query.type}`, 10);
-  console.log('1111111111111111');
   if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
     // 非商品详情装修的情况
     getNavData(openType.value);
@@ -867,14 +900,12 @@ onBeforeUnmount(() => {
 
 .select_config-box {
   position: absolute;
-  left: 42%;
+  left: 50%;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 104px;
   height: 24px;
   margin-top: 4px;
+  transform: translateX(-50%);
 }
 
 ::v-deep(.tele-radio-button.tele-radio-checked) {

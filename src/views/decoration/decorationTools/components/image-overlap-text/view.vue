@@ -232,9 +232,9 @@ defineExpose({
     box-shadow: 0 calc(@factor * 2px) calc(@factor * 2px) 0 #4ce9ff63 inset;
 
     img {
-      width: calc(@factor * 56px);
-      height: calc(@factor * 56px);
-      // border-radius: 50%;
+      width: calc(@factor * 70px);
+      height: calc(@factor * 70px);
+      border-radius: 100%;
     }
   }
 
