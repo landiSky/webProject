@@ -39,22 +39,10 @@ const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
 
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
-
-// watch(
-//   () => props.data,
-//   (val: any) => {
-//     console.log('multi image data', val);
-//   },
-//   { immediate: true, deep: true }
-// );
 
 const checkConfigList = (list: any) => {
   console.log('竖图遍历000', list.length);

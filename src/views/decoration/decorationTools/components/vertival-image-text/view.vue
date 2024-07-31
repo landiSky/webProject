@@ -38,16 +38,12 @@ const props = defineProps({
   data: Object,
   isPreview: Boolean,
 });
+const emit = defineEmits(['golink']);
 
 const { data, isPreview } = toRefs(props);
 
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(

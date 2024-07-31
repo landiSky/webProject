@@ -9,6 +9,7 @@
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
+        @click="clickLink(item?.linkType, item?.linkUrl)"
       >
         <t-image
           :src="`/server/web/file/download?name=${item?.src}`"
@@ -30,16 +31,11 @@ const props = defineProps({
   data: Object,
   isPreview: Boolean,
 });
-
 const { data, isPreview } = toRefs(props);
 
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -117,6 +113,7 @@ defineExpose({
       height: calc(@factor * 256px);
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
+      cursor: pointer;
 
       .image-item-content {
         z-index: 100;

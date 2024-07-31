@@ -100,7 +100,7 @@
           validate-trigger="blur"
           :rules="[{ required: true, message: '必填' }]"
         >
-          <t-radio-group v-model="item.linkType">
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
             <t-radio :value="1">商品</t-radio>
             <t-radio :value="2">无</t-radio>
@@ -131,9 +131,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodList" :key="itemg">{{
-              itemg
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
@@ -217,7 +220,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted, computed } from 'vue';
+import { toRefs, ref, watch, onMounted, computed, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 // 每个子表单的配置项
@@ -233,8 +236,13 @@ type ConfigData = {
   mainTitle: string;
   list: ConfigItem[];
 };
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);
 
@@ -258,7 +266,6 @@ const onBeforeRemove = (index: number) => {
   console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
-const goodList = ['123', '456', '789'];
 
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value, curIndex.value);
@@ -287,7 +294,9 @@ const addBlock = () => {
 const deleteSpace = (index: number) => {
   form.value.list.splice(index, 1);
 };
-
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
 onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';

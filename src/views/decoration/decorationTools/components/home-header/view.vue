@@ -6,7 +6,9 @@
           <div class="hover-header">{{ data?.configValue[0].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[0].desc }} </div>
-            <p> 查看更多<icon-right /></p>
+            <p @click="clickLink(data?.configValue[0].linkUrl)">
+              查看更多<icon-right
+            /></p>
           </div>
         </div>
       </div>
@@ -16,7 +18,9 @@
           <div class="hover-header">{{ data?.configValue[1].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[1].desc }} </div>
-            <p>查看更多<icon-right /></p>
+            <p @click="clickLink(data?.configValue[1].linkUrl)"
+              >查看更多<icon-right
+            /></p>
           </div>
         </div>
       </div>
@@ -25,7 +29,9 @@
           <div class="hover-header">{{ data?.configValue[2].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[2].desc }} </div>
-            <p>查看更多<icon-right /></p>
+            <p @click="clickLink(data?.configValue[2].linkUrl)"
+              >查看更多<icon-right
+            /></p>
           </div>
         </div>
       </div>
@@ -34,7 +40,9 @@
           <div class="hover-header">{{ data?.configValue[3].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[3].desc }} </div>
-            <p>查看更多<icon-right /></p>
+            <p @click="clickLink(data?.configValue[3].linkUrl)"
+              >查看更多<icon-right
+            /></p>
           </div>
         </div>
       </div>
@@ -78,6 +86,11 @@ const validate = () => {
     }
     return resolve('');
   });
+};
+
+const emit = defineEmits(['golink']);
+const clickLink = (url: string) => {
+  emit('golink', { type: 0, url });
 };
 
 defineExpose({

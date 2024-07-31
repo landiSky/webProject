@@ -6,6 +6,10 @@
     <t-image
       :src="`/server/web/file/download?name=${data?.configValue?.src}`"
       :preview="false"
+      style="cursor: pointer"
+      @click="
+        clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
+      "
     ></t-image>
     <div class="single-image-desc">{{
       data?.configValue?.desc || '图片描述'
@@ -22,6 +26,10 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
+const emit = defineEmits(['golink']);
+const clickLink = (type: number, url: string) => {
+  emit('golink', { type, url });
+};
 
 const imageBoxW = computed(() => {
   return isPreview.value ? 1200 : 600;
