@@ -176,11 +176,11 @@ const form = ref({
 });
 
 const rules = {
-  title: [{ required: true, message: '必填' }],
-  src: [{ required: true, message: '必填' }],
-  desc: [{ required: true, message: '必填' }],
-  linkType: [{ required: true, message: '必填' }],
-  linkUrl: [{ required: true, message: '必填' }],
+  title: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
 };
 
 const radioChange = () => {

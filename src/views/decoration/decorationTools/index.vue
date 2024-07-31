@@ -443,8 +443,8 @@ const clickSaveRemote = () => {
       });
     })
     .catch(() => {
-      console.log('保存失败');
-      Message.error('保存失败');
+      console.log('未完成详情配置');
+      Message.error('未完成详情配置');
     });
 };
 
