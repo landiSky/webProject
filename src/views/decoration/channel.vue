@@ -40,20 +40,32 @@
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
           <div
-            v-if="form1?.detail || !nav1DecorationJson"
+            v-if="form1?.status === 1"
             class="save-btn"
-            style="margin-left: 16px"
-            @click="goDecoration(form1)"
+            style="margin-left: 8px"
           >
-            去装修>>
+            <t-tag bordered style="cursor: pointer" @click="goHome"
+              >查看前台页面
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goDecoration(form1)"
+              >继续装修
+            </t-tag>
           </div>
-          <div v-else style="margin-left: 8px">
+          <div v-else-if="form1?.status === 0" style="margin-left: 8px">
             <t-tag bordered style="cursor: pointer" @click="goPreview(form1)"
               >预览效果
             </t-tag>
             <t-tag bordered style="cursor: pointer" @click="goPreview(form1)"
               >发布
             </t-tag>
+          </div>
+          <div
+            v-else
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form1)"
+          >
+            去装修>>
           </div>
         </div>
       </div>
@@ -95,20 +107,32 @@
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
           <div
-            v-if="form2?.detail || !nav2DecorationJson"
+            v-if="form2?.status === 1"
             class="save-btn"
-            style="margin-left: 16px"
-            @click="goDecoration(form2)"
+            style="margin-left: 8px"
           >
-            去装修>>
+            <t-tag bordered style="cursor: pointer" @click="goPlatProducts"
+              >查看前台页面
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goDecoration(form2)"
+              >继续装修
+            </t-tag>
           </div>
-          <div v-else style="margin-left: 8px">
+          <div v-else-if="form2?.status === 0" style="margin-left: 8px">
             <t-tag bordered style="cursor: pointer" @click="goPreview(form2)"
               >预览效果
             </t-tag>
             <t-tag bordered style="cursor: pointer" @click="goPreview(form2)"
               >发布
             </t-tag>
+          </div>
+          <div
+            v-else
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form2)"
+          >
+            去装修>>
           </div>
         </div>
       </div>
@@ -150,20 +174,32 @@
           <span class="required-mark">*</span>
           <div class="input-title">页面装修</div>
           <div
-            v-if="form3?.detail || !nav3DecorationJson"
+            v-if="form3?.status === 1"
             class="save-btn"
-            style="margin-left: 16px"
-            @click="goDecoration(form3)"
+            style="margin-left: 8px"
           >
-            去装修>>
+            <t-tag bordered style="cursor: pointer" @click="goPlatServices"
+              >查看前台页面
+            </t-tag>
+            <t-tag bordered style="cursor: pointer" @click="goDecoration(form3)"
+              >继续装修
+            </t-tag>
           </div>
-          <div v-else style="margin-left: 8px">
+          <div v-else-if="form3?.status === 0" style="margin-left: 8px">
             <t-tag bordered style="cursor: pointer" @click="goPreview(form3)"
               >预览效果
             </t-tag>
             <t-tag bordered style="cursor: pointer" @click="goPreview(form3)"
               >发布
             </t-tag>
+          </div>
+          <div
+            v-else
+            class="save-btn"
+            style="margin-left: 16px"
+            @click="goDecoration(form3)"
+          >
+            去装修>>
           </div>
         </div>
       </div>
@@ -226,7 +262,9 @@ type FormItem = {
   id: number;
   logo: string;
   type: number;
+  status: number | null;
   detail: string;
+  draftDetail: string;
 };
 
 const form1 = ref<FormItem>({
@@ -234,21 +272,27 @@ const form1 = ref<FormItem>({
   id: 0,
   logo: '',
   type: ChannelType.PLATFORM_HOME,
+  status: null,
   detail: '',
+  draftDetail: '',
 });
 const form2 = ref<FormItem>({
   name: '',
   id: 0,
   logo: '',
   type: ChannelType.PLATFORM_PRODUCT,
+  status: null,
   detail: '',
+  draftDetail: '',
 });
 const form3 = ref<FormItem>({
   name: '',
   id: 0,
   logo: '',
   type: ChannelType.PLATFORM_SERVE,
+  status: null,
   detail: '',
+  draftDetail: '',
 });
 
 const publishName = (form: FormItem | null | undefined) => {
@@ -289,7 +333,6 @@ const goPreview = (form: FormItem | null | undefined) => {
 const getPageData = () => {
   // 拉取所有导航数据
   apiGetNavData({}).then((res) => {
-    // Form.value = res.data;
     if (isArray(res.data)) {
       res.data.forEach((item) => {
         switch (item.type) {
@@ -312,6 +355,16 @@ const getPageData = () => {
   nav1DecorationJson.value = localStorage.getItem('componentsList2') || '';
   nav2DecorationJson.value = localStorage.getItem('componentsList3') || '';
   nav3DecorationJson.value = localStorage.getItem('componentsList4') || '';
+};
+
+const goHome = () => {
+  router.push({ path: '/wow/index' });
+};
+const goPlatProducts = () => {
+  router.push({ path: '/wow/platProducts' });
+};
+const goPlatServices = () => {
+  router.push({ path: '/wow/platProducts' });
 };
 
 onMounted(() => {
