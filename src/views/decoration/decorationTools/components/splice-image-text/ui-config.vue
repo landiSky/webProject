@@ -93,13 +93,13 @@
               <t-input
                 v-model="item.title"
                 placeholder="请输入"
-                :max-length="8"
+                :max-length="10"
                 show-word-limit
                 allow-clear
               />
             </t-form-item>
             <t-form-item
-              label="详情简介"
+              label="简介"
               :field="`config.${index}.desc`"
               :label-col-props="{
                 flex: '90px',
@@ -110,9 +110,9 @@
             >
               <t-textarea
                 v-model="item.desc"
-                placeholder="请输入图片简介"
+                placeholder="请输入"
                 allow-clear
-                :max-length="40"
+                :max-length="20"
                 show-word-limit
               />
             </t-form-item>
@@ -154,9 +154,9 @@
               <t-textarea
                 v-if="item.linkType === 0"
                 v-model="item.linkUrl"
-                max-length="40"
+                :max-length="40"
                 show-word-limit
-                placeholder="请输入链接地址"
+                placeholder="请输入"
               />
               <t-select
                 v-if="item.linkType === 1"
@@ -213,7 +213,7 @@
                 >
                   {{
                     `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
                   }}
                 </span>
               </t-space>
@@ -308,13 +308,13 @@
               <t-input
                 v-model="item.title"
                 placeholder="请输入"
-                :max-length="8"
+                :max-length="10"
                 show-word-limit
                 allow-clear
               />
             </t-form-item>
             <t-form-item
-              label="详情简介"
+              label="简介"
               :field="`config.${index}.desc`"
               :label-col-props="{
                 flex: '90px',
@@ -325,9 +325,9 @@
             >
               <t-textarea
                 v-model="item.desc"
-                placeholder="请输入图片简介"
+                placeholder="请输入"
                 allow-clear
-                :max-length="40"
+                :max-length="20"
                 show-word-limit
               />
             </t-form-item>
@@ -369,9 +369,9 @@
               <t-textarea
                 v-if="item.linkType === 0"
                 v-model="item.linkUrl"
-                max-length="40"
+                :max-length="40"
                 show-word-limit
-                placeholder="请输入链接地址"
+                placeholder="请输入"
               />
               <t-select
                 v-if="item.linkType === 1"
@@ -428,7 +428,7 @@
                 >
                   {{
                     `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
                   }}
                 </span>
               </t-space>
