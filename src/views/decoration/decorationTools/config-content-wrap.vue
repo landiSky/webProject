@@ -42,6 +42,7 @@ const listType = [
   'LeftRightImageText',
   'CarouselImageText',
   'ImageOverlapText',
+  'HomeHeader',
 ];
 
 watch(

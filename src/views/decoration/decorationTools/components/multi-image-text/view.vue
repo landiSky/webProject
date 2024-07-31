@@ -1,7 +1,7 @@
 <!-- 多图文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="multi-image-text-box" style="position: relative">
-    <div class="multi-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="multi-image-text-title">{{ data?.mainTitle }}</div>
     <div class="image-box" style="position: relative">
       <div
         v-for="(item, index) in data?.configValue"
@@ -9,13 +9,13 @@
         :style="boxStyle"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title || '小标题' }}</span>
+        <span class="image-title">{{ item?.title }}</span>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}`"
           :preview="false"
           class="image-cls"
         />
-        <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+        <span class="image-desc">{{ item?.desc }}</span>
         <span
           v-if="item?.linkType !== 2"
           class="image-link"

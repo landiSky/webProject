@@ -21,7 +21,7 @@
       >
         <t-input
           v-model="form.title"
-          placeholder="请输入主标题"
+          placeholder="请输入"
           :max-length="12"
           show-word-limit
           allow-clear
@@ -38,7 +38,7 @@
       >
         <t-textarea
           v-model="form.desc"
-          placeholder="请输入图片简介"
+          placeholder="请输入"
           allow-clear
           :max-length="50"
           show-word-limit
@@ -82,7 +82,7 @@
           <span style="margin-top: -20px; color: #86909c; font-size: 12px">
             {{
               `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
             }}
           </span>
         </t-space>
@@ -114,9 +114,9 @@
         <t-textarea
           v-if="form.linkType === 0"
           v-model="form.linkUrl"
-          max-length="40"
+          :max-length="40"
           show-word-limit
-          placeholder="请输入链接地址"
+          placeholder="请输入"
         />
         <t-select
           v-if="form.linkType === 1"

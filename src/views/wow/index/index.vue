@@ -1,122 +1,6 @@
 <template>
   <div class="home-box">
-    <div class="top-box">
-      <!-- <t-carousel
-      :style="{
-        width: '100%',
-        height: '450px',
-      }"
-      auto-play
-      indicator-type="line"
-    >
-      <t-carousel-item v-for="item in carouselList" :key="item.path">
-        <img
-          :src="item.path"
-          :style="{
-            height: '100%',
-            width: '100%',
-            objectFit: 'cover',
-          }"
-          alt="加载异常..."
-          @click="clickCarousel(item.link)"
-        />
-      </t-carousel-item>
-    </t-carousel> -->
-      <!-- <div class="top-left-box">
-        <t-popover
-          popup-container=".top-left-box"
-          position="left"
-          trigger="hover"
-          content-class="popover"
-        >
-          <div class="trigger-box"></div>
-          <template #title>
-            <div class="content-header">
-              <span>智能工业</span>
-            </div>
-          </template>
-          <template #content>
-            <div class="hover-content">
-              <span class="hover-desc"> </span>
-              <span class="hover-more">查看更多<icon-right /></span>
-            </div>
-          </template>
-        </t-popover>
-      </div>
-
-      <div class="top-right-box">
-        <t-popover
-          popup-container=".top-right-box"
-          position="left"
-          trigger="hover"
-          content-class="popover"
-        >
-          <div class="trigger-box"></div>
-          <template #title>
-            <div class="content-header">
-              <span>科技制造</span>
-            </div>
-          </template>
-          <template #content>
-            <div class="hover-content">
-              <span class="hover-desc"> </span>
-              <span class="hover-more">查看更多<icon-right /></span>
-            </div>
-          </template>
-        </t-popover>
-      </div>
-      <div class="bottom-left-box">
-        <t-popover
-          popup-container=".bottom-left-box"
-          position="left"
-          trigger="hover"
-          content-class="popover"
-        >
-          <div class="trigger-box"></div>
-          <template #title>
-            <div class="content-header">
-              <span>数据</span>
-            </div>
-          </template>
-          <template #content>
-            <div class="hover-content">
-              <span class="hover-desc"> </span>
-              <span class="hover-more">查看更多<icon-right /></span>
-            </div>
-          </template>
-        </t-popover>
-      </div>
-      <div class="bottom-right-box">
-        <t-popover
-          popup-container=".bottom-right-box"
-          position="left"
-          trigger="hover"
-          content-class="popover"
-        >
-          <div class="trigger-box"></div>
-          <template #title>
-            <div class="content-header">
-              <span>可信</span>
-            </div>
-          </template>
-          <template #content>
-            <div class="hover-content">
-              <span class="hover-desc">文案 </span>
-              <span class="hover-more">查看更多<icon-right /></span>
-            </div>
-          </template>
-        </t-popover>
-      </div> -->
-      <div>
-        <video
-          src="../../../assets/video/home-bg.mp4"
-          style="width: 100%; height: auto"
-          autoplay
-          loop
-          muted
-        />
-      </div>
-    </div>
+    <Container :components-list="componentList" />
     <div class="header">
       <div
         v-for="item in allCategList"
@@ -294,11 +178,14 @@ import { snmsClientLogin } from '@/api/login';
 import { apiDataPoint } from '@/api/data-point';
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import { sm2 } from '@/utils/encrypt';
+import Container from '@/views/decoration/decorationTools/pageContainer.vue';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { ChannelType } from '@/enums/decoration';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
 const router = useRouter();
-
+const componentList = ref([]);
 const { userInfo, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 
@@ -623,6 +510,13 @@ const goCardDetail = (item: Record<string, any>) => {
 };
 
 onMounted(() => {
+  apiGetNavData({ type: ChannelType.PLATFORM_HOME }).then((res: any) => {
+    if (res.data.length > 0) {
+      const { detail } = res.data[0];
+      if (!detail) return;
+      componentList.value = JSON.parse(res.data[0].detail);
+    }
+  });
   apiDataPoint(null, null, userInfo?.value?.id, 1, 1).then((res) => {
     console.log('首页全页面打点');
   });

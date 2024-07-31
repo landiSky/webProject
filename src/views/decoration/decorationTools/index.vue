@@ -57,8 +57,13 @@
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
+                <!-- element.name !== 'HomeHeader' 后续可以考虑写个方法 -->
                 <div
-                  v-if="selectIndex === index && !isPreview"
+                  v-if="
+                    selectIndex === index &&
+                    !isPreview &&
+                    element.name !== 'HomeHeader'
+                  "
                   class="select_config-box"
                 >
                   <iconpark-icon
@@ -74,11 +79,12 @@
                   <iconpark-icon
                     name="componentCopy"
                     :size="12"
-                    style="
-                      padding: 5px;
-                      border: 1px solid #86909c;
-                      border-radius: 2px;
-                    "
+                    :style="{
+                      padding: '5px',
+                      border: '1px solid #86909c',
+                      borderRadius: '2px',
+                      cursor: isMaxNum ? 'disabled' : 'pointer',
+                    }"
                     @click="copyComponent(index)"
                   />
                   <t-popover trigger="hover">
@@ -151,7 +157,7 @@ import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
 import { Translate } from '@icon-park/vue-next';
 import ViewComponentWrap from './view-component-wrap.vue';
-import { channelName } from './constant';
+import { channelName, LinkType } from './constant';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
@@ -270,6 +276,11 @@ const onEnd = (index: number) => {
   selectIndex.value = index;
 };
 
+// 判断组件数量是否大于10个上限
+const isMaxNum = computed(() => {
+  return componentsList.value.length >= 3;
+});
+
 // 移除当前组件
 const deleteComponent = (index: number) => {
   componentsList.value.splice(index, 1);
@@ -314,6 +325,7 @@ const setItemRef = (el: any, index: number) => {
 const closeTip = (msg: string) => {
   Message.info(msg);
   setTimeout(() => {
+    interceptFlag.value = false;
     window.close();
   }, 900);
 };
@@ -321,12 +333,10 @@ const closeTip = (msg: string) => {
 // 保存组件列表的json数据到本地
 const clickSave = () => {
   // 先清除本地存储
-  const { type } = route.query;
+  const { id } = route.query;
+  const json =
+    componentsList.value.length > 0 ? JSON.stringify(componentsList.value) : '';
   if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-    const json =
-      componentsList.value.length > 0
-        ? JSON.stringify(componentsList.value)
-        : '';
     // 保存草稿
     localStorage.setItem(
       proId.value,
@@ -336,22 +346,44 @@ const clickSave = () => {
       JSON.stringify({ name: 'product_detail', data: '' })
     );
   } else {
-    localStorage.removeItem(`componentsList${type}`);
-    localStorage.setItem(
-      `componentsList${type}`,
-      JSON.stringify(componentsList.value)
-    );
-    console.log('保存成功:', componentsList.value);
+    // localStorage.removeItem(`componentsList${type}`);
+    // localStorage.setItem(
+    //   `componentsList${type}`,
+    //   JSON.stringify(componentsList.value)
+    // );
+    // console.log('保存成功:', componentsList.value);
 
-    broadcastChannel.postMessage(
-      JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
-    );
+    // 二次弹框
+    Modal.info({
+      title: '确认保存',
+      content: '保存后，当前编辑内容将保存到草稿',
+      titleAlign: 'start',
+      hideCancel: false,
+      okText: '保存',
+      onOk: () => {
+        // 保存远程
+        apiUpdateNavData({
+          id,
+          status: 0,
+          draftDetail: json,
+        }).then((res: any) => {
+          // 通知主tab页刷新
+          broadcastChannel.postMessage(
+            JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+          );
+          closeTip('保存成功');
+        });
+      },
+
+      onCancel: () => {},
+    });
   }
-  closeTip('保存成功');
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
+  console.log('保存home header00');
   const childForm = () => {
+    console.log('childForm', viewComponentWrapRef.value);
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
     });
@@ -362,6 +394,7 @@ const clickSaveRemote = () => {
         Message.error('请先添加组件');
         return;
       }
+      console.log('保存远程00');
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
@@ -379,6 +412,8 @@ const clickSaveRemote = () => {
         return;
       }
 
+      console.log('保存远程', json);
+
       // 二次弹框
       Modal.info({
         title: '确认保存并发布',
@@ -388,10 +423,11 @@ const clickSaveRemote = () => {
         okText: '保存并发布',
         onOk: () => {
           // 保存本地
-          clickSave();
+          // clickSave();
           // 保存远程
           apiUpdateNavData({
             id,
+            status: 1,
             detail: json,
           }).then((res: any) => {
             // 通知主tab页刷新
@@ -505,8 +541,7 @@ watch(
     const { type } = route.query;
     console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
-    if (openType.value === 5) {
-      console.log('open model1', openModel.value);
+    if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
       interceptFlag.value = false;
     } else {
       interceptFlag.value = true;
@@ -518,13 +553,57 @@ watch(
   }
 );
 
+// 数组插入第一个元素--homeheader
+const insertFirst = () => {
+  componentsList.value.unshift({
+    chineseName: '首页top',
+    maxNum: 3,
+    icon: 'singleImg',
+    name: 'HomeHeader',
+    mainTitle: '我是主标题',
+    configValue: [
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+    ],
+  });
+};
+
 const getNavData = (type: number) => {
   apiGetNavData({ type })
     .then((res: any) => {
-      decorationJson.value = res.data[0].detail;
+      // decorationJson.value = res.data[0].detail;
+      const { status, detail, draftDetail } = res.data[0];
       console.log('装修数据000', res.data[0].detail);
-      if (decorationJson.value && decorationJson.value !== '[]') {
-        componentsList.value = JSON.parse(decorationJson.value);
+      if (status) {
+        if (detail && detail !== '[]') {
+          componentsList.value = JSON.parse(detail);
+        }
         console.log('有装修数据', componentsList.value);
       } else {
         console.log(
@@ -533,15 +612,30 @@ const getNavData = (type: number) => {
           typeof decorationJson.value,
           componentsList.value
         );
-        const localStorageData = localStorage.getItem(
-          `componentsList${openType.value}`
-        );
-        if (localStorageData) {
-          componentsList.value = JSON.parse(localStorageData);
+        // const localStorageData = localStorage.getItem(
+        //   `componentsList${openType.value}`
+        // );
+        // if (localStorageData) {
+        //   componentsList.value = JSON.parse(localStorageData);
+        // }
+        if (draftDetail && draftDetail !== '[]') {
+          componentsList.value = JSON.parse(draftDetail);
         }
       }
     })
-    .catch();
+    .catch()
+    .finally(() => {
+      if (type === ChannelType.PLATFORM_HOME) {
+        // 首页装修，默认把首页组件放到第一个
+        if (componentsList.value.length > 0) {
+          if (componentsList.value[0].name !== 'HomeHeader') {
+            insertFirst();
+          }
+        } else if (componentsList.value.length === 0) {
+          insertFirst();
+        }
+      }
+    });
 };
 
 // 开场第一次闪烁两次
@@ -646,6 +740,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   // 释放资源
+  interceptFlag.value = false;
   window.removeEventListener('beforeunload', (event) => {});
   broadcastChannel.close();
 });
@@ -780,7 +875,6 @@ onBeforeUnmount(() => {
   width: 104px;
   height: 24px;
   margin-top: 4px;
-  cursor: pointer;
 }
 
 ::v-deep(.tele-radio-button.tele-radio-checked) {
