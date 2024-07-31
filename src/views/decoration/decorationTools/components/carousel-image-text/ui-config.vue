@@ -131,9 +131,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg.name
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
@@ -233,12 +236,10 @@ type ConfigData = {
   mainTitle: string;
   list: ConfigItem[];
 };
-
 type GoodsItem = {
   name: string;
   id: string;
 };
-
 const props = defineProps({
   data: Object,
   goodsList: Array as PropType<GoodsItem[]>,
@@ -297,7 +298,6 @@ const addBlock = () => {
 const deleteSpace = (index: number) => {
   form.value.list.splice(index, 1);
 };
-
 onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';

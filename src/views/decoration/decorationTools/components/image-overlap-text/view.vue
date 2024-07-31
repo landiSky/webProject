@@ -26,9 +26,11 @@
             align="center"
             :size="5 * num"
           >
-            <div class="image-overlap-item-btn" @click="clickViewDetail(item)"
-              >查看详情>></div
-            >
+            <div
+              class="image-overlap-item-btn"
+              @click="clickLink(item.linkType, item.linkUrl)"
+              >查看详情>>
+            </div>
             <div class="view-detail-line"></div>
           </t-space>
         </t-space>
@@ -54,6 +56,10 @@ const props = defineProps({
 
 const { data, isPreview } = toRefs(props);
 
+const emit = defineEmits(['golink']);
+const clickLink = (type: number, url: string) => {
+  emit('golink', { type, url });
+};
 const getDefaultImg = (index: number) => {
   if (index === 1) return item1;
   if (index === 2) return item2;
@@ -101,15 +107,6 @@ const validate = () => {
     }
     return resolve('');
   });
-};
-
-const clickViewDetail = (item: IList) => {
-  if (item.linkType === LinkType.LINK) {
-    // 外部链接
-    window.open(item.linkUrl);
-  } else if (item.linkType === LinkType.PRODUCT) {
-    // TODO: 商品搜索页
-  }
 };
 
 defineExpose({

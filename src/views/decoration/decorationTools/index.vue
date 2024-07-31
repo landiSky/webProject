@@ -147,7 +147,7 @@ import {
 } from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   apiGetIsFirstUseDecoration,
   apiGetNavData,
@@ -161,6 +161,7 @@ import { channelName, LinkType } from './constant';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
+const router = useRouter();
 const componentsList = ref<any[]>([]);
 const selectIndex = ref(-1);
 
@@ -477,11 +478,6 @@ const notPreview = () => {
 // 选中组件回调
 const selectComponent = (index: number) => {
   selectIndex.value = index;
-  console.log('收到选中组件事件:', index);
-  console.log(
-    '打印选中组件的值：',
-    JSON.parse(JSON.stringify(componentsList.value))
-  );
   if (!isPreview.value) {
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
     console.log(
@@ -489,22 +485,6 @@ const selectComponent = (index: number) => {
       componentsList.value[selectIndex.value],
       selectIndex.value
     );
-  } else {
-    // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
-    console.log(
-      '选中的组件00:',
-      componentsList.value[selectIndex.value].configValue?.linkType
-    );
-    const type = componentsList.value[selectIndex.value].configValue?.linkType;
-    if (type === 0) {
-      window.open(
-        componentsList.value[selectIndex.value].configValue?.linkUrl,
-        '_blank'
-      );
-    } else if (type === 1) {
-      // 跳转到搜索产品结果页
-      console.log('跳转到搜索产品结果页');
-    }
   }
 };
 

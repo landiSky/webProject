@@ -124,7 +124,7 @@
           placeholder="请选择"
           allow-clear
         >
-          <t-option v-for="item in goodsList" :key="item">{{
+          <t-option v-for="item in goodsList" :key="item" :value="item.id">{{
             item.name
           }}</t-option>
         </t-select>

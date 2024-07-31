@@ -119,9 +119,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg.name
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
@@ -203,7 +206,6 @@ type ConfigData = {
   mainTitle: string;
   list: ConfigItem[];
 };
-
 type GoodsItem = {
   name: string;
   id: string;
@@ -248,14 +250,14 @@ const onBeforeRemove = (index: number) => {
 //     deep: true,
 //   }
 // );
+
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value);
   form.value.list[curIndex.value].src = value;
   showSource.value = false;
-};
-
-const radioChange = (index: number) => {
-  form.value.list[index].linkUrl = '';
 };
 
 const onCancel = () => {

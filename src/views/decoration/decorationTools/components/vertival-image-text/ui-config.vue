@@ -118,9 +118,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
