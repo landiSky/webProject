@@ -31,7 +31,9 @@
             align: 'left',
           }"
           :validate-trigger="['blur']"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-input
             v-model="item.title"
@@ -49,7 +51,9 @@
             align: 'center',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-model="item.desc"
@@ -67,7 +71,9 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
