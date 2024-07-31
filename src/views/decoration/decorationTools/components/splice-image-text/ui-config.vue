@@ -34,7 +34,7 @@
       </t-form-item>
     </t-form>
 
-    <t-tabs default-active-key="1">
+    <t-tabs default-active-key="1" @change="onTabChange">
       <t-tab-pane key="1" title="左区域">
         <t-form
           ref="formRef"
@@ -524,6 +524,8 @@ const form = ref<ConfigData>({
   },
 });
 
+const tabKey = ref('1');
+
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
   console.log('第几个图片', curIndex.value);
@@ -531,8 +533,9 @@ const onBeforeRemove = (index: number) => {
 };
 
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value, curIndex.value);
-  // form.value.list[curIndex.value].src = value;
+  console.log('拼图文返回的图片信息', form.value, value, curIndex.value);
+  const targetKey = tabKey.value === '1' ? 'configValue1' : 'configValue2';
+  (form.value[targetKey]?.config)[curIndex.value].src = value;
   showSource.value = false;
 };
 
@@ -567,6 +570,11 @@ const addBlock2 = () => {
     linkUrl: '',
   });
 };
+
+const onTabChange = (val: string) => {
+  tabKey.value = val;
+};
+
 const radioChange1 = (index: number) => {
   form.value.configValue1.config[index].linkUrl = '';
 };
