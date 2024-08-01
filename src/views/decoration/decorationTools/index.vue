@@ -696,9 +696,11 @@ onMounted(() => {
     // 平图文组件特殊处理
     if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
       const { mainTitle, configValue1, configValue2 } = jsonData.msgData;
-      componentsList.value[selectIndex.value].mainTitle = mainTitle;
-      componentsList.value[selectIndex.value].configValue1 = configValue1;
-      componentsList.value[selectIndex.value].configValue2 = configValue2;
+      (componentsList.value[selectIndex.value] || {}).mainTitle = mainTitle;
+      (componentsList.value[selectIndex.value] || {}).configValue1 =
+        configValue1;
+      (componentsList.value[selectIndex.value] || {}).configValue2 =
+        configValue2;
       return;
     }
     if (jsonData.type) {
