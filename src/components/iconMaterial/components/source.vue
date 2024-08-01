@@ -215,7 +215,7 @@ const onBeforeUpload = async (currentFile: Record<string, any>) => {
       Message.error(`上传失败，文件大小不要超过10M`);
       reject();
     } else if (!limitSize) {
-      Message.error(`上传尺寸要求144X144`);
+      Message.error(`上传尺寸要求144X144，否则影响展示效果`);
       reject();
     } else {
       resolve(true);
