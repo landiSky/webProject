@@ -364,7 +364,7 @@ const goPlatProducts = () => {
   router.push({ path: '/wow/platProducts' });
 };
 const goPlatServices = () => {
-  router.push({ path: '/wow/platProducts' });
+  router.push({ path: '/wow/platServices' });
 };
 
 onMounted(() => {
