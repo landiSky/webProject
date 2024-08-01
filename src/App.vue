@@ -106,6 +106,7 @@ onMounted(() => {
           errorTarget?.nodeName &&
           typeList.includes(errorTarget?.nodeName.toUpperCase())
         ) {
+          console.log('errorTarget', errorTarget);
           console.log('event 监听异常:', event);
           Message.error('资源加载失败，请尝试刷新浏览器。');
         }
