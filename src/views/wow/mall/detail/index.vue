@@ -132,7 +132,7 @@
                   </t-radio>
                 </t-radio-group>
               </span>
-              <span v-else>不限</span>
+              <span v-else>-</span>
             </div>
             <div
               v-if="
@@ -284,7 +284,7 @@
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>-</span>
           </div>
           <div
             v-if="
