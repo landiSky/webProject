@@ -28,7 +28,7 @@
           ref="uploadRef"
           class="upload-operation"
           action="/"
-          accept=".jpg,.png,.bmp,.jpeg,gif"
+          accept=".jpg,.png,.bmp,.jpeg,.gif"
           :auto-upload="false"
           :show-file-list="false"
           :image-preview="false"
