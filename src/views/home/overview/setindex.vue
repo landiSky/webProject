@@ -17,10 +17,22 @@
         <div class="list">
           <div class="title">
             <ellipsis
+              v-if="
+                userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                userInfoByCompany.certificateStatus === CompanyAuthStatus.AUTHED
+              "
               :copy="false"
               :value="userInfoByCompany.companyName || '暂未认证'"
             >
             </ellipsis>
+            <div
+              v-if="
+                userInfoByCompany.nodeStatus !== NodeAuthStatus.AUTHED &&
+                userInfoByCompany.certificateStatus !== CompanyAuthStatus.AUTHED
+              "
+              class="statuslist notcertified"
+              >未认证</div
+            >
           </div>
           <div
             v-if="
@@ -916,6 +928,19 @@ onMounted(() => {
         text-align: left;
         cursor: pointer;
       }
+    }
+
+    .statuslist {
+      width: 52px;
+      padding: 1px 8px;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 22px;
+    }
+    // 未认证
+    .notcertified {
+      color: #fa9600;
+      background-color: #fffae8;
     }
   }
 }

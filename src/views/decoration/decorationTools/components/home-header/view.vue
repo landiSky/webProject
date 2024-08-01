@@ -123,7 +123,7 @@ defineExpose({
       position: absolute;
       top: 10%;
       left: 35%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -147,7 +147,7 @@ defineExpose({
       position: absolute;
       top: 5%;
       left: 57%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
 
@@ -172,7 +172,7 @@ defineExpose({
       position: absolute;
       top: 54%;
       left: 34%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -198,7 +198,7 @@ defineExpose({
       position: absolute;
       top: 50%;
       left: 56%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -236,10 +236,10 @@ defineExpose({
       .hover-header {
         width: calc(@factor * 121px);
         height: calc(@factor * 21px);
-        padding-left: calc(@factor * 12px);
-        color: #1664ff;
+        padding-left: calc(@factor * 10px);
+        color: #1d2129;
         font-weight: 500;
-        font-size: calc(@factor * 9.4px);
+        font-size: calc(@factor * 9px);
         line-height: calc(@factor * 21px);
         text-align: left;
         background-color: transparent;
@@ -252,7 +252,7 @@ defineExpose({
         align-items: flex-start;
         justify-content: space-between;
         width: calc(@factor * 120px);
-        font-size: calc(@factor * 5.38px);
+        font-size: calc(@factor * 5.2px);
         background-color: #bcf6ff80;
 
         .hover-desc {
@@ -262,9 +262,9 @@ defineExpose({
           padding: 0 calc(@factor * 9px);
           overflow: hidden;
           color: #4e5969;
-          font-size: calc(@factor * 6px);
+          font-size: calc(@factor * 5.4px);
           // height: calc(@factor * 17px);
-          line-height: calc(@factor * 8px);
+          line-height: calc(@factor * 9px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
@@ -274,7 +274,7 @@ defineExpose({
         }
 
         p {
-          width: 100%;
+          // width: 100%;
           padding: calc(@factor * 4px) calc(@factor * 9px);
           color: #1664ff;
           text-align: left;
