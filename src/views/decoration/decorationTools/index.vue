@@ -542,7 +542,9 @@ watch(
     console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
     if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-      interceptFlag.value = false;
+      console.log(openType.value, ChannelType);
+
+      // interceptFlag.value = false;
     } else {
       interceptFlag.value = true;
     }
@@ -675,9 +677,11 @@ watch(
 );
 
 onMounted(() => {
-  console.log('装修index页面');
+  console.log('beforeunload111');
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
+    console.log('beforeunload111 inner', interceptFlag.value);
+    componentsList.value = [...componentsList.value];
     if (interceptFlag.value) {
       console.log('有装修数据，是否确认离开？');
       event.preventDefault();
