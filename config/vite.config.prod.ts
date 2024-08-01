@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import svgLoader from 'vite-svg-loader';
+import imageminPlugin from 'vite-plugin-imagemin';
 
 export default defineConfig({
   mode: 'production',
@@ -17,6 +18,30 @@ export default defineConfig({
     }),
     vueJsx(),
     svgLoader({ svgoConfig: {} }),
+    imageminPlugin({
+      // 插件选项
+      gifsicle: {
+        optimizationLevel: 7,
+        interlaced: false,
+      },
+      optipng: {
+        optimizationLevel: 7,
+      },
+      mozjpeg: {
+        quality: 20,
+      },
+      pngquant: {
+        quality: [0.8, 0.9],
+        speed: 4,
+      },
+      svgo: {
+        plugins: [
+          { removeViewBox: false },
+          { removeEmptyAttrs: false },
+          { sortAttrs: false },
+        ],
+      },
+    }),
   ],
   resolve: {
     alias: [
