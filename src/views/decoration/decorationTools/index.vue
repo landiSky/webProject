@@ -159,6 +159,7 @@ import {
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
 import { Translate } from '@icon-park/vue-next';
+import { goodsDetail } from '@/api/goods-manage';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
 import { ToolData, tools } from './config/tools';
@@ -209,9 +210,9 @@ const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
 
-const curSelectedComponent = computed(() => {
-  return componentsList.value[selectIndex.value];
-});
+// const curSelectedComponent = computed(() => {
+//   return componentsList.value[selectIndex.value];
+// });
 
 // 处理背景色的字符串，1-非渐变色，就返回一个颜色值，2-渐变色，切割为两个颜色值
 function handleBgColor(color: string) {
@@ -284,7 +285,7 @@ const onEnd = (index: number) => {
 
 // 判断组件数量是否大于10个上限
 const isMaxNum = computed(() => {
-  return componentsList.value.length >= 3;
+  return componentsList.value.length >= 10;
 });
 
 // 移除当前组件
@@ -347,14 +348,10 @@ const clickSave = () => {
   const json =
     componentsList.value.length > 0 ? JSON.stringify(componentsList.value) : '';
   if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-    // 保存草稿
-    localStorage.setItem(
-      proId.value,
-      JSON.stringify({ setOk: false, data: json })
-    );
     broadcastChannel.postMessage(
-      JSON.stringify({ name: 'product_detail', data: '' })
+      JSON.stringify({ name: 'product_detail', status: 0, data: json })
     );
+    closeTip('保存成功');
   } else {
     // 二次弹框
     Modal.info({
@@ -726,31 +723,41 @@ onMounted(() => {
     // 非商品详情装修的情况
     getNavData(openType.value);
   } else {
-    // 商品详情装修的情况，注意监听时机，如果监听晚于发送可能收不到
-    // broadcastChannel.addEventListener('message', (event) => {
-    //   const { name, data } = JSON.parse(event.data);
-    //   if (name === 'product_detail') {
-    //     console.log('商品详情装修数据', data);
-    //     componentsList.value = JSON.parse(data);
-    //   }
-    // });
-    proId.value = `pro_${route.query.pro_id}`;
-    const storage = localStorage.getItem(proId.value);
-    if (storage) {
-      const { data } = JSON.parse(storage);
-      if (data) {
-        componentsList.value = JSON.parse(data);
+    const { proId } = route.query;
+    // const proIdNum = parseInt(`${proId}`, 10);
+    goodsDetail(`${proId}`).then((res) => {
+      console.log('商品详情数据000111', res);
+      const { draftStatus, draftDetail, detail, versionType } = res;
+      if (versionType === 1) {
+        // 新版装修数据
+        if (draftStatus === 0) {
+          // 草稿状态
+          if (!draftDetail) return;
+          componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        } else {
+          // 发布状态
+          if (!detail) return;
+          componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        }
+      } else {
+        // 旧版数据丢弃
       }
-    }
+    });
+    console.log('2222222222222222222');
+    apiGetIsFirstUseDecoration().then((res: any) => {
+      if (!res) {
+        console.log('第一次使用装修', res);
+        isFirstUse.value = true;
+        firstFlicker();
+      }
+    });
   }
-  console.log('2222222222222222222');
-  apiGetIsFirstUseDecoration().then((res: any) => {
-    if (!res) {
-      console.log('第一次使用装修', res);
-      isFirstUse.value = true;
-      firstFlicker();
-    }
-  });
 });
 
 onBeforeUnmount(() => {
