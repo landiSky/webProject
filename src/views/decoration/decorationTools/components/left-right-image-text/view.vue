@@ -3,17 +3,11 @@
     <div class="vertical-image-text-title">{{
       data?.mainTitle || '主标题'
     }}</div>
-    <t-carousel
-      :auto-play="true"
-      animation-name="fade"
-      class="image-box"
-      show-arrow="never"
-    >
+    <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
           <div class="image-item-content">
-            <span class="image-title">{{ item?.title || '小标题' }}</span>
-
+            <div class="image-title">{{ item?.title || '小标题' }}</div>
             <div class="image-desc">{{ item?.desc || '图片简介' }}</div>
             <span
               v-if="item?.linkType !== 2"
@@ -106,6 +100,7 @@ defineExpose({
   justify-content: flex-start;
   width: calc(@factor * 720px);
   height: calc(@factor * 380px);
+  background-color: white;
 
   .vertical-image-text-title {
     width: calc(@factor * 600px);
@@ -135,29 +130,30 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        box-sizing: border-box;
         width: calc(@factor * 300px);
         height: calc(@factor * 192px);
         margin-right: 15.5px;
-        padding: 5px;
-        overflow: auto;
-        font-size: calc(@factor * 7px);
+        padding: calc(@factor * 11px) 0;
 
         .image-title {
           width: 100%;
           height: calc(@factor * 34px);
+          padding: 0 calc(@factor * 11px);
           color: #1d2129;
           font-weight: 500;
           font-size: calc(@factor * 8px);
+          line-height: calc(@factor * 34px);
           text-align: left;
           text-overflow: ellipsis;
           border-bottom: 1px solid #e2e2e2;
+          // background-color: white;
         }
 
         .image-desc {
           display: -webkit-box;
           width: 100%;
           margin: 10px 0;
+          padding: 0 calc(@factor * 11px);
           overflow: hidden;
           color: #4e5969;
           font-size: calc(@factor * 7px);
@@ -172,6 +168,7 @@ defineExpose({
 
         .image-link {
           display: inline-block;
+          padding: 0 calc(@factor * 11px);
           color: #1664ff;
           font-size: calc(@factor * 7px);
           cursor: pointer;
@@ -191,7 +188,7 @@ defineExpose({
     }
 
     :deep(.tele-carousel-indicator-item) {
-      background-color: rgba(233, 233, 233, 0.4);
+      background-color: #e9e9e966;
     }
 
     :deep(.tele-carousel-indicator-wrapper-bottom) {
@@ -199,7 +196,7 @@ defineExpose({
     }
 
     :deep(.tele-carousel-indicator-item:hover) {
-      background: #eaeaea;
+      background: #e0d9d9;
     }
 
     :deep(.tele-carousel-indicator-item-active) {
