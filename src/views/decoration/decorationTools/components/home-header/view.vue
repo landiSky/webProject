@@ -236,10 +236,10 @@ defineExpose({
       .hover-header {
         width: calc(@factor * 121px);
         height: calc(@factor * 21px);
-        padding-left: calc(@factor * 12px);
-        color: #1664ff;
+        padding-left: calc(@factor * 10px);
+        color: #1d2129;
         font-weight: 500;
-        font-size: calc(@factor * 9.4px);
+        font-size: calc(@factor * 9px);
         line-height: calc(@factor * 21px);
         text-align: left;
         background-color: transparent;
@@ -252,7 +252,7 @@ defineExpose({
         align-items: flex-start;
         justify-content: space-between;
         width: calc(@factor * 120px);
-        font-size: calc(@factor * 5.38px);
+        font-size: calc(@factor * 5.2px);
         background-color: #bcf6ff80;
 
         .hover-desc {
@@ -262,9 +262,9 @@ defineExpose({
           padding: 0 calc(@factor * 9px);
           overflow: hidden;
           color: #4e5969;
-          font-size: calc(@factor * 6px);
+          font-size: calc(@factor * 5.4px);
           // height: calc(@factor * 17px);
-          line-height: calc(@factor * 8px);
+          line-height: calc(@factor * 9px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
