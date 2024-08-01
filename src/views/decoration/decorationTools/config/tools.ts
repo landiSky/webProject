@@ -1,6 +1,6 @@
 import { LinkType } from '../constant';
 
-export const ToolData = {
+export const ToolData: Record<string, any> = {
   SigleImg: {
     chineseName: '单图',
     maxNum: 3,

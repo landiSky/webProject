@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted } from 'vue';
+import { ref, defineEmits, onMounted } from 'vue';
 import draggable from 'vuedraggable';
 import {
   tools,
