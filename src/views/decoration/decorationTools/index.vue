@@ -100,17 +100,20 @@
                         border-radius: 2px;
                       "
                     />
-
                     <template #content>
                       <div class="color-picker">
                         <div
-                          v-for="(item, index) in colorList"
-                          :key="index"
+                          v-for="(item, i) in colorList"
+                          :key="i"
                           :class="[
                             item.cssClass,
-                            { 'is-active': colorIndex === index },
+                            {
+                              'is-active':
+                                `${item.color0}${item.color1}` ===
+                                componentsList[selectIndex].bgColor,
+                            },
                           ]"
-                          @click="changeColor(index)"
+                          @click="changeColor(i)"
                         ></div>
                       </div>
                     </template>
@@ -199,9 +202,9 @@ const openModel = ref(-1);
 
 // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
 const colorList = ref([
-  { cssClass: 'bg_color-1', color0: '#ffffff' },
-  { cssClass: 'bg_color-2', color0: '#F5F6FB' },
-  { cssClass: 'bg_color-3', color0: '#EBF0F4' },
+  { cssClass: 'bg_color-1', color0: '#ffffff', color1: '' },
+  { cssClass: 'bg_color-2', color0: '#F5F6FB', color1: '' },
+  { cssClass: 'bg_color-3', color0: '#EBF0F4', color1: '' },
   { cssClass: 'bg_color-4', color0: '#ffffff', color1: '#e2ecff' },
 ]);
 
@@ -275,7 +278,7 @@ const changeColor = (val: number) => {
   colorIndex.value = val;
   componentsList.value[selectIndex.value].bgColor =
     colorList.value[colorIndex.value]?.color0 +
-    (colorList.value[colorIndex.value]?.color1 ?? '');
+    colorList.value[colorIndex.value]?.color1;
 };
 
 // 左侧工具栏拖入后在列表中的位置
