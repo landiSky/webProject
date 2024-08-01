@@ -52,6 +52,7 @@ const opearationRouteList = [
   'ROUTE_GOODS_OBSERVE',
   'ROUTE_USER',
   'ROUTE_USER_VERIFY',
+  'ROUTE_USERAGREEMENT',
 ];
 
 watch(

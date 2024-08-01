@@ -40,11 +40,7 @@ const getDetail = () => {
 };
 
 const save = () => {
-  if (
-    !textData.value ||
-    !childeRef.value ||
-    childeRef.value.handleGetContent().length === 0
-  ) {
+  if (!textData.value || !childeRef.value) {
     return;
   }
   if (textData.value.length === childeRef.value.handleGetContent().length) {
@@ -99,7 +95,9 @@ const cancellation = () => {
     hideCancel: false,
     cancelText: '取消',
     okText: '确定',
-    onOk: () => {},
+    onOk: () => {
+      childeRef.value.handleSetContent(textData.value);
+    },
   });
   // childeRef.value.handleSetContent('');
 };
