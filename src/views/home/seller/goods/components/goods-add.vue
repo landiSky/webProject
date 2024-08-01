@@ -1726,7 +1726,7 @@ const addTemplateDetail = () => {
     query: {
       model: 0,
       type: ChannelType.PLATFORM_PRODUCT_DETAIL,
-      pro_id: formModel.value.id,
+      // proId: formModel.value.id,
     },
   });
   window.open(routeUrl.href, '_blank');
@@ -2136,6 +2136,10 @@ onMounted(() => {
       // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
       formModel.value.draftStatus = status;
       formModel.value.draftDetail = data;
+      if (!formModel.value.detail) {
+        formModel.value.detail = data;
+      }
+      console.log('返回的商品详情000', formModel.value);
       clickSave();
     }
   });

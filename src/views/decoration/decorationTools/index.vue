@@ -399,20 +399,13 @@ const clickSaveRemote = () => {
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
       if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-        // 商品详情装修
         // tab间通信，发送json数据到tab页
-        localStorage.setItem(
-          proId.value,
-          JSON.stringify({ setOk: true, data: json })
-        );
         broadcastChannel.postMessage(
-          JSON.stringify({ name: 'product_detail', data: '' })
+          JSON.stringify({ name: 'product_detail', status: 1, data: json })
         );
         closeTip('发布成功');
         return;
       }
-
-      console.log('保存远程', json);
 
       // 二次弹框
       Modal.info({
@@ -422,8 +415,6 @@ const clickSaveRemote = () => {
         hideCancel: false,
         okText: '保存并发布',
         onOk: () => {
-          // 保存本地
-          // clickSave();
           // 保存远程
           apiUpdateNavData({
             id,
@@ -442,7 +433,6 @@ const clickSaveRemote = () => {
       });
     })
     .catch(() => {
-      console.log('未完成详情配置');
       Message.error('未完成详情配置');
     });
 };
@@ -674,7 +664,6 @@ watch(
 );
 
 onMounted(() => {
-  console.log('beforeunload111');
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
     console.log('beforeunload111 inner', interceptFlag.value);
@@ -728,31 +717,33 @@ onMounted(() => {
     getNavData(openType.value);
   } else {
     const { proId } = route.query;
-    // const proIdNum = parseInt(`${proId}`, 10);
-    goodsDetail(`${proId}`).then((res) => {
-      console.log('商品详情数据000111', res);
-      const { draftStatus, draftDetail, detail, versionType } = res;
-      if (versionType === 1) {
-        // 新版装修数据
-        if (draftStatus === 0) {
-          // 草稿状态
-          if (!draftDetail) return;
-          componentsList.value = JSON.parse(draftDetail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
+    if (proId) {
+      goodsDetail(`${proId}`).then((res) => {
+        console.log('商品详情数据000111', res);
+        const { draftStatus, draftDetail, detail, versionType } = res;
+        if (versionType === 1) {
+          // 新版装修数据
+          if (draftStatus === 0) {
+            // 草稿状态
+            if (!draftDetail) return;
+            componentsList.value = JSON.parse(draftDetail);
+            toolList.value = componentsList.value.map((item) => {
+              return item.name;
+            });
+          } else {
+            // 发布状态
+            if (!detail) return;
+            componentsList.value = JSON.parse(detail);
+            toolList.value = componentsList.value.map((item) => {
+              return item.name;
+            });
+          }
         } else {
-          // 发布状态
-          if (!detail) return;
-          componentsList.value = JSON.parse(detail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
+          // 旧版数据丢弃
         }
-      } else {
-        // 旧版数据丢弃
-      }
-    });
+      });
+    }
+
     console.log('2222222222222222222');
     apiGetIsFirstUseDecoration().then((res: any) => {
       if (!res) {
