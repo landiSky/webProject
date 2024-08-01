@@ -885,9 +885,17 @@ onMounted(() => {
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
-
-      templateList.value = JSON.parse(data.detail);
       versionType.value = data.versionType;
+      if (data.draftStatus === 0) {
+        // 装修组件的草稿状态
+        if (!data.draftDetail) return;
+        templateList.value = JSON.parse(data.draftDetail);
+      } else if (data.draftStatus === 1) {
+        // 装修组件的发布状态
+        if (!data.detail) return;
+        templateList.value = JSON.parse(data.detail);
+      }
+
       // prodDetail.value.versionType = 1; // 模拟？？？
 
       const { saleType } = data;

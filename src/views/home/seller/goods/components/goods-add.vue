@@ -339,7 +339,9 @@
               <div style="display: flex">
                 <div>装修模块：</div>
                 <div style="color: #1d2129"
-                  >{{ `${detailSetOk ? '已配置模块' : '草稿状态'}` }}
+                  >{{
+                    `${formModel.draftStatus === 0 ? '草稿状态' : '已配置模块'}`
+                  }}
                 </div>
               </div>
               <div style="margin-left: 30px">
@@ -1003,6 +1005,8 @@ const formModel = ref<Record<string, any>>({
   useExplain: [],
   introduction: '',
   detail: '',
+  draftStatus: null,
+  draftDetail: '',
   versionType: 0,
   companyId: '',
 });
@@ -1558,6 +1562,8 @@ const getDetail = (id: any) => {
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
+    formModel.value.draftStatus = res.draftStatus;
+    formModel.value.draftDetail = res.draftDetail;
     formModel.value.versionType = res.versionType;
     formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
@@ -1732,7 +1738,7 @@ const editTemplateDetail = () => {
     query: {
       model: 0,
       type: ChannelType.PLATFORM_PRODUCT_DETAIL,
-      pro_id: formModel.value.id,
+      proId: formModel.value.id,
     },
   });
   window.open(routeUrl.href, '_blank');
@@ -1750,10 +1756,10 @@ const editTemplateDetail = () => {
   // const json = localStorage.getItem(`pro_${formModel.value.id}`);
   if (formModel.value.versionType === 1) {
     // 新版的装修信息才会存storage，传给装修工具
-    localStorage.setItem(
-      `pro_${formModel.value.id}`,
-      JSON.stringify({ setOk: true, data: formModel.value.detail })
-    );
+    // localStorage.setItem(
+    //   `pro_${formModel.value.id}`,
+    //   JSON.stringify({ setOk: true, data: formModel.value.detail })
+    // );
   }
 };
 
@@ -1889,39 +1895,6 @@ const getLocalDetail = () => {
   }
 };
 
-onMounted(() => {
-  window.addEventListener('online', () => {
-    online.value = true;
-  });
-  window.addEventListener('offline', () => {
-    cancelUploadingFiles();
-    online.value = false;
-  });
-  broadcastChannel.addEventListener('message', (event) => {
-    console.log('返回商品装修信息detail', event.data);
-    const { name } = JSON.parse(event.data);
-    if (name === 'product_detail') {
-      getLocalDetail();
-    }
-  });
-
-  formModel.value.companyId = String(userInfoByCompany.value?.companyId);
-  getClassList();
-  getSelectApplication();
-  if (props.data?.id) {
-    formModel.value.id = props.data?.id;
-    formModel2.value.productId = props.data?.id;
-    getDetail(props.data?.id);
-  } else {
-    getGoodsId();
-  }
-});
-
-onBeforeUnmount(() => {
-  broadcastChannel.close();
-  localStorage.removeItem(`pro_${formModel.value.id}`);
-});
-
 // const templateChanged = () => {
 //   // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
 //   // formRef.value.validateField('detail');
@@ -2001,10 +1974,10 @@ const onBack = (done: (closed: boolean) => void) => {
 // 保存
 const clickSave = async () => {
   // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
-  if (!detailSetOk.value && step.value === 1) {
-    Message.warning('详情未配置发布，配置发布完成可进行商品发布');
-    return;
-  }
+  // if (!detailSetOk.value && step.value === 1) {
+  //   Message.warning('详情未配置发布，配置发布完成可进行商品发布');
+  //   return;
+  // }
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
@@ -2015,7 +1988,11 @@ const clickSave = async () => {
 
 // 下一步
 const clickNext = async () => {
-  // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  // TODO 需要拦截做商品详情的发布后再进行下一步
+  if (formModel.value.draftStatus === 0) {
+    Message.warning('详情未配置发布，配置发布完成可进行商品发布');
+    return;
+  }
   formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
@@ -2142,6 +2119,43 @@ const validateAP = (index: number, key: string) => {
     validateAPT(key === 'account', index);
   });
 };
+
+onMounted(() => {
+  window.addEventListener('online', () => {
+    online.value = true;
+  });
+  window.addEventListener('offline', () => {
+    cancelUploadingFiles();
+    online.value = false;
+  });
+  broadcastChannel.addEventListener('message', (event) => {
+    console.log('返回商品装修信息detail', event.data);
+    const { name, status, data } = JSON.parse(event.data);
+    if (name === 'product_detail') {
+      // getLocalDetail();
+      // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
+      formModel.value.draftStatus = status;
+      formModel.value.draftDetail = data;
+      clickSave();
+    }
+  });
+
+  formModel.value.companyId = String(userInfoByCompany.value?.companyId);
+  getClassList();
+  getSelectApplication();
+  if (props.data?.id) {
+    formModel.value.id = props.data?.id;
+    formModel2.value.productId = props.data?.id;
+    getDetail(props.data?.id);
+  } else {
+    getGoodsId();
+  }
+});
+
+onBeforeUnmount(() => {
+  broadcastChannel.close();
+  localStorage.removeItem(`pro_${formModel.value.id}`);
+});
 </script>
 
 <style lang="less" scoped>
