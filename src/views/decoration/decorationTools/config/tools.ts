@@ -246,13 +246,6 @@ export const ToolData: Record<string, any> = {
           linkType: LinkType.LINK,
           linkUrl: 'http://www.baidu.com',
         },
-        {
-          title: '小标题',
-          desc: '图片描述图片描述',
-          src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
-          linkType: LinkType.LINK,
-          linkUrl: 'http://www.baidu.com',
-        },
       ],
     },
     configValue2: {
@@ -262,13 +255,6 @@ export const ToolData: Record<string, any> = {
           title: '小标题',
           desc: '图片描述图片描述',
           src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
-          linkType: LinkType.LINK,
-          linkUrl: 'http://www.baidu.com',
-        },
-        {
-          title: '小标题',
-          desc: '图片描述图片描述',
-          src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
           linkType: LinkType.LINK,
           linkUrl: 'http://www.baidu.com',
         },
