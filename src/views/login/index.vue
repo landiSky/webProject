@@ -3,7 +3,7 @@
     <div class="container-bg">
       <picture>
         <!-- 可能是一些对兼容性有要求的，但是性能表现更好的现代图片格式-->
-        <source
+        <!-- <source
           class="container-bg-img"
           :srcset="getImgPath('avif')"
           type="image/avif"
@@ -12,7 +12,7 @@
           class="container-bg-img"
           :srcset="getImgPath('webp')"
           type="image/webp"
-        />
+        /> -->
 
         <!-- 最终的兜底方案-->
         <img class="container-bg-img" :src="getImgPath('jpg')" />
@@ -24,16 +24,12 @@
 
 <script lang="ts" setup>
 import loginBgJpg from '@/assets/images/login-bg.jpg';
-import loginBgWebp from '@/assets/images/login-bg.webp';
-import loginBgAvif from '@/assets/images/login-bg.avif';
 
 import Register from './components/register.vue';
 
 const getImgPath = (type: string) => {
   const imgObj: Record<string, any> = {
     jpg: loginBgJpg,
-    webp: loginBgWebp,
-    avif: loginBgAvif,
   };
   return imgObj[type];
 };

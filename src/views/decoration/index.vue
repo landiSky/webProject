@@ -11,8 +11,6 @@
       <t-input
         v-model="form.name"
         :style="{ width: '532px' }"
-        :max-length="10"
-        show-word-limit
         allow-clear
         placeholder="请输入"
       />
@@ -89,6 +87,7 @@ import {
   onBeforeMount,
   onMounted,
   ref,
+  h,
 } from 'vue';
 import SourceMaterial from '@/components/sourceMaterial/index.vue';
 import {
@@ -97,7 +96,7 @@ import {
 } from '@/api/decoration/decoration-tools';
 import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
 
 const decoration = useDecorationStore();
@@ -122,24 +121,63 @@ const form = reactive({
 });
 
 const formRules = {
-  name: [{ required: true, message: '请输入平台名称' }],
-  logo: [{ required: true, message: '请输入平台LOGO' }],
+  // name: [{ required: true, message: '请输入平台名称' }],
+  name: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入平台名称');
+        const iszhCn = /[^\u4e00-\u9fa5]/;
+        const isEn = /[^a-zA-Z]/;
+        if (!iszhCn.test(value) || !isEn.test(value)) {
+          if (!iszhCn.test(value)) {
+            if (value.length > 8) return cb('中文长度不超过8个字符');
+          }
+          if (!isEn.test(value)) {
+            if (value.length > 12) return cb('英文长度不超过12个字符');
+          }
+        }
+        if (iszhCn.test(value) && isEn.test(value)) {
+          return cb('只支持中文或者英文');
+        }
+        return cb();
+      },
+    },
+  ],
+  logo: [{ required: true, message: '请上传平台LOGO' }],
 };
 const handleSubmit = (data: any) => {
   console.log(data);
   formRef.value.validate((valid: any) => {
     console.log('form 验证', valid, form);
     if (!valid) {
-      apiUpdateNavData({
-        id: ChannelType.PLATFORM_NAME,
-        name: data.name,
-        logo: data.logo,
-      }).then((res) => {
-        console.log(res);
-        // 暂时不用
-        // decoration.setPlatFormLogo(data.logo);
-        // decoration.setPlatFormName(data.name);
-        Message.success('保存成功');
+      Modal.info({
+        title: '保存成功，信息将展示用户，请确认！',
+        width: 450,
+        content: () => {
+          return h('div', { class: 'info-modal-content' }, [
+            h('div', { style: 'margin-left: 12px;' }, ''),
+          ]);
+        },
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '取消',
+        okText: '确定',
+        onOk: () => {
+          apiUpdateNavData({
+            id: ChannelType.PLATFORM_NAME,
+            name: data.name,
+            logo: data.logo,
+          }).then((res) => {
+            console.log(res);
+            // 暂时不用
+            // decoration.setPlatFormLogo(data.logo);
+            // decoration.setPlatFormName(data.name);
+            Message.success('保存成功');
+            // 等测试说得更新数据时在放开或者去调用接口
+            // window.location.reload();
+          });
+        },
       });
     }
   });
