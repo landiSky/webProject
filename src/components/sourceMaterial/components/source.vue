@@ -24,7 +24,7 @@
               accept=".jpg,.png,.bmp,.jpeg,gif"
               :data="uploadData"
               @success="uploadSuccess"
-              @error="uploadError"
+              @before-upload="onBeforeUpload"
             >
               <template #upload-button>
                 <t-space>
@@ -163,6 +163,17 @@ const uploadData = () => {
   return {};
 };
 
+const onBeforeUpload = async (currentFile: Record<string, any>) => {
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      Message.error(`上传失败，文件大小不要超过10M`);
+      reject();
+    } else {
+      resolve(true);
+    }
+  });
+};
+
 const getMaterialList = () => {
   state.loading = true;
   fetchMaterialList({
@@ -212,9 +223,9 @@ const uploadSuccess = () => {
   getMaterialList();
 };
 
-const uploadError = () => {
-  Message.error('上传失败');
-};
+// const uploadError = () => {
+//   Message.error('上传失败');
+// };
 
 const onTabChange = (key: number) => {
   params.pageNum = 1;
