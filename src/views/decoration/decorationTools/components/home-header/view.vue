@@ -123,7 +123,7 @@ defineExpose({
       position: absolute;
       top: 10%;
       left: 35%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -147,7 +147,7 @@ defineExpose({
       position: absolute;
       top: 5%;
       left: 57%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
 
@@ -172,7 +172,7 @@ defineExpose({
       position: absolute;
       top: 54%;
       left: 34%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -198,7 +198,7 @@ defineExpose({
       position: absolute;
       top: 50%;
       left: 56%;
-      z-index: 3000;
+      z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
@@ -274,7 +274,7 @@ defineExpose({
         }
 
         p {
-          width: 100%;
+          // width: 100%;
           padding: calc(@factor * 4px) calc(@factor * 9px);
           color: #1664ff;
           text-align: left;
