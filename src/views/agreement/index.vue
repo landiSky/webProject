@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, h } from 'vue';
-import { Modal } from '@tele-design/web-vue';
+import { Modal, Message } from '@tele-design/web-vue';
 import { agreementDetail, agreementuUpdate } from '@/api/operation/agreement';
 
 import TEditor from '@/components/teditor/index.vue';
@@ -40,10 +40,10 @@ const getDetail = () => {
 };
 
 const save = () => {
-  if (!textData.value || !childeRef.value) {
-    return;
-  }
-  if (textData.value.length === childeRef.value.handleGetContent().length) {
+  if (
+    textData.value.length ===
+    (childeRef.value && childeRef.value.handleGetContent().length)
+  ) {
     return;
   }
   const data = {
@@ -67,6 +67,7 @@ const save = () => {
           return;
         }
         getDetail();
+        Message.success('保存成功');
       });
     },
   });
@@ -74,13 +75,9 @@ const save = () => {
 
 const cancellation = () => {
   if (
-    !textData.value ||
-    !childeRef.value ||
-    childeRef.value.handleGetContent().length === 0
+    textData.value.length ===
+    (childeRef.value && childeRef.value.handleGetContent().length)
   ) {
-    return;
-  }
-  if (textData.value.length === childeRef.value.handleGetContent().length) {
     return;
   }
   Modal.info({
