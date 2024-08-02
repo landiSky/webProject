@@ -18,30 +18,30 @@ export default defineConfig({
     }),
     vueJsx(),
     svgLoader({ svgoConfig: {} }),
-    imageminPlugin({
-      // 插件选项
-      gifsicle: {
-        optimizationLevel: 7,
-        interlaced: false,
-      },
-      optipng: {
-        optimizationLevel: 7,
-      },
-      mozjpeg: {
-        quality: 20,
-      },
-      pngquant: {
-        quality: [0.8, 0.9],
-        speed: 4,
-      },
-      svgo: {
-        plugins: [
-          { removeViewBox: false },
-          { removeEmptyAttrs: false },
-          { sortAttrs: false },
-        ],
-      },
-    }),
+    // imageminPlugin({
+    //   // 插件选项
+    //   gifsicle: {
+    //     optimizationLevel: 7,
+    //     interlaced: false,
+    //   },
+    //   optipng: {
+    //     optimizationLevel: 7,
+    //   },
+    //   mozjpeg: {
+    //     quality: 20,
+    //   },
+    //   pngquant: {
+    //     quality: [0.8, 0.9],
+    //     speed: 4,
+    //   },
+    //   svgo: {
+    //     plugins: [
+    //       { removeViewBox: false },
+    //       { removeEmptyAttrs: false },
+    //       { sortAttrs: false },
+    //     ],
+    //   },
+    // }),
   ],
   resolve: {
     alias: [
