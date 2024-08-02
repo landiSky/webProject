@@ -135,7 +135,7 @@
                             color: '#fff',
                             cursor: 'pointer',
                           }"
-                          @click="() => (formModel.logo = '')"
+                          @click="onUploadDelete"
                         />
                       </div>
                     </div>
@@ -144,43 +144,6 @@
               </div>
               <IconMaterial v-else @on-confirm="finishedUploadLogo" />
             </div>
-
-            <!-- <t-upload
-              v-if="formModel.logo == ''"
-              :ref="logoRef"
-              :file-list="logoList"
-              :limit="1"
-              :multiple="false"
-              :headers="uploadHeaders"
-              action="/server/web/file/upload"
-              :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
-              :show-file-list="false"
-              @before-upload="beforeUpload"
-              @success="uploadSuccess"
-              @error="uploadError"
-              @progress="uploadProgress"
-            >
-              <template #upload-button>
-                <t-spin :size="24" :loading="logoUploading">
-                  <div :class="`tele-upload-list-item`">
-                    <div class="tele-upload-picture-card">
-                      <div class="tele-upload-picture-card-text">
-                        <IconPlus :size="16" :stroke-width="6" />
-                        <div
-                          style="
-                            margin-top: 8px;
-                            font-weight: 500;
-                            font-size: 12px;
-                          "
-                          >点击上传</div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </t-spin>
-              </template>
-            </t-upload> -->
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -982,14 +945,7 @@ const classFiledNames = { value: 'id', label: 'name' };
 
 // 详情
 const detailImageRef = ref();
-const imageVisible: Record<string, any> = ref({});
 const imageList = ref<string[]>([]);
-const deletedetailImg = (file: string) => {
-  const index = imageList.value.indexOf(file);
-  if (index >= 0) {
-    imageList.value.splice(index, 1);
-  }
-};
 
 // logo
 const logoRef = ref();
@@ -1046,7 +1002,19 @@ const formRules = {
     { required: true, message: '请输入商品名称' },
     { maxLength: 20, message: '最多允许输入20个字符' },
   ],
-  logo: [{ required: true, message: '请上传logo图' }],
+  logo: [
+    {
+      required: true,
+      // message: '请上传logo图',
+      validator: (value: string, callback: (error?: string) => void) => {
+        if (!value) {
+          callback('请上传logo图');
+        } else {
+          callback('');
+        }
+      },
+    },
+  ],
   detailImg: [{ required: true, message: '请至少上传一张详情图' }],
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
@@ -1306,64 +1274,9 @@ const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
 
-const logoUploading = ref(false);
-
-const uploadError = (fileItem: FileItem) => {
-  logoUploading.value = false;
+const onUploadDelete = () => {
   formModel.value.logo = '';
-  const size = fileItem.file?.size ?? 0;
-  if (size > 10 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过10M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
   formRef.value.validateField('logo');
-};
-
-const uploadProgress = () => {
-  logoUploading.value = true;
-};
-
-const uploadSuccess = (fileItem: FileItem) => {
-  logoUploading.value = false;
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    formModel.value.logo = fileItem.response.data;
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-  formRef.value.validateField('logo');
-};
-
-const detailUploading = ref(false);
-
-const uploadDetailProgress = () => {
-  detailUploading.value = true;
-};
-
-const uploadDetailError = (fileItem: FileItem) => {
-  detailUploading.value = false;
-  const size = fileItem.file?.size ?? 0;
-  if (size > 10 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过10M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
-  formRef.value.validateField('detailImg');
-};
-
-const uploadDetailSuccess = (fileItem: FileItem) => {
-  detailUploading.value = false;
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    imageList.value.push(fileItem.response.data);
-    formModel.value.detailImg = imageList.value.join(',');
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-  formRef.value.validateField('detailImg');
 };
 
 const uploadExpError = (fileItem: FileItem) => {
@@ -1717,6 +1630,7 @@ const getDetail = (id: any) => {
 
 const finishedUploadLogo = (logo: string) => {
   formModel.value.logo = logo;
+  formRef.value.validateField('logo');
 };
 
 // 增加详情内容，跳转装修工具
