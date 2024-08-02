@@ -348,13 +348,16 @@ const closeTip = (msg: string) => {
 const clickSave = () => {
   // 先清除本地存储
   const { id } = route.query;
-  const json =
-    componentsList.value.length > 0 ? JSON.stringify(componentsList.value) : '';
+  if (componentsList.value.length === 0) {
+    Message.warning('请先添加组件并配置完成再保存');
+    return;
+  }
+  const json = JSON.stringify(componentsList.value);
   if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+    // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
     broadcastChannel.postMessage(
       JSON.stringify({ name: 'product_detail', status: 0, data: json })
     );
-    closeTip('保存成功');
   } else {
     // 二次弹框
     Modal.info({
@@ -384,7 +387,6 @@ const clickSave = () => {
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
-  console.log('保存home header00');
   const childForm = () => {
     console.log('childForm', viewComponentWrapRef.value);
     return viewComponentWrapRef.value.map((item: any) => {
@@ -394,46 +396,43 @@ const clickSaveRemote = () => {
   Promise.all(childForm())
     .then((data: any) => {
       if (componentsList.value.length === 0) {
-        Message.error('请先添加组件');
+        Message.warning('请先添加组件并配置完成再发布');
         return;
       }
-      console.log('保存远程00');
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
       if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-        // tab间通信，发送json数据到tab页
+        // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', status: 1, data: json })
         );
-        closeTip('发布成功');
-        return;
+      } else {
+        // 二次弹框
+        Modal.info({
+          title: '确认保存并发布',
+          content: '发布后，当前编辑内容将发布到网站前台',
+          titleAlign: 'start',
+          hideCancel: false,
+          okText: '保存并发布',
+          onOk: () => {
+            // 保存远程
+            apiUpdateNavData({
+              id,
+              status: 1,
+              detail: json,
+            }).then((res: any) => {
+              // 通知主tab页刷新
+              broadcastChannel.postMessage(
+                JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+              );
+              closeTip('发布成功');
+            });
+          },
+
+          onCancel: () => {},
+        });
       }
-
-      // 二次弹框
-      Modal.info({
-        title: '确认保存并发布',
-        content: '发布后，当前编辑内容将发布到网站前台',
-        titleAlign: 'start',
-        hideCancel: false,
-        okText: '保存并发布',
-        onOk: () => {
-          // 保存远程
-          apiUpdateNavData({
-            id,
-            status: 1,
-            detail: json,
-          }).then((res: any) => {
-            // 通知主tab页刷新
-            broadcastChannel.postMessage(
-              JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
-            );
-            closeTip('发布成功');
-          });
-        },
-
-        onCancel: () => {},
-      });
     })
     .catch(() => {
       Message.error('未完成详情配置');
@@ -756,6 +755,19 @@ onMounted(() => {
       }
     });
   }
+  // 接收外部页面的消息
+  broadcastChannel.addEventListener('message', (event) => {
+    const { name, status, msg } = JSON.parse(event.data);
+    if (name === 'product_detail_save') {
+      if (status) {
+        // 保存成功
+        closeTip(msg);
+      } else {
+        // 失败
+        Message.warning(msg);
+      }
+    }
+  });
 });
 
 onBeforeUnmount(() => {

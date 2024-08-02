@@ -1798,17 +1798,6 @@ const getSelectApplication = () => {
   });
 };
 
-const getLocalDetail = () => {
-  const json = localStorage.getItem(`pro_${formModel.value.id}`);
-  if (json) {
-    const { setOk, data } = JSON.parse(json);
-    // true:已经配置好了;false:只是草稿
-    detailSetOk.value = setOk;
-    formModel.value.detail = data ?? '';
-    formRef.value.validateField('detail');
-  }
-};
-
 // const templateChanged = () => {
 //   // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
 //   // formRef.value.validateField('detail');
@@ -1817,10 +1806,17 @@ const getLocalDetail = () => {
 const doSave = async () => {
   let res;
   if (step.value === 1) {
-    // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
+      // 发消息给装修index页面，通知其保存商品详情失败
+      broadcastChannel.postMessage(
+        JSON.stringify({
+          name: 'product_detail_save',
+          status: false,
+          msg: '商品基础信息填写不完整，请检查',
+        })
+      );
       return false;
     }
     if (props.data?.id) {
@@ -1834,6 +1830,14 @@ const doSave = async () => {
         useExplain: formModel.value.useExplain.join(','),
       });
     }
+    const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
+    broadcastChannel.postMessage(
+      JSON.stringify({
+        name: 'product_detail_save',
+        status: !!res,
+        msg: res ? msg : '网络异常，请重试',
+      })
+    );
   } else {
     const r = await validForm2();
     if (!r) {
@@ -1887,11 +1891,6 @@ const onBack = (done: (closed: boolean) => void) => {
 
 // 保存
 const clickSave = async () => {
-  // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
-  // if (!detailSetOk.value && step.value === 1) {
-  //   Message.warning('详情未配置发布，配置发布完成可进行商品发布');
-  //   return;
-  // }
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
@@ -1904,7 +1903,7 @@ const clickSave = async () => {
 const clickNext = async () => {
   // TODO 需要拦截做商品详情的发布后再进行下一步
   if (formModel.value.draftStatus === 0) {
-    Message.warning('详情未配置发布，配置发布完成可进行商品发布');
+    Message.warning('详情未配置发布，配置发布完成可进行下一步');
     return;
   }
   formModel.value.detailImg = imageList.value.join(',');
@@ -2053,7 +2052,6 @@ onMounted(() => {
       if (!formModel.value.detail) {
         formModel.value.detail = data;
       }
-      console.log('返回的商品详情000', formModel.value);
       clickSave();
     }
   });
