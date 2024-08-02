@@ -109,7 +109,7 @@ onMounted(() => {
         ) {
           console.log('errorTarget', errorTarget);
           console.log('event 监听异常:', event);
-          Message.error('资源加载失败，请尝试刷新浏览器。');
+          // Message.error('资源加载失败，请尝试刷新浏览器。');
         }
       } catch (e) {
         console.log('error 监听异常:', e);
