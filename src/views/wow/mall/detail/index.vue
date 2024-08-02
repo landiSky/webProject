@@ -1075,12 +1075,18 @@ onUnmounted(() => {
             background: none;
 
             .self-radio-item {
+              min-width: 60px;
               margin-right: 30px;
               padding: 10px;
               font-weight: 500;
               font-size: 16px;
+              text-align: center;
               background: #fff;
               border-radius: 4px;
+
+              > div {
+                margin: 0 auto;
+              }
 
               &.tele-radio-checked {
                 color: #1d2129;
@@ -1116,7 +1122,7 @@ onUnmounted(() => {
 
       &.new-baseInfo {
         height: 600px;
-        background: url('../../../../assets/images/wow/mall/mall-bg.png')
+        background: url('../../../../assets/images/wow/mall/mall1-bg.jpg')
           no-repeat;
         background-size: 100%;
 
@@ -1165,9 +1171,6 @@ onUnmounted(() => {
               font-size: 14px;
             }
           }
-        }
-
-        button {
         }
       }
     }
