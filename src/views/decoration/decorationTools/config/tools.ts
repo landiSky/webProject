@@ -199,6 +199,7 @@ export const ToolData: Record<string, any> = {
     icon: 'leftRightImgTxt',
     name: 'LeftRightImageText',
     mainTitle: '我是主标题66',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '小标题',

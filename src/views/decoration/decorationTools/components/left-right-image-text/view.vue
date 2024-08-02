@@ -1,8 +1,6 @@
 <template>
-  <div class="vertical-image-text-box">
-    <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
-    }}</div>
+  <div class="lr-image-text-box">
+    <div class="lr-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
     <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
@@ -28,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed, ref, watch } from 'vue';
+import { toRefs, computed, ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
   data: {
@@ -93,16 +91,15 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 
-.vertical-image-text-box {
+.lr-image-text-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: calc(@factor * 720px);
   height: calc(@factor * 380px);
-  background-color: white;
 
-  .vertical-image-text-title {
+  .lr-image-text-title {
     width: calc(@factor * 600px);
     margin: calc(@factor * 29px) 0;
     overflow: hidden;
@@ -206,9 +203,14 @@ defineExpose({
     :deep(.tele-carousel-indicator-wrapper-bottom) {
       background: transparent;
     }
+
+    :deep(.tele-carousel-item-slide-out) {
+      display: none;
+      // animation: xxx;
+    }
   }
 
-  .vertical-image-text-desc {
+  .lr-image-text-desc {
     display: -webkit-box;
     width: calc(@factor * 600px);
     margin-top: calc(@factor * 9px);
