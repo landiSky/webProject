@@ -132,7 +132,7 @@
                   </t-radio>
                 </t-radio-group>
               </span>
-              <span v-else>-</span>
+              <span v-else>不限</span>
             </div>
             <div
               v-if="
@@ -313,12 +313,12 @@
                     >
                       {{ durationItem.duration }}个月
                     </span>
-                    <span v-else>不限</span>
+                    <span v-else>-</span>
                   </template>
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>-</span>
           </div>
           <t-button
             v-if="Number(selectVersion.isTry) === 1"
