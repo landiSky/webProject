@@ -51,7 +51,6 @@
     "sm-crypto": "^0.3.13",
     "tinymce": "^7.2.1",
     "vant": "^2.13.2",
-    "vite-plugin-imagemin": "^0.6.1",
     "vue": "^3.2.16",
     "vue-router": "^4.2.2",
     "vue3-seamless-scroll": "^2.0.1",
