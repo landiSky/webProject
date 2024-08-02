@@ -6,9 +6,17 @@
           <div class="hover-header">{{ data?.configValue[0].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[0].desc }} </div>
-            <p @click="clickLink(data?.configValue[0].linkUrl)">
-              查看更多<icon-right
-            /></p>
+            <p
+              @click="
+                clickLink(
+                  data?.configValue[0].linkType,
+                  data?.configValue[0].linkUrl
+                )
+              "
+            >
+              查看更多
+              <icon-right />
+            </p>
           </div>
         </div>
       </div>
@@ -18,9 +26,15 @@
           <div class="hover-header">{{ data?.configValue[1].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[1].desc }} </div>
-            <p @click="clickLink(data?.configValue[1].linkUrl)"
-              >查看更多<icon-right
-            /></p>
+            <p
+              @click="
+                clickLink(
+                  data?.configValue[1].linkType,
+                  data?.configValue[1].linkUrl
+                )
+              "
+              >查看更多<icon-right />
+            </p>
           </div>
         </div>
       </div>
@@ -29,9 +43,15 @@
           <div class="hover-header">{{ data?.configValue[2].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[2].desc }} </div>
-            <p @click="clickLink(data?.configValue[2].linkUrl)"
-              >查看更多<icon-right
-            /></p>
+            <p
+              @click="
+                clickLink(
+                  data?.configValue[2].linkType,
+                  data?.configValue[2].linkUrl
+                )
+              "
+              >查看更多<icon-right />
+            </p>
           </div>
         </div>
       </div>
@@ -40,9 +60,15 @@
           <div class="hover-header">{{ data?.configValue[3].title }}</div>
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[3].desc }} </div>
-            <p @click="clickLink(data?.configValue[3].linkUrl)"
-              >查看更多<icon-right
-            /></p>
+            <p
+              @click="
+                clickLink(
+                  data?.configValue[3].linkType,
+                  data?.configValue[3].linkUrl
+                )
+              "
+              >查看更多 <icon-right />
+            </p>
           </div>
         </div>
       </div>
@@ -89,8 +115,8 @@ const validate = () => {
 };
 
 const emit = defineEmits(['golink']);
-const clickLink = (url: string) => {
-  emit('golink', { type: 0, url });
+const clickLink = (type: number, url: string) => {
+  emit('golink', { type, url });
 };
 
 defineExpose({
@@ -234,14 +260,20 @@ defineExpose({
       transition: opacity 0.5s ease, transform 0.5s ease;
 
       .hover-header {
-        width: calc(@factor * 121px);
+        // display: block;
+        width: calc(@factor * 118px);
         height: calc(@factor * 21px);
+        padding-right: calc(@factor * 8px);
         padding-left: calc(@factor * 10px);
+        overflow: hidden;
         color: #1d2129;
         font-weight: 500;
+        // word-break: break-all;
         font-size: calc(@factor * 9px);
         line-height: calc(@factor * 21px);
+        white-space: nowrap;
         text-align: left;
+        text-overflow: ellipsis;
         background-color: transparent;
       }
 
@@ -268,7 +300,7 @@ defineExpose({
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
-          word-wrap: break-word;
+          // word-wrap: break-word;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
         }
@@ -290,91 +322,6 @@ defineExpose({
     width: calc(@factor * 600px) !important;
     height: calc(@factor * 260px) !important;
     object-fit: cover !important;
-  }
-}
-
-::v-deep(.tele-trigger-popup) {
-  .tele-trigger-popup-wrapper {
-    .tele-popover-popup-content {
-      width: calc(@factor * 121px) !important;
-      height: calc(@factor * 62px) !important;
-      padding: 0;
-      overflow-x: hidden;
-      overflow-y: hidden;
-      background-color: transparent;
-
-      .tele-popover-title {
-        width: 100%;
-
-        .content-header {
-          position: relative;
-          display: flex !important;
-          align-items: flex-start;
-          justify-content: space-between !important;
-          height: calc(@factor * 21px);
-          background-color: transparent !important;
-
-          span {
-            margin-left: calc(@factor * 12px);
-            font-weight: 500;
-            font-size: calc(@factor * 9.4px);
-            line-height: calc(@factor * 21px);
-          }
-        }
-      }
-
-      .tele-popover-content {
-        width: 100%;
-        height: calc(@factor * 41px);
-
-        .hover-content {
-          position: relative;
-          display: flex !important;
-          flex-direction: column;
-          align-items: flex-start !important;
-          // justify-content: flex-start !important;
-          height: 100%;
-          padding: calc(@factor * 6px) calc(@factor * 6px) 0 calc(@factor * 6px);
-          color: #4e5969;
-          font: PingFang SC;
-          font-size: calc(@factor * 5.3px);
-          background-color: #bcf6ff80;
-
-          .hover-desc {
-            display: -webkit-box;
-            flex: 1;
-            width: 100%;
-            overflow: hidden;
-            font-size: calc(@factor * 6px);
-            white-space: normal;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-          }
-
-          .hover-more {
-            margin-bottom: calc(@factor * 7px);
-            color: #1664ff;
-            cursor: pointer;
-          }
-          // .img_top-left {
-          //   position: absolute;
-          //   bottom: 4px;
-          //   left: 0;
-          // }
-          // .img_top-right {
-          //   position: absolute;
-          //   bottom: 4px;
-          //   right: 0;
-          // }
-        }
-      }
-    }
-
-    .tele-trigger-arrow {
-      visibility: hidden;
-    }
   }
 }
 </style>

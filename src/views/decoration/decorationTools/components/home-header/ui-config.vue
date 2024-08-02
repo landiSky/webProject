@@ -63,9 +63,28 @@
             show-word-limit
           />
         </t-form-item>
-
         <t-form-item
-          label="详情链接"
+          label="关联"
+          :field="`list.${index}.linkType`"
+          :label-col-props="{
+            flex: '90px',
+          }"
+          validate-trigger="blur"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
+        >
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
+            <t-radio :value="0">链接</t-radio>
+            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="2">无</t-radio>
+          </t-radio-group>
+        </t-form-item>
+        <t-form-item
+          v-if="item.linkType !== 2"
+          :label="
+            item.linkType === 0 ? '链接地址' : item.linkType === 1 ? '商品' : ''
+          "
           :field="`list.${index}.linkUrl`"
           :label-col-props="{
             flex: '90px',
@@ -82,6 +101,19 @@
             show-word-limit
             placeholder="请输入"
           />
+          <t-select
+            v-if="item.linkType === 1"
+            v-model="item.linkUrl"
+            placeholder="请选择"
+            allow-clear
+          >
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg?.name }}</t-option
+            >
+          </t-select>
         </t-form-item>
       </div>
     </t-form>
@@ -122,6 +154,10 @@ const form = ref<ConfigData>({
   mainTitle: '',
   list: [],
 });
+
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
 
 onMounted(() => {
   // form赋值
