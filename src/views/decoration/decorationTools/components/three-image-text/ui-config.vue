@@ -98,7 +98,7 @@
         >
           <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
-            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="1" :disabled="isPro">商品</t-radio>
             <t-radio :value="2">无</t-radio>
           </t-radio-group>
         </t-form-item>
@@ -226,6 +226,7 @@ interface GoodsItem {
 
 const props = defineProps({
   data: Object,
+  isPro: Boolean,
   goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);

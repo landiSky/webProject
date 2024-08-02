@@ -5,6 +5,7 @@
       :is="ComponentsMap[data?.name]?.uiConfig()"
       ref="formComponentRef"
       :data="data"
+      :is-pro="isPro"
       :goods-list="goodsList"
     ></component>
   </div>
@@ -24,12 +25,16 @@ import {
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import eventBus from '@/utils/bus';
 import { apiGetProductList } from '@/api/decoration/decoration-tools';
+import { useRoute, useRouter } from 'vue-router';
+import { ChannelType } from '@/enums/decoration';
 
 type GoodsItem = {
   name: string;
   id: string;
 };
 const data = ref();
+const route = useRoute();
+const isPro = ref(false);
 const goodsList = ref<GoodsItem[]>([]);
 const formComponentRef = ref();
 // 配置项是list的组件
@@ -59,6 +64,16 @@ watch(
     }
   },
   { deep: true }
+);
+
+watch(
+  () => route.query,
+  (nv) => {
+    const { type } = nv;
+    const t = parseInt(`${type}`, 10);
+    isPro.value = t === ChannelType.PLATFORM_PRODUCT_DETAIL;
+  },
+  { deep: true, immediate: true }
 );
 
 const getGoodsList = () => {
