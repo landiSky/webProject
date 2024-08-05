@@ -257,12 +257,17 @@
               :size="20"
               @click="addBlock1"
             />
-            <iconpark-icon
+            <t-tooltip
               v-else
-              style="cursor: not-allowed"
-              name="squarePlusGray"
-              size="20"
-            />
+              content="到达区块添加上限，删除后可操作"
+              position="tl"
+            >
+              <iconpark-icon
+                style="cursor: not-allowed"
+                name="squarePlusGray"
+                size="20"
+              />
+            </t-tooltip>
             <span>添加区块（最多支持4个区块）</span>
           </div>
         </div>
@@ -487,12 +492,17 @@
               :size="20"
               @click="addBlock2"
             />
-            <iconpark-icon
+            <t-tooltip
               v-else
-              style="cursor: not-allowed"
-              name="squarePlusGray"
-              size="20"
-            />
+              content="到达区块添加上限，删除后可操作"
+              position="tl"
+            >
+              <iconpark-icon
+                style="cursor: not-allowed"
+                name="squarePlusGray"
+                size="20"
+              />
+            </t-tooltip>
             <span>添加区块（最多支持4个区块）</span>
           </div>
         </div>
