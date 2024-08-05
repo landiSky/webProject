@@ -118,8 +118,7 @@ defineExpose({
       height: calc(@factor * 256px);
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
-      cursor: pointer;
-
+      // cursor: pointer;
       .image-item-content {
         z-index: 100;
         display: flex;

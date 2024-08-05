@@ -153,7 +153,7 @@ defineExpose({
     width: calc(@factor * 148px);
     height: calc(@factor * 180px);
     background: #fffffff5;
-    cursor: pointer;
+    // cursor: pointer;
     // transition: all 0.3s;
     .item-overlap-item-hover {
       width: 100%;
@@ -265,6 +265,7 @@ defineExpose({
     font-size: calc(@factor * 7px);
     line-height: calc(@factor * 11px);
     text-align: center;
+    cursor: pointer;
   }
 
   .view-detail-line {
