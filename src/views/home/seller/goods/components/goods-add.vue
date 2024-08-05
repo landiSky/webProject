@@ -1657,14 +1657,6 @@ const editTemplateDetail = () => {
   });
   window.open(routeUrl.href, '_blank');
   // 方案一 使用tab通信发送detail数据
-  // setTimeout(() => {
-  //   broadcastChannel.postMessage(
-  //     JSON.stringify({
-  //       name: 'product_detail',
-  //       data: formModel.value.detail,
-  //     })
-  //   );
-  // }, 100);
   // 方案二 路由传递商品id，去装修页通过接口重新拉取商品信息，包含detail数据
   // 方案三 路由传递商品id并存本地，去装修页面获取本地存储，包含detai数据
   // const json = localStorage.getItem(`pro_${formModel.value.id}`);
@@ -1805,11 +1797,13 @@ const getSelectApplication = () => {
 
 const doSave = async () => {
   let res;
+  let err;
   if (step.value === 1) {
     formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
       // 发消息给装修index页面，通知其保存商品详情失败
+      formModel.value.detail = '';
       broadcastChannel.postMessage(
         JSON.stringify({
           name: 'product_detail_save',
@@ -1823,19 +1817,24 @@ const doSave = async () => {
       res = await updateGoods1({
         ...formModel.value,
         useExplain: formModel.value.useExplain.join(','),
+      }).catch((e) => {
+        err = e.message;
       });
     } else {
       res = await saveGoods1({
         ...formModel.value,
         useExplain: formModel.value.useExplain.join(','),
+      }).catch((e) => {
+        err = e.message;
       });
     }
     const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
+    console.log('00112233', res);
     broadcastChannel.postMessage(
       JSON.stringify({
         name: 'product_detail_save',
         status: !!res,
-        msg: res ? msg : '网络异常，请重试',
+        msg: res ? msg : err ?? '保存失败',
       })
     );
   } else {
@@ -1894,7 +1893,7 @@ const clickSave = async () => {
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
-    Message.success('保存成功');
+    // Message.success('保存成功');
     needSave = false;
   }
 };
@@ -2045,12 +2044,22 @@ onMounted(() => {
     console.log('返回商品装修信息detail', event.data);
     const { name, status, data } = JSON.parse(event.data);
     if (name === 'product_detail') {
-      // getLocalDetail();
       // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
       formModel.value.draftStatus = status;
-      formModel.value.draftDetail = data;
-      if (!formModel.value.detail) {
+      if (status) {
         formModel.value.detail = data;
+      } else {
+        formModel.value.draftDetail = data;
+        if (!formModel.value.detail) {
+          broadcastChannel.postMessage(
+            JSON.stringify({
+              name: 'product_detail_save',
+              status: false,
+              msg: '创建商品时需要先发布详情模块',
+            })
+          );
+          return;
+        }
       }
       clickSave();
     }
