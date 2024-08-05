@@ -128,9 +128,11 @@ const params = reactive<{
   pageSize: number;
   pageNum: number;
   companyId: number | undefined;
+  type: number;
 }>({
   pageSize: 12,
   pageNum: 1,
+  type: 0,
   companyId: undefined, // 内置-1 我的-管理员不传/机构companyId
 });
 
