@@ -220,7 +220,10 @@
                   >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示信息">
+              <t-descriptions-item
+                v-if="!formModel.versionType"
+                label="详情展示信息"
+              >
                 {{
                   formModel.detail
                     ? JSON.parse(formModel.detail)
