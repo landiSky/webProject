@@ -73,18 +73,20 @@
                       padding: 5px;
                       border: 1px solid #86909c;
                       border-radius: 2px;
+                      cursor: pointer;
                     "
                     @click="deleteComponent(index)"
                   />
                   <iconpark-icon
+                    v-if="!isMaxNum"
                     name="componentCopy"
                     :size="12"
-                    :style="{
-                      padding: '5px',
-                      border: '1px solid #86909c',
-                      borderRadius: '2px',
-                      cursor: isMaxNum ? 'disabled' : 'pointer',
-                    }"
+                    style="
+                      padding: 5px;
+                      border: 1px solid #86909c;
+                      border-radius: 2px;
+                      cursor: pointer;
+                    "
                     @click="copyComponent(index)"
                   />
                   <t-popover
@@ -98,6 +100,7 @@
                         padding: 5px;
                         border: 1px solid #86909c;
                         border-radius: 2px;
+                        cursor: pointer;
                       "
                     />
                     <template #content>
