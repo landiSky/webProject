@@ -9,7 +9,6 @@
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
-        @click="clickLink(item?.linkType, item?.linkUrl)"
       >
         <t-image
           :src="`/server/web/file/download?name=${item?.src}`"
@@ -21,6 +20,12 @@
             item?.desc ||
             '我是简介我是简介我是简介，我是简介，我是简介我是简介我是简介，我是简介我是简介我是简介我是简介。'
           }}</span>
+          <span
+            v-if="item?.linkType !== 2"
+            class="image-link"
+            @click="clickLink(item?.linkType, item?.linkUrl)"
+            >查看详情>>
+          </span>
         </div>
       </div>
     </div>
@@ -116,8 +121,7 @@ defineExpose({
       height: calc(@factor * 256px);
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
-      cursor: pointer;
-
+      // cursor: pointer;
       .image-item-content {
         z-index: 100;
         display: flex;
@@ -149,6 +153,14 @@ defineExpose({
           word-wrap: break-word;
           -webkit-line-clamp: 7;
           -webkit-box-orient: vertical;
+        }
+
+        .image-link {
+          color: #fff;
+          color: rgba(22, 100, 255, 1);
+          font-size: calc(@factor * 7px);
+          line-height: calc(@factor * 11px);
+          cursor: pointer;
         }
       }
     }

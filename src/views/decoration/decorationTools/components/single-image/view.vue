@@ -6,7 +6,7 @@
     <t-image
       :src="`/server/web/file/download?name=${data?.configValue?.src}`"
       :preview="false"
-      style="cursor: pointer"
+      :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
       @click="
         clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
       "
@@ -115,4 +115,7 @@ defineExpose({
 //   transform: scale(2); /* 将元素的尺寸放大2倍 */
 //   transform-origin: 0 0; /* 设置缩放中心点 */
 // }
+.mouse-cursor {
+  cursor: pointer;
+}
 </style>

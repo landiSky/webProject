@@ -22,7 +22,10 @@
           >
             <div class="image-item">
               <div class="image-content">
-                <t-image :src="`/server/web/file/download?name=${item?.src}`" />
+                <t-image
+                  :src="`/server/web/file/download?name=${item?.src}`"
+                  :preview="false"
+                />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
                     item?.title || '小标题'
@@ -64,7 +67,10 @@
           >
             <div class="image-item">
               <div class="image-content">
-                <t-image :src="`/server/web/file/download?name=${item?.src}`" />
+                <t-image
+                  :src="`/server/web/file/download?name=${item?.src}`"
+                  :preview="false"
+                />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
                     item?.title || '小标题'

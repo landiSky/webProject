@@ -217,7 +217,11 @@
           size="20px"
           @click="addBlock"
         ></iconpark-icon>
-        <t-tooltip v-else content="到达区块添加上限，删除后可操作" is-bright>
+        <t-tooltip
+          v-else
+          content="到达区块添加上限，删除后可操作"
+          position="tl"
+        >
           <iconpark-icon
             class="plusIcon"
             name="squarePlusGray"
