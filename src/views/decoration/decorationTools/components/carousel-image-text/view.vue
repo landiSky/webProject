@@ -26,7 +26,10 @@
             class="image-cls"
           />
           <div class="image-content">
-            <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+            <span class="image-desc">{{
+              item?.desc ||
+              '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
+            }}</span>
             <span
               v-if="item?.linkType !== 2"
               class="image-link"

@@ -6,7 +6,10 @@
         <div class="image-item">
           <div class="image-item-content">
             <div class="image-title">{{ item?.title || '小标题' }}</div>
-            <div class="image-desc">{{ item?.desc || '图片简介' }}</div>
+            <div class="image-desc">{{
+              item?.desc ||
+              '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题'
+            }}</div>
             <span
               v-if="item?.linkType !== 2"
               class="image-link"

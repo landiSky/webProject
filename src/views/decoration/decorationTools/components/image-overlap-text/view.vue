@@ -18,8 +18,12 @@
           <div class="image-overlap-item-icon">
             <img :src="`/server/web/file/download?name=${item?.src}`" alt="" />
           </div>
-          <div class="image-overlap-item-title">{{ item?.title }}</div>
-          <div class="image-overlap-item-desc">{{ item?.desc }}</div>
+          <div class="image-overlap-item-title">{{
+            item?.title || '小标题'
+          }}</div>
+          <div class="image-overlap-item-desc">{{
+            item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+          }}</div>
           <t-space
             v-if="item.linkType !== LinkType.BLANK"
             direction="vertical"

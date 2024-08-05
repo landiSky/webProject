@@ -261,8 +261,8 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 190,
-  height: 190,
+  width: 960,
+  height: 520,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
@@ -300,11 +300,11 @@ const addBlock = () => {
   }
   const { list } = form.value;
   list.push({
-    title: '',
-    desc: '',
-    src: '909d785b-d3fa-4812-b117-557dfe8270e1.jpeg',
+    title: '小标题',
+    desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+    src: 'a0076f29-088e-44b4-afee-ac0924043e1e.png',
     linkType: 0,
-    linkUrl: '',
+    linkUrl: 'http://www.baidu.com',
   });
 };
 

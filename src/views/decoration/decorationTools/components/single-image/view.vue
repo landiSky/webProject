@@ -12,7 +12,8 @@
       "
     ></t-image>
     <div class="single-image-desc">{{
-      data?.configValue?.desc || '图片描述'
+      data?.configValue?.desc ||
+      '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
     }}</div>
   </div>
 </template>
@@ -95,6 +96,7 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 8px);
     white-space: normal;
+    text-align: left;
     text-overflow: ellipsis;
     word-wrap: break-word;
     -webkit-line-clamp: 2;

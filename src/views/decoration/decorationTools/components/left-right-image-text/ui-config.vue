@@ -271,11 +271,11 @@ const changeRadio = (value: number) => {
 };
 const addBlock = () => {
   form.value.list.push({
-    title: '',
-    desc: '',
-    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+    title: '小标题',
+    desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
+    src: 'a34a8661-c656-42ef-92fb-d14cf97bf2dd.png',
     linkType: 0,
-    linkUrl: '',
+    linkUrl: 'http://www.baidu.com',
   });
 };
 const onBeforeRemove = (index: number) => {

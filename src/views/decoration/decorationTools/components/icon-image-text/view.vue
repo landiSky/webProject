@@ -13,7 +13,9 @@
           :preview="false"
         />
         <span class="image-title">{{ item?.title || '小标题' }}</span>
-        <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+        <span class="image-desc">{{
+          item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+        }}</span>
         <span
           v-if="item?.linkType !== 2"
           class="image-link"

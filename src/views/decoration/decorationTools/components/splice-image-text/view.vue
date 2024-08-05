@@ -27,7 +27,9 @@
                   <span class="image-little-title">{{
                     item?.title || '小标题'
                   }}</span>
-                  <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+                  <span class="image-desc">{{
+                    item?.desc || '我是简介我是简介我是简介我是简介我是简介'
+                  }}</span>
                   <span class="image-index">{{
                     `${index + 1}/${data?.configValue1?.config.length}`
                   }}</span>

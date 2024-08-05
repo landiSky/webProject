@@ -9,13 +9,15 @@
         :style="boxStyle"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title }}</span>
+        <span class="image-title">{{ item?.title || '主标题' }}</span>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}`"
           :preview="false"
           class="image-cls"
         />
-        <span class="image-desc">{{ item?.desc }}</span>
+        <span class="image-desc">{{
+          item?.desc || '我是副标题我是副标题我是副标题'
+        }}</span>
         <span
           v-if="item?.linkType !== 2"
           class="image-link"

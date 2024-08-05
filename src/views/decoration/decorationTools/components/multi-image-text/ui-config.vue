@@ -291,11 +291,11 @@ const addBlock = () => {
   }
   const { list } = form.value;
   list.push({
-    title: '',
-    desc: '',
-    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
+    title: '小标题',
+    desc: '我是副标题我是副标题我是副标题',
+    src: '86e87d58-2bbf-4044-8638-e2a041ffe31f.png',
     linkType: 0,
-    linkUrl: '',
+    linkUrl: 'http://www.baidu.com',
   });
 };
 

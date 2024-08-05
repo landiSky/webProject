@@ -17,7 +17,10 @@
         />
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
-          <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+          <span class="image-desc">{{
+            item?.desc ||
+            '我是简介我是简介我是简介，我是简介，我是简介我是简介我是简介，我是简介我是简介我是简介我是简介。'
+          }}</span>
         </div>
       </div>
     </div>
