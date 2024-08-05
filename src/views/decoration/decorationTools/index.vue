@@ -349,7 +349,7 @@ const clickSave = () => {
   // 先清除本地存储
   const { id } = route.query;
   if (componentsList.value.length === 0) {
-    Message.warning('请先添加组件并配置完成再保存');
+    Message.error('请先添加组件并配置完成再保存');
     return;
   }
   const json = JSON.stringify(componentsList.value);
@@ -396,7 +396,7 @@ const clickSaveRemote = () => {
   Promise.all(childForm())
     .then((data: any) => {
       if (componentsList.value.length === 0) {
-        Message.warning('请先添加组件并配置完成再发布');
+        Message.error('请先添加组件并配置完成再发布');
         return;
       }
       const { id } = route.query;
@@ -764,7 +764,7 @@ onMounted(() => {
         closeTip(msg);
       } else {
         // 失败
-        Message.warning(msg);
+        Message.error(msg);
       }
     }
   });
