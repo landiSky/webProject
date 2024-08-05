@@ -1,7 +1,7 @@
 <!-- 这里是渠道页面 -->
 <template>
   <div class="channel-box">
-    <t-space direction="vertical" size="large" fill>
+    <t-space direction="vertical" size="small" fill>
       <div class="form-box">
         <t-space>
           <div class="vertical-line"></div>
@@ -53,15 +53,21 @@
           <div class="row-cls row-cls-top">
             <t-form-item field="status" label="页面装修">
               <div v-if="form1?.status === 1" class="save-btn">
-                <t-tag bordered style="cursor: pointer" @click="goHome"
-                  >查看前台页面
-                </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
+                <span style="color: #1d2129">已发布</span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
+                  @click="goHome"
+                >
+                  查看前台页面>>
+                </span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
                   @click="goDecoration(form1)"
-                  >继续装修
-                </t-tag>
+                >
+                  继续装修>>
+                </span>
               </div>
               <div v-else-if="form1?.status === 0">
                 <t-tag
@@ -80,7 +86,7 @@
               <div
                 v-else
                 class="save-btn"
-                style="margin-left: 16px"
+                style="margin-left: 0"
                 @click="goDecoration(form1)"
               >
                 去装修>>
@@ -140,15 +146,21 @@
           <div class="row-cls row-cls-top">
             <t-form-item field="status" label="页面装修">
               <div v-if="form2?.status === 1" class="save-btn">
-                <t-tag bordered style="cursor: pointer" @click="goPlatProducts"
-                  >查看前台页面
-                </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
+                <span style="color: #1d2129">已发布</span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
+                  @click="goPlatProducts"
+                >
+                  查看前台页面>>
+                </span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
                   @click="goDecoration(form2)"
-                  >继续装修
-                </t-tag>
+                >
+                  继续装修>>
+                </span>
               </div>
               <div v-else-if="form2?.status === 0">
                 <t-tag
@@ -231,15 +243,21 @@
           <div class="input-title">页面装修</div> -->
             <t-form-item field="status" label="页面装修">
               <div v-if="form3?.status === 1" class="save-btn">
-                <t-tag bordered style="cursor: pointer" @click="goPlatServices"
-                  >查看前台页面
-                </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
+                <span style="color: #1d2129">已发布</span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
+                  @click="goPlatServices"
+                >
+                  查看前台页面>>
+                </span>
+                <span
+                  class="save-btn"
+                  style="margin-left: 16px"
                   @click="goDecoration(form3)"
-                  >继续装修
-                </t-tag>
+                >
+                  继续装修>>
+                </span>
               </div>
               <div v-else-if="form3?.status === 0">
                 <t-tag
@@ -579,6 +597,10 @@ onBeforeUnmount(() => {
 
     .row-cls-top {
       margin-top: 0;
+    }
+
+    ::v-deep(.tele-form-item) {
+      margin-bottom: 10px;
     }
   }
 }
