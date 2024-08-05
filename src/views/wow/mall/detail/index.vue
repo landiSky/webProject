@@ -894,6 +894,10 @@ onMounted(() => {
         // 装修组件的发布状态
         if (!data.detail) return;
         templateList.value = JSON.parse(data.detail);
+      } else if (data.draftStatus === null) {
+        // 老版本展示信息
+        if (!data.detail) return;
+        templateList.value = JSON.parse(data.detail);
       }
 
       // prodDetail.value.versionType = 1; // 模拟？？？
