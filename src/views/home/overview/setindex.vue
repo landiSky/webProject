@@ -261,7 +261,7 @@
                   <t-link
                     v-if="!productData?.idTestBuyStatus"
                     :hoverable="false"
-                    @click="zeroPurchase"
+                    @click="zeroPurchase(productData)"
                   >
                     0元购买
                   </t-link>
@@ -651,6 +651,7 @@ const zeroPurchase = (obj: any) => {
       onAuthConfirm([]);
       return;
     }
+    return;
   }
   Message.warning('商品已下架，无法继续购买');
 };
