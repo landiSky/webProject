@@ -11,7 +11,9 @@
       >
         <span class="image-title">{{ item?.title || '主标题' }}</span>
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}&productId=${data?.productId}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           :preview="false"
           class="image-cls"
         />

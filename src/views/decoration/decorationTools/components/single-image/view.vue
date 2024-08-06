@@ -4,7 +4,9 @@
       data?.configValue?.title || '主标题'
     }}</div>
     <t-image
-      :src="`/server/web/file/download?name=${data?.configValue?.src}&productId=${data?.productId}`"
+      :src="`/server/web/file/download?name=${
+        data?.configValue?.src
+      }&productId=${data?.productId || ''}`"
       :preview="false"
       :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
       @click="
