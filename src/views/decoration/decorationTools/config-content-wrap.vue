@@ -56,7 +56,7 @@ watch(
     // 实时监测form数据变化
     if (val) {
       console.log('form配置数据变化：', val, data.value.name);
-      // formComponentRef.value.validate();
+      formComponentRef?.value?.formRef.validate();
       eventBus.emit('config-event', {
         type: !listType.includes(data.value.name),
         msgData: formComponentRef.value.form,
@@ -86,6 +86,7 @@ const getGoodsList = () => {
 const handleMyEvent = (payload: any) => {
   console.log('收到配置消息', payload);
   data.value = payload || {};
+  formComponentRef?.value?.formRef.validate();
   getGoodsList();
 };
 
