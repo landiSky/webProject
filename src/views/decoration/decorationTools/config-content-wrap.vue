@@ -61,8 +61,8 @@ watch(
         .then((val: any) => {
           console.log('form验证成功：', val);
         })
-        .catch((e) => {
-          console.log('form验证失败：', e);
+        .catch(() => {
+          console.log('form验证失败：');
         });
       // formComponentRef?.value?.formRef.setFields({
       //   'form.list.1.title': {
