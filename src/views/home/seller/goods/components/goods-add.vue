@@ -1893,7 +1893,7 @@ const clickSave = async () => {
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
-    // Message.success('保存成功');
+    Message.success('保存成功');
     needSave = false;
   }
 };

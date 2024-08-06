@@ -56,8 +56,21 @@ watch(
     // 实时监测form数据变化
     if (val) {
       console.log('form配置数据变化：', val, data.value.name);
-      formComponentRef?.value?.formRef.validate();
-      eventBus.emit('config-event', {
+      formComponentRef?.value?.formRef
+        ?.validate()
+        .then((val: any) => {
+          console.log('form验证成功：', val);
+        })
+        .catch((e) => {
+          console.log('form验证失败：', e);
+        });
+      // formComponentRef?.value?.formRef.setFields({
+      //   'form.list.1.title': {
+      //     status: 'error',
+      //     message: '标题不能为空aaa',
+      //   },
+      // });
+      eventBus.emit('configEvent', {
         type: !listType.includes(data.value.name),
         msgData: formComponentRef.value.form,
       });
@@ -86,7 +99,7 @@ const getGoodsList = () => {
 const handleMyEvent = (payload: any) => {
   console.log('收到配置消息', payload);
   data.value = payload || {};
-  formComponentRef?.value?.formRef.validate();
+  // formComponentRef?.value?.formRef.validate();
   getGoodsList();
 };
 
