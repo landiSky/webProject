@@ -274,7 +274,7 @@
                   </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false" @click="immediateUse">
+                  <t-link :hoverable="false" @click="immediateUse(productData)">
                     立即使用
                   </t-link>
                 </div>
