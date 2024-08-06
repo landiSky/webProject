@@ -86,7 +86,7 @@
           <div
             v-if="userInfoByCompany.hostingEntPrefixList?.length"
             class="prefix"
-            @click="prefixJump(1)"
+            @click="prefixJump(2)"
             >前缀管理>></div
           >
         </div>
@@ -658,12 +658,12 @@ const zeroPurchase = (obj: any) => {
 // 立即使用
 const immediateUse = (obj: any) => {
   const {
-    idTestProductStatus,
+    idTestBuyStatus,
     idTestProductId,
     idTestOrderId,
     productDeliverySetId,
   } = obj;
-  if (idTestProductStatus === 1) {
+  if (idTestBuyStatus === 1) {
     const params = {
       productId: idTestProductId,
       productDeliverySetId,
