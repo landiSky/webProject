@@ -87,10 +87,10 @@ watch(
 );
 
 const checkConfigList = (list: any) => {
-  console.log('竖图遍历000', list.length);
+  console.log('轮播图校验', list);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历000', item);
+    console.log('轮播图校验', item);
     return (
       item.title &&
       item.desc &&
