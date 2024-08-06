@@ -177,8 +177,11 @@ defineExpose({
 }
 
 ::v-deep(.tele-image) {
+  display: contents;
+
   .tele-image-img {
     width: 100%;
+    height: 100%;
     object-fit: cover !important;
   }
 }
