@@ -160,6 +160,7 @@ const uploadData = () => {
   if (state.type === 2 && userInfoByCompany?.companyId) {
     return {
       companyId: userInfoByCompany?.companyId,
+      type: 0,
     };
   }
   return {};

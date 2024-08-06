@@ -41,6 +41,7 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-trigger="['blur', 'input']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
           ]"
@@ -56,6 +57,7 @@
         <t-form-item
           label="简介"
           :field="`list.${index}.desc`"
+          :validate-trigger="['blur', 'input']"
           :rules="[{ required: true, message: '请输入简介' }]"
           :label-col-props="{
             flex: '90px',
@@ -120,6 +122,7 @@
         <t-form-item
           label="关联"
           :field="`list.${index}.linkType`"
+          :validate-trigger="['blur', 'input']"
           :rules="[{ required: true, message: '请选择关联' }]"
           :label-col-props="{
             flex: '90px',
@@ -151,7 +154,7 @@
           :label-col-props="{
             flex: '90px',
           }"
-          :validate-trigger="['blur']"
+          :validate-trigger="['blur', 'input']"
         >
           <t-textarea
             v-if="item.linkType === LinkType.LINK"
@@ -255,7 +258,13 @@ const form = ref<{
 });
 
 const rules = {
-  mainTitle: [{ required: true, message: '请输入主标题' }],
+  'mainTitle': [{ required: true, message: '请输入主标题' }],
+  // mainTitle: [{ required: true, message: '请输入主标题' }],
+  'title': [{ required: true, message: '请输入标题' }],
+  'list.*.desc': [{ required: true, message: '请输入简介' }],
+  'list.*.src': [{ required: true, message: '请上传图片' }],
+  'list.*.linkType': [{ required: true, message: '请选择关联' }],
+  'list.*.linkUrl': [{ required: true, message: '请输入链接' }],
 };
 
 const onBeforeRemove = (index: number) => {

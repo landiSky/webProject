@@ -261,7 +261,7 @@
                   <t-link
                     v-if="!productData?.idTestBuyStatus"
                     :hoverable="false"
-                    @click="zeroPurchase"
+                    @click="zeroPurchase(productData)"
                   >
                     0元购买
                   </t-link>
@@ -274,7 +274,7 @@
                   </t-link>
                 </div>
                 <div v-if="index === 1" class="buttom-body">
-                  <t-link :hoverable="false" @click="immediateUse">
+                  <t-link :hoverable="false" @click="immediateUse(productData)">
                     立即使用
                   </t-link>
                 </div>
@@ -651,6 +651,7 @@ const zeroPurchase = (obj: any) => {
       onAuthConfirm([]);
       return;
     }
+    return;
   }
   Message.warning('商品已下架，无法继续购买');
 };
@@ -690,6 +691,7 @@ const immediateUse = (obj: any) => {
       }
       return window.open(`${res.data}&data=${sm2data}`);
     });
+    return;
   }
   Message.warning('请先开通沙盒服务');
 };

@@ -1,5 +1,6 @@
 <template>
   <div class="home-header">
+    <div class="mask"></div>
     <div class="top-box">
       <div class="top-left-box">
         <div class="tip-box">
@@ -72,16 +73,18 @@
           </div>
         </div>
       </div>
+
       <div class="video-box">
         <video
           src="../../../../../assets/video/home-bg.mp4"
-          style="width: 100%; height: 100%"
+          style="width: 100%; height: 100%; object-fit: fill"
           autoplay
           loop
           muted
         />
       </div>
     </div>
+    <div class="mask right-mask"></div>
   </div>
 </template>
 
@@ -97,8 +100,20 @@ const { data, isPreview } = toRefs(props);
 
 // 动态倍数
 const num = computed(() => {
-  return isPreview.value ? 2.6667 : 1;
+  return isPreview.value ? 2 : 1;
 });
+
+const maskWidthFactor = computed(() => {
+  return isPreview.value ? 1 : 0;
+});
+
+const topBoxWidth = computed(() => {
+  return isPreview.value ? '1920px' : '720px';
+});
+const topBoxHeight = computed(() => {
+  return isPreview.value ? '700px' : '266px';
+});
+
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
@@ -130,19 +145,40 @@ defineExpose({
 
 <style scoped lang="less">
 @factor: v-bind(num);
+@widthFactor: v-bind(maskWidthFactor);
+@topBoxWidth: v-bind(topBoxWidth);
+@topBoxHeight: v-bind(topBoxHeight);
 
 .home-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  // width: calc(@factor * 960px);
-  // height: calc(@factor * 350px);
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  // min-width: 720px;
+  // min-height: 500px;
+  margin: 0 auto;
+
+  .mask {
+    position: absolute;
+    top: 0;
+    left: -365px;
+    z-index: 2;
+    width: calc(@widthFactor * 540px);
+    height: calc(@factor * 350px);
+    background: linear-gradient(90deg, #f2f5fc 70%, rgba(224, 243, 250, 0));
+  }
+
+  .right-mask {
+    right: -365px;
+    left: auto;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+  }
+
   .top-box {
     position: relative;
-    width: calc(@factor * 716px);
-    height: calc(@factor * 262px);
-    // background-color: red;
+    width: calc(@topBoxWidth - 2px);
+    height: calc(@topBoxHeight - 2px);
+    margin: 0 auto;
+
     .video-box {
       z-index: -1;
       width: 100%;
@@ -320,12 +356,11 @@ defineExpose({
     }
   }
 }
-
-::v-deep(.tele-image) {
-  .tele-image-img {
-    width: calc(@factor * 600px) !important;
-    height: calc(@factor * 260px) !important;
-    object-fit: cover !important;
-  }
-}
+// ::v-deep(.tele-image) {
+//   .tele-image-img {
+//     width: calc(@factor * 600px) !important;
+//     height: calc(@factor * 260px) !important;
+//     object-fit: cover !important;
+//   }
+// }
 </style>

@@ -16,7 +16,12 @@
         />
         <t-space class="item-card" :size="5 * num" direction="vertical">
           <div class="image-overlap-item-icon">
-            <img :src="`/server/web/file/download?name=${item?.src}`" alt="" />
+            <img
+              :src="`/server/web/file/download?name=${item?.src}&productId=${
+                data?.productId || ''
+              }`"
+              alt=""
+            />
           </div>
           <div class="image-overlap-item-title">{{
             item?.title || '小标题'

@@ -9,7 +9,9 @@
         class="image-item"
       >
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           :preview="false"
         />
         <span class="image-title">{{ item?.title || '小标题' }}</span>

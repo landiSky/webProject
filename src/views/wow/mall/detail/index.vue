@@ -381,7 +381,10 @@
         </div>
       </div>
       <div v-else class="newIntro">
-        <DecorationBox :components-list="templateList"></DecorationBox>
+        <DecorationBox
+          :components-list="templateList"
+          :product-id="prodDetail.id"
+        ></DecorationBox>
       </div>
 
       <!-- 产品评价 -->
