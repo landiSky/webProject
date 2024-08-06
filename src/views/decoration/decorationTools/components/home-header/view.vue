@@ -102,7 +102,11 @@ const num = computed(() => {
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    return item.title && item.desc && item.linkUrl;
+    return (
+      item.title &&
+      item.desc &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+    );
   });
 };
 const validate = () => {
