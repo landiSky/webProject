@@ -691,6 +691,7 @@ const immediateUse = (obj: any) => {
       }
       return window.open(`${res.data}&data=${sm2data}`);
     });
+    return;
   }
   Message.warning('请先开通沙盒服务');
 };
