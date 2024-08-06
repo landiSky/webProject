@@ -224,6 +224,7 @@
         >
           <iconpark-icon
             class="plusIcon"
+            style="cursor: not-allowed"
             name="squarePlusGray"
             size="20px"
           ></iconpark-icon>
