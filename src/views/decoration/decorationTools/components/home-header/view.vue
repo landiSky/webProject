@@ -77,7 +77,7 @@
       <div class="video-box">
         <video
           src="../../../../../assets/video/home-bg.mp4"
-          style="width: 100%; height: 100%"
+          style="width: 100%; height: 100%; object-fit: fill"
           autoplay
           loop
           muted
@@ -102,6 +102,18 @@ const { data, isPreview } = toRefs(props);
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
+
+const maskWidthFactor = computed(() => {
+  return isPreview.value ? 1 : 0;
+});
+
+const topBoxWidth = computed(() => {
+  return isPreview.value ? '1920px' : '720px';
+});
+const topBoxHeight = computed(() => {
+  return isPreview.value ? '700px' : '266px';
+});
+
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
@@ -133,11 +145,15 @@ defineExpose({
 
 <style scoped lang="less">
 @factor: v-bind(num);
+@widthFactor: v-bind(maskWidthFactor);
+@topBoxWidth: v-bind(topBoxWidth);
+@topBoxHeight: v-bind(topBoxHeight);
 
 .home-header {
   position: relative;
   width: 100%;
   max-width: 1920px;
+  // min-width: 720px;
   // min-height: 500px;
   margin: 0 auto;
 
@@ -146,7 +162,7 @@ defineExpose({
     top: 0;
     left: -365px;
     z-index: 2;
-    width: 540px;
+    width: calc(@widthFactor * 540px);
     height: calc(@factor * 350px);
     background: linear-gradient(90deg, #f2f5fc 70%, rgba(224, 243, 250, 0));
   }
@@ -159,10 +175,9 @@ defineExpose({
 
   .top-box {
     position: relative;
-    width: calc(@factor * 960px);
-    height: calc(@factor * 350px);
+    width: calc(@topBoxWidth - 2px);
+    height: calc(@topBoxHeight - 2px);
     margin: 0 auto;
-    background-color: red;
 
     .video-box {
       z-index: -1;
