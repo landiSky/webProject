@@ -6,23 +6,6 @@
       width: isPreview ? '100%' : '720px',
     }"
   >
-    <t-popover position="rt" :popup-visible="isFirstUse">
-      <div
-        :style="{
-          position: 'absolute',
-          top: '50px',
-          left: '-230px',
-          color: 'transparent',
-        }"
-      >
-        .
-      </div>
-      <template #title> 操作引导 </template>
-      <template #content>
-        <p>拖动左侧icon到指定区域，松开</p>
-        <p>鼠标完成模版添加</p>
-      </template>
-    </t-popover>
     <div v-if="openType === 5" class="product-bg"></div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
       >拖动左侧组件，到当前区域进行楼层配置
@@ -146,19 +129,11 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  watch,
-  onMounted,
-  computed,
-  nextTick,
-  onBeforeUnmount,
-} from 'vue';
+import { ref, watch, onMounted, computed, onBeforeUnmount } from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
 import { useRoute, useRouter } from 'vue-router';
 import {
-  apiGetIsFirstUseDecoration,
   apiGetNavData,
   apiUpdateNavData,
 } from '@/api/decoration/decoration-tools';
@@ -215,10 +190,6 @@ const colorList = ref([
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
-
-// const curSelectedComponent = computed(() => {
-//   return componentsList.value[selectIndex.value];
-// });
 
 // 处理背景色的字符串，1-非渐变色，就返回一个颜色值，2-渐变色，切割为两个颜色值
 function handleBgColor(color: string) {
@@ -340,7 +311,7 @@ const setItemRef = (el: any, index: number) => {
 };
 
 const closeTip = (msg: string) => {
-  Message.info(msg);
+  Message.success(msg);
   setTimeout(() => {
     interceptFlag.value = false;
     window.close();
@@ -457,7 +428,8 @@ const endSort = (event: any) => {
 
 const insertSort = (event: any) => {
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
-
+  // todo
+  selectIndex.value = newIndex;
   const addToolData = JSON.parse(JSON.stringify(ToolData[tools[oldIndex]]));
   componentsList.value.splice(newIndex, 0, addToolData);
   console.log(
@@ -479,12 +451,12 @@ const close = () => {
 
 const clickPreview = () => {
   isPreview.value = true;
-  eventBus.emit('preview-event', true);
+  eventBus.emit('previewEvent', true);
 };
 
 const notPreview = () => {
   isPreview.value = false;
-  eventBus.emit('preview-event', false);
+  eventBus.emit('previewEvent', false);
 };
 
 // 选中组件回调
@@ -504,13 +476,13 @@ const selectComponent = (index: number) => {
 const edit = () => {
   openModel.value = 0;
   isPreview.value = false;
-  eventBus.emit('preview-event', false);
+  eventBus.emit('previewEvent', false);
 };
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
   console.log('index.vue 监听到insertIndex事件，获取到index:', payload);
-  selectIndex.value = payload;
+  // selectIndex.value = payload;
 };
 
 watch(
@@ -520,7 +492,7 @@ watch(
     if (openModel.value === 1) {
       isPreview.value = true;
       setTimeout(() => {
-        eventBus.emit('preview-event', isPreview.value);
+        eventBus.emit('previewEvent', isPreview.value);
       }, 10);
     }
   },
@@ -640,17 +612,16 @@ const getNavData = (type: number) => {
 
 // 开场第一次闪烁两次
 const firstFlicker = () => {
-  // popupShow.value = true;
-  flickering.value = true;
   setTimeout(() => {
+    flickering.value = true;
     flickerBorder(2);
   }, 2000);
 };
 // 拖入组件后闪烁一次
 const secondFlicker = () => {
-  flickering.value = true;
   setTimeout(() => {
-    flickerBorder(2);
+    flickering.value = true;
+    flickerBorder(1);
   }, 1000);
   isFirstUse.value = false;
 };
@@ -678,9 +649,9 @@ onMounted(() => {
       event.preventDefault();
     }
   });
-  eventBus.on('insertIndex', handleMyEvent);
+  // eventBus.on('insertIndex', handleMyEvent);
   // config-event
-  eventBus.on('config-event', (data: any) => {
+  eventBus.on('configEvent', (data: any) => {
     const jsonData = JSON.parse(JSON.stringify(data));
     console.log(
       'index 接收的config信息',
@@ -703,6 +674,7 @@ onMounted(() => {
       componentsList.value[selectIndex.value].configValue = {
         ...jsonData.msgData,
       };
+      console.log('对象类型复制00', componentsList.value);
     } else {
       // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
@@ -748,23 +720,25 @@ onMounted(() => {
         }
       });
     }
-
-    console.log('2222222222222222222');
-    apiGetIsFirstUseDecoration().then((res: any) => {
-      if (!res) {
-        console.log('第一次使用装修', res);
-        isFirstUse.value = true;
-        firstFlicker();
-      }
-    });
   }
+  // 接收首次使用装修的消息
+  eventBus.on('isFirstUseDecoration', (data: any) => {
+    if (data) {
+      isFirstUse.value = true;
+      firstFlicker();
+    }
+  });
   // 接收外部页面的消息
   broadcastChannel.addEventListener('message', (event) => {
     const { name, status, msg } = JSON.parse(event.data);
     if (name === 'product_detail_save') {
       if (status) {
         // 保存成功
-        closeTip(msg);
+        Message.success(msg);
+        setTimeout(() => {
+          interceptFlag.value = false;
+          window.close();
+        }, 900);
       } else {
         // 失败
         Message.error(msg);
@@ -774,9 +748,14 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  // 释放资源
+  // bus 关闭监听
+  // eventBus.off('insertIndex');
+  eventBus.off('configEvent');
+  eventBus.off('isFirstUseDecoration');
+  // tab 关闭拦截关闭
   interceptFlag.value = false;
   window.removeEventListener('beforeunload', (event) => {});
+  // 关闭消息通道
   broadcastChannel.close();
 });
 </script>
