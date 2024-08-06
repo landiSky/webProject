@@ -191,8 +191,8 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：190px *
-              190px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。
+              建议图片尺寸：960px *
+              520px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。
             </span>
           </t-space>
         </t-form-item>
