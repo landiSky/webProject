@@ -11,7 +11,7 @@
         class="image-item"
       >
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${data?.productId}`"
           :preview="false"
         />
         <div class="image-item-content">

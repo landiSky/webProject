@@ -23,7 +23,7 @@
             <div class="image-item">
               <div class="image-content">
                 <t-image
-                  :src="`/server/web/file/download?name=${item?.src}`"
+                  :src="`/server/web/file/download?name=${item?.src}&productId=${data?.productId}`"
                   :preview="false"
                 />
                 <div class="image-desc-box">

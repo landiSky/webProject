@@ -11,7 +11,7 @@
         class="image-item"
       >
         <img
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${data?.productId}`"
           fit="cover"
           :preview="false"
           class="image-cls"

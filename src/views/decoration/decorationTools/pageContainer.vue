@@ -26,7 +26,7 @@
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
                   :is-preview="true"
-                  :data="element"
+                  :data="{ ...element, productId }"
                   :component-index="index"
                   :component-style="bgStyle(index)"
                   @select="selectComponent"
@@ -51,6 +51,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  productId: {
+    type: String,
+    default: () => '',
+  },
 });
 
 const route = useRoute();
@@ -65,6 +69,7 @@ watch(
   () => props.componentsList,
   (val: any) => {
     console.log('watch componentsList:', val);
+    console.log('watch productid:', props);
   },
   {
     deep: true,
