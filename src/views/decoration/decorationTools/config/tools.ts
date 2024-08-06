@@ -7,6 +7,7 @@ export const ToolData: Record<string, any> = {
     icon: 'singleImg',
     name: 'SigleImg',
     mainTitle: '主标题',
+    bgColor: '#ffffff',
     configValue: {
       title: '小标题',
       src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
@@ -21,6 +22,7 @@ export const ToolData: Record<string, any> = {
     icon: 'verticalImgTxt',
     name: 'VerticalImageText',
     mainTitle: '主标题',
+    bgColor: '#F5F6FB',
     configValue: [
       {
         title: '小标题',
@@ -65,6 +67,7 @@ export const ToolData: Record<string, any> = {
     icon: 'threeImgTxt',
     name: 'ThreeImageText',
     mainTitle: '主标题',
+    bgColor: '#F5F6FB',
     configValue: [
       {
         title: '小标题',
@@ -95,6 +98,7 @@ export const ToolData: Record<string, any> = {
     icon: 'multiImgTxt',
     name: 'MultiImageText',
     mainTitle: '主标题',
+    bgColor: '#F5F6FB',
     configValue: [
       {
         title: '小标题',
@@ -132,6 +136,7 @@ export const ToolData: Record<string, any> = {
     icon: 'iconTxt',
     name: 'IconImageText',
     mainTitle: '主标题',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '小标题',
@@ -169,6 +174,7 @@ export const ToolData: Record<string, any> = {
     icon: 'imgTxt',
     name: 'ImageOverlapText',
     mainTitle: '主标题',
+    bgColor: '#ffffff#e2ecff',
     configValue: [
       {
         title: '小标题',
@@ -230,6 +236,7 @@ export const ToolData: Record<string, any> = {
     icon: 'stitchingImgTxt',
     name: 'SpliceImageText',
     mainTitle: '主标题',
+    bgColor: '#ffffff',
     configValue1: {
       subTitle: '我是主标题我是主标题',
       config: [
@@ -275,6 +282,7 @@ export const ToolData: Record<string, any> = {
     icon: 'imgTxt',
     name: 'HerizontalImageText',
     mainTitle: '主标题',
+    bgColor: '#ffffff#e2ecff',
     configValue: [
       {
         title: '小标题',
@@ -305,6 +313,7 @@ export const ToolData: Record<string, any> = {
     icon: 'slideshow',
     name: 'CarouselImageText',
     mainTitle: '主标题',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '小标题',
