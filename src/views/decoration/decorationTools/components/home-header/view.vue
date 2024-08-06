@@ -1,5 +1,6 @@
 <template>
   <div class="home-header">
+    <div class="mask"></div>
     <div class="top-box">
       <div class="top-left-box">
         <div class="tip-box">
@@ -72,6 +73,7 @@
           </div>
         </div>
       </div>
+
       <div class="video-box">
         <video
           src="../../../../../assets/video/home-bg.mp4"
@@ -82,6 +84,7 @@
         />
       </div>
     </div>
+    <div class="mask right-mask"></div>
   </div>
 </template>
 
@@ -97,7 +100,7 @@ const { data, isPreview } = toRefs(props);
 
 // 动态倍数
 const num = computed(() => {
-  return isPreview.value ? 2.6667 : 1;
+  return isPreview.value ? 2 : 1;
 });
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
@@ -128,17 +131,35 @@ defineExpose({
 @factor: v-bind(num);
 
 .home-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  // width: calc(@factor * 960px);
-  // height: calc(@factor * 350px);
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  // min-height: 500px;
+  margin: 0 auto;
+
+  .mask {
+    position: absolute;
+    top: 0;
+    left: -365px;
+    z-index: 2;
+    width: 540px;
+    height: calc(@factor * 350px);
+    background: linear-gradient(90deg, #f2f5fc 70%, rgba(224, 243, 250, 0));
+  }
+
+  .right-mask {
+    right: -365px;
+    left: auto;
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+  }
+
   .top-box {
     position: relative;
-    width: calc(@factor * 716px);
-    height: calc(@factor * 262px);
-    // background-color: red;
+    width: calc(@factor * 960px);
+    height: calc(@factor * 350px);
+    margin: 0 auto;
+    background-color: red;
+
     .video-box {
       z-index: -1;
       width: 100%;
@@ -316,12 +337,11 @@ defineExpose({
     }
   }
 }
-
-::v-deep(.tele-image) {
-  .tele-image-img {
-    width: calc(@factor * 600px) !important;
-    height: calc(@factor * 260px) !important;
-    object-fit: cover !important;
-  }
-}
+// ::v-deep(.tele-image) {
+//   .tele-image-img {
+//     width: calc(@factor * 600px) !important;
+//     height: calc(@factor * 260px) !important;
+//     object-fit: cover !important;
+//   }
+// }
 </style>

@@ -3,7 +3,7 @@
     class="page-editor"
     :class="{ blueBorder: flickering }"
     :style="{
-      width: isPreview ? '100%' : '720px',
+      width: isPreview ? '100%' : '100%',
     }"
   >
     <t-popover position="rt" :popup-visible="isFirstUse">
