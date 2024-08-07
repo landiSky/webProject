@@ -303,6 +303,16 @@ onMounted(() => {
     if (res?.data?.length > 0) {
       logo.value = res.data[0]?.logo;
       platformName.value = res.data[0]?.name;
+      const link: any =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'shortcut icon';
+      link.href = res.data[0]?.logo
+        ? `/server/web/file/download?name=${res.data[0]?.logo}`
+        : '/src/assets/images/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+      document.title = res.data[0]?.name || '';
     }
   });
 });
