@@ -20,6 +20,7 @@
             <t-upload
               v-if="state.type === 2"
               :headers="uploadHeaders"
+              :multiple="true"
               action="/server/web/file/upload"
               accept=".jpg,.png,.bmp,.jpeg,.gif"
               :data="uploadData"
