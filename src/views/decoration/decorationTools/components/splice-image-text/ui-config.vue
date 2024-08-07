@@ -39,7 +39,7 @@
     <t-tabs default-active-key="1" @change="onTabChange">
       <t-tab-pane key="1" title="左区域">
         <t-form
-          ref="formRef"
+          ref="formRef1"
           :model="form.configValue1"
           auto-label-width
           :style="{
@@ -56,6 +56,12 @@
               flex: '90px',
               align: 'center',
             }"
+            :validate-status="`${form.configValue1.subTitle ? '' : 'error'}`"
+            :help="`${
+              form.configValue1.subTitle
+                ? ''
+                : '该信息为必填项，未填写不支持发布'
+            }`"
             :validate-trigger="['blur', 'input']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -91,6 +97,8 @@
                 flex: '90px',
                 align: 'left',
               }"
+              :validate-status="`${item.title ? '' : 'error'}`"
+              :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
               :validate-trigger="['blur']"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -111,6 +119,8 @@
                 flex: '90px',
                 align: 'center',
               }"
+              :validate-status="`${item.desc ? '' : 'error'}`"
+              :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
               validate-trigger="blur"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -158,6 +168,10 @@
               :label-col-props="{
                 flex: '90px',
               }"
+              :validate-status="`${item.linkUrl ? '' : 'error'}`"
+              :help="`${
+                item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'
+              }`"
               validate-trigger="blur"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -274,7 +288,7 @@
       </t-tab-pane>
       <t-tab-pane key="2" title="右区域">
         <t-form
-          ref="formRef"
+          ref="formRef2"
           :model="form.configValue2"
           auto-label-width
           :style="{
@@ -291,6 +305,12 @@
               flex: '90px',
               align: 'center',
             }"
+            :validate-status="`${form.configValue2.subTitle ? '' : 'error'}`"
+            :help="`${
+              form.configValue2.subTitle
+                ? ''
+                : '该信息为必填项，未填写不支持发布'
+            }`"
             :validate-trigger="['blur', 'input']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -326,6 +346,8 @@
                 flex: '90px',
                 align: 'left',
               }"
+              :validate-status="`${item.title ? '' : 'error'}`"
+              :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
               :validate-trigger="['blur']"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -346,6 +368,8 @@
                 flex: '90px',
                 align: 'center',
               }"
+              :validate-status="`${item.desc ? '' : 'error'}`"
+              :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
               validate-trigger="blur"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -393,6 +417,10 @@
               :label-col-props="{
                 flex: '90px',
               }"
+              :validate-status="`${item.linkUrl ? '' : 'error'}`"
+              :help="`${
+                item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'
+              }`"
               validate-trigger="blur"
               :rules="[
                 { required: true, message: '该信息为必填项，未填写不支持发布' },
