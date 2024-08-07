@@ -163,7 +163,9 @@ const uploadData = () => {
       type: 0,
     };
   }
-  return {};
+  return {
+    type: 0,
+  };
 };
 
 const onBeforeUpload = async (currentFile: Record<string, any>) => {
