@@ -240,6 +240,8 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
+
 // 每个子表单的配置项
 type ConfigItem = {
   title: string;
@@ -304,13 +306,7 @@ const addBlock = () => {
     return;
   }
   const { list } = form.value;
-  list.push({
-    title: '小标题',
-    desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
-  });
+  list.push(ToolData.CarouselImageText.configValue[0]);
 };
 
 const deleteSpace = (index: number) => {

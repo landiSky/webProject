@@ -235,6 +235,8 @@
 import { toRefs, ref, watch, onMounted, computed, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
+
 // 每个子表单的配置项
 type ConfigItem = {
   title: string;
@@ -295,13 +297,7 @@ const addBlock = () => {
     return;
   }
   const { list } = form.value;
-  list.push({
-    title: '小标题',
-    desc: '我是副标题我是副标题我是副标题',
-    src: '86e87d58-2bbf-4044-8638-e2a041ffe31f.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
-  });
+  list.push(ToolData.MultiImageText.configValue[0]);
 };
 
 watch(
