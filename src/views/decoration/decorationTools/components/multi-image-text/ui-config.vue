@@ -298,7 +298,7 @@ const addBlock = () => {
   list.push({
     title: '小标题',
     desc: '我是副标题我是副标题我是副标题',
-    src: '86e87d58-2bbf-4044-8638-e2a041ffe31f.png',
+    src: 'ef536287-ec6a-4b57-a4f8-bd5a845b07d4.png',
     linkType: 0,
     linkUrl: 'http://www.baidu.com',
   });
