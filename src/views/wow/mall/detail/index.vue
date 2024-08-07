@@ -284,7 +284,7 @@
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <div
             v-if="
@@ -318,7 +318,7 @@
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <t-button
             v-if="Number(selectVersion.isTry) === 1"
@@ -1135,7 +1135,7 @@ onUnmounted(() => {
 
         .right {
           flex: none;
-          margin-left: 126px;
+          margin-left: 12%;
 
           .header {
             margin-top: 56px;
