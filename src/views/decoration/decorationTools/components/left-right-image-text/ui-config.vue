@@ -239,6 +239,7 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
 
 type GoodsItem = {
   name: string;
@@ -275,13 +276,7 @@ const changeRadio = (value: number) => {
   form.value.list[value].linkUrl = '';
 };
 const addBlock = () => {
-  form.value.list.push({
-    title: '小标题',
-    desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
-    src: 'b535d146-6edb-40be-abba-f37285293c92.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
-  });
+  form.value.list.push(ToolData.LeftRightImageText.configValue[0]);
 };
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
