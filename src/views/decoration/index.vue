@@ -98,6 +98,7 @@ import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
 import { Message, Modal } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+import eventBus from '@/utils/bus';
 
 const decoration = useDecorationStore();
 
@@ -174,8 +175,8 @@ const handleSubmit = (data: any) => {
             // decoration.setPlatFormLogo(data.logo);
             // decoration.setPlatFormName(data.name);
             Message.success('保存成功');
-            // 等测试说得更新数据时在放开或者去调用接口
-            // window.location.reload();
+            // 保存调用updateNavData 顶部里边的方法
+            eventBus.emit('updateNavData');
           });
         },
       });
