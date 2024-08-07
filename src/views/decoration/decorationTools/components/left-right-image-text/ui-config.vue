@@ -63,6 +63,8 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -83,6 +85,8 @@
             flex: '90px',
             align: 'center',
           }"
+          :validate-status="`${item.desc ? '' : 'error'}`"
+          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -122,6 +126,8 @@
           :label-col-props="{
             flex: '90px',
           }"
+          :validate-status="`${item.linkUrl ? '' : 'error'}`"
+          :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -239,6 +245,7 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
 
 type GoodsItem = {
   name: string;
@@ -275,13 +282,7 @@ const changeRadio = (value: number) => {
   form.value.list[value].linkUrl = '';
 };
 const addBlock = () => {
-  form.value.list.push({
-    title: '小标题',
-    desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
-    src: 'a34a8661-c656-42ef-92fb-d14cf97bf2dd.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
-  });
+  form.value.list.push(ToolData.LeftRightImageText.configValue[0]);
 };
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
