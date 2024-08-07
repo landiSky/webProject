@@ -1129,9 +1129,9 @@ onUnmounted(() => {
 
       &.new-baseInfo {
         height: 600px;
-        background: url('../../../../assets/images/wow/mall/mall1-bg.jpg')
+        background: url('../../../../assets/images/wow/mall/mall-bg.jpg')
           no-repeat;
-        background-size: 100%;
+        background-size: 100% 100%;
 
         .right {
           flex: none;
@@ -1461,6 +1461,10 @@ onUnmounted(() => {
   }
 
   .decorationIntroCls {
+    &.productIntro {
+      margin-top: 0;
+    }
+
     display: flex;
     flex-direction: column;
     align-items: center;
