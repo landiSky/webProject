@@ -41,6 +41,8 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur', 'input']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -57,8 +59,12 @@
         <t-form-item
           label="简介"
           :field="`list.${index}.desc`"
+          :validate-status="`${item.desc ? '' : 'error'}`"
+          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur', 'input']"
-          :rules="[{ required: true, message: '请输入简介' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
           :label-col-props="{
             flex: '90px',
             align: 'center',
@@ -154,6 +160,8 @@
           :label-col-props="{
             flex: '90px',
           }"
+          :validate-status="`${item.linkUrl ? '' : 'error'}`"
+          :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur', 'input']"
         >
           <t-textarea
