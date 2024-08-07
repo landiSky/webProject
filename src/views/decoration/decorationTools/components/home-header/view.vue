@@ -188,20 +188,19 @@ defineExpose({
     .top-left-box {
       position: absolute;
       top: 10%;
-      left: 35%;
+      left: 36%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * -100px);
+        margin-left: calc(@factor * -130px);
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 121px) !important;
-          margin-left: calc(@factor * -100px);
+          width: calc(@factor * 161px) !important;
           transform: scale(1);
           visibility: visible;
           opacity: 1;
@@ -218,13 +217,12 @@ defineExpose({
       height: calc(@factor * 100px);
 
       .tip-box {
-        margin-left: calc(@factor * 80px);
+        margin-left: calc(@factor * 84px);
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 121px) !important;
-          margin-left: calc(@factor * 80px);
+          width: calc(@factor * 161px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -244,13 +242,12 @@ defineExpose({
       background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * -100px);
+        margin-left: calc(@factor * -120px);
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 121px) !important;
-          margin-left: calc(@factor * -100px);
+          width: calc(@factor * 161px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -270,13 +267,12 @@ defineExpose({
       background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * 80px);
+        margin-left: calc(@factor * 94px);
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 121px) !important;
-          margin-left: calc(@factor * 80px);
+          width: calc(@factor * 161px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -291,26 +287,25 @@ defineExpose({
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      width: calc(@factor * 121px) !important;
+      width: calc(@factor * 161px) !important;
       border: 1px solid #fff;
       border-radius: 2px;
-      transform: scale(0.9);
+      transform: scale(0.8);
       visibility: visible;
       opacity: 1;
       transition: opacity 0.5s ease, transform 0.5s ease;
 
       .hover-header {
         // display: block;
-        width: calc(@factor * 118px);
-        height: calc(@factor * 21px);
-        padding-right: calc(@factor * 8px);
-        padding-left: calc(@factor * 10px);
+        width: calc(@factor * 160px);
+        height: calc(@factor * 25px);
+        padding-right: calc(@factor * 10px);
+        padding-left: calc(@factor * 14px);
         overflow: hidden;
         color: #1d2129;
         font-weight: 500;
-        // word-break: break-all;
-        font-size: calc(@factor * 9px);
-        line-height: calc(@factor * 21px);
+        font-size: calc(@factor * 12px);
+        line-height: calc(@factor * 25px);
         white-space: nowrap;
         text-align: left;
         text-overflow: ellipsis;
@@ -323,20 +318,20 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: space-between;
-        width: calc(@factor * 120px);
-        font-size: calc(@factor * 5.2px);
+        width: calc(@factor * 160px);
+        font-size: calc(@factor * 7px);
         background-color: #bcf6ff80;
 
         .hover-desc {
           display: -webkit-box;
           width: 100%;
-          margin-top: calc(@factor * 4px);
-          padding: 0 calc(@factor * 9px);
+          margin-top: calc(@factor * 6px);
+          padding: 0 calc(@factor * 12px);
           overflow: hidden;
           color: #4e5969;
-          font-size: calc(@factor * 5.4px);
+          font-size: calc(@factor * 7px);
           // height: calc(@factor * 17px);
-          line-height: calc(@factor * 9px);
+          line-height: calc(@factor * 12px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
@@ -346,8 +341,10 @@ defineExpose({
         }
 
         p {
-          // width: 100%;
-          padding: calc(@factor * 4px) calc(@factor * 9px);
+          padding-top: calc(@factor * 4px);
+          padding-right: calc(@factor * 12px);
+          padding-bottom: calc(@factor * 8px);
+          padding-left: calc(@factor * 12px);
           color: #1664ff;
           text-align: left;
           cursor: pointer;
