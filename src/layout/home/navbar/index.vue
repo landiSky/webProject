@@ -316,7 +316,7 @@ const handleMyEvent = () => {
         ? `/server/web/file/download?name=${res.data[0]?.logo}`
         : '/src/assets/images/favicon.ico';
       document.getElementsByTagName('head')[0].appendChild(link);
-      document.title = res.data[0]?.name || '123';
+      document.title = res.data[0]?.name || '';
     }
   });
 };
