@@ -95,6 +95,28 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 
+@keyframes fadeIn {
+  0%,
+  10% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0%,
+  20% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .vertical-image-text-box {
   display: flex;
   flex-direction: column;
@@ -115,24 +137,25 @@ defineExpose({
   .image-box {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    // flex-wrap: wrap;
-    height: calc(@factor * 230px);
-    // margin-top: calc(@factor * 29px);
+    justify-content: center;
+    height: calc(@factor * 240px);
+
     .image-item {
       position: relative;
       display: block;
       width: calc(@factor * 91px);
       height: calc(@factor * 230px);
-      margin: 0 calc(@factor * 2px);
-      transition: width 0.8s;
+      padding: 0 calc(@factor * 2.5px);
+      background-color: transparent;
+      transition: width 0.5s;
 
       .image-cls {
-        width: 100%;
+        float: right;
+        width: calc(@factor * 87px);
         height: 100%;
+        transition: width 0.5s;
       }
-      // .image-cls:hover {
-      // }
+
       .image-item-content {
         position: absolute;
         top: 0;
@@ -143,7 +166,8 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        padding: 20px;
+        padding: calc(@factor * 10px);
+        animation: fadeOut 1s ease 1;
 
         .image-title {
           color: #fff;
@@ -154,7 +178,7 @@ defineExpose({
         .image-desc {
           display: -webkit-box;
           width: calc(@factor * 70px);
-          margin: 10px 0;
+          margin: calc(@factor * 5px) 0;
           overflow: hidden;
           font-size: calc(@factor * 7px);
           white-space: normal;
@@ -176,21 +200,29 @@ defineExpose({
     .image-item:hover::before {
       position: absolute;
       top: 0;
-      right: 0;
+      right: calc(@factor * 2.5px);
       bottom: 0;
-      left: 0;
+      left: calc(@factor * 2.5px);
       background: linear-gradient(
         to right,
-        rgba(255, 255, 255, 0.9),
-        rgba(199, 221, 255, 0.9)
+        rgb(236, 239, 245) 40%,
+        rgba(207, 220, 244, 0.8)
       );
       content: '';
     }
 
     .image-item:hover {
-      width: calc(@factor * 91px * 2.3);
+      width: calc(@factor * 204px);
+
+      .image-cls {
+        float: right;
+        width: calc(@factor * 120px);
+        height: 100%;
+      }
 
       .image-item-content {
+        animation: fadeIn 1s ease 1;
+
         .image-title,
         .image-link {
           color: #1d2129;
@@ -198,7 +230,7 @@ defineExpose({
 
         .image-desc {
           display: -webkit-box;
-          width: calc(@factor * 70px * 2.3);
+          width: calc(@factor * 182px);
           -webkit-line-clamp: 6;
           color: #4e5969;
         }
@@ -221,8 +253,4 @@ defineExpose({
     -webkit-box-orient: vertical;
   }
 }
-// .is-preview {
-//   transform: scale(2); /* 将元素的尺寸放大2倍 */
-//   transform-origin: 0 0; /* 设置缩放中心点 */
-// }
 </style>
