@@ -171,6 +171,7 @@ const handleSubmit = (data: any) => {
             logo: data.logo,
           }).then((res) => {
             console.log(res);
+            if (res.code !== 200) return;
             // 暂时不用
             // decoration.setPlatFormLogo(data.logo);
             // decoration.setPlatFormName(data.name);
