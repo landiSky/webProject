@@ -98,6 +98,7 @@ import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
 import { Message, Modal } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+import eventBus from '@/utils/bus';
 
 const decoration = useDecorationStore();
 
@@ -175,17 +176,8 @@ const handleSubmit = (data: any) => {
             // decoration.setPlatFormLogo(data.logo);
             // decoration.setPlatFormName(data.name);
             Message.success('保存成功');
-            // 保存这更新当前的 顶部里边是定时更新
-            const link: any =
-              document.querySelector("link[rel*='icon']") ||
-              document.createElement('link');
-            link.type = 'image/x-icon';
-            link.rel = 'shortcut icon';
-            link.href = data.logo
-              ? `/server/web/file/download?name=${data.logo}`
-              : '/src/assets/images/favicon.ico';
-            document.getElementsByTagName('head')[0].appendChild(link);
-            document.title = data.name || '';
+            // 保存调用updateNavData 顶部里边的方法
+            eventBus.emit('updateNavData');
           });
         },
       });

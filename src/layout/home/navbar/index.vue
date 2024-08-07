@@ -108,6 +108,7 @@ import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
 import { RouteAuthEnum } from '@/enums/authEnum';
 import { usermenuList, managemenuList } from '@/enums/menuEnum';
+import eventBus from '@/utils/bus';
 
 const userStore = useUserStore();
 // const decoration = useDecorationStore();
@@ -118,7 +119,7 @@ const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 // const { platFormLogo, platFormName } = storeToRefs(decoration);
 const logo = ref('');
 const platformName = ref('');
-const updateBrowser = ref();
+
 const menuStore = useMenuStore();
 
 const userMenu = [
@@ -298,31 +299,35 @@ const onSearch = () => {
     },
   });
 };
+
+// 接收bus事件调用
+const handleMyEvent = () => {
+  apiGetNavData({ type: ChannelType.PLATFORM_NAME }).then((res) => {
+    console.log('首页logo和项目名称接口获取', res.data[0]);
+    if (res?.data?.length > 0) {
+      logo.value = res.data[0]?.logo;
+      platformName.value = res.data[0]?.name;
+      const link: any =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'shortcut icon';
+      link.href = res.data[0]?.logo
+        ? `/server/web/file/download?name=${res.data[0]?.logo}`
+        : '/src/assets/images/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+      document.title = res.data[0]?.name || '123';
+    }
+  });
+};
+
 onMounted(() => {
-  updateBrowser.value = setInterval(() => {
-    apiGetNavData({ type: ChannelType.PLATFORM_NAME }).then((res) => {
-      console.log('首页logo和项目名称接口获取', res.data[0]);
-      if (res?.data?.length > 0) {
-        logo.value = res.data[0]?.logo;
-        platformName.value = res.data[0]?.name;
-        const link: any =
-          document.querySelector("link[rel*='icon']") ||
-          document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        link.href = res.data[0]?.logo
-          ? `/server/web/file/download?name=${res.data[0]?.logo}`
-          : '/src/assets/images/favicon.ico';
-        document.getElementsByTagName('head')[0].appendChild(link);
-        document.title = res.data[0]?.name || '';
-      }
-    });
-  }, 1800000);
+  handleMyEvent();
+  eventBus.on('updateNavData', handleMyEvent);
 });
 
 onBeforeUnmount(() => {
-  clearInterval(updateBrowser.value);
-  updateBrowser.value = null;
+  eventBus.off('updateNavData');
 });
 
 watch(
