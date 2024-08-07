@@ -22,7 +22,9 @@
           align: 'center',
         }"
         :validate-trigger="['blur', 'input']"
-        :rules="[{ required: true, message: '必填' }]"
+        :rules="[
+          { required: true, message: '该信息为必填项，未填写不支持发布' },
+        ]"
       >
         <t-input
           v-model="form.mainTitle"
@@ -50,12 +52,14 @@
             align: 'left',
           }"
           :validate-trigger="['blur']"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="8"
+            :max-length="10"
             show-word-limit
             allow-clear
           />
@@ -68,13 +72,15 @@
             align: 'center',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-model="item.desc"
-            placeholder="请输入图片简介"
+            placeholder="请输入"
             allow-clear
-            :max-length="40"
+            :max-length="50"
             show-word-limit
           />
         </t-form-item>
@@ -86,11 +92,13 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
-            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="1" :disabled="isPro">商品</t-radio>
             <t-radio :value="2">无</t-radio>
           </t-radio-group>
         </t-form-item>
@@ -104,14 +112,16 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            max-length="40"
+            :max-length="40"
             show-word-limit
-            placeholder="请输入链接地址"
+            placeholder="请输入"
           />
           <t-select
             v-if="item.linkType === 1"
@@ -119,9 +129,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg?.name
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg?.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
@@ -132,7 +145,9 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-space direction="vertical">
             <t-upload
@@ -166,7 +181,7 @@
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
               {{
                 `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
               }}
             </span>
           </t-space>
@@ -211,6 +226,7 @@ interface GoodsItem {
 
 const props = defineProps({
   data: Object,
+  isPro: Boolean,
   goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);

@@ -1,7 +1,7 @@
 <!-- 多图文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="multi-image-text-box" style="position: relative">
-    <div class="multi-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="multi-image-text-title">{{ data?.mainTitle }}</div>
     <div class="image-box" style="position: relative">
       <div
         v-for="(item, index) in data?.configValue"
@@ -9,13 +9,17 @@
         :style="boxStyle"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title || '小标题' }}</span>
+        <span class="image-title">{{ item?.title || '主标题' }}</span>
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           :preview="false"
           class="image-cls"
         />
-        <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+        <span class="image-desc">{{
+          item?.desc || '我是副标题我是副标题我是副标题'
+        }}</span>
         <span
           v-if="item?.linkType !== 2"
           class="image-link"
@@ -86,13 +90,9 @@ const moveCarousel = (direction: number) => {
   }
 };
 
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -106,10 +106,11 @@ watch(
 watch(
   () => props.data,
   () => {
-    currentOffset.value =
-      paginationFactor.value *
-      -1 *
-      (Object.values(data?.value?.configValue).length - windowSize.value);
+    console.log('多图文数据更新');
+    // currentOffset.value =
+    //   paginationFactor.value *
+    //   -1 *
+    //   (Object.values(data?.value?.configValue).length - windowSize.value);
   },
   { immediate: true, deep: true }
 );
@@ -122,11 +123,13 @@ const clickRight = () => {
 };
 
 const checkConfigList = (list: any) => {
-  console.log('竖图遍历000', list.length);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     return (
-      item.title && item.desc && item.src && item.linkType !== 2 && item.linkUrl
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };

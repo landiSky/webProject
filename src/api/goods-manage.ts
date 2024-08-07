@@ -6,7 +6,7 @@ export function goodsList(data: any) {
 }
 
 // 详情
-export function goodsDetail(id: number) {
+export function goodsDetail(id: any) {
   return $http.get(`/server/web/product/selectById?id=${id}`);
 }
 

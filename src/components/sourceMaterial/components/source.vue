@@ -21,10 +21,10 @@
               v-if="state.type === 2"
               :headers="uploadHeaders"
               action="/server/web/file/upload"
-              accept=".jpg,.png,.bmp,.jpeg"
+              accept=".jpg,.png,.bmp,.jpeg,.gif"
               :data="uploadData"
               @success="uploadSuccess"
-              @error="uploadError"
+              @before-upload="onBeforeUpload"
             >
               <template #upload-button>
                 <t-space>
@@ -45,6 +45,7 @@
               <t-upload
                 class="picture-card"
                 list-type="picture-card"
+                :show-remove-button="state.type === 2"
                 :file-list="[
                   {
                     url: `/server/web/file/download?name=${i.name}`,
@@ -127,9 +128,11 @@ const params = reactive<{
   pageSize: number;
   pageNum: number;
   companyId: number | undefined;
+  type: number;
 }>({
   pageSize: 12,
   pageNum: 1,
+  type: 0,
   companyId: undefined, // 内置-1 我的-管理员不传/机构companyId
 });
 
@@ -157,9 +160,23 @@ const uploadData = () => {
   if (state.type === 2 && userInfoByCompany?.companyId) {
     return {
       companyId: userInfoByCompany?.companyId,
+      type: 0,
     };
   }
-  return {};
+  return {
+    type: 0,
+  };
+};
+
+const onBeforeUpload = async (currentFile: Record<string, any>) => {
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      Message.error(`上传失败，文件大小不要超过10M`);
+      reject();
+    } else {
+      resolve(true);
+    }
+  });
 };
 
 const getMaterialList = () => {
@@ -211,9 +228,9 @@ const uploadSuccess = () => {
   getMaterialList();
 };
 
-const uploadError = () => {
-  Message.error('上传失败');
-};
+// const uploadError = () => {
+//   Message.error('上传失败');
+// };
 
 const onTabChange = (key: number) => {
   params.pageNum = 1;

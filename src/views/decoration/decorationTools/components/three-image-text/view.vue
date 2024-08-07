@@ -11,12 +11,23 @@
         class="image-item"
       >
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           :preview="false"
         />
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
-          <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+          <span class="image-desc">{{
+            item?.desc ||
+            '我是简介我是简介我是简介，我是简介，我是简介我是简介我是简介，我是简介我是简介我是简介我是简介。'
+          }}</span>
+          <span
+            v-if="item?.linkType !== 2"
+            class="image-link"
+            @click="clickLink(item?.linkType, item?.linkUrl)"
+            >查看详情>>
+          </span>
         </div>
       </div>
     </div>
@@ -30,16 +41,11 @@ const props = defineProps({
   data: Object,
   isPreview: Boolean,
 });
-
 const { data, isPreview } = toRefs(props);
 
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -57,12 +63,11 @@ const num = computed(() => {
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -72,7 +77,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }
@@ -118,7 +123,7 @@ defineExpose({
       height: calc(@factor * 256px);
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
-
+      // cursor: pointer;
       .image-item-content {
         z-index: 100;
         display: flex;
@@ -150,6 +155,14 @@ defineExpose({
           word-wrap: break-word;
           -webkit-line-clamp: 7;
           -webkit-box-orient: vertical;
+        }
+
+        .image-link {
+          color: #fff;
+          color: rgba(22, 100, 255, 1);
+          font-size: calc(@factor * 7px);
+          line-height: calc(@factor * 11px);
+          cursor: pointer;
         }
       }
     }

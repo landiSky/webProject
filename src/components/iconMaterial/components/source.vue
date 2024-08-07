@@ -28,11 +28,13 @@
           ref="uploadRef"
           class="upload-operation"
           action="/"
+          accept=".jpg,.png,.bmp,.jpeg,.gif"
           :auto-upload="false"
           :show-file-list="false"
           :image-preview="false"
           :file-list="state.fileList"
           @change="onUploadChange"
+          @before-upload="onBeforeUpload"
         >
           <template #upload-button>
             <t-space>
@@ -184,6 +186,43 @@ const onIconClick = (item: any, name: string, idx: number) => {
   state.isShowUpload = false;
 };
 
+const validateImageSize = (file: any) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const image = new Image();
+      // eslint-disable-next-line func-names
+      image.onload = function () {
+        const { width, height } = this as any;
+        if (width === 144 && height === 144) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      };
+      image.onerror = reject;
+      image.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
+const onBeforeUpload = async (currentFile: Record<string, any>) => {
+  const limitSize = await validateImageSize(currentFile);
+  return new Promise((resolve, reject) => {
+    if (currentFile.size > 10 * 1024 * 1024) {
+      Message.error(`上传失败，文件大小不要超过10M`);
+      reject();
+    } else if (!limitSize) {
+      Message.error(`上传尺寸要求144X144，否则影响展示效果`);
+      reject();
+    } else {
+      resolve(true);
+    }
+  });
+};
+
 const onUploadChange = (fileList: FileList, fileItem: FileItem) => {
   console.log('onUploadChange', fileList, fileItem);
   // 这里需要判断是成功状态
@@ -203,13 +242,12 @@ const uploadRequest = (formData: any) => {
       .post('/server/web/file/upload', formData, {})
       .then((res) => {
         // 在这里将最终值传递
-        console.log('res', res);
         emits('onConfirm', res);
         Message.success('上传成功');
         resolve(true);
       })
       .catch((e) => {
-        Message.error(e);
+        Message.error(e.message);
         reject();
       });
   });

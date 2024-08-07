@@ -34,11 +34,27 @@ export const useMenuStore = defineStore({
       }
     },
     setMenuIndex(num: number, userInfo: any) {
+      const opearationRouteList = [
+        'ROUTE_GOODS',
+        'ROUTE_GOODS_MANAGE',
+        'ROUTE_GOODS_OBSERVE',
+        'ROUTE_USER',
+        'ROUTE_USER_VERIFY',
+        'ROUTE_DECORATION',
+        'ROUTE_DECORATION_BASE',
+        'ROUTE_DECORATION_CHANNEL',
+        'ROUTE_DECORATION_TOOLS',
+        'ROUTE_DECORATION_TOOLS_INDEX',
+        'ROUTE_USERAGREEMENT',
+      ];
       this.menuIndex = num;
       useUserStore().setUserMenuIndex(num);
       const userMenuList =
         num === 1 ? useUserStore().userInfoByCompany?.menuCodes : userMenu(num);
-      const menuList = userInfo.isAdmin ? manageMenu(num) : userMenuList;
+      let menuList = userInfo.isAdmin ? manageMenu(num) : userMenuList;
+      if (userInfo.isAdmin && !userInfo.source) {
+        menuList = opearationRouteList;
+      }
       this.leftMenu = appMenus(menuList);
 
       // // 取第一个有权限的路由

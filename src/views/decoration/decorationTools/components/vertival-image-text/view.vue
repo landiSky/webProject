@@ -11,14 +11,18 @@
         class="image-item"
       >
         <img
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           fit="cover"
           :preview="false"
           class="image-cls"
         />
         <div class="image-item-content">
           <span class="image-title">{{ item?.title || '小标题' }}</span>
-          <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+          <span class="image-desc">{{
+            item?.desc || '我是简介我是简介我是简介我是简介'
+          }}</span>
           <span
             v-if="item?.linkType !== 2"
             class="image-link"
@@ -38,16 +42,12 @@ const props = defineProps({
   data: Object,
   isPreview: Boolean,
 });
+const emit = defineEmits(['golink']);
 
 const { data, isPreview } = toRefs(props);
 
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -65,12 +65,11 @@ const num = computed(() => {
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -80,7 +79,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }
@@ -149,7 +148,7 @@ defineExpose({
         .image-title {
           color: #fff;
           font-weight: 500;
-          font-size: calc(@factor * 16px);
+          font-size: calc(@factor * 8px);
         }
 
         .image-desc {
@@ -157,7 +156,7 @@ defineExpose({
           width: calc(@factor * 70px);
           margin: 10px 0;
           overflow: hidden;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
@@ -168,7 +167,7 @@ defineExpose({
 
         .image-link {
           color: #fff;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           cursor: pointer;
         }
       }

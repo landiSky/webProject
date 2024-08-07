@@ -16,19 +16,30 @@
         />
         <t-space class="item-card" :size="5 * num" direction="vertical">
           <div class="image-overlap-item-icon">
-            <img :src="item?.src || getDefaultImg(index + 1)" alt="" />
+            <img
+              :src="`/server/web/file/download?name=${item?.src}&productId=${
+                data?.productId || ''
+              }`"
+              alt=""
+            />
           </div>
-          <div class="image-overlap-item-title">{{ item?.title }}</div>
-          <div class="image-overlap-item-desc">{{ item?.desc }}</div>
+          <div class="image-overlap-item-title">{{
+            item?.title || '小标题'
+          }}</div>
+          <div class="image-overlap-item-desc">{{
+            item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+          }}</div>
           <t-space
             v-if="item.linkType !== LinkType.BLANK"
             direction="vertical"
             align="center"
             :size="5 * num"
           >
-            <div class="image-overlap-item-btn" @click="clickViewDetail(item)"
-              >查看详情>></div
-            >
+            <div
+              class="image-overlap-item-btn"
+              @click="clickLink(item.linkType, item.linkUrl)"
+              >查看详情>>
+            </div>
             <div class="view-detail-line"></div>
           </t-space>
         </t-space>
@@ -54,6 +65,10 @@ const props = defineProps({
 
 const { data, isPreview } = toRefs(props);
 
+const emit = defineEmits(['golink']);
+const clickLink = (type: number, url: string) => {
+  emit('golink', { type, url });
+};
 const getDefaultImg = (index: number) => {
   if (index === 1) return item1;
   if (index === 2) return item2;
@@ -80,27 +95,27 @@ const validateConfigValue = () => {
   return flag;
 };
 
+const checkConfigList = (list: []) => {
+  if (!list || list.length === 0) return false;
+  return list.every((item: any) => {
+    console.log('竖图遍历', item);
+    return (
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+    );
+  });
+};
+
 const validate = () => {
+  console.log('图叠', data?.value);
   return new Promise((resolve, reject) => {
-    if (
-      // TODO 可能需要完善校验逻辑
-      !data?.value?.mainTitle ||
-      !data?.value?.configValue?.length ||
-      !validateConfigValue()
-    ) {
+    if (!data?.value?.mainTitle || !checkConfigList(data?.value?.configValue)) {
       return reject();
     }
     return resolve('');
   });
-};
-
-const clickViewDetail = (item: IList) => {
-  if (item.linkType === LinkType.LINK) {
-    // 外部链接
-    window.open(item.linkUrl);
-  } else if (item.linkType === LinkType.PRODUCT) {
-    // TODO: 商品搜索页
-  }
 };
 
 defineExpose({
@@ -147,7 +162,7 @@ defineExpose({
     width: calc(@factor * 148px);
     height: calc(@factor * 180px);
     background: #fffffff5;
-    cursor: pointer;
+    // cursor: pointer;
     // transition: all 0.3s;
     .item-overlap-item-hover {
       width: 100%;
@@ -225,6 +240,7 @@ defineExpose({
     img {
       width: calc(@factor * 70px);
       height: calc(@factor * 70px);
+      border-radius: 100%;
     }
   }
 
@@ -258,6 +274,7 @@ defineExpose({
     font-size: calc(@factor * 7px);
     line-height: calc(@factor * 11px);
     text-align: center;
+    cursor: pointer;
   }
 
   .view-detail-line {

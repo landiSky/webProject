@@ -142,7 +142,7 @@
                   </div>
                 </div>
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示图">
+              <!-- <t-descriptions-item label="详情展示图">
                 <div v-if="detailImageList.length > 0" class="file-list">
                   <div
                     v-for="url of detailImageList"
@@ -181,7 +181,7 @@
                     </div>
                   </div>
                 </div>
-              </t-descriptions-item>
+              </t-descriptions-item> -->
               <t-descriptions-item label="商品分类">
                 {{ formModel.productTypeParentName }}/{{
                   formModel.productTypeName
@@ -220,7 +220,10 @@
                   >{{ item.useExplainOriginal }}</a
                 >
               </t-descriptions-item>
-              <t-descriptions-item label="详情展示信息">
+              <t-descriptions-item
+                v-if="!formModel.versionType"
+                label="详情展示信息"
+              >
                 {{
                   formModel.detail
                     ? JSON.parse(formModel.detail)

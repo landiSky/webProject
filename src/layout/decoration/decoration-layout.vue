@@ -28,7 +28,7 @@
         hide-trigger
       >
         <div class="menu-wrapper">
-          <ConfigContent :data="data" />
+          <ConfigContent />
         </div>
       </t-layout-sider>
     </t-layout>
@@ -48,8 +48,6 @@ const contentRef = ref<HTMLDivElement>();
 
 const scrollY = ref(0);
 const disable = ref(false);
-
-const data = ref({ name: 'SigleImg' });
 
 const handleMyEvent = (payload: any) => {
   console.log('Event received:', payload);
@@ -76,7 +74,7 @@ watch(
 
 onMounted(() => {
   console.log('preview-event 开始监听--');
-  eventBus.on('preview-event', handleMyEvent);
+  eventBus.on('previewEvent', handleMyEvent);
 });
 </script>
 

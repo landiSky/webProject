@@ -18,7 +18,9 @@
         <!-- <span class="image-title">{{ item?.title || '小标题' }}</span> -->
         <div class="content-area">
           <t-image
-            :src="`/server/web/file/download?name=${item?.src}`"
+            :src="`/server/web/file/download?name=${item?.src}&productId=${
+              data?.productId || ''
+            }`"
             :preview="false"
             :style="{
               width: '100%',
@@ -26,7 +28,10 @@
             class="image-cls"
           />
           <div class="image-content">
-            <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+            <span class="image-desc">{{
+              item?.desc ||
+              '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
+            }}</span>
             <span
               v-if="item?.linkType !== 2"
               class="image-link"
@@ -66,17 +71,9 @@ const atEndOfList = computed(() => {
   return currentOffset.value <= n;
 });
 
-const atHeadOfList = computed(() => {
-  return currentOffset.value === 0;
-});
-
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -92,15 +89,15 @@ watch(
 );
 
 const checkConfigList = (list: any) => {
-  console.log('竖图遍历000', list.length);
+  console.log('轮播图校验', list);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历000', item);
+    console.log('轮播图校验', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -110,7 +107,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }

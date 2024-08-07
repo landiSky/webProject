@@ -4,11 +4,18 @@
       data?.configValue?.title || '主标题'
     }}</div>
     <t-image
-      :src="`/server/web/file/download?name=${data?.configValue?.src}`"
+      :src="`/server/web/file/download?name=${
+        data?.configValue?.src
+      }&productId=${data?.productId || ''}`"
       :preview="false"
+      :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
+      @click="
+        clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
+      "
     ></t-image>
     <div class="single-image-desc">{{
-      data?.configValue?.desc || '图片描述'
+      data?.configValue?.desc ||
+      '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
     }}</div>
   </div>
 </template>
@@ -22,6 +29,10 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
+const emit = defineEmits(['golink']);
+const clickLink = (type: number, url: string) => {
+  emit('golink', { type, url });
+};
 
 const imageBoxW = computed(() => {
   return isPreview.value ? 1200 : 600;
@@ -87,6 +98,7 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 8px);
     white-space: normal;
+    text-align: left;
     text-overflow: ellipsis;
     word-wrap: break-word;
     -webkit-line-clamp: 2;
@@ -105,4 +117,7 @@ defineExpose({
 //   transform: scale(2); /* 将元素的尺寸放大2倍 */
 //   transform-origin: 0 0; /* 设置缩放中心点 */
 // }
+.mouse-cursor {
+  cursor: pointer;
+}
 </style>

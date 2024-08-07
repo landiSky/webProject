@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-tool-bar">
+  <div v-if="tools.length" class="editor-tool-bar">
     <draggable
       item-key="index"
       ghost-class="ghost"
@@ -10,14 +10,19 @@
       :fallback-tolerance="0"
       :touch-start-threshold="0"
       :group="{ name: 'vehicle-station', pull: 'clone', put: false }"
-      :list="configTools[0].componentList"
+      :list="tools"
       @end="onEnd"
     >
       <template #item="{ element }">
         <transition name="el-fade-in-linear">
           <div v-show="true" class="element-wrap">
-            <iconpark-icon :name="element.icon" size="18px"></iconpark-icon>
-            <div class="element-wrap-text">{{ element.chineseName }}</div>
+            <iconpark-icon
+              :name="ToolData[element].icon"
+              size="18px"
+            ></iconpark-icon>
+            <div class="element-wrap-text">{{
+              ToolData[element].chineseName
+            }}</div>
           </div>
         </transition>
       </template>
@@ -26,29 +31,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, onMounted } from 'vue';
+import { ref, defineEmits, onMounted } from 'vue';
 import draggable from 'vuedraggable';
+import {
+  tools,
+  ToolData,
+} from '@/views/decoration/decorationTools/config/tools';
 
 const emit = defineEmits(['onEnd']);
-const props = defineProps(['configTools']);
-
-// interface list {
-//   name: string;
-//   componentName: any;
-//   formComponentName: string;
-//   value: Record<string, any>;
-// }
-
-// const sectionList = ref<list[]>([
-//   {
-//     name: '单个图片',
-//     componentName: 'SingleImage',
-//     formComponentName: 'SingleImageConfig',
-//     value: {
-//       title: '',
-//     },
-//   },
-// ]);
 
 const sectionIndex = ref<number>(0);
 
@@ -75,9 +65,7 @@ const onEnd = (evt: any) => {
   emit('onEnd', evt.newIndex);
 };
 
-onMounted(() => {
-  // console.log('onMounted', props.configTools);
-});
+onMounted(() => {});
 </script>
 
 <style scoped lang="less">

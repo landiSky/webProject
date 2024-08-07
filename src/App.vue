@@ -52,6 +52,12 @@ const opearationRouteList = [
   'ROUTE_GOODS_OBSERVE',
   'ROUTE_USER',
   'ROUTE_USER_VERIFY',
+  'ROUTE_DECORATION',
+  'ROUTE_DECORATION_BASE',
+  'ROUTE_DECORATION_CHANNEL',
+  'ROUTE_DECORATION_TOOLS',
+  'ROUTE_DECORATION_TOOLS_INDEX',
+  'ROUTE_USERAGREEMENT',
 ];
 
 watch(
@@ -106,7 +112,9 @@ onMounted(() => {
           errorTarget?.nodeName &&
           typeList.includes(errorTarget?.nodeName.toUpperCase())
         ) {
-          Message.error('资源加载失败，请尝试刷新浏览器。');
+          console.log('errorTarget', errorTarget);
+          console.log('event 监听异常:', event);
+          // Message.error('资源加载失败，请尝试刷新浏览器。');
         }
       } catch (e) {
         console.log('error 监听异常:', e);

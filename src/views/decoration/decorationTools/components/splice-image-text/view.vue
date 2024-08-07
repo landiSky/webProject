@@ -22,12 +22,19 @@
           >
             <div class="image-item">
               <div class="image-content">
-                <t-image :src="`/server/web/file/download?name=${item?.src}`" />
+                <t-image
+                  :src="`/server/web/file/download?name=${
+                    item?.src
+                  }&productId=${data?.productId || ''}`"
+                  :preview="false"
+                />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
                     item?.title || '小标题'
                   }}</span>
-                  <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+                  <span class="image-desc">{{
+                    item?.desc || '我是简介我是简介我是简介我是简介我是简介'
+                  }}</span>
                   <span class="image-index">{{
                     `${index + 1}/${data?.configValue1?.config.length}`
                   }}</span>
@@ -62,7 +69,10 @@
           >
             <div class="image-item">
               <div class="image-content">
-                <t-image :src="`/server/web/file/download?name=${item?.src}`" />
+                <t-image
+                  :src="`/server/web/file/download?name=${item?.src}`"
+                  :preview="false"
+                />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
                     item?.title || '小标题'
@@ -100,115 +110,20 @@ const { data, isPreview } = toRefs(props);
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
-// 当前开始的索引，展示往后4张图片
-// const curShowIndex = ref(0);
-// const listLength = computed(() => {
-//   const list: any[] = Object.values(data?.value?.configValue);
-//   console.log('list0000000', list, data?.value?.configValue);
-//   return list.length;
-// });
 
-// const currentOffset = computed(() => {
-//   return (
-
-//   );
-// });
-
-// const showArrow = computed(() => {
-//   return Object.values(data?.value?.configValue).length > 4;
-// });
-
-// const atEndOfList = computed(() => {
-//   const n =
-//     paginationFactor *
-//     -1 *
-//     (Object.values(data?.value?.configValue).length - windowSize.value);
-//   console.log('atEndOfList', atEndOfList, n);
-//   return currentOffset.value <= n;
-// });
-
-// const atHeadOfList = computed(() => {
-//   return currentOffset.value === 0;
-// });
-
-// const moveCarousel = (direction: number) => {
-//   if (direction === 1 && !atEndOfList.value) {
-//     currentOffset.value -= paginationFactor;
-//     console.log('offset', currentOffset.value);
-//   } else if (direction === -1 && !atHeadOfList.value) {
-//     currentOffset.value += paginationFactor;
-//     console.log('offset', currentOffset.value);
-//   }
-// };
-
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
-
-// watch(
-//   () => props.data,
-//   (val: any) => {
-//     console.log('multi image data', val);
-//     currentOffset.value =
-//       paginationFactor *
-//       -1 *
-//       (Object.values(data?.value?.configValue).length - windowSize.value);
-//   },
-//   { immediate: true, deep: true }
-// );
-
-// const initTranslateXList = () => {
-//   const list: number[] = [];
-//   let n = 0;
-//   Object.values(data?.value?.configValue).forEach(
-//     (item: any, index: number) => {
-//       n += index * 30 * num.value;
-//       list.push(n);
-//     }
-//   );
-//   return list;
-// };
-
-// const dataListChangeRight = () => {
-//   console.log('9090901111000000', translateXList.value);
-//   intervalId = setInterval(() => {
-//     translateXList.value.forEach((item, i) => {
-//       console.log('9090901111000000', item, i);
-//       if (item <= 148 * num.value) {
-//         console.log('移动到位了');
-//         // 跳出定时循环
-//         clearInterval(intervalId);
-//       } else {
-//         translateXList.value[i] = item + 10;
-//         console.log('移动中。。。', translateXList.value);
-//       }
-//     });
-//   }, 10);
-// };
-
-// const clickLeft = () => {
-//   moveCarousel(1);
-// };
-// const clickRight = () => {
-//   moveCarousel(-1);
-// };
 
 const checkConfigList = (list: any) => {
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
-    console.log('竖图遍历000', item, typeof list, Array.isArray(list));
     return (
-      (item.title &&
-        item.desc &&
-        item.src &&
-        item.linkType === 2 &&
-        !item.linkUrl) ||
-      (item.linkType !== 2 && item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };

@@ -80,7 +80,7 @@ const ComponentsMap: Record<string, any> = {
     view: defineAsyncComponent(
       () =>
         import(
-          '@/views/decoration/decorationTools/components/icon-image-text/view.vue'
+          '@/views/decoration/decorationTools/components/herizontal-image-text/view.vue'
         )
     ),
     uiConfig: () =>
@@ -148,6 +148,21 @@ const ComponentsMap: Record<string, any> = {
         () =>
           import(
             '@/views/decoration/decorationTools/components/carousel-image-text/ui-config.vue'
+          )
+      ),
+  },
+  HomeHeader: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/home-header/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/home-header/ui-config.vue'
           )
       ),
   },

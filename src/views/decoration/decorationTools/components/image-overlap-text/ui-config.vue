@@ -22,8 +22,8 @@
       >
         <t-input
           v-model="form.mainTitle"
-          placeholder="请输入主标题"
-          :max-length="12"
+          placeholder="请输入"
+          :max-length="10"
           show-word-limit
           allow-clear
         />
@@ -41,7 +41,10 @@
             flex: '90px',
             align: 'left',
           }"
-          :rules="[{ required: true, message: '必填' }]"
+          :validate-trigger="['blur', 'input']"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-input
             v-model="item.title"
@@ -54,6 +57,7 @@
         <t-form-item
           label="简介"
           :field="`list.${index}.desc`"
+          :validate-trigger="['blur', 'input']"
           :rules="[{ required: true, message: '请输入简介' }]"
           :label-col-props="{
             flex: '90px',
@@ -64,7 +68,7 @@
             v-model="item.desc"
             placeholder="请输入"
             allow-clear
-            :max-length="50"
+            :max-length="20"
             show-word-limit
           />
         </t-form-item>
@@ -93,7 +97,11 @@
               action="/"
               :limit="1"
               image-preview
-              :on-before-remove="onBeforeRemove"
+              :on-before-remove="
+                () => {
+                  return onBeforeRemove(index);
+                }
+              "
               style="width: 100px; height: 100px"
             >
               <template #remove-icon>
@@ -106,7 +114,7 @@
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
               {{
                 `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。`
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
               }}
             </span>
           </t-space>
@@ -114,6 +122,7 @@
         <t-form-item
           label="关联"
           :field="`list.${index}.linkType`"
+          :validate-trigger="['blur', 'input']"
           :rules="[{ required: true, message: '请选择关联' }]"
           :label-col-props="{
             flex: '90px',
@@ -121,7 +130,7 @@
         >
           <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
-            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="1" :disabled="isPro">商品</t-radio>
             <t-radio :value="2">无</t-radio>
           </t-radio-group>
         </t-form-item>
@@ -145,14 +154,14 @@
           :label-col-props="{
             flex: '90px',
           }"
-          :validate-trigger="['blur']"
+          :validate-trigger="['blur', 'input']"
         >
           <t-textarea
             v-if="item.linkType === LinkType.LINK"
             v-model="item.linkUrl"
-            max-length="40"
+            :max-length="40"
             show-word-limit
-            placeholder="请输入链接地址"
+            placeholder="请输入"
           />
           <t-select
             v-if="item.linkType === LinkType.PRODUCT"
@@ -160,9 +169,12 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodsList" :key="itemg">{{
-              itemg.name
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
       </template>
@@ -192,6 +204,7 @@ type GoodsItem = {
 };
 const props = defineProps({
   data: Object,
+  isPro: Boolean,
   goodsList: Array as PropType<GoodsItem[]>,
 });
 
@@ -199,7 +212,7 @@ const { data, goodsList } = toRefs(props);
 const formRef = ref();
 const showSource = ref(false);
 const confirmLoading = ref(false);
-
+const curIndex = ref(-1);
 const numberToChiness = (index: number) => {
   if (index === 0) return '一';
   if (index === 1) return '二';
@@ -232,8 +245,8 @@ const listDefault = [
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 1200,
-  height: 520,
+  width: 80,
+  height: 80,
 });
 
 const form = ref<{
@@ -245,16 +258,29 @@ const form = ref<{
 });
 
 const rules = {
-  mainTitle: [{ required: true, message: '请输入主标题' }],
+  'mainTitle': [{ required: true, message: '请输入主标题' }],
+  // mainTitle: [{ required: true, message: '请输入主标题' }],
+  'title': [{ required: true, message: '请输入标题' }],
+  'list.*.desc': [{ required: true, message: '请输入简介' }],
+  'list.*.src': [{ required: true, message: '请上传图片' }],
+  'list.*.linkType': [{ required: true, message: '请选择关联' }],
+  'list.*.linkUrl': [{ required: true, message: '请输入链接' }],
 };
 
-const onBeforeRemove = () => {
+const onBeforeRemove = (index: number) => {
+  curIndex.value = index;
   showSource.value = true;
 };
 
+// const onConfirm = (value: any) => {
+//   console.log('返回的图片信息', value);
+//   form.value.src = value;
+
+//   showSource.value = false;
+// };
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value);
-  // form.value.src = value;
+  console.log('返回的图片信息', value, curIndex.value);
+  form.value.list[curIndex.value].src = value;
   showSource.value = false;
 };
 

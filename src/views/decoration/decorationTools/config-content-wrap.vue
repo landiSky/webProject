@@ -5,6 +5,7 @@
       :is="ComponentsMap[data?.name]?.uiConfig()"
       ref="formComponentRef"
       :data="data"
+      :is-pro="isPro"
       :goods-list="goodsList"
     ></component>
   </div>
@@ -24,12 +25,16 @@ import {
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import eventBus from '@/utils/bus';
 import { apiGetProductList } from '@/api/decoration/decoration-tools';
+import { useRoute, useRouter } from 'vue-router';
+import { ChannelType } from '@/enums/decoration';
 
 type GoodsItem = {
   name: string;
   id: string;
 };
 const data = ref();
+const route = useRoute();
+const isPro = ref(false);
 const goodsList = ref<GoodsItem[]>([]);
 const formComponentRef = ref();
 // 配置项是list的组件
@@ -42,6 +47,7 @@ const listType = [
   'LeftRightImageText',
   'CarouselImageText',
   'ImageOverlapText',
+  'HomeHeader',
 ];
 
 watch(
@@ -50,14 +56,37 @@ watch(
     // 实时监测form数据变化
     if (val) {
       console.log('form配置数据变化：', val, data.value.name);
-      // formComponentRef.value.validate();
-      eventBus.emit('config-event', {
+      formComponentRef?.value?.formRef
+        ?.validate()
+        .then((val: any) => {
+          console.log('form验证成功：', val);
+        })
+        .catch(() => {
+          console.log('form验证失败：');
+        });
+      // formComponentRef?.value?.formRef.setFields({
+      //   'form.list.1.title': {
+      //     status: 'error',
+      //     message: '标题不能为空aaa',
+      //   },
+      // });
+      eventBus.emit('configEvent', {
         type: !listType.includes(data.value.name),
         msgData: formComponentRef.value.form,
       });
     }
   },
   { deep: true }
+);
+
+watch(
+  () => route.query,
+  (nv) => {
+    const { type } = nv;
+    const t = parseInt(`${type}`, 10);
+    isPro.value = t === ChannelType.PLATFORM_PRODUCT_DETAIL;
+  },
+  { deep: true, immediate: true }
 );
 
 const getGoodsList = () => {
@@ -70,6 +99,7 @@ const getGoodsList = () => {
 const handleMyEvent = (payload: any) => {
   console.log('收到配置消息', payload);
   data.value = payload || {};
+  // formComponentRef?.value?.formRef.validate();
   getGoodsList();
 };
 

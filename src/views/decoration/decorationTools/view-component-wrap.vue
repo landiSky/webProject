@@ -14,6 +14,7 @@
       :is-preview="isPreview"
       :bg-color="data?.bgColor"
       :style="componentStyle"
+      @golink="linked"
       @click.stop="clickComponent"
     ></component>
   </div>
@@ -22,7 +23,9 @@
 <script setup lang="ts">
 import { ref, toRefs, computed, onMounted } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const emit = defineEmits(['confirm', 'close', 'select']);
 
 const props = defineProps({
@@ -90,6 +93,21 @@ const validate = () => {
         return reject();
       });
   });
+};
+// 统一处理链接点击事件
+const linked = (data: any) => {
+  if (!isPreview.value) return;
+  const { type, url } = data;
+  if (type === 0) {
+    // 外部链接
+    window.open(url);
+  } else if (type === 1) {
+    console.log('商品链接点击', url);
+    router.push({
+      name: 'wowMallDetail',
+      params: { id: url },
+    });
+  }
 };
 onMounted(() => {
   console.log('渲染组件:', props?.data);

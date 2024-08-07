@@ -22,7 +22,9 @@
           align: 'center',
         }"
         :validate-trigger="['blur', 'input']"
-        :rules="[{ required: true, message: '必填' }]"
+        :rules="[
+          { required: true, message: '该信息为必填项，未填写不支持发布' },
+        ]"
       >
         <t-input
           v-model="form.mainTitle"
@@ -37,9 +39,22 @@
         :key="index"
         :style="{ width: '100%', marginTop: '0px' }"
       >
-        <t-space style="margin-top: 10px; margin-bottom: 20px">
+        <t-space
+          style="
+            position: relative;
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 20px;
+          "
+        >
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
+          <div
+            v-if="form.list.length > 3"
+            class="delete"
+            @click="deleteSpace(index)"
+            >删除</div
+          >
         </t-space>
         <t-form-item
           label="标题"
@@ -49,31 +64,35 @@
             align: 'left',
           }"
           :validate-trigger="['blur']"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="8"
+            :max-length="10"
             show-word-limit
             allow-clear
           />
         </t-form-item>
         <t-form-item
-          label="详情简介"
+          label="简介"
           :field="`list.${index}.desc`"
           :label-col-props="{
             flex: '90px',
             align: 'center',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-model="item.desc"
-            placeholder="请输入图片简介"
+            placeholder="请输入"
             allow-clear
-            :max-length="40"
+            :max-length="50"
             show-word-limit
           />
         </t-form-item>
@@ -85,11 +104,13 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
-          <t-radio-group v-model="item.linkType">
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
-            <t-radio :value="1">商品</t-radio>
+            <t-radio :value="1" :disabled="isPro">商品</t-radio>
             <t-radio :value="2">无</t-radio>
           </t-radio-group>
         </t-form-item>
@@ -103,14 +124,16 @@
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            max-length="40"
+            :max-length="40"
             show-word-limit
-            placeholder="请输入链接地址"
+            placeholder="请输入"
           />
           <t-select
             v-if="item.linkType === 1"
@@ -118,20 +141,25 @@
             placeholder="请选择"
             allow-clear
           >
-            <t-option v-for="itemg in goodList" :key="itemg">{{
-              itemg
-            }}</t-option>
+            <t-option
+              v-for="itemg in goodsList"
+              :key="itemg"
+              :value="itemg.id"
+              >{{ itemg.name }}</t-option
+            >
           </t-select>
         </t-form-item>
 
         <t-form-item
-          label="配图"
+          label="图片"
           :field="`list.${index}.src`"
           :label-col-props="{
             flex: '90px',
           }"
           validate-trigger="blur"
-          :rules="[{ required: true, message: '必填' }]"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
         >
           <t-space direction="vertical">
             <t-upload
@@ -163,8 +191,8 @@
               </template>
             </t-upload>
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              建议图片尺寸：190px *
-              190px，支持jpg、png、bmp、tif、gif文件格式，文件大小限制10M以内。
+              建议图片尺寸：960px *
+              520px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。
             </span>
           </t-space>
         </t-form-item>
@@ -185,26 +213,31 @@
       <t-divider margin="0" />
       <div class="area-add-box-content">
         <iconpark-icon
-          v-if="form.list.length < 8"
+          v-if="form.list.length < 5"
           style="cursor: pointer"
           name="squarePlus"
           :size="20"
           @click="addBlock"
         />
-        <iconpark-icon
+        <t-tooltip
           v-else
-          style="cursor: not-allowed"
-          name="squarePlusGray"
-          size="20"
-        />
-        <span>添加区块（最多支持8个区块）</span>
+          content="到达区块添加上限，删除后可操作"
+          position="tl"
+        >
+          <iconpark-icon
+            style="cursor: not-allowed"
+            name="squarePlusGray"
+            size="20"
+          />
+        </t-tooltip>
+        <span>添加区块（最多支持5个区块）</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, watch, onMounted, computed } from 'vue';
+import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 // 每个子表单的配置项
@@ -220,15 +253,21 @@ type ConfigData = {
   mainTitle: string;
   list: ConfigItem[];
 };
+type GoodsItem = {
+  name: string;
+  id: string;
+};
 const props = defineProps({
   data: Object,
+  isPro: Boolean,
+  goodsList: Array as PropType<GoodsItem[]>,
 });
 const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 190,
-  height: 190,
+  width: 960,
+  height: 520,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
@@ -245,7 +284,6 @@ const onBeforeRemove = (index: number) => {
   console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
-const goodList = ['123', '456', '789'];
 
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value, curIndex.value);
@@ -253,26 +291,32 @@ const onConfirm = (value: any) => {
   showSource.value = false;
 };
 
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
+};
+
 const onCancel = () => {
   showSource.value = false;
 };
 const addBlock = () => {
   console.log('添加区块', form.value.list as any);
-  if (form.value.list.length >= 8) {
+  if (form.value.list.length >= 5) {
     return;
   }
   const { list } = form.value;
   list.push({
-    title: '',
-    desc: '',
-    src: '909d785b-d3fa-4812-b117-557dfe8270e1',
+    title: '小标题',
+    desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+    src: 'a0076f29-088e-44b4-afee-ac0924043e1e.png',
     linkType: 0,
-    linkUrl: '',
+    linkUrl: 'http://www.baidu.com',
   });
 };
 
+const deleteSpace = (index: number) => {
+  form.value.list.splice(index, 1);
+};
 onMounted(() => {
-  console.log('mounted');
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.list = Object.values(data?.value?.configValue) || [];
@@ -308,6 +352,14 @@ defineExpose({
     height: 10px;
     background: #1664ff;
     border-radius: 1px;
+  }
+
+  .delete {
+    position: absolute;
+    right: 0;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .tele-image {

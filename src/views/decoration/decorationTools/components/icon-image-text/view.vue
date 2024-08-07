@@ -9,11 +9,15 @@
         class="image-item"
       >
         <t-image
-          :src="`/server/web/file/download?name=${item?.src}`"
+          :src="`/server/web/file/download?name=${item?.src}&productId=${
+            data?.productId || ''
+          }`"
           :preview="false"
         />
         <span class="image-title">{{ item?.title || '小标题' }}</span>
-        <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+        <span class="image-desc">{{
+          item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+        }}</span>
         <span
           v-if="item?.linkType !== 2"
           class="image-link"
@@ -39,22 +43,10 @@ const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
 
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
-
-// watch(
-//   () => props.data,
-//   (val: any) => {
-//     console.log('multi image data', val);
-//   },
-//   { immediate: true, deep: true }
-// );
 
 const checkConfigList = (list: any) => {
   console.log('竖图遍历000', list.length);
@@ -62,10 +54,10 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     console.log('竖图遍历000', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -76,7 +68,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(Object.values(data?.value?.configValue))
+      !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
     }

@@ -135,7 +135,7 @@
                             color: '#fff',
                             cursor: 'pointer',
                           }"
-                          @click="() => (formModel.logo = '')"
+                          @click="onUploadDelete"
                         />
                       </div>
                     </div>
@@ -144,43 +144,6 @@
               </div>
               <IconMaterial v-else @on-confirm="finishedUploadLogo" />
             </div>
-
-            <!-- <t-upload
-              v-if="formModel.logo == ''"
-              :ref="logoRef"
-              :file-list="logoList"
-              :limit="1"
-              :multiple="false"
-              :headers="uploadHeaders"
-              action="/server/web/file/upload"
-              :show-cancel-button="false"
-              accept=".png,.jpg,.bmp,.jpeg,.gif"
-              :show-file-list="false"
-              @before-upload="beforeUpload"
-              @success="uploadSuccess"
-              @error="uploadError"
-              @progress="uploadProgress"
-            >
-              <template #upload-button>
-                <t-spin :size="24" :loading="logoUploading">
-                  <div :class="`tele-upload-list-item`">
-                    <div class="tele-upload-picture-card">
-                      <div class="tele-upload-picture-card-text">
-                        <IconPlus :size="16" :stroke-width="6" />
-                        <div
-                          style="
-                            margin-top: 8px;
-                            font-weight: 500;
-                            font-size: 12px;
-                          "
-                          >点击上传</div
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </t-spin>
-              </template>
-            </t-upload> -->
           </t-form-item>
           <t-form-item label="" field="" class="hint-item">
             <div class="hint"
@@ -339,7 +302,9 @@
               <div style="display: flex">
                 <div>装修模块：</div>
                 <div style="color: #1d2129"
-                  >{{ `${detailSetOk ? '已配置模块' : '草稿状态'}` }}
+                  >{{
+                    `${formModel.draftStatus === 0 ? '草稿状态' : '已配置模块'}`
+                  }}
                 </div>
               </div>
               <div style="margin-left: 30px">
@@ -980,14 +945,7 @@ const classFiledNames = { value: 'id', label: 'name' };
 
 // 详情
 const detailImageRef = ref();
-const imageVisible: Record<string, any> = ref({});
 const imageList = ref<string[]>([]);
-const deletedetailImg = (file: string) => {
-  const index = imageList.value.indexOf(file);
-  if (index >= 0) {
-    imageList.value.splice(index, 1);
-  }
-};
 
 // logo
 const logoRef = ref();
@@ -1002,7 +960,9 @@ const formModel = ref<Record<string, any>>({
   detailImg: '',
   useExplain: [],
   introduction: '',
-  detail: '[]',
+  detail: '',
+  draftStatus: null,
+  draftDetail: '',
   versionType: 0,
   companyId: '',
 });
@@ -1042,7 +1002,19 @@ const formRules = {
     { required: true, message: '请输入商品名称' },
     { maxLength: 20, message: '最多允许输入20个字符' },
   ],
-  logo: [{ required: true, message: '请上传logo图' }],
+  logo: [
+    {
+      required: true,
+      // message: '请上传logo图',
+      validator: (value: string, callback: (error?: string) => void) => {
+        if (!value) {
+          callback('请上传logo图');
+        } else {
+          callback('');
+        }
+      },
+    },
+  ],
   detailImg: [{ required: true, message: '请至少上传一张详情图' }],
   productTypeId: [{ required: true, message: '请选择分类' }],
   type: [{ required: true }],
@@ -1302,64 +1274,9 @@ const formRef = ref();
 const formRef2 = ref();
 const copyFormRef = [ref(), ref(), ref()];
 
-const logoUploading = ref(false);
-
-const uploadError = (fileItem: FileItem) => {
-  logoUploading.value = false;
+const onUploadDelete = () => {
   formModel.value.logo = '';
-  const size = fileItem.file?.size ?? 0;
-  if (size > 10 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过10M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
   formRef.value.validateField('logo');
-};
-
-const uploadProgress = () => {
-  logoUploading.value = true;
-};
-
-const uploadSuccess = (fileItem: FileItem) => {
-  logoUploading.value = false;
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    formModel.value.logo = fileItem.response.data;
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-  formRef.value.validateField('logo');
-};
-
-const detailUploading = ref(false);
-
-const uploadDetailProgress = () => {
-  detailUploading.value = true;
-};
-
-const uploadDetailError = (fileItem: FileItem) => {
-  detailUploading.value = false;
-  const size = fileItem.file?.size ?? 0;
-  if (size > 10 * 1024 * 1024) {
-    Message.error(`上传失败，文件大小不要超过10M`);
-  } else {
-    Message.error(`上传失败，请检查网络`);
-  }
-  formRef.value.validateField('detailImg');
-};
-
-const uploadDetailSuccess = (fileItem: FileItem) => {
-  detailUploading.value = false;
-  const res = fileItem.response;
-  if (res?.code === 200) {
-    imageList.value.push(fileItem.response.data);
-    formModel.value.detailImg = imageList.value.join(',');
-    Message.success(`上传 ${fileItem.name} 成功`);
-  } else {
-    Message.error(`上传 ${fileItem.name} 失败: ${res?.message ?? ''}`);
-  }
-  formRef.value.validateField('detailImg');
 };
 
 const uploadExpError = (fileItem: FileItem) => {
@@ -1558,6 +1475,8 @@ const getDetail = (id: any) => {
     formModel.value.logo = res.logo;
     formModel.value.detailImg = res.detailImg;
     formModel.value.detail = res.detail;
+    formModel.value.draftStatus = res.draftStatus;
+    formModel.value.draftDetail = res.draftDetail;
     formModel.value.versionType = res.versionType;
     formModel.value.useExplain = useExplainList;
     formModel.value.type = res.type;
@@ -1711,6 +1630,7 @@ const getDetail = (id: any) => {
 
 const finishedUploadLogo = (logo: string) => {
   formModel.value.logo = logo;
+  formRef.value.validateField('logo');
 };
 
 // 增加详情内容，跳转装修工具
@@ -1720,7 +1640,7 @@ const addTemplateDetail = () => {
     query: {
       model: 0,
       type: ChannelType.PLATFORM_PRODUCT_DETAIL,
-      pro_id: formModel.value.id,
+      // proId: formModel.value.id,
     },
   });
   window.open(routeUrl.href, '_blank');
@@ -1732,28 +1652,20 @@ const editTemplateDetail = () => {
     query: {
       model: 0,
       type: ChannelType.PLATFORM_PRODUCT_DETAIL,
-      pro_id: formModel.value.id,
+      proId: formModel.value.id,
     },
   });
   window.open(routeUrl.href, '_blank');
   // 方案一 使用tab通信发送detail数据
-  // setTimeout(() => {
-  //   broadcastChannel.postMessage(
-  //     JSON.stringify({
-  //       name: 'product_detail',
-  //       data: formModel.value.detail,
-  //     })
-  //   );
-  // }, 100);
   // 方案二 路由传递商品id，去装修页通过接口重新拉取商品信息，包含detail数据
   // 方案三 路由传递商品id并存本地，去装修页面获取本地存储，包含detai数据
   // const json = localStorage.getItem(`pro_${formModel.value.id}`);
   if (formModel.value.versionType === 1) {
     // 新版的装修信息才会存storage，传给装修工具
-    localStorage.setItem(
-      `pro_${formModel.value.id}`,
-      JSON.stringify({ setOk: true, data: formModel.value.detail })
-    );
+    // localStorage.setItem(
+    //   `pro_${formModel.value.id}`,
+    //   JSON.stringify({ setOk: true, data: formModel.value.detail })
+    // );
   }
 };
 
@@ -1878,50 +1790,6 @@ const getSelectApplication = () => {
   });
 };
 
-const getLocalDetail = () => {
-  const json = localStorage.getItem(`pro_${formModel.value.id}`);
-  if (json) {
-    const { setOk, data } = JSON.parse(json);
-    // true:已经配置好了;false:只是草稿
-    detailSetOk.value = setOk;
-    formModel.value.detail = data ?? '';
-    formRef.value.validateField('detail');
-  }
-};
-
-onMounted(() => {
-  window.addEventListener('online', () => {
-    online.value = true;
-  });
-  window.addEventListener('offline', () => {
-    cancelUploadingFiles();
-    online.value = false;
-  });
-  broadcastChannel.addEventListener('message', (event) => {
-    console.log('返回商品装修信息detail', event.data);
-    const { name } = JSON.parse(event.data);
-    if (name === 'product_detail') {
-      getLocalDetail();
-    }
-  });
-
-  formModel.value.companyId = String(userInfoByCompany.value?.companyId);
-  getClassList();
-  getSelectApplication();
-  if (props.data?.id) {
-    formModel.value.id = props.data?.id;
-    formModel2.value.productId = props.data?.id;
-    getDetail(props.data?.id);
-  } else {
-    getGoodsId();
-  }
-});
-
-onBeforeUnmount(() => {
-  broadcastChannel.close();
-  localStorage.removeItem(`pro_${formModel.value.id}`);
-});
-
 // const templateChanged = () => {
 //   // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
 //   // formRef.value.validateField('detail');
@@ -1929,24 +1797,46 @@ onBeforeUnmount(() => {
 
 const doSave = async () => {
   let res;
+  let err;
   if (step.value === 1) {
-    // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
     formModel.value.detailImg = imageList.value.join(',');
     const result = await formRef.value.validate();
     if (result) {
+      // 发消息给装修index页面，通知其保存商品详情失败
+      formModel.value.detail = '';
+      broadcastChannel.postMessage(
+        JSON.stringify({
+          name: 'product_detail_save',
+          status: false,
+          msg: '商品基础信息填写不完整，请检查',
+        })
+      );
       return false;
     }
     if (props.data?.id) {
       res = await updateGoods1({
         ...formModel.value,
         useExplain: formModel.value.useExplain.join(','),
+      }).catch((e) => {
+        err = e.message;
       });
     } else {
       res = await saveGoods1({
         ...formModel.value,
         useExplain: formModel.value.useExplain.join(','),
+      }).catch((e) => {
+        err = e.message;
       });
     }
+    const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
+    console.log('00112233', res);
+    broadcastChannel.postMessage(
+      JSON.stringify({
+        name: 'product_detail_save',
+        status: !!res,
+        msg: res ? msg : err ?? '保存失败',
+      })
+    );
   } else {
     const r = await validForm2();
     if (!r) {
@@ -2000,11 +1890,6 @@ const onBack = (done: (closed: boolean) => void) => {
 
 // 保存
 const clickSave = async () => {
-  // 此时的保存需要判断详情字段是否配置完成，如果是草稿就不让保存后端，并提示
-  if (!detailSetOk.value && step.value === 1) {
-    Message.error('请先在装修模块确认发布');
-    return;
-  }
   const res = await doSave();
   if (res) {
     modalJsonString.value = getModalJson();
@@ -2015,7 +1900,11 @@ const clickSave = async () => {
 
 // 下一步
 const clickNext = async () => {
-  // formModel.value.detail = JSON.stringify(templateRef.value.templateData);
+  // TODO 需要拦截做商品详情的发布后再进行下一步
+  if (formModel.value.draftStatus === 0) {
+    Message.warning('详情未配置发布，配置发布完成可进行下一步');
+    return;
+  }
   formModel.value.detailImg = imageList.value.join(',');
   const result = await formRef.value.validate();
   if (result) {
@@ -2142,6 +2031,56 @@ const validateAP = (index: number, key: string) => {
     validateAPT(key === 'account', index);
   });
 };
+
+onMounted(() => {
+  window.addEventListener('online', () => {
+    online.value = true;
+  });
+  window.addEventListener('offline', () => {
+    cancelUploadingFiles();
+    online.value = false;
+  });
+  broadcastChannel.addEventListener('message', (event) => {
+    console.log('返回商品装修信息detail', event.data);
+    const { name, status, data } = JSON.parse(event.data);
+    if (name === 'product_detail') {
+      // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
+      formModel.value.draftStatus = status;
+      if (status) {
+        formModel.value.detail = data;
+      } else {
+        formModel.value.draftDetail = data;
+        if (!formModel.value.detail) {
+          broadcastChannel.postMessage(
+            JSON.stringify({
+              name: 'product_detail_save',
+              status: false,
+              msg: '创建商品时需要先发布详情模块',
+            })
+          );
+          return;
+        }
+      }
+      clickSave();
+    }
+  });
+
+  formModel.value.companyId = String(userInfoByCompany.value?.companyId);
+  getClassList();
+  getSelectApplication();
+  if (props.data?.id) {
+    formModel.value.id = props.data?.id;
+    formModel2.value.productId = props.data?.id;
+    getDetail(props.data?.id);
+  } else {
+    getGoodsId();
+  }
+});
+
+onBeforeUnmount(() => {
+  broadcastChannel.close();
+  localStorage.removeItem(`pro_${formModel.value.id}`);
+});
 </script>
 
 <style lang="less" scoped>

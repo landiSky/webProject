@@ -6,23 +6,6 @@
       width: isPreview ? '100%' : '720px',
     }"
   >
-    <t-popover position="rt" :popup-visible="isFirstUse">
-      <div
-        :style="{
-          position: 'absolute',
-          top: '50px',
-          left: '-230px',
-          color: 'transparent',
-        }"
-      >
-        .
-      </div>
-      <template #title> 操作引导 </template>
-      <template #content>
-        <p>拖动左侧icon到指定区域，松开</p>
-        <p>鼠标完成模版添加</p>
-      </template>
-    </t-popover>
     <div v-if="openType === 5" class="product-bg"></div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
       >拖动左侧组件，到当前区域进行楼层配置
@@ -39,7 +22,7 @@
           :scroll="true"
           :disabled="isPreview"
           :group="{ name: 'vehicle-station' }"
-          :list="componentsList"
+          :list="toolList"
           :move-threshold="20"
           @end="endSort"
           @add="insertSort"
@@ -50,15 +33,20 @@
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
                   :is-preview="isPreview"
-                  :data="element"
+                  :data="componentsList[index]"
                   :component-index="index"
                   :component-style="bgStyle(index)"
                   :select-component-index="selectIndex"
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
-                <div
-                  v-if="selectIndex === index && !isPreview"
+                <!-- element !== 'HomeHeader' 后续可以考虑写个方法 -->
+                <t-space
+                  v-if="
+                    selectIndex === index &&
+                    !isPreview &&
+                    element !== 'HomeHeader'
+                  "
                   class="select_config-box"
                 >
                   <iconpark-icon
@@ -68,20 +56,26 @@
                       padding: 5px;
                       border: 1px solid #86909c;
                       border-radius: 2px;
+                      cursor: pointer;
                     "
                     @click="deleteComponent(index)"
                   />
                   <iconpark-icon
+                    v-if="!isMaxNum"
                     name="componentCopy"
                     :size="12"
                     style="
                       padding: 5px;
                       border: 1px solid #86909c;
                       border-radius: 2px;
+                      cursor: pointer;
                     "
                     @click="copyComponent(index)"
                   />
-                  <t-popover trigger="hover">
+                  <t-popover
+                    v-if="element !== 'ImageOverlapText'"
+                    trigger="hover"
+                  >
                     <iconpark-icon
                       name="componentBg"
                       :size="12"
@@ -89,24 +83,28 @@
                         padding: 5px;
                         border: 1px solid #86909c;
                         border-radius: 2px;
+                        cursor: pointer;
                       "
                     />
-
                     <template #content>
                       <div class="color-picker">
                         <div
-                          v-for="(item, index) in colorList"
-                          :key="index"
+                          v-for="(item, i) in colorList"
+                          :key="i"
                           :class="[
                             item.cssClass,
-                            { 'is-active': colorIndex === index },
+                            {
+                              'is-active':
+                                `${item.color0}${item.color1}` ===
+                                componentsList[selectIndex].bgColor,
+                            },
                           ]"
-                          @click="changeColor(index)"
+                          @click="changeColor(i)"
                         ></div>
                       </div>
                     </template>
                   </t-popover>
-                </div>
+                </t-space>
               </div>
             </transition>
           </template>
@@ -131,31 +129,27 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  watch,
-  onMounted,
-  computed,
-  nextTick,
-  onBeforeUnmount,
-} from 'vue';
+import { ref, watch, onMounted, computed, onBeforeUnmount } from 'vue';
 import draggable from 'vuedraggable';
 import eventBus from '@/utils/bus';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
-  apiGetIsFirstUseDecoration,
   apiGetNavData,
   apiUpdateNavData,
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
 import { Translate } from '@icon-park/vue-next';
+import { goodsDetail } from '@/api/goods-manage';
 import ViewComponentWrap from './view-component-wrap.vue';
-import { channelName } from './constant';
+import { channelName, LinkType } from './constant';
+import { ToolData, tools } from './config/tools';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
+const router = useRouter();
 const componentsList = ref<any[]>([]);
+const toolList = ref<any[]>([]);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
@@ -186,19 +180,15 @@ const openModel = ref(-1);
 
 // 配置背景色列表（后续如果需要支持选中返显效果，需要给组件增加一个cssClass字段跟列表中的字段做匹配）
 const colorList = ref([
-  { cssClass: 'bg_color-1', color0: '#ffffff' },
-  { cssClass: 'bg_color-2', color0: '#F5F6FB' },
-  { cssClass: 'bg_color-3', color0: '#EBF0F4' },
+  { cssClass: 'bg_color-1', color0: '#ffffff', color1: '' },
+  { cssClass: 'bg_color-2', color0: '#F5F6FB', color1: '' },
+  { cssClass: 'bg_color-3', color0: '#EBF0F4', color1: '' },
   { cssClass: 'bg_color-4', color0: '#ffffff', color1: '#e2ecff' },
 ]);
 
 // 动态倍数
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
-});
-
-const curSelectedComponent = computed(() => {
-  return componentsList.value[selectIndex.value];
 });
 
 // 处理背景色的字符串，1-非渐变色，就返回一个颜色值，2-渐变色，切割为两个颜色值
@@ -262,7 +252,7 @@ const changeColor = (val: number) => {
   colorIndex.value = val;
   componentsList.value[selectIndex.value].bgColor =
     colorList.value[colorIndex.value]?.color0 +
-    (colorList.value[colorIndex.value]?.color1 ?? '');
+    colorList.value[colorIndex.value]?.color1;
 };
 
 // 左侧工具栏拖入后在列表中的位置
@@ -270,9 +260,15 @@ const onEnd = (index: number) => {
   selectIndex.value = index;
 };
 
+// 判断组件数量是否大于10个上限
+const isMaxNum = computed(() => {
+  return componentsList.value.length >= 10;
+});
+
 // 移除当前组件
 const deleteComponent = (index: number) => {
   componentsList.value.splice(index, 1);
+  toolList.value.splice(index, 1);
   // 删除ref对象
   viewComponentWrapRef.value.splice(index, 1);
   // 删除当前的组件,将下个组件数据传递给配置组件,直到删完所有组件
@@ -301,6 +297,9 @@ const copyComponent = (index: number) => {
   const firstHalf = componentsList.value.slice(0, index);
   const secondHalf = componentsList.value.slice(index);
   componentsList.value = [...firstHalf, component, ...secondHalf];
+  const firstHalfTool = toolList.value.slice(0, index);
+  const secondHalfTool = toolList.value.slice(index);
+  toolList.value = [...firstHalfTool, component.name, ...secondHalfTool];
   selectIndex.value = index;
 };
 
@@ -311,109 +310,138 @@ const setItemRef = (el: any, index: number) => {
   }
 };
 
+const closeTip = (msg: string) => {
+  Message.success(msg);
+  setTimeout(() => {
+    interceptFlag.value = false;
+    window.close();
+  }, 900);
+};
+
 // 保存组件列表的json数据到本地
 const clickSave = () => {
   // 先清除本地存储
-  const { type } = route.query;
+  const { id } = route.query;
+  if (componentsList.value.length === 0) {
+    Message.error('请先添加组件并配置完成再保存');
+    return;
+  }
+  const json = JSON.stringify(componentsList.value);
   if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-    const json =
-      componentsList.value.length > 0
-        ? JSON.stringify(componentsList.value)
-        : '';
-    // 保存草稿
-    localStorage.setItem(
-      proId.value,
-      JSON.stringify({ setOk: false, data: json })
-    );
+    // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
     broadcastChannel.postMessage(
-      JSON.stringify({ name: 'product_detail', data: '' })
+      JSON.stringify({ name: 'product_detail', status: 0, data: json })
     );
-    window.close();
   } else {
-    localStorage.removeItem(`componentsList${type}`);
-    localStorage.setItem(
-      `componentsList${type}`,
-      JSON.stringify(componentsList.value)
-    );
-    console.log('保存成功:', componentsList.value);
+    // 二次弹框
+    Modal.info({
+      title: '确认保存',
+      content: '保存后，当前编辑内容将保存到草稿',
+      titleAlign: 'start',
+      hideCancel: false,
+      okText: '保存',
+      onOk: () => {
+        // 保存远程
+        apiUpdateNavData({
+          id,
+          status: 0,
+          draftDetail: json,
+        }).then((res: any) => {
+          // 通知主tab页刷新
+          broadcastChannel.postMessage(
+            JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+          );
+          closeTip('保存成功');
+        });
+      },
 
-    broadcastChannel.postMessage(
-      JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
-    );
+      onCancel: () => {},
+    });
   }
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
   const childForm = () => {
+    console.log('childForm', viewComponentWrapRef.value);
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
     });
   };
   Promise.all(childForm())
     .then((data: any) => {
-      console.log('校验成功:', data);
       if (componentsList.value.length === 0) {
-        Message.error('请先添加组件');
+        Message.error('请先添加组件并配置完成再发布');
         return;
       }
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
       if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-        // 商品详情装修
-        // tab间通信，发送json数据到tab页
-        localStorage.setItem(
-          proId.value,
-          JSON.stringify({ setOk: true, data: json })
-        );
+        // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
         broadcastChannel.postMessage(
-          JSON.stringify({ name: 'product_detail', data: '' })
+          JSON.stringify({ name: 'product_detail', status: 1, data: json })
         );
-        window.close();
-        return;
-      }
+      } else {
+        // 二次弹框
+        Modal.info({
+          title: '确认保存并发布',
+          content: '发布后，当前编辑内容将发布到网站前台',
+          titleAlign: 'start',
+          hideCancel: false,
+          okText: '保存并发布',
+          onOk: () => {
+            // 保存远程
+            apiUpdateNavData({
+              id,
+              status: 1,
+              detail: json,
+            }).then((res: any) => {
+              // 通知主tab页刷新
+              broadcastChannel.postMessage(
+                JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
+              );
+              closeTip('发布成功');
+            });
+          },
 
-      // 二次弹框
-      Modal.info({
-        title: '确认保存并发布',
-        content: '发布后，当前编辑内容将发布到网站前台',
-        titleAlign: 'start',
-        hideCancel: false,
-        okText: '保存并发布',
-        onOk: () => {
-          // 保存本地
-          clickSave();
-          // 保存远程
-          apiUpdateNavData({
-            id,
-            detail: json,
-          }).then((res: any) => {
-            Message.success('保存成功');
-            // 通知主tab页刷新
-            broadcastChannel.postMessage(
-              JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
-            );
-          });
-        },
-        onCancel: () => {},
-      });
+          onCancel: () => {},
+        });
+      }
     })
     .catch(() => {
-      console.log('保存失败');
-      Message.error('保存失败');
+      Message.error('未完成详情配置');
     });
 };
 
 // 从新排序
-const endSort = () => {
-  console.log('endSort0000:', componentsList.value);
-  // clickSave();
+const endSort = (event: any) => {
+  const { newIndex, oldIndex } = event;
+  const newIndexData = JSON.parse(
+    JSON.stringify(componentsList.value[oldIndex])
+  );
+  const oldIndexData = JSON.parse(
+    JSON.stringify(componentsList.value[newIndex])
+  );
+  componentsList.value[newIndex] = newIndexData;
+  componentsList.value[oldIndex] = oldIndexData;
 };
 
 const insertSort = (event: any) => {
+  const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
+  // todo
+  selectIndex.value = newIndex;
+  const addToolData = JSON.parse(JSON.stringify(ToolData[tools[oldIndex]]));
+  componentsList.value.splice(newIndex, 0, addToolData);
+  console.log(
+    '----被拖拽区域收到新增组件事件 触发选中组件--：',
+    event.newIndex,
+    componentsList.value
+  );
   if (!isPreview.value) {
-    console.log('endSort11111:', event.newIndex);
-    eventBus.emit('selectComponent', componentsList.value[event.newIndex]);
+    eventBus.emit(
+      'selectComponent',
+      JSON.parse(JSON.stringify(componentsList.value[newIndex]))
+    );
   }
 };
 
@@ -423,22 +451,17 @@ const close = () => {
 
 const clickPreview = () => {
   isPreview.value = true;
-  eventBus.emit('preview-event', true);
+  eventBus.emit('previewEvent', true);
 };
 
 const notPreview = () => {
   isPreview.value = false;
-  eventBus.emit('preview-event', false);
+  eventBus.emit('previewEvent', false);
 };
 
 // 选中组件回调
 const selectComponent = (index: number) => {
   selectIndex.value = index;
-  console.log('收到选中组件事件:', index);
-  console.log(
-    '打印选中组件的值：',
-    JSON.parse(JSON.stringify(componentsList.value))
-  );
   if (!isPreview.value) {
     eventBus.emit('selectComponent', componentsList.value[selectIndex.value]);
     console.log(
@@ -446,22 +469,6 @@ const selectComponent = (index: number) => {
       componentsList.value[selectIndex.value],
       selectIndex.value
     );
-  } else {
-    // linkType :0-链接（点击跳转链接），1-产品（点击跳到搜索产品结果页）
-    console.log(
-      '选中的组件00:',
-      componentsList.value[selectIndex.value].configValue?.linkType
-    );
-    const type = componentsList.value[selectIndex.value].configValue?.linkType;
-    if (type === 0) {
-      window.open(
-        componentsList.value[selectIndex.value].configValue?.linkUrl,
-        '_blank'
-      );
-    } else if (type === 1) {
-      // 跳转到搜索产品结果页
-      console.log('跳转到搜索产品结果页');
-    }
   }
 };
 
@@ -469,13 +476,13 @@ const selectComponent = (index: number) => {
 const edit = () => {
   openModel.value = 0;
   isPreview.value = false;
-  eventBus.emit('preview-event', false);
+  eventBus.emit('previewEvent', false);
 };
 
 // 接收bus事件
 const handleMyEvent = (payload: any) => {
-  console.log('监听到insertIndex事件，获取到index:', payload);
-  selectIndex.value = payload;
+  console.log('index.vue 监听到insertIndex事件，获取到index:', payload);
+  // selectIndex.value = payload;
 };
 
 watch(
@@ -485,7 +492,7 @@ watch(
     if (openModel.value === 1) {
       isPreview.value = true;
       setTimeout(() => {
-        eventBus.emit('preview-event', isPreview.value);
+        eventBus.emit('previewEvent', isPreview.value);
       }, 10);
     }
   },
@@ -498,9 +505,10 @@ watch(
     const { type } = route.query;
     console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
-    if (openType.value === 5) {
-      console.log('open model1', openModel.value);
-      interceptFlag.value = false;
+    if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+      console.log(openType.value, ChannelType);
+
+      // interceptFlag.value = false;
     } else {
       interceptFlag.value = true;
     }
@@ -511,14 +519,61 @@ watch(
   }
 );
 
+// 数组插入第一个元素--homeheader
+const insertFirst = () => {
+  componentsList.value.unshift({
+    chineseName: '首页top',
+    maxNum: 3,
+    icon: 'singleImg',
+    name: 'HomeHeader',
+    mainTitle: '我是主标题',
+    configValue: [
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+      {
+        title: '小标题',
+        desc: '图片描述',
+        src: '',
+        linkType: LinkType.LINK,
+        linkUrl: 'http://www.baidu.com',
+      },
+    ],
+  });
+};
+
 const getNavData = (type: number) => {
   apiGetNavData({ type })
     .then((res: any) => {
-      decorationJson.value = res.data[0].detail;
+      // decorationJson.value = res.data[0].detail;
+      const { status, detail, draftDetail } = res.data[0];
       console.log('装修数据000', res.data[0].detail);
-      if (decorationJson.value && decorationJson.value !== '[]') {
-        componentsList.value = JSON.parse(decorationJson.value);
-        console.log('有装修数据', componentsList.value);
+      if (status) {
+        if (detail && detail !== '[]') {
+          componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        }
+        console.log('有装修数据', componentsList.value, toolList.value);
       } else {
         console.log(
           '没有装修数据',
@@ -526,30 +581,47 @@ const getNavData = (type: number) => {
           typeof decorationJson.value,
           componentsList.value
         );
-        const localStorageData = localStorage.getItem(
-          `componentsList${openType.value}`
-        );
-        if (localStorageData) {
-          componentsList.value = JSON.parse(localStorageData);
+        // const localStorageData = localStorage.getItem(
+        //   `componentsList${openType.value}`
+        // );
+        // if (localStorageData) {
+        //   componentsList.value = JSON.parse(localStorageData);
+        // }
+        if (draftDetail && draftDetail !== '[]') {
+          componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
         }
       }
     })
-    .catch();
+    .catch()
+    .finally(() => {
+      if (type === ChannelType.PLATFORM_HOME) {
+        // 首页装修，默认把首页组件放到第一个
+        if (componentsList.value.length > 0) {
+          if (componentsList.value[0].name !== 'HomeHeader') {
+            insertFirst();
+          }
+        } else if (componentsList.value.length === 0) {
+          insertFirst();
+        }
+      }
+    });
 };
 
 // 开场第一次闪烁两次
 const firstFlicker = () => {
-  // popupShow.value = true;
-  flickering.value = true;
   setTimeout(() => {
+    flickering.value = true;
     flickerBorder(2);
   }, 2000);
 };
 // 拖入组件后闪烁一次
 const secondFlicker = () => {
-  flickering.value = true;
   setTimeout(() => {
-    flickerBorder(2);
+    flickering.value = true;
+    flickerBorder(1);
   }, 1000);
   isFirstUse.value = false;
 };
@@ -568,76 +640,122 @@ watch(
 );
 
 onMounted(() => {
-  console.log('装修index页面');
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
+    console.log('beforeunload111 inner', interceptFlag.value);
+    componentsList.value = [...componentsList.value];
     if (interceptFlag.value) {
       console.log('有装修数据，是否确认离开？');
       event.preventDefault();
     }
   });
-  eventBus.on('insertIndex', handleMyEvent);
+  // eventBus.on('insertIndex', handleMyEvent);
   // config-event
-  eventBus.on('config-event', (data: any) => {
+  eventBus.on('configEvent', (data: any) => {
+    const jsonData = JSON.parse(JSON.stringify(data));
     console.log(
-      '接收的config信息',
-      data.msgData,
-      componentsList.value[selectIndex.value]
+      'index 接收的config信息',
+      jsonData,
+      selectIndex.value,
+      JSON.parse(JSON.stringify(componentsList.value))
     );
     // 平图文组件特殊处理
     if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
-      const { mainTitle, configValue1, configValue2 } = data.msgData;
-      componentsList.value[selectIndex.value].mainTitle = mainTitle;
-      componentsList.value[selectIndex.value].configValue1 = configValue1;
-      componentsList.value[selectIndex.value].configValue2 = configValue2;
+      const { mainTitle, configValue1, configValue2 } = jsonData.msgData;
+      (componentsList.value[selectIndex.value] || {}).mainTitle = mainTitle;
+      (componentsList.value[selectIndex.value] || {}).configValue1 =
+        configValue1;
+      (componentsList.value[selectIndex.value] || {}).configValue2 =
+        configValue2;
       return;
     }
-    if (data.type) {
+    if (jsonData.type) {
       // 对象类型的配置项
-      componentsList.value[selectIndex.value].configValue = { ...data.msgData };
+      componentsList.value[selectIndex.value].configValue = {
+        ...jsonData.msgData,
+      };
+      console.log('对象类型复制00', componentsList.value);
     } else {
       // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
-        data.msgData.mainTitle;
+        jsonData.msgData.mainTitle;
       componentsList.value[selectIndex.value].configValue = [
-        ...data.msgData.list,
+        ...jsonData.msgData.list,
       ];
+      console.log(
+        'index 接收的config信息end',
+        JSON.parse(JSON.stringify(componentsList.value))
+      );
     }
   });
   openType.value = parseInt(`${route.query.type}`, 10);
-  console.log('1111111111111111');
   if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
     // 非商品详情装修的情况
     getNavData(openType.value);
   } else {
-    // 商品详情装修的情况，注意监听时机，如果监听晚于发送可能收不到
-    // broadcastChannel.addEventListener('message', (event) => {
-    //   const { name, data } = JSON.parse(event.data);
-    //   if (name === 'product_detail') {
-    //     console.log('商品详情装修数据', data);
-    //     componentsList.value = JSON.parse(data);
-    //   }
-    // });
-    proId.value = `pro_${route.query.pro_id}`;
-    const storage = localStorage.getItem(proId.value);
-    if (storage) {
-      const { data } = JSON.parse(storage);
-      componentsList.value = JSON.parse(data);
+    const { proId } = route.query;
+    if (proId) {
+      goodsDetail(`${proId}`).then((res) => {
+        console.log('商品详情数据000111', res);
+        const { draftStatus, draftDetail, detail, versionType } = res;
+        if (versionType === 1) {
+          // 新版装修数据
+          if (draftStatus === 0) {
+            // 草稿状态
+            if (!draftDetail) return;
+            componentsList.value = JSON.parse(draftDetail);
+            toolList.value = componentsList.value.map((item) => {
+              return item.name;
+            });
+          } else {
+            // 发布状态
+            if (!detail) return;
+            componentsList.value = JSON.parse(detail);
+            toolList.value = componentsList.value.map((item) => {
+              return item.name;
+            });
+          }
+        } else {
+          // 旧版数据丢弃
+        }
+      });
     }
   }
-  console.log('2222222222222222222');
-  apiGetIsFirstUseDecoration().then((res: any) => {
-    if (!res) {
-      console.log('第一次使用装修', res);
+  // 接收首次使用装修的消息
+  eventBus.on('isFirstUseDecoration', (data: any) => {
+    if (data) {
       isFirstUse.value = true;
       firstFlicker();
+    }
+  });
+  // 接收外部页面的消息
+  broadcastChannel.addEventListener('message', (event) => {
+    const { name, status, msg } = JSON.parse(event.data);
+    if (name === 'product_detail_save') {
+      if (status) {
+        // 保存成功
+        Message.success(msg);
+        setTimeout(() => {
+          interceptFlag.value = false;
+          window.close();
+        }, 900);
+      } else {
+        // 失败
+        Message.error(msg);
+      }
     }
   });
 });
 
 onBeforeUnmount(() => {
-  // 释放资源
+  // bus 关闭监听
+  // eventBus.off('insertIndex');
+  eventBus.off('configEvent');
+  eventBus.off('isFirstUseDecoration');
+  // tab 关闭拦截关闭
+  interceptFlag.value = false;
   window.removeEventListener('beforeunload', (event) => {});
+  // 关闭消息通道
   broadcastChannel.close();
 });
 </script>
@@ -721,7 +839,7 @@ onBeforeUnmount(() => {
     position: fixed;
     bottom: 24px;
     left: 130px;
-    z-index: 9999;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -737,7 +855,7 @@ onBeforeUnmount(() => {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -763,15 +881,12 @@ onBeforeUnmount(() => {
 
 .select_config-box {
   position: absolute;
-  left: 42%;
+  left: 50%;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 104px;
   height: 24px;
   margin-top: 4px;
-  cursor: pointer;
+  transform: translateX(-50%);
 }
 
 ::v-deep(.tele-radio-button.tele-radio-checked) {

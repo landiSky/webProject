@@ -85,6 +85,7 @@ const onBeforeOk = (file: any) => {
   //   lastModified: Date.now(),
   // });
   form.append('file', file);
+  form.append('type', '1');
   // form.append('fileField', 'image');
   // console.log('onBeforeOk', blob, newfile, form);
   return new Promise((resolve, reject) => {

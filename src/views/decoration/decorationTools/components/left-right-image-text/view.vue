@@ -1,20 +1,15 @@
 <template>
-  <div class="vertical-image-text-box">
-    <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
-    }}</div>
-    <t-carousel
-      :auto-play="true"
-      animation-name="fade"
-      class="image-box"
-      show-arrow="hover"
-    >
+  <div class="lr-image-text-box">
+    <div class="lr-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
           <div class="image-item-content">
-            <span class="image-title">{{ item?.title || '小标题' }}</span>
-
-            <div class="image-desc">{{ item?.desc || '图片简介' }}</div>
+            <div class="image-title">{{ item?.title || '小标题' }}</div>
+            <div class="image-desc">{{
+              item?.desc ||
+              '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题'
+            }}</div>
             <span
               v-if="item?.linkType !== 2"
               class="image-link"
@@ -23,7 +18,9 @@
             </span>
           </div>
           <img
-            :src="`/server/web/file/download?name=${item?.src}`"
+            :src="`/server/web/file/download?name=${item?.src}&productId=${
+              data?.productId || ''
+            }`"
             fit="cover"
             class="image-cls"
           />
@@ -34,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed, ref, watch } from 'vue';
+import { toRefs, computed, ref, watch, onMounted } from 'vue';
 
 const props = defineProps({
   data: {
@@ -47,14 +44,10 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
-console.log('view-data左侧内容:', data.value);
+
+const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
-  if (type === 0) {
-    // 外部链接
-    window.open(url);
-  } else if (type === 1) {
-    // TODO: 商品搜索页
-  }
+  emit('golink', { type, url });
 };
 
 watch(
@@ -74,10 +67,10 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     console.log('竖图遍历', item);
     return (
-      !item.title ||
-      !item.desc ||
-      !item.src ||
-      (item.linkType === 2 && !item.linkUrl)
+      item.title &&
+      item.desc &&
+      item.src &&
+      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
 };
@@ -87,7 +80,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      checkConfigList(data?.value?.configValue.value)
+      !checkConfigList(data?.value?.configValue)
     ) {
       return reject();
     }
@@ -103,7 +96,7 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 
-.vertical-image-text-box {
+.lr-image-text-box {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -111,7 +104,7 @@ defineExpose({
   width: calc(@factor * 720px);
   height: calc(@factor * 380px);
 
-  .vertical-image-text-title {
+  .lr-image-text-title {
     width: calc(@factor * 600px);
     margin: calc(@factor * 29px) 0;
     overflow: hidden;
@@ -139,32 +132,33 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        box-sizing: border-box;
         width: calc(@factor * 300px);
         height: calc(@factor * 192px);
         margin-right: 15.5px;
-        padding: 5px;
-        overflow: auto;
-        font-size: calc(@factor * 14px);
+        padding: calc(@factor * 11px) 0;
 
         .image-title {
           width: 100%;
           height: calc(@factor * 34px);
+          padding: 0 calc(@factor * 11px);
           color: #1d2129;
           font-weight: 500;
-          font-size: calc(@factor * 16px);
+          font-size: calc(@factor * 8px);
+          line-height: calc(@factor * 34px);
           text-align: left;
           text-overflow: ellipsis;
           border-bottom: 1px solid #e2e2e2;
+          // background-color: white;
         }
 
         .image-desc {
           display: -webkit-box;
           width: 100%;
           margin: 10px 0;
+          padding: 0 calc(@factor * 11px);
           overflow: hidden;
           color: #4e5969;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           line-height: calc(@factor * 18px);
           white-space: pre-wrap;
           text-align: left;
@@ -176,8 +170,9 @@ defineExpose({
 
         .image-link {
           display: inline-block;
+          padding: 0 calc(@factor * 11px);
           color: #1664ff;
-          font-size: calc(@factor * 14px);
+          font-size: calc(@factor * 7px);
           cursor: pointer;
         }
       }
@@ -194,8 +189,16 @@ defineExpose({
       border-radius: 1px;
     }
 
+    :deep(.tele-carousel-indicator-item) {
+      background-color: #e9e9e966;
+    }
+
+    :deep(.tele-carousel-indicator-wrapper-bottom) {
+      bottom: -35px;
+    }
+
     :deep(.tele-carousel-indicator-item:hover) {
-      background: #eaeaea;
+      background: #e0d9d9;
     }
 
     :deep(.tele-carousel-indicator-item-active) {
@@ -205,9 +208,14 @@ defineExpose({
     :deep(.tele-carousel-indicator-wrapper-bottom) {
       background: transparent;
     }
+
+    :deep(.tele-carousel-item-slide-out) {
+      display: none;
+      // animation: xxx;
+    }
   }
 
-  .vertical-image-text-desc {
+  .lr-image-text-desc {
     display: -webkit-box;
     width: calc(@factor * 600px);
     margin-top: calc(@factor * 9px);

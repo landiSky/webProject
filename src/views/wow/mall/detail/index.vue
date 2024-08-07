@@ -381,7 +381,10 @@
         </div>
       </div>
       <div v-else class="newIntro">
-        <DecorationBox :components-list="templateList"></DecorationBox>
+        <DecorationBox
+          :components-list="templateList"
+          :product-id="prodDetail.id"
+        ></DecorationBox>
       </div>
 
       <!-- 产品评价 -->
@@ -885,9 +888,21 @@ onMounted(() => {
       deliveryList.value = data.productDeliverySetList || [];
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
-
-      templateList.value = JSON.parse(data.detail);
       versionType.value = data.versionType;
+      if (data.draftStatus === 0) {
+        // 装修组件的草稿状态
+        if (!data.draftDetail) return;
+        templateList.value = JSON.parse(data.draftDetail);
+      } else if (data.draftStatus === 1) {
+        // 装修组件的发布状态
+        if (!data.detail) return;
+        templateList.value = JSON.parse(data.detail);
+      } else if (data.draftStatus === null) {
+        // 老版本展示信息
+        if (!data.detail) return;
+        templateList.value = JSON.parse(data.detail);
+      }
+
       // prodDetail.value.versionType = 1; // 模拟？？？
 
       const { saleType } = data;
@@ -1067,12 +1082,18 @@ onUnmounted(() => {
             background: none;
 
             .self-radio-item {
+              min-width: 60px;
               margin-right: 30px;
               padding: 10px;
               font-weight: 500;
               font-size: 16px;
+              text-align: center;
               background: #fff;
               border-radius: 4px;
+
+              > div {
+                margin: 0 auto;
+              }
 
               &.tele-radio-checked {
                 color: #1d2129;
@@ -1108,7 +1129,7 @@ onUnmounted(() => {
 
       &.new-baseInfo {
         height: 600px;
-        background: url('../../../../assets/images/wow/mall/mall-bg.png')
+        background: url('../../../../assets/images/wow/mall/mall1-bg.jpg')
           no-repeat;
         background-size: 100%;
 
@@ -1157,9 +1178,6 @@ onUnmounted(() => {
               font-size: 14px;
             }
           }
-        }
-
-        button {
         }
       }
     }
@@ -1409,6 +1427,7 @@ onUnmounted(() => {
       position: fixed;
       top: 229px;
       right: 15px;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       width: 140px;
