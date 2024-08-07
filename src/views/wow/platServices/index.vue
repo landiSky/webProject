@@ -1,6 +1,9 @@
 <!-- 平台服务页 -->
 <template>
   <Container :components-list="componentList" />
+  <div v-if="componentList && componentList.length" class="platServices">
+    <WowFooter></WowFooter>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -9,6 +12,7 @@ import { defineProps, onMounted, ref } from 'vue';
 import Container from '@/views/decoration/decorationTools/pageContainer.vue';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
+import WowFooter from '../components/wowFooter/index.vue';
 
 const props = defineProps({
   xxx: {
@@ -34,4 +38,8 @@ onMounted(() => {
 });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.platServices {
+  margin-top: 120px;
+}
+</style>

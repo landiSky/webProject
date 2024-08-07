@@ -284,7 +284,7 @@
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <div
             v-if="
@@ -318,7 +318,7 @@
                 </t-radio>
               </t-radio-group>
             </span>
-            <span v-else>不限</span>
+            <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <t-button
             v-if="Number(selectVersion.isTry) === 1"
@@ -1129,13 +1129,13 @@ onUnmounted(() => {
 
       &.new-baseInfo {
         height: 600px;
-        background: url('../../../../assets/images/wow/mall/mall1-bg.jpg')
+        background: url('../../../../assets/images/wow/mall/mall-bg.jpg')
           no-repeat;
-        background-size: 100%;
+        background-size: 100% 100%;
 
         .right {
           flex: none;
-          margin-left: 126px;
+          margin-left: 12%;
 
           .header {
             margin-top: 56px;
@@ -1461,6 +1461,10 @@ onUnmounted(() => {
   }
 
   .decorationIntroCls {
+    &.productIntro {
+      margin-top: 0;
+    }
+
     display: flex;
     flex-direction: column;
     align-items: center;
