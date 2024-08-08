@@ -216,7 +216,7 @@
                   @click="() => goMallDetail(item.id)"
                 >
                   <span>
-                    大多数大部分不方便不发达不大大多数大部分不方便不发达不大
+                    {{ item.name }}
                   </span>
                 </t-typography-paragraph>
                 <span class="desc">
