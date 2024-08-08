@@ -315,8 +315,8 @@ const addBlock = () => {
     title: '小标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
     src: 'db1d53a6-d1f1-48f4-9aff-2b1846f82112.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
+    linkType: 2,
+    linkUrl: '',
   });
 };
 

@@ -285,8 +285,8 @@ const addBlock = () => {
     title: '小标题',
     desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
     src: 'b535d146-6edb-40be-abba-f37285293c92.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
+    linkType: 2,
+    linkUrl: '',
   });
 };
 const onBeforeRemove = (index: number) => {
