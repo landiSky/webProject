@@ -2,7 +2,10 @@
   <div class="home-header">
     <div class="mask"></div>
     <div class="top-box">
+      <!--  @mouseenter="setShow(0)"
+        @mouseleave="setShow(-1)" -->
       <div class="top-left-box">
+        <!-- v-if="tipshow === 0" -->
         <div class="tip-box">
           <div class="hover-header">{{ data?.configValue[0].title }}</div>
           <div class="hover-content">
@@ -23,6 +26,7 @@
       </div>
 
       <div class="top-right-box">
+        <!-- v-if="tipshow === 1" -->
         <div class="tip-box">
           <div class="hover-header">{{ data?.configValue[1].title }}</div>
           <div class="hover-content">
@@ -40,6 +44,7 @@
         </div>
       </div>
       <div class="bottom-left-box">
+        <!-- v-if="tipshow === 3" -->
         <div class="tip-box">
           <div class="hover-header">{{ data?.configValue[2].title }}</div>
           <div class="hover-content">
@@ -57,6 +62,7 @@
         </div>
       </div>
       <div class="bottom-right-box">
+        <!-- v-if="tipshow === 2" -->
         <div class="tip-box">
           <div class="hover-header">{{ data?.configValue[3].title }}</div>
           <div class="hover-content">
@@ -89,12 +95,16 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed, ref } from 'vue';
+import { toRefs, computed, ref, onMounted, onBeforeUnmount } from 'vue';
+
+const tipshow = ref(-1);
 
 const props = defineProps({
   data: Object,
   isPreview: Boolean,
 });
+
+const timer = ref();
 
 const { data, isPreview } = toRefs(props);
 
@@ -137,6 +147,38 @@ const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
   emit('golink', { type, url });
 };
+// 实现轮流显示效果（未使用）
+const startTimer = () => {
+  timer.value = setInterval(() => {
+    if (tipshow.value === -1 || tipshow.value === 3) {
+      tipshow.value = 0;
+    } else {
+      tipshow.value += 1;
+    }
+  }, 3800);
+};
+
+const endTimer = () => {
+  clearInterval(timer.value);
+};
+
+// 未使用
+const setShow = (index: number) => {
+  if (index < 0) {
+    startTimer();
+  } else {
+    endTimer();
+    tipshow.value = index;
+  }
+};
+
+onMounted(() => {
+  // startTimer();
+});
+
+onBeforeUnmount(() => {
+  // endTimer();
+});
 
 defineExpose({
   validate,
@@ -148,6 +190,19 @@ defineExpose({
 @widthFactor: v-bind(maskWidthFactor);
 @topBoxWidth: v-bind(topBoxWidth);
 @topBoxHeight: v-bind(topBoxHeight);
+
+@keyframes fadeIn {
+  0%,
+  10% {
+    opacity: 0;
+    scale: 0.2;
+  }
+
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
 
 .home-header {
   position: relative;
@@ -164,7 +219,7 @@ defineExpose({
     z-index: 2;
     width: calc(@widthFactor * 540px);
     height: calc(@factor * 350px);
-    background: linear-gradient(90deg, #f2f5fc 70%, rgba(224, 243, 250, 0));
+    background: linear-gradient(90deg, #f2f6fb 70%, rgba(224, 243, 250, 0));
   }
 
   .right-mask {
@@ -187,8 +242,8 @@ defineExpose({
 
     .top-left-box {
       position: absolute;
-      top: 10%;
-      left: 36%;
+      top: 22%;
+      left: 37%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
@@ -196,21 +251,20 @@ defineExpose({
 
       .tip-box {
         margin-left: calc(@factor * -130px);
+        animation: fadeIn 0.5s ease 1;
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 161px) !important;
+          width: calc(@factor * 144px) !important;
           transform: scale(1);
-          visibility: visible;
-          opacity: 1;
         }
       }
     }
 
     .top-right-box {
       position: absolute;
-      top: 5%;
+      top: 18%;
       left: 57%;
       z-index: 1000;
       width: calc(@factor * 100px);
@@ -218,11 +272,12 @@ defineExpose({
 
       .tip-box {
         margin-left: calc(@factor * 84px);
+        animation: fadeIn 0.5s ease 1;
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 161px) !important;
+          width: calc(@factor * 144px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -234,8 +289,8 @@ defineExpose({
 
     .bottom-left-box {
       position: absolute;
-      top: 54%;
-      left: 34%;
+      top: 66%;
+      left: 36%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
@@ -243,11 +298,12 @@ defineExpose({
 
       .tip-box {
         margin-left: calc(@factor * -120px);
+        animation: fadeIn 0.5s ease 1;
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 161px) !important;
+          width: calc(@factor * 144px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -259,7 +315,7 @@ defineExpose({
 
     .bottom-right-box {
       position: absolute;
-      top: 50%;
+      top: 66%;
       left: 56%;
       z-index: 1000;
       width: calc(@factor * 100px);
@@ -268,11 +324,12 @@ defineExpose({
 
       .tip-box {
         margin-left: calc(@factor * 94px);
+        animation: fadeIn 0.5s ease 1;
       }
 
       &:hover {
         .tip-box {
-          width: calc(@factor * 161px) !important;
+          width: calc(@factor * 144px) !important;
           border: 1px solid #fff;
           border-radius: 2px;
           transform: scale(1);
@@ -287,7 +344,7 @@ defineExpose({
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      width: calc(@factor * 161px) !important;
+      width: calc(@factor * 144px) !important;
       border: 1px solid #fff;
       border-radius: 2px;
       transform: scale(0.8);
@@ -297,19 +354,19 @@ defineExpose({
 
       .hover-header {
         // display: block;
-        width: calc(@factor * 160px);
-        height: calc(@factor * 25px);
+        width: calc(@factor * 143px);
+        height: calc(@factor * 27px);
         padding-right: calc(@factor * 10px);
-        padding-left: calc(@factor * 14px);
+        padding-left: calc(@factor * 12px);
         overflow: hidden;
-        color: #1d2129;
+        color: #0a4a90;
         font-weight: 500;
-        font-size: calc(@factor * 12px);
-        line-height: calc(@factor * 25px);
+        font-size: calc(@factor * 10px);
+        line-height: calc(@factor * 27px);
         white-space: nowrap;
         text-align: left;
         text-overflow: ellipsis;
-        background-color: transparent;
+        background-color: #ffffff60;
       }
 
       .hover-content {
@@ -318,10 +375,10 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: space-between;
-        width: calc(@factor * 160px);
+        width: calc(@factor * 143px);
         font-size: calc(@factor * 7px);
         background-color: #bcf6ff80;
-
+        // background-color: red;
         .hover-desc {
           display: -webkit-box;
           width: 100%;
@@ -351,13 +408,18 @@ defineExpose({
         }
       }
     }
+
+    .tip-box::after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      background: inherit;
+      backdrop-filter: blur(3px);
+      content: '';
+    }
   }
 }
-// ::v-deep(.tele-image) {
-//   .tele-image-img {
-//     width: calc(@factor * 600px) !important;
-//     height: calc(@factor * 260px) !important;
-//     object-fit: cover !important;
-//   }
-// }
 </style>
