@@ -360,6 +360,10 @@ onMounted(async () => {
     line-height: 140px;
     border: 2px solid #f7f7f7;
     border-radius: 2px;
+
+    > img {
+      object-fit: cover;
+    }
   }
 
   .list-item.active {

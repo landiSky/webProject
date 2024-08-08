@@ -201,11 +201,9 @@
             </span>
             <span class="right">
               <span class="right-top">
-                <span class="name" @click="() => goMallDetail(item.id)">{{
-                  item.name
-                }}</span>
                 <t-typography-paragraph
-                  style="width: 100%; text-align: left"
+                  class="name"
+                  style="width: 130px; text-align: left"
                   :ellipsis="{
                     rows: 1,
                     showTooltip: {
@@ -215,31 +213,15 @@
                       },
                     },
                   }"
+                  @click="() => goMallDetail(item.id)"
                 >
-                  <span class="companyName">{{ item.companyName }}</span>
+                  <span>
+                    大多数大部分不方便不发达不大大多数大部分不方便不发达不大
+                  </span>
                 </t-typography-paragraph>
-                <span class="tag">
-                  <t-tag color="#E8F4FF">{{
-                    DeliverTypeDesc[item.deliveryType]
-                  }}</t-tag>
-                  <div
-                    v-for="(item2, index) in item?.tagList"
-                    :key="index"
-                    class="tagList"
-                  >
-                    <t-typography-paragraph
-                      class="tagList-color"
-                      :ellipsis="{
-                        rows: 1,
-                        showTooltip: true,
-                      }"
-                    >
-                      {{ item2.name }}
-                    </t-typography-paragraph>
-                  </div>
-                </span>
                 <span class="desc">
                   <t-typography-paragraph
+                    class="introduction"
                     :ellipsis="{
                       rows: 2,
                       showTooltip: {
@@ -251,6 +233,28 @@
                     }"
                     >{{ item.introduction }}
                   </t-typography-paragraph>
+                  <span class="companyName">{{ item.companyName }}</span>
+
+                  <span class="tag">
+                    <t-tag color="#E8F4FF">{{
+                      DeliverTypeDesc[item.deliveryType]
+                    }}</t-tag>
+                    <div
+                      v-for="(item2, index) in item?.tagList"
+                      :key="index"
+                      class="tagList"
+                    >
+                      <t-typography-paragraph
+                        class="tagList-color"
+                        :ellipsis="{
+                          rows: 1,
+                          showTooltip: true,
+                        }"
+                      >
+                        {{ item2.name }}
+                      </t-typography-paragraph>
+                    </div>
+                  </span>
                 </span>
               </span>
               <span class="price">
@@ -407,6 +411,7 @@ const onPageSizeChange = (size: number) => {
 };
 
 const goMallDetail = (id: string) => {
+  console.log('goMallDetail');
   router.push({
     name: 'wowMallDetail',
     params: { id },
@@ -716,22 +721,28 @@ onMounted(() => {
             flex-direction: column;
             align-items: start;
             width: 100%;
+            text-align: left;
           }
 
           .name {
-            margin-bottom: 4px;
-            color: #223354;
+            margin-bottom: 0;
+            color: #1d2129;
             font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 22px;
+            line-height: 22px;
             cursor: pointer;
           }
 
+          .introduction {
+            margin-bottom: 8px;
+          }
+
           .companyName {
-            margin-bottom: 4px;
-            color: #4e5969;
+            display: inline-block;
+            margin-bottom: 8px;
+            color: #86909c;
             font-weight: 400;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 22px;
           }
 
@@ -751,10 +762,12 @@ onMounted(() => {
           }
 
           .desc {
-            margin-top: 12px;
-            color: #1d2129;
-            font-weight: 400;
-            font-size: 14px;
+            width: 264px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            color: #4e5969;
+            font-weight: 500;
+            font-size: 18px;
             line-height: 22px; /* 157.143% */
             word-break: break-all;
           }
@@ -798,7 +811,7 @@ onMounted(() => {
   font-weight: 400;
   font-size: 12px;
   font-family: PingFang SC;
-  background: rgba(232, 244, 255, 1);
+  background: #f2f3f8;
   border-radius: 2px;
 
   .tagList-color {
