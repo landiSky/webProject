@@ -1679,6 +1679,7 @@ const editTemplateDetail = () => {
 // 删除详情内容
 const delTemplateDetail = () => {
   formModel.value.detail = '';
+  formModel.value.draftDetail = '';
   localStorage.removeItem(`pro_${formModel.value.id}`);
 };
 
@@ -1807,21 +1808,21 @@ const doSave = async () => {
   let err;
   if (step.value === 1) {
     formModel.value.detailImg = imageList.value.join(',');
-    // const result = await formRef.value.validate();
+    const result = await formRef.value.validate();
     // 保存操作
 
-    // if (result) {
-    //   // 发消息给装修index页面，通知其保存商品详情失败
-    //   formModel.value.detail = '';
-    //   broadcastChannel.postMessage(
-    //     JSON.stringify({
-    //       name: 'product_detail_save',
-    //       status: false,
-    //       msg: '商品基础信息填写不完整，请检查',
-    //     })
-    //   );
-    //   return false;
-    // }
+    if (result) {
+      // 发消息给装修index页面，通知其保存商品详情失败
+      formModel.value.detail = '';
+      broadcastChannel.postMessage(
+        JSON.stringify({
+          name: 'product_detail_save',
+          status: false,
+          msg: '商品基础信息填写不完整，请检查',
+        })
+      );
+      return false;
+    }
     if (props.data?.id) {
       res = await updateGoods1({
         ...formModel.value,
