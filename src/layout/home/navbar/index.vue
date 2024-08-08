@@ -119,6 +119,7 @@ const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 // const { platFormLogo, platFormName } = storeToRefs(decoration);
 const logo = ref('');
 const platformName = ref('');
+
 const menuStore = useMenuStore();
 
 const userMenu = [
