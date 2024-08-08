@@ -230,7 +230,7 @@ defineExpose({
 
   .top-box {
     position: relative;
-    width: calc(@topBoxWidth - 2px);
+    // width: calc(@topBoxWidth - 2px);
     height: calc(@topBoxHeight - 2px);
     margin: 0 auto;
 
