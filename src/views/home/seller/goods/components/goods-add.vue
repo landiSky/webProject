@@ -298,7 +298,10 @@
               :template-data="templateDetail"
               @confirm="templateChanged"
             ></TemplateDrawer> -->
-            <div v-if="formModel.detail" class="templateItem">
+            <div
+              v-if="formModel.detail || formModel.draftDetail"
+              class="templateItem"
+            >
               <div style="display: flex">
                 <div>装修模块：</div>
                 <div style="color: #1d2129"
@@ -1045,7 +1048,11 @@ const formRules = {
       required: true,
       message: '请添加详情模块',
       validator: (value: string, cb: (params?: any) => void) => {
-        if (!value || value === '[]') return cb('请添加详情模块');
+        if (
+          (!value || value === '[]') &&
+          (!formModel.value.draftDetail || formModel.value.draftDetail === '[]')
+        )
+          return cb('请添加详情模块');
         return cb();
       },
     },
@@ -1800,19 +1807,21 @@ const doSave = async () => {
   let err;
   if (step.value === 1) {
     formModel.value.detailImg = imageList.value.join(',');
-    const result = await formRef.value.validate();
-    if (result) {
-      // 发消息给装修index页面，通知其保存商品详情失败
-      formModel.value.detail = '';
-      broadcastChannel.postMessage(
-        JSON.stringify({
-          name: 'product_detail_save',
-          status: false,
-          msg: '商品基础信息填写不完整，请检查',
-        })
-      );
-      return false;
-    }
+    // const result = await formRef.value.validate();
+    // 保存操作
+
+    // if (result) {
+    //   // 发消息给装修index页面，通知其保存商品详情失败
+    //   formModel.value.detail = '';
+    //   broadcastChannel.postMessage(
+    //     JSON.stringify({
+    //       name: 'product_detail_save',
+    //       status: false,
+    //       msg: '商品基础信息填写不完整，请检查',
+    //     })
+    //   );
+    //   return false;
+    // }
     if (props.data?.id) {
       res = await updateGoods1({
         ...formModel.value,
@@ -2050,16 +2059,16 @@ onMounted(() => {
         formModel.value.detail = data;
       } else {
         formModel.value.draftDetail = data;
-        if (!formModel.value.detail) {
-          broadcastChannel.postMessage(
-            JSON.stringify({
-              name: 'product_detail_save',
-              status: false,
-              msg: '创建商品时需要先发布详情模块',
-            })
-          );
-          return;
-        }
+        // if (!formModel.value.detail) {
+        //   broadcastChannel.postMessage(
+        //     JSON.stringify({
+        //       name: 'product_detail_save',
+        //       status: false,
+        //       msg: '创建商品时需要先发布详情模块',
+        //     })
+        //   );
+        //   return;
+        // }
       }
       clickSave();
     }
