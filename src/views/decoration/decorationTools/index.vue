@@ -170,7 +170,7 @@ const decorationJson = ref('');
 
 const openType = ref(-1);
 
-const interceptFlag = ref(true);
+const interceptFlag = ref(false);
 
 const proId = ref('');
 
@@ -346,11 +346,13 @@ const clickSave = () => {
           status: 0,
           draftDetail: json,
         }).then((res: any) => {
+          console.log('平道页面保存成功', res);
+          Message.success('保存成功');
+          interceptFlag.value = false;
           // 通知主tab页刷新
           broadcastChannel.postMessage(
             JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
           );
-          closeTip('保存成功');
         });
       },
 
@@ -509,7 +511,7 @@ watch(
 
       // interceptFlag.value = false;
     } else {
-      interceptFlag.value = true;
+      // interceptFlag.value = true;
     }
   },
   {
@@ -631,6 +633,10 @@ watch(
     if (isFirstUse.value && vn > 0) {
       secondFlicker();
     }
+    // vn vo 差的绝对值==1
+    if (Math.abs(vn - vo) === 1) {
+      interceptFlag.value = true;
+    }
   },
   {
     immediate: true,
@@ -732,11 +738,13 @@ onMounted(() => {
     const { name, status, msg } = JSON.parse(event.data);
     if (name === 'product_detail_save') {
       if (status) {
-        // 保存成功
+        // 成功
         Message.success(msg);
+        interceptFlag.value = false;
         setTimeout(() => {
-          interceptFlag.value = false;
-          window.close();
+          if (msg === '发布成功') {
+            window.close();
+          }
         }, 900);
       } else {
         // 失败

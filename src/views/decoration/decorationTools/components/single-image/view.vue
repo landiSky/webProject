@@ -15,7 +15,7 @@
     ></t-image>
     <div class="single-image-desc">{{
       data?.configValue?.desc ||
-      '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
+      '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是'
     }}</div>
   </div>
 </template>
@@ -106,6 +106,12 @@ defineExpose({
   }
 }
 
+.single-image:hover {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  transform: scale(1.02); /* 放大到原来的110% */
+  transition: transform 0.5s, box-shadow 0.5s;
+}
+
 ::v-deep(.tele-image) {
   .tele-image-img {
     width: calc(@factor * 600px) !important;
@@ -113,10 +119,7 @@ defineExpose({
     object-fit: cover !important;
   }
 }
-// .is-preview {
-//   transform: scale(2); /* 将元素的尺寸放大2倍 */
-//   transform-origin: 0 0; /* 设置缩放中心点 */
-// }
+
 .mouse-cursor {
   cursor: pointer;
 }

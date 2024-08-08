@@ -11,7 +11,7 @@ export const ToolData: Record<string, any> = {
     configValue: {
       title: '小标题',
       src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
-      desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+      desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是',
       linkType: LinkType.LINK,
       linkUrl: 'http://www.baidu.com',
     },
