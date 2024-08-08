@@ -543,7 +543,6 @@
 import { toRefs, ref, watch, onMounted, computed, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
-import { ToolData } from '../../config/tools';
 
 // 每个子表单的配置项
 type ConfigItem = {
@@ -621,7 +620,13 @@ const addBlock1 = () => {
     return;
   }
   const { config } = form.value.configValue1;
-  config.push(ToolData.SpliceImageText.configValue1.config[0]);
+  config.push({
+    title: '我是主标题我是主标题',
+    desc: '我是简介我是简介我是简介我是简介我是简介',
+    src: 'c18782ef-2879-4531-b946-f8d31c3ceded.png',
+    linkType: 0,
+    linkUrl: 'http://www.baidu.com',
+  });
 };
 
 const addBlock2 = () => {
@@ -629,7 +634,13 @@ const addBlock2 = () => {
     return;
   }
   const { config } = form.value.configValue2;
-  config.push(ToolData.SpliceImageText.configValue2.config[0]);
+  config.push({
+    title: '我是主标题我是主标题',
+    desc: '我是简介我是简介我是简介我是简介我是简介',
+    src: 'c18782ef-2879-4531-b946-f8d31c3ceded.png',
+    linkType: 0,
+    linkUrl: 'http://www.baidu.com',
+  });
 };
 
 const onTabChange = (val: string) => {

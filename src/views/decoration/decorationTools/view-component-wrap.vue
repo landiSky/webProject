@@ -24,6 +24,8 @@
 import { ref, toRefs, computed, onMounted } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import { useRouter } from 'vue-router';
+import { Message } from '@tele-design/web-vue';
+import { apiProductDetail } from '@/api/wow/mall';
 
 const router = useRouter();
 const emit = defineEmits(['confirm', 'close', 'select']);
@@ -103,9 +105,15 @@ const linked = (data: any) => {
     window.open(url);
   } else if (type === 1) {
     console.log('商品链接点击', url);
-    router.push({
-      name: 'wowMallDetail',
-      params: { id: url },
+    apiProductDetail({ id: url }).then((res: any) => {
+      if (Number(res?.status) !== 1) {
+        Message.warning('该商品已下架，无法进行查看');
+        return;
+      }
+      router.push({
+        name: 'wowMallDetail',
+        params: { id: url },
+      });
     });
   }
 };
