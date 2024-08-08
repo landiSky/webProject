@@ -117,11 +117,11 @@ const maskWidthFactor = computed(() => {
   return isPreview.value ? 1 : 0;
 });
 
-const topBoxWidth = computed(() => {
-  return isPreview.value ? '1920px' : '720px';
-});
+// const topBoxWidth = computed(() => {
+//   return isPreview.value ? '1920px' : '720px';
+// });
 const topBoxHeight = computed(() => {
-  return isPreview.value ? '700px' : '266px';
+  return isPreview.value ? '100%' : '263px';
 });
 
 const checkConfigList = (list: any) => {
@@ -188,7 +188,7 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 @widthFactor: v-bind(maskWidthFactor);
-@topBoxWidth: v-bind(topBoxWidth);
+// @topBoxWidth: v-bind(topBoxWidth);
 @topBoxHeight: v-bind(topBoxHeight);
 
 @keyframes fadeIn {
@@ -208,17 +208,20 @@ defineExpose({
   position: relative;
   width: 100%;
   max-width: 1920px;
+  max-height: 700px;
+  // height: 698px;
   // min-width: 720px;
   // min-height: 500px;
-  margin: 0 auto;
-
+  // margin: 0 auto;
+  // background-color: #0a4a90;
   .mask {
     position: absolute;
     top: 0;
+    bottom: 0;
     left: -365px;
     z-index: 2;
     width: calc(@widthFactor * 540px);
-    height: calc(@factor * 350px);
+    // height: calc(@factor * 350px);
     background: linear-gradient(90deg, #f2f6fb 70%, rgba(224, 243, 250, 0));
   }
 
@@ -231,25 +234,27 @@ defineExpose({
   .top-box {
     position: relative;
     // width: calc(@topBoxWidth - 2px);
-    height: calc(@topBoxHeight - 2px);
-    margin: 0 auto;
+    height: calc(@topBoxHeight - 0px);
+    max-height: 700px;
+    background-color: transparent; //注意这里
 
     .video-box {
       z-index: -1;
       width: 100%;
-      height: 100%;
+      // height: 100px;
     }
 
     .top-left-box {
       position: absolute;
-      top: 22%;
-      left: 37%;
+      top: 10%;
+      left: 36%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
 
       .tip-box {
+        margin-top: calc(@factor * 40px);
         margin-left: calc(@factor * -130px);
         animation: fadeIn 0.5s ease 1;
       }
@@ -264,14 +269,16 @@ defineExpose({
 
     .top-right-box {
       position: absolute;
-      top: 18%;
-      left: 57%;
+      top: 8%;
+      left: 58%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
+      background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * 84px);
+        margin-top: calc(@factor * 40px);
+        margin-left: calc(@factor * 70px);
         animation: fadeIn 0.5s ease 1;
       }
 
@@ -285,15 +292,16 @@ defineExpose({
 
     .bottom-left-box {
       position: absolute;
-      top: 66%;
-      left: 36%;
+      top: 56%;
+      left: 35%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * -120px);
+        margin-top: calc(@factor * 30px);
+        margin-left: calc(@factor * -121px);
         animation: fadeIn 0.5s ease 1;
       }
 
@@ -307,15 +315,16 @@ defineExpose({
 
     .bottom-right-box {
       position: absolute;
-      top: 66%;
-      left: 56%;
+      top: 56%;
+      left: 58%;
       z-index: 1000;
       width: calc(@factor * 100px);
       height: calc(@factor * 100px);
       background-color: transparent;
 
       .tip-box {
-        margin-left: calc(@factor * 94px);
+        margin-top: calc(@factor * 30px);
+        margin-left: calc(@factor * 80px);
         animation: fadeIn 0.5s ease 1;
       }
 
