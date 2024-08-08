@@ -63,6 +63,8 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -83,6 +85,8 @@
             flex: '90px',
             align: 'center',
           }"
+          :validate-status="`${item.desc ? '' : 'error'}`"
+          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -123,6 +127,8 @@
           :label-col-props="{
             flex: '90px',
           }"
+          :validate-status="`${item.linkUrl ? '' : 'error'}`"
+          :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -240,6 +246,7 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+
 // 每个子表单的配置项
 type ConfigItem = {
   title: string;
@@ -307,9 +314,9 @@ const addBlock = () => {
   list.push({
     title: '小标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'a0076f29-088e-44b4-afee-ac0924043e1e.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
+    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+    linkType: 2,
+    linkUrl: '',
   });
 };
 

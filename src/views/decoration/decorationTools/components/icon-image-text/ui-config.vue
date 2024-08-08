@@ -50,6 +50,8 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -70,6 +72,8 @@
             flex: '90px',
             align: 'center',
           }"
+          :validate-status="`${item.desc ? '' : 'error'}`"
+          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -111,6 +115,8 @@
             flex: '90px',
           }"
           validate-trigger="blur"
+          :validate-status="`${item.linkUrl ? '' : 'error'}`"
+          :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
           ]"
@@ -267,8 +273,8 @@ const addBlock = () => {
   list.push({
     title: '',
     desc: '',
-    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
-    linkType: 0,
+    src: '12e87e00-67c9-448f-bad4-b6938da4d830.png',
+    linkType: 2,
     linkUrl: '',
   });
 };

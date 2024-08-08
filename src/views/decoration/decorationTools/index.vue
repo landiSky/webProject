@@ -159,7 +159,6 @@ const isFirstUse = ref(false);
 
 const flickering = ref(false);
 
-// const popupShow = ref(false);
 // 定时器
 const timer = ref();
 

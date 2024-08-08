@@ -1,10 +1,19 @@
 <template>
   <div class="banner-container">
-    <video ref="video" autoplay muted loop>
-      <source :src="videoImg" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
-    <span class="banner-text">文档中心</span>
+    <video
+      ref="video"
+      class="banner-video"
+      :src="videoImg"
+      autoplay
+      muted
+      loop
+    ></video>
+    <!-- <span class="banner-text">文档中心</span> -->
+    <div class="banner-bg">
+      <div class="banner-top">
+        <div class="banner-title">文档中心</div>
+      </div>
+    </div>
   </div>
   <div class="card-box">
     <div
@@ -98,9 +107,11 @@ const handleSearch = (url: string) => {
   justify-content: center;
   height: 400px; /* 设置容器高度为视口高度 */
 
-  video {
+  .banner-video {
     width: 100%;
-    height: 100%;
+    // height: 100%;
+    height: 400px; /* 设置容器高度为视口高度 */
+    object-fit: cover;
   }
 
   .banner-text {
@@ -109,6 +120,34 @@ const handleSearch = (url: string) => {
     color: #052878;
     font-weight: 500;
     font-size: 48px;
+  }
+
+  .banner-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    width: 100%;
+    height: 400px;
+
+    .banner-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      margin-left: -630px;
+
+      .banner-title {
+        color: rgba(29, 33, 41, 1);
+        font-weight: 500;
+        font-size: 30px;
+        font-family: PingFang SC;
+        line-height: 44px;
+        text-align: left;
+      }
+    }
   }
 }
 
@@ -159,6 +198,10 @@ const handleSearch = (url: string) => {
       color: #1664ff;
       cursor: pointer;
     }
+  }
+
+  .card-item:last-child {
+    margin-right: 0;
   }
 }
 </style>

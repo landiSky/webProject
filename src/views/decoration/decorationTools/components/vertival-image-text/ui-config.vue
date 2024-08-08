@@ -50,6 +50,8 @@
             flex: '90px',
             align: 'left',
           }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -70,6 +72,8 @@
             flex: '90px',
             align: 'center',
           }"
+          :validate-status="`${item.desc ? '' : 'error'}`"
+          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -110,6 +114,8 @@
           :label-col-props="{
             flex: '90px',
           }"
+          :validate-status="`${item.linkUrl ? '' : 'error'}`"
+          :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
@@ -259,20 +265,7 @@ const onConfirm = (value: any) => {
 const onCancel = () => {
   showSource.value = false;
 };
-// watch(
-//   () => data?.value,
-//   (val) => {
-//     // console.log('form:', JSON.stringify(form), val);
-//     // form.value.title = val?.value.title || '';
-//     // form.value.linkType = val?.value.linkType || 0;
-//     // form.value.linkUrl = val?.value.linkUrl || '';
-//     // form.value.desc = val?.value.desc || '';
-//   },
-//   {
-//     immediate: true,
-//     deep: true,
-//   }
-// );
+
 const radioChange = (index: number) => {
   form.value.list[index].linkUrl = '';
 };
