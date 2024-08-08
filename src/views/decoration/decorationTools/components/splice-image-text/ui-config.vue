@@ -624,8 +624,8 @@ const addBlock1 = () => {
     title: '我是主标题我是主标题',
     desc: '我是简介我是简介我是简介我是简介我是简介',
     src: 'c18782ef-2879-4531-b946-f8d31c3ceded.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
+    linkType: 2,
+    linkUrl: '',
   });
 };
 
@@ -638,8 +638,8 @@ const addBlock2 = () => {
     title: '我是主标题我是主标题',
     desc: '我是简介我是简介我是简介我是简介我是简介',
     src: 'c18782ef-2879-4531-b946-f8d31c3ceded.png',
-    linkType: 0,
-    linkUrl: 'http://www.baidu.com',
+    linkType: 2,
+    linkUrl: '',
   });
 };
 

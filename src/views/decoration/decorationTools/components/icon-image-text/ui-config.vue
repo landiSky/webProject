@@ -273,8 +273,8 @@ const addBlock = () => {
   list.push({
     title: '',
     desc: '',
-    src: 'eb8a97de-c8a0-4d43-89e7-c39643070b3f.jpeg',
-    linkType: 0,
+    src: '12e87e00-67c9-448f-bad4-b6938da4d830.png',
+    linkType: 2,
     linkUrl: '',
   });
 };
