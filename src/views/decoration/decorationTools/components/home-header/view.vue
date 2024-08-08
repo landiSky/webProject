@@ -278,11 +278,7 @@ defineExpose({
       &:hover {
         .tip-box {
           width: calc(@factor * 144px) !important;
-          border: 1px solid #fff;
-          border-radius: 2px;
           transform: scale(1);
-          visibility: visible;
-          opacity: 1;
         }
       }
     }
@@ -304,11 +300,7 @@ defineExpose({
       &:hover {
         .tip-box {
           width: calc(@factor * 144px) !important;
-          border: 1px solid #fff;
-          border-radius: 2px;
           transform: scale(1);
-          visibility: visible;
-          opacity: 1;
         }
       }
     }
@@ -330,11 +322,7 @@ defineExpose({
       &:hover {
         .tip-box {
           width: calc(@factor * 144px) !important;
-          border: 1px solid #fff;
-          border-radius: 2px;
           transform: scale(1);
-          visibility: visible;
-          opacity: 1;
         }
       }
     }
