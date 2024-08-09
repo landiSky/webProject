@@ -2070,6 +2070,15 @@ onMounted(() => {
         //   );
         //   return;
         // }
+        // 单纯走装修保存不需要校验，不需要走后端接口, 只更改装修状态
+        broadcastChannel.postMessage(
+          JSON.stringify({
+            name: 'product_detail_save',
+            status: true,
+            msg: '保存成功',
+          })
+        );
+        return;
       }
       clickSave();
     }
