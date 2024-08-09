@@ -36,9 +36,11 @@ const props = defineProps({
   componentIndex: Number,
   selectComponentIndex: Number,
   isPreview: Boolean,
+  isClick: Boolean,
 });
 
-const { data, componentIndex, selectComponentIndex, isPreview } = toRefs(props);
+const { data, componentIndex, selectComponentIndex, isPreview, isClick } =
+  toRefs(props);
 
 const drawerVisible = ref(false);
 
@@ -98,7 +100,8 @@ const validate = () => {
 };
 // 统一处理链接点击事件
 const linked = (data: any) => {
-  if (!isPreview.value) return;
+  console.log(isPreview.value, isClick.value);
+  if (!isPreview.value || isClick.value) return;
   const { type, url } = data;
   if (type === 0) {
     // 外部链接
