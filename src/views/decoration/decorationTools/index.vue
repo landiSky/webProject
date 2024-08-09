@@ -33,6 +33,7 @@
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
                   :is-preview="isPreview"
+                  :is-click="isClick"
                   :data="componentsList[index]"
                   :component-index="index"
                   :component-style="bgStyle(index)"
@@ -153,6 +154,7 @@ const toolList = ref<any[]>([]);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
+const isClick = ref(false);
 
 // 是否是第一次使用
 const isFirstUse = ref(false);
@@ -450,11 +452,13 @@ const close = () => {
 };
 
 const clickPreview = () => {
+  isClick.value = true;
   isPreview.value = true;
   eventBus.emit('previewEvent', true);
 };
 
 const notPreview = () => {
+  isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
 };
@@ -475,6 +479,7 @@ const selectComponent = (index: number) => {
 // 进入编辑模式
 const edit = () => {
   openModel.value = 0;
+  isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
 };
@@ -489,6 +494,7 @@ watch(
   () => route.query.model,
   (nV) => {
     openModel.value = parseInt(`${nV}`, 10);
+    isClick.value = true;
     if (openModel.value === 1) {
       isPreview.value = true;
       setTimeout(() => {
