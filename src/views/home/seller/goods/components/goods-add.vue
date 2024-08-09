@@ -1657,10 +1657,12 @@ const addTemplateDetail = () => {
 // 编辑详情内容，跳转装修工具
 const editTemplateDetail = () => {
   // 再次编辑
+
   const goodsDetail = {
     ...JSON.parse(localStorage.getItem('goodsDetail') || ''),
     detail: formModel.value.detail,
     draftDetail: formModel.value.draftDetail,
+    draftStatus: formModel.value.draftStatus,
   };
   localStorage.setItem('goodsDetail', JSON.stringify(goodsDetail));
   const routeUrl = router.resolve({
@@ -1848,7 +1850,6 @@ const doSave = async () => {
       });
     }
     // const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
-    console.log('00112233', res);
     // broadcastChannel.postMessage(
     //   JSON.stringify({
     //     name: 'product_detail_save',
@@ -2061,6 +2062,7 @@ onMounted(() => {
   });
   broadcastChannel.addEventListener('message', (event) => {
     console.log('返回商品装修信息detail', event.data);
+
     const { name, status, data } = JSON.parse(event.data);
     if (name === 'product_detail') {
       // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
