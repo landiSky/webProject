@@ -2,7 +2,12 @@
   <div class="upload-cropper-contaier">
     <t-upload-cropper
       v-if="visible"
-      :cropper-props="cropperProps"
+      :cropper-props="{
+        stencilSize: {
+          width: cropperProps?.stencilSize?.width,
+          height: cropperProps?.stencilSize?.height + 18,
+        },
+      }"
       :modal-props="{
         width:
           cropperProps?.stencilSize?.width < 480
