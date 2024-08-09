@@ -363,7 +363,6 @@ const clickSave = () => {
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
   const childForm = () => {
-    console.log('childForm', viewComponentWrapRef.value);
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
     });

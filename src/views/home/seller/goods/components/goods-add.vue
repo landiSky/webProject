@@ -1814,14 +1814,14 @@ const doSave = async () => {
 
     if (result) {
       // 发消息给装修index页面，通知其保存商品详情失败
-      formModel.value.detail = '';
-      broadcastChannel.postMessage(
-        JSON.stringify({
-          name: 'product_detail_save',
-          status: false,
-          msg: '商品基础信息填写不完整，请检查',
-        })
-      );
+      // formModel.value.detail = '';
+      // broadcastChannel.postMessage(
+      //   JSON.stringify({
+      //     name: 'product_detail_save',
+      //     status: false,
+      //     msg: '商品基础信息填写不完整，请检查',
+      //   })
+      // );
       return false;
     }
     if (props.data?.id) {
@@ -1839,15 +1839,15 @@ const doSave = async () => {
         err = e.message;
       });
     }
-    const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
+    // const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
     console.log('00112233', res);
-    broadcastChannel.postMessage(
-      JSON.stringify({
-        name: 'product_detail_save',
-        status: !!res,
-        msg: res ? msg : err ?? '保存失败',
-      })
-    );
+    // broadcastChannel.postMessage(
+    //   JSON.stringify({
+    //     name: 'product_detail_save',
+    //     status: !!res,
+    //     msg: res ? msg : err ?? '保存失败',
+    //   })
+    // );
   } else {
     const r = await validForm2();
     if (!r) {
@@ -2057,11 +2057,11 @@ onMounted(() => {
     if (name === 'product_detail') {
       // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
       formModel.value.draftStatus = status;
+
       if (status) {
         formModel.value.detail = data;
       } else {
         formModel.value.draftDetail = data;
-        formRef.value.clearValidate('detail');
         // if (!formModel.value.detail) {
         //   broadcastChannel.postMessage(
         //     JSON.stringify({
@@ -2072,18 +2072,18 @@ onMounted(() => {
         //   );
         //   return;
         // }
-
-        // 单纯走装修保存不需要校验，不需要走后端接口, 只更改装修状态
-        broadcastChannel.postMessage(
-          JSON.stringify({
-            name: 'product_detail_save',
-            status: true,
-            msg: '保存成功',
-          })
-        );
-        return;
       }
-      clickSave();
+      // 单纯走装修保存发布不需要校验，不需要走后端接口, 只更改装修状态
+      formRef.value.clearValidate('detail');
+      broadcastChannel.postMessage(
+        JSON.stringify({
+          name: 'product_detail_save',
+          status: true,
+          msg: status ? '发布成功' : '保存成功',
+        })
+      );
+
+      // clickSave();
     }
   });
 
