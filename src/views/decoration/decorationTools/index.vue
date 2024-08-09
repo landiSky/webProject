@@ -629,7 +629,7 @@ const secondFlicker = () => {
 
 watch(
   () => componentsList.value.length,
-  (vn, vo) => {
+  (vn, vo = 0) => {
     if (isFirstUse.value && vn > 0) {
       secondFlicker();
     }
