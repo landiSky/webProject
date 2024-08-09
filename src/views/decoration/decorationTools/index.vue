@@ -707,7 +707,7 @@ onMounted(() => {
     if (proId) {
       // goodsDetail(`${proId}`).then((res) => {
       // console.log('商品详情数据000111', res);
-      const res = JSON.parse(localStorage.getItem('goodsDetail'));
+      const res = JSON.parse(localStorage.getItem('goodsDetail') || '');
       console.log('res', res);
       const { draftStatus, draftDetail, detail, versionType } = res;
       if (versionType === 1) {

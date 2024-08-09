@@ -1658,7 +1658,7 @@ const addTemplateDetail = () => {
 const editTemplateDetail = () => {
   // 再次编辑
   const goodsDetail = {
-    ...JSON.parse(localStorage.getItem('goodsDetail')),
+    ...JSON.parse(localStorage.getItem('goodsDetail') || ''),
     detail: formModel.value.detail,
     draftDetail: formModel.value.draftDetail,
   };
