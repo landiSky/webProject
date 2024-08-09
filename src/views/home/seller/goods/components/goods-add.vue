@@ -1051,8 +1051,9 @@ const formRules = {
         if (
           (!value || value === '[]') &&
           (!formModel.value.draftDetail || formModel.value.draftDetail === '[]')
-        )
+        ) {
           return cb('请添加详情模块');
+        }
         return cb();
       },
     },
@@ -2060,6 +2061,7 @@ onMounted(() => {
         formModel.value.detail = data;
       } else {
         formModel.value.draftDetail = data;
+        formRef.value.clearValidate('detail');
         // if (!formModel.value.detail) {
         //   broadcastChannel.postMessage(
         //     JSON.stringify({
@@ -2070,6 +2072,7 @@ onMounted(() => {
         //   );
         //   return;
         // }
+
         // 单纯走装修保存不需要校验，不需要走后端接口, 只更改装修状态
         broadcastChannel.postMessage(
           JSON.stringify({
