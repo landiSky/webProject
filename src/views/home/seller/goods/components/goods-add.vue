@@ -1478,6 +1478,7 @@ const getDetail = (id: any) => {
       res?.useExplainMap.map((item: any) => {
         return item.useExplain;
       }) || [];
+    localStorage.setItem('goodsDetail', JSON.stringify(res));
     formModel.value.name = res.name;
     formModel.value.id = res.id;
     formModel.value.logo = res.logo;
@@ -1655,6 +1656,13 @@ const addTemplateDetail = () => {
 };
 // 编辑详情内容，跳转装修工具
 const editTemplateDetail = () => {
+  // 再次编辑
+  const goodsDetail = {
+    ...JSON.parse(localStorage.getItem('goodsDetail')),
+    detail: formModel.value.detail,
+    draftDetail: formModel.value.draftDetail,
+  };
+  localStorage.setItem('goodsDetail', JSON.stringify(goodsDetail));
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: {
