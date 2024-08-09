@@ -94,13 +94,17 @@ export const useUserStore = defineStore({
             (company: Record<string, any>) =>
               company.memberType === AccountType.MAIN
           );
-
+          const companyIndex = Number(localStorage.getItem('companyIndex'));
           const adminCompany =
-            Array.isArray(resultList) && resultList.length
+            Array.isArray(resultList) && resultList.length && !companyIndex
               ? resultList[0]
               : null;
-
-          await this.changeSelectCompany(adminCompany || companyList[0]);
+          await this.changeSelectCompany(
+            adminCompany ||
+              companyList[
+                companyList.length === companyIndex ? companyIndex : 0
+              ]
+          );
         } else {
           await this.changeSelectCompany({ companyId, companyName: '' });
           this.updateMenu = !this.updateMenu;
