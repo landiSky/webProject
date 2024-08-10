@@ -156,11 +156,21 @@ defineExpose({
 
         .image-content {
           position: absolute;
-          bottom: calc(@factor * 24px);
-          left: calc(@factor * 24px);
+          bottom: 0;
+          left: 0;
+          // bottom: calc(@factor * 24px);
+          // left: calc(@factor * 24px);
           display: flex;
           flex-direction: column;
           align-items: flex-start;
+          width: calc(@factor * 480px);
+          height: calc(@factor * 90px);
+          padding: 26px 0 0 24px;
+          background: linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.12) 0%,
+            #000 100%
+          );
 
           .image-desc {
             display: flex;
@@ -169,9 +179,11 @@ defineExpose({
             width: calc(@factor * 370px);
             margin: calc(@factor * 5px) 0;
             overflow: hidden;
-            color: #4e5969;
-            color: #fff;
+            color: rgba(255, 255, 255, 1);
+            font-weight: calc(@factor * 400px);
             font-size: calc(@factor * 7px);
+            font-family: PingFang SC;
+            line-height: calc(@factor * 11px);
             white-space: normal;
             text-align: left;
             text-overflow: ellipsis;
@@ -179,7 +191,12 @@ defineExpose({
 
           .image-link {
             color: #fff;
+            font-weight: 400;
             font-size: calc(@factor * 7px);
+            font-size: 7px;
+            font-family: PingFang SC;
+            line-height: 11px;
+            text-align: left;
             cursor: pointer;
           }
         }
