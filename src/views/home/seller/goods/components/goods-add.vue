@@ -257,12 +257,12 @@
               placeholder="请输入商品简介"
               :max-length="{
                 length: 300,
-                errorOnly: true,
+                errorOnly: false,
               }"
               show-word-limit
               :auto-size="{
-                minRows: 2,
-                maxRows: 5,
+                minRows: 9,
+                maxRows: 9,
               }"
               @input="validate(formRef, 'introduction')"
             />
