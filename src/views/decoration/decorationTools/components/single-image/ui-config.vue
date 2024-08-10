@@ -114,7 +114,7 @@
         <t-textarea
           v-if="form.linkType === 0"
           v-model="form.linkUrl"
-          :max-length="40"
+          :max-length="500"
           show-word-limit
           placeholder="请输入"
         />

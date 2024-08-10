@@ -83,7 +83,7 @@
             v-model="item.desc"
             placeholder="请输入"
             allow-clear
-            :max-length="40"
+            :max-length="500"
             show-word-limit
           />
         </t-form-item>
@@ -124,7 +124,7 @@
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            :max-length="40"
+            :max-length="500"
             show-word-limit
             placeholder="请输入"
           />
