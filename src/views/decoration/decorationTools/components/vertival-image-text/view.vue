@@ -177,7 +177,7 @@ defineExpose({
 
         .image-desc {
           display: -webkit-box;
-          width: calc(@factor * 70px);
+          // width: calc(@factor * 70px);
           margin: calc(@factor * 5px) 0;
           overflow: hidden;
           font-size: calc(@factor * 7px);
@@ -230,7 +230,7 @@ defineExpose({
 
         .image-desc {
           display: -webkit-box;
-          width: calc(@factor * 182px);
+          // width: calc(@factor * 182px);
           -webkit-line-clamp: 6;
           color: #4e5969;
         }
