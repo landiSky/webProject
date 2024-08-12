@@ -9,12 +9,13 @@
         }}</span>
         <t-carousel
           :auto-play="true"
-          animation-name="fade"
+          animation-name="slide"
           class="left-carousel-cls"
           show-arrow="always"
           direction="vertical"
           indicator-position="right"
           indicator-type="never"
+          @change="leftCarouselChange"
         >
           <t-carousel-item
             v-for="(item, index) in data?.configValue1?.config"
@@ -49,6 +50,9 @@
             </div>
           </t-carousel-item>
         </t-carousel>
+        <span class="indicator-num">{{
+          `${leftIndex}/${data?.configValue1?.config.length}`
+        }}</span>
       </div>
       <div class="right-box">
         <span class="image-title">{{
@@ -56,12 +60,13 @@
         }}</span>
         <t-carousel
           :auto-play="true"
-          animation-name="fade"
+          animation-name="slide"
           class="right-carousel-cls"
           show-arrow="always"
           direction="vertical"
           indicator-position="right"
           indicator-type="never"
+          @change="rightCarouselChange"
         >
           <t-carousel-item
             v-for="(item, index) in data?.configValue2?.config"
@@ -94,6 +99,9 @@
             </div>
           </t-carousel-item>
         </t-carousel>
+        <span class="indicator-num">{{
+          `${rightIndex}/${data?.configValue2?.config.length}`
+        }}</span>
       </div>
     </div>
   </div>
@@ -112,6 +120,9 @@ const { data, isPreview } = toRefs(props);
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
+
+const leftIndex = ref(1);
+const rightIndex = ref(1);
 
 const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
@@ -145,6 +156,15 @@ const validate = () => {
     }
     return resolve('');
   });
+};
+
+const leftCarouselChange = (index: number) => {
+  console.log('左侧轮播图切换了', index);
+  leftIndex.value = index;
+};
+const rightCarouselChange = (index: number) => {
+  console.log('右侧轮播图切换了', index);
+  rightIndex.value = index;
 };
 
 onMounted(() => {});
@@ -185,6 +205,7 @@ defineExpose({
     background-color: #353535;
 
     .left-box {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -284,6 +305,15 @@ defineExpose({
         }
       }
 
+      .indicator-num {
+        position: absolute;
+        top: calc(@factor * 106px);
+        right: calc(@factor * 64px);
+        z-index: 2;
+        font-weight: 500;
+        font-size: calc(@factor * 8px);
+      }
+
       .image-title {
         width: 100%;
         padding: calc(@factor * 10px);
@@ -322,6 +352,7 @@ defineExpose({
     }
 
     .right-box {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -434,6 +465,15 @@ defineExpose({
         text-align: right;
       }
 
+      .indicator-num {
+        position: absolute;
+        top: calc(@factor * 106px);
+        left: calc(@factor * 47px);
+        z-index: 2;
+        font-weight: 500;
+        font-size: calc(@factor * 8px);
+      }
+
       ::v-deep(.tele-carousel-arrow) {
         position: absolute;
         top: calc(@factor * 16px);
@@ -459,6 +499,14 @@ defineExpose({
           height: calc(@factor * 12px);
         }
       }
+    }
+
+    ::v-deep(.tele-carousel-item-slide-out) {
+      display: none;
+    }
+
+    ::v-deep(.image-index) {
+      color: transparent;
     }
   }
 }
