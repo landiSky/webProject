@@ -58,6 +58,9 @@
                 :on-before-remove="onBeforeRemove"
               >
               </t-upload>
+              <span v-if="i.width && i.height" class="image-size">{{
+                `${i.width}X${i.height}`
+              }}</span>
             </div>
           </div>
           <div class="list-pagination">
@@ -189,12 +192,39 @@ const getMaterialList = () => {
     .then((res) => {
       state.loading = false;
       state.total = res.total;
-      const recordData = res.records.map((name: string, idx: number) => ({
-        id: idx,
-        name,
-        active: false,
-      }));
-      state.imgList = recordData || [];
+
+      const recordData = res.records.map(async (name: string, idx: number) => {
+        return new Promise((resolve) => {
+          const image = new Image();
+          image.src = `/server/web/file/download?name=${name}`;
+          image.onload = () => {
+            resolve({
+              width: image.width,
+              height: image.height,
+              id: idx,
+              name,
+              active: false,
+            });
+          };
+          image.onerror = () => {
+            resolve({
+              width: 0,
+              height: 0,
+              id: idx,
+              name,
+              active: false,
+            });
+          };
+        });
+      });
+      Promise.all(recordData)
+        .then((res) => {
+          state.imgList = res;
+        })
+        .catch(() => {
+          state.imgList = [];
+        });
+      console.log('resocrdDAATA', recordData);
     })
     .catch(() => {
       state.loading = false;
@@ -322,6 +352,7 @@ onMounted(async () => {
 
   :deep(.tele-tabs-pane) {
     .list-item {
+      position: relative;
       display: inline-block;
       margin-right: 16px;
       margin-bottom: 16px;
@@ -335,6 +366,15 @@ onMounted(async () => {
 
       &:nth-last-child(-n + 4) {
         margin-bottom: 0;
+      }
+
+      .image-size {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        color: #fff;
+        font-size: 12px;
+        text-shadow: 2px 2px 2px #000;
       }
     }
 
@@ -362,7 +402,7 @@ onMounted(async () => {
     border-radius: 2px;
 
     > img {
-      object-fit: cover;
+      object-fit: contain;
     }
   }
 
