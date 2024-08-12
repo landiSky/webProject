@@ -570,7 +570,7 @@ onMounted(() => {
   apiGetProductId().then((data: any) => {
     accessProductIds.value = data;
     if (data?.idInside) {
-      apiProductDetail2({ id: '123' })
+      apiProductDetail2({ id: data?.idInside })
         .then((data: any) => {
           if (data?.code !== 200) {
             return;
