@@ -293,13 +293,12 @@
             <div class="hint">文件大小限制50M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
-            <!-- <TemplateDrawer
-              ref="templateRef"
-              :template-data="templateDetail"
-              @confirm="templateChanged"
-            ></TemplateDrawer> -->
+            <!-- 用draftStauts来判断是否装修过 -->
             <div
-              v-if="formModel.detail || formModel.draftDetail"
+              v-if="
+                formModel.draftStatus !== null &&
+                (formModel.detail || formModel.draftDetail)
+              "
               class="templateItem"
             >
               <div style="display: flex">
@@ -1819,6 +1818,11 @@ const doSave = async () => {
   let err;
   if (step.value === 1) {
     formModel.value.detailImg = imageList.value.join(',');
+    // 老版本保存校验做兼容
+    if (formModel.value.draftStatus === null) {
+      formModel.value.detail = '';
+      formModel.value.draftDetail = '';
+    }
     const result = await formRef.value.validate();
     // 保存操作
 
