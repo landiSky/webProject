@@ -83,7 +83,7 @@
             v-model="item.desc"
             placeholder="请输入"
             allow-clear
-            :max-length="500"
+            :max-length="40"
             show-word-limit
           />
         </t-form-item>

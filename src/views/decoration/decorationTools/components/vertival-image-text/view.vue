@@ -337,7 +337,7 @@ defineExpose({
           width: calc(@factor * 182px);
           color: #4e5969;
           line-height: calc(@factor * 11px);
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 3;
         }
       }
     }
