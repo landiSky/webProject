@@ -721,8 +721,7 @@ defineExpose({
     justify-content: center;
     width: 100%;
     margin-bottom: 200px;
-    padding: 0 24px;
-
+    // padding: 0 24px;
     .area-add-box-content {
       display: flex;
       flex-direction: row;
@@ -738,6 +737,10 @@ defineExpose({
       }
     }
   }
+}
+
+::v-deep(.tele-tabs) {
+  width: 100%;
 }
 
 ::v-deep(.tele-tabs-content) {

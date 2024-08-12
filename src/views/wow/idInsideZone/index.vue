@@ -281,7 +281,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useRouter, useRoute } from 'vue-router';
 import { AccountType } from '@/enums/common';
 import { apiGetProductId } from '@/api/wow/index';
-import { apiProductDetail } from '@/api/wow/mall';
+import { apiProductDetail2 } from '@/api/wow/mall';
 import { apiDataPoint } from '@/api/data-point';
 import { Modal } from '@tele-design/web-vue';
 import advantage1 from '@/assets/images/idinside/whyjoin/advantage-01.png';
@@ -422,7 +422,6 @@ const testref: Record<string, any> = ref(null);
 const handleScroll = () => {
   nextTick(() => {
     const currentScroll = testref.value.getBoundingClientRect().top; // 表示当前标签距离顶部滚动的位置
-    console.log(currentScroll);
     if (currentScroll < 608) {
       // 当前滚动位置到达testref的时候，显示div（100作为调整用）
       testShow.value = true;
@@ -568,13 +567,16 @@ const learnmore = () => {
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, true);
-  apiGetProductId().then((data) => {
+  apiGetProductId().then((data: any) => {
     accessProductIds.value = data;
     if (data?.idInside) {
-      apiProductDetail({ id: data?.idInside })
-        .then((data) => {
-          prodDetail.value = data;
-          previewImgList.value = data.detailImg.split(',');
+      apiProductDetail2({ id: '123' })
+        .then((data: any) => {
+          if (data?.code !== 200) {
+            return;
+          }
+          prodDetail.value = data?.data;
+          previewImgList.value = data?.data.detailImg.split(',');
         })
         .catch(() => {});
     }
