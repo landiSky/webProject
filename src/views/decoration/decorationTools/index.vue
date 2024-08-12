@@ -727,6 +727,23 @@ onMounted(() => {
             return item.name;
           });
         }
+        // 兼容老版本走装修
+      } else if (versionType === 0 && draftStatus !== null) {
+        if (draftStatus === 0) {
+          // 草稿状态
+          if (!draftDetail) return;
+          componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        } else {
+          // 发布状态
+          if (!detail) return;
+          componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        }
       } else {
         // 旧版数据丢弃
       }
