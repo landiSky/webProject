@@ -180,7 +180,7 @@
               <t-textarea
                 v-if="item.linkType === 0"
                 v-model="item.linkUrl"
-                :max-length="40"
+                :max-length="500"
                 show-word-limit
                 placeholder="请输入"
               />
@@ -429,7 +429,7 @@
               <t-textarea
                 v-if="item.linkType === 0"
                 v-model="item.linkUrl"
-                :max-length="40"
+                :max-length="500"
                 show-word-limit
                 placeholder="请输入"
               />

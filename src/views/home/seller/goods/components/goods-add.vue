@@ -257,12 +257,12 @@
               placeholder="请输入商品简介"
               :max-length="{
                 length: 300,
-                errorOnly: true,
+                errorOnly: false,
               }"
               show-word-limit
               :auto-size="{
-                minRows: 2,
-                maxRows: 5,
+                minRows: 9,
+                maxRows: 9,
               }"
               @input="validate(formRef, 'introduction')"
             />
@@ -293,13 +293,12 @@
             <div class="hint">文件大小限制50M以内，支持PDF格式、Word格式。</div>
           </t-form-item>
           <t-form-item label="详情展示信息" field="detail">
-            <!-- <TemplateDrawer
-              ref="templateRef"
-              :template-data="templateDetail"
-              @confirm="templateChanged"
-            ></TemplateDrawer> -->
+            <!-- 用draftStauts来判断是否装修过 -->
             <div
-              v-if="formModel.detail || formModel.draftDetail"
+              v-if="
+                formModel.draftStatus !== null &&
+                (formModel.detail || formModel.draftDetail)
+              "
               class="templateItem"
             >
               <div style="display: flex">
@@ -1051,8 +1050,9 @@ const formRules = {
         if (
           (!value || value === '[]') &&
           (!formModel.value.draftDetail || formModel.value.draftDetail === '[]')
-        )
+        ) {
           return cb('请添加详情模块');
+        }
         return cb();
       },
     },
@@ -1477,6 +1477,7 @@ const getDetail = (id: any) => {
       res?.useExplainMap.map((item: any) => {
         return item.useExplain;
       }) || [];
+    localStorage.setItem('goodsDetail', JSON.stringify(res));
     formModel.value.name = res.name;
     formModel.value.id = res.id;
     formModel.value.logo = res.logo;
@@ -1654,6 +1655,15 @@ const addTemplateDetail = () => {
 };
 // 编辑详情内容，跳转装修工具
 const editTemplateDetail = () => {
+  // 再次编辑
+
+  const goodsDetail = {
+    ...JSON.parse(localStorage.getItem('goodsDetail') || ''),
+    detail: formModel.value.detail,
+    draftDetail: formModel.value.draftDetail,
+    draftStatus: formModel.value.draftStatus,
+  };
+  localStorage.setItem('goodsDetail', JSON.stringify(goodsDetail));
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: {
@@ -1679,6 +1689,7 @@ const editTemplateDetail = () => {
 // 删除详情内容
 const delTemplateDetail = () => {
   formModel.value.detail = '';
+  formModel.value.draftDetail = '';
   localStorage.removeItem(`pro_${formModel.value.id}`);
 };
 
@@ -1807,21 +1818,26 @@ const doSave = async () => {
   let err;
   if (step.value === 1) {
     formModel.value.detailImg = imageList.value.join(',');
-    // const result = await formRef.value.validate();
+    // 老版本保存校验做兼容
+    if (formModel.value.draftStatus === null) {
+      formModel.value.detail = '';
+      formModel.value.draftDetail = '';
+    }
+    const result = await formRef.value.validate();
     // 保存操作
 
-    // if (result) {
-    //   // 发消息给装修index页面，通知其保存商品详情失败
-    //   formModel.value.detail = '';
-    //   broadcastChannel.postMessage(
-    //     JSON.stringify({
-    //       name: 'product_detail_save',
-    //       status: false,
-    //       msg: '商品基础信息填写不完整，请检查',
-    //     })
-    //   );
-    //   return false;
-    // }
+    if (result) {
+      // 发消息给装修index页面，通知其保存商品详情失败
+      // formModel.value.detail = '';
+      // broadcastChannel.postMessage(
+      //   JSON.stringify({
+      //     name: 'product_detail_save',
+      //     status: false,
+      //     msg: '商品基础信息填写不完整，请检查',
+      //   })
+      // );
+      return false;
+    }
     if (props.data?.id) {
       res = await updateGoods1({
         ...formModel.value,
@@ -1837,15 +1853,14 @@ const doSave = async () => {
         err = e.message;
       });
     }
-    const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
-    console.log('00112233', res);
-    broadcastChannel.postMessage(
-      JSON.stringify({
-        name: 'product_detail_save',
-        status: !!res,
-        msg: res ? msg : err ?? '保存失败',
-      })
-    );
+    // const msg = formModel.value.draftStatus ? '发布成功' : '保存成功';
+    // broadcastChannel.postMessage(
+    //   JSON.stringify({
+    //     name: 'product_detail_save',
+    //     status: !!res,
+    //     msg: res ? msg : err ?? '保存失败',
+    //   })
+    // );
   } else {
     const r = await validForm2();
     if (!r) {
@@ -2051,10 +2066,12 @@ onMounted(() => {
   });
   broadcastChannel.addEventListener('message', (event) => {
     console.log('返回商品装修信息detail', event.data);
+
     const { name, status, data } = JSON.parse(event.data);
     if (name === 'product_detail') {
       // 新逻辑：保存商品详情，0-装修模块草稿状态保存，1-装修模块正式状态保存
       formModel.value.draftStatus = status;
+
       if (status) {
         formModel.value.detail = data;
       } else {
@@ -2070,7 +2087,17 @@ onMounted(() => {
         //   return;
         // }
       }
-      clickSave();
+      // 单纯走装修保存发布不需要校验，不需要走后端接口, 只更改装修状态
+      formRef.value.clearValidate('detail');
+      broadcastChannel.postMessage(
+        JSON.stringify({
+          name: 'product_detail_save',
+          status: true,
+          msg: status ? '发布成功' : '保存成功',
+        })
+      );
+
+      // clickSave();
     }
   });
 

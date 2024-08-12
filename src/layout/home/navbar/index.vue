@@ -241,11 +241,13 @@ const onChangeCompany = async (companyId: string) => {
   const resultList = userInfo.value?.companyList?.filter(
     (company: Record<string, any>) => company.companyId === companyId
   );
-
+  const resultIndex = userInfo.value?.companyList?.findIndex(
+    (company: Record<string, any>) => company.companyId === companyId
+  );
+  localStorage.setItem('companyIndex', resultIndex);
   const selectItem =
     Array.isArray(resultList) && resultList.length ? resultList[0] : {};
   await userStore.changeSelectCompany(selectItem);
-
   const { primary } = userInfoByCompany.value || {};
   if (Number(primary) === 2) {
     useMenuStore().setMenuIndex(1, userInfo.value);

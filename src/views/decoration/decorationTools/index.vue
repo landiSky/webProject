@@ -33,6 +33,7 @@
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
                   :is-preview="isPreview"
+                  :is-click="isClick"
                   :data="componentsList[index]"
                   :component-index="index"
                   :component-style="bgStyle(index)"
@@ -153,6 +154,7 @@ const toolList = ref<any[]>([]);
 const selectIndex = ref(-1);
 
 const isPreview = ref(false);
+const isClick = ref(false);
 
 // 是否是第一次使用
 const isFirstUse = ref(false);
@@ -170,7 +172,7 @@ const decorationJson = ref('');
 
 const openType = ref(-1);
 
-const interceptFlag = ref(true);
+const interceptFlag = ref(false);
 
 const proId = ref('');
 
@@ -346,11 +348,13 @@ const clickSave = () => {
           status: 0,
           draftDetail: json,
         }).then((res: any) => {
+          console.log('平道页面保存成功', res);
+          Message.success('保存成功');
+          interceptFlag.value = false;
           // 通知主tab页刷新
           broadcastChannel.postMessage(
             JSON.stringify({ name: 'chnnelPageRefresh', data: '' })
           );
-          closeTip('保存成功');
         });
       },
 
@@ -361,7 +365,6 @@ const clickSave = () => {
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
   const childForm = () => {
-    console.log('childForm', viewComponentWrapRef.value);
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
     });
@@ -449,11 +452,13 @@ const close = () => {
 };
 
 const clickPreview = () => {
+  isClick.value = true;
   isPreview.value = true;
   eventBus.emit('previewEvent', true);
 };
 
 const notPreview = () => {
+  isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
 };
@@ -474,6 +479,7 @@ const selectComponent = (index: number) => {
 // 进入编辑模式
 const edit = () => {
   openModel.value = 0;
+  isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
 };
@@ -488,6 +494,7 @@ watch(
   () => route.query.model,
   (nV) => {
     openModel.value = parseInt(`${nV}`, 10);
+    isClick.value = true;
     if (openModel.value === 1) {
       isPreview.value = true;
       setTimeout(() => {
@@ -509,7 +516,7 @@ watch(
 
       // interceptFlag.value = false;
     } else {
-      interceptFlag.value = true;
+      // interceptFlag.value = true;
     }
   },
   {
@@ -627,9 +634,13 @@ const secondFlicker = () => {
 
 watch(
   () => componentsList.value.length,
-  (vn, vo) => {
+  (vn, vo = 0) => {
     if (isFirstUse.value && vn > 0) {
       secondFlicker();
+    }
+    // vn vo 差的绝对值==1
+    if (Math.abs(vn - vo) === 1) {
+      interceptFlag.value = true;
     }
   },
   {
@@ -694,30 +705,49 @@ onMounted(() => {
   } else {
     const { proId } = route.query;
     if (proId) {
-      goodsDetail(`${proId}`).then((res) => {
-        console.log('商品详情数据000111', res);
-        const { draftStatus, draftDetail, detail, versionType } = res;
-        if (versionType === 1) {
-          // 新版装修数据
-          if (draftStatus === 0) {
-            // 草稿状态
-            if (!draftDetail) return;
-            componentsList.value = JSON.parse(draftDetail);
-            toolList.value = componentsList.value.map((item) => {
-              return item.name;
-            });
-          } else {
-            // 发布状态
-            if (!detail) return;
-            componentsList.value = JSON.parse(detail);
-            toolList.value = componentsList.value.map((item) => {
-              return item.name;
-            });
-          }
+      // goodsDetail(`${proId}`).then((res) => {
+      // console.log('商品详情数据000111', res);
+      const res = JSON.parse(localStorage.getItem('goodsDetail') || '');
+      console.log('res', res);
+      const { draftStatus, draftDetail, detail, versionType } = res;
+      if (versionType === 1) {
+        // 新版装修数据
+        if (draftStatus === 0) {
+          // 草稿状态
+          if (!draftDetail) return;
+          componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
         } else {
-          // 旧版数据丢弃
+          // 发布状态
+          if (!detail) return;
+          componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
         }
-      });
+        // 兼容老版本走装修
+      } else if (versionType === 0 && draftStatus !== null) {
+        if (draftStatus === 0) {
+          // 草稿状态
+          if (!draftDetail) return;
+          componentsList.value = JSON.parse(draftDetail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        } else {
+          // 发布状态
+          if (!detail) return;
+          componentsList.value = JSON.parse(detail);
+          toolList.value = componentsList.value.map((item) => {
+            return item.name;
+          });
+        }
+      } else {
+        // 旧版数据丢弃
+      }
+      // });
     }
   }
   // 接收首次使用装修的消息
@@ -732,11 +762,13 @@ onMounted(() => {
     const { name, status, msg } = JSON.parse(event.data);
     if (name === 'product_detail_save') {
       if (status) {
-        // 保存成功
+        // 成功
         Message.success(msg);
+        interceptFlag.value = false;
         setTimeout(() => {
-          interceptFlag.value = false;
-          window.close();
+          if (msg === '发布成功') {
+            window.close();
+          }
         }, 900);
       } else {
         // 失败
@@ -769,7 +801,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 0;
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {

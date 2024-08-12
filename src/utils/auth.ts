@@ -17,6 +17,7 @@ const setToken = (token: string) => {
  */
 const clearToken = () => {
   localStorage.removeItem('token');
+  localStorage.removeItem('companyIndex');
 };
 
 export { getToken, setToken, clearToken };

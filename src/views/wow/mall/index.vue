@@ -201,11 +201,9 @@
             </span>
             <span class="right">
               <span class="right-top">
-                <span class="name" @click="() => goMallDetail(item.id)">{{
-                  item.name
-                }}</span>
                 <t-typography-paragraph
-                  style="width: 100%; text-align: left"
+                  class="name"
+                  style="width: 130px; text-align: left"
                   :ellipsis="{
                     rows: 1,
                     showTooltip: {
@@ -215,31 +213,15 @@
                       },
                     },
                   }"
+                  @click="() => goMallDetail(item.id)"
                 >
-                  <span class="companyName">{{ item.companyName }}</span>
+                  <span>
+                    {{ item.name }}
+                  </span>
                 </t-typography-paragraph>
-                <span class="tag">
-                  <t-tag color="#E8F4FF">{{
-                    DeliverTypeDesc[item.deliveryType]
-                  }}</t-tag>
-                  <div
-                    v-for="(item2, index) in item?.tagList"
-                    :key="index"
-                    class="tagList"
-                  >
-                    <t-typography-paragraph
-                      class="tagList-color"
-                      :ellipsis="{
-                        rows: 1,
-                        showTooltip: true,
-                      }"
-                    >
-                      {{ item2.name }}
-                    </t-typography-paragraph>
-                  </div>
-                </span>
                 <span class="desc">
                   <t-typography-paragraph
+                    class="introduction"
                     :ellipsis="{
                       rows: 2,
                       showTooltip: {
@@ -251,6 +233,28 @@
                     }"
                     >{{ item.introduction }}
                   </t-typography-paragraph>
+                  <span class="companyName">{{ item.companyName }}</span>
+
+                  <span class="tag">
+                    <t-tag color="#F2F3F8">{{
+                      DeliverTypeDesc[item.deliveryType]
+                    }}</t-tag>
+                    <div
+                      v-for="(item2, index) in item?.tagList"
+                      :key="index"
+                      class="tagList"
+                    >
+                      <t-typography-paragraph
+                        class="tagList-color"
+                        :ellipsis="{
+                          rows: 1,
+                          showTooltip: true,
+                        }"
+                      >
+                        {{ item2.name }}
+                      </t-typography-paragraph>
+                    </div>
+                  </span>
                 </span>
               </span>
               <span class="price">
@@ -258,7 +262,7 @@
                   <span class="prefix">免费</span>
                 </template>
                 <template v-else-if="item.lowPrice !== '-1.00'">
-                  <span class="prefix">¥ {{ item.lowPrice || '-' }}</span>
+                  <span class="prefix"> {{ item.lowPrice || '-' }}</span>
                   <span class="suffix">元起</span>
                 </template>
                 <span v-else class="prefix">价格面议</span>
@@ -407,6 +411,7 @@ const onPageSizeChange = (size: number) => {
 };
 
 const goMallDetail = (id: string) => {
+  console.log('goMallDetail');
   router.push({
     name: 'wowMallDetail',
     params: { id },
@@ -679,7 +684,7 @@ onMounted(() => {
         display: flex;
         width: 552px;
         margin-bottom: 16px;
-        padding: 16px;
+        padding: 25px 30px;
         border: 1px solid #e5e8ef;
         border-radius: 4px;
 
@@ -692,13 +697,15 @@ onMounted(() => {
         }
 
         .left {
-          margin-right: 16px;
+          display: flex;
+          align-items: center;
+          margin-right: 35px;
           // display: inline-block;
           img {
             display: block;
-            width: 178px;
-            height: 178px;
-            border-radius: 2px;
+            width: 144px;
+            height: 144px;
+            border-radius: 24px;
             cursor: pointer;
           }
         }
@@ -716,22 +723,28 @@ onMounted(() => {
             flex-direction: column;
             align-items: start;
             width: 100%;
+            text-align: left;
           }
 
           .name {
-            margin-bottom: 4px;
-            color: #223354;
+            margin-bottom: 0;
+            color: #1d2129;
             font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 22px;
+            line-height: 22px;
             cursor: pointer;
           }
 
+          .introduction {
+            margin-bottom: 8px;
+          }
+
           .companyName {
-            margin-bottom: 4px;
-            color: #4e5969;
+            display: inline-block;
+            margin-bottom: 8px;
+            color: #86909c;
             font-weight: 400;
-            font-size: 14px;
+            font-size: 16px;
             line-height: 22px;
           }
 
@@ -743,34 +756,45 @@ onMounted(() => {
               font-weight: 400;
               font-size: 12px;
               line-height: 22px; /* 183.333% */
+              background: #f2f3f8;
             }
 
             :deep(.tele-typography) {
               margin-bottom: 0;
             }
+
+            > span,
+            .tagList {
+              color: #4e5969 !important;
+              text-align: center;
+              background: #f2f3f8;
+            }
           }
 
           .desc {
-            margin-top: 12px;
-            color: #1d2129;
-            font-weight: 400;
-            font-size: 14px;
+            width: 264px;
+            margin-top: 16px;
+            margin-bottom: 32px;
+            color: #4e5969;
+            font-weight: 500;
+            font-size: 18px;
             line-height: 22px; /* 157.143% */
             word-break: break-all;
           }
 
           .price {
             .prefix {
-              color: #e63f3f;
+              margin-right: 10px;
+              color: #ff1414;
               font-weight: 500;
-              font-size: 16px;
-              line-height: 24px; /* 150% */
+              font-size: 24px;
+              line-height: 22px; /* 150% */
             }
 
             .suffix {
-              color: #86909c;
+              color: #1d2129;
               font-weight: 400;
-              font-size: 14px;
+              font-size: 16px;
               line-height: 22px; /* 157.143% */
             }
           }
@@ -794,16 +818,15 @@ onMounted(() => {
   height: 24px;
   margin-left: 8px;
   padding: 1px 8px;
-  color: rgba(22, 100, 255, 1);
   font-weight: 400;
   font-size: 12px;
   font-family: PingFang SC;
-  background: rgba(232, 244, 255, 1);
+  text-align: center;
   border-radius: 2px;
 
   .tagList-color {
     width: 100%;
-    color: rgba(22, 100, 255, 1);
+    color: #4e5969;
   }
 }
 </style>

@@ -315,7 +315,7 @@ onMounted(async () => {
     width: 836px;
     height: 432px;
     margin-bottom: 12px;
-    padding: 16px 24px;
+    padding: 16px 0 16px 24px;
     overflow: auto;
     background: #f8f8f8;
   }
@@ -360,6 +360,10 @@ onMounted(async () => {
     line-height: 140px;
     border: 2px solid #f7f7f7;
     border-radius: 2px;
+
+    > img {
+      object-fit: cover;
+    }
   }
 
   .list-item.active {
