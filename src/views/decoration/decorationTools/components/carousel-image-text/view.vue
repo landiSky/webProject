@@ -145,8 +145,7 @@ defineExpose({
       height: calc(@factor * 260px);
       padding: 0 calc(@factor * 15px);
       overflow: hidden;
-      background: #fff;
-
+      // background: #fff;
       .image-cls {
         height: calc(@factor * 260px);
       }
@@ -193,7 +192,6 @@ defineExpose({
             color: #fff;
             font-weight: 400;
             font-size: calc(@factor * 7px);
-            font-size: 7px;
             font-family: PingFang SC;
             line-height: 11px;
             text-align: left;
@@ -205,6 +203,16 @@ defineExpose({
 
     ::v-deep(.tele-carousel-indicator-wrapper-bottom) {
       background: none;
+    }
+
+    ::v-deep(.tele-carousel-arrow > div) {
+      width: calc(@factor * 24px);
+      height: calc(@factor * 24px);
+
+      svg {
+        width: calc(@factor * 16px);
+        height: calc(@factor * 16px);
+      }
     }
   }
 }
