@@ -102,7 +102,7 @@ export const useUserStore = defineStore({
           await this.changeSelectCompany(
             adminCompany ||
               companyList[
-                companyList.length === companyIndex ? companyIndex : 0
+                companyList.length === companyIndex + 1 ? companyIndex : 0
               ]
           );
         } else {
