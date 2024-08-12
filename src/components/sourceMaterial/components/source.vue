@@ -374,7 +374,7 @@ onMounted(async () => {
         left: 12px;
         color: #fff;
         font-size: 12px;
-        text-shadow: 2px 2px 2px #000;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
       }
     }
 
@@ -402,7 +402,7 @@ onMounted(async () => {
     border-radius: 2px;
 
     > img {
-      object-fit: contain;
+      object-fit: cover;
     }
   }
 
