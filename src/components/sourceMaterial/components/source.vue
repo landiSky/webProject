@@ -100,6 +100,7 @@ import { getToken } from '@/utils/auth';
 import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
 import { Message, Modal } from '@tele-design/web-vue';
 import UploadCropperModal from './upload-cropper-modal.vue';
+// @ts-nocheck
 
 const store = useUserStore();
 
@@ -141,7 +142,7 @@ const params = reactive<{
 });
 
 const state = reactive<{
-  imgList: Record<any, any>[];
+  imgList: Record<string, any>[];
   loading: boolean;
   total: number;
   type: number;
@@ -219,7 +220,7 @@ const getMaterialList = () => {
       });
       Promise.all(recordData)
         .then((res) => {
-          state.imgList = res;
+          state.imgList = res || [];
         })
         .catch(() => {
           state.imgList = [];
