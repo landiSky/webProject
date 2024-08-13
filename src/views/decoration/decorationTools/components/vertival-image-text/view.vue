@@ -229,6 +229,8 @@ defineExpose({
           color: #fff;
           font-weight: 500;
           font-size: calc(@factor * 8px);
+          line-height: calc(@factor * 12px);
+          text-align: left;
         }
 
         .image-desc {
