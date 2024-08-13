@@ -140,8 +140,6 @@ import {
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
-import { Translate } from '@icon-park/vue-next';
-import { goodsDetail } from '@/api/goods-manage';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
 import { ToolData, tools } from './config/tools';

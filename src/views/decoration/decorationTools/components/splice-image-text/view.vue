@@ -142,7 +142,6 @@ const checkConfigList = (list: any) => {
 };
 
 const validate = () => {
-  console.log('品图文开始校验了', data);
   return new Promise((resolve, reject) => {
     if (
       // 可能需要完善校验逻辑
@@ -159,11 +158,9 @@ const validate = () => {
 };
 
 const leftCarouselChange = (index: number) => {
-  console.log('左侧轮播图切换了', index);
   leftIndex.value = index;
 };
 const rightCarouselChange = (index: number) => {
-  console.log('右侧轮播图切换了', index);
   rightIndex.value = index;
 };
 

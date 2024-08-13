@@ -388,7 +388,11 @@
       </div>
 
       <!-- 产品评价 -->
-      <div class="evaluate" :class="{ decorationCls: versionType === 1 }">
+      <div
+        :id="`evaluate-${templateList.length}`"
+        class="evaluate"
+        :class="{ decorationCls: versionType === 1 }"
+      >
         <div class="top">产品评价（{{ evaluateDatail?.total ?? 0 }}）</div>
         <div class="body">
           <div class="score">
