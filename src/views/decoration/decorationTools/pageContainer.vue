@@ -6,6 +6,31 @@
       width: '100%',
     }"
   >
+    <t-affix
+      v-if="showAnchor"
+      class="affix"
+      :class="isFold ? 'fold' : 'unfold'"
+    >
+      <t-anchor :ref="anchorRef" :change-hash="false" line-less>
+        <div class="anchor-title">楼层导航</div>
+        <t-anchor-link
+          v-for="(item, index) in computedList(componentsList)"
+          :key="index"
+          :href="`#${item.name}-${index}`"
+        >
+          {{ item.mainTitle }}
+        </t-anchor-link>
+        <div
+          v-if="componentsList.length >= 5"
+          class="anchor-footer"
+          @click="() => (isFold = !isFold)"
+          ><span>{{ isFold ? '展开全部' : '收起' }}</span>
+          <icon-down v-if="isFold" />
+          <icon-up v-else />
+        </div>
+        <!-- <t-anchor-link href="#evaluate">评价</t-anchor-link> -->
+      </t-anchor>
+    </t-affix>
     <t-layout>
       <t-layout-content>
         <draggable
@@ -25,6 +50,7 @@
               <div v-show="true">
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
+                  :uid="getId(element, index)"
                   :is-preview="true"
                   :data="{ ...element, productId }"
                   :component-index="index"
@@ -41,33 +67,49 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import draggable from 'vuedraggable';
 import { useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const props = defineProps({
   componentsList: {
-    type: Array,
+    type: Array as any,
     default: () => [],
   },
   productId: {
     type: String,
     default: () => '',
   },
+  showAnchor: {
+    type: Boolean,
+    default: () => false,
+  },
+  showEvaluate: {
+    type: Boolean,
+    default: () => false,
+  },
 });
 
-const route = useRoute();
+const isFold = ref(false);
+
+const anchorRef = ref();
+
+const getId = (ele: any, idx: number) => {
+  return `${ele.name}-${idx}`;
+};
 
 // const componentsList = ref<any[]>([]);
-
-const selectIndex = ref(-1);
 
 const viewComponentWrapRef = ref<any[]>([]);
 
 watch(
   () => props.componentsList,
   (val: any) => {
+    console.log('componentsList length', val.length);
+    if (val.length >= 5) {
+      isFold.value = true;
+    }
     console.log('watch componentsList:', val);
     console.log('watch productid:', props);
   },
@@ -139,6 +181,21 @@ const selectComponent = (index: number) => {
   }
 };
 
+const computedList = (list: any) => {
+  const newList = JSON.parse(JSON.stringify(list));
+  if (list.length >= 5) {
+    if (isFold.value) {
+      return newList.slice(0, 5);
+    }
+    return props.showEvaluate
+      ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
+      : newList;
+  }
+  return props.showEvaluate
+    ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
+    : newList;
+};
+
 onMounted(() => {
   //   // 从后台获取json数据
   //   const localStorageData = localStorage.getItem('componentsList');
@@ -188,6 +245,68 @@ onMounted(() => {
 
   :deep(.tele-layout-content) {
     height: 100%;
+  }
+
+  .affix {
+    position: fixed;
+    top: 206px;
+    left: 70px;
+    z-index: 1000;
+    width: 140px;
+    height: auto; /* 依据内容高度 */
+    max-height: 290px;
+    padding: 10px 10px 0;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+    transition: 0.2s ease; /* 0.3秒的过渡效果 */
+
+    :deep(.tele-anchor-link) {
+      font-size: 12px;
+    }
+
+    :deep(.tele-anchor) {
+      width: auto;
+    }
+
+    :deep(.tele-anchor-link-item) {
+      margin-bottom: 10px;
+    }
+
+    &.fold {
+      // height: 290px;
+    }
+
+    &.unfold {
+      max-height: 1000px;
+    }
+
+    .anchor-title {
+      height: 40px;
+      margin-bottom: 10px;
+      color: #86909c;
+      font-size: 12px;
+      line-height: 40px;
+      border-bottom: 1px dotted #e5e8ef;
+    }
+
+    .anchor-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 40px;
+      margin-top: 10px;
+      padding: 0 20px 0 8px;
+      color: #86909c;
+      font-size: 12px;
+      line-height: 40px;
+      border-top: 1px dotted #e5e8ef;
+
+      :deep(.tele-icon) {
+        font-size: 12px;
+      }
+    }
   }
 
   .floating_btn-box {

@@ -9,6 +9,7 @@
   >
     <component
       :is="ComponentsMap[data?.name]?.view"
+      :id="uid"
       ref="viewComponentRef"
       :data="data"
       :is-preview="isPreview"
@@ -21,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, computed, onMounted } from 'vue';
+import { ref, toRefs, onMounted } from 'vue';
 import ComponentsMap from '@/views/decoration/decorationTools/config/components-map';
 import { useRouter } from 'vue-router';
 import { Message } from '@tele-design/web-vue';
@@ -37,9 +38,10 @@ const props = defineProps({
   selectComponentIndex: Number,
   isPreview: Boolean,
   isClick: Boolean,
+  uid: String,
 });
 
-const { data, componentIndex, selectComponentIndex, isPreview, isClick } =
+const { data, componentIndex, selectComponentIndex, isPreview, isClick, uid } =
   toRefs(props);
 
 const drawerVisible = ref(false);
@@ -77,7 +79,6 @@ const validateError = ref(false);
 // };
 
 const clickComponent = () => {
-  console.log('选中组件-view-component-wrap:', componentIndex?.value);
   validateError.value = false;
   emit('select', componentIndex?.value);
 };

@@ -100,7 +100,6 @@ import { getToken } from '@/utils/auth';
 import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
 import { Message, Modal } from '@tele-design/web-vue';
 import UploadCropperModal from './upload-cropper-modal.vue';
-// @ts-nocheck
 
 const store = useUserStore();
 
@@ -228,7 +227,6 @@ const getMaterialList = () => {
         .catch(() => {
           state.imgList = [];
         });
-      console.log('resocrdData', recordData);
     })
     .catch(() => {
       state.loading = false;
