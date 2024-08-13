@@ -107,6 +107,7 @@ defineExpose({
 }
 
 .single-image:hover {
+  z-index: 2;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   transform: scale(1.02); /* 放大到原来的110% */
   transition: transform 0.5s, box-shadow 0.5s;
