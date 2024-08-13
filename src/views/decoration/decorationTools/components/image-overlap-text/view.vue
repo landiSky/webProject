@@ -245,6 +245,7 @@ defineExpose({
   }
 
   .image-overlap-item-title {
+    max-width: calc(@factor * 112px);
     padding: calc(@factor * 5px) 0;
     color: #1d2129;
     font-weight: 500;
@@ -256,6 +257,7 @@ defineExpose({
   .image-overlap-item-desc {
     display: -webkit-box;
     display: none;
+    max-width: calc(@factor * 112px);
     overflow: hidden;
     color: #4e5969;
     font-weight: 500;

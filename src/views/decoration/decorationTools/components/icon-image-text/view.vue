@@ -130,21 +130,20 @@ defineExpose({
       transition: transform 200ms ease-out, box-shadow 0.4s ease;
 
       .image-title {
-        margin: calc(@factor * 5px);
+        max-width: calc(@factor * 110px);
+        margin: calc(@factor * 12px) 0;
         overflow: hidden;
         color: #1d2129;
         font-weight: 500;
         font-size: calc(@factor * 8px);
-        line-height: calc(@factor * 26px);
+        line-height: calc(@factor * 12px);
         white-space: normal;
         text-align: center;
       }
 
       .image-desc {
-        // display: flex;
         display: inline-block;
-        width: calc(@factor * 110px);
-        height: calc(@factor * 22px);
+        width: calc(@factor * 112px);
         margin-bottom: calc(@factor * 5px);
         overflow: hidden;
         color: #4e5969;
