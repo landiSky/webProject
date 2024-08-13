@@ -166,6 +166,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  ChannelHeader: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/channel-header/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/channel-header/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

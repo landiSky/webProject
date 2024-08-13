@@ -176,6 +176,58 @@ const interceptFlag = ref(false);
 
 const proId = ref('');
 
+// 首页顶部组件
+const homeHeader = {
+  chineseName: '首页top',
+  maxNum: 3,
+  icon: 'singleImg',
+  name: 'HomeHeader',
+  mainTitle: '我是主标题',
+  configValue: [
+    {
+      title: '小标题',
+      desc: '图片描述',
+      src: '',
+      linkType: LinkType.LINK,
+      linkUrl: 'http://www.baidu.com',
+    },
+    {
+      title: '小标题',
+      desc: '图片描述',
+      src: '',
+      linkType: LinkType.LINK,
+      linkUrl: 'http://www.baidu.com',
+    },
+    {
+      title: '小标题',
+      desc: '图片描述',
+      src: '',
+      linkType: LinkType.LINK,
+      linkUrl: 'http://www.baidu.com',
+    },
+    {
+      title: '小标题',
+      desc: '图片描述',
+      src: '',
+      linkType: LinkType.LINK,
+      linkUrl: 'http://www.baidu.com',
+    },
+  ],
+};
+// 频道页头部组件
+const channelHeader = {
+  chineseName: '频道页头图',
+  maxNum: 3,
+  name: 'ChannelHeader',
+  configValue: {
+    title: '标题',
+    desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+    src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
+    linkType: LinkType.BLANK,
+    linkUrl: '',
+  },
+};
+
 // 打开模式 0-普通编辑模式 1-外部预览模式
 const openModel = ref(-1);
 
@@ -526,44 +578,15 @@ watch(
 );
 
 // 数组插入第一个元素--homeheader
-const insertFirst = () => {
-  componentsList.value.unshift({
-    chineseName: '首页top',
-    maxNum: 3,
-    icon: 'singleImg',
-    name: 'HomeHeader',
-    mainTitle: '我是主标题',
-    configValue: [
-      {
-        title: '小标题',
-        desc: '图片描述',
-        src: '',
-        linkType: LinkType.LINK,
-        linkUrl: 'http://www.baidu.com',
-      },
-      {
-        title: '小标题',
-        desc: '图片描述',
-        src: '',
-        linkType: LinkType.LINK,
-        linkUrl: 'http://www.baidu.com',
-      },
-      {
-        title: '小标题',
-        desc: '图片描述',
-        src: '',
-        linkType: LinkType.LINK,
-        linkUrl: 'http://www.baidu.com',
-      },
-      {
-        title: '小标题',
-        desc: '图片描述',
-        src: '',
-        linkType: LinkType.LINK,
-        linkUrl: 'http://www.baidu.com',
-      },
-    ],
-  });
+const insertFirst = (type: number) => {
+  if (type === ChannelType.PLATFORM_HOME) {
+    componentsList.value.unshift(homeHeader);
+  } else if (
+    type === ChannelType.PLATFORM_PRODUCT ||
+    type === ChannelType.PLATFORM_SERVE
+  ) {
+    componentsList.value.unshift(channelHeader);
+  }
 };
 
 const getNavData = (type: number) => {
@@ -603,15 +626,12 @@ const getNavData = (type: number) => {
     })
     .catch()
     .finally(() => {
-      if (type === ChannelType.PLATFORM_HOME) {
-        // 首页装修，默认把首页组件放到第一个
-        if (componentsList.value.length > 0) {
-          if (componentsList.value[0].name !== 'HomeHeader') {
-            insertFirst();
-          }
-        } else if (componentsList.value.length === 0) {
-          insertFirst();
+      if (componentsList.value.length > 0) {
+        if (componentsList.value[0].name !== 'HomeHeader') {
+          insertFirst(type);
         }
+      } else if (componentsList.value.length === 0) {
+        insertFirst(type);
       }
     });
 };
