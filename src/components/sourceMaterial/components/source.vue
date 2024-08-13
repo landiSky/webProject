@@ -219,14 +219,16 @@ const getMaterialList = () => {
         });
       });
       Promise.all(recordData)
-        .then((res) => {
-          if (Array.isArray(res) && typeof res[0] === 'object')
+        .then((res: any) => {
+          if (Array.isArray(res) && typeof res[0] === 'object') {
+            console.log('res', res);
             state.imgList = res || [];
+          }
         })
         .catch(() => {
           state.imgList = [];
         });
-      console.log('resocrdDAATA', recordData);
+      console.log('resocrdData', recordData);
     })
     .catch(() => {
       state.loading = false;
