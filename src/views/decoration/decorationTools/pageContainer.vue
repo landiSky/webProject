@@ -107,7 +107,7 @@ watch(
   () => props.componentsList,
   (val: any) => {
     console.log('componentsList length', val.length);
-    if (val.length >= 5) {
+    if (val.length > 5) {
       isFold.value = true;
     }
     console.log('watch componentsList:', val);
