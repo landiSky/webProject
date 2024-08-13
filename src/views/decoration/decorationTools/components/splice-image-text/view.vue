@@ -243,8 +243,8 @@ defineExpose({
               display: flex;
               flex: 1;
               flex-direction: column;
-              align-items: flex-start;
-              justify-content: flex-start;
+              align-items: flex-center;
+              justify-content: space-evenly;
               height: 100%;
               padding: calc(@factor * 8px);
 
@@ -257,21 +257,22 @@ defineExpose({
               }
 
               .image-little-title {
+                max-width: calc(@factor * 110px);
                 margin-bottom: calc(@factor * 6px);
-                padding-left: calc(@factor * 3px);
                 color: #fff;
                 font-weight: 500;
                 font-size: calc(@factor * 10px);
-                line-height: calc(@factor * 28px);
+                line-height: calc(@factor * 14px);
+                text-align: left;
               }
 
               .image-desc {
                 width: calc(@factor * 110px);
-                height: calc(@factor * 22px);
-                padding: calc(@factor * 4px);
+                padding: calc(@factor * 4px) 0;
                 overflow: hidden;
                 color: #fff;
                 font-size: calc(@factor * 7px);
+                line-height: calc(@factor * 11px);
                 white-space: normal;
                 text-align: left;
                 text-overflow: ellipsis;
@@ -389,12 +390,11 @@ defineExpose({
               display: flex;
               flex: 1;
               flex-direction: column;
-              align-items: flex-start;
-              justify-content: flex-start;
+              align-items: flex-center;
+              justify-content: space-evenly;
               height: 100%;
               padding: calc(@factor * 8px) 0 calc(@factor * 8px)
                 calc(@factor * 36px);
-              background-color: #353535;
 
               .image-index {
                 position: absolute;
@@ -405,27 +405,30 @@ defineExpose({
               }
 
               .image-little-title {
+                width: calc(@factor * 110px);
                 margin-bottom: calc(@factor * 6px);
-                padding-left: calc(@factor * 3px);
                 color: #fff;
                 font-weight: 500;
                 font-size: calc(@factor * 10px);
-                line-height: calc(@factor * 28px);
+                line-height: calc(@factor * 14px);
+                text-align: left;
+                // background-color: red;
               }
 
               .image-desc {
                 width: calc(@factor * 110px);
-                height: calc(@factor * 22px);
-                padding: calc(@factor * 4px);
+                padding: calc(@factor * 4px) 0;
                 overflow: hidden;
                 color: #fff;
                 font-size: calc(@factor * 7px);
+                line-height: calc(@factor * 11px);
                 white-space: normal;
                 text-align: left;
                 text-overflow: ellipsis;
                 word-wrap: break-word;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
+                // background-color: #fff;
               }
             }
           }
