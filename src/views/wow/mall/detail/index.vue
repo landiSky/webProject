@@ -382,6 +382,8 @@
       </div>
       <div v-else class="newIntro">
         <DecorationBox
+          show-anchor
+          show-evaluate
           :components-list="templateList"
           :product-id="prodDetail.id"
         ></DecorationBox>

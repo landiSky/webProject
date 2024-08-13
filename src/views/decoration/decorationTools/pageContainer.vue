@@ -6,7 +6,11 @@
       width: '100%',
     }"
   >
-    <t-affix class="affix" :class="isFold ? 'fold' : 'unfold'">
+    <t-affix
+      v-if="showAnchor"
+      class="affix"
+      :class="isFold ? 'fold' : 'unfold'"
+    >
       <t-anchor :ref="anchorRef" :change-hash="false" line-less>
         <div class="anchor-title">楼层导航</div>
         <t-anchor-link
@@ -16,7 +20,10 @@
         >
           {{ item.mainTitle }}
         </t-anchor-link>
-        <div class="anchor-footer" @click="() => (isFold = !isFold)"
+        <div
+          v-if="componentsList.length >= 5"
+          class="anchor-footer"
+          @click="() => (isFold = !isFold)"
           ><span>{{ isFold ? '展开全部' : '收起' }}</span>
           <icon-down v-if="isFold" />
           <icon-up v-else />
@@ -74,6 +81,14 @@ const props = defineProps({
     type: String,
     default: () => '',
   },
+  showAnchor: {
+    type: Boolean,
+    default: () => false,
+  },
+  showEvaluate: {
+    type: Boolean,
+    default: () => false,
+  },
 });
 
 const isFold = ref(false);
@@ -84,17 +99,14 @@ const getId = (ele: any, idx: number) => {
   return `${ele.name}-${idx}`;
 };
 
-const route = useRoute();
-
 // const componentsList = ref<any[]>([]);
-
-const selectIndex = ref(-1);
 
 const viewComponentWrapRef = ref<any[]>([]);
 
 watch(
   () => props.componentsList,
   (val: any) => {
+    console.log('componentsList length', val.length);
     if (val.length >= 5) {
       isFold.value = true;
     }
@@ -171,9 +183,17 @@ const selectComponent = (index: number) => {
 
 const computedList = (list: any) => {
   const newList = JSON.parse(JSON.stringify(list));
-  return isFold.value
-    ? newList.slice(0, 5)
-    : [...newList, { name: 'evaluate', mainTitle: '产品评价' }];
+  if (list.length >= 5) {
+    if (isFold.value) {
+      return newList.slice(0, 5);
+    }
+    return props.showEvaluate
+      ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
+      : newList;
+  }
+  return props.showEvaluate
+    ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
+    : newList;
 };
 
 onMounted(() => {
