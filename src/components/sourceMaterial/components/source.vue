@@ -141,7 +141,7 @@ const params = reactive<{
 });
 
 const state = reactive<{
-  imgList: Record<string, any>[];
+  imgList: Record<any, any>[];
   loading: boolean;
   total: number;
   type: number;
