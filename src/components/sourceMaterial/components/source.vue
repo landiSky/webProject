@@ -220,7 +220,8 @@ const getMaterialList = () => {
       });
       Promise.all(recordData)
         .then((res) => {
-          state.imgList = res || [];
+          if (Array.isArray(res) && typeof res[0] === 'object')
+            state.imgList = res || [];
         })
         .catch(() => {
           state.imgList = [];
@@ -272,7 +273,7 @@ const onTabChange = (key: number) => {
 
 const onListItemClick = (index: number) => {
   state.imgList[index].active = true;
-  state.imgList.forEach((item, idx) => {
+  state.imgList.forEach((item: any, idx) => {
     if (idx === index) {
       item.active = true;
     } else {
@@ -289,7 +290,7 @@ const onPageChange = (current: number) => {
 const onOk = () => {
   // 用数据去循环，这样保证状态都是重新渲染的
   state.fileName = '';
-  state.imgList.forEach((item) => {
+  state.imgList.forEach((item: any) => {
     if (item.active) {
       state.fileName = item.name;
     }
