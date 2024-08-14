@@ -76,7 +76,7 @@
             <input ref="formInput" name="password" />
           </form>
           <t-form
-            ref="formRef"
+            ref="formRef2"
             :model="form"
             :rules="formRules2"
             layout="vertical"
@@ -118,7 +118,7 @@
                 size="large"
                 long
                 :disabled="btnDisabled"
-                @click="clickLoginBtn"
+                @click="clickLoginBtn2"
                 >登录</t-button
               >
             </t-form-item>
@@ -321,6 +321,7 @@ const loginDataSet: Record<string, any> = {
 };
 
 const formRef = ref();
+const formRef2 = ref();
 const form = ref({ ...loginDataSet });
 
 const performsRef = ref();
@@ -484,6 +485,16 @@ const getLog = () => {
 };
 const clickLoginBtn = () => {
   formRef.value.validate((errors: any) => {
+    if (!errors) {
+      captchaType.value = 1;
+      loginLoading.value = true;
+      captchaVisible.value = true;
+    }
+  });
+};
+
+const clickLoginBtn2 = () => {
+  formRef2.value.validate((errors: any) => {
     if (!errors) {
       captchaType.value = 1;
       loginLoading.value = true;
