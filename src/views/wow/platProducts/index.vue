@@ -1,6 +1,6 @@
 <!-- 平台产品页 -->
 <template>
-  <Container :components-list="componentList" show-anchor />
+  <Container :components-list="addId(componentList)" show-anchor />
   <div v-if="componentList && componentList.length" class="platProducts">
     <WowFooter></WowFooter>
   </div>
@@ -12,6 +12,7 @@ import { defineProps, onMounted, ref } from 'vue';
 import Container from '@/views/decoration/decorationTools/pageContainer.vue';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
+import { addId } from '@/utils/index';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const props = defineProps({
