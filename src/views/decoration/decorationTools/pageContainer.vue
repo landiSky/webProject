@@ -12,7 +12,7 @@
       :class="isFold ? 'fold' : 'unfold'"
     >
       <t-anchor :ref="anchorRef" :change-hash="false" line-less>
-        <div class="anchor-title">楼层导航</div>
+        <!-- <div class="anchor-title">楼层导航</div> -->
         <t-anchor-link
           v-for="(item, index) in computedList(componentsList)"
           :key="index"
@@ -106,7 +106,6 @@ const viewComponentWrapRef = ref<any[]>([]);
 watch(
   () => props.componentsList,
   (val: any) => {
-    console.log('componentsList length', val.length);
     if (val.length > 5) {
       isFold.value = true;
     }
@@ -257,7 +256,7 @@ onMounted(() => {
     max-height: 290px;
     padding: 10px 10px 0;
     overflow: hidden;
-    background: #fff;
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 4px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     transition: 0.2s ease; /* 0.3秒的过渡效果 */
@@ -280,15 +279,6 @@ onMounted(() => {
 
     &.unfold {
       max-height: 1000px;
-    }
-
-    .anchor-title {
-      height: 40px;
-      margin-bottom: 10px;
-      color: #86909c;
-      font-size: 12px;
-      line-height: 40px;
-      border-bottom: 1px dotted #e5e8ef;
     }
 
     .anchor-footer {
