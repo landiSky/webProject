@@ -18,17 +18,25 @@
           animation="300"
           drag-class="dragClass"
           class="components-wrap"
+          filter=".unmover"
+          :prevent-on-filter="false"
           :force-fallback="true"
           :scroll="true"
           :disabled="isPreview"
           :group="{ name: 'vehicle-station' }"
           :list="toolList"
-          :move-threshold="20"
+          :move="onMove"
           @end="endSort"
           @add="insertSort"
         >
           <template #item="{ element, index }">
-            <transition name="el-fade-in-linear">
+            <transition
+              name="el-fade-in-linear"
+              :class="{
+                unmover:
+                  element === 'ChannelHeader' || element === 'HomeHeader',
+              }"
+            >
               <div v-show="true">
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
@@ -468,6 +476,18 @@ const clickSaveRemote = () => {
     });
 };
 
+const onMove = (event: any) => {
+  let res = true;
+  if (
+    event.relatedContext.element === 'ChannelHeader' ||
+    event.relatedContext.element === 'HomeHeader'
+  ) {
+    console.log('拖到了最上面------0000');
+    res = false;
+  }
+  return res;
+};
+
 // 从新排序
 const endSort = (event: any) => {
   const { newIndex, oldIndex } = event;
@@ -582,6 +602,7 @@ watch(
 const insertFirst = (type: number) => {
   if (type === ChannelType.PLATFORM_HOME) {
     if (componentsList.value[0]?.name !== 'HomeHeader') {
+      toolList.value.unshift('HomeHeader');
       componentsList.value.unshift(homeHeader);
     }
   } else if (
@@ -589,6 +610,7 @@ const insertFirst = (type: number) => {
     type === ChannelType.PLATFORM_SERVE
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
+      toolList.value.unshift('ChannelHeader');
       componentsList.value.unshift(channelHeader);
     }
   }

@@ -152,6 +152,8 @@ defineExpose({
   }
 
   &.active {
+    z-index: 2;
+    box-sizing: border-box;
     border: 1px solid #1664ff;
   }
 

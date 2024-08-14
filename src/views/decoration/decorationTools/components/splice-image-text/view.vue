@@ -178,7 +178,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   width: calc(@factor * 720px);
   height: calc(@factor * 275px);
 
