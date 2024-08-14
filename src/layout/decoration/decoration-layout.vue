@@ -109,7 +109,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 48px);
+  height: calc(100vh - 0px);
   overflow-y: auto;
   background-color: #f6f7f9;
 }
