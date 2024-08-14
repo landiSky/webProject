@@ -9,9 +9,7 @@
     >
     </t-image>
     <div class="contnet-box">
-      <div class="header-title"
-        >{{ data?.configValue?.title || '主标题' }}
-      </div>
+      <div class="header-title">{{ data?.mainTitle || '主标题' }} </div>
       <div class="header-desc"
         >{{
           data?.configValue?.desc ||
@@ -23,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed, ref } from 'vue';
+import { toRefs, computed } from 'vue';
 
 const props = defineProps({
   data: Object,
@@ -40,7 +38,7 @@ const validate = () => {
   return new Promise((resolve, reject) => {
     if (
       // TODO 可能需要完善校验逻辑
-      !data?.value?.configValue?.title ||
+      !data?.value?.mainTitle ||
       !data?.value?.configValue?.desc
     ) {
       return reject();
@@ -65,6 +63,7 @@ defineExpose({
   justify-content: flex-start;
   width: calc(@factor * 720px);
   height: calc(@factor * 280px);
+  background-color: transparent;
 
   .contnet-box {
     position: absolute;

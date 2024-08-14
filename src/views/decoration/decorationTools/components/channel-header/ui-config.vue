@@ -12,7 +12,7 @@
     >
       <t-form-item
         label="标题"
-        field="title"
+        field="mainTitle"
         :label-col-props="{
           flex: '90px',
           align: 'center',
@@ -20,7 +20,7 @@
         :validate-trigger="['blur', 'input']"
       >
         <t-input
-          v-model="form.title"
+          v-model="form.mainTitle"
           placeholder="请输入"
           :max-length="12"
           show-word-limit
@@ -127,44 +127,24 @@ const stencilSize = ref({
 });
 
 const form = ref({
+  mainTitle: '',
   src: '',
-  title: '',
   desc: '',
-  linkType: 0,
-  linkUrl: '',
+  // linkType: 0,
+  // linkUrl: '',
 });
 
 const rules = {
-  title: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  mainTitle: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-};
-
-const radioChange = () => {
-  form.value.linkUrl = '';
+  // linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  // linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
 };
 
 const onBeforeRemove = () => {
   showSource.value = true;
 };
-watch(
-  () => data,
-  (val: any) => {
-    // console.log('form00000:', JSON.stringify(form), val);
-    // form.value.src = val?.value.configValue?.src || '';
-    // form.value.title = val?.value.configValue.title || '';
-    // form.value.linkType = val?.value.configValue.linkType || 0;
-    // form.value.linkUrl = val?.value.configValue.linkUrl || '';
-    // form.value.desc = val?.value.configValue.desc || '';
-    // console.log('form111111:', form);
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
 const onConfirm = (value: any) => {
   console.log('返回的图片信息', value);
   form.value.src = value;
@@ -176,12 +156,11 @@ const onCancel = () => {
 };
 
 onMounted(() => {
-  // console.log('mounted');
   // // form赋值
   form.value.src = data?.value?.configValue.src || '';
-  form.value.title = data?.value?.configValue.title || '';
-  form.value.linkType = data?.value?.configValue.linkType || 0;
-  form.value.linkUrl = data?.value?.configValue.linkUrl || '';
+  form.value.mainTitle = data?.value?.mainTitle || '';
+  // form.value.linkType = data?.value?.configValue.linkType || 0;
+  // form.value.linkUrl = data?.value?.configValue.linkUrl || '';
   form.value.desc = data?.value?.configValue.desc || '';
 });
 

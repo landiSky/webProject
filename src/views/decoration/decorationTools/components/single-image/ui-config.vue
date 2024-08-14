@@ -12,7 +12,7 @@
     >
       <t-form-item
         label="标题"
-        field="title"
+        field="mainTitle"
         :label-col-props="{
           flex: '90px',
           align: 'center',
@@ -20,7 +20,7 @@
         :validate-trigger="['blur', 'input']"
       >
         <t-input
-          v-model="form.title"
+          v-model="form.mainTitle"
           placeholder="请输入"
           :max-length="12"
           show-word-limit
@@ -61,7 +61,6 @@
                 ? [
                     {
                       url: `/server/web/file/download?name=${form.src}`,
-                      // url: `${form.src}`,
                     },
                   ]
                 : []
@@ -151,6 +150,14 @@ type GoodsItem = {
   name: string;
   id: string;
 };
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
 const props = defineProps({
   data: Object,
   isPro: Boolean,
@@ -168,16 +175,16 @@ const stencilSize = ref({
   height: 520,
 });
 
-const form = ref({
+const form = ref<ConfigData>({
+  mainTitle: '',
   src: '',
-  title: '',
   desc: '',
   linkType: 0,
   linkUrl: '',
 });
 
 const rules = {
-  title: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  mainTitle: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
@@ -191,24 +198,7 @@ const radioChange = () => {
 const onBeforeRemove = () => {
   showSource.value = true;
 };
-watch(
-  () => data,
-  (val: any) => {
-    // console.log('form00000:', JSON.stringify(form), val);
-    // form.value.src = val?.value.configValue?.src || '';
-    // form.value.title = val?.value.configValue.title || '';
-    // form.value.linkType = val?.value.configValue.linkType || 0;
-    // form.value.linkUrl = val?.value.configValue.linkUrl || '';
-    // form.value.desc = val?.value.configValue.desc || '';
-    // console.log('form111111:', form);
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
 const onConfirm = (value: any) => {
-  console.log('返回的图片信息', value);
   form.value.src = value;
   showSource.value = false;
 };
@@ -218,13 +208,13 @@ const onCancel = () => {
 };
 
 onMounted(() => {
-  // console.log('mounted');
   // // form赋值
+  console.log('单图props', data?.value);
+  form.value.mainTitle = data?.value?.mainTitle || '';
+  form.value.desc = data?.value?.configValue.desc || '';
   form.value.src = data?.value?.configValue.src || '';
-  form.value.title = data?.value?.configValue.title || '';
   form.value.linkType = data?.value?.configValue.linkType || 0;
   form.value.linkUrl = data?.value?.configValue.linkUrl || '';
-  form.value.desc = data?.value?.configValue.desc || '';
 });
 
 defineExpose({
