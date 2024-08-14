@@ -279,6 +279,7 @@
               show-total
               show-jumper
               show-page-size
+              :page-size-options="[12, 24, 36, 45, 51]"
               @change="onPageChange"
               @page-size-change="onPageSizeChange"
             />
@@ -317,7 +318,7 @@ const { userInfo } = userStore;
 
 const pagination = reactive({
   page: 1,
-  size: 10,
+  size: 12,
   total: 0,
 });
 const priceSortEnum = {
@@ -543,7 +544,7 @@ onMounted(() => {
 }
 
 .content {
-  width: 1176px;
+  width: 1226px;
   margin: -30px auto 120px auto;
 
   .search {
@@ -682,9 +683,10 @@ onMounted(() => {
 
       .card {
         display: flex;
-        width: 552px;
+        width: 386px;
+        margin-right: 10px;
         margin-bottom: 16px;
-        padding: 25px 30px;
+        padding: 15px;
         border: 1px solid #e5e8ef;
         border-radius: 4px;
 
@@ -692,19 +694,19 @@ onMounted(() => {
           box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
         }
 
-        &:nth-child(odd) {
-          margin-right: 24px;
+        &:nth-child(3n) {
+          margin-right: 0;
         }
 
         .left {
           display: flex;
           align-items: center;
-          margin-right: 35px;
+          margin-right: 10px;
           // display: inline-block;
           img {
             display: block;
-            width: 144px;
-            height: 144px;
+            width: 80px;
+            height: 80px;
             border-radius: 24px;
             cursor: pointer;
           }
@@ -730,7 +732,7 @@ onMounted(() => {
             margin-bottom: 0;
             color: #1d2129;
             font-weight: 500;
-            font-size: 22px;
+            font-size: 20px;
             line-height: 22px;
             cursor: pointer;
           }
@@ -744,7 +746,7 @@ onMounted(() => {
             margin-bottom: 8px;
             color: #86909c;
             font-weight: 400;
-            font-size: 16px;
+            font-size: 12px;
             line-height: 22px;
           }
 
@@ -774,10 +776,10 @@ onMounted(() => {
           .desc {
             width: 264px;
             margin-top: 16px;
-            margin-bottom: 32px;
+            margin-bottom: 16px;
             color: #4e5969;
             font-weight: 500;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 22px; /* 157.143% */
             word-break: break-all;
           }

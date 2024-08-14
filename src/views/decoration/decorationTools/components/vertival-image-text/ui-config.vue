@@ -60,7 +60,7 @@
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="8"
+            :max-length="20"
             show-word-limit
             allow-clear
           />
@@ -83,7 +83,7 @@
             v-model="item.desc"
             placeholder="请输入"
             allow-clear
-            :max-length="500"
+            :max-length="40"
             show-word-limit
           />
         </t-form-item>

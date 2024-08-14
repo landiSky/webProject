@@ -9,6 +9,8 @@
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
+        :class="[index === curUnFoldIndex ? 'itemhover' : '']"
+        @mouseenter="unfold(index)"
       >
         <img
           :src="`/server/web/file/download?name=${item?.src}&productId=${
@@ -30,6 +32,7 @@
             >详情>>
           </span>
         </div>
+        <div class="mask-box" :class="[`mask-box${index + 1}`]"></div>
       </div>
     </div>
   </div>
@@ -43,7 +46,7 @@ const props = defineProps({
   isPreview: Boolean,
 });
 const emit = defineEmits(['golink']);
-
+const curUnFoldIndex = ref(1);
 const { data, isPreview } = toRefs(props);
 
 const clickLink = (type: number, url: string) => {
@@ -57,6 +60,10 @@ watch(
   },
   { immediate: true, deep: true }
 );
+
+const unfold = (index: number) => {
+  curUnFoldIndex.value = index;
+};
 
 // 动态倍数
 const num = computed(() => {
@@ -97,8 +104,12 @@ defineExpose({
 
 @keyframes fadeIn {
   0%,
-  10% {
+  40% {
     opacity: 0;
+  }
+
+  50% {
+    opacity: 0.7;
   }
 
   100% {
@@ -109,6 +120,17 @@ defineExpose({
 @keyframes fadeOut {
   0%,
   20% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes maskFadeIn {
+  0%,
+  40% {
     opacity: 0;
   }
 
@@ -139,19 +161,52 @@ defineExpose({
     align-items: center;
     justify-content: center;
     height: calc(@factor * 240px);
-
+    padding: 0 calc(@factor * 2.5px);
+    // background-color: red;
     .image-item {
       position: relative;
       display: block;
-      width: calc(@factor * 91px);
+      width: calc(@factor * 96px);
       height: calc(@factor * 230px);
       padding: 0 calc(@factor * 2.5px);
       background-color: transparent;
       transition: width 0.5s;
 
+      .mask-box {
+        position: absolute;
+        z-index: 1;
+        width: calc(@factor * 91px);
+        height: calc(@factor * 230px);
+        padding: 0 calc(@factor * 2.5px);
+        animation: maskFadeIn 0.8s ease 1;
+      }
+      //默认展开的cls
+      .mask-box1,
+      .mask-box5 {
+        background: linear-gradient(
+          180deg,
+          #00fff0 0%,
+          rgba(128, 179, 255, 0.7) 50%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
+        animation: maskFadeIn 0.8s ease 1;
+      }
+
+      .mask-box2,
+      .mask-box3,
+      .mask-box4 {
+        background: linear-gradient(
+          180deg,
+          #06f 0%,
+          rgba(128, 179, 255, 0.7) 50%,
+          rgba(255, 255, 255, 0.2) 100%
+        );
+        animation: maskFadeIn 0.8s ease 1;
+      }
+
       .image-cls {
         float: right;
-        width: calc(@factor * 87px);
+        width: calc(@factor * 91px);
         height: 100%;
         transition: width 0.5s;
       }
@@ -162,6 +217,7 @@ defineExpose({
         right: 0;
         bottom: 0;
         left: 0;
+        z-index: 2;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -173,6 +229,8 @@ defineExpose({
           color: #fff;
           font-weight: 500;
           font-size: calc(@factor * 8px);
+          line-height: calc(@factor * 12px);
+          text-align: left;
         }
 
         .image-desc {
@@ -181,6 +239,7 @@ defineExpose({
           margin: calc(@factor * 5px) 0;
           overflow: hidden;
           font-size: calc(@factor * 7px);
+          line-height: calc(@factor * 11px);
           white-space: normal;
           text-align: left;
           text-overflow: ellipsis;
@@ -197,7 +256,7 @@ defineExpose({
       }
     }
 
-    .image-item:hover::before {
+    .itemhover::before {
       position: absolute;
       top: 0;
       right: calc(@factor * 2.5px);
@@ -205,23 +264,70 @@ defineExpose({
       left: calc(@factor * 2.5px);
       background: linear-gradient(
         to right,
-        rgb(236, 239, 245) 40%,
+        rgb(236, 239, 245) 50%,
         rgba(207, 220, 244, 0.8)
       );
       content: '';
     }
 
-    .image-item:hover {
+    // .image-item:hover::before {
+    //   position: absolute;
+    //   top: 0;
+    //   right: calc(@factor * 2.5px);
+    //   bottom: 0;
+    //   left: calc(@factor * 2.5px);
+    //   background: linear-gradient(
+    //     to right,
+    //     rgb(236, 239, 245) 40%,
+    //     rgba(207, 220, 244, 0.8)
+    //   );
+    //   content: '';
+    // }
+
+    // .image-item:hover {
+    //   width: calc(@factor * 204px);
+    //   .mask-box {
+    //     background: transparent;
+    //     animation: fadeIn 1s ease 1;
+    //   }
+    //   .image-cls {
+    //     float: right;
+    //     width: calc(@factor * 120px);
+    //     height: 100%;
+    //   }
+
+    //   .image-item-content {
+    //     animation: fadeIn 1s ease 1;
+
+    //     .image-title,
+    //     .image-link {
+    //       color: #1d2129;
+    //     }
+
+    //     .image-desc {
+    //       display: -webkit-box;
+    //       // width: calc(@factor * 182px);
+    //       -webkit-line-clamp: 6;
+    //       color: #4e5969;
+    //     }
+    //   }
+    // }
+    .itemhover {
       width: calc(@factor * 204px);
+
+      .mask-box {
+        background: transparent;
+        animation: fadeIn 1s ease 1;
+      }
 
       .image-cls {
         float: right;
-        width: calc(@factor * 120px);
+        width: calc(@factor * 108px);
         height: 100%;
       }
 
       .image-item-content {
-        animation: fadeIn 1s ease 1;
+        animation: fadeIn 0.8s ease 1;
 
         .image-title,
         .image-link {
@@ -230,27 +336,13 @@ defineExpose({
 
         .image-desc {
           display: -webkit-box;
-          // width: calc(@factor * 182px);
-          -webkit-line-clamp: 6;
+          width: calc(@factor * 182px);
           color: #4e5969;
+          line-height: calc(@factor * 11px);
+          -webkit-line-clamp: 3;
         }
       }
     }
-  }
-
-  .vertical-image-text-desc {
-    display: -webkit-box;
-    width: calc(@factor * 600px);
-    margin-top: calc(@factor * 9px);
-    overflow: hidden;
-    color: #4e5969;
-    font-weight: 500;
-    font-size: calc(@factor * 8px);
-    white-space: normal;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
   }
 }
 </style>

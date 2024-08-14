@@ -130,7 +130,7 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        height: calc(@factor * 162px);
+        height: calc(@factor * 107px);
         margin-top: -20px;
         padding: 12px;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);

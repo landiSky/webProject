@@ -9,7 +9,6 @@ export const ToolData: Record<string, any> = {
     mainTitle: '主标题',
     bgColor: '#ffffff',
     configValue: {
-      title: '小标题',
       src: '9e1d411d-e447-4f27-a8ce-b9ca50d06e11.png',
       desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
       linkType: LinkType.BLANK,

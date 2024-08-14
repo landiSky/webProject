@@ -94,7 +94,7 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     console.log('轮播图校验', item);
     return (
-      item.title &&
+      // item.title &&
       item.desc &&
       item.src &&
       (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))

@@ -56,7 +56,7 @@
             >删除</div
           >
         </t-space>
-        <t-form-item
+        <!-- <t-form-item
           label="标题"
           :field="`list.${index}.title`"
           :label-col-props="{
@@ -77,7 +77,7 @@
             show-word-limit
             allow-clear
           />
-        </t-form-item>
+        </t-form-item> -->
         <t-form-item
           label="简介"
           :field="`list.${index}.desc`"

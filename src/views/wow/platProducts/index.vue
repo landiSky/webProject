@@ -1,6 +1,6 @@
 <!-- 平台产品页 -->
 <template>
-  <Container :components-list="componentList" />
+  <Container :components-list="componentList" show-anchor />
   <div v-if="componentList && componentList.length" class="platProducts">
     <WowFooter></WowFooter>
   </div>

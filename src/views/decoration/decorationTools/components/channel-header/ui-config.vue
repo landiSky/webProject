@@ -61,6 +61,7 @@
                 ? [
                     {
                       url: `/server/web/file/download?name=${form.src}`,
+                      // url: `${form.src}`,
                     },
                   ]
                 : []
@@ -86,48 +87,6 @@
           </span>
         </t-space>
       </t-form-item>
-      <t-form-item
-        label="关联"
-        field="linkType"
-        :label-col-props="{
-          flex: '90px',
-        }"
-      >
-        <t-radio-group v-model="form.linkType" @change="radioChange">
-          <t-radio :value="0">链接</t-radio>
-          <t-radio :value="1" :disabled="isPro">商品</t-radio>
-          <t-radio :value="2">无</t-radio>
-        </t-radio-group>
-      </t-form-item>
-      <t-form-item
-        v-if="form.linkType !== 2"
-        :label="
-          form.linkType === 0 ? '链接地址' : form.linkType === 1 ? '商品' : ''
-        "
-        field="linkUrl"
-        :label-col-props="{
-          flex: '90px',
-        }"
-        :validate-trigger="['blur']"
-      >
-        <t-textarea
-          v-if="form.linkType === 0"
-          v-model="form.linkUrl"
-          :max-length="500"
-          show-word-limit
-          placeholder="请输入"
-        />
-        <t-select
-          v-if="form.linkType === 1"
-          v-model="form.linkUrl"
-          placeholder="请选择"
-          allow-clear
-        >
-          <t-option v-for="item in goodsList" :key="item" :value="item.id">{{
-            item.name
-          }}</t-option>
-        </t-select>
-      </t-form-item>
     </t-form>
     <Source
       v-if="showSource"
@@ -150,14 +109,6 @@ type GoodsItem = {
   name: string;
   id: string;
 };
-// 全部配置数据
-type ConfigData = {
-  mainTitle: string;
-  desc: string;
-  src: string;
-  linkType: number;
-  linkUrl: string;
-};
 const props = defineProps({
   data: Object,
   isPro: Boolean,
@@ -171,34 +122,31 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 1200,
-  height: 520,
+  width: 1440,
+  height: 560,
 });
 
-const form = ref<ConfigData>({
+const form = ref({
   mainTitle: '',
   src: '',
   desc: '',
-  linkType: 0,
-  linkUrl: '',
+  // linkType: 0,
+  // linkUrl: '',
 });
 
 const rules = {
   mainTitle: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-};
-
-const radioChange = () => {
-  form.value.linkUrl = '';
+  // linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  // linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
 };
 
 const onBeforeRemove = () => {
   showSource.value = true;
 };
 const onConfirm = (value: any) => {
+  console.log('返回的图片信息', value);
   form.value.src = value;
   showSource.value = false;
 };
@@ -209,12 +157,11 @@ const onCancel = () => {
 
 onMounted(() => {
   // // form赋值
-  console.log('单图props', data?.value);
-  form.value.mainTitle = data?.value?.mainTitle || '';
-  form.value.desc = data?.value?.configValue.desc || '';
   form.value.src = data?.value?.configValue.src || '';
-  form.value.linkType = data?.value?.configValue.linkType || 0;
-  form.value.linkUrl = data?.value?.configValue.linkUrl || '';
+  form.value.mainTitle = data?.value?.mainTitle || '';
+  // form.value.linkType = data?.value?.configValue.linkType || 0;
+  // form.value.linkUrl = data?.value?.configValue.linkUrl || '';
+  form.value.desc = data?.value?.configValue.desc || '';
 });
 
 defineExpose({

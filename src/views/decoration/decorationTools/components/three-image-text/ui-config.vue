@@ -61,7 +61,7 @@
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="10"
+            :max-length="20"
             show-word-limit
             allow-clear
           />

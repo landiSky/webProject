@@ -200,11 +200,14 @@ defineExpose({
       transition: transform 200ms ease-out, box-shadow 0.4s ease;
 
       .image-title {
+        max-width: calc(@factor * 96px);
+        height: calc(@factor * 24px);
+        margin-bottom: calc(@factor * 5px);
         overflow: hidden;
         color: #1d2129;
         font-weight: 500;
         font-size: calc(@factor * 8px);
-        line-height: calc(@factor * 26px);
+        line-height: calc(@factor * 12px);
         white-space: normal;
         text-align: center;
       }

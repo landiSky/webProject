@@ -58,6 +58,9 @@
                 :on-before-remove="onBeforeRemove"
               >
               </t-upload>
+              <span v-if="i.width && i.height" class="image-size">{{
+                `${i.width}X${i.height}`
+              }}</span>
             </div>
           </div>
           <div class="list-pagination">
@@ -189,12 +192,41 @@ const getMaterialList = () => {
     .then((res) => {
       state.loading = false;
       state.total = res.total;
-      const recordData = res.records.map((name: string, idx: number) => ({
-        id: idx,
-        name,
-        active: false,
-      }));
-      state.imgList = recordData || [];
+
+      const recordData = res.records.map(async (name: string, idx: number) => {
+        return new Promise((resolve) => {
+          const image = new Image();
+          image.src = `/server/web/file/download?name=${name}`;
+          image.onload = () => {
+            resolve({
+              width: image.width,
+              height: image.height,
+              id: idx,
+              name,
+              active: false,
+            });
+          };
+          image.onerror = () => {
+            resolve({
+              width: 0,
+              height: 0,
+              id: idx,
+              name,
+              active: false,
+            });
+          };
+        });
+      });
+      Promise.all(recordData)
+        .then((res: any) => {
+          if (Array.isArray(res) && typeof res[0] === 'object') {
+            console.log('res', res);
+            state.imgList = res || [];
+          }
+        })
+        .catch(() => {
+          state.imgList = [];
+        });
     })
     .catch(() => {
       state.loading = false;
@@ -241,7 +273,7 @@ const onTabChange = (key: number) => {
 
 const onListItemClick = (index: number) => {
   state.imgList[index].active = true;
-  state.imgList.forEach((item, idx) => {
+  state.imgList.forEach((item: any, idx) => {
     if (idx === index) {
       item.active = true;
     } else {
@@ -258,7 +290,7 @@ const onPageChange = (current: number) => {
 const onOk = () => {
   // 用数据去循环，这样保证状态都是重新渲染的
   state.fileName = '';
-  state.imgList.forEach((item) => {
+  state.imgList.forEach((item: any) => {
     if (item.active) {
       state.fileName = item.name;
     }
@@ -322,6 +354,7 @@ onMounted(async () => {
 
   :deep(.tele-tabs-pane) {
     .list-item {
+      position: relative;
       display: inline-block;
       margin-right: 16px;
       margin-bottom: 16px;
@@ -335,6 +368,15 @@ onMounted(async () => {
 
       &:nth-last-child(-n + 4) {
         margin-bottom: 0;
+      }
+
+      .image-size {
+        position: absolute;
+        bottom: 10px;
+        left: 12px;
+        color: #fff;
+        font-size: 12px;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.6);
       }
     }
 
