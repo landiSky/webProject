@@ -258,7 +258,7 @@ onMounted(() => {
   .affix {
     position: fixed;
     top: 206px;
-    left: 70px;
+    left: 20px;
     z-index: 1000;
     width: 140px;
     height: auto; /* 依据内容高度 */
