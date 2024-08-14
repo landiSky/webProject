@@ -46,7 +46,8 @@
                   v-if="
                     selectIndex === index &&
                     !isPreview &&
-                    element !== 'HomeHeader'
+                    element !== 'HomeHeader' &&
+                    element !== 'ChannelHeader'
                   "
                   class="select_config-box"
                 >
@@ -217,6 +218,7 @@ const channelHeader = {
   chineseName: '频道页头图',
   maxNum: 3,
   name: 'ChannelHeader',
+  mainTitle: '我是主标题',
   configValue: {
     title: '标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
@@ -414,6 +416,7 @@ const clickSave = () => {
 };
 // 保存组件列表的json数据到远程
 const clickSaveRemote = () => {
+  console.log('远端保存', viewComponentWrapRef.value);
   const childForm = () => {
     return viewComponentWrapRef.value.map((item: any) => {
       return item.validate();
@@ -578,12 +581,16 @@ watch(
 // 数组插入第一个元素--homeheader
 const insertFirst = (type: number) => {
   if (type === ChannelType.PLATFORM_HOME) {
-    componentsList.value.unshift(homeHeader);
+    if (componentsList.value[0]?.name !== 'HomeHeader') {
+      componentsList.value.unshift(homeHeader);
+    }
   } else if (
     type === ChannelType.PLATFORM_PRODUCT ||
     type === ChannelType.PLATFORM_SERVE
   ) {
-    componentsList.value.unshift(channelHeader);
+    if (componentsList.value[0]?.name !== 'ChannelHeader') {
+      componentsList.value.unshift(channelHeader);
+    }
   }
 };
 
@@ -624,13 +631,7 @@ const getNavData = (type: number) => {
     })
     .catch()
     .finally(() => {
-      if (componentsList.value.length > 0) {
-        if (componentsList.value[0].name !== 'HomeHeader') {
-          insertFirst(type);
-        }
-      } else if (componentsList.value.length === 0) {
-        insertFirst(type);
-      }
+      insertFirst(type);
     });
 };
 
@@ -677,17 +678,10 @@ onMounted(() => {
       event.preventDefault();
     }
   });
-  // eventBus.on('insertIndex', handleMyEvent);
   // config-event
   eventBus.on('configEvent', (data: any) => {
     const jsonData = JSON.parse(JSON.stringify(data));
-    console.log(
-      'index 接收的config信息',
-      jsonData,
-      selectIndex.value,
-      JSON.parse(JSON.stringify(componentsList.value))
-    );
-    // 平图文组件特殊处理
+    // 拼图文组件特殊处理
     if (componentsList.value[selectIndex.value]?.name === 'SpliceImageText') {
       const { mainTitle, configValue1, configValue2 } = jsonData.msgData;
       (componentsList.value[selectIndex.value] || {}).mainTitle = mainTitle;
@@ -697,12 +691,13 @@ onMounted(() => {
         configValue2;
       return;
     }
+    // 开始赋值
+    console.log('接收的数据', jsonData.msgData);
     if (jsonData.type) {
       // 对象类型的配置项
-      componentsList.value[selectIndex.value].configValue = {
-        ...jsonData.msgData,
-      };
-      console.log('对象类型复制00', componentsList.value);
+      const { mainTitle, ...objData } = jsonData.msgData;
+      componentsList.value[selectIndex.value].mainTitle = mainTitle;
+      componentsList.value[selectIndex.value].configValue = objData;
     } else {
       // 数组类型的配置项
       componentsList.value[selectIndex.value].mainTitle =
@@ -710,11 +705,11 @@ onMounted(() => {
       componentsList.value[selectIndex.value].configValue = [
         ...jsonData.msgData.list,
       ];
-      console.log(
-        'index 接收的config信息end',
-        JSON.parse(JSON.stringify(componentsList.value))
-      );
     }
+    console.log(
+      'index接收的配置区域信息',
+      JSON.parse(JSON.stringify(componentsList.value))
+    );
   });
   openType.value = parseInt(`${route.query.type}`, 10);
   if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {

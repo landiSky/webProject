@@ -1,8 +1,6 @@
 <template>
   <div class="single-image">
-    <div class="single-image-title">{{
-      data?.configValue?.title || '主标题'
-    }}</div>
+    <div class="single-image-title">{{ data?.mainTitle || '主标题' }}</div>
     <t-image
       :src="`/server/web/file/download?name=${
         data?.configValue?.src
@@ -21,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed, ref } from 'vue';
+import { toRefs, computed } from 'vue';
 
 const props = defineProps({
   data: Object,
@@ -34,22 +32,16 @@ const clickLink = (type: number, url: string) => {
   emit('golink', { type, url });
 };
 
-const imageBoxW = computed(() => {
-  return isPreview.value ? 1200 : 600;
-});
-
-const imageBoxH = computed(() => {
-  return isPreview.value ? 520 : 260;
-});
 // 动态倍数
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
+
 const validate = () => {
   return new Promise((resolve, reject) => {
     if (
       // TODO 可能需要完善校验逻辑
-      !data?.value?.configValue?.title ||
+      !data?.value?.mainTitle ||
       !data?.value?.configValue?.desc ||
       (!data?.value?.configValue?.linkUrl &&
         data?.value?.configValue?.linkType !== 2)

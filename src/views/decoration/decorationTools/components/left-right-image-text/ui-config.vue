@@ -307,20 +307,6 @@ const onCancel = () => {
 const deleteSpace = (index: number) => {
   form.value.list.splice(index, 1);
 };
-// watch(
-//   () => data?.value,
-//   (val) => {
-//     console.log('右侧内容form:', JSON.stringify(form), val);
-//     // form.value.title = val?.value.title || '';
-//     // form.value.linkType = val?.value.linkType || 0;
-//     // form.value.linkUrl = val?.value.linkUrl || '';
-//     // form.value.desc = val?.value.desc || '';
-//   },
-//   {
-//     immediate: true,
-//     deep: true,
-//   }
-// );
 onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
