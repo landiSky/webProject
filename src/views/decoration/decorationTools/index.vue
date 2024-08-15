@@ -3,7 +3,7 @@
     class="page-editor"
     :class="{ blueBorder: flickering }"
     :style="{
-      width: isPreview ? '100%' : '720px',
+      width: isPreview ? '100vw' : '720px',
     }"
   >
     <div v-if="openType === 5" class="product-bg"></div>
@@ -18,17 +18,25 @@
           animation="300"
           drag-class="dragClass"
           class="components-wrap"
+          filter=".unmover"
+          :prevent-on-filter="false"
           :force-fallback="true"
           :scroll="true"
           :disabled="isPreview"
           :group="{ name: 'vehicle-station' }"
           :list="toolList"
-          :move-threshold="20"
+          :move="onMove"
           @end="endSort"
           @add="insertSort"
         >
           <template #item="{ element, index }">
-            <transition name="el-fade-in-linear">
+            <transition
+              name="el-fade-in-linear"
+              :class="{
+                unmover:
+                  element === 'ChannelHeader' || element === 'HomeHeader',
+              }"
+            >
               <div v-show="true">
                 <ViewComponentWrap
                   :ref="(el: any) => { setItemRef(el, index)}"
@@ -468,6 +476,17 @@ const clickSaveRemote = () => {
     });
 };
 
+const onMove = (event: any) => {
+  let res = true;
+  if (
+    event.relatedContext.element === 'ChannelHeader' ||
+    event.relatedContext.element === 'HomeHeader'
+  ) {
+    res = false;
+  }
+  return res;
+};
+
 // 从新排序
 const endSort = (event: any) => {
   const { newIndex, oldIndex } = event;
@@ -482,6 +501,7 @@ const endSort = (event: any) => {
 };
 
 const insertSort = (event: any) => {
+  let res = true;
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
   // todo
   selectIndex.value = newIndex;
@@ -490,14 +510,20 @@ const insertSort = (event: any) => {
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',
     event.newIndex,
-    componentsList.value
+    componentsList.value.length
   );
+  if (componentsList.value.length > 10) {
+    res = false;
+    Message.error('组件数量不能超过10个');
+    return res;
+  }
   if (!isPreview.value) {
     eventBus.emit(
       'selectComponent',
       JSON.parse(JSON.stringify(componentsList.value[newIndex]))
     );
   }
+  return res;
 };
 
 const close = () => {
@@ -582,6 +608,7 @@ watch(
 const insertFirst = (type: number) => {
   if (type === ChannelType.PLATFORM_HOME) {
     if (componentsList.value[0]?.name !== 'HomeHeader') {
+      toolList.value.unshift('HomeHeader');
       componentsList.value.unshift(homeHeader);
     }
   } else if (
@@ -589,6 +616,7 @@ const insertFirst = (type: number) => {
     type === ChannelType.PLATFORM_SERVE
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
+      toolList.value.unshift('ChannelHeader');
       componentsList.value.unshift(channelHeader);
     }
   }
@@ -818,10 +846,10 @@ onBeforeUnmount(() => {
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {
-    width: calc(@factor * 718px);
+    width: 100%;
     height: calc(@factor * 280px);
-    margin-top: 20px;
-    background: url(../../../assets/images/decoration/product_bg.png);
+    background: url(../../../assets/images/wow/mall/mall-bg.jpg);
+    background-repeat: no-repeat;
     background-size: cover;
   }
 

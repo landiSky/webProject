@@ -6,6 +6,7 @@
         data?.configValue?.src
       }&productId=${data?.productId || ''}`"
       :preview="false"
+      class="image-box"
       :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
       @click="
         clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
@@ -65,7 +66,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
+  width: 100%;
   height: calc(@factor * 415px);
 
   .single-image-title {
@@ -77,10 +78,13 @@ defineExpose({
     font-size: calc(@factor * 18px);
   }
 
-  // .image-box {
-  //   width: 600px;
-  //   height: 260px;
-  // }
+  .image-box:hover {
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    transform: scale(1.01);
+    transition: transform 0.5s, box-shadow 0.5s;
+  }
+
   .single-image-desc {
     display: -webkit-box;
     width: calc(@factor * 600px);
@@ -98,13 +102,12 @@ defineExpose({
   }
 }
 
-.single-image:hover {
-  z-index: 2;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  transform: scale(1.02); /* 放大到原来的110% */
-  transition: transform 0.5s, box-shadow 0.5s;
-}
-
+// .single-image:hover {
+//   z-index: 2;
+//   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+//   transform: scale(1.02); /* 放大到原来的110% */
+//   transition: transform 0.5s, box-shadow 0.5s;
+// }
 ::v-deep(.tele-image) {
   .tele-image-img {
     width: calc(@factor * 600px) !important;

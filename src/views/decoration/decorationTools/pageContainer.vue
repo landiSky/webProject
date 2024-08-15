@@ -13,15 +13,19 @@
     >
       <t-anchor :ref="anchorRef" :change-hash="false" line-less>
         <!-- <div class="anchor-title">楼层导航</div> -->
+
         <t-anchor-link
-          v-for="(item, index) in computedList(componentsList)"
+          v-for="(item, index) in isFold
+            ? navFloorData.slice(0, 5)
+            : navFloorData"
           :key="index"
-          :href="`#${item.name}-${index}`"
+          :href="`#${item.uid}`"
         >
           {{ item.mainTitle }}
         </t-anchor-link>
+
         <div
-          v-if="componentsList.length >= 5"
+          v-if="navFloorData.length > 5"
           class="anchor-footer"
           @click="() => (isFold = !isFold)"
           ><span>{{ isFold ? '展开全部' : '收起' }}</span>
@@ -49,8 +53,8 @@
             <transition name="el-fade-in-linear">
               <div v-show="true">
                 <ViewComponentWrap
+                  :id="element.uid"
                   :ref="(el: any) => { setItemRef(el, index)}"
-                  :uid="getId(element, index)"
                   :is-preview="true"
                   :data="{ ...element, productId }"
                   :component-index="index"
@@ -69,7 +73,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import draggable from 'vuedraggable';
-import { useRoute } from 'vue-router';
 import ViewComponentWrap from './view-component-wrap.vue';
 
 const props = defineProps({
@@ -91,26 +94,47 @@ const props = defineProps({
   },
 });
 
+// 楼层数据使用
+const navFloorData = ref<Record<string, any>>([]);
+
 const isFold = ref(false);
 
 const anchorRef = ref();
 
-const getId = (ele: any, idx: number) => {
-  return `${ele.name}-${idx}`;
-};
+// const getId = (ele: any, idx: number) => {
+//   console.log('getId', ele, idx);
+//   ele.uid = new Date().getTime().toString(10);
+//   return `${ele.name}-${idx}`;
+// };
 
 // const componentsList = ref<any[]>([]);
 
 const viewComponentWrapRef = ref<any[]>([]);
 
+const computedList = (list: any) => {
+  const copyList = JSON.parse(JSON.stringify(list));
+  // 过滤掉头图
+  let newList = copyList.filter(
+    (item: Record<string, any>) => item.name !== 'ChannelHeader'
+  );
+  // 添加是否有评论
+  if (props.showEvaluate) {
+    newList = [
+      ...newList,
+      { name: 'evaluate', mainTitle: '产品评价', uid: 'evaluate' },
+    ];
+  }
+  isFold.value = newList.length > 5;
+  return newList;
+};
+
 watch(
   () => props.componentsList,
   (val: any) => {
-    if (val.length > 5) {
-      isFold.value = true;
-    }
     console.log('watch componentsList:', val);
     console.log('watch productid:', props);
+    // 对头图和评价做处理
+    navFloorData.value = computedList(val);
   },
   {
     deep: true,
@@ -180,21 +204,6 @@ const selectComponent = (index: number) => {
   }
 };
 
-const computedList = (list: any) => {
-  const newList = JSON.parse(JSON.stringify(list));
-  if (list.length >= 5) {
-    if (isFold.value) {
-      return newList.slice(0, 5);
-    }
-    return props.showEvaluate
-      ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
-      : newList;
-  }
-  return props.showEvaluate
-    ? [...newList, { name: 'evaluate', mainTitle: '产品评价' }]
-    : newList;
-};
-
 onMounted(() => {
   //   // 从后台获取json数据
   //   const localStorageData = localStorage.getItem('componentsList');
@@ -249,7 +258,7 @@ onMounted(() => {
   .affix {
     position: fixed;
     top: 206px;
-    left: 70px;
+    left: 20px;
     z-index: 1000;
     width: 140px;
     height: auto; /* 依据内容高度 */

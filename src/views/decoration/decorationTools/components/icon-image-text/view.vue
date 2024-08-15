@@ -91,7 +91,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
+  width: 100%;
   height: calc(@factor * 340px);
 
   .icon-image-text-title {

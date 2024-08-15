@@ -98,7 +98,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
+  width: 100%;
   height: calc(@factor * 380px);
 
   .vertical-image-text-title {
@@ -120,7 +120,7 @@ defineExpose({
       display: flex;
       flex-direction: column;
       width: calc(@factor * 190px);
-      height: calc(@factor * 256px);
+      height: calc(@factor * 210px);
       margin: 0 calc(@factor * 7px);
       border-radius: 6px;
       // cursor: pointer;

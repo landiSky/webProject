@@ -126,9 +126,8 @@ defineExpose({
 @factor: v-bind(num);
 
 .carousel-image-text-box {
-  width: calc(@factor * 720px);
-  // background: #fff;
-  // height: calc(@factor * 340px);
+  width: 100%;
+
   .carousel-image-text-title {
     margin: calc(@factor * 29px) 0 calc(@factor * 54px);
     color: #1d2129;

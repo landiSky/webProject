@@ -130,13 +130,14 @@ defineExpose({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: calc(@factor * 720px);
+  justify-content: space-between;
+  width: 100%;
   height: calc(@factor * 340px);
   background: #fff;
 
   .image-overlap-text-title {
     width: 100%;
+    height: calc(@factor * 80px);
     padding: calc(@factor * 29px) 0;
     overflow: hidden;
     color: #1d2129;
@@ -149,7 +150,6 @@ defineExpose({
     justify-content: center;
     width: 100%;
     height: calc(@factor * 260px);
-    // background: linear-gradient(180deg, #ffffff 0%, #1664ff 100%);
     background: url('@/assets/images/decoration/image-overlap-bg.png') center
       no-repeat;
     background-size: 100%;
