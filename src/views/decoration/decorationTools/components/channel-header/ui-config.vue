@@ -40,7 +40,7 @@
           v-model="form.desc"
           placeholder="请输入"
           allow-clear
-          :max-length="50"
+          :max-length="200"
           show-word-limit
         />
       </t-form-item>

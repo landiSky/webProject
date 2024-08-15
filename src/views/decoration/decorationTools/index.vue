@@ -6,7 +6,9 @@
       width: isPreview ? '100vw' : '720px',
     }"
   >
-    <div v-if="openType === 5" class="product-bg"></div>
+    <div v-if="openType === 5" class="product-bg">
+      <div class="product-text"></div>
+    </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
       >拖动左侧组件，到当前区域进行楼层配置
     </div>
@@ -846,11 +848,23 @@ onBeforeUnmount(() => {
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {
+    position: relative;
     width: 100%;
     height: calc(@factor * 280px);
     background: url(../../../assets/images/wow/mall/mall-bg.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+
+    .product-text {
+      position: absolute;
+      top: 10%;
+      left: 15%;
+      width: calc(@factor * 228px);
+      height: calc(@factor * 220px);
+      background: url(../../../assets/images/decoration/pro-txt.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
   }
 
   .empty-box {
