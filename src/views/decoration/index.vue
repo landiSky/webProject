@@ -246,7 +246,7 @@ onMounted(() => {
   height: 100px;
 
   img {
-    // object-fit: cover;
+    object-fit: cover;
   }
 }
 </style>

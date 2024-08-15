@@ -71,7 +71,8 @@ onMounted(() => {});
 <style scoped lang="less">
 .editor-tool-bar {
   height: 100%;
-  border: 1px solid #ddd;
+  padding-top: 20px;
+  border: 1px solid #e5e8ef;
 }
 
 .element-wrap {
@@ -79,12 +80,13 @@ onMounted(() => {});
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  color: #000;
-  border-bottom: 1px solid #ddd;
-
+  width: 68px;
+  height: 57px;
+  margin: 5px auto;
+  // background-color: red;
   &:hover {
-    background-color: #eee;
+    background-color: #f2f3f8;
+    border-radius: 2px;
     cursor: pointer;
   }
 
@@ -94,19 +96,15 @@ onMounted(() => {});
 
   .element-wrap-text {
     margin-top: 8px;
-    font-weight: 500;
+    color: #1d2129;
     font-size: 12px;
   }
 }
 
-.components-view {
-}
-
-.components-view,
-.components-wrap {
-  height: 100%;
-}
-
+// .components-view,
+// .components-wrap {
+//   height: 100%;
+// }
 .dragClass {
   border: 1px solid #1664ff;
   border-radius: 8px;
@@ -116,37 +114,37 @@ onMounted(() => {});
   background-color: #e8f4ff !important;
 }
 
-.operate-container,
-.section-container,
-.components-container {
-  float: left;
-  width: 300px;
-  height: 800px;
-  padding-top: 30px;
-  text-align: center;
-}
+// .operate-container,
+// .section-container,
+// .components-container {
+//   float: left;
+//   width: 300px;
+//   height: 800px;
+//   padding-top: 30px;
+//   text-align: center;
+// }
 
-.section-container {
-  background-color: blanchedalmond;
-}
+// .section-container {
+//   background-color: blanchedalmond;
+// }
 
-.components-container {
-  margin-left: 30px;
-  background-color: rgb(184, 205, 178);
-}
+// .components-container {
+//   margin-left: 30px;
+//   background-color: rgb(184, 205, 178);
+// }
 
-.operate-container {
-  margin-left: 30px;
-  background-color: rgb(125, 176, 228);
-}
+// .operate-container {
+//   margin-left: 30px;
+//   background-color: rgb(125, 176, 228);
+// }
 
-.section {
-  width: 150px;
-  height: 80px;
-  margin-bottom: 30px;
-  line-height: 80px;
-  text-align: center;
-  background-color: cadetblue;
-  cursor: pointer;
-}
+// .section {
+//   width: 150px;
+//   height: 80px;
+//   margin-bottom: 30px;
+//   line-height: 80px;
+//   text-align: center;
+//   background-color: cadetblue;
+//   cursor: pointer;
+// }
 </style>

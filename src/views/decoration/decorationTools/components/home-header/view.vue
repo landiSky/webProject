@@ -11,6 +11,7 @@
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[0].desc }} </div>
             <p
+              v-if="data?.configValue[0].linkType !== LinkType.BLANK"
               @click="
                 clickLink(
                   data?.configValue[0].linkType,
@@ -32,6 +33,7 @@
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[1].desc }} </div>
             <p
+              v-if="data?.configValue[1].linkType !== LinkType.BLANK"
               @click="
                 clickLink(
                   data?.configValue[1].linkType,
@@ -50,6 +52,7 @@
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[2].desc }} </div>
             <p
+              v-if="data?.configValue[2].linkType !== LinkType.BLANK"
               @click="
                 clickLink(
                   data?.configValue[2].linkType,
@@ -68,6 +71,7 @@
           <div class="hover-content">
             <div class="hover-desc">{{ data?.configValue[3].desc }} </div>
             <p
+              v-if="data?.configValue[3].linkType !== LinkType.BLANK"
               @click="
                 clickLink(
                   data?.configValue[3].linkType,
@@ -96,6 +100,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import { channelName, LinkType } from '../../constant';
 
 const tipshow = ref(-1);
 
@@ -380,6 +385,7 @@ defineExpose({
           display: -webkit-box;
           width: 100%;
           margin-top: calc(@factor * 6px);
+          margin-bottom: calc(@factor * 4px);
           padding: 0 calc(@factor * 12px);
           overflow: hidden;
           color: #4e5969;
@@ -395,7 +401,7 @@ defineExpose({
         }
 
         p {
-          padding-top: calc(@factor * 4px);
+          // padding-top: calc(@factor * 4px);
           padding-right: calc(@factor * 12px);
           padding-bottom: calc(@factor * 8px);
           padding-left: calc(@factor * 12px);

@@ -195,7 +195,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: calc(@factor * 718px);
+    width: calc(@factor * 720px);
     height: calc(@factor * 195px);
     overflow: hidden;
     // padding-left: calc(@factor * 33px);
