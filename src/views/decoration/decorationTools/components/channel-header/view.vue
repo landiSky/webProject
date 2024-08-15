@@ -68,8 +68,8 @@ defineExpose({
 
   .contnet-box {
     position: absolute;
-    top: calc(@factor * 90px);
-    left: calc(@factor * 70px);
+    top: calc(@factor * 14%);
+    left: calc(@factor * 7%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
