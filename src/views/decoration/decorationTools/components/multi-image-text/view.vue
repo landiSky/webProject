@@ -82,10 +82,10 @@ const atHeadOfList = computed(() => {
 
 const moveCarousel = (direction: number) => {
   if (direction === 1 && !atEndOfList.value) {
-    currentOffset.value -= paginationFactor.value * 4;
+    currentOffset.value -= paginationFactor.value;
     console.log('offset', currentOffset.value);
   } else if (direction === -1 && !atHeadOfList.value) {
-    currentOffset.value += paginationFactor.value * 4;
+    currentOffset.value += paginationFactor.value;
     console.log('offset', currentOffset.value);
   }
 };
