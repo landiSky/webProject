@@ -28,10 +28,10 @@
         </span>
       </div>
       <div v-if="showArrow" class="left-icon-box" @click="clickLeft">
-        <icon-left :style="{ color: atEndOfList ? '#C9CDD4' : '#1d2129' }" />
+        <icon-left :style="{ color: atHeadOfList ? '#C9CDD4' : '#1d2129' }" />
       </div>
       <div v-if="showArrow" class="right-icon-box" @click="clickRight">
-        <icon-right :style="{ color: atHeadOfList ? '#C9CDD4' : '#1d2129' }" />
+        <icon-right :style="{ color: atEndOfList ? '#C9CDD4' : '#1d2129' }" />
       </div>
     </div>
   </div>
@@ -82,10 +82,10 @@ const atHeadOfList = computed(() => {
 
 const moveCarousel = (direction: number) => {
   if (direction === 1 && !atEndOfList.value) {
-    currentOffset.value -= paginationFactor.value;
+    currentOffset.value -= paginationFactor.value * 4;
     console.log('offset', currentOffset.value);
   } else if (direction === -1 && !atHeadOfList.value) {
-    currentOffset.value += paginationFactor.value;
+    currentOffset.value += paginationFactor.value * 4;
     console.log('offset', currentOffset.value);
   }
 };
@@ -116,10 +116,10 @@ watch(
 );
 
 const clickLeft = () => {
-  moveCarousel(1);
+  moveCarousel(-1);
 };
 const clickRight = () => {
-  moveCarousel(-1);
+  moveCarousel(1);
 };
 
 const checkConfigList = (list: any) => {
