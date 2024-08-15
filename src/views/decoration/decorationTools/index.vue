@@ -846,10 +846,10 @@ onBeforeUnmount(() => {
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {
-    width: calc(@factor * 718px);
+    width: 100%;
     height: calc(@factor * 280px);
-    margin-top: 20px;
-    background: url(../../../assets/images/decoration/product_bg.png);
+    background: url(../../../assets/images/wow/mall/mall-bg.jpg);
+    background-repeat: no-repeat;
     background-size: cover;
   }
 
