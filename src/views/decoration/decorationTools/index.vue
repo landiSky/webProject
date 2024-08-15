@@ -3,7 +3,7 @@
     class="page-editor"
     :class="{ blueBorder: flickering }"
     :style="{
-      width: isPreview ? '100%' : '720px',
+      width: isPreview ? '100vw' : '720px',
     }"
   >
     <div v-if="openType === 5" class="product-bg"></div>

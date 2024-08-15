@@ -179,7 +179,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  width: calc(@factor * 720px);
+  width: 100%;
   height: calc(@factor * 275px);
 
   .multi-image-text-title {
