@@ -3,7 +3,7 @@
     class="page-editor"
     :class="{ blueBorder: flickering }"
     :style="{
-      width: isPreview ? '100vw' : '720px',
+      width: isPreview ? '100vw' : '722px',
     }"
   >
     <div v-if="openType === 5" class="product-bg">
@@ -197,29 +197,29 @@ const homeHeader = {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
   ],
 };
@@ -473,8 +473,9 @@ const clickSaveRemote = () => {
         });
       }
     })
-    .catch(() => {
+    .catch((e) => {
       Message.error('未完成详情配置');
+      console.log('未完成详情配置', e);
     });
 };
 
@@ -512,11 +513,19 @@ const insertSort = (event: any) => {
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',
     event.newIndex,
-    componentsList.value.length
+    componentsList.value,
+    toolList.value,
+    newIndex
   );
   if (componentsList.value.length > 10) {
+    // 此处 res 值没什么实际作用
     res = false;
+    // 删除componentsList的第index个元素
+    componentsList.value.splice(newIndex, 1);
+    toolList.value.splice(newIndex, 1);
+    viewComponentWrapRef.value.splice(newIndex, 1);
     Message.error('组件数量不能超过10个');
+    console.log('触发选中组件--', componentsList.value, toolList.value);
     return res;
   }
   if (!isPreview.value) {
