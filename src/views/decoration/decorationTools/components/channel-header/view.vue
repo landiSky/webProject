@@ -68,14 +68,14 @@ defineExpose({
 
   .contnet-box {
     position: absolute;
-    top: calc(@factor * 90px);
-    left: calc(@factor * 70px);
+    top: calc(@factor * 14%);
+    left: calc(@factor * 7%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     width: calc(@factor * 228px);
-    height: calc(@factor * 100px);
+    height: calc(@factor * 130px);
     // background-color: red;
     .header-title {
       margin-bottom: calc(@factor * 15px);
@@ -97,7 +97,7 @@ defineExpose({
       text-align: left;
       text-overflow: ellipsis;
       word-wrap: break-word;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 8;
       -webkit-box-orient: vertical;
     }
   }
