@@ -6,6 +6,7 @@
       }&productId=${data?.productId || ''}`"
       :preview="false"
       class="image-cls"
+      width="100%"
     >
     </t-image>
     <div class="contnet-box">
@@ -61,8 +62,8 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
-  height: calc(@factor * 280px);
+  width: 100%;
+  height: auto;
   background-color: transparent;
 
   .contnet-box {
@@ -104,7 +105,7 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 718px) !important;
+    width: 100%;
     height: calc(@factor * 280px) !important;
     object-fit: cover !important;
   }
