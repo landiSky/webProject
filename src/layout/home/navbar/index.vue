@@ -421,6 +421,7 @@ watch(
     }
 
     .title {
+      margin-left: 4px;
       color: #fff;
       font-weight: 500;
       font-size: 14px;
