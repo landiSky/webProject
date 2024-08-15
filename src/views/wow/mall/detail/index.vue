@@ -384,14 +384,14 @@
         <DecorationBox
           show-anchor
           show-evaluate
-          :components-list="templateList"
+          :components-list="addId(templateList)"
           :product-id="prodDetail.id"
         ></DecorationBox>
       </div>
 
       <!-- 产品评价 -->
       <div
-        :id="`evaluate-${templateList.length}`"
+        id="evaluate"
         class="evaluate"
         :class="{ decorationCls: versionType === 1 }"
       >
@@ -518,7 +518,7 @@ import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import { apiDataPoint } from '@/api/data-point';
-import { copyToClipboard } from '@/utils/index';
+import { copyToClipboard, addId } from '@/utils/index';
 import copy from '@/assets/images/copy.png';
 import avatar from '@/assets/images/avatar.png';
 import DecorationBox from '@/views/decoration/decorationTools/pageContainer.vue';

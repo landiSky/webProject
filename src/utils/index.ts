@@ -19,3 +19,16 @@ export function copyToClipboard(text: string) {
     document.body.removeChild(textArea);
   }
 }
+
+export function addId(data: Record<string, any>) {
+  if (Array.isArray(data)) {
+    return data.map((item, index) => ({
+      ...item,
+      uid: `${Math.random().toString(36).substring(2, 15)}_${index}`,
+    }));
+  }
+  if (Object.prototype.toString.call(data) === '[object Object]') {
+    return { ...data, uid: `${Math.random().toString(36).substring(2, 15)}_0` };
+  }
+  return data;
+}
