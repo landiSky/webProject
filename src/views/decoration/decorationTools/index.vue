@@ -482,7 +482,6 @@ const onMove = (event: any) => {
     event.relatedContext.element === 'ChannelHeader' ||
     event.relatedContext.element === 'HomeHeader'
   ) {
-    console.log('拖到了最上面------0000');
     res = false;
   }
   return res;
@@ -502,6 +501,7 @@ const endSort = (event: any) => {
 };
 
 const insertSort = (event: any) => {
+  let res = true;
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
   // todo
   selectIndex.value = newIndex;
@@ -510,14 +510,20 @@ const insertSort = (event: any) => {
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',
     event.newIndex,
-    componentsList.value
+    componentsList.value.length
   );
+  if (componentsList.value.length > 10) {
+    res = false;
+    Message.error('组件数量不能超过10个');
+    return res;
+  }
   if (!isPreview.value) {
     eventBus.emit(
       'selectComponent',
       JSON.parse(JSON.stringify(componentsList.value[newIndex]))
     );
   }
+  return res;
 };
 
 const close = () => {

@@ -5,14 +5,14 @@
       :cropper-props="{
         stencilSize: {
           width: cropperProps?.stencilSize?.width,
-          height: cropperProps?.stencilSize?.height + 18,
+          height: cropperProps?.stencilSize?.height,
         },
       }"
       :modal-props="{
         width:
-          cropperProps?.stencilSize?.width < 480
-            ? 480
-            : cropperProps?.stencilSize?.width,
+          cropperProps?.stencilSize?.width < 720
+            ? 720
+            : cropperProps?.stencilSize?.width + 40,
       }"
       :area-height="
         cropperProps?.stencilSize?.height < 240
