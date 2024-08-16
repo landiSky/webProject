@@ -65,7 +65,7 @@ const props = defineProps({
     .item {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      // align-items: center;
       width: 290px;
       margin-right: 15px;
       padding: 20px 24px 40px 24px;
