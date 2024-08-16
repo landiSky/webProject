@@ -1221,7 +1221,7 @@ const copyRules = {
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入一口价金额');
-        if (!/^[1-9]\d*$/.test(value) || value.length > 10)
+        if (!/^[0-9]\d*$/.test(value) || value.length > 10)
           return cb('一口价请填写10位以内整数');
         return cb();
       },

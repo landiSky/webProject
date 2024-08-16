@@ -236,9 +236,16 @@
                   <span class="companyName">{{ item.companyName }}</span>
 
                   <span class="tag">
-                    <t-tag color="#F2F3F8">{{
-                      DeliverTypeDesc[item.deliveryType]
-                    }}</t-tag>
+                    <t-typography-paragraph
+                      class="tagList-color tagList firstTag"
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: true,
+                      }"
+                    >
+                      {{ DeliverTypeDesc[item.deliveryType] }}
+                    </t-typography-paragraph>
+                    <!-- <t-tag>{{ DeliverTypeDesc[item.deliveryType] }}</t-tag> -->
                     <div
                       v-for="(item2, index) in item?.tagList"
                       :key="index"
@@ -257,7 +264,7 @@
                   </span>
                 </span>
               </span>
-              <span class="price">
+              <div class="price">
                 <template v-if="item.lowPrice == '-2.00'">
                   <span class="prefix">免费</span>
                 </template>
@@ -266,7 +273,7 @@
                   <span class="suffix">元起</span>
                 </template>
                 <span v-else class="prefix">价格面议</span>
-              </span>
+              </div>
             </span>
           </span>
         </div>
@@ -544,8 +551,8 @@ onMounted(() => {
 }
 
 .content {
-  width: 1226px;
-  margin: -30px auto 120px auto;
+  width: 1198px;
+  margin: -30px auto 0 auto;
 
   .search {
     display: flex;
@@ -627,14 +634,15 @@ onMounted(() => {
   }
 
   .result {
-    padding: 16px 24px;
-    background-color: #fff;
+    padding: 16px 0;
 
     .sort {
       display: flex;
       margin-bottom: 16px;
+      padding: 0;
       padding: 0 24px;
-      background: #f2f3f8;
+      background: #fff;
+      border-radius: 8px;
 
       .allSort {
         cursor: pointer;
@@ -684,14 +692,14 @@ onMounted(() => {
       .card {
         display: flex;
         width: 386px;
-        margin-right: 10px;
-        margin-bottom: 16px;
+        margin-right: 20px;
+        margin-bottom: 20px;
         padding: 15px;
-        border: 1px solid #e5e8ef;
-        border-radius: 4px;
+        background: #fff;
+        border-radius: 8px;
 
         &:hover {
-          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 4px 4px 0 rgba(180, 180, 180, 0.25);
         }
 
         &:nth-child(3n) {
@@ -732,29 +740,34 @@ onMounted(() => {
             margin-bottom: 0;
             color: #1d2129;
             font-weight: 500;
-            font-size: 20px;
+            font-size: 16px;
             line-height: 22px;
             cursor: pointer;
           }
 
           .introduction {
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+            color: #4e5969;
+            font-size: 14px;
+            line-height: 20px;
           }
 
           .companyName {
             display: inline-block;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             color: #86909c;
             font-weight: 400;
             font-size: 12px;
-            line-height: 22px;
+            line-height: 20px;
           }
 
           .tag {
             display: flex;
 
             :deep(.tele-tag) {
-              color: #1664ff;
+              max-width: 58px;
+              padding: 0 8px;
+              color: #4e5969;
               font-weight: 400;
               font-size: 12px;
               line-height: 22px; /* 183.333% */
@@ -767,7 +780,6 @@ onMounted(() => {
 
             > span,
             .tagList {
-              color: #4e5969 !important;
               text-align: center;
               background: #f2f3f8;
             }
@@ -775,8 +787,8 @@ onMounted(() => {
 
           .desc {
             width: 264px;
-            margin-top: 16px;
-            margin-bottom: 16px;
+            margin-top: 8px;
+            margin-bottom: 8px;
             color: #4e5969;
             font-weight: 500;
             font-size: 16px;
@@ -785,18 +797,20 @@ onMounted(() => {
           }
 
           .price {
+            line-height: 22px;
+
             .prefix {
               margin-right: 10px;
               color: #ff1414;
               font-weight: 500;
-              font-size: 24px;
-              line-height: 22px; /* 150% */
+              font-size: 16px;
+              // line-height: 22px; /* 150% */
             }
 
             .suffix {
               color: #1d2129;
               font-weight: 400;
-              font-size: 16px;
+              font-size: 12px;
               line-height: 22px; /* 157.143% */
             }
           }
@@ -816,15 +830,20 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 24px;
+  width: 58px;
+  height: 22px;
   margin-left: 8px;
   padding: 1px 8px;
   font-weight: 400;
   font-size: 12px;
   font-family: PingFang SC;
+  line-height: 22px;
   text-align: center;
   border-radius: 2px;
+
+  &.firstTag {
+    margin-left: 0;
+  }
 
   .tagList-color {
     width: 100%;
