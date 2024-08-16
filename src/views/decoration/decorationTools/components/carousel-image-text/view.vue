@@ -1,47 +1,49 @@
 <template>
   <div class="carousel-image-text-box" style="position: relative">
-    <div class="carousel-image-text-title">{{
-      data?.mainTitle || '主标题'
-    }}</div>
-    <t-carousel
-      class="image-box"
-      animation-name="card"
-      :auto-play="true"
-      indicator-type="outer"
-      show-arrow="hover"
-    >
-      <t-carousel-item
-        v-for="(item, index) in data?.configValue"
-        :key="index"
-        class="image-item"
+    <div class="carousel-box">
+      <div class="carousel-image-text-title">{{
+        data?.mainTitle || '主标题'
+      }}</div>
+      <t-carousel
+        class="image-box"
+        animation-name="card"
+        :auto-play="true"
+        indicator-type="outer"
+        show-arrow="hover"
       >
-        <!-- <span class="image-title">{{ item?.title || '小标题' }}</span> -->
-        <div class="content-area">
-          <t-image
-            :src="`/server/web/file/download?name=${item?.src}&productId=${
-              data?.productId || ''
-            }`"
-            :preview="false"
-            :style="{
-              width: '100%',
-            }"
-            class="image-cls"
-          />
-          <div class="image-content">
-            <span class="image-desc">{{
-              item?.desc ||
-              '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
-            }}</span>
-            <span
-              v-if="item?.linkType !== 2"
-              class="image-link"
-              @click="clickLink(item?.linkType, item?.linkUrl)"
-              >查看详情>>
-            </span>
+        <t-carousel-item
+          v-for="(item, index) in data?.configValue"
+          :key="index"
+          class="image-item"
+        >
+          <!-- <span class="image-title">{{ item?.title || '小标题' }}</span> -->
+          <div class="content-area">
+            <t-image
+              :src="`/server/web/file/download?name=${item?.src}&productId=${
+                data?.productId || ''
+              }`"
+              :preview="false"
+              :style="{
+                width: '100%',
+              }"
+              class="image-cls"
+            />
+            <div class="image-content">
+              <span class="image-desc">{{
+                item?.desc ||
+                '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
+              }}</span>
+              <span
+                v-if="item?.linkType !== 2"
+                class="image-link"
+                @click="clickLink(item?.linkType, item?.linkUrl)"
+                >查看详情>>
+              </span>
+            </div>
           </div>
-        </div>
-      </t-carousel-item>
-    </t-carousel>
+        </t-carousel-item>
+      </t-carousel>
+    </div>
   </div>
 </template>
 
@@ -126,92 +128,97 @@ defineExpose({
 @factor: v-bind(num);
 
 .carousel-image-text-box {
-  width: calc(@factor * 720px);
-  // background: #fff;
-  // height: calc(@factor * 340px);
-  .carousel-image-text-title {
-    margin: calc(@factor * 29px) 0 calc(@factor * 54px);
-    color: #1d2129;
-    font-weight: 500;
-    font-size: calc(@factor * 18px);
-  }
+  width: 100%;
+  background-color: red;
 
-  .image-box {
-    width: 100%;
-    height: calc(@factor * 308px);
-    // background: #fff;
-    .image-item {
-      width: calc(@factor * 510px);
-      height: calc(@factor * 260px);
-      padding: 0 calc(@factor * 15px);
-      overflow: hidden;
+  .carousel-box {
+    width: calc(@factor * 720px);
+    margin: 0 auto;
+
+    .carousel-image-text-title {
+      margin: calc(@factor * 29px) 0 calc(@factor * 54px);
+      color: #1d2129;
+      font-weight: 500;
+      font-size: calc(@factor * 18px);
+    }
+
+    .image-box {
+      width: 100%;
+      height: calc(@factor * 308px);
       // background: #fff;
-      .image-cls {
+      .image-item {
+        width: calc(@factor * 510px);
         height: calc(@factor * 260px);
-      }
+        padding: 0 calc(@factor * 15px);
+        overflow: hidden;
+        // background: #fff;
+        .image-cls {
+          height: calc(@factor * 260px);
+        }
 
-      .content-area {
-        position: relative;
+        .content-area {
+          position: relative;
 
-        .image-content {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          // bottom: calc(@factor * 24px);
-          // left: calc(@factor * 24px);
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          width: calc(@factor * 480px);
-          height: calc(@factor * 90px);
-          padding: 26px 0 0 24px;
-          background: linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0.12) 0%,
-            #000 100%
-          );
-
-          .image-desc {
+          .image-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            // bottom: calc(@factor * 24px);
+            // left: calc(@factor * 24px);
             display: flex;
-            // align-items: center;
-            // justify-content: center;
-            width: calc(@factor * 370px);
-            margin: calc(@factor * 5px) 0;
-            overflow: hidden;
-            color: rgba(255, 255, 255, 1);
-            font-weight: calc(@factor * 400px);
-            font-size: calc(@factor * 7px);
-            font-family: PingFang SC;
-            line-height: calc(@factor * 11px);
-            white-space: normal;
-            text-align: left;
-            text-overflow: ellipsis;
-          }
+            flex-direction: column;
+            align-items: flex-start;
+            width: calc(@factor * 480px);
+            height: calc(@factor * 90px);
+            padding: 26px 0 0 24px;
+            background: linear-gradient(
+              180deg,
+              rgba(0, 0, 0, 0.12) 0%,
+              #000 100%
+            );
 
-          .image-link {
-            color: #fff;
-            font-weight: 400;
-            font-size: calc(@factor * 7px);
-            font-family: PingFang SC;
-            line-height: 11px;
-            text-align: left;
-            cursor: pointer;
+            .image-desc {
+              display: flex;
+              // align-items: center;
+              // justify-content: center;
+              width: calc(@factor * 370px);
+              margin: calc(@factor * 5px) 0;
+              overflow: hidden;
+              color: rgba(255, 255, 255, 1);
+              font-weight: calc(@factor * 400px);
+              font-size: calc(@factor * 7px);
+              font-family: PingFang SC;
+              line-height: calc(@factor * 11px);
+              white-space: normal;
+              text-align: left;
+              text-overflow: ellipsis;
+            }
+
+            .image-link {
+              color: #fff;
+              font-weight: 400;
+              font-size: calc(@factor * 7px);
+              font-family: PingFang SC;
+              line-height: 11px;
+              text-align: left;
+              cursor: pointer;
+            }
           }
         }
       }
-    }
 
-    ::v-deep(.tele-carousel-indicator-wrapper-bottom) {
-      background: none;
-    }
+      ::v-deep(.tele-carousel-indicator-wrapper-bottom) {
+        background: none;
+      }
 
-    ::v-deep(.tele-carousel-arrow > div) {
-      width: calc(@factor * 24px);
-      height: calc(@factor * 24px);
+      ::v-deep(.tele-carousel-arrow > div) {
+        width: calc(@factor * 24px);
+        height: calc(@factor * 24px);
 
-      svg {
-        width: calc(@factor * 16px);
-        height: calc(@factor * 16px);
+        svg {
+          width: calc(@factor * 16px);
+          height: calc(@factor * 16px);
+        }
       }
     }
   }

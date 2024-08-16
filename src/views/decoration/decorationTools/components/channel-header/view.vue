@@ -6,6 +6,7 @@
       }&productId=${data?.productId || ''}`"
       :preview="false"
       class="image-cls"
+      width="100%"
     >
     </t-image>
     <div class="contnet-box">
@@ -61,20 +62,20 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
-  height: calc(@factor * 280px);
+  width: 100%;
+  height: auto;
   background-color: transparent;
 
   .contnet-box {
     position: absolute;
-    top: calc(@factor * 90px);
-    left: calc(@factor * 70px);
+    top: calc(@factor * 14%);
+    left: calc(@factor * 7%);
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
     width: calc(@factor * 228px);
-    height: calc(@factor * 100px);
+    height: calc(@factor * 130px);
     // background-color: red;
     .header-title {
       margin-bottom: calc(@factor * 15px);
@@ -96,7 +97,7 @@ defineExpose({
       text-align: left;
       text-overflow: ellipsis;
       word-wrap: break-word;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 8;
       -webkit-box-orient: vertical;
     }
   }
@@ -104,7 +105,7 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 718px) !important;
+    width: 100%;
     height: calc(@factor * 280px) !important;
     object-fit: cover !important;
   }

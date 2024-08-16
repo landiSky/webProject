@@ -27,12 +27,12 @@
           >查看详情>>
         </span>
       </div>
-    </div>
-    <div v-if="showArrow" class="left-icon-box" @click="clickLeft">
-      <icon-left :style="{ color: atEndOfList ? '#C9CDD4' : '#1d2129' }" />
-    </div>
-    <div v-if="showArrow" class="right-icon-box" @click="clickRight">
-      <icon-right :style="{ color: atHeadOfList ? '#C9CDD4' : '#1d2129' }" />
+      <div v-if="showArrow" class="left-icon-box" @click="clickLeft">
+        <icon-left :style="{ color: atHeadOfList ? '#C9CDD4' : '#1d2129' }" />
+      </div>
+      <div v-if="showArrow" class="right-icon-box" @click="clickRight">
+        <icon-right :style="{ color: atEndOfList ? '#C9CDD4' : '#1d2129' }" />
+      </div>
     </div>
   </div>
 </template>
@@ -116,10 +116,10 @@ watch(
 );
 
 const clickLeft = () => {
-  moveCarousel(1);
+  moveCarousel(-1);
 };
 const clickRight = () => {
-  moveCarousel(-1);
+  moveCarousel(1);
 };
 
 const checkConfigList = (list: any) => {
@@ -162,7 +162,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
+  width: 100%;
   height: calc(@factor * 340px);
 
   .multi-image-text-title {
@@ -178,7 +178,7 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: calc(@factor * 718px);
+    width: calc(@factor * 720px);
     height: calc(@factor * 260px);
     padding-left: calc(@factor * 33px);
     // background-color: rgb(168, 158, 158);
@@ -266,8 +266,8 @@ defineExpose({
 
   .left-icon-box {
     position: absolute;
-    top: 58%;
-    left: calc(@factor * 24px);
+    top: 50%;
+    left: 2px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -281,8 +281,8 @@ defineExpose({
 
   .right-icon-box {
     position: absolute;
-    top: 58%;
-    right: calc(@factor * 24px);
+    top: 50%;
+    right: 2px;
     display: flex;
     align-items: center;
     justify-content: center;

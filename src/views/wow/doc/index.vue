@@ -146,9 +146,10 @@ const handleSearch = (url: string, target: string) => {
       margin-left: -630px;
 
       .banner-title {
+        margin-left: 146px;
         color: rgba(29, 33, 41, 1);
         font-weight: 500;
-        font-size: 30px;
+        font-size: 48px;
         font-family: PingFang SC;
         line-height: 44px;
         text-align: left;

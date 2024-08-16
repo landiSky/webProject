@@ -64,6 +64,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  // width: 90px;
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE/Edge */
@@ -76,6 +77,7 @@ onMounted(() => {
     font-size: 14px;
     line-height: 54px;
     text-align: center;
+    box-shadow: 0 1px 2px 0 #0000001a;
   }
 }
 </style>

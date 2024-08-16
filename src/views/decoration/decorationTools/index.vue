@@ -3,10 +3,12 @@
     class="page-editor"
     :class="{ blueBorder: flickering }"
     :style="{
-      width: isPreview ? '100%' : '720px',
+      width: isPreview ? '100vw' : '722px',
     }"
   >
-    <div v-if="openType === 5" class="product-bg"></div>
+    <div v-if="openType === 5" class="product-bg">
+      <div class="product-text"></div>
+    </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
       >拖动左侧组件，到当前区域进行楼层配置
     </div>
@@ -195,29 +197,29 @@ const homeHeader = {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
     {
       title: '小标题',
       desc: '图片描述',
       src: '',
-      linkType: LinkType.LINK,
-      linkUrl: 'http://www.baidu.com',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
     },
   ],
 };
@@ -471,8 +473,9 @@ const clickSaveRemote = () => {
         });
       }
     })
-    .catch(() => {
+    .catch((e) => {
       Message.error('未完成详情配置');
+      console.log('未完成详情配置', e);
     });
 };
 
@@ -482,7 +485,6 @@ const onMove = (event: any) => {
     event.relatedContext.element === 'ChannelHeader' ||
     event.relatedContext.element === 'HomeHeader'
   ) {
-    console.log('拖到了最上面------0000');
     res = false;
   }
   return res;
@@ -502,6 +504,7 @@ const endSort = (event: any) => {
 };
 
 const insertSort = (event: any) => {
+  let res = true;
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
   // todo
   selectIndex.value = newIndex;
@@ -510,14 +513,28 @@ const insertSort = (event: any) => {
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',
     event.newIndex,
-    componentsList.value
+    componentsList.value,
+    toolList.value,
+    newIndex
   );
+  if (componentsList.value.length > 10) {
+    // 此处 res 值没什么实际作用
+    res = false;
+    // 删除componentsList的第index个元素
+    componentsList.value.splice(newIndex, 1);
+    toolList.value.splice(newIndex, 1);
+    viewComponentWrapRef.value.splice(newIndex, 1);
+    Message.error('组件数量不能超过10个');
+    console.log('触发选中组件--', componentsList.value, toolList.value);
+    return res;
+  }
   if (!isPreview.value) {
     eventBus.emit(
       'selectComponent',
       JSON.parse(JSON.stringify(componentsList.value[newIndex]))
     );
   }
+  return res;
 };
 
 const close = () => {
@@ -840,11 +857,23 @@ onBeforeUnmount(() => {
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {
-    width: calc(@factor * 718px);
+    position: relative;
+    width: 100%;
     height: calc(@factor * 280px);
-    margin-top: 20px;
-    background: url(../../../assets/images/decoration/product_bg.png);
+    background: url(../../../assets/images/wow/mall/mall-bg.jpg);
+    background-repeat: no-repeat;
     background-size: cover;
+
+    .product-text {
+      position: absolute;
+      top: 10%;
+      left: 15%;
+      width: calc(@factor * 228px);
+      height: calc(@factor * 220px);
+      background: url(../../../assets/images/decoration/pro-txt.png);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
   }
 
   .empty-box {

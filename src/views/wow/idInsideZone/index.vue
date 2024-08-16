@@ -120,7 +120,7 @@
       </div>
       <t-carousel
         :style="{
-          width: '1582px',
+          width: '1398px',
           height: '760px',
         }"
         :auto-play="true"
@@ -133,10 +133,6 @@
       >
         <t-carousel-item v-for="(item, index) in caseList" :key="index">
           <div class="carousel-body">
-            <div
-              class="instructions-left"
-              @click="about('Left', carouselCurrent)"
-            ></div>
             <div class="synopsis">
               <div class="synopsis-left">
                 <div class="left-01">
@@ -167,12 +163,12 @@
                 <img :src="item.img" alt="" />
               </div>
             </div>
-            <div
-              class="instructions-right"
-              @click="about('right', carouselCurrent)"
-            ></div>
           </div>
           <div class="instructions">
+            <div
+              class="instructions-left"
+              @click="about('Left', carouselCurrent)"
+            ></div>
             <div
               class="instructions-icon"
               :class="{ 'instructions-icon-blue': carouselCurrent === 1 }"
@@ -192,6 +188,10 @@
               class="instructions-icon"
               :class="{ 'instructions-icon-blue': carouselCurrent === 4 }"
               @click="currentClick(4)"
+            ></div>
+            <div
+              class="instructions-right"
+              @click="about('right', carouselCurrent)"
             ></div>
           </div>
         </t-carousel-item>
@@ -590,7 +590,7 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .bodyT {
-  min-width: 1640px;
+  // min-width: 1640px;
   background-color: #fff;
 }
 
@@ -1073,16 +1073,22 @@ onUnmounted(() => {
     gap: 12px;
     align-items: center;
     justify-content: center;
-    height: 16px;
-    margin-top: 16px;
+    height: 32px;
+    margin-top: 18px;
+    overflow: hidden;
   }
 
   .instructions-left {
-    width: 20px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+    margin-right: 20px;
     background: url(@/assets/images/idinside/case/icon-01.png) no-repeat;
     background-size: 100% 100%;
     cursor: pointer;
+  }
+
+  .instructions-left:hover {
+    opacity: 0.5;
   }
 
   .instructions-icon {
@@ -1101,11 +1107,16 @@ onUnmounted(() => {
   }
 
   .instructions-right {
-    width: 20px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+    margin-left: 20px;
     background: url(@/assets/images/idinside/case/icon-02.png) no-repeat;
     background-size: 100% 100%;
     cursor: pointer;
+  }
+
+  .instructions-right:hover {
+    opacity: 0.5;
   }
 }
 
