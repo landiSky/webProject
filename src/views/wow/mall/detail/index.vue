@@ -482,8 +482,8 @@
         v-if="prodDetail.versionType"
         :class="prodDetail.versionType ? 'new-consult' : ''"
       >
-        <span class="title">服务商资质</span>
-        <span class="header">服务商名称：{{ prodDetail?.companyName }}</span>
+        <span class="title">服务商名称</span>
+        <span class="header">{{ prodDetail?.companyName }}</span>
         <span class="online-consult" @click="buyConsult">
           <iconpark-icon size="18" name="message" class="icon-message" />
           在线咨询</span
