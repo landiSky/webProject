@@ -21,7 +21,15 @@
           :key="index"
           :href="`#${item.uid}`"
         >
+          <!-- <t-typography-paragraph
+            class="anchor-item-paragraph"
+            :ellipsis="{
+              rows: 1,
+              showTooltip: true,
+            }"
+          > -->
           {{ item.mainTitle }}
+          <!-- </t-typography-paragraph> -->
         </t-anchor-link>
 
         <div
@@ -269,6 +277,13 @@ onMounted(() => {
     border-radius: 4px;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
     transition: 0.2s ease; /* 0.3秒的过渡效果 */
+
+    .anchor-item-paragraph {
+      // width: 100px;
+      // text-overflow: ellipsis;
+      // white-space: nowrap;
+      // overflow: hidden;
+    }
 
     :deep(.tele-anchor-link) {
       font-size: 12px;
