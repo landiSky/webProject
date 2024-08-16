@@ -29,7 +29,9 @@
       <div class="card-desc">
         {{ item.desc }}
       </div>
-      <div class="search-btn" @click="handleSearch(item.url)">查看全部 ></div>
+      <div class="search-btn" @click="handleSearch(item.url, item.target)"
+        >查看全部 ></div
+      >
     </div>
   </div>
   <WowFooter></WowFooter>
@@ -61,6 +63,7 @@ const contents = ref([
     icon: icon1,
     title: '平台集成文档',
     desc: '简单步骤，快速对接，全网推广。',
+    target: '_self',
     url:
       process.env.NODE_ENV !== 'production'
         ? 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose'
@@ -72,6 +75,7 @@ const contents = ref([
       ...commonStyle,
     },
     icon: icon2,
+    target: '_blank',
     title: '标识服务',
     desc: '应用集成标准流程规范、SDK、Open API等，帮助开发者便捷的完成企业信息系统、平台与标识体系对接，支撑标识应用开发落地。',
     url:
@@ -84,6 +88,7 @@ const contents = ref([
       backgroundImage: `url(${bg3})`,
       ...commonStyle,
     },
+    target: '_self',
     icon: icon3,
     title: 'IDInside合作计划',
     desc: '加速标识应用贯通，从零开始，仅需五步，实现应用快速接入标识体系。',
@@ -94,8 +99,9 @@ const contents = ref([
   },
 ]);
 
-const handleSearch = (url: string) => {
-  window.open(url);
+const handleSearch = (url: string, target: string) => {
+  // 智数通本身文档当前页面打开
+  window.open(url, target);
 };
 </script>
 
