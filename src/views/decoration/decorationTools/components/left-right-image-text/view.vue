@@ -1,6 +1,8 @@
 <template>
   <div class="lr-image-text-box">
-    <div class="lr-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="lr-image-text-title">
+      <span>{{ data?.mainTitle || '左右图片+文字' }}</span>
+    </div>
     <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
@@ -102,24 +104,33 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 380px);
-
+  // height: calc(@factor * 421px);
   .lr-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
-    overflow: hidden;
-    color: #1d2129;
-    font-weight: 500;
-    font-size: calc(@factor * 18px);
+    position: relative;
+    width: calc(@factor * 720px);
+    height: calc(@factor * 42px);
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      overflow: hidden;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: calc(@factor * 12px);
+      line-height: calc(@factor * 14px);
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
   }
 
   .image-box {
-    width: calc(@factor * 600px);
-    height: calc(@factor * 260px);
-    // margin-top: calc(@factor * 29px);
+    width: calc(@factor * 720px);
+    height: calc(@factor * 311px);
+    padding: 0 calc(@factor * 40px) calc(@factor * 20px);
+
     .image-item {
       position: relative;
-      // display: block;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -148,7 +159,6 @@ defineExpose({
           text-align: left;
           text-overflow: ellipsis;
           border-bottom: 1px solid #e2e2e2;
-          // background-color: white;
         }
 
         .image-desc {
@@ -194,7 +204,7 @@ defineExpose({
     }
 
     :deep(.tele-carousel-indicator-wrapper-bottom) {
-      bottom: -35px;
+      bottom: 10px;
     }
 
     :deep(.tele-carousel-indicator-item:hover) {

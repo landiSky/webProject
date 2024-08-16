@@ -101,14 +101,14 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 280px);
-
+  // height: calc(@factor * 280px);
   .vertical-image-text-title {
-    margin: calc(@factor * 29px) 0;
+    margin: calc(@factor * 20px) 0;
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
   }
 
   .image-box {
@@ -116,6 +116,7 @@ defineExpose({
     flex: 1;
     align-items: center;
     justify-content: flex-start;
+    padding-bottom: calc(@factor * 20px);
 
     .image-item {
       position: relative;
