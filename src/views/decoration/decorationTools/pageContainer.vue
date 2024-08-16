@@ -15,10 +15,8 @@
         <!-- <div class="anchor-title">楼层导航</div> -->
 
         <t-anchor-link
-          v-for="(item, index) in isFold
-            ? navFloorData.slice(0, 5)
-            : navFloorData"
-          :key="index"
+          v-for="item in isFold ? navFloorData.slice(0, 5) : navFloorData"
+          :key="item.uid"
           :href="`#${item.uid}`"
         >
           <!-- <t-typography-paragraph
