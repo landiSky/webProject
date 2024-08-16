@@ -99,15 +99,16 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 380px);
-
+  // height: calc(@factor * 380px);
   .vertical-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
+    width: calc(@factor * 720px);
+    margin: calc(@factor * 20px) 0 calc(@factor * 10px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
+    // background-color: red;
   }
 
   .image-box {
@@ -120,10 +121,9 @@ defineExpose({
       display: flex;
       flex-direction: column;
       width: calc(@factor * 190px);
-      height: calc(@factor * 210px);
-      margin: 0 calc(@factor * 7px);
+      margin: calc(@factor * 10px) calc(@factor * 7px) calc(@factor * 20px);
       border-radius: 6px;
-      // cursor: pointer;
+
       .image-item-content {
         z-index: 100;
         display: flex;

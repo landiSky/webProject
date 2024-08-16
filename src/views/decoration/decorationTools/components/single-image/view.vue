@@ -67,15 +67,21 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 415px);
+  padding-bottom: calc(@factor * 20px);
 
   .single-image-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
+    width: calc(@factor * 720px);
+    margin: calc(@factor * 20px) 0 calc(@factor * 10px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
+    // background-color: red;
+  }
+
+  .image-box {
+    margin-top: calc(@factor * 10px);
   }
 
   .image-box:hover {
@@ -89,10 +95,12 @@ defineExpose({
     display: -webkit-box;
     width: calc(@factor * 600px);
     margin-top: calc(@factor * 9px);
+    padding: 0 calc(@factor * 12px);
     overflow: hidden;
     color: #4e5969;
     font-weight: 500;
     font-size: calc(@factor * 8px);
+    line-height: calc(@factor * 12px);
     white-space: normal;
     text-align: left;
     text-overflow: ellipsis;
