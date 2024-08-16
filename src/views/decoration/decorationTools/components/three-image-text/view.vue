@@ -131,7 +131,7 @@ defineExpose({
         align-items: flex-start;
         justify-content: flex-start;
         height: calc(@factor * 107px);
-        margin-top: -20px;
+        margin-top: -6px;
         padding: 12px;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);
         border-radius: 6px;
