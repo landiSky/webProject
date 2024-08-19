@@ -7,7 +7,7 @@
         :style="{
           position: 'absolute',
           top: '80px',
-          left: '100px',
+          left: '80px',
           color: 'transparent',
         }"
       >
