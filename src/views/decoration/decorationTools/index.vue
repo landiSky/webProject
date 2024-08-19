@@ -980,7 +980,7 @@ onBeforeUnmount(() => {
   z-index: 1000;
   display: flex;
   height: 24px;
-  margin-top: 4px;
+  // margin-top: 4px;
   transform: translateX(-50%);
 }
 
