@@ -480,6 +480,7 @@ const clickSaveRemote = () => {
 };
 
 const onMove = (event: any) => {
+  console.log('onMove 事件', event);
   let res = true;
   if (
     event.relatedContext.element === 'ChannelHeader' ||
@@ -499,8 +500,17 @@ const endSort = (event: any) => {
   const oldIndexData = JSON.parse(
     JSON.stringify(componentsList.value[newIndex])
   );
+  // 内容交换
   componentsList.value[newIndex] = newIndexData;
   componentsList.value[oldIndex] = oldIndexData;
+  // 选中一个组件并发送消息给配置区
+  if (!isPreview.value) {
+    selectIndex.value = oldIndex;
+    eventBus.emit(
+      'selectComponent',
+      JSON.parse(JSON.stringify(componentsList.value[selectIndex.value]))
+    );
+  }
 };
 
 const insertSort = (event: any) => {
@@ -515,6 +525,7 @@ const insertSort = (event: any) => {
     event.newIndex,
     componentsList.value,
     toolList.value,
+    oldIndex,
     newIndex
   );
   if (componentsList.value.length > 10) {
@@ -572,12 +583,6 @@ const edit = () => {
   isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
-};
-
-// 接收bus事件
-const handleMyEvent = (payload: any) => {
-  console.log('index.vue 监听到insertIndex事件，获取到index:', payload);
-  // selectIndex.value = payload;
 };
 
 watch(
@@ -832,7 +837,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   // bus 关闭监听
-  // eventBus.off('insertIndex');
   eventBus.off('configEvent');
   eventBus.off('isFirstUseDecoration');
   // tab 关闭拦截关闭
