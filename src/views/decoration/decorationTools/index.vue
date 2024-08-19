@@ -976,12 +976,14 @@ onBeforeUnmount(() => {
 
 .select_config-box {
   position: absolute;
-  left: 50%;
+  // left: 50%;
+  right: 0;
   z-index: 1000;
   display: flex;
   height: 24px;
-  // margin-top: 4px;
-  transform: translateX(-50%);
+  margin-top: 2px;
+  margin-right: 2px;
+  // transform: translateX(-50%);
 }
 
 ::v-deep(.tele-radio-button.tele-radio-checked) {
