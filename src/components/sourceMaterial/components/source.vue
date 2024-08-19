@@ -219,7 +219,7 @@ const getMaterialList = () => {
       });
       Promise.all(recordData)
         .then((res: any) => {
-          if (Array.isArray(res) && typeof res[0] === 'object') {
+          if (Array.isArray(res) || typeof res[0] === 'object') {
             console.log('res', res);
             state.imgList = res || [];
           }
