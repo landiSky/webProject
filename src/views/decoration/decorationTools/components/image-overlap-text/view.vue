@@ -2,10 +2,10 @@
   <div class="image-overlap-text">
     <div class="image-overlap-text-title">
       <span>{{ data?.mainTitle || '主标题' }}</span>
-      <div class="mask"></div>
     </div>
     <div class="mask"></div>
     <t-space class="image-overlap-text-content" fill :size="15 * num">
+      <div class="mask"></div>
       <div
         v-for="(item, index) in data?.configValue"
         :key="index"
@@ -138,23 +138,6 @@ defineExpose({
   width: 100%;
   background: #fff;
 
-  .mask {
-    position: absolute;
-    top: calc(@factor * 34px);
-    left: 0;
-    z-index: 2;
-    width: 100%;
-    height: calc(@factor * 100px);
-    // background-color: red;
-    // opacity: 0.3;
-    background: linear-gradient(
-      to top,
-      rgba(151, 189, 249, 0) 0%,
-      rgba(255, 255, 255, 0.6) 80%,
-      rgba(255, 255, 255, 1) 100%
-    );
-  }
-
   .image-overlap-text-title {
     width: 100%;
     height: calc(@factor * 42px);
@@ -164,7 +147,7 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    // background-color: #8b2e2e;
+    background-color: #fff;
   }
 
   .image-overlap-text-content {
@@ -175,6 +158,24 @@ defineExpose({
     background: url('@/assets/images/decoration/image-overlap-bg.png') center
       no-repeat;
     background-size: 100%;
+
+    .mask {
+      position: absolute;
+      top: calc(@factor * 34px);
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: calc(@factor * 200px);
+      // background-color: red;
+      // opacity: 0.3;
+      background: linear-gradient(
+        to top,
+        rgba(151, 189, 249, 0) 0%,
+        rgba(255, 255, 255, 0.6) 80%,
+        rgba(255, 255, 255, 1) 98%,
+        rgba(255, 255, 255, 1) 100%
+      );
+    }
   }
 
   .image-overlap-item {
