@@ -2,6 +2,7 @@ import type { Router } from 'vue-router';
 import { whiteList } from '@/router';
 import { getToken, setToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
+import { useMenuStore } from '@/store/modules/menu';
 
 import { apiLoginToken } from '@/api/login';
 
@@ -30,9 +31,16 @@ const isBackAuthFirstPath = (toPath: string) => {
 export function createPermissionGuard(router: Router) {
   router.beforeEach((to, from, next) => {
     const userStore = useUserStore();
-
     // s1: 有 token， 已登录态
     if (getToken()) {
+      if (userStore.userInfo) {
+        // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
+        if (to.path === '/license/index' || to.path === '/overview/index') {
+          useMenuStore().setMenuIndex(2, userStore.userInfo);
+        } else {
+          useMenuStore().setMenuIndex(1, userStore.userInfo);
+        }
+      }
       // s1-1: 没有用户信息
       if (!userStore.userInfo) {
         // async 形式的控制台总报 invalid guard 问题
