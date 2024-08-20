@@ -98,6 +98,9 @@
             allow-clear
             :max-length="100"
             show-word-limit
+            :auto-size="{
+              minRows: 6,
+            }"
           />
         </t-form-item>
         <t-form-item
