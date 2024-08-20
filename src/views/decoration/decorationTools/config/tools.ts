@@ -1,5 +1,5 @@
 import { LinkType } from '../constant';
-
+// 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
   SigleImg: {
     chineseName: '单图',

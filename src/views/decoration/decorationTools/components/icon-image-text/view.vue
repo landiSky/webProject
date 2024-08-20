@@ -92,15 +92,15 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 340px);
-
+  // height: calc(@factor * 340px);
   .icon-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
+    width: calc(@factor * 720px);
+    margin: calc(@factor * 20px) 0 calc(@factor * 20px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
   }
 
   .image-box {
@@ -108,7 +108,8 @@ defineExpose({
     align-items: center;
     justify-content: flex-start;
     width: calc(@factor * 720px);
-    height: calc(@factor * 260px);
+    padding-bottom: calc(@factor * 20px);
+    // height: calc(@factor * 260px);
     padding-left: calc(@factor * 33px);
     // background-color: rgb(168, 158, 158);
     overflow: hidden;

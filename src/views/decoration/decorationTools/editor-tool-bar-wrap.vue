@@ -7,7 +7,7 @@
         :style="{
           position: 'absolute',
           top: '80px',
-          left: '100px',
+          left: '80px',
           color: 'transparent',
         }"
       >
@@ -39,9 +39,6 @@ const onEnd = (index: number) => {
     'editor-tool-bar-wrap 收到onEnd事件 开始广播insertIndex事件:',
     selectIndex.value
   );
-  // setTimeout(() => {
-  //   eventBus.emit('insertIndex', index);
-  // }, 100);
 };
 
 onMounted(() => {

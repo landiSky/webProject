@@ -36,9 +36,9 @@
                   <span class="image-desc">{{
                     item?.desc || '我是简介我是简介我是简介我是简介我是简介'
                   }}</span>
-                  <span class="image-index">{{
+                  <!-- <span class="image-index">{{
                     `${index + 1}/${data?.configValue1?.config.length}`
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
               <span
@@ -85,9 +85,9 @@
                     item?.title || '小标题'
                   }}</span>
                   <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
-                  <span class="image-index">{{
+                  <!-- <span class="image-index">{{
                     `${index + 1}/${data?.configValue2?.config.length}`
-                  }}</span>
+                  }}</span> -->
                 </div>
               </div>
               <span
@@ -180,15 +180,16 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: calc(@factor * 275px);
-
+  // height: calc(@factor * 275px);
   .multi-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
+    width: calc(@factor * 720px);
+    margin: calc(@factor * 20px) 0 calc(@factor * 10px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
+    // background-color: red;
   }
 
   .image-box {
@@ -197,8 +198,8 @@ defineExpose({
     justify-content: flex-start;
     width: calc(@factor * 720px);
     height: calc(@factor * 195px);
+    margin-top: calc(@factor * 10px);
     overflow: hidden;
-    // padding-left: calc(@factor * 33px);
     background-color: #353535;
 
     .left-box {
@@ -258,7 +259,7 @@ defineExpose({
                 margin-bottom: calc(@factor * 6px);
                 color: #fff;
                 font-weight: 500;
-                font-size: calc(@factor * 10px);
+                font-size: calc(@factor * 8px);
                 line-height: calc(@factor * 14px);
                 text-align: left;
               }
@@ -305,7 +306,7 @@ defineExpose({
 
       .indicator-num {
         position: absolute;
-        top: calc(@factor * 106px);
+        top: calc(@factor * 100px);
         right: calc(@factor * 64px);
         z-index: 2;
         font-weight: 500;
@@ -318,7 +319,7 @@ defineExpose({
         overflow: hidden;
         color: #fff;
         font-weight: 500;
-        font-size: calc(@factor * 18px);
+        font-size: calc(@factor * 10px);
         white-space: normal;
         text-align: left;
       }
@@ -395,7 +396,7 @@ defineExpose({
 
               .image-index {
                 position: absolute;
-                top: calc(@factor * 32px);
+                top: calc(@factor * 10px);
                 left: calc(@factor * 12px);
                 font-weight: 500;
                 font-size: calc(@factor * 8px);
@@ -406,7 +407,7 @@ defineExpose({
                 margin-bottom: calc(@factor * 6px);
                 color: #fff;
                 font-weight: 500;
-                font-size: calc(@factor * 10px);
+                font-size: calc(@factor * 8px);
                 line-height: calc(@factor * 14px);
                 text-align: left;
                 // background-color: red;
@@ -460,14 +461,14 @@ defineExpose({
         overflow: hidden;
         color: #fff;
         font-weight: 500;
-        font-size: calc(@factor * 18px);
+        font-size: calc(@factor * 10px);
         white-space: normal;
         text-align: right;
       }
 
       .indicator-num {
         position: absolute;
-        top: calc(@factor * 106px);
+        top: calc(@factor * 99px);
         left: calc(@factor * 47px);
         z-index: 2;
         font-weight: 500;

@@ -843,6 +843,7 @@ onMounted(() => {
 
   &.firstTag {
     margin-left: 0;
+    color: #4e5969;
   }
 
   .tagList-color {

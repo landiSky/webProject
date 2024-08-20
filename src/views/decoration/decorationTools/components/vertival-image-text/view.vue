@@ -145,15 +145,16 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 380px);
-
+  padding-bottom: calc(@factor * 20px);
+  // height: calc(@factor * 380px);
   .vertical-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
+    width: calc(@factor * 720px);
+    margin: calc(@factor * 20px) 0 calc(@factor * 10px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
   }
 
   .image-box {
