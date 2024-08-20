@@ -558,6 +558,10 @@ const applyNow = () => {
 
 // 立即托管
 const instantHosting = () => {
+  if (!userStore.configInfo?.trusteeshipSwitch) {
+    Message.warning('暂未开放');
+    return;
+  }
   if (!productData.value?.entSubmitStatus) {
     clickIdService('/ent/apply');
     return;
@@ -658,6 +662,10 @@ const zeroPurchase = (obj: any) => {
 
 // 立即使用
 const immediateUse = (obj: any) => {
+  if (!userStore.configInfo?.sandboxSwitch) {
+    Message.warning('暂未开放');
+    return;
+  }
   const {
     idTestBuyStatus,
     idTestProductId,
@@ -737,6 +745,10 @@ const viewLicense = () => {
 
 // 查看详情
 const viewDetail = () => {
+  if (!userStore.configInfo?.trusteeshipSwitch) {
+    Message.warning('暂未开放');
+    return;
+  }
   clickIdService('/entPrefix/proxy');
 };
 
@@ -839,6 +851,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
   padding: 24px 0;
   overflow-y: auto;
   background: url(@/assets/images/overview/overview-bg.png) no-repeat scroll top
