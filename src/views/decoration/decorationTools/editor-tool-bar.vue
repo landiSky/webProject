@@ -81,7 +81,7 @@ onMounted(() => {});
   align-items: center;
   justify-content: center;
   width: 68px;
-  height: 57px;
+  height: 68px;
   margin: 5px auto;
   // background-color: red;
   &:hover {

@@ -83,7 +83,7 @@ defineExpose({
       color: #000;
       font-weight: 500;
       font-size: calc(@factor * 14px);
-      line-height: calc(@factor * 14px);
+      line-height: calc(@factor * 16px);
     }
 
     .header-desc {

@@ -129,22 +129,22 @@ defineExpose({
 
 .carousel-image-text-box {
   width: 100%;
-  background-color: red;
 
   .carousel-box {
     width: calc(@factor * 720px);
     margin: 0 auto;
 
     .carousel-image-text-title {
-      margin: calc(@factor * 29px) 0 calc(@factor * 54px);
+      margin: calc(@factor * 20px) 0;
       color: #1d2129;
       font-weight: 500;
-      font-size: calc(@factor * 18px);
+      font-size: calc(@factor * 12px);
+      line-height: calc(@factor * 14px);
     }
 
     .image-box {
       width: 100%;
-      height: calc(@factor * 308px);
+      height: calc(@factor * 280px);
       // background: #fff;
       .image-item {
         width: calc(@factor * 510px);

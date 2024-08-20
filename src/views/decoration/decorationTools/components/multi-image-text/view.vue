@@ -1,7 +1,9 @@
 <!-- 多图文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="multi-image-text-box" style="position: relative">
-    <div class="multi-image-text-title">{{ data?.mainTitle }}</div>
+    <div class="multi-image-text-title">
+      <span>{{ data?.mainTitle }}</span>
+    </div>
     <div class="image-box" style="position: relative">
       <div
         v-for="(item, index) in data?.configValue"
@@ -9,7 +11,9 @@
         :style="boxStyle"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title || '主标题' }}</span>
+        <div class="image-title-box">
+          <span class="image-title">{{ item?.title || '主标题' }}</span>
+        </div>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
             data?.productId || ''
@@ -163,15 +167,23 @@ defineExpose({
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 340px);
-
+  // height: calc(@factor * 340px);
   .multi-image-text-title {
-    width: calc(@factor * 600px);
-    margin: calc(@factor * 29px) 0;
-    overflow: hidden;
-    color: #1d2129;
-    font-weight: 500;
-    font-size: calc(@factor * 18px);
+    position: relative;
+    width: calc(@factor * 720px);
+    height: calc(@factor * 42px);
+
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      overflow: hidden;
+      color: #1d2129;
+      font-weight: 500;
+      font-size: calc(@factor * 12px);
+      line-height: calc(@factor * 14px);
+      transform: translate(-50%, -50%);
+    }
   }
 
   .image-box {
@@ -179,9 +191,9 @@ defineExpose({
     align-items: center;
     justify-content: flex-start;
     width: calc(@factor * 720px);
-    height: calc(@factor * 260px);
+    padding-bottom: calc(@factor * 20px);
+    // height: calc(@factor * 260px);
     padding-left: calc(@factor * 33px);
-    // background-color: rgb(168, 158, 158);
     overflow: hidden;
 
     .image-item {
@@ -190,26 +202,36 @@ defineExpose({
       flex: 1;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       width: calc(@factor * 148px);
       min-width: calc(@factor * 148px);
       max-width: calc(@factor * 148px);
       height: calc(@factor * 180px);
       margin: 0 calc(@factor * 7.5px);
+      padding-top: calc(@factor * 10px);
       background-color: white;
       transition: transform 200ms ease-out, box-shadow 0.4s ease;
 
-      .image-title {
-        max-width: calc(@factor * 96px);
+      .image-title-box {
+        position: relative;
+        width: calc(@factor * 96px);
         height: calc(@factor * 24px);
         margin-bottom: calc(@factor * 5px);
-        overflow: hidden;
-        color: #1d2129;
-        font-weight: 500;
-        font-size: calc(@factor * 8px);
-        line-height: calc(@factor * 12px);
-        white-space: normal;
-        text-align: center;
+
+        .image-title {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: calc(@factor * 96px);
+          overflow: hidden;
+          color: #1d2129;
+          font-weight: 500;
+          font-size: calc(@factor * 8px);
+          line-height: calc(@factor * 12px);
+          white-space: normal;
+          text-align: center;
+          transform: translate(-50%, -50%);
+        }
       }
 
       .image-desc {
@@ -266,7 +288,7 @@ defineExpose({
 
   .left-icon-box {
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 2px;
     display: flex;
     align-items: center;
@@ -281,7 +303,7 @@ defineExpose({
 
   .right-icon-box {
     position: absolute;
-    top: 50%;
+    top: 42%;
     right: 2px;
     display: flex;
     align-items: center;

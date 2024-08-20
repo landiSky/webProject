@@ -185,14 +185,13 @@ const onBeforeUpload = async (currentFile: Record<string, any>) => {
 
 const getMaterialList = () => {
   state.loading = true;
+  console.log(11111);
   fetchMaterialList({
     ...params,
     companyId: state.type === 1 ? -1 : userInfoByCompany?.companyId,
   })
     .then((res) => {
-      state.loading = false;
       state.total = res.total;
-
       const recordData = res.records.map(async (name: string, idx: number) => {
         return new Promise((resolve) => {
           const image = new Image();
@@ -219,12 +218,13 @@ const getMaterialList = () => {
       });
       Promise.all(recordData)
         .then((res: any) => {
-          if (Array.isArray(res) && typeof res[0] === 'object') {
-            console.log('res', res);
+          state.loading = false;
+          if (Array.isArray(res) || typeof res[0] === 'object') {
             state.imgList = res || [];
           }
         })
         .catch(() => {
+          state.loading = false;
           state.imgList = [];
         });
     })

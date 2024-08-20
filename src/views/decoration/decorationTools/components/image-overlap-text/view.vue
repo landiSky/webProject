@@ -1,9 +1,11 @@
 <template>
   <div class="image-overlap-text">
     <div class="image-overlap-text-title">
-      {{ data?.mainTitle || '主标题' }}
+      <span>{{ data?.mainTitle || '主标题' }}</span>
     </div>
+    <div class="mask"></div>
     <t-space class="image-overlap-text-content" fill :size="15 * num">
+      <div class="mask"></div>
       <div
         v-for="(item, index) in data?.configValue"
         :key="index"
@@ -127,36 +129,58 @@ defineExpose({
 @factor: v-bind(num);
 
 .image-overlap-text {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  // height: calc(@factor * 340px);
   width: 100%;
-  height: calc(@factor * 340px);
   background: #fff;
 
   .image-overlap-text-title {
     width: 100%;
-    height: calc(@factor * 80px);
-    padding: calc(@factor * 29px) 0;
+    height: calc(@factor * 42px);
+    padding: calc(@factor * 20px) 0 calc(@factor * 10px);
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
-    font-size: calc(@factor * 18px);
+    font-size: calc(@factor * 12px);
+    line-height: calc(@factor * 14px);
     background-color: #fff;
   }
 
   .image-overlap-text-content {
+    z-index: 1;
     justify-content: center;
     width: 100%;
     height: calc(@factor * 260px);
     background: url('@/assets/images/decoration/image-overlap-bg.png') center
       no-repeat;
     background-size: 100%;
+
+    .mask {
+      position: absolute;
+      top: calc(@factor * 34px);
+      left: 0;
+      z-index: 2;
+      width: 100%;
+      height: calc(@factor * 200px);
+      // background-color: red;
+      // opacity: 0.3;
+      background: linear-gradient(
+        to top,
+        rgba(151, 189, 249, 0) 0%,
+        rgba(255, 255, 255, 0.6) 80%,
+        rgba(255, 255, 255, 1) 98%,
+        rgba(255, 255, 255, 1) 100%
+      );
+    }
   }
 
   .image-overlap-item {
     position: relative;
+    z-index: 3;
     align-items: center;
     justify-content: center;
     width: calc(@factor * 148px);
