@@ -11,7 +11,12 @@
       class="affix"
       :class="isFold ? 'fold' : 'unfold'"
     >
-      <t-anchor :ref="anchorRef" :change-hash="false" line-less>
+      <t-anchor
+        :ref="anchorRef"
+        :change-hash="false"
+        line-less
+        scroll-container=".main"
+      >
         <!-- <div class="anchor-title">楼层导航</div> -->
 
         <t-anchor-link
