@@ -232,7 +232,7 @@ const channelHeader = {
   configValue: {
     title: '标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
+    src: '4e0c5c42-16ac-42b0-a462-672cdb540ffe.jpg',
     linkType: LinkType.BLANK,
     linkUrl: '',
   },
