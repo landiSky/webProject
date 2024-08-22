@@ -198,7 +198,7 @@
       </t-carousel>
     </div>
     <!-- 明星产品 -->
-    <div class="product">
+    <div v-if="prodDetail?.name" class="product">
       <div class="unified">
         <div class="unified-left unified-icon-01"></div>
         <div class="unified-title">明星产品</div>
