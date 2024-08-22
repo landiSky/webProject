@@ -7,7 +7,7 @@
     }"
   >
     <t-affix
-      v-if="showAnchor"
+      v-if="showAnchor && !!navFloorData.length"
       class="affix"
       :class="isFold ? 'fold' : 'unfold'"
     >
