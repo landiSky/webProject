@@ -636,6 +636,10 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
 // 0元购买
 const zeroPurchase = (obj: any) => {
+  if (!userStore.configInfo?.sandboxSwitch) {
+    Message.warning('暂未开放');
+    return;
+  }
   const { idTestProductStatus, idTestProductId } = obj;
   if (idTestProductStatus === 1) {
     apiDataPoint(
@@ -774,7 +778,7 @@ const getPrice = () => {
 const initData = () => {
   userLicensePreview({}).then((res) => {
     productData.value = res;
-    if (res.idTestProductId) {
+    if (res.idTestProductId && userStore.configInfo?.sandboxSwitch) {
       // TODO w: 商品详情打点
       apiDataPoint(
         res.idTestProductId as string,
