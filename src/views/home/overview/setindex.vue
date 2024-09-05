@@ -900,13 +900,13 @@ onMounted(() => {
 
       .title {
         max-width: 170px;
+        overflow: hidden;
         color: rgba(134, 144, 156, 1);
         font-weight: 400;
         font-size: 12px;
         //styleName: CN/正文/12-Regular-小;
         font-family: PingFang SC;
         line-height: 20px;
-        // overflow: hidden;
         white-space: nowrap;
         text-align: left;
         -0-text-overflow: ellipsis;
