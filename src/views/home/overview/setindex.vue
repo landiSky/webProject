@@ -636,6 +636,10 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
 // 0元购买
 const zeroPurchase = (obj: any) => {
+  if (!userStore.configInfo?.sandboxSwitch) {
+    Message.warning('暂未开放');
+    return;
+  }
   const { idTestProductStatus, idTestProductId } = obj;
   if (idTestProductStatus === 1) {
     apiDataPoint(
@@ -774,7 +778,7 @@ const getPrice = () => {
 const initData = () => {
   userLicensePreview({}).then((res) => {
     productData.value = res;
-    if (res.idTestProductId) {
+    if (res.idTestProductId && userStore.configInfo?.sandboxSwitch) {
       // TODO w: 商品详情打点
       apiDataPoint(
         res.idTestProductId as string,
@@ -896,13 +900,13 @@ onMounted(() => {
 
       .title {
         max-width: 170px;
+        overflow: hidden;
         color: rgba(134, 144, 156, 1);
         font-weight: 400;
         font-size: 12px;
         //styleName: CN/正文/12-Regular-小;
         font-family: PingFang SC;
         line-height: 20px;
-        // overflow: hidden;
         white-space: nowrap;
         text-align: left;
         -0-text-overflow: ellipsis;
