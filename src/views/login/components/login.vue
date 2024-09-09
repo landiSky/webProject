@@ -65,7 +65,11 @@
           <t-divider direction="vertical" />
           <t-link class="bottomOpt" @click="goRegister">注册账号</t-link>
         </t-tab-pane>
-        <t-tab-pane key="2" title="二级节点账号登录">
+        <t-tab-pane
+          v-if="!configInfo.callSnmsSwitch"
+          key="2"
+          title="二级节点账号登录"
+        >
           <form
             ref="orgFormRef"
             action="/auth/login"
@@ -305,7 +309,8 @@ const orgFormRef = ref();
 const formInput = ref();
 const captchaVisible = ref(false);
 const loginLoading = ref(false);
-let configInfo: Record<string, any> = {};
+const configInfo: Record<string, any> = ref({});
+// let configInfo: Record<string, any> = {};
 const phoneTs = /^1[2|3|4|5|6|7|8|9][0-9]{9}$/; //  手机号正则
 const captchaType = ref(1);
 
@@ -557,7 +562,7 @@ const realLoginRequest = () => {
     '047df36f25dab03d12739e57a1c3a86a72019bea590e5ffaefa79145d9129ae5ae9d395de0fba16a9577c7d52b27cda3e2ec63f522d4d69c5a92a0a0b388b1db10';
   formInput.value.value = sm2(
     form.value.password,
-    configInfo?.publicKey ?? publicKey
+    configInfo.value?.publicKey ?? publicKey
   );
   setTimeout(() => {
     apiLogin({
@@ -656,7 +661,7 @@ const captchaSuccess = () => {
 
 onMounted(() => {
   apiConfigInfo().then((data) => {
-    configInfo = data;
+    configInfo.value = data;
   });
 });
 </script>
