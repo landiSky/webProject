@@ -35,39 +35,39 @@ export default defineConfig(({ command, mode }) => {
       proxy: {
         '/server': {
           // target: 'http://10.14.148.167:18080',
-          target: `http://zhishutong.dev.idx.space`,
+          target: `https://snms.teleinfo.cn`,
           changeOrigin: true,
-          agent: new https.Agent(),
+          // agent: new https.Agent(),
           followRedirects: true,
           // rewrite: (path) => path.replace(/^\/server/, ''),
         },
 
         '/auth': {
-          target: 'http://zhishutong.dev.idx.space',
+          target: 'https://snms.teleinfo.cn',
           changeOrigin: true,
-          agent: new https.Agent(),
+          // agent: new https.Agent(),
           followRedirects: true,
         },
         '/api/': {
-          target: 'http://zhishutong.dev.idx.space',
+          target: 'https://snms.teleinfo.cn',
           changeOrigin: true,
-          agent: new https.Agent(),
+          // agent: new https.Agent(),
           followRedirects: true,
         },
         '/inventory': {
-          target: `http://zhishutong.dev.idx.space`,
+          target: `https://snms.teleinfo.cn`,
           changeOrigin: true,
-          agent: new https.Agent(),
+          // agent: new https.Agent(),
           // rewrite: (path) => path.replace(/^\/sync/, ''),
         },
         '/operation': {
-          target: 'http://zhishutong.dev.idx.space',
+          target: 'https://snms.teleinfo.cn',
           // target: 'http://10.14.148.167:18080',
           // target: `http://10.14.150.182:9091`, // 亚涛
           // target: `http://10.14.148.103:9191`, // 凯文
           // target: `http://10.14.150.253:9092`, // 鹏飞
           changeOrigin: true,
-          agent: new https.Agent(),
+          // agent: new https.Agent(),
           // rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
