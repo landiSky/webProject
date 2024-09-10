@@ -203,7 +203,7 @@
               <span class="right-top">
                 <t-typography-paragraph
                   class="name"
-                  style="width: 130px; text-align: left"
+                  style="width: 192px; text-align: left"
                   :ellipsis="{
                     rows: 1,
                     showTooltip: {
@@ -274,6 +274,9 @@
                 </template>
                 <span v-else class="prefix">价格面议</span>
               </div>
+            </span>
+            <span class="label-try">
+              <span>支持试用</span>
             </span>
           </span>
         </div>
@@ -850,5 +853,48 @@ onMounted(() => {
     width: 100%;
     color: #4e5969;
   }
+}
+
+.card {
+  position: relative;
+  overflow: hidden; /* 隐藏超出部分 */
+}
+
+.label-try {
+  /* 绝对定位 */
+  position: absolute;
+  top: 19px;
+  right: -37px;
+  width: 100px;
+  height: 30px;
+  margin: 0;
+
+  /* 飘带的阴影 */
+  padding: 0 5px; /* 调整飘带的内边距 */
+
+  /* 右上角飘带的背景颜色 */
+  overflow: hidden;
+
+  /* 文字不换行 */
+  white-space: nowrap;
+
+  /* 右上角飘带 */
+  background-color: #1890ff;
+  box-shadow: 0 0 10px #888;
+
+  /* 旋转45° */
+  transform: rotate(45deg);
+}
+
+.label-try span {
+  display: block;
+  margin: 1px 0;
+  padding: 5px 5px;
+  color: #090909;
+  font: bold 60%;
+  font-size: 13px;
+  text-align: left;
+  text-shadow: 0 0 5px #444;
+  border: 1px solid #1890ff;
 }
 </style>
