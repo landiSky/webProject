@@ -98,6 +98,9 @@
             allow-clear
             :max-length="100"
             show-word-limit
+            :auto-size="{
+              minRows: 6,
+            }"
           />
         </t-form-item>
         <t-form-item
@@ -284,7 +287,7 @@ const addBlock = () => {
   form.value.list.push({
     title: '小标题',
     desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
-    src: 'b535d146-6edb-40be-abba-f37285293c92.png',
+    src: 'adf3d564-271d-4e38-84c1-933be3e470ea.png',
     linkType: 2,
     linkUrl: '',
   });

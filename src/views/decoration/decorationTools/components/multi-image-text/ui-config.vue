@@ -305,7 +305,7 @@ const addBlock = () => {
   list.push({
     title: '小标题',
     desc: '我是副标题我是副标题我是副标题',
-    src: 'ef536287-ec6a-4b57-a4f8-bd5a845b07d4.png',
+    src: '8fae7110-79aa-44b2-acd1-8c4d8078e682.png',
     linkType: 2,
     linkUrl: '',
   });

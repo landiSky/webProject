@@ -623,7 +623,7 @@ const addBlock1 = () => {
   config.push({
     title: '我是主标题我是主标题',
     desc: '我是简介我是简介我是简介我是简介我是简介',
-    src: '40028340-110b-46bb-b323-c245f7d0b3dc.png',
+    src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
     linkType: 2,
     linkUrl: '',
   });
@@ -637,7 +637,7 @@ const addBlock2 = () => {
   config.push({
     title: '我是主标题我是主标题',
     desc: '我是简介我是简介我是简介我是简介我是简介',
-    src: '40028340-110b-46bb-b323-c245f7d0b3dc.png',
+    src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
     linkType: 2,
     linkUrl: '',
   });

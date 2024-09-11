@@ -338,10 +338,7 @@ watch(
     const currentPath = router.currentRoute.value.path;
 
     // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
-    if (
-      (currentPath === '/license/index' || currentPath === '/overview/index') &&
-      menuStore.menuIndex !== 2
-    ) {
+    if (currentPath === '/license/index' || currentPath === '/overview/index') {
       useMenuStore().setMenuIndex(2, userInfo.value);
     } else {
       useMenuStore().setMenuIndex(1, userInfo.value);

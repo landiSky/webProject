@@ -340,6 +340,10 @@ onMounted(() => {
         font-size: 14px;
         line-height: 64px;
 
+        &:hover {
+          background-color: transparent;
+        }
+
         &.active {
           color: #1664ff;
           border-bottom: 4px solid #165dff;
