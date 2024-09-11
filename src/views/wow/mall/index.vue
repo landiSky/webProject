@@ -238,6 +238,7 @@
                   <span class="tag">
                     <t-typography-paragraph
                       class="tagList-color tagList firstTag"
+                      style="width: 74px"
                       :ellipsis="{
                         rows: 1,
                         showTooltip: true,
