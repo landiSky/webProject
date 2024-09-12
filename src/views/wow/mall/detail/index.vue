@@ -399,7 +399,9 @@
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">{{ evaluateDatail?.avgEvaluate }}</div>
+            <div class="score-num" :class="{ 'score-nothing': isScoreNothing }">
+              {{ evaluateDatail?.avgEvaluate }}
+            </div>
             <div class="score-count">
               <t-rate
                 v-model="evaluateDatail.avgEvaluate"
@@ -502,7 +504,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -852,7 +854,7 @@ const BypageList = () => {
     .then((data) => {
       evaluateDatail.value = {
         ...data,
-        avgEvaluate: data.avgEvaluate ?? 5,
+        avgEvaluate: data.avgEvaluate ?? '暂无评分',
       };
       pagination.total = evaluateTotal(appraiseIndex.value, data);
     })
@@ -869,6 +871,10 @@ const paginationchange = (current: number) => {
   pagination.current = current;
   BypageList();
 };
+
+const isScoreNothing = computed(
+  () => evaluateDatail.value.avgEvaluate === '暂无评分'
+);
 
 // watch(
 //   () => versionType.value,
@@ -1320,6 +1326,14 @@ onUnmounted(() => {
             margin: 12px 0;
             color: rgba(255, 20, 20, 1);
             font-size: 30px;
+          }
+
+          .score-nothing {
+            color: #c9cdd4;
+            font: PingFang SC;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 22px;
           }
         }
 
