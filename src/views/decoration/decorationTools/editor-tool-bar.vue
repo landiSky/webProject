@@ -38,6 +38,8 @@ import {
   ToolData,
 } from '@/views/decoration/decorationTools/config/tools';
 
+console.log('ToolData', ToolData, tools);
+
 const emit = defineEmits(['onEnd']);
 
 const sectionIndex = ref<number>(0);

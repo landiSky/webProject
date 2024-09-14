@@ -1,11 +1,11 @@
 import { LinkType } from '../constant';
 // 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
-  SigleImg: {
-    chineseName: '单图',
+  SigleImgText: {
+    chineseName: '单图文',
     maxNum: 3,
     icon: 'singleImg',
-    name: 'SigleImg',
+    name: 'SigleImgText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
     configValue: {
@@ -337,10 +337,48 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
+  MutiNavImageText: {
+    chineseName: '多导航图文',
+    maxNum: 8,
+    icon: 'mutiNavImg',
+    name: 'MutiNavImageText',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        title: '子导航',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '子导航',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  SigleImg: {
+    chineseName: '单图',
+    maxNum: 1,
+    icon: 'singleImg',
+    name: 'SigleImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: {
+      src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+      desc: '',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
+    },
+  },
 };
 
 export const tools = [
-  'SigleImg',
+  'SigleImgText',
   'VerticalImageText',
   'ThreeImageText',
   'MultiImageText',
@@ -350,4 +388,6 @@ export const tools = [
   'SpliceImageText',
   'HerizontalImageText',
   'CarouselImageText',
+  'MutiNavImageText',
+  'SigleImg',
 ];

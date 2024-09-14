@@ -1657,12 +1657,12 @@ const addTemplateDetail = () => {
 // 编辑详情内容，跳转装修工具
 const editTemplateDetail = () => {
   // 再次编辑
-
   const goodsDetail = {
-    ...JSON.parse(localStorage.getItem('goodsDetail') || ''),
+    ...JSON.parse(localStorage.getItem('goodsDetail') || '{}'),
     detail: formModel.value.detail,
     draftDetail: formModel.value.draftDetail,
     draftStatus: formModel.value.draftStatus,
+    // versionType: 1  // 第一次装修还没有保存versiontype是0怎么搞？？？再次编辑都是强制走装修， 老版本装修和新版本装修有什么区别？
   };
   localStorage.setItem('goodsDetail', JSON.stringify(goodsDetail));
   const routeUrl = router.resolve({
@@ -2088,6 +2088,7 @@ onMounted(() => {
         //   return;
         // }
       }
+      console.log('formModal value', formModel.value);
       // 单纯走装修保存发布不需要校验，不需要走后端接口, 只更改装修状态
       formRef.value.clearValidate('detail');
       broadcastChannel.postMessage(

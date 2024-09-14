@@ -1,18 +1,18 @@
 import { defineAsyncComponent } from 'vue';
 
 const ComponentsMap: Record<string, any> = {
-  SigleImg: {
+  SigleImgText: {
     view: defineAsyncComponent(
       () =>
         import(
-          '@/views/decoration/decorationTools/components/single-image/view.vue'
+          '@/views/decoration/decorationTools/components/single-image-text/view.vue'
         )
     ),
     uiConfig: () =>
       defineAsyncComponent(
         () =>
           import(
-            '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
+            '@/views/decoration/decorationTools/components/single-image-text/ui-config.vue'
           )
       ),
   },
@@ -178,6 +178,36 @@ const ComponentsMap: Record<string, any> = {
         () =>
           import(
             '@/views/decoration/decorationTools/components/channel-header/ui-config.vue'
+          )
+      ),
+  },
+  MutiNavImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-image-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-image-text/ui-config.vue'
+          )
+      ),
+  },
+  SigleImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/single-image/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
           )
       ),
   },

@@ -12,10 +12,10 @@
         clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
       "
     ></t-image>
-    <!-- <div class="single-image-desc">{{
+    <div class="single-image-desc">{{
       data?.configValue?.desc ||
       '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是'
-    }}</div> -->
+    }}</div>
   </div>
 </template>
 
