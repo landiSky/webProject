@@ -181,6 +181,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  MutiNavImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-image-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-image-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

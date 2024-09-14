@@ -48,6 +48,7 @@ const listType = [
   'CarouselImageText',
   'ImageOverlapText',
   'HomeHeader',
+  'MutiNavImageText',
 ];
 
 watch(
