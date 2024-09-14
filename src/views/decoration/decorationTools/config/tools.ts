@@ -361,6 +361,20 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
+  SigleImg: {
+    chineseName: '单图',
+    maxNum: 1,
+    icon: 'singleImg',
+    name: 'SigleImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: {
+      src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+      desc: '',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
+    },
+  },
 };
 
 export const tools = [
@@ -375,4 +389,5 @@ export const tools = [
   'HerizontalImageText',
   'CarouselImageText',
   'MutiNavImageText',
+  'SigleImg',
 ];
