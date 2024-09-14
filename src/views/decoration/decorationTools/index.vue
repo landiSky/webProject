@@ -763,47 +763,49 @@ onMounted(() => {
     const { proId } = route.query;
     if (proId) {
       // goodsDetail(`${proId}`).then((res) => {
-      // console.log('商品详情数据000111', res);
-      const res = JSON.parse(localStorage.getItem('goodsDetail') || '');
+      const res = JSON.parse(localStorage.getItem('goodsDetail') || '{}');
       console.log('res', res);
       const { draftStatus, draftDetail, detail, versionType } = res;
-      if (versionType === 1) {
-        // 新版装修数据
-        if (draftStatus === 0) {
-          // 草稿状态
-          if (!draftDetail) return;
-          componentsList.value = JSON.parse(draftDetail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
-        } else {
-          // 发布状态
-          if (!detail) return;
-          componentsList.value = JSON.parse(detail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
-        }
-        // 兼容老版本走装修
-      } else if (versionType === 0 && draftStatus !== null) {
-        if (draftStatus === 0) {
-          // 草稿状态
-          if (!draftDetail) return;
-          componentsList.value = JSON.parse(draftDetail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
-        } else {
-          // 发布状态
-          if (!detail) return;
-          componentsList.value = JSON.parse(detail);
-          toolList.value = componentsList.value.map((item) => {
-            return item.name;
-          });
-        }
+      /* 这里把装修视图的版本判断去掉了，因为一旦进入装修页面就代表是走的装修数据 */
+      // if (versionType === 1) {
+      // 新版装修数据
+      if (draftStatus === 0) {
+        // 草稿状态
+        if (!draftDetail) return;
+        componentsList.value = JSON.parse(draftDetail);
+        toolList.value = componentsList.value.map((item) => {
+          return item.name;
+        });
       } else {
-        // 旧版数据丢弃
+        // 发布状态
+        if (!detail) return;
+        componentsList.value = JSON.parse(detail);
+        toolList.value = componentsList.value.map((item) => {
+          return item.name;
+        });
       }
+      // }
+      // 兼容老版本走装修
+      // else if (versionType === 0 && draftStatus !== null) {
+      //   if (draftStatus === 0) {
+      //     // 草稿状态
+      //     if (!draftDetail) return;
+      //     componentsList.value = JSON.parse(draftDetail);
+      //     toolList.value = componentsList.value.map((item) => {
+      //       return item.name;
+      //     });
+      //   } else {
+      //     // 发布状态
+      //     if (!detail) return;
+      //     componentsList.value = JSON.parse(detail);
+      //     toolList.value = componentsList.value.map((item) => {
+      //       return item.name;
+      //     });
+      //   }
+      // }
+      // else {
+      // 旧版数据丢弃
+      // }
       // });
     }
   }
