@@ -27,7 +27,7 @@
           allow-clear
         />
       </t-form-item>
-      <t-form-item
+      <!-- <t-form-item
         label="详情简介"
         field="desc"
         :label-col-props="{
@@ -43,7 +43,7 @@
           :max-length="50"
           show-word-limit
         />
-      </t-form-item>
+      </t-form-item> -->
 
       <t-form-item
         label="配图"
