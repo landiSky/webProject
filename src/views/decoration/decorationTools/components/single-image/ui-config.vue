@@ -186,7 +186,7 @@ const form = ref<ConfigData>({
 const rules = {
   mainTitle: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  desc: [{ required: false, message: '该信息为必填项，未填写不支持发布' }],
   linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
 };

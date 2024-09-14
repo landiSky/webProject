@@ -43,7 +43,7 @@ const validate = () => {
     if (
       // TODO 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      !data?.value?.configValue?.desc ||
+      // !data?.value?.configValue?.desc ||
       (!data?.value?.configValue?.linkUrl &&
         data?.value?.configValue?.linkType !== 2)
     ) {
