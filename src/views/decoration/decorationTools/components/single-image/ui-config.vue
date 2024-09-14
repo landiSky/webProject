@@ -209,7 +209,7 @@ const onCancel = () => {
 
 onMounted(() => {
   // // form赋值
-  console.log('单图props', data?.value);
+  console.log('单图文props', data?.value);
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.desc = data?.value?.configValue.desc || '';
   form.value.src = data?.value?.configValue.src || '';
