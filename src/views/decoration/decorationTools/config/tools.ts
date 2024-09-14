@@ -1,11 +1,11 @@
 import { LinkType } from '../constant';
 // 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
-  SigleImg: {
+  SigleImgText: {
     chineseName: '单图',
     maxNum: 3,
     icon: 'singleImg',
-    name: 'SigleImg',
+    name: 'SigleImgText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
     configValue: {
@@ -364,7 +364,7 @@ export const ToolData: Record<string, any> = {
 };
 
 export const tools = [
-  'SigleImg',
+  'SigleImgText',
   'VerticalImageText',
   'ThreeImageText',
   'MultiImageText',

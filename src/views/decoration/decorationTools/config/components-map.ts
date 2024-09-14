@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 
 const ComponentsMap: Record<string, any> = {
-  SigleImg: {
+  SigleImgText: {
     view: defineAsyncComponent(
       () =>
         import(
