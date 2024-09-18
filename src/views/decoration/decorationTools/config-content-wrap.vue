@@ -49,6 +49,8 @@ const listType = [
   'ImageOverlapText',
   'HomeHeader',
   'MutiNavImageText',
+  'MutiNavText',
+  'MutiIconText',
 ];
 
 watch(

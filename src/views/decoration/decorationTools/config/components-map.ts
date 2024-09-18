@@ -226,6 +226,36 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  MutiNavText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-text/ui-config.vue'
+          )
+      ),
+  },
+  MutiIconText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-icon-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-icon-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

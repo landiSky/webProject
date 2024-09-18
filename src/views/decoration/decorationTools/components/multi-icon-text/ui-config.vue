@@ -1,5 +1,5 @@
 <template>
-  <div class="single-image">
+  <div class="box">
     <div class="header">
       {{ data?.chineseName || '' }}
     </div>
@@ -39,41 +39,34 @@
         :key="index"
         :style="{ width: '100%', marginTop: '0px' }"
       >
-        <t-space
-          style="
-            position: relative;
-            width: 100%;
-            margin-top: 10px;
-            margin-bottom: 20px;
-          "
-        >
+        <t-space style="margin-top: 10px; margin-bottom: 20px">
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
-          <div
-            v-if="form.list.length > 2"
-            class="delete"
-            @click="deleteSpace(index)"
-            >删除</div
-          >
         </t-space>
+        <span
+          v-if="form.list.length > 3"
+          class="delete-btn"
+          @click="form.list.splice(index, 1)"
+          >删除
+        </span>
         <t-form-item
-          label="子导航"
-          :field="`list.${index}.navTitle`"
+          label="标题"
+          :field="`list.${index}.title`"
           :label-col-props="{
             flex: '90px',
             align: 'left',
           }"
-          :validate-status="`${item.navTitle ? '' : 'error'}`"
-          :help="`${item.navTitle ? '' : '该信息为必填项，未填写不支持发布'}`"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
           ]"
         >
           <t-input
-            v-model="item.navTitle"
+            v-model="item.title"
             placeholder="请输入"
-            :max-length="20"
+            :max-length="8"
             show-word-limit
             allow-clear
           />
@@ -98,11 +91,9 @@
             allow-clear
             :max-length="100"
             show-word-limit
-            :auto-size="{
-              minRows: 6,
-            }"
           />
         </t-form-item>
+
         <t-form-item
           label="关联"
           :field="`list.${index}.linkType`"
@@ -114,7 +105,7 @@
             { required: true, message: '该信息为必填项，未填写不支持发布' },
           ]"
         >
-          <t-radio-group v-model="item.linkType" @change="changeRadio(index)">
+          <t-radio-group v-model="item.linkType" @change="radioChange(index)">
             <t-radio :value="0">链接</t-radio>
             <t-radio :value="1" :disabled="isPro">商品</t-radio>
             <t-radio :value="2">无</t-radio>
@@ -123,15 +114,15 @@
         <t-form-item
           v-if="item.linkType !== 2"
           :label="
-            item.linkType === 0 ? '详情链接' : item.linkType === 1 ? '商品' : ''
+            item.linkType === 0 ? '链接地址' : item.linkType === 1 ? '商品' : ''
           "
           :field="`list.${index}.linkUrl`"
           :label-col-props="{
             flex: '90px',
           }"
+          validate-trigger="blur"
           :validate-status="`${item.linkUrl ? '' : 'error'}`"
           :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
-          validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
           ]"
@@ -159,7 +150,7 @@
         </t-form-item>
 
         <t-form-item
-          label="图片"
+          label="配图"
           :field="`list.${index}.src`"
           :label-col-props="{
             flex: '90px',
@@ -177,7 +168,6 @@
                   ? [
                       {
                         url: `/server/web/file/download?name=${item.src}`,
-                        // url: `${form.src}`,
                       },
                     ]
                   : []
@@ -218,37 +208,51 @@
         @on-confirm="onConfirm"
         @on-cancel="onCancel"
       />
-      <div class="extraOpt">
+    </t-form>
+    <div class="area-add-box">
+      <t-divider margin="0" />
+      <div class="area-add-box-content">
         <iconpark-icon
-          v-if="form.list.length < 8"
-          class="plusIcon"
+          v-if="form.list.length < 9"
+          style="cursor: pointer"
           name="squarePlus"
-          size="20px"
+          :size="20"
           @click="addBlock"
-        ></iconpark-icon>
+        />
         <t-tooltip
           v-else
           content="到达区块添加上限，删除后可操作"
           position="tl"
         >
           <iconpark-icon
-            class="plusIcon"
             style="cursor: not-allowed"
             name="squarePlusGray"
-            size="20px"
-          ></iconpark-icon>
+            size="20"
+          />
         </t-tooltip>
-        <span>{{ `添加区块 (最多支持${data?.maxNum}个区块)` }}</span>
+        <span>添加区块（最多支持9个区块）</span>
       </div>
-    </t-form>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, ref, onMounted, PropType } from 'vue';
+import { toRefs, ref, watch, onMounted, computed, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
-
+// 每个子表单的配置项
+type ConfigItem = {
+  title: string;
+  desc: string;
+  src: string;
+  linkType: number;
+  linkUrl: string;
+};
+// 全部配置数据
+type ConfigData = {
+  mainTitle: string;
+  list: ConfigItem[];
+};
 type GoodsItem = {
   name: string;
   id: string;
@@ -262,60 +266,55 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 598,
-  height: 609,
+  width: 205,
+  height: 205,
 });
-const curIndex = ref(0);
+const curIndex = ref(-1);
 const showSource = ref(false);
 const { data, goodsList } = toRefs(props);
 const formRef = ref();
 
-interface Form {
-  mainTitle: string;
-  list: any[];
-}
-
-const form = ref<Form>({
+const form = ref<ConfigData>({
   mainTitle: '',
   list: [],
 });
 
-const changeRadio = (value: number) => {
-  form.value.list[value].linkUrl = '';
-};
-const addBlock = () => {
-  form.value.list.push({
-    navTitle: '子导航',
-    desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
-    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
-    linkType: 2,
-    linkUrl: '',
-  });
-};
 const onBeforeRemove = (index: number) => {
   curIndex.value = index;
+  console.log('第几个图片', curIndex.value);
   showSource.value = true;
 };
 
 const onConfirm = (value: any) => {
+  console.log('返回的图片信息', value, curIndex.value);
   form.value.list[curIndex.value].src = value;
-  // console.log('form:', form.value.list);
   showSource.value = false;
 };
 
 const onCancel = () => {
   showSource.value = false;
 };
-
-const deleteSpace = (index: number) => {
-  form.value.list.splice(index, 1);
+const addBlock = () => {
+  console.log('添加区块', form.value.list as any);
+  if (form.value.list.length >= 9) {
+    return;
+  }
+  const { list } = form.value;
+  list.push({
+    title: '子标题',
+    desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+    src: '12e87e00-67c9-448f-bad4-b6938da4d830.png',
+    linkType: 2,
+    linkUrl: '',
+  });
+};
+const radioChange = (index: number) => {
+  form.value.list[index].linkUrl = '';
 };
 onMounted(() => {
   // form赋值
   form.value.mainTitle = data?.value?.mainTitle || '';
-  form.value.list = Array.isArray(data?.value?.configValue)
-    ? data?.value?.configValue || []
-    : Object.values(data?.value?.configValue);
+  form.value.list = Object.values(data?.value?.configValue) || [];
 });
 
 defineExpose({
@@ -325,16 +324,13 @@ defineExpose({
 </script>
 
 <style scoped lang="less">
-.single-image {
+.box {
   display: flex;
-  // height: calc(100vh - 50px);
-  // min-height: 500px;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: 100%;
-
+  // height: 100%;
   .header {
     width: 100%;
     height: 54px;
@@ -346,6 +342,14 @@ defineExpose({
     border-bottom: 1px solid #ccc;
   }
 
+  .delete-btn {
+    float: right;
+    margin-top: 10px;
+    color: #1664ff;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
   .vertical-line {
     width: 2px;
     height: 10px;
@@ -353,29 +357,42 @@ defineExpose({
     border-radius: 1px;
   }
 
-  .space-between {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
   .tele-image {
     width: 100%;
     height: 84px;
   }
 
-  .delete {
-    position: absolute;
-    right: 0;
-    color: #1664ff;
-    font-size: 14px;
-    cursor: pointer;
+  .box-desc {
+    color: #1d1d1d;
   }
 
-  .single-image-desc {
-    color: #1d1d1d;
+  .divider-cls {
+    width: calc(100% - 40px);
+  }
+
+  .area-add-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 200px;
+    padding: 0 24px;
+
+    .area-add-box-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      margin-top: 20px;
+
+      span {
+        margin-left: 8px;
+        color: #1d2129;
+        font-size: 12px;
+      }
+    }
   }
 }
 
@@ -388,25 +405,32 @@ defineExpose({
   }
 }
 
-.extraOpt {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-
-  .plusIcon {
-    cursor: pointer;
-  }
-
-  span {
-    margin-left: 8px;
-    color: #1d2129;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 20px; /* 166.667% */
-  }
-}
-
 ::v-deep(.tele-upload-tip) {
   width: 190px;
+}
+
+.area-add-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 200px;
+  padding: 0 24px;
+
+  .area-add-box-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-top: 20px;
+
+    span {
+      margin-left: 8px;
+      color: #1d2129;
+      font-size: 12px;
+    }
+  }
 }
 </style>
