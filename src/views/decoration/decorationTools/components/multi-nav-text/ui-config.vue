@@ -118,7 +118,7 @@
             v-model="item.desc"
             placeholder="请输入"
             allow-clear
-            :max-length="100"
+            :max-length="400"
             show-word-limit
             :auto-size="{
               minRows: 6,
