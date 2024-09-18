@@ -11,19 +11,13 @@
           :title="item.navTitle"
         >
           <div class="item-content">
+            <div class="item-title">{{
+              item?.title || '名称名称名称名称名称名称名称名称名称名称'
+            }}</div>
             <div class="item-desc">{{
               item?.desc ||
               '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字'
             }}</div>
-            <!-- <div class="item-image">
-              <img
-                :src="`/server/web/file/download?name=${item?.src}&productId=${
-                  data?.productId || ''
-                }`"
-                fit="cover"
-                class="image-cls"
-              />
-            </div> -->
           </div>
         </t-tab-pane>
       </t-tabs>
@@ -75,7 +69,7 @@ const checkConfigList = (list: []) => {
     return (
       item.navTitle &&
       item.desc &&
-      item.src &&
+      item.title &&
       (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
   });
@@ -141,9 +135,19 @@ defineExpose({
       align-items: center;
     }
 
-    .item-desc {
+    .item-title {
       width: calc(@factor * 600px);
       margin-top: calc(@factor * 16px);
+      color: #4e5969;
+      font-weight: 500;
+      font-size: calc(@factor * 8px);
+      line-height: calc(@factor * 12px);
+      text-align: left;
+    }
+
+    .item-desc {
+      width: calc(@factor * 600px);
+      margin-top: calc(@factor * 11px);
       margin-bottom: calc(@factor * 8px);
       color: #4e5969;
       font-size: calc(@factor * 7px);

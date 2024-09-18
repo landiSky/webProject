@@ -79,6 +79,28 @@
           />
         </t-form-item>
         <t-form-item
+          label="名称"
+          :field="`list.${index}.title`"
+          :label-col-props="{
+            flex: '90px',
+            align: 'left',
+          }"
+          :validate-status="`${item.title ? '' : 'error'}`"
+          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
+          :validate-trigger="['blur']"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
+        >
+          <t-input
+            v-model="item.title"
+            placeholder="请输入"
+            :max-length="20"
+            show-word-limit
+            allow-clear
+          />
+        </t-form-item>
+        <t-form-item
           label="简介"
           :field="`list.${index}.desc`"
           :label-col-props="{
@@ -157,67 +179,7 @@
             >
           </t-select>
         </t-form-item>
-
-        <!-- <t-form-item
-          label="图片"
-          :field="`list.${index}.src`"
-          :label-col-props="{
-            flex: '90px',
-          }"
-          validate-trigger="blur"
-          :rules="[
-            { required: true, message: '该信息为必填项，未填写不支持发布' },
-          ]"
-        >
-          <t-space direction="vertical">
-            <t-upload
-              list-type="picture-card"
-              :file-list="
-                item.src
-                  ? [
-                      {
-                        url: `/server/web/file/download?name=${item.src}`,
-                        // url: `${form.src}`,
-                      },
-                    ]
-                  : []
-              "
-              action="/"
-              :limit="1"
-              image-preview
-              :on-before-remove="
-                () => {
-                  return onBeforeRemove(index);
-                }
-              "
-              style="width: 100px; height: 100px"
-            >
-              <template #remove-icon>
-                <iconpark-icon name="replace" size="16px"></iconpark-icon>
-              </template>
-              <template #preview-icon>
-                <icon-eye />
-              </template>
-            </t-upload>
-            <span style="margin-top: -20px; color: #86909c; font-size: 12px">
-              {{
-                `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
-              }}
-            </span>
-          </t-space>
-        </t-form-item> -->
       </div>
-      <Source
-        v-if="showSource"
-        :visible="showSource"
-        :confirm-loading="confirmLoading"
-        :cut-width="stencilSize.width"
-        :cut-height="stencilSize.height"
-        title="素材库"
-        @on-confirm="onConfirm"
-        @on-cancel="onCancel"
-      />
       <div class="extraOpt">
         <iconpark-icon
           v-if="form.list.length < 8"
@@ -246,7 +208,6 @@
 
 <script setup lang="ts">
 import { toRefs, ref, onMounted, PropType } from 'vue';
-import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
 
 type GoodsItem = {
@@ -258,15 +219,7 @@ const props = defineProps({
   isPro: Boolean,
   goodsList: Array as PropType<GoodsItem[]>,
 });
-const confirmLoading = ref(false);
 
-// 截图尺寸
-const stencilSize = ref({
-  width: 598,
-  height: 609,
-});
-const curIndex = ref(0);
-const showSource = ref(false);
 const { data, goodsList } = toRefs(props);
 const formRef = ref();
 
@@ -287,24 +240,10 @@ const addBlock = () => {
   form.value.list.push({
     navTitle: '子导航',
     desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
-    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+    title: '名称名称名称名称名称名称名称名称名称名称',
     linkType: 2,
     linkUrl: '',
   });
-};
-const onBeforeRemove = (index: number) => {
-  curIndex.value = index;
-  showSource.value = true;
-};
-
-const onConfirm = (value: any) => {
-  form.value.list[curIndex.value].src = value;
-  // console.log('form:', form.value.list);
-  showSource.value = false;
-};
-
-const onCancel = () => {
-  showSource.value = false;
 };
 
 const deleteSpace = (index: number) => {
