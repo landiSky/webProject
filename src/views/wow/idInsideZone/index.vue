@@ -206,15 +206,15 @@
       </div>
       <div class="understand">
         <div class="learnmore" @click="learnmore">了解更多</div>
-        <img :src="product1" alt="" class="img" />
-        <!-- <img
+        <!-- <img :src="product1" alt="" class="img" /> -->
+        <img
           :src="
-            previewImgList.length
-              ? `/server/web/file/download?name=${previewImgList[0]}&productId=${prodDetail.id}`
-              : defaultImg
+            prodDetail?.logo
+              ? `/server/web/file/download?name=${prodDetail?.logo}&productId=${prodDetail.id}`
+              : product1
           "
           class="img"
-        /> -->
+        />
         <div class="introduce">
           <div class="title">{{ prodDetail.name || '-' }}</div>
           <div class="company">{{ prodDetail.companyName || '-' }}</div>
@@ -312,7 +312,7 @@ import partner13 from '@/assets/images/idinside/partner/partner-13.png';
 import partner14 from '@/assets/images/idinside/partner/partner-14.png';
 import partner15 from '@/assets/images/idinside/partner/partner-15.png';
 
-import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
+// import defaultImg from '@/assets/images/wow/mall/default_product_logo.png';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
@@ -320,7 +320,6 @@ const router = useRouter();
 const route = useRoute();
 const accessProductIds = ref<Record<string, any>>({});
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
-const previewImgList = ref<string[]>([]);
 const partnerList = ref([
   partner1,
   partner2,
@@ -576,7 +575,6 @@ onMounted(() => {
             return;
           }
           prodDetail.value = data?.data;
-          previewImgList.value = data?.data.detailImg.split(',');
         })
         .catch(() => {});
     }
