@@ -146,6 +146,7 @@ watch(
     console.log('watch productid:', props);
     // 对头图和评价做处理
     navFloorData.value = computedList(val);
+    console.log('navFloorData', navFloorData);
   },
   {
     deep: true,
