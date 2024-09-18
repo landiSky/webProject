@@ -226,6 +226,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  MutiIconText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-icon-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-icon-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

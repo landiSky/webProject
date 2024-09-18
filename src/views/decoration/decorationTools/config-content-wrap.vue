@@ -50,6 +50,7 @@ const listType = [
   'HomeHeader',
   'MutiNavImageText',
   'MutiNavText',
+  'MutiIconText',
 ];
 
 watch(
