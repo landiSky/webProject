@@ -375,6 +375,30 @@ export const ToolData: Record<string, any> = {
       linkUrl: '',
     },
   },
+  DoubleImg: {
+    chineseName: '双图',
+    maxNum: 3,
+    icon: 'threeImgTxt',
+    name: 'DoubleImg',
+    mainTitle: '主标题',
+    bgColor: '#F5F6FB',
+    configValue: [
+      {
+        title: '小标题',
+        desc: '',
+        src: '93d4af34-9f0a-4516-950c-6714bf2602f6.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '小标题',
+        desc: '',
+        src: '93d4af34-9f0a-4516-950c-6714bf2602f6.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
 };
 
 export const tools = [
@@ -390,4 +414,5 @@ export const tools = [
   'CarouselImageText',
   'MutiNavImageText',
   'SigleImg',
+  'DoubleImg',
 ];
