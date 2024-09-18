@@ -158,7 +158,7 @@
           </t-select>
         </t-form-item>
 
-        <t-form-item
+        <!-- <t-form-item
           label="图片"
           :field="`list.${index}.src`"
           :label-col-props="{
@@ -206,7 +206,7 @@
               }}
             </span>
           </t-space>
-        </t-form-item>
+        </t-form-item> -->
       </div>
       <Source
         v-if="showSource"
