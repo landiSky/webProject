@@ -432,6 +432,34 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
+  ThreeImgText: {
+    chineseName: '三图',
+    maxNum: 5,
+    icon: 'threeImg',
+    name: 'ThreeImgText',
+    mainTitle: '主标题',
+    bgColor: '#F5F6FB',
+    configValue: [
+      {
+        title: '小标题',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '小标题',
+        src: '9afb0bf5-152b-440a-b4f5-0b1a24fd4e08.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '小标题',
+        src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
 };
 
 export const tools = [
@@ -449,4 +477,5 @@ export const tools = [
   'SigleImg',
   'MutiNavText',
   'MutiIconText',
+  'ThreeImgText',
 ];

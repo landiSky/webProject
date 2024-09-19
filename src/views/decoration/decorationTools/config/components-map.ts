@@ -241,6 +241,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  ThreeImgText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/three-img-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/three-img-text/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;
