@@ -3,7 +3,7 @@
     class="tele-upload-picture-card picture-card-container"
     @click="onButtonClick"
   >
-    <div class="tele-upload-picture-card-text">
+    <div class="tele-upload-picture-card-text" style="cursor: pointer">
       <svg
         viewBox="0 0 48 48"
         fill="none"
@@ -16,7 +16,9 @@
       >
         <path d="M5 24h38M24 5v38"></path>
       </svg>
-      <div style="margin-top: 10px; font-weight: 600">点击上传</div>
+      <div style="margin-top: 10px; font-weight: 500; font-size: 12px"
+        >点击上传</div
+      >
     </div>
   </div>
 
@@ -35,17 +37,29 @@
     :visible="showSource"
     :confirm-loading="confirmLoading"
     title="应用图标"
+    :picture-width="props?.pictureWidth"
+    :picture-height="props?.pictureHeight"
     @on-confirm="onConfirm"
     @on-cancel="onCancel"
   />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, defineEmits, defineProps } from 'vue';
 import { fetchClassList } from '@/api/goods-manage';
 import Source from './components/source.vue';
 
 const emits = defineEmits(['onConfirm']);
+const props = defineProps({
+  pictureWidth: {
+    type: Number,
+    default: 144,
+  },
+  pictureHeight: {
+    type: Number,
+    default: 144,
+  },
+});
 const showSource = ref(false);
 
 const previewList = ref([]);
