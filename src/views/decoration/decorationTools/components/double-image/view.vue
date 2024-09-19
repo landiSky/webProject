@@ -1,26 +1,24 @@
-<!-- 竖图文 -->
+<!-- 双图 -->
 <template>
-  <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
-    <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
-    }}</div>
+  <div class="double-image-box" :class="{ 'is-preview': isPreview }">
+    <div class="double-image-title">{{ data?.mainTitle || '主标题' }}</div>
     <div class="image-box">
       <div
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
       >
+        <div class="image-title">{{ item?.title || '副标题' }}</div>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
             data?.productId || ''
           }`"
           :preview="false"
-          class="image-box"
           :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
           @click="
             clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
           "
-        ></t-image>
+        />
       </div>
     </div>
   </div>
@@ -85,16 +83,18 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 
-.vertical-image-text-box {
+.double-image-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  // height: calc(@factor * 380px);
-  .vertical-image-text-title {
+  height: calc(@factor * 327px);
+
+  .double-image-title {
     width: calc(@factor * 720px);
-    margin: calc(@factor * 20px) 0 calc(@factor * 10px);
+    height: calc(@factor * 52px);
+    padding: calc(@factor * 24px) 0 calc(@factor * 12px) 0;
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
@@ -105,57 +105,29 @@ defineExpose({
 
   .image-box {
     display: flex;
+    gap: 30px;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
+    width: 100%;
+    height: calc(@factor * 275px);
+    padding: calc(@factor * 12px) calc(@factor * 60px) calc(@factor * 24px)
+      calc(@factor * 60px);
 
     .image-item {
       position: relative;
       display: flex;
       flex-direction: column;
-      width: calc(@factor * 190px);
-      margin: calc(@factor * 10px) calc(@factor * 7px) calc(@factor * 20px);
+      gap: calc(@factor * 8px);
+      width: calc(@factor * 292.5px);
+      height: calc(@factor * 239px);
+      //margin: calc(@factor * 10px) calc(@factor * 7px) calc(@factor * 20px);
       border-radius: 6px;
 
-      .image-item-content {
-        z-index: 100;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: flex-start;
-        height: calc(@factor * 107px);
-        margin-top: -6px;
-        padding: 12px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);
-        border-radius: 6px;
-
-        .image-title {
-          color: #1d2129;
-          font-weight: 500;
-          font-size: calc(@factor * 8px);
-        }
-
-        .image-desc {
-          display: -webkit-box;
-          width: 100%;
-          margin: 10px 0;
-          overflow: hidden;
-          color: #4e5969;
-          font-size: calc(@factor * 7px);
-          white-space: normal;
-          text-align: left;
-          text-overflow: ellipsis;
-          word-wrap: break-word;
-          -webkit-line-clamp: 7;
-          -webkit-box-orient: vertical;
-        }
-
-        .image-link {
-          color: #fff;
-          color: rgba(22, 100, 255, 1);
-          font-size: calc(@factor * 7px);
-          line-height: calc(@factor * 11px);
-          cursor: pointer;
-        }
+      .image-title {
+        color: #1d2129;
+        font-weight: 400;
+        font-size: calc(@factor * 8px);
+        text-align: left;
       }
     }
 
@@ -169,8 +141,9 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 190px) !important;
-    height: calc(@factor * 114px) !important;
+    //width: calc(@factor * 290px) !important;
+    width: 100% !important;
+    height: calc(@factor * 219px) !important;
     object-fit: cover !important;
     border-radius: 6px;
   }

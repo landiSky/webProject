@@ -377,21 +377,21 @@ export const ToolData: Record<string, any> = {
   },
   DoubleImg: {
     chineseName: '双图',
-    maxNum: 3,
+    maxNum: 5,
     icon: 'threeImgTxt',
     name: 'DoubleImg',
     mainTitle: '主标题',
     bgColor: '#F5F6FB',
     configValue: [
       {
-        title: '小标题',
+        title: '副标题',
         desc: '',
-        src: '93d4af34-9f0a-4516-950c-6714bf2602f6.png',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
       },
       {
-        title: '小标题',
+        title: '副标题',
         desc: '',
-        src: '93d4af34-9f0a-4516-950c-6714bf2602f6.png',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
       },
     ],
   },
