@@ -241,18 +241,18 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
-  ThreeImgText: {
+  ThreeImg: {
     view: defineAsyncComponent(
       () =>
         import(
-          '@/views/decoration/decorationTools/components/three-img-text/view.vue'
+          '@/views/decoration/decorationTools/components/three-img/view.vue'
         )
     ),
     uiConfig: () =>
       defineAsyncComponent(
         () =>
           import(
-            '@/views/decoration/decorationTools/components/three-img-text/ui-config.vue'
+            '@/views/decoration/decorationTools/components/three-img/ui-config.vue'
           )
       ),
   },

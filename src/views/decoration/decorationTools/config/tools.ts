@@ -432,11 +432,11 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
-  ThreeImgText: {
+  ThreeImg: {
     chineseName: '三图',
     maxNum: 5,
     icon: 'threeImg',
-    name: 'ThreeImgText',
+    name: 'ThreeImg',
     mainTitle: '主标题',
     bgColor: '#F5F6FB',
     configValue: [
@@ -477,5 +477,5 @@ export const tools = [
   'SigleImg',
   'MutiNavText',
   'MutiIconText',
-  'ThreeImgText',
+  'ThreeImg',
 ];
