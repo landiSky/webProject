@@ -77,8 +77,18 @@
               <t-anchor-link href="#proof">应用凭证</t-anchor-link>
               <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
               <t-anchor-link href="#abutInfo">对接信息</t-anchor-link>
+              <t-anchor-link
+                v-if="!showAuthLimit || !showAuthLimitDock"
+                href="#abutInfo"
+                >对接信息</t-anchor-link
+              >
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
+              >
+              <t-anchor-link
+                v-if="!showAuthLimit"
+                href="#authorizationInformation"
+                >授权信息</t-anchor-link
               >
             </t-anchor>
           </t-affix>
@@ -166,6 +176,20 @@
                   <span>{{ AppTypeEnum[form.appType] ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
+                  v-if="showAuthLimit"
+                  field="appMode"
+                  label="对接方式"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '对接方式不允许为空',
+                    },
+                  ]"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ AppTypeEnum[form.appMode] ?? '-' }}</span>
+                </t-form-item>
+                <t-form-item
                   field="appName"
                   label="应用名称"
                   :rules="[
@@ -216,9 +240,25 @@
                     </div>
                   </div>
                 </t-form-item>
+                <t-form-item
+                  v-if="showAuthLimitDock"
+                  field="appLink"
+                  label="链接"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '链接不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ form.appLink ?? '-' }}</span>
+                </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
+              v-if="!showAuthLimit || !showAuthLimitDock"
               id="abutInfo"
               title="对接信息"
               :title-style="{
@@ -331,6 +371,30 @@
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
+            <t-descriptions
+              v-if="!showAuthLimit"
+              id="authorizationInformation"
+              title="授权信息"
+              :title-style="{
+                fontSize: '14px',
+                lineHeight: '22px',
+                marginBottom: '16px',
+              }"
+              :title-divider-style="{ height: '12px' }"
+              :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
+              size="medium"
+              :column="1"
+            >
+              <t-descriptions-item>
+                <t-form-item
+                  field="authorizationSettings"
+                  label="授权设置"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ form.authorizationSettings ?? '-' }}</span>
+                </t-form-item>
+              </t-descriptions-item>
+            </t-descriptions>
           </t-form>
         </t-col>
       </t-row>
@@ -408,6 +472,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
+  authorizationSettings: Record<string, any>[];
+  appMode: number; // 0、SAAS 1、链接接入
+  appLink: string;
 }>({
   appType: 1,
   appName: '',
@@ -418,6 +485,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
+  authorizationSettings: [],
+  appMode: 1,
+  appLink: '',
 });
 
 const state = reactive<{
@@ -456,6 +526,13 @@ const emit = defineEmits(['onCancel']);
 
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
+    return true;
+  }
+  return false;
+});
+
+const showAuthLimitDock = computed(() => {
+  if (form.appMode === 1) {
     return true;
   }
   return false;
