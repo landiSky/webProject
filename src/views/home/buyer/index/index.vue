@@ -457,7 +457,7 @@
                 v-if="userInfoByCompany.primary !== AccountType?.UNAUTH"
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
-                @click="togo(item)"
+                @click="togoCheck(item)"
               >
                 前往 <span class="to-img"></span></span
             ></div>
@@ -630,6 +630,16 @@
       @cancel="detailuploadclick"
     >
     </DetailsModalUpload>
+
+    <EmpowerTip
+      v-if="empowerTipVisible"
+      :visible="empowerTipVisible"
+      :empower-tip-data="empowerTipData"
+      title="授权提示"
+      @confirm="empowerTipConfirm"
+      @cancel="empowerTipCancel"
+    >
+    </EmpowerTip>
   </div>
 </template>
 
@@ -691,6 +701,7 @@ import group4 from './image/group4.png';
 // import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+import EmpowerTip from './empowerTip.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -756,6 +767,11 @@ const detailflag = ref(false);
 const editModalVisiblealter = ref(false);
 // 配置自建应用 弹窗
 const editModalApplication = ref(false);
+
+// 授权提示 弹窗
+const empowerTipVisible = ref(false);
+// 当前点击数据
+const empowerTipData = ref({});
 
 // 使用说明 弹窗
 const detailupload = ref(false);
@@ -1053,6 +1069,15 @@ const togo = (detailData: Record<string, any>) => {
   }
 };
 
+const togoCheck = (detailData: Record<string, any>) => {
+  if (detailData?.appMode === 1) {
+    empowerTipVisible.value = true;
+    empowerTipData.value = detailData;
+    return;
+  }
+  togo(detailData);
+};
+
 // 配置应用
 const configurationapp = (item: Record<string, any>) => {
   selectProduct.value = item; // 配置的应用 id
@@ -1100,6 +1125,14 @@ const DetailModalConfirmflag = () => {
 };
 const detailuploadclick = () => {
   detailupload.value = false;
+};
+// 授权提示
+const empowerTipConfirm = () => {
+  togo(empowerTipData.value);
+  empowerTipVisible.value = false;
+};
+const empowerTipCancel = () => {
+  empowerTipVisible.value = false;
 };
 
 // 更多

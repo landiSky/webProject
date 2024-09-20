@@ -34,6 +34,21 @@
         </t-radio-group>
       </t-form-item>
       <t-form-item
+        field="appMode"
+        label="对接方式"
+        :rules="[
+          {
+            required: true,
+            message: '对接方式不允许为空',
+          },
+        ]"
+      >
+        <t-radio-group v-model="form.appMode">
+          <t-radio :value="0">SAAS</t-radio>
+          <t-radio :value="1">链接接入</t-radio>
+        </t-radio-group>
+      </t-form-item>
+      <t-form-item
         field="appName"
         label="应用名称"
         :rules="[
@@ -118,7 +133,13 @@
             </div>
           </div>
         </div>
-        <t-upload
+        <IconMaterial
+          v-if="!form.appLogo"
+          :picture-width="200"
+          :picture-height="200"
+          @on-confirm="finishedUploadLogo"
+        />
+        <!-- <t-upload
           v-if="form.appLogo == ''"
           :ref="logoRef"
           :file-list="logoList"
@@ -149,7 +170,7 @@
               </div>
             </t-spin>
           </template>
-        </t-upload>
+        </t-upload> -->
       </t-form-item>
       <t-form-item label="" field="" class="hint-item">
         <div class="hint"
@@ -157,17 +178,45 @@
           200px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
         >
       </t-form-item>
+      <t-form-item
+        v-if="showAuthLimitDock"
+        field="appLink"
+        label="链接"
+        :rules="[
+          {
+            required: true,
+            message: '链接不允许为空',
+          },
+          { maxLength: 500, message: '不允许超过500个字符' },
+        ]"
+      >
+        <t-textarea
+          v-model="form.appLink"
+          placeholder="请输入"
+          :max-length="500"
+          allow-clear
+          show-word-limit
+        />
+      </t-form-item>
     </t-form>
   </t-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue';
+import {
+  ref,
+  reactive,
+  defineProps,
+  defineEmits,
+  onMounted,
+  computed,
+} from 'vue';
 import { Message, FileItem } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { fetchApplicationAdd } from '@/api/devCenter/manage';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 
 const logoRef = ref();
 const logoVisible = ref(false);
@@ -188,17 +237,28 @@ const form = reactive<{
   introduction: string;
   appLogo: string;
   companyId: string;
+  appMode: number;
+  appLink: string;
 }>({
   appName: '',
   appType: 0, // 1商场
   introduction: '',
   appLogo: '',
   companyId: userInfoByCompany.value?.companyId,
+  appMode: 0,
+  appLink: '',
 });
 
 const props = defineProps({
   visible: Boolean,
   title: String,
+});
+
+const showAuthLimitDock = computed(() => {
+  if (form.appMode === 1) {
+    return true;
+  }
+  return false;
 });
 
 const uploadHeaders = {
@@ -260,6 +320,11 @@ const uploadError = (fileItem: FileItem) => {
 
 const uploadProgress = () => {
   logoUploading.value = true;
+};
+
+const finishedUploadLogo = (logo: string) => {
+  form.appLogo = logo;
+  formRef.value.validateField('appLogo');
 };
 
 const handleCancel = () => {
@@ -395,5 +460,9 @@ onMounted(() => {
   margin-top: 8px;
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-radio-group) {
+  display: flex;
 }
 </style>
