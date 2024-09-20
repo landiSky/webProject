@@ -276,8 +276,8 @@
                 <span v-else class="prefix">价格面议</span>
               </div>
             </span>
-            <span class="label-try">
-              <span>支持试用</span>
+            <span v-if="item.isTry === 1" class="label-try">
+              <span class="label-try-text">支持试用</span>
             </span>
           </span>
         </div>
@@ -864,38 +864,44 @@ onMounted(() => {
 .label-try {
   /* 绝对定位 */
   position: absolute;
-  top: 19px;
-  right: -37px;
-  width: 100px;
-  height: 30px;
+  top: 10px;
+  //right: 0px;
+  left: 324px;
+  //display: flex;
+  align-items: center;
+  width: 82px;
+  height: 20px;
   margin: 0;
 
   /* 飘带的阴影 */
-  padding: 0 5px; /* 调整飘带的内边距 */
+  //padding: 0 5px; /* 调整飘带的内边距 */
 
   /* 右上角飘带的背景颜色 */
-  overflow: hidden;
+  //overflow: hidden;
 
   /* 文字不换行 */
   white-space: nowrap;
+  background: #0ac8d2;
 
   /* 右上角飘带 */
-  background-color: #1890ff;
-  box-shadow: 0 0 10px #888;
+  //background-color: #1890ff;
+  //box-shadow: 0 0 10px #888;
 
   /* 旋转45° */
   transform: rotate(45deg);
 }
 
-.label-try span {
-  display: block;
-  margin: 1px 0;
-  padding: 5px 5px;
-  color: #090909;
-  font: bold 60%;
-  font-size: 13px;
-  text-align: left;
-  text-shadow: 0 0 5px #444;
-  border: 1px solid #1890ff;
+.label-try-text {
+  width: 48px;
+  //display: block;
+  //margin: 1px 0;
+  height: 20px;
+  //padding: 5px 5px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  //text-shadow: 0 0 5px #444;
+  //border: 1px solid #1890ff;
 }
 </style>
