@@ -44,6 +44,7 @@ router.afterEach((to, from) => {
   display: flex;
   flex: 1;
   flex-direction: column;
+  width: 100%;
   height: 100%; // 页面滚动
   // overflow-x: hidden; 滚动不要在这里加
   overflow-y: auto;
