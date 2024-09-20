@@ -28,7 +28,7 @@
           {
             required: true,
             match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
-            message: '只可填写中英文，不能填写其他特殊字符',
+            message: '输入内容只支持中英文，不支持输入其他特殊字符。',
           },
         ]"
       >
@@ -69,7 +69,7 @@
             {
               required: true,
               match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
-              message: '只可填写中英文，不能填写其他特殊字符',
+              message: '输入内容只支持中英文，不支持输入其他特殊字符。',
             },
           ]"
         >

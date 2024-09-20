@@ -99,7 +99,6 @@ defineExpose({
     width: calc(@factor * 130px);
     margin: calc(@factor * 24px) 0 calc(@factor * 12px);
     overflow: hidden;
-    overflow: hidden;
     color: #1d2129;
     font-weight: 500;
     font-size: calc(@factor * 12px);
