@@ -43,9 +43,18 @@
             >
               <t-anchor-link href="#proof">应用凭证</t-anchor-link>
               <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
-              <t-anchor-link href="#abutInfo">对接信息</t-anchor-link>
+              <t-anchor-link
+                v-if="!showAuthLimit || !showAuthLimitDock"
+                href="#abutInfo"
+                >对接信息</t-anchor-link
+              >
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
+              >
+              <t-anchor-link
+                v-if="!showAuthLimit"
+                href="#authorizationInformation"
+                >授权信息</t-anchor-link
               >
             </t-anchor>
           </t-affix>
@@ -136,6 +145,22 @@
                   </t-radio-group>
                 </t-form-item>
                 <t-form-item
+                  v-if="showAuthLimit"
+                  field="appMode"
+                  label="对接方式"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '对接方式不允许为空',
+                    },
+                  ]"
+                >
+                  <t-radio-group v-model="form.appMode">
+                    <t-radio :value="0">SAAS</t-radio>
+                    <t-radio :value="1">链接接入</t-radio>
+                  </t-radio-group>
+                </t-form-item>
+                <t-form-item
                   field="appName"
                   label="应用名称"
                   :rules="[
@@ -222,7 +247,13 @@
                       </div>
                     </div>
                   </div>
-                  <t-upload
+                  <IconMaterial
+                    v-if="!form.appLogo"
+                    :picture-width="200"
+                    :picture-height="200"
+                    @on-confirm="finishedUploadLogo"
+                  />
+                  <!-- <t-upload
                     v-if="form.appLogo == ''"
                     :ref="logoRef"
                     :file-list="logoList"
@@ -257,7 +288,7 @@
                         </div>
                       </t-spin>
                     </template>
-                  </t-upload>
+                  </t-upload> -->
                 </t-form-item>
                 <t-form-item label="" field="" class="hint-item">
                   <div class="hint"
@@ -265,9 +296,30 @@
                     200px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
                   >
                 </t-form-item>
+                <t-form-item
+                  v-if="showAuthLimitDock"
+                  field="appLink"
+                  label="链接"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '链接不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                >
+                  <t-textarea
+                    v-model="form.appLink"
+                    placeholder="请输入"
+                    :max-length="500"
+                    allow-clear
+                    show-word-limit
+                  />
+                </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
+              v-if="!showAuthLimit || !showAuthLimitDock"
               id="abutInfo"
               title="对接信息"
               :title-style="{
@@ -413,6 +465,38 @@
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
+            <t-descriptions
+              v-if="!showAuthLimit"
+              id="authorizationInformation"
+              title="授权信息"
+              :title-style="{
+                fontSize: '14px',
+                lineHeight: '22px',
+                marginBottom: '16px',
+              }"
+              :title-divider-style="{ height: '12px' }"
+              :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
+              size="medium"
+              :column="1"
+            >
+              <t-descriptions-item>
+                <t-form-item
+                  field="authorizationSettings"
+                  label="授权设置"
+                  :rules="[
+                    {
+                      required: true,
+                      validator: validateCheckbox,
+                    },
+                  ]"
+                >
+                  <t-checkbox-group v-model="form.authorizationSettings">
+                    <t-checkbox value="1">用户手机号</t-checkbox>
+                    <t-checkbox value="2">企业认证信息</t-checkbox>
+                  </t-checkbox-group>
+                </t-form-item>
+              </t-descriptions-item>
+            </t-descriptions>
           </t-form>
         </t-col>
       </t-row>
@@ -451,6 +535,7 @@ import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { Message, FileItem } from '@tele-design/web-vue';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 import AddMembersModal from './addMembersModal.vue';
 
 const props = defineProps({
@@ -484,6 +569,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
+  authorizationSettings: Record<string, any>[];
+  appMode: number; // 0、SAAS 1、链接接入
+  appLink: string;
 }>({
   appType: 1,
   appName: '',
@@ -494,6 +582,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
+  authorizationSettings: [],
+  appMode: 1,
+  appLink: '',
 });
 
 const state = reactive<{
@@ -521,6 +612,13 @@ const showModal = computed(() => props.visible);
 
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
+    return true;
+  }
+  return false;
+});
+
+const showAuthLimitDock = computed(() => {
+  if (form.appMode === 1) {
     return true;
   }
   return false;
@@ -557,6 +655,14 @@ const validateRadio = (value: number, callback: (error?: string) => void) => {
   } else {
     callback();
   }
+};
+
+const validateCheckbox = (value: any, callback: (error?: string) => void) => {
+  if (!value || !value.length) {
+    callback('授权设置不能为空');
+    return;
+  }
+  callback();
 };
 
 const validateMembers = (
@@ -710,6 +816,11 @@ const uploadError = (fileItem: FileItem) => {
 
 const uploadProgress = () => {
   logoUploading.value = true;
+};
+
+const finishedUploadLogo = (logo: string) => {
+  form.appLogo = logo;
+  formRef.value.validateField('appLogo');
 };
 
 const handleAddMembers = () => {
@@ -941,5 +1052,9 @@ onMounted(() => {
   margin-top: 8px;
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-radio-group) {
+  display: flex;
 }
 </style>

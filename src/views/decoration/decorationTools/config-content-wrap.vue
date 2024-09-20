@@ -52,6 +52,7 @@ const listType = [
   'MutiNavText',
   'MutiIconText',
   'DoubleImg',
+  'ThreeImg',
 ];
 
 watch(
