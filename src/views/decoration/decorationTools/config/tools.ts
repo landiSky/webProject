@@ -438,7 +438,7 @@ export const ToolData: Record<string, any> = {
     icon: 'threeImg',
     name: 'ThreeImg',
     mainTitle: '主标题',
-    bgColor: '#F5F6FB',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '小标题',
@@ -455,6 +455,34 @@ export const ToolData: Record<string, any> = {
       {
         title: '小标题',
         src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  MultiNavImg: {
+    chineseName: '多导航图',
+    maxNum: 8,
+    icon: 'mutiNavImg',
+    name: 'MultiNavImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
         linkType: LinkType.BLANK,
         linkUrl: '',
       },
@@ -478,4 +506,5 @@ export const tools = [
   'MutiNavText',
   'MutiIconText',
   'ThreeImg',
+  'MultiNavImg',
 ];
