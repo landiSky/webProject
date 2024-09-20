@@ -381,17 +381,21 @@ export const ToolData: Record<string, any> = {
     icon: 'threeImgTxt',
     name: 'DoubleImg',
     mainTitle: '主标题',
-    bgColor: '#F5F6FB',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '副标题',
         desc: '',
         src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
       },
       {
         title: '副标题',
         desc: '',
-        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        src: '9afb0bf5-152b-440a-b4f5-0b1a24fd4e08.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
       },
     ],
   },

@@ -55,7 +55,6 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.desc &&
       item.src &&
       (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
@@ -67,6 +66,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 10 ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
@@ -90,7 +90,7 @@ defineExpose({
   justify-content: flex-start;
   width: 100%;
   height: calc(@factor * 327px);
-
+  //color: #ffffff;
   .double-image-title {
     width: calc(@factor * 720px);
     height: calc(@factor * 52px);

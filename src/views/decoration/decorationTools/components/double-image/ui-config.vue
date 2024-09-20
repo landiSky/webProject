@@ -31,7 +31,7 @@
           placeholder="请输入"
           :max-length="10"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
 
@@ -61,9 +61,9 @@
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="20"
+            :max-length="30"
             show-word-limit
-            allow-clear
+            :allow-clear="false"
           />
         </t-form-item>
 

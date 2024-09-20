@@ -432,8 +432,9 @@ const clickSaveRemote = () => {
       return item.validate();
     });
   };
+
   Promise.all(childForm())
-    .then((data: any) => {
+    .then(() => {
       if (componentsList.value.length === 0) {
         Message.error('请先添加组件并配置完成再发布');
         return;
