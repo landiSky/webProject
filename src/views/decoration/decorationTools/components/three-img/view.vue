@@ -32,6 +32,7 @@ const props = defineProps({
   isPreview: Boolean,
 });
 const { data, isPreview } = toRefs(props);
+const letterReg = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 
 const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
@@ -56,6 +57,7 @@ const checkConfigList = (list: any) => {
     return (
       item.title &&
       item.title.length < 20 &&
+      letterReg.test(item.title) &&
       item.src &&
       (item.linkType === 2 ||
         (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
@@ -68,6 +70,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      !letterReg.test(data?.value?.mainTitle) ||
       data?.value?.mainTitle.length > 10 ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
