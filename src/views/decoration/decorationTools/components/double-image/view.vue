@@ -32,6 +32,7 @@ const props = defineProps({
   isPreview: Boolean,
 });
 const { data, isPreview } = toRefs(props);
+const letterReg = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 
 const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
@@ -55,6 +56,8 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
+      item.title.length < 30 &&
+      letterReg.test(item.title) &&
       item.src &&
       (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
     );
@@ -66,6 +69,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      !letterReg.test(data?.value?.mainTitle) ||
       data?.value?.mainTitle.length > 10 ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
@@ -100,6 +104,8 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
+    //当文本溢出容器时，在文本末尾显示省略号（...）
+    text-overflow: ellipsis;
     // background-color: red;
   }
 
@@ -128,6 +134,7 @@ defineExpose({
         font-weight: 400;
         font-size: calc(@factor * 8px);
         text-align: left;
+        text-overflow: ellipsis;
       }
     }
 

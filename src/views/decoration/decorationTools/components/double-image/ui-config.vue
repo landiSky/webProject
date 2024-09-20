@@ -24,12 +24,21 @@
         :validate-trigger="['blur', 'input']"
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 10, message: '长度不超过10个字符' },
+          {
+            required: true,
+            match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+            message: '只可填写中英文，不能填写其他特殊字符',
+          },
         ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 10,
+            errorOnly: true,
+          }"
           show-word-limit
           :allow-clear="false"
         />
@@ -56,12 +65,21 @@
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 30, message: '长度不超过30个字符' },
+            {
+              required: true,
+              match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+              message: '只可填写中英文，不能填写其他特殊字符',
+            },
           ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="30"
+            :max-length="{
+              length: 30,
+              errorOnly: true,
+            }"
             show-word-limit
             :allow-clear="false"
           />
@@ -98,6 +116,7 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 500, message: '长度不超过500个字符' },
           ]"
         >
           <t-textarea
