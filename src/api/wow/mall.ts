@@ -31,3 +31,8 @@ export function apiComputePrice(data: Record<string, any>) {
 export function apiBypageList(data: Record<string, any>) {
   return $http.post('/server/web/product/evaluate/listByPage', data);
 }
+
+// 获取商品服务商的手机号
+export function apiServicePhone(params: Record<string, any>) {
+  return $http.post('/server/web/reception/getServicePhone?productId', params);
+}

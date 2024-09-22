@@ -486,7 +486,7 @@
       >
         <span class="title">服务商名称</span>
         <span class="header">{{ prodDetail?.companyName }}</span>
-        <span class="online-consult" @click="buyConsult">
+        <span class="online-consult" @click="onLineConsult">
           <iconpark-icon size="18" name="message" class="icon-message" />
           在线咨询</span
         >
@@ -500,6 +500,31 @@
     @cancel="onAuthCancel"
     @confirm="onAuthConfirm"
   ></AuthMemberModal>
+  <!-- 登录状态下咨询服务商跳出的弹窗-->
+  <t-modal v-model:visible="infoModalVisible" mask-closable>
+    <template #title> 服务商信息 </template>
+    <div class="service-content">
+      <div class="service-content-detail">
+        <span class="service-label">服务商名称:</span>
+        <span class="service-name">{{ prodDetail?.companyName }}</span>
+      </div>
+      <!-- 服务商手机号暂未后端接口尚未开发完成 -->
+      <div class="service-content-detail">
+        <span class="service-label">服务商手机号:</span>
+        <span class="service-name">
+          {{ phoneNumber }}
+          <iconpark-icon
+            class="copy-icon"
+            name="componentCopy"
+            @click="copyPhoneNumber"
+          ></iconpark-icon>
+        </span>
+      </div>
+    </div>
+    <template #footer>
+      <t-button type="primary" @click="handleCancel">关闭</t-button>
+    </template>
+  </t-modal>
   <WowFooter></WowFooter>
 </template>
 
@@ -512,6 +537,7 @@ import {
   apiProductDetail,
   apiComputePrice,
   apiBypageList,
+  apiServicePhone,
 } from '@/api/wow/mall';
 import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
@@ -876,6 +902,35 @@ const isScoreNothing = computed(
   () => evaluateDatail.value.avgEvaluate === '暂无评分'
 );
 
+const phoneNumber = ref('');
+// 登录状态下 咨询公司信息的 弹窗
+const infoModalVisible = ref(false);
+// const {redirect} = router.currentRoute.value.query;
+const onLineConsult = () => {
+  if (userInfo !== null) {
+    infoModalVisible.value = true;
+  } else {
+    Modal.warning({
+      title: '无法查看',
+      content: '未登录系统，无法查看服务商信息，请先登录。',
+      titleAlign: 'start',
+      okText: '先登录',
+      hideCancel: false,
+      onOk: () => {
+        // router.push('/login');
+        sessionStorage.setItem('mallDetailPath', route.fullPath);
+        userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+      },
+    });
+  }
+};
+const handleCancel = () => {
+  infoModalVisible.value = false;
+};
+const copyPhoneNumber = () => {
+  copyToClipboard(String(phoneNumber.value));
+};
+
 // watch(
 //   () => versionType.value,
 //   () => {}
@@ -885,6 +940,10 @@ const isScoreNothing = computed(
 // });
 
 onMounted(() => {
+  // 获取商品服务商的电话
+  apiServicePhone({ id: route.params.id }).then((data) => {
+    phoneNumber.value = data.data;
+  });
   // TODO w: 商品详情打点
   apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(() => {
     console.log('商品详情打点', route.params.id);
@@ -1490,6 +1549,24 @@ onUnmounted(() => {
     align-items: center;
     width: 100%;
   }
+}
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-content-detail {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.service-label {
+  width: 90px;
+  height: 20px;
+  color: #4e5969;
 }
 
 :deep(.tele-typography) {
