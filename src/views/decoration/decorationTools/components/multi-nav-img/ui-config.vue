@@ -246,6 +246,7 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
 
 type GoodsItem = {
   name: string;
@@ -283,10 +284,7 @@ const changeRadio = (value: number) => {
 };
 const addBlock = () => {
   form.value.list.push({
-    navTitle: '子导航',
-    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
-    linkType: 2,
-    linkUrl: '',
+    ...ToolData?.MultiNavImg?.configValue[0],
   });
 };
 const onBeforeRemove = (index: number) => {

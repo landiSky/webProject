@@ -74,7 +74,7 @@ const checkConfigList = (list: []) => {
     return (
       item.navTitle &&
       item.navTitle.length < 6 &&
-      letterReg.test(item.title) &&
+      letterReg.test(item.navTitle) &&
       item.src &&
       (item.linkType === 2 ||
         (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
@@ -113,6 +113,7 @@ defineExpose({
 
   .nav-image-text-title {
     position: relative;
+    display: -webkit-box;
     width: calc(@factor * 130px);
     margin: calc(@factor * 24px) auto calc(@factor * 12px);
     overflow: hidden;
@@ -120,9 +121,12 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: nowrap;
+    white-space: normal;
     text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-all;
     -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .nav-image-text-content {
