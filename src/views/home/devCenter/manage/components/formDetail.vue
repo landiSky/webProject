@@ -177,7 +177,7 @@
                 </t-form-item>
                 <t-form-item
                   v-if="showAuthLimit"
-                  field="appMode"
+                  field="dockingMethod"
                   label="对接方式"
                   :rules="[
                     {
@@ -187,7 +187,7 @@
                   ]"
                   :hide-asterisk="true"
                 >
-                  <span>{{ AppTypeEnum[form.appMode] ?? '-' }}</span>
+                  <span>{{ ModeTypeEnum[form.dockingMethod] ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
                   field="appName"
@@ -242,7 +242,7 @@
                 </t-form-item>
                 <t-form-item
                   v-if="showAuthLimitDock"
-                  field="appLink"
+                  field="link"
                   label="链接"
                   :rules="[
                     {
@@ -253,7 +253,7 @@
                   ]"
                   :hide-asterisk="true"
                 >
-                  <span>{{ form.appLink ?? '-' }}</span>
+                  <span>{{ form.link ?? '-' }}</span>
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -387,11 +387,16 @@
             >
               <t-descriptions-item>
                 <t-form-item
-                  field="authorizationSettings"
+                  field="authType"
                   label="授权设置"
                   :hide-asterisk="true"
                 >
-                  <span>{{ form.authorizationSettings ?? '-' }}</span>
+                  <t-space v-if="form.authType.length">
+                    <span v-for="(item, index) in form.authType" :key="index">
+                      {{ AuthTypeEnum[Number(item)] }}
+                    </span>
+                  </t-space>
+                  <span v-else>{{ '-' }}</span>
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
@@ -472,9 +477,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
-  authorizationSettings: Record<string, any>[];
-  appMode: number; // 0、SAAS 1、链接接入
-  appLink: string;
+  authType: Record<string, any>[];
+  dockingMethod: number; // 0、SAAS 1、链接接入
+  link: string;
 }>({
   appType: 1,
   appName: '',
@@ -485,9 +490,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
-  authorizationSettings: [],
-  appMode: 1,
-  appLink: '',
+  authType: [],
+  dockingMethod: 1,
+  link: '',
 });
 
 const state = reactive<{
@@ -532,7 +537,7 @@ const showAuthLimit = computed(() => {
 });
 
 const showAuthLimitDock = computed(() => {
-  if (form.appMode === 1) {
+  if (form.dockingMethod === 1) {
     return true;
   }
   return false;
@@ -721,6 +726,16 @@ const AppTypeEnum: { [name: string]: any } = {
   1: '商城应用',
 };
 
+const ModeTypeEnum: { [name: string]: any } = {
+  0: 'SAAS',
+  1: '链接接入',
+};
+
+const AuthTypeEnum: { [name: string]: any } = {
+  0: '用户手机号',
+  1: '企业认证信息',
+};
+
 const MemberEnum: { [name: string]: any } = {
   1: '仅添加企业成员可用',
   0: '全部企业成员可用',
@@ -748,6 +763,9 @@ onMounted(() => {
       form.homeUri = res?.homeUri;
       form.redirectUri = res?.redirectUri;
       state.companyId = res?.companyId;
+      form.dockingMethod = res?.dockingMethod;
+      form.link = res?.link;
+      form.authType = res?.authType ? res?.authType.split(',') : [];
     })
     .catch(() => {
       state.tableLoading = false;

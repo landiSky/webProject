@@ -655,6 +655,8 @@ import {
   selectSelfApps,
   appInfoClientLogin,
   alreadyBuyClientLogin,
+  apiAuthStatus,
+  apiGetAuth,
 } from '@/api/buyer/overview';
 
 // 头像
@@ -771,7 +773,7 @@ const editModalApplication = ref(false);
 // 授权提示 弹窗
 const empowerTipVisible = ref(false);
 // 当前点击数据
-const empowerTipData = ref({});
+const empowerTipData: Record<string, any> = ref({});
 
 // 使用说明 弹窗
 const detailupload = ref(false);
@@ -1070,12 +1072,24 @@ const togo = (detailData: Record<string, any>) => {
 };
 
 const togoCheck = (detailData: Record<string, any>) => {
-  if (detailData?.appMode === 1) {
-    empowerTipVisible.value = true;
-    empowerTipData.value = detailData;
-    return;
+  if (detailData?.deliveryType === 0) {
+    const params = {
+      productId: detailData.productId, // 商品id
+      memberId: selectCompany.value?.memberId, // 成员id
+      productDeliverySetId: detailData.deliveryId, // 版本id
+      appId: detailData.saasAppId, // 应用id
+    };
+    apiAuthStatus(params).then((res: any) => {
+      if (res === 1) {
+        togo(detailData);
+        return;
+      }
+      empowerTipVisible.value = true;
+      empowerTipData.value = detailData;
+    });
+  } else {
+    togo(detailData);
   }
-  togo(detailData);
 };
 
 // 配置应用
@@ -1128,8 +1142,16 @@ const detailuploadclick = () => {
 };
 // 授权提示
 const empowerTipConfirm = () => {
-  togo(empowerTipData.value);
-  empowerTipVisible.value = false;
+  const params = {
+    productId: empowerTipData.value?.productId, // 商品id
+    memberId: selectCompany?.memberId, // 成员id
+    productDeliverySetId: empowerTipData.value?.deliveryId, // 版本id
+    appId: empowerTipData.value?.saasAppId, // 应用id
+  };
+  apiGetAuth(params).then(() => {
+    togo(empowerTipData.value);
+    empowerTipVisible.value = false;
+  });
 };
 const empowerTipCancel = () => {
   empowerTipVisible.value = false;

@@ -34,7 +34,8 @@
         </t-radio-group>
       </t-form-item>
       <t-form-item
-        field="appMode"
+        v-if="showAuthLimit"
+        field="dockingMethod"
         label="对接方式"
         :rules="[
           {
@@ -43,7 +44,7 @@
           },
         ]"
       >
-        <t-radio-group v-model="form.appMode">
+        <t-radio-group v-model="form.dockingMethod">
           <t-radio :value="0">SAAS</t-radio>
           <t-radio :value="1">链接接入</t-radio>
         </t-radio-group>
@@ -180,7 +181,7 @@
       </t-form-item>
       <t-form-item
         v-if="showAuthLimitDock"
-        field="appLink"
+        field="link"
         label="链接"
         :rules="[
           {
@@ -191,7 +192,7 @@
         ]"
       >
         <t-textarea
-          v-model="form.appLink"
+          v-model="form.link"
           placeholder="请输入"
           :max-length="500"
           allow-clear
@@ -237,16 +238,16 @@ const form = reactive<{
   introduction: string;
   appLogo: string;
   companyId: string;
-  appMode: number;
-  appLink: string;
+  dockingMethod: number;
+  link: string;
 }>({
   appName: '',
   appType: 0, // 1商场
   introduction: '',
   appLogo: '',
   companyId: userInfoByCompany.value?.companyId,
-  appMode: 0,
-  appLink: '',
+  dockingMethod: 0,
+  link: '',
 });
 
 const props = defineProps({
@@ -254,8 +255,15 @@ const props = defineProps({
   title: String,
 });
 
+const showAuthLimit = computed(() => {
+  if (form.appType === 0) {
+    return true;
+  }
+  return false;
+});
+
 const showAuthLimitDock = computed(() => {
-  if (form.appMode === 1) {
+  if (form.dockingMethod === 1) {
     return true;
   }
   return false;

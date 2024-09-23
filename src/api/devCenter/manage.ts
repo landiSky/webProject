@@ -54,3 +54,8 @@ export function fetchOffine(data: Record<string, any>) {
 export function fetchDel(id: string) {
   return $http.get(`/server/web/app/info/deleteById?id=${id}`);
 }
+
+// 取消调试-应用状态修改
+export function fetchCancelDebug(params: Record<string, any>) {
+  return $http.get(`/server/web/app/info/cancelDebug`, { params });
+}
