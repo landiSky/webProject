@@ -25,9 +25,21 @@
             <t-button
               type="primary"
               :loading="state.launchLoading"
-              @click="handleLaunchOrSave(1)"
-              >保存并上线</t-button
-            >
+              @click="
+                handleLaunchOrSave(
+                  (state.status === 0 && form.appType === 1) ||
+                    (state.status === 0 && form.dockingMethod === 0)
+                    ? 2
+                    : 1
+                )
+              "
+              >{{
+                (state.status === 0 && form.appType === 1) ||
+                (state.status === 0 && form.dockingMethod === 0)
+                  ? '应用调试'
+                  : '保存并上线'
+              }}
+            </t-button>
           </span>
         </div>
       </template>
@@ -596,6 +608,7 @@ const state = reactive<{
   companyId: string;
   saveLoading: boolean;
   launchLoading: boolean;
+  status: number; // 应用状态:0-未上线,1-已上线 2-调试中
 }>({
   tableData: [],
   tableLoading: false,
@@ -605,6 +618,7 @@ const state = reactive<{
   companyId: '',
   saveLoading: false,
   launchLoading: false,
+  status: 0,
 });
 const emit = defineEmits(['onCancel']);
 
@@ -869,6 +883,7 @@ onMounted(() => {
       form.dockingMethod = res?.dockingMethod;
       form.link = res?.link;
       form.authType = res?.authType ? res?.authType.split(',') : [];
+      state.status = res?.status;
     })
     .catch(() => {
       state.tableLoading = false;
