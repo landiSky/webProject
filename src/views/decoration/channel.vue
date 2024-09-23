@@ -315,9 +315,10 @@ const setChannelRef = (el: any, index: number) => {
   }
 };
 
-const publishName = (form: FormItem | null | undefined) => {
+const publishName = (form: FormItem | null | undefined | any) => {
   if (!form) return;
   const { id, name } = form;
+  console.log('publishName', form);
   apiUpdateNavData({ id, name }).then((res: any) => {
     if (form.type === ChannelType.PLATFORM_HOME) {
       nav1NameEdit.value = false;
