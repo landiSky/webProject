@@ -271,6 +271,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  TreeTextNavigation: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/tree-text-navigation/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/tree-text-navigation/ui-config.vue'
+          )
+      ),
+  },
 };
 
 export default ComponentsMap;

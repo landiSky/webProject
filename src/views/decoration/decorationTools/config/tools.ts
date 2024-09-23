@@ -1,4 +1,6 @@
+import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
+
 // 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
   SigleImgText: {
@@ -488,6 +490,41 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
+  TreeTextNavigation: {
+    chineseName: '树状文本导航',
+    maxNum: 10,
+    maxContentNum: 20,
+    icon: 'verticalNavTxt',
+    name: 'TreeTextNavigation',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: 2,
+            linkUrl: '',
+          },
+        ],
+      },
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: 2,
+            linkUrl: '',
+          },
+        ],
+      },
+    ],
+  },
 };
 
 export const tools = [
@@ -507,4 +544,5 @@ export const tools = [
   'MutiIconText',
   'ThreeImg',
   'MultiNavImg',
+  'TreeTextNavigation',
 ];
