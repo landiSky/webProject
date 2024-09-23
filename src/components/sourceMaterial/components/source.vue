@@ -100,6 +100,7 @@ import { getToken } from '@/utils/auth';
 import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
 import { Message, Modal } from '@tele-design/web-vue';
 import UploadCropperModal from './upload-cropper-modal.vue';
+// import { useIntersectionObserver } from '@vueuse/core';
 
 const store = useUserStore();
 
@@ -185,7 +186,6 @@ const onBeforeUpload = async (currentFile: Record<string, any>) => {
 
 const getMaterialList = () => {
   state.loading = true;
-  console.log(11111);
   fetchMaterialList({
     ...params,
     companyId: state.type === 1 ? -1 : userInfoByCompany?.companyId,

@@ -137,6 +137,10 @@ const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
+const store = storeToRefs(userStore);
+
+console.log('userStore', userStore.configInfo, store);
+
 const logo = ref('');
 const platformName = ref('');
 // 首页导航栏
@@ -199,6 +203,15 @@ const goDocCenter = () => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 19).then((res) => {
     console.log('前台文档中心打点', res);
   });
+  // 判断是不是英福平台做引流
+  if (!store.configInfo.value?.isTeleInfo) {
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+    } else {
+      window.open('https://snms.teleinfo.cn/zst/#/wow/doc');
+    }
+    return;
+  }
   router.push({ path: '/wow/doc' });
 };
 
@@ -264,6 +277,14 @@ const clickIdService = () => {
     console.log('前台导航栏IDInside专区点击打点', res);
   });
   selectTab.value = TabPath.IDINSIDEZONE;
+  if (!store.configInfo.value?.isTeleInfo) {
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
+    } else {
+      window.open('https://snms.teleinfo.cn/zst/#/wow/idInsideZone');
+    }
+    return;
+  }
   router.push({ path: '/wow/idInsideZone' });
 };
 
