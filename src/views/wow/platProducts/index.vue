@@ -8,12 +8,15 @@
 
 <script lang="ts" setup>
 import { defineProps, onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 import Container from '@/views/decoration/decorationTools/pageContainer.vue';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
 import { addId } from '@/utils/index';
 import WowFooter from '../components/wowFooter/index.vue';
+
+const route = useRoute();
 
 const props = defineProps({
   xxx: {
@@ -29,7 +32,8 @@ const props = defineProps({
 });
 const componentList = ref([]);
 onMounted(() => {
-  apiGetNavData({ type: ChannelType.PLATFORM_PRODUCT }).then((res: any) => {
+  // type改为动态props传递
+  apiGetNavData({ type: route.params?.type }).then((res: any) => {
     if (res.data.length > 0) {
       const { detail } = res.data[0];
       if (!detail) return;

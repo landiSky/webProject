@@ -17,7 +17,7 @@ const wowRoutesList = [
         component: () => import('@/views/wow/freeApp/index.vue'),
       },
       {
-        path: '/wow/platProducts',
+        path: '/wow/platProducts/:type',
         name: 'wowPlatProducts',
         component: () => import('@/views/wow/platProducts/index.vue'),
       },
