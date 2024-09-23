@@ -120,6 +120,28 @@
           </span>
         </span>
       </span>
+      <!-- 试用商品筛选 -->
+      <span class="item">
+        <span class="label">支持试用:</span>
+        <span class="value">
+          <span
+            :class="{ active: apiParams.isTry === null }"
+            class="span-padding"
+            @click="(apiParams.isTry = null), clickSearchBtn()"
+            >不限</span
+          >
+          <span
+            :class="{ active: apiParams.isTry === 1 }"
+            @click="(apiParams.isTry = 1), clickSearchBtn()"
+            >是</span
+          >
+          <span
+            :class="{ active: apiParams.isTry === 0 }"
+            @click="(apiParams.isTry = 0), clickSearchBtn()"
+            >否</span
+          >
+        </span>
+      </span>
 
       <!-- <span>
         <t-button
@@ -354,6 +376,7 @@ const apiParams = ref<Record<string, any>>({
   upShelfTimeSort: null,
   name: route.query.goodsName || null,
   tagIdList: [null, null, null],
+  isTry: null,
 });
 
 const tagList = ref<Record<string, any>>([]);
@@ -455,6 +478,7 @@ const clickSearchBtn = () => {
 const clickResetBtn = () => {
   apiParams.value.productTypeId = null;
   apiParams.value.deliveryType = null;
+  apiParams.value.isTry = null;
   selectPriceInterval.value = -1;
   customPriceStart.value = null;
   customPriceEnd.value = null;
