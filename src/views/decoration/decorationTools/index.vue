@@ -54,7 +54,6 @@
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
-                <!-- element !== 'HomeHeader' 后续可以考虑写个方法 -->
                 <t-space
                   v-if="
                     selectIndex === index &&
@@ -628,8 +627,8 @@ const insertFirst = (type: number) => {
       componentsList.value.unshift(homeHeader);
     }
   } else if (
-    type === ChannelType.PLATFORM_PRODUCT ||
-    type === ChannelType.PLATFORM_SERVE
+    type !== ChannelType.PLATFORM_HOME &&
+    type !== ChannelType.PLATFORM_PRODUCT_DETAIL
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
       toolList.value.unshift('ChannelHeader');
