@@ -6,7 +6,7 @@
       width: isPreview ? '100vw' : '722px',
     }"
   >
-    <div v-if="openType === 5" class="product-bg">
+    <div v-if="openType === 100" class="product-bg">
       <div class="product-text"></div>
     </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
@@ -604,11 +604,8 @@ watch(
   () => route.query,
   () => {
     const { type } = route.query;
-    console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
     if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-      console.log(openType.value, ChannelType);
-
       // interceptFlag.value = false;
     } else {
       // interceptFlag.value = true;
