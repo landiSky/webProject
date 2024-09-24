@@ -8,17 +8,59 @@
           <span
             :class="{ active: !apiParams.productTypeId }"
             class="span-padding"
-            @click="(apiParams.productTypeId = null), clickSearchBtn()"
+            @click="
+              ((apiParams.productTypeId = null),
+              (apiParams.productChildTypeId = null),
+              (firstClassIndex = null)),
+                clickSearchBtn()
+            "
             >不限</span
           >
           <span
-            v-for="item in productTypeList"
-            :key="item.id"
-            :class="{ active: apiParams.productTypeId === item.id }"
-            @click="(apiParams.productTypeId = item.id), clickSearchBtn()"
+            v-for="(item, index) in productTypeList"
+            :key="`${item.id}-${index}`"
+            :class="{
+              active:
+                apiParams.productTypeId === item.id ||
+                firstClassIndex === index,
+            }"
+            @click="
+              ((apiParams.productTypeId = item.id),
+              (firstClassIndex = index),
+              (apiParams.productChildTypeId = null)),
+                clickSearchBtn()
+            "
           >
-            {{ item.name }}
+            <span>
+              {{ item.name }}
+            </span>
           </span>
+          <!-- 二级分类 -->
+          <!-- productTypeList[firstClassIndex || 0]: 这个表达式用于获取productTypeList数组中的某个元素。
+        firstClassIndex是一个变量，可能是从其他地方传递进来的，
+        用来指定数组中的索引。如果firstClassIndex未定义或为null，则默认使用数组的第一个元素（即索引为0的元素）。 -->
+          <div
+            v-if="
+              apiParams.productTypeId &&
+              apiParams.productTypeId ===
+                productTypeList[firstClassIndex || 0]?.id
+            "
+            class="value"
+          >
+            <span
+              v-for="itemSecond in productTypeList[firstClassIndex || 0]
+                ?.children"
+              :key="itemSecond.id"
+              :class="{
+                active: apiParams.productChildTypeId === itemSecond.id,
+              }"
+              @click="
+                (apiParams.productChildTypeId = itemSecond.id), clickSearchBtn()
+              "
+            >
+              {{ itemSecond.name }}
+            </span>
+          </div>
         </span>
       </span>
       <span class="item">
@@ -369,8 +411,10 @@ const btnLoading = ref(false);
 const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
 const customPriceStart = ref(); // 自定义价格区间起止
 const customPriceEnd = ref();
+const firstClassIndex = ref(); // 商品的一级标签的index
 const apiParams = ref<Record<string, any>>({
   productTypeId: null,
+  productChildTypeId: null,
   deliveryType: null,
   priceSort: null,
   upShelfTimeSort: null,
