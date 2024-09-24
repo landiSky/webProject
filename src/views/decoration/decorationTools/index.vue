@@ -6,7 +6,10 @@
       width: isPreview ? '100vw' : '722px',
     }"
   >
-    <div v-if="openType === 100" class="product-bg">
+    <div
+      v-if="openType === ChannelType.PLATFORM_PRODUCT_DETAIL"
+      class="product-bg"
+    >
       <div class="product-text"></div>
     </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
