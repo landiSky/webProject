@@ -35,32 +35,35 @@
               {{ item.name }}
             </span>
           </span>
-          <!-- 二级分类 -->
-          <!-- productTypeList[firstClassIndex || 0]: 这个表达式用于获取productTypeList数组中的某个元素。
-        firstClassIndex是一个变量，可能是从其他地方传递进来的，
-        用来指定数组中的索引。如果firstClassIndex未定义或为null，则默认使用数组的第一个元素（即索引为0的元素）。 -->
-          <div
-            v-if="
-              apiParams.productTypeId &&
-              apiParams.productTypeId ===
-                productTypeList[firstClassIndex || 0]?.id
+        </span>
+      </span>
+
+      <!-- 二级分类 -->
+      <span
+        v-if="
+          apiParams.productTypeId &&
+          apiParams.productTypeId === productTypeList[firstClassIndex || 0]?.id
+        "
+        class="item"
+        style="margin-top: -20px"
+      >
+        <span class="label" style="opacity: 0">二级分类:</span>
+        <span class="value">
+          <span
+            v-for="itemSecond in productTypeList[firstClassIndex || 0]
+              ?.children"
+            :key="itemSecond.id"
+            :class="{
+              active: apiParams.productChildTypeId === itemSecond.id,
+            }"
+            @click="
+              (apiParams.productChildTypeId = itemSecond.id), clickSearchBtn()
             "
-            class="value"
           >
-            <span
-              v-for="itemSecond in productTypeList[firstClassIndex || 0]
-                ?.children"
-              :key="itemSecond.id"
-              :class="{
-                active: apiParams.productChildTypeId === itemSecond.id,
-              }"
-              @click="
-                (apiParams.productChildTypeId = itemSecond.id), clickSearchBtn()
-              "
-            >
+            <span>
               {{ itemSecond.name }}
             </span>
-          </div>
+          </span>
         </span>
       </span>
       <span class="item">
