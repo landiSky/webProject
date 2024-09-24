@@ -355,10 +355,10 @@
                       message: '应用首页地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
@@ -383,10 +383,10 @@
                       message: '应用回调地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
