@@ -414,10 +414,10 @@ const getPageData = (idx?: number) => {
         }
       });
       // 保存做单独状态处理
+      channelFormMap.value.forEach((item, index) => {
+        item.navNameEdit = tempData[index]?.navNameEdit;
+      });
       if (typeof idx === 'number' && channelFormMap.value[idx]) {
-        channelFormMap.value.forEach((item, index) => {
-          item.navNameEdit = tempData[index]?.navNameEdit;
-        });
         channelFormMap.value[idx].navNameEdit =
           !channelFormMap.value[idx].navNameEdit;
       }
