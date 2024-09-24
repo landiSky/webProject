@@ -72,7 +72,6 @@ export const whiteList = [
   '/wow/freeApp',
   '/wow/mall',
   '/wow/doc',
-  '/wow/platProducts',
   '/wow/platServices',
   '/wow/idInsideZone',
 ];
