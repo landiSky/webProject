@@ -1,5 +1,22 @@
 <template>
-  <div class="header"></div>
+  <div class="header">
+    <div class="search">
+      <t-input
+        v-model="searchContent"
+        class="inputSearch"
+        placeholder="请输入商品名称"
+        @press-enter="onSearch"
+      >
+        <template #prepend>
+          <icon-search />
+          <!-- 假设 t-icon 是用来插入图标的组件 -->
+        </template>
+      </t-input>
+      <t-button type="primary" class="searchButton" @click="onSearch"
+        >搜索</t-button
+      >
+    </div>
+  </div>
   <div class="content">
     <div class="search">
       <span class="item">
@@ -45,7 +62,7 @@
           apiParams.productTypeId === productTypeList[firstClassIndex || 0]?.id
         "
         class="item"
-        style="margin-top: -20px"
+        style="margin-top: -15px"
       >
         <span class="label" style="opacity: 0">二级分类:</span>
         <span class="value">
@@ -561,6 +578,22 @@ const tagsClick = (parentsubscript: any, item: any) => {
   getProductList();
 };
 
+const searchContent = ref();
+const onSearch = () => {
+  // TODO w: 商城搜索打点
+  apiDataPoint(null, searchContent.value, userInfo?.value?.id, 5, 9).then(
+    () => {
+      console.log('主导航栏商品搜索打点', searchContent.value);
+    }
+  );
+  router.push({
+    name: 'wowMall',
+    query: {
+      goodsName: searchContent.value,
+    },
+  });
+};
+
 watch(
   () => route.query.goodsName,
   (newV) => {
@@ -619,10 +652,34 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .header {
+  display: flex; /* 启用 Flexbox 布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
   width: 100%;
-  min-height: 480px;
+  min-height: 360px;
   background-image: url('@/assets/images/wow/mall/mall_index_bg.svg');
   background-size: cover;
+
+  .search {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    height: 40px;
+
+    .inputSearch {
+      width: 500px;
+      height: 40px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .searchButton {
+      width: 100px;
+      height: 40px;
+      margin: 0; /* 移除默认的外边距 */
+      padding: 0; /* 移除默认的内边距 */
+    }
+  }
 }
 
 .content {
