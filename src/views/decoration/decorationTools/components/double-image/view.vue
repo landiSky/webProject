@@ -59,7 +59,8 @@ const checkConfigList = (list: any) => {
       item.title.length < 30 &&
       letterReg.test(item.title) &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
     );
   });
 };
