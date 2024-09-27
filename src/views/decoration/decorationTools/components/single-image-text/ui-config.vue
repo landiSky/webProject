@@ -122,6 +122,7 @@
           v-model="form.linkUrl"
           placeholder="请选择"
           allow-clear
+          :allow-search="true"
         >
           <t-option v-for="item in goodsList" :key="item" :value="item.id">{{
             item.name

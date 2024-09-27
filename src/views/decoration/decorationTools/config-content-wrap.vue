@@ -53,6 +53,8 @@ const listType = [
   'MutiIconText',
   'DoubleImg',
   'ThreeImg',
+  'MultiNavImg',
+  'TreeTextNavigation',
 ];
 
 watch(

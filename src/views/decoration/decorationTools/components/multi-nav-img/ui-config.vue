@@ -24,14 +24,23 @@
         :validate-trigger="['blur', 'input']"
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 10, message: '长度不超过10个字符' },
+          {
+            required: true,
+            match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+            message: '输入内容只支持中英文，不支持输入其他特殊字符。',
+          },
         ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 10,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
       <div
@@ -50,7 +59,7 @@
           <div class="vertical-line"></div>
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
           <div
-            v-if="form.list.length > 2"
+            v-if="form.list.length > 3"
             class="delete"
             @click="deleteSpace(index)"
             >删除</div
@@ -68,61 +77,23 @@
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 6, message: '长度不超过6个字符' },
+            {
+              required: true,
+              match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+              message: '输入内容只支持中英文，不支持输入其他特殊字符。',
+            },
           ]"
         >
           <t-input
             v-model="item.navTitle"
             placeholder="请输入"
-            :max-length="20"
-            show-word-limit
-            allow-clear
-          />
-        </t-form-item>
-        <t-form-item
-          label="名称"
-          :field="`list.${index}.title`"
-          :label-col-props="{
-            flex: '90px',
-            align: 'left',
-          }"
-          :validate-status="`${item.title ? '' : 'error'}`"
-          :help="`${item.title ? '' : '该信息为必填项，未填写不支持发布'}`"
-          :validate-trigger="['blur']"
-          :rules="[
-            { required: true, message: '该信息为必填项，未填写不支持发布' },
-          ]"
-        >
-          <t-input
-            v-model="item.title"
-            placeholder="请输入"
-            :max-length="20"
-            show-word-limit
-            allow-clear
-          />
-        </t-form-item>
-        <t-form-item
-          label="简介"
-          :field="`list.${index}.desc`"
-          :label-col-props="{
-            flex: '90px',
-            align: 'center',
-          }"
-          :validate-status="`${item.desc ? '' : 'error'}`"
-          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
-          validate-trigger="blur"
-          :rules="[
-            { required: true, message: '该信息为必填项，未填写不支持发布' },
-          ]"
-        >
-          <t-textarea
-            v-model="item.desc"
-            placeholder="请输入"
-            allow-clear
-            :max-length="400"
-            show-word-limit
-            :auto-size="{
-              minRows: 6,
+            :max-length="{
+              length: 6,
+              errorOnly: true,
             }"
+            show-word-limit
+            :allow-clear="false"
           />
         </t-form-item>
         <t-form-item
@@ -156,14 +127,19 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 500, message: '长度不超过500个字符' },
           ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            :max-length="500"
+            :max-length="{
+              length: 500,
+              errorOnly: true,
+            }"
             show-word-limit
             placeholder="请输入"
+            :allow-clear="false"
           />
           <t-select
             v-if="item.linkType === 1"
@@ -180,7 +156,67 @@
             >
           </t-select>
         </t-form-item>
+
+        <t-form-item
+          label="图片"
+          :field="`list.${index}.src`"
+          :label-col-props="{
+            flex: '90px',
+          }"
+          validate-trigger="blur"
+          :rules="[
+            { required: true, message: '该信息为必填项，未填写不支持发布' },
+          ]"
+        >
+          <t-space direction="vertical">
+            <t-upload
+              list-type="picture-card"
+              :file-list="
+                item.src
+                  ? [
+                      {
+                        url: `/server/web/file/download?name=${item.src}`,
+                        // url: `${form.src}`,
+                      },
+                    ]
+                  : []
+              "
+              action="/"
+              :limit="1"
+              image-preview
+              :on-before-remove="
+                () => {
+                  return onBeforeRemove(index);
+                }
+              "
+              style="width: 100px; height: 100px"
+            >
+              <template #remove-icon>
+                <iconpark-icon name="replace" size="16px"></iconpark-icon>
+              </template>
+              <template #preview-icon>
+                <icon-eye />
+              </template>
+            </t-upload>
+            <span style="margin-top: -20px; color: #86909c; font-size: 12px">
+              {{
+                `建议图片尺寸：${stencilSize.width}px *
+              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
+              }}
+            </span>
+          </t-space>
+        </t-form-item>
       </div>
+      <Source
+        v-if="showSource"
+        :visible="showSource"
+        :confirm-loading="confirmLoading"
+        :cut-width="stencilSize.width"
+        :cut-height="stencilSize.height"
+        title="素材库"
+        @on-confirm="onConfirm"
+        @on-cancel="onCancel"
+      />
       <div class="extraOpt">
         <iconpark-icon
           v-if="form.list.length < 8"
@@ -209,7 +245,9 @@
 
 <script setup lang="ts">
 import { toRefs, ref, onMounted, PropType } from 'vue';
+import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
+import { ToolData } from '../../config/tools';
 
 type GoodsItem = {
   name: string;
@@ -220,7 +258,15 @@ const props = defineProps({
   isPro: Boolean,
   goodsList: Array as PropType<GoodsItem[]>,
 });
+const confirmLoading = ref(false);
 
+// 截图尺寸
+const stencilSize = ref({
+  width: 1200,
+  height: 520,
+});
+const curIndex = ref(0);
+const showSource = ref(false);
 const { data, goodsList } = toRefs(props);
 const formRef = ref();
 
@@ -239,12 +285,22 @@ const changeRadio = (value: number) => {
 };
 const addBlock = () => {
   form.value.list.push({
-    navTitle: '子导航',
-    desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
-    title: '名称名称名称名称名称名称名称名称名称名称',
-    linkType: 2,
-    linkUrl: '',
+    ...ToolData?.MultiNavImg?.configValue[0],
   });
+};
+const onBeforeRemove = (index: number) => {
+  curIndex.value = index;
+  showSource.value = true;
+};
+
+const onConfirm = (value: any) => {
+  form.value.list[curIndex.value].src = value;
+  // console.log('form:', form.value.list);
+  showSource.value = false;
+};
+
+const onCancel = () => {
+  showSource.value = false;
 };
 
 const deleteSpace = (index: number) => {

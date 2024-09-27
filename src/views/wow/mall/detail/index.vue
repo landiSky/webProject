@@ -1031,6 +1031,7 @@ onUnmounted(() => {
   font-size: 14px;
 
   .productIntro {
+    position: relative;
     width: 1176px;
     margin: 32px 0 132px 0;
 

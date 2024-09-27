@@ -96,6 +96,7 @@ defineExpose({
   width: 100%;
 
   .vertical-image-text-title {
+    display: -webkit-box;
     width: calc(@factor * 130px);
     margin: calc(@factor * 24px) 0 calc(@factor * 12px);
     overflow: hidden;
@@ -104,9 +105,12 @@ defineExpose({
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: nowrap;
+    white-space: normal;
     text-overflow: ellipsis;
+    word-wrap: break-word;
+    word-break: break-all;
     -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .image-box {
@@ -124,17 +128,21 @@ defineExpose({
       width: calc(@factor * 190px);
 
       .image-title {
+        display: -webkit-box;
         margin-bottom: calc(@factor * 8px);
+        overflow: hidden;
         overflow: hidden;
         color: #1d2129;
         font-weight: 400;
         font-size: calc(@factor * 8px);
         font-family: PingFang SC;
         line-height: calc(@factor * 12px);
-        white-space: nowrap;
-        text-align: left;
+        white-space: normal;
         text-overflow: ellipsis;
+        word-wrap: break-word;
+        word-break: break-all;
         -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
       }
     }
 

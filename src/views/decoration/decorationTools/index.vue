@@ -860,7 +860,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 0;
+  margin: 0 auto;
+  // margin-top: 0;
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {

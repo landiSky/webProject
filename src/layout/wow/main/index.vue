@@ -42,6 +42,7 @@ router.afterEach((to, from) => {
 <style scoped lang="less">
 .main {
   display: flex;
+  // width: 100%;
   flex: 1;
   flex-direction: column;
   height: 100%; // 页面滚动

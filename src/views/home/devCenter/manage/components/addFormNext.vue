@@ -25,9 +25,21 @@
             <t-button
               type="primary"
               :loading="state.launchLoading"
-              @click="handleLaunchOrSave(1)"
-              >保存并上线</t-button
-            >
+              @click="
+                handleLaunchOrSave(
+                  (state.status === 0 && form.appType === 1) ||
+                    (state.status === 0 && form.dockingMethod === 0)
+                    ? 2
+                    : 1
+                )
+              "
+              >{{
+                (state.status === 0 && form.appType === 1) ||
+                (state.status === 0 && form.dockingMethod === 0)
+                  ? '应用调试'
+                  : '保存并上线'
+              }}
+            </t-button>
           </span>
         </div>
       </template>
@@ -146,7 +158,7 @@
                 </t-form-item>
                 <t-form-item
                   v-if="showAuthLimit"
-                  field="appMode"
+                  field="dockingMethod"
                   label="对接方式"
                   :rules="[
                     {
@@ -155,7 +167,7 @@
                     },
                   ]"
                 >
-                  <t-radio-group v-model="form.appMode">
+                  <t-radio-group v-model="form.dockingMethod">
                     <t-radio :value="0">SAAS</t-radio>
                     <t-radio :value="1">链接接入</t-radio>
                   </t-radio-group>
@@ -298,7 +310,7 @@
                 </t-form-item>
                 <t-form-item
                   v-if="showAuthLimitDock"
-                  field="appLink"
+                  field="link"
                   label="链接"
                   :rules="[
                     {
@@ -309,7 +321,7 @@
                   ]"
                 >
                   <t-textarea
-                    v-model="form.appLink"
+                    v-model="form.link"
                     placeholder="请输入"
                     :max-length="500"
                     allow-clear
@@ -343,10 +355,10 @@
                       message: '应用首页地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
@@ -371,10 +383,10 @@
                       message: '应用回调地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
@@ -481,7 +493,7 @@
             >
               <t-descriptions-item>
                 <t-form-item
-                  field="authorizationSettings"
+                  field="authType"
                   label="授权设置"
                   :rules="[
                     {
@@ -490,9 +502,9 @@
                     },
                   ]"
                 >
-                  <t-checkbox-group v-model="form.authorizationSettings">
-                    <t-checkbox value="1">用户手机号</t-checkbox>
-                    <t-checkbox value="2">企业认证信息</t-checkbox>
+                  <t-checkbox-group v-model="form.authType">
+                    <t-checkbox value="0">用户手机号</t-checkbox>
+                    <t-checkbox value="1">企业认证信息</t-checkbox>
                   </t-checkbox-group>
                 </t-form-item>
               </t-descriptions-item>
@@ -569,9 +581,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
-  authorizationSettings: Record<string, any>[];
-  appMode: number; // 0、SAAS 1、链接接入
-  appLink: string;
+  authType: Record<string, any>[];
+  dockingMethod: number; // 0、SAAS 1、链接接入
+  link: string;
 }>({
   appType: 1,
   appName: '',
@@ -582,9 +594,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
-  authorizationSettings: [],
-  appMode: 1,
-  appLink: '',
+  authType: [],
+  dockingMethod: 1,
+  link: '',
 });
 
 const state = reactive<{
@@ -596,6 +608,7 @@ const state = reactive<{
   companyId: string;
   saveLoading: boolean;
   launchLoading: boolean;
+  status: number; // 应用状态:0-未上线,1-已上线 2-调试中
 }>({
   tableData: [],
   tableLoading: false,
@@ -605,6 +618,7 @@ const state = reactive<{
   companyId: '',
   saveLoading: false,
   launchLoading: false,
+  status: 0,
 });
 const emit = defineEmits(['onCancel']);
 
@@ -618,7 +632,7 @@ const showAuthLimit = computed(() => {
 });
 
 const showAuthLimitDock = computed(() => {
-  if (form.appMode === 1) {
+  if (form.dockingMethod === 1) {
     return true;
   }
   return false;
@@ -697,6 +711,7 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       memberType: undefined,
+      authType: form.authType ? form.authType.join(',') : '',
     };
   } else {
     const memberIdList = form.memberList.map((i) => i.memberId);
@@ -865,6 +880,10 @@ onMounted(() => {
       form.homeUri = res?.homeUri;
       form.redirectUri = res?.redirectUri;
       state.companyId = res?.companyId;
+      form.dockingMethod = res?.dockingMethod;
+      form.link = res?.link;
+      form.authType = res?.authType ? res?.authType.split(',') : [];
+      state.status = res?.status;
     })
     .catch(() => {
       state.tableLoading = false;

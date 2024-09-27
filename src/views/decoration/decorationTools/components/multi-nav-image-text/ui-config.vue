@@ -148,6 +148,7 @@
             v-model="item.linkUrl"
             placeholder="请选择"
             allow-clear
+            :allow-search="true"
           >
             <t-option
               v-for="itemg in goodsList"

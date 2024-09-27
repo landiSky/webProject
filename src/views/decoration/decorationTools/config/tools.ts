@@ -1,4 +1,6 @@
+import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
+
 // 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
   SigleImgText: {
@@ -462,7 +464,7 @@ export const ToolData: Record<string, any> = {
     icon: 'threeImg',
     name: 'ThreeImg',
     mainTitle: '主标题',
-    bgColor: '#F5F6FB',
+    bgColor: '#ffffff',
     configValue: [
       {
         title: '小标题',
@@ -481,6 +483,69 @@ export const ToolData: Record<string, any> = {
         src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
         linkType: LinkType.BLANK,
         linkUrl: '',
+      },
+    ],
+  },
+  MultiNavImg: {
+    chineseName: '多导航图',
+    maxNum: 8,
+    icon: 'mutiNavImg',
+    name: 'MultiNavImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  TreeTextNavigation: {
+    chineseName: '树状文本导航',
+    maxNum: 10,
+    maxContentNum: 20,
+    icon: 'verticalNavTxt',
+    name: 'TreeTextNavigation',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: LinkType.BLANK,
+            linkUrl: '',
+          },
+        ],
+      },
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: LinkType.BLANK,
+            linkUrl: '',
+          },
+        ],
       },
     ],
   },
@@ -503,4 +568,6 @@ export const tools = [
   'MutiNavText',
   'MutiIconText',
   'ThreeImg',
+  'MultiNavImg',
+  'TreeTextNavigation',
 ];

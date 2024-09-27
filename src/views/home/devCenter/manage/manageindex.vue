@@ -71,7 +71,7 @@
           <template #status="{ record }">
             <span
               class="status-section"
-              :class="record.status ? '' : 'offline'"
+              :class="StatusClassEnum[record.status]"
               >{{ StatusEnum[record.status] ?? '-' }}</span
             >
           </template>
@@ -83,18 +83,52 @@
               <t-button type="text" @click="handleTableLaunchOrDel(record)">{{
                 record.status ? '下线' : '上线'
               }}</t-button>
-              <t-button
+              <!-- <t-button
                 type="text"
                 :disabled="record.status === 1"
                 @click="handleTableEdit(record)"
                 >编辑</t-button
-              >
-              <t-button
+              > -->
+              <!-- <t-button
                 type="text"
                 :disabled="record.status === 1"
                 @click="handleTableDel(record)"
                 >删除</t-button
-              >
+              > -->
+              <t-dropdown position="br">
+                <t-link>
+                  <icon-more />
+                </t-link>
+                <template #content>
+                  <t-doption
+                    :disabled="record.status !== 3"
+                    @click="handleTableDebugging(record)"
+                  >
+                    <template #icon>
+                      <icon-common />
+                    </template>
+                    取消调试
+                  </t-doption>
+                  <t-doption
+                    :disabled="record.status === 1"
+                    @click="handleTableEdit(record)"
+                  >
+                    <template #icon>
+                      <icon-edit />
+                    </template>
+                    编辑
+                  </t-doption>
+                  <t-doption
+                    :disabled="record.status === 1"
+                    @click="handleTableDel(record)"
+                  >
+                    <template #icon>
+                      <icon-delete />
+                    </template>
+                    删除
+                  </t-doption>
+                </template>
+              </t-dropdown>
             </span>
           </template>
         </t-table>
@@ -135,6 +169,7 @@ import {
   fetchOffineStatus,
   fetchOffine,
   fetchDel,
+  fetchCancelDebug,
 } from '@/api/devCenter/manage';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -236,11 +271,21 @@ const StatusList = [
     text: '已上线',
     value: 1,
   },
+  {
+    text: '调试中',
+    value: 2,
+  },
 ];
 
 const StatusEnum: { [name: string]: any } = {
   0: '未上线',
   1: '已上线',
+  2: '调试中',
+};
+const StatusClassEnum: { [name: string]: any } = {
+  0: 'offline',
+  1: 'already-online',
+  2: 'debugging',
 };
 
 const columns = [
@@ -295,7 +340,8 @@ const columns = [
     title: '操作',
     dataIndex: 'operation',
     slotName: 'operation',
-    width: 220,
+    fixed: 'right',
+    width: 160,
   },
 ];
 
@@ -501,6 +547,15 @@ const handleReset = () => {
   fetchTableData();
 };
 
+const handleTableDebugging = (record: Record<string, any>) => {
+  const params = {
+    appInfoId: record.id,
+  };
+  fetchCancelDebug(params).then(() => {
+    fetchTableData();
+  });
+};
+
 watch(
   () => route.query.selectById,
   (newV) => {
@@ -548,12 +603,19 @@ onMounted(async () => {
   height: 8px;
   margin-right: 6px;
   vertical-align: middle;
-  background: #00aa2a;
   border-radius: 50%;
   content: '';
 }
 
+.already-online::before {
+  background: #00aa2a;
+}
+
 .offline::before {
   background: #c9cdd4;
+}
+
+.debugging::before {
+  background-color: rgba(22, 100, 255, 1);
 }
 </style>
