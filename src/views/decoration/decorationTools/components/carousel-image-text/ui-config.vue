@@ -24,14 +24,18 @@
         :validate-trigger="['blur', 'input']"
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 10, message: '长度不超过10个字符' },
         ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 10,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
       <div
@@ -90,14 +94,18 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 120, message: '长度不超过120个字符' },
           ]"
         >
           <t-textarea
             v-model="item.desc"
             placeholder="请输入"
-            allow-clear
-            :max-length="50"
+            :max-length="{
+              length: 120,
+              errorOnly: true,
+            }"
             show-word-limit
+            :allow-clear="false"
           />
         </t-form-item>
 

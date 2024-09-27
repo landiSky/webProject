@@ -29,9 +29,12 @@
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 10,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
 
