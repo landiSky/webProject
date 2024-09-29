@@ -24,7 +24,7 @@
               placeholder="请输入"
               :allow-clear="false"
               :max-length="{
-                length: 20,
+                length: 50,
                 errorOnly: true,
               }"
               show-word-limit
@@ -379,7 +379,7 @@ const formRules = {
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入商务合作');
-        if (value.length > 20) return cb('长度不超过20个字符');
+        if (value.length > 50) return cb('长度不超过50个字符');
         return cb();
       },
     },
