@@ -360,7 +360,7 @@
                 <span v-else class="prefix">价格面议</span>
               </div>
             </span>
-            <span v-if="item.isTry === 1" class="label-try">
+            <span v-if="item.isTry == 1" class="label-try">
               <span class="label-try-text">支持试用</span>
             </span>
           </span>

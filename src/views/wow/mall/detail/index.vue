@@ -572,6 +572,7 @@ const priceParams = ref<Record<string, any>>({
   accountId: null,
   durationId: null,
 });
+const phoneNumber = ref();
 const previewImgList = ref<string[]>([]);
 const bigImgPath = ref();
 const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
@@ -902,12 +903,19 @@ const isScoreNothing = computed(
   () => evaluateDatail.value.avgEvaluate === '暂无评分'
 );
 
-const phoneNumber = ref('');
 // 登录状态下 咨询公司信息的 弹窗
 const infoModalVisible = ref(false);
 // const {redirect} = router.currentRoute.value.query;
 const onLineConsult = () => {
   if (userInfo !== null) {
+    // 获取商品服务商的电话
+    apiServicePhone({ productId: route.params.id })
+      .then((data) => {
+        phoneNumber.value = data;
+      })
+      .catch((error) => {
+        console.error('Error fetching service phone number:', error);
+      });
     infoModalVisible.value = true;
   } else {
     Modal.warning({
@@ -940,10 +948,6 @@ const copyPhoneNumber = () => {
 // });
 
 onMounted(() => {
-  // 获取商品服务商的电话
-  apiServicePhone({ id: route.params.id }).then((data) => {
-    phoneNumber.value = data.data;
-  });
   // TODO w: 商品详情打点
   apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(() => {
     console.log('商品详情打点', route.params.id);

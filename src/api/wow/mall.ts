@@ -34,5 +34,5 @@ export function apiBypageList(data: Record<string, any>) {
 
 // 获取商品服务商的手机号
 export function apiServicePhone(params: Record<string, any>) {
-  return $http.post('/server/web/reception/getServicePhone?productId', params);
+  return $http.get(`/server/web/reception/getServicePhone`, { params });
 }
