@@ -24,14 +24,18 @@
         :validate-trigger="['blur', 'input']"
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 10, message: '长度不超过10个字符' },
         ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 10,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
       <div
@@ -68,14 +72,18 @@
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 8, message: '长度不超过8个字符' },
           ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
-            :max-length="20"
+            :max-length="{
+              length: 8,
+              errorOnly: true,
+            }"
             show-word-limit
-            allow-clear
+            :allow-clear="false"
           />
         </t-form-item>
         <t-form-item
@@ -90,14 +98,18 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 400, message: '长度不超过400个字符' },
           ]"
         >
           <t-textarea
             v-model="item.desc"
             placeholder="请输入"
-            allow-clear
-            :max-length="100"
+            :max-length="{
+              length: 400,
+              errorOnly: true,
+            }"
             show-word-limit
+            :allow-clear="false"
             :auto-size="{
               minRows: 6,
             }"
@@ -134,14 +146,19 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 500, message: '长度不超过500个字符' },
           ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            :max-length="500"
-            show-word-limit
             placeholder="请输入"
+            :max-length="{
+              length: 500,
+              errorOnly: true,
+            }"
+            show-word-limit
+            :allow-clear="false"
           />
           <t-select
             v-if="item.linkType === 1"
