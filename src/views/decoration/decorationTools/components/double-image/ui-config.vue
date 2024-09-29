@@ -122,9 +122,13 @@
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            :max-length="500"
+            :max-length="{
+              length: 500,
+              errorOnly: true,
+            }"
             show-word-limit
             placeholder="请输入"
+            :allow-clear="false"
           />
           <t-select
             v-if="item.linkType === 1"
