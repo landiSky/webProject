@@ -43,8 +43,10 @@ const validate = () => {
     if (
       // TODO 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 10 ||
       // !data?.value?.configValue?.desc ||
-      (!data?.value?.configValue?.linkUrl &&
+      ((!data?.value?.configValue?.linkUrl ||
+        data?.value?.configValue?.linkUrl.length > 500) &&
         data?.value?.configValue?.linkType !== 2)
     ) {
       return reject();
