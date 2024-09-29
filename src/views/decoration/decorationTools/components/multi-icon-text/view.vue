@@ -58,9 +58,12 @@ const checkConfigList = (list: any) => {
     console.log('竖图遍历000', item);
     return (
       item.title &&
+      item.title.length < 8 &&
       item.desc &&
+      item.desc.length < 100 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
     );
   });
 };
