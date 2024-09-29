@@ -193,6 +193,16 @@ const operationRoutesList = [
           hideInMenu: false,
         },
       },
+      {
+        path: '/decoration/footer',
+        name: 'footerConfig',
+        component: () => import('@/views/decoration/footer.vue'),
+        meta: {
+          name: 'Footer信息配置',
+          keepAlive: true,
+          hideInMenu: false,
+        },
+      },
       // {
       //   path: '/decoration/tools',
       //   name: 'decorationTools',
