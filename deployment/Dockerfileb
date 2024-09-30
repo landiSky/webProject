@@ -1,5 +1,5 @@
 # 基础镜像
-ROM harbor.idx.space/ops/nginx:1.24.1
+FROM harbor.idx.space/ops/nginx:1.24.1
 
 # 设置时区
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
