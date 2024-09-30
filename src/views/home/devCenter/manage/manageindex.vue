@@ -170,7 +170,6 @@ import {
   fetchDel,
   fetchCancelDebug,
 } from '@/api/devCenter/manage';
-import { snmsClientLogin } from '@/api/login';
 import {
   alreadyBuyClientLogin,
   appInfoClientLogin,
@@ -179,7 +178,6 @@ import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { sm2 } from '@/utils/encrypt';
-import { AppType, NodeAuthStatus } from '@/enums/common';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
@@ -563,129 +561,68 @@ const handleTableCancelDebugging = (record: Record<string, any>) => {
   });
 };
 
-const compareDate = (dateTime1: string, dateTime2: string) => {
-  const formatDate1 = new Date(dateTime1);
-  const formatDate2 = new Date(dateTime2);
-  if (formatDate1 > formatDate2) {
-    return true;
-  }
-  return false;
-};
-
 const handleTableDebugging = (record: Record<string, any>) => {
   if (record.appType === 0 && record.dockingMethod === 1) {
     window.open(record?.link);
     return false;
   }
-  const { id, dueDate, type, productId, deliveryId, deliveryType } = record;
-  const { snmsUrls, companyId } = userInfo || {};
-  // 标识类应用需要申请开通企业节点
-  if (
-    AppType.IDAPP === type &&
-    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
-  ) {
-    Modal.info({
-      title: '使用提醒',
-      content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不开通',
-      okText: '去开通',
-      onOk: () => {
-        const { companyId } = userInfoByCompany.value || {};
-        const params = {
-          companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
-          snmsLoginId: snmsUrls?.snmsLoginId,
-        };
-        snmsClientLogin(params).then((res: any) => {
-          if (res?.data?.code === 102006) {
-            return Message.error(res?.data?.message);
-          }
-          if (!res?.data?.data) {
-            return false;
-          }
-          const data = {
-            type: 'snms',
-            companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
-          };
-          const sm2data = sm2(
-            JSON.stringify(data),
-            userStore.configInfo?.publicKey
-          );
-          window.open(`${res?.data?.data}&data=${sm2data}`);
-          return false;
-        });
-      },
-    });
-    return false;
-  }
+  const { id, productId, deliveryId, deliveryType } = record;
 
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = `0${now.getMonth() + 1}`.slice(-2);
-  const day = `0${now.getDate()}`.slice(-2);
-  const hours = `0${now.getHours()}`.slice(-2);
-  const minutes = `0${now.getMinutes()}`.slice(-2);
-  const seconds = `0${now.getSeconds()}`.slice(-2);
-  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  if (!dueDate || compareDate(dueDate, formattedTime)) {
-    // TODO 过期时间判断
-    if (Number(record.appType) === 1) {
-      const params = {
+  if (Number(record.appType) === 1) {
+    const params = {
+      productId,
+      productDeliverySetId: deliveryId,
+      memberId: selectCompany.value?.memberId,
+      orderId: id,
+    };
+
+    alreadyBuyClientLogin(params).then((res: any) => {
+      const data = {
+        type: 'productApp',
         productId,
         productDeliverySetId: deliveryId,
         memberId: selectCompany.value?.memberId,
-        orderId: id,
       };
-
-      alreadyBuyClientLogin(params).then((res: any) => {
-        const data = {
-          type: 'productApp',
-          productId,
-          productDeliverySetId: deliveryId,
-          memberId: selectCompany.value?.memberId,
-        };
-        const sm2data = sm2(
-          JSON.stringify(data),
-          userStore.configInfo?.publicKey
-        );
-        if (res.code === 102008) {
-          return Message.warning(res?.message);
-        }
-        if (res.code !== 200) {
-          return Message.error(res?.message);
-        }
-        if (deliveryType === 1) {
-          window.open(res.data);
-        } else {
-          window.open(`${res.data}&data=${sm2data}`);
-        }
-        return true;
-      });
-    } else if (Number(record.appType) === 0) {
-      const params = {
-        appInfoId: id,
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      if (res.code === 102008) {
+        return Message.warning(res?.message);
+      }
+      if (res.code !== 200) {
+        return Message.error(res?.message);
+      }
+      if (deliveryType === 1) {
+        window.open(res.data);
+      } else {
+        window.open(`${res.data}&data=${sm2data}`);
+      }
+      return true;
+    });
+  } else if (Number(record.appType) === 0 && record.dockingMethod === 0) {
+    const params = {
+      appInfoId: id,
+      companyId: userInfoByCompany.value.companyId,
+    };
+    appInfoClientLogin(params).then((res: any) => {
+      if (res.code === 102008) {
+        return Message.warning(res?.message);
+      }
+      if (res.code !== 200) {
+        return Message.error(res?.message);
+      }
+      const data = {
+        type: 'selfApp',
         companyId: userInfoByCompany.value.companyId,
       };
-      appInfoClientLogin(params).then((res: any) => {
-        if (res.code === 102008) {
-          return Message.warning(res?.message);
-        }
-        if (res.code !== 200) {
-          return Message.error(res?.message);
-        }
-        const data = {
-          type: 'selfApp',
-          companyId: userInfoByCompany.value.companyId,
-        };
-        const sm2data = sm2(
-          JSON.stringify(data),
-          userStore.configInfo?.publicKey
-        );
-        window.open(`${res.data}&data=${sm2data}`);
-        return true;
-      });
-    }
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res.data}&data=${sm2data}`);
+      return true;
+    });
   }
   return true;
 };
