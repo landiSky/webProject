@@ -40,7 +40,9 @@ const validate = () => {
     if (
       // TODO 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      !data?.value?.configValue?.desc
+      data?.value?.mainTitle.length > 10 ||
+      !data?.value?.configValue?.desc ||
+      data?.value?.configValue?.desc.length > 500
     ) {
       return reject();
     }
@@ -82,7 +84,7 @@ defineExpose({
       overflow: hidden;
       color: #000;
       font-weight: 500;
-      font-size: calc(@factor * 14px);
+      font-size: calc(@factor * 12px);
       line-height: calc(@factor * 16px);
     }
 
