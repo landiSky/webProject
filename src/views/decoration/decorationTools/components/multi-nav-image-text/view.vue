@@ -74,12 +74,12 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.navTitle &&
-      item.navTitle.length < 6 &&
+      item.navTitle.length <= 6 &&
       item.desc &&
-      item.desc.length < 200 &&
+      item.desc.length <= 200 &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

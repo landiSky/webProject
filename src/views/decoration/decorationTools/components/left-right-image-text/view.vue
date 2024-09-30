@@ -70,12 +70,12 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
-      item.title.length < 8 &&
+      item.title.length <= 8 &&
       item.desc &&
-      item.desc.length < 400 &&
+      item.desc.length <= 400 &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

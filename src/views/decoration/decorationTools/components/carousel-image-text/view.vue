@@ -98,10 +98,10 @@ const checkConfigList = (list: any) => {
     return (
       // item.title &&
       item.desc &&
-      item.desc.length < 120 &&
+      item.desc.length <= 120 &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

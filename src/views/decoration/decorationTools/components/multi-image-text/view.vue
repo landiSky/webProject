@@ -131,12 +131,12 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.title.length < 6 &&
+      item.title.length <= 6 &&
       item.desc &&
-      item.desc.length < 16 &&
+      item.desc.length <= 16 &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

@@ -103,12 +103,12 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
-      item.title.length < 6 &&
+      item.title.length <= 6 &&
       item.desc &&
-      item.desc.length < 30 &&
+      item.desc.length <= 30 &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

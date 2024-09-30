@@ -89,12 +89,12 @@ const checkContentBlockList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.name &&
-      item.name.length < 40 &&
+      item.name.length <= 40 &&
       letterReg.test(item.name) &&
       item.desc &&
-      item.desc.length < 200 &&
+      item.desc.length <= 200 &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -103,9 +103,9 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.navTitle &&
-      item.navTitle.length < 6 &&
+      item.navTitle.length <= 6 &&
       letterReg.test(item.navTitle) &&
-      !checkContentBlockList(item.contentList)
+      checkContentBlockList(item.contentList)
     );
   });
 };
