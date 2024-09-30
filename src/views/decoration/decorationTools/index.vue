@@ -124,11 +124,24 @@
       </t-layout-content>
     </t-layout>
     <div v-if="openModel === 0" class="floating_btn-box">
-      <t-space size="medium">
-        <icon-eye v-if="!isPreview" :size="24" @click="clickPreview" />
-        <icon-eye-invisible v-if="isPreview" :size="24" @click="notPreview" />
-        <iconpark-icon name="saveLocal" :size="24" @click="clickSave" />
-        <iconpark-icon name="saveRemote" :size="24" @click="clickSaveRemote" />
+      <t-space size="large" class="icons-container">
+        <div class="icon-text-container">
+          <icon-eye v-if="!isPreview" :size="24" @click="clickPreview" />
+          <icon-eye-invisible v-if="isPreview" :size="24" @click="notPreview" />
+          <span style="font-size: 12px">预览</span>
+        </div>
+        <div class="icon-text-container">
+          <iconpark-icon name="saveLocal" :size="24" @click="clickSave" />
+          <span style="font-size: 12px">保存</span>
+        </div>
+        <div class="icon-text-container">
+          <iconpark-icon
+            name="saveRemote"
+            :size="24"
+            @click="clickSaveRemote"
+          />
+          <span style="font-size: 12px">发布</span>
+        </div>
       </t-space>
     </div>
     <div v-if="openModel === 1" class="floating_footer-box">
@@ -946,11 +959,19 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 152px;
-    height: 42px;
+    width: 252px;
+    height: 48px;
     background-color: white;
     border-radius: 2px;
     cursor: pointer;
+
+    .icons-container {
+      .icon-text-container {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+    }
   }
 
   .floating_footer-box {
