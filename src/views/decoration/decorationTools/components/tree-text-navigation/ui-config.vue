@@ -294,8 +294,8 @@
             <iconpark-icon
               v-if="item.contentList.length < data?.maxContentNum"
               class="plusIcon"
-              name="squarePlus"
-              size="20px"
+              name="plus"
+              size="12px"
               @click="addContent(index)"
             ></iconpark-icon>
             <t-tooltip
@@ -303,12 +303,17 @@
               content="到达内容添加上限，删除后可操作"
               position="tl"
             >
-              <iconpark-icon
+              <!-- <iconpark-icon
                 class="plusIcon"
                 style="cursor: not-allowed"
-                name="squarePlusGray"
-                size="20px"
-              ></iconpark-icon>
+                name="plus"
+                size="12px"
+              ></iconpark-icon> -->
+              <icon-plus
+                class="plusIcon"
+                style="cursor: not-allowed"
+                size="12px"
+              />
             </t-tooltip>
             <span>{{ `添加内容 (最多支持${data?.maxContentNum}条)` }}</span>
           </div>
