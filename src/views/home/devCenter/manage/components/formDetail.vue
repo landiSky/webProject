@@ -42,7 +42,7 @@
               >调试应用</t-button
             >
             <t-tooltip
-              v-if="props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 1"
               content="该应用已上线，暂时无法编辑"
               position="top"
             >
@@ -53,14 +53,14 @@
               >
             </t-tooltip>
             <t-button
-              v-if="!props.tableRecord?.status"
+              v-if="props.tableRecord?.status !== 1"
               type="primary"
-              :disabled="props.tableRecord?.status"
+              :disabled="props.tableRecord?.status === 1"
               @click="handleEdit"
               >编辑</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 1"
               type="primary"
               status="danger"
               @click="handleOffine"
@@ -475,7 +475,7 @@ const StatusEnum: { [name: string]: any } = {
 const StatusClassEnum: { [name: string]: any } = {
   0: 'warning',
   1: 'success',
-  2: '',
+  2: 'info',
 };
 
 const form = reactive<{

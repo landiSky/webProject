@@ -598,8 +598,6 @@ const form = reactive<{
   link: '',
 });
 
-const storeForms: Record<string, any> = reactive({});
-
 const state = reactive<{
   tableData: Record<string, any>[];
   tableLoading: boolean;
@@ -610,6 +608,9 @@ const state = reactive<{
   saveLoading: boolean;
   launchLoading: boolean;
   status: number; // 应用状态:0-未上线,1-已上线 2-调试中
+  homeUri: string;
+  redirectUri: string;
+  link: string;
 }>({
   tableData: [],
   tableLoading: false,
@@ -620,7 +621,11 @@ const state = reactive<{
   saveLoading: false,
   launchLoading: false,
   status: 0,
+  homeUri: '',
+  redirectUri: '',
+  link: '',
 });
+
 const emit = defineEmits(['onCancel']);
 
 const showModal = computed(() => props.visible);
@@ -663,10 +668,10 @@ const showButton = computed(() => {
     if (state.status === 2) {
       if (form.homeUri && form.redirectUri) {
         if (
-          storeForms.homeUri &&
-          storeForms.redirectUri &&
-          form.homeUri !== storeForms.homeUri &&
-          form.redirectUri !== storeForms.redirectUri
+          (state.homeUri &&
+            state.redirectUri &&
+            form.homeUri !== state.homeUri) ||
+          form.redirectUri !== state.redirectUri
         ) {
           return false;
         }
@@ -679,7 +684,7 @@ const showButton = computed(() => {
   if (form.appType === 0 && form.dockingMethod === 1) {
     if (state.status === 2) {
       if (form.link) {
-        if (storeForms.link && form.link !== storeForms.link) {
+        if (state.link && form.link !== state.link) {
           return false;
         }
         return true;
@@ -772,6 +777,7 @@ const handleLaunchOrSave = (status: number) => {
       ...form,
       memberList: undefined,
       id: props.editId,
+      authType: form.authType ? form.authType.join(',') : '',
     };
     if (form.memberType === 1) {
       params.memberIdList = memberIdList;
@@ -808,7 +814,7 @@ const handleLaunchOrSave = (status: number) => {
         const { data } = res;
         if (data?.code === 200) {
           Message.success({
-            content: '上线成功',
+            content: status === 2 ? '提交成功' : '上线成功',
             duration: 1000,
             onClose: () => {
               state.launchLoading = false;
@@ -937,6 +943,10 @@ onMounted(() => {
       form.link = res?.link;
       form.authType = res?.authType ? res?.authType.split(',') : [];
       state.status = res?.status;
+
+      state.homeUri = res?.homeUri;
+      state.redirectUri = res?.redirectUri;
+      state.link = res?.link;
     })
     .catch(() => {
       state.tableLoading = false;

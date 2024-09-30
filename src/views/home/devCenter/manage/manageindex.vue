@@ -80,21 +80,19 @@
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button type="text" @click="handleTableLaunchOrDel(record)">{{
-                record.status ? '下线' : '上线'
-              }}</t-button>
-              <!-- <t-button
+              <t-button
+                v-if="record.status === 2"
                 type="text"
-                :disabled="record.status === 1"
-                @click="handleTableEdit(record)"
-                >编辑</t-button
-              > -->
-              <!-- <t-button
+                @click="handleTableDebugging(record)"
+              >
+                调试
+              </t-button>
+              <t-button
+                v-if="record.status !== 2"
                 type="text"
-                :disabled="record.status === 1"
-                @click="handleTableDel(record)"
-                >删除</t-button
-              > -->
+                @click="handleTableLaunchOrDel(record)"
+                >{{ record.status !== 1 ? '下线' : '上线' }}</t-button
+              >
               <t-dropdown position="br">
                 <t-link>
                   <icon-more />
@@ -105,18 +103,10 @@
                     @click="handleTableCancelDebugging(record)"
                   >
                     <template #icon>
-                      <icon-common />
+                      <!-- <icon-common /> -->
+                      <icon-close-circle />
                     </template>
                     取消调试
-                  </t-doption>
-                  <t-doption
-                    v-if="record.status === 2"
-                    @click="handleTableDebugging(record)"
-                  >
-                    <template #icon>
-                      <icon-common />
-                    </template>
-                    调试
                   </t-doption>
                   <t-doption
                     :disabled="record.status === 1"
@@ -181,20 +171,15 @@ import {
   fetchCancelDebug,
 } from '@/api/devCenter/manage';
 import { snmsClientLogin } from '@/api/login';
-import { appInfoClientLogin } from '@/api/buyer/overview';
+import {
+  alreadyBuyClientLogin,
+  appInfoClientLogin,
+} from '@/api/buyer/overview';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { sm2 } from '@/utils/encrypt';
-import {
-  AppType,
-  AccountType,
-  AccountTypeDesc,
-  CompanyAuthStatus,
-  CompanyAuthStatusDESC,
-  NodeAuthStatus,
-  NodeAuthStatusDESC,
-} from '@/enums/common';
+import { AppType, NodeAuthStatus } from '@/enums/common';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
@@ -207,7 +192,8 @@ const route = useRoute();
 
 const { userInfo } = store;
 
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const baseParams: Record<string, string | number | null> = reactive<{
   appName: string;
@@ -591,7 +577,7 @@ const handleTableDebugging = (record: Record<string, any>) => {
     window.open(record?.link);
     return false;
   }
-  const { id, dueDate, type } = record;
+  const { id, dueDate, type, productId, deliveryId, deliveryType } = record;
   const { snmsUrls, companyId } = userInfo || {};
   // 标识类应用需要申请开通企业节点
   if (
@@ -613,10 +599,10 @@ const handleTableDebugging = (record: Record<string, any>) => {
         };
         snmsClientLogin(params).then((res: any) => {
           if (res?.data?.code === 102006) {
-            Message.error(res?.data?.message);
+            return Message.error(res?.data?.message);
           }
           if (!res?.data?.data) {
-            return;
+            return false;
           }
           const data = {
             type: 'snms',
@@ -627,31 +613,80 @@ const handleTableDebugging = (record: Record<string, any>) => {
             userStore.configInfo?.publicKey
           );
           window.open(`${res?.data?.data}&data=${sm2data}`);
+          return false;
         });
       },
     });
     return false;
   }
 
-  const params = {
-    appInfoId: id,
-    companyId: userInfoByCompany.value.companyId,
-  };
-  appInfoClientLogin(params).then((res: any) => {
-    if (res.code === 102008) {
-      return Message.warning(res?.message);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = `0${now.getMonth() + 1}`.slice(-2);
+  const day = `0${now.getDate()}`.slice(-2);
+  const hours = `0${now.getHours()}`.slice(-2);
+  const minutes = `0${now.getMinutes()}`.slice(-2);
+  const seconds = `0${now.getSeconds()}`.slice(-2);
+  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  if (!dueDate || compareDate(dueDate, formattedTime)) {
+    // TODO 过期时间判断
+    if (Number(record.appType) === 1) {
+      const params = {
+        productId,
+        productDeliverySetId: deliveryId,
+        memberId: selectCompany.value?.memberId,
+        orderId: id,
+      };
+
+      alreadyBuyClientLogin(params).then((res: any) => {
+        const data = {
+          type: 'productApp',
+          productId,
+          productDeliverySetId: deliveryId,
+          memberId: selectCompany.value?.memberId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        if (res.code === 102008) {
+          return Message.warning(res?.message);
+        }
+        if (res.code !== 200) {
+          return Message.error(res?.message);
+        }
+        if (deliveryType === 1) {
+          window.open(res.data);
+        } else {
+          window.open(`${res.data}&data=${sm2data}`);
+        }
+        return true;
+      });
+    } else if (Number(record.appType) === 0) {
+      const params = {
+        appInfoId: id,
+        companyId: userInfoByCompany.value.companyId,
+      };
+      appInfoClientLogin(params).then((res: any) => {
+        if (res.code === 102008) {
+          return Message.warning(res?.message);
+        }
+        if (res.code !== 200) {
+          return Message.error(res?.message);
+        }
+        const data = {
+          type: 'selfApp',
+          companyId: userInfoByCompany.value.companyId,
+        };
+        const sm2data = sm2(
+          JSON.stringify(data),
+          userStore.configInfo?.publicKey
+        );
+        window.open(`${res.data}&data=${sm2data}`);
+        return true;
+      });
     }
-    if (res.code !== 200) {
-      return Message.error(res?.message);
-    }
-    const data = {
-      type: 'selfApp',
-      companyId: userInfoByCompany.value.companyId,
-    };
-    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
-    window.open(`${res.data}&data=${sm2data}`);
-    return true;
-  });
+  }
   return true;
 };
 
