@@ -23,22 +23,20 @@
               >保存</t-button
             >
             <t-button
+              v-if="showButton"
+              :disabled="!showDisabled"
               type="primary"
               :loading="state.launchLoading"
-              @click="
-                handleLaunchOrSave(
-                  (state.status === 0 && form.appType === 1) ||
-                    (state.status === 0 && form.dockingMethod === 0)
-                    ? 2
-                    : 1
-                )
-              "
-              >{{
-                (state.status === 0 && form.appType === 1) ||
-                (state.status === 0 && form.dockingMethod === 0)
-                  ? '应用调试'
-                  : '保存并上线'
-              }}
+              @click="handleLaunchOrSave(1)"
+              >保存并上线
+            </t-button>
+            <t-button
+              v-else
+              :disabled="!showDisabled"
+              type="primary"
+              :loading="state.launchLoading"
+              @click="handleLaunchOrSave(2)"
+              >调试应用
             </t-button>
           </span>
         </div>
@@ -55,11 +53,7 @@
             >
               <t-anchor-link href="#proof">应用凭证</t-anchor-link>
               <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
-              <t-anchor-link
-                v-if="!showAuthLimit || !showAuthLimitDock"
-                href="#abutInfo"
-                >对接信息</t-anchor-link
-              >
+              <t-anchor-link href="#abutInfo">对接信息</t-anchor-link>
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
               >
@@ -308,30 +302,9 @@
                     200px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
                   >
                 </t-form-item>
-                <t-form-item
-                  v-if="showAuthLimitDock"
-                  field="link"
-                  label="链接"
-                  :rules="[
-                    {
-                      required: true,
-                      message: '链接不允许为空',
-                    },
-                    { maxLength: 500, message: '不允许超过500个字符' },
-                  ]"
-                >
-                  <t-textarea
-                    v-model="form.link"
-                    placeholder="请输入"
-                    :max-length="500"
-                    allow-clear
-                    show-word-limit
-                  />
-                </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              v-if="!showAuthLimit || !showAuthLimitDock"
               id="abutInfo"
               title="对接信息"
               :title-style="{
@@ -344,7 +317,33 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item>
+              <t-descriptions-item v-if="showAuthLimitDock">
+                <t-form-item
+                  class="tip-content"
+                  label="应用地址"
+                  field="link"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '应用首页地址不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                >
+                  <t-input
+                    v-model="form.link"
+                    :max-length="{ length: 500, errorOnly: true }"
+                    :allow-clear="false"
+                    show-word-limit
+                    placeholder="请输入"
+                  >
+                  </t-input>
+                  <span class="tip"
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                  >
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item v-if="!showAuthLimit || !showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用首页地址"
@@ -599,6 +598,8 @@ const form = reactive<{
   link: '',
 });
 
+const storeForms: Record<string, any> = reactive({});
+
 const state = reactive<{
   tableData: Record<string, any>[];
   tableLoading: boolean;
@@ -634,6 +635,58 @@ const showAuthLimit = computed(() => {
 const showAuthLimitDock = computed(() => {
   if (form.dockingMethod === 1) {
     return true;
+  }
+  return false;
+});
+
+const showDisabled = computed(() => {
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (form.homeUri && form.redirectUri) {
+      return true;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (form.link) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+});
+
+const showButton = computed(() => {
+  // "appType": 1, //应用类型：0-自建应用、1-商场应用
+  // "dockingMethod": 1, //对接方式 0-SAAS 1-链接接入
+  // "status": 1, //应用状态:0-未上线,1-已上线 2 调试中
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (state.status === 2) {
+      if (form.homeUri && form.redirectUri) {
+        if (
+          storeForms.homeUri &&
+          storeForms.redirectUri &&
+          form.homeUri !== storeForms.homeUri &&
+          form.redirectUri !== storeForms.redirectUri
+        ) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (state.status === 2) {
+      if (form.link) {
+        if (storeForms.link && form.link !== storeForms.link) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }
+    return false;
   }
   return false;
 });

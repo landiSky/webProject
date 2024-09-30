@@ -12,11 +12,9 @@
     >
       <t-alert
         class="top-inform"
-        :type="props.tableRecord?.status ? 'success' : 'warning'"
+        :type="StatusClassEnum[props.tableRecord?.status]"
         :banner="true"
-        >应用状态：{{
-          props.tableRecord?.status ? '已上线' : '未上线'
-        }}</t-alert
+        >应用状态：{{ StatusEnum[props.tableRecord?.status] ?? '-' }}</t-alert
       >
       <template #footer>
         <div class="footer-button">
@@ -32,10 +30,16 @@
               >删除</t-button
             >
             <t-button
-              v-if="!props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 2 && showButton"
               :loading="state.launchLoading"
               @click="handleLaunch"
               >上线</t-button
+            >
+            <t-button
+              v-if="props.tableRecord?.status === 0 && !showButton"
+              :loading="state.launchLoading"
+              @click="handleLaunch"
+              >调试应用</t-button
             >
             <t-tooltip
               v-if="props.tableRecord?.status"
@@ -77,11 +81,6 @@
               <t-anchor-link href="#proof">应用凭证</t-anchor-link>
               <t-anchor-link href="#appInfo">应用信息</t-anchor-link>
               <t-anchor-link href="#abutInfo">对接信息</t-anchor-link>
-              <t-anchor-link
-                v-if="!showAuthLimit || !showAuthLimitDock"
-                href="#abutInfo"
-                >对接信息</t-anchor-link
-              >
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
               >
@@ -240,25 +239,9 @@
                     </div>
                   </div>
                 </t-form-item>
-                <t-form-item
-                  v-if="showAuthLimitDock"
-                  field="link"
-                  label="链接"
-                  :rules="[
-                    {
-                      required: true,
-                      message: '链接不允许为空',
-                    },
-                    { maxLength: 500, message: '不允许超过500个字符' },
-                  ]"
-                  :hide-asterisk="true"
-                >
-                  <span>{{ form.link ?? '-' }}</span>
-                </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
             <t-descriptions
-              v-if="!showAuthLimit || !showAuthLimitDock"
               id="abutInfo"
               title="对接信息"
               :title-style="{
@@ -270,7 +253,23 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item>
+              <t-descriptions-item v-if="showAuthLimitDock">
+                <t-form-item
+                  field="link"
+                  label="应用地址"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '应用地址不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ form.link ?? '-' }}</span>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item v-if="!showAuthLimit || !showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用首页地址"
@@ -467,6 +466,18 @@ const formRef = ref();
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
+const StatusEnum: { [name: string]: any } = {
+  0: '未上线',
+  1: '已上线',
+  2: '调试中',
+};
+
+const StatusClassEnum: { [name: string]: any } = {
+  0: 'warning',
+  1: 'success',
+  2: '',
+};
+
 const form = reactive<{
   appType: number; // 0、自建应用 1、商城应用
   appName: string; // 应用名称
@@ -539,6 +550,22 @@ const showAuthLimit = computed(() => {
 const showAuthLimitDock = computed(() => {
   if (form.dockingMethod === 1) {
     return true;
+  }
+  return false;
+});
+
+const showButton = computed(() => {
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (form.homeUri && form.redirectUri) {
+      return true;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (form.link) {
+      return true;
+    }
+    return false;
   }
   return false;
 });

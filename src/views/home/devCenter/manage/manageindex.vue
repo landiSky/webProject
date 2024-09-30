@@ -101,13 +101,22 @@
                 </t-link>
                 <template #content>
                   <t-doption
-                    :disabled="record.status !== 3"
-                    @click="handleTableDebugging(record)"
+                    v-if="record.status === 2"
+                    @click="handleTableCancelDebugging(record)"
                   >
                     <template #icon>
                       <icon-common />
                     </template>
                     取消调试
+                  </t-doption>
+                  <t-doption
+                    v-if="record.status === 2"
+                    @click="handleTableDebugging(record)"
+                  >
+                    <template #icon>
+                      <icon-common />
+                    </template>
+                    调试
                   </t-doption>
                   <t-doption
                     :disabled="record.status === 1"
@@ -171,9 +180,21 @@ import {
   fetchDel,
   fetchCancelDebug,
 } from '@/api/devCenter/manage';
+import { snmsClientLogin } from '@/api/login';
+import { appInfoClientLogin } from '@/api/buyer/overview';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
+import { sm2 } from '@/utils/encrypt';
+import {
+  AppType,
+  AccountType,
+  AccountTypeDesc,
+  CompanyAuthStatus,
+  CompanyAuthStatusDESC,
+  NodeAuthStatus,
+  NodeAuthStatusDESC,
+} from '@/enums/common';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
@@ -547,13 +568,91 @@ const handleReset = () => {
   fetchTableData();
 };
 
-const handleTableDebugging = (record: Record<string, any>) => {
+const handleTableCancelDebugging = (record: Record<string, any>) => {
   const params = {
     appInfoId: record.id,
   };
   fetchCancelDebug(params).then(() => {
     fetchTableData();
   });
+};
+
+const compareDate = (dateTime1: string, dateTime2: string) => {
+  const formatDate1 = new Date(dateTime1);
+  const formatDate2 = new Date(dateTime2);
+  if (formatDate1 > formatDate2) {
+    return true;
+  }
+  return false;
+};
+
+const handleTableDebugging = (record: Record<string, any>) => {
+  if (record.appType === 0 && record.dockingMethod === 1) {
+    window.open(record?.link);
+    return false;
+  }
+  const { id, dueDate, type } = record;
+  const { snmsUrls, companyId } = userInfo || {};
+  // 标识类应用需要申请开通企业节点
+  if (
+    AppType.IDAPP === type &&
+    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
+  ) {
+    Modal.info({
+      title: '使用提醒',
+      content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '暂不开通',
+      okText: '去开通',
+      onOk: () => {
+        const { companyId } = userInfoByCompany.value || {};
+        const params = {
+          companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+          snmsLoginId: snmsUrls?.snmsLoginId,
+        };
+        snmsClientLogin(params).then((res: any) => {
+          if (res?.data?.code === 102006) {
+            Message.error(res?.data?.message);
+          }
+          if (!res?.data?.data) {
+            return;
+          }
+          const data = {
+            type: 'snms',
+            companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+          };
+          const sm2data = sm2(
+            JSON.stringify(data),
+            userStore.configInfo?.publicKey
+          );
+          window.open(`${res?.data?.data}&data=${sm2data}`);
+        });
+      },
+    });
+    return false;
+  }
+
+  const params = {
+    appInfoId: id,
+    companyId: userInfoByCompany.value.companyId,
+  };
+  appInfoClientLogin(params).then((res: any) => {
+    if (res.code === 102008) {
+      return Message.warning(res?.message);
+    }
+    if (res.code !== 200) {
+      return Message.error(res?.message);
+    }
+    const data = {
+      type: 'selfApp',
+      companyId: userInfoByCompany.value.companyId,
+    };
+    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
+    window.open(`${res.data}&data=${sm2data}`);
+    return true;
+  });
+  return true;
 };
 
 watch(
