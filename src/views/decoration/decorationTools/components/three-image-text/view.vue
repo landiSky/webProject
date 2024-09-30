@@ -65,9 +65,12 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
+      item.title.length <= 8 &&
       item.desc &&
+      item.desc.length <= 200 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -77,6 +80,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 10 ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
