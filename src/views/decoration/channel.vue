@@ -2,104 +2,7 @@
 <template>
   <div class="channel-box">
     <t-space direction="vertical" size="small" fill>
-      <div class="form-box">
-        <t-space>
-          <div class="vertical-line"></div>
-          <div class="title-text">顶部导航1</div>
-        </t-space>
-        <t-form
-          ref="formRef1"
-          :model="form1"
-          :rules="formRules"
-          auto-label-width
-        >
-          <div class="row-cls">
-            <t-form-item field="name" label="名称配置">
-              <div v-if="nav1NameEdit" class="input-box-edit">
-                <t-input
-                  v-model="form1.name"
-                  placeholder="请输入"
-                  allow-clear
-                  style="width: 260px"
-                />
-                <div
-                  style="margin: 0 16px"
-                  class="save-btn"
-                  @click="nameEdit(form1, '1', formRef1)"
-                  >保存并发布
-                </div>
-                <div
-                  class="cancel-btn"
-                  @click="
-                    () => {
-                      formRef1.clearValidate();
-                      nav1NameEdit = false;
-                      getPageData();
-                    }
-                  "
-                  >取消</div
-                >
-              </div>
-              <div v-else class="input-box-show">
-                <span class="input-value">{{ form1?.name || '-' }}</span>
-                <icon-edit
-                  style="color: #1664ff; cursor: pointer"
-                  :size="16"
-                  @click="nav1NameEdit = true"
-                />
-              </div>
-            </t-form-item>
-          </div>
-          <div class="row-cls row-cls-top">
-            <t-form-item field="status" label="页面装修">
-              <div v-if="form1?.status === 1" class="save-btn">
-                <span style="color: #1d2129">已发布</span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goHome"
-                >
-                  查看前台页面>>
-                </span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goDecoration(form1)"
-                >
-                  继续装修>>
-                </span>
-              </div>
-              <div v-else-if="form1?.status === 0">
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form1)"
-                  >预览效果
-                </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form1)"
-                  >发布
-                </t-tag>
-              </div>
-              <div
-                v-else
-                class="save-btn"
-                style="margin-left: 0"
-                @click="goDecoration(form1)"
-              >
-                去装修>>
-              </div>
-            </t-form-item>
-          </div>
-        </t-form>
-      </div>
       <div v-for="(item, idx) in channelFormMap" :key="idx" class="form-box">
-        <t-space>
-          <div class="vertical-line"></div>
-          <div class="title-text">{{ `顶部导航${idx + 2}` }}</div>
-        </t-space>
         <t-form
           :ref="(el: any) => setChannelRef(el, idx)"
           :model="item"
@@ -107,7 +10,28 @@
           auto-label-width
         >
           <div class="row-cls">
-            <t-form-item field="name" label="名称配置">
+            <div class="left">
+              <div class="vertical-line"></div>
+              <div>{{ item.name || '-' }}</div>
+            </div>
+            <div class="right">
+              <icon-to-top
+                style="margin-right: 12px; cursor: pointer"
+                :size="12"
+                @click="handleSort('up', item)"
+              />
+              <icon-to-bottom
+                style="margin-right: 12px; cursor: pointer"
+                :size="12"
+                @click="handleSort('down', item)"
+              />
+              <icon-edit
+                style="cursor: pointer"
+                :size="12"
+                @click="item.navNameEdit = true"
+              />
+            </div>
+            <!-- <t-form-item field="name" label="名称配置">
               <div v-if="item.navNameEdit" class="input-box-edit">
                 <t-input
                   v-model="item.name"
@@ -141,7 +65,7 @@
                   @click="item.navNameEdit = true"
                 />
               </div>
-            </t-form-item>
+            </t-form-item> -->
           </div>
           <div class="row-cls row-cls-top">
             <t-form-item field="status" label="页面装修">
@@ -189,16 +113,19 @@
 <script lang="ts" setup>
 import { defineProps, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
+import { Message } from '@tele-design/web-vue';
 import {
   apiUpdateNavData,
   apiGetNavData,
 } from '@/api/decoration/decoration-tools';
 import { isArray } from 'lodash';
 import { ChannelType } from '@/enums/decoration';
-import eventBus from '@/utils/bus';
-import { useDecorationStore } from '@/store/modules/decoration';
-import { storeToRefs } from 'pinia';
+// import eventBus from '@/utils/bus';
+// import { useDecorationStore } from '@/store/modules/decoration';
+// import { storeToRefs } from 'pinia';
 import { channelName } from './decorationTools/constant';
+
+console.log('Message', Message);
 
 // 创建tabs通信通道
 const broadcastChannel = new BroadcastChannel(channelName);
@@ -440,8 +367,36 @@ const goPlatProducts = (type: number) => {
     params: { type },
   });
 };
-const goPlatServices = () => {
-  router.push({ path: '/wow/platServices' });
+
+const handleExchangeArray = (
+  arr: Record<string, any>,
+  indexA: number,
+  indexB: number
+) => {
+  const temp = arr[indexA];
+  arr[indexA] = arr[indexB];
+  arr[indexB] = temp;
+  return arr;
+};
+
+const handleSort = (type: string, data: any) => {
+  console.log('sort111', channelFormMap.value, type, data);
+  if (type === 'up' && data.sort === 0) {
+    Message.warning('已经到顶了');
+    return;
+  }
+  if (type === 'down' && data.sort === channelFormMap.value.length - 1) {
+    Message.warning('已经到底了');
+    return;
+  }
+  // 置换操作
+  const newArrData = JSON.parse(JSON.stringify(channelFormMap.value));
+  const newSortData = handleExchangeArray(
+    newArrData,
+    data.sort,
+    type === 'up' ? data.sort - 1 : data.sort + 1
+  );
+  console.log('newSortData', newSortData);
 };
 
 onMounted(() => {
@@ -462,7 +417,7 @@ onBeforeUnmount(() => {
 
 <style scoped lang="less">
 .channel-box {
-  width: 100%;
+  width: 600px;
   height: 100%;
   padding: 24px;
 
@@ -472,6 +427,7 @@ onBeforeUnmount(() => {
     .vertical-line {
       width: 4px;
       height: 14px;
+      margin-right: 8px;
       background: #1664ff;
       border-radius: 1px;
     }
@@ -486,12 +442,17 @@ onBeforeUnmount(() => {
     .row-cls {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       width: 100%;
       margin-top: 18px;
       margin-left: 24px;
       font-size: 12px;
       // background-color: red;
+      .left {
+        display: flex;
+        justify-content: flex-start;
+      }
+
       .input-box-edit {
         display: flex;
         align-items: center;
