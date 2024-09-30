@@ -342,7 +342,7 @@ export const ToolData: Record<string, any> = {
   MutiNavImageText: {
     chineseName: '多导航图文',
     maxNum: 8,
-    icon: 'mutiNavImg',
+    icon: 'mutiNavImgTxt',
     name: 'MutiNavImageText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
