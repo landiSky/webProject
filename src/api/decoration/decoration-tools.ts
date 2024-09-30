@@ -19,3 +19,8 @@ export function apiGetProductList() {
 export function apiGetIsFirstUseDecoration() {
   return $http.get('/server/web/user/getRenovationStatusByUserId');
 }
+
+// 频道页排序接口
+export function apiChangeSort(data: Record<string, any>) {
+  return $http.post('/operation/web/renovation/changeSort', data);
+}

@@ -117,6 +117,7 @@ import { Message } from '@tele-design/web-vue';
 import {
   apiUpdateNavData,
   apiGetNavData,
+  apiChangeSort,
 } from '@/api/decoration/decoration-tools';
 import { isArray } from 'lodash';
 import { ChannelType } from '@/enums/decoration';
@@ -379,7 +380,7 @@ const handleExchangeArray = (
   return arr;
 };
 
-const handleSort = (type: string, data: any) => {
+const handleSort = async (type: string, data: any) => {
   console.log('sort111', channelFormMap.value, type, data);
   if (type === 'up' && data.sort === 0) {
     Message.warning('已经到顶了');
@@ -396,6 +397,13 @@ const handleSort = (type: string, data: any) => {
     data.sort,
     type === 'up' ? data.sort - 1 : data.sort + 1
   );
+  // 重排操作
+  const updateParams: any[] = [];
+  newSortData.forEach((item: any, idx: number) => {
+    updateParams.push({ id: item.id, sort: idx });
+  });
+  await apiChangeSort(updateParams);
+  getPageData();
   console.log('newSortData', newSortData);
 };
 
