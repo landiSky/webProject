@@ -6,7 +6,7 @@ export const ToolData: Record<string, any> = {
   SigleImgText: {
     chineseName: '单图文',
     maxNum: 3,
-    icon: 'singleImg',
+    icon: 'singleImgTxt',
     name: 'SigleImgText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
