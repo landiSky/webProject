@@ -7,9 +7,8 @@
         placeholder="请输入商品名称"
         @press-enter="onSearch"
       >
-        <template #prepend>
+        <template #prefix>
           <icon-search />
-          <!-- 假设 t-icon 是用来插入图标的组件 -->
         </template>
       </t-input>
       <t-button type="primary" class="searchButton" @click="onSearch"
@@ -670,7 +669,7 @@ onMounted(() => {
       width: 500px;
       height: 40px;
       margin: 0;
-      padding: 0;
+      //padding: 0;
     }
 
     .searchButton {
