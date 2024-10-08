@@ -380,7 +380,7 @@ export const ToolData: Record<string, any> = {
   DoubleImg: {
     chineseName: '双图',
     maxNum: 5,
-    icon: 'threeImgTxt',
+    icon: 'doubleImg',
     name: 'DoubleImg',
     mainTitle: '主标题',
     bgColor: '#ffffff',
