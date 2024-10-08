@@ -241,8 +241,10 @@ const { data, goodsList } = toRefs(props);
 const formRef = ref();
 // 截图尺寸
 const stencilSize = ref({
-  width: 456,
-  height: 264,
+  // width: 456,
+  // height: 264,
+  width: 585,
+  height: 438,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);
