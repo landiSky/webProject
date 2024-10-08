@@ -76,51 +76,59 @@
             >
           </template>
           <template #operation="{ record }">
-            <span class="operation-section">
+            <span v-if="record.status === 0" class="operation-section">
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button
-                v-if="record.status === 2"
-                type="text"
-                @click="handleTableDebugging(record)"
+              <t-button type="text" @click="handleTableEdit(record)">
+                编辑
+              </t-button>
+              <t-button type="text" @click="handleTableDel(record)">
+                删除
+              </t-button>
+            </span>
+            <span v-if="record.status === 1" class="operation-section">
+              <t-button type="text" @click="handleTableDetail(record)"
+                >详情</t-button
               >
+              <t-button type="text" @click="handleTableLaunchOrDel(record)"
+                >下线</t-button
+              >
+            </span>
+            <span v-if="record.status === 2" class="operation-section">
+              <t-button type="text" @click="handleTableDetail(record)"
+                >详情</t-button
+              >
+              <t-button type="text" @click="handleTableDebugging(record)">
                 调试
               </t-button>
-              <t-button
-                v-if="record.status !== 2"
-                type="text"
-                @click="handleTableLaunchOrDel(record)"
-                >{{ record.status !== 1 ? '下线' : '上线' }}</t-button
-              >
               <t-dropdown position="br">
                 <t-link>
                   <icon-more />
                 </t-link>
                 <template #content>
-                  <t-doption
-                    v-if="record.status === 2"
-                    @click="handleTableCancelDebugging(record)"
-                  >
+                  <t-doption @click="handleTableCancelDebugging(record)">
                     <template #icon>
-                      <!-- <icon-common /> -->
                       <icon-close-circle />
                     </template>
                     取消调试
                   </t-doption>
-                  <t-doption
-                    :disabled="record.status === 1"
-                    @click="handleTableEdit(record)"
-                  >
+                  <t-doption @click="handleTableLaunchOrDel(record)">
                     <template #icon>
-                      <icon-edit />
+                      <icon-common />
                     </template>
-                    编辑
+                    上线
                   </t-doption>
-                  <t-doption
-                    :disabled="record.status === 1"
-                    @click="handleTableDel(record)"
-                  >
+                  <t-tooltip content="取消调试可编辑">
+                    <t-doption disabled @click="handleTableEdit(record)">
+                      <template #icon>
+                        <icon-edit />
+                      </template>
+                      编辑
+                    </t-doption>
+                  </t-tooltip>
+
+                  <t-doption @click="handleTableDel(record)">
                     <template #icon>
                       <icon-delete />
                     </template>
@@ -346,7 +354,7 @@ const columns = [
     dataIndex: 'operation',
     slotName: 'operation',
     fixed: 'right',
-    width: 160,
+    width: 180,
   },
 ];
 
@@ -427,7 +435,7 @@ const handleTableDetail = (record: Record<string, any>) => {
 const handleTableLaunchOrDel = (record: Record<string, any>) => {
   // 0 未上线 1 上线
   const { status, id } = record;
-  if (status) {
+  if (status === 1) {
     fetchOffineStatus(id).then((res: any) => {
       if (res) {
         Modal.warning({
