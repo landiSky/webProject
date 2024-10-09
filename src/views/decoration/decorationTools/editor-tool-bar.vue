@@ -29,7 +29,7 @@
               <t-tooltip
                 is-bright
                 enter-delay="1000"
-                position="rt"
+                position="right"
                 popup-container="#toolbar-tooltip-container"
               >
                 <template #content>
