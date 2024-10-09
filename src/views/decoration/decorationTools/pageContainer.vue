@@ -232,11 +232,11 @@ onMounted(() => {
   position: fixed;
   top: 150px;
   left: 15px;
+  z-index: 2;
 }
 
 .temp-fold-anchor-box {
   left: 16px;
-  z-index: 999;
   width: 0;
 }
 

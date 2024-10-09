@@ -381,12 +381,13 @@
         </div>
       </div>
       <div v-else class="newIntro">
-        <!-- 页面导航组件 -->
+        <!-- 页面导航组件 及 产品介绍 -->
         <DecorationBox
           show-anchor
           show-evaluate
           :components-list="addId(templateList)"
           :product-id="prodDetail.id"
+          class="decorationBox"
         ></DecorationBox>
       </div>
 
@@ -1345,12 +1346,12 @@ onUnmounted(() => {
       flex-direction: column;
       justify-content: center;
       //width: 1440px;
-      width: 100vw;
+      width: 100%;
     }
 
     .evaluate {
       //width: 900px;
-      width: 100vw;
+      width: 100%;
       padding: 20px 24px;
       background: rgba(255, 255, 255, 1);
       border-top: solid rgba(229, 232, 239, 1) 1px;
