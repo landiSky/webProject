@@ -529,20 +529,116 @@ export const ToolData: Record<string, any> = {
 
 export const tools = [
   'SigleImgText',
-  'VerticalImageText',
-  'ThreeImageText',
-  'MultiImageText',
-  'IconImageText',
   'ImageOverlapText',
+  'VerticalImageText',
   'LeftRightImageText',
+  'ThreeImageText',
   'SpliceImageText',
+  'MultiImageText',
   'HerizontalImageText',
+  'IconImageText',
   'CarouselImageText',
   'MutiNavImageText',
-  'SigleImg',
-  'MutiNavText',
   'MutiIconText',
+  'SigleImg',
+  'SigleImg', // 这里替换旭蓓的双图
   'ThreeImg',
   'MultiNavImg',
   'TreeTextNavigation',
+  'MutiNavText',
+];
+
+export const toolsGroup = [
+  {
+    // id: 1,
+    type: 'title',
+    title: '图文组件',
+    noDrag: true,
+  },
+  {
+    id: 2,
+    text: 'SigleImgText',
+    noDrag: false,
+  },
+  {
+    id: 3,
+    text: 'ImageOverlapText',
+    noDrag: false,
+  },
+  {
+    id: 4,
+    text: 'VerticalImageText',
+    noDrag: false,
+  },
+  {
+    id: 5,
+    text: 'LeftRightImageText',
+    noDrag: false,
+  },
+  {
+    text: 'ThreeImageText',
+    noDrag: false,
+  },
+  {
+    text: 'SpliceImageText',
+    noDrag: false,
+  },
+  {
+    text: 'MultiImageText',
+    noDrag: false,
+  },
+  {
+    text: 'HerizontalImageText',
+    noDrag: false,
+  },
+  {
+    text: 'IconImageText',
+    noDrag: false,
+  },
+  {
+    text: 'CarouselImageText',
+    noDrag: false,
+  },
+  {
+    text: 'MutiNavImageText',
+    noDrag: false,
+  },
+  {
+    text: 'MutiIconText',
+    noDrag: false,
+  },
+  {
+    type: 'title',
+    title: '纯图组件',
+    noDrag: true,
+  },
+  {
+    text: 'SigleImg',
+    noDrag: false,
+  },
+  {
+    text: 'SigleImg',
+    noDrag: false,
+  },
+  {
+    text: 'ThreeImg',
+    noDrag: false,
+  },
+  {
+    text: 'MultiNavImg',
+    noDrag: false,
+  },
+  {
+    type: 'title',
+    title: '纯文组件',
+    noDrag: true,
+  },
+  {
+    text: 'TreeTextNavigation',
+    noDrag: false,
+  },
+  {
+    text: 'MutiNavText',
+    noDrag: false,
+  },
 ];

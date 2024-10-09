@@ -153,7 +153,7 @@ import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
-import { ToolData, tools } from './config/tools';
+import { ToolData, tools, toolsGroup } from './config/tools';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
@@ -319,9 +319,9 @@ const changeColor = (val: number) => {
 };
 
 // 左侧工具栏拖入后在列表中的位置
-const onEnd = (index: number) => {
-  selectIndex.value = index;
-};
+// const onEnd = (index: number) => {
+//   selectIndex.value = index;
+// };
 
 // 判断组件数量是否大于10个上限
 const isMaxNum = computed(() => {
@@ -518,7 +518,8 @@ const insertSort = (event: any) => {
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
   // todo
   selectIndex.value = newIndex;
-  const addToolData = JSON.parse(JSON.stringify(ToolData[tools[oldIndex]]));
+  const componentName = toolsGroup[oldIndex].text || '';
+  const addToolData = JSON.parse(JSON.stringify(ToolData[componentName]));
   componentsList.value.splice(newIndex, 0, addToolData);
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',

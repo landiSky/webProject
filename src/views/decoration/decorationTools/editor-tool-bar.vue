@@ -1,6 +1,8 @@
 <template>
-  <div v-if="tools.length" class="editor-tool-bar">
+  <div v-if="toolsGroup.length" class="editor-tool-bar">
+    <!-- <div class="group-title">{{ item.name }}</div> -->
     <draggable
+      v-model="toolsGroup"
       item-key="index"
       ghost-class="ghost"
       drag-class="dragClass"
@@ -10,22 +12,44 @@
       :fallback-tolerance="0"
       :touch-start-threshold="0"
       :group="{ name: 'vehicle-station', pull: 'clone', put: false }"
-      :list="tools"
+      draggable=".draggable"
       @end="onEnd"
     >
       <template #item="{ element }">
-        <transition name="el-fade-in-linear">
-          <div v-show="true" class="element-wrap">
-            <iconpark-icon
-              :name="ToolData[element].icon"
-              size="18px"
-            ></iconpark-icon>
-            <div class="element-wrap-text">{{
-              ToolData[element].chineseName
-            }}</div>
+        <transition
+          name="el-fade-in-linear"
+          :class="{ draggable: !element.noDrag }"
+        >
+          <div
+            v-show="true"
+            :class="element.noDrag ? 'group-title' : 'element-wrap'"
+          >
+            <span v-if="element.type === 'title'">{{ element.title }} </span>
+            <div v-else class="element-group">
+              <iconpark-icon
+                :name="ToolData[element.text].icon"
+                size="18px"
+              ></iconpark-icon>
+              <div class="element-wrap-text">{{
+                ToolData[element.text].chineseName
+              }}</div>
+            </div>
           </div>
         </transition>
       </template>
+      <!-- <template #item="{ element }">
+          <transition name="el-fade-in-linear">
+            <div v-show="true" class="element-wrap">
+              <iconpark-icon
+                :name="ToolData[element].icon"
+                size="18px"
+              ></iconpark-icon>
+              <div class="element-wrap-text">{{
+                ToolData[element].chineseName
+              }}</div>
+            </div>
+          </transition>
+        </template> -->
     </draggable>
   </div>
 </template>
@@ -36,6 +60,7 @@ import draggable from 'vuedraggable';
 import {
   tools,
   ToolData,
+  toolsGroup,
 } from '@/views/decoration/decorationTools/config/tools';
 
 console.log('ToolData', ToolData, tools);
@@ -73,19 +98,35 @@ onMounted(() => {});
 <style scoped lang="less">
 .editor-tool-bar {
   height: 100%;
-  padding-top: 20px;
+  padding: 0 8px;
   border: 1px solid #e5e8ef;
+  border-bottom: 0;
+}
+
+.group-title {
+  height: 54px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 54px;
+  text-align: center;
+  box-shadow: 0 1px 0 0 #e5e8ef;
 }
 
 .element-wrap {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 68px;
   height: 68px;
-  margin: 5px auto;
-  // background-color: red;
+  margin-bottom: 10px;
+  text-align: center;
+
+  &:nth-child(even) {
+    margin-right: 8px;
+  }
+
   &:hover {
     background-color: #f2f3f8;
     border-radius: 2px;
