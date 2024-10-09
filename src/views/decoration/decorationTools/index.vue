@@ -125,21 +125,17 @@
     </t-layout>
     <div v-if="openModel === 0" class="floating_btn-box">
       <t-space size="large" class="icons-container">
-        <div class="icon-text-container">
-          <icon-eye v-if="!isPreview" :size="24" @click="clickPreview" />
-          <icon-eye-invisible v-if="isPreview" :size="24" @click="notPreview" />
+        <div class="icon-text-container" @click="controlPreview">
+          <icon-eye v-if="!isPreview" :size="24" />
+          <icon-eye-invisible v-if="isPreview" :size="24" />
           <span style="font-size: 12px">预览</span>
         </div>
-        <div class="icon-text-container">
-          <iconpark-icon name="saveLocal" :size="24" @click="clickSave" />
+        <div class="icon-text-container" @click="clickSave">
+          <iconpark-icon name="saveLocal" :size="24" />
           <span style="font-size: 12px">保存</span>
         </div>
-        <div class="icon-text-container">
-          <iconpark-icon
-            name="saveRemote"
-            :size="24"
-            @click="clickSaveRemote"
-          />
+        <div class="icon-text-container" @click="clickSaveRemote">
+          <iconpark-icon name="saveRemote" :size="24" />
           <span style="font-size: 12px">发布</span>
         </div>
       </t-space>
@@ -576,6 +572,14 @@ const notPreview = () => {
   isClick.value = true;
   isPreview.value = false;
   eventBus.emit('previewEvent', false);
+};
+
+const controlPreview = () => {
+  if (isPreview.value === false) {
+    clickPreview();
+  } else if (isPreview.value === true) {
+    notPreview();
+  }
 };
 
 // 选中组件回调
