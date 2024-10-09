@@ -23,7 +23,7 @@
           >
           <span class="right-btn">
             <t-button
-              v-if="props.tableRecord?.status === 0"
+              v-if="props.tableRecord?.status !== 1"
               class="save-btn"
               :loading="state.delLoading"
               @click="handleDel"
@@ -32,13 +32,13 @@
             <t-button
               v-if="props.tableRecord?.status === 2 && showButton"
               :loading="state.launchLoading"
-              @click="handleLaunch"
+              @click="handleLaunch(1)"
               >上线</t-button
             >
             <t-button
               v-if="props.tableRecord?.status === 0 && !showButton"
               :loading="state.launchLoading"
-              @click="handleLaunch"
+              @click="handleLaunch(2)"
               >调试应用</t-button
             >
             <t-tooltip
@@ -52,8 +52,19 @@
                 >编辑</t-button
               >
             </t-tooltip>
+            <t-tooltip
+              v-if="props.tableRecord?.status === 2"
+              content="该应用调试中，暂时无法编辑"
+              position="top"
+            >
+              <t-button
+                :disabled="props.tableRecord?.status"
+                @click="handleEdit"
+                >编辑</t-button
+              >
+            </t-tooltip>
             <t-button
-              v-if="props.tableRecord?.status !== 1"
+              v-if="props.tableRecord?.status === 0"
               type="primary"
               :disabled="props.tableRecord?.status === 1"
               @click="handleEdit"
@@ -609,16 +620,16 @@ const handleEdit = () => {
 };
 
 // 上线
-const handleLaunch = () => {
+const handleLaunch = (status: number) => {
   // formRef.value.validate((errors: undefined) => {
   //   if (!errors) {
   state.launchLoading = true;
   // 0 未上线 1 上线
-  fetchLaunch({ ...form, id: props.editId, status: 1 }).then((res) => {
+  fetchLaunch({ ...form, id: props.editId, status }).then((res) => {
     const { data } = res;
     if (data?.code === 200) {
       Message.success({
-        content: '上线成功',
+        content: status === 2 ? '提交成功' : '上线成功',
         duration: 1000,
         onClose: () => {
           state.launchLoading = false;

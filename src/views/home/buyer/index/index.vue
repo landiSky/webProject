@@ -1039,6 +1039,10 @@ const togo = (detailData: Record<string, any>) => {
         return true;
       });
     } else if (Number(tabsApplication.value) === 2) {
+      if (detailData.appType === 0 && detailData.dockingMethod === 1) {
+        window.open(detailData?.link);
+        return;
+      }
       const params = {
         appInfoId: id,
         companyId: userInfoByCompany.value.companyId,
