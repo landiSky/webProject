@@ -25,26 +25,27 @@
             :class="element.noDrag ? 'group-title' : 'element-wrap'"
           >
             <span v-if="element.type === 'title'">{{ element.title }} </span>
-            <t-tooltip
-              v-else
-              is-bright
-              enter-delay="1000"
-              position="rt"
-              content-class="toolbar-tooltip-container"
-            >
-              <template #content>
-                <t-image width="350" height="232" :src="singleImgText" />
-              </template>
-              <div class="element-group">
-                <iconpark-icon
-                  :name="ToolData[element.text].icon"
-                  size="18px"
-                ></iconpark-icon>
-                <div class="element-wrap-text">{{
-                  ToolData[element.text].chineseName
-                }}</div>
-              </div>
-            </t-tooltip>
+            <div v-else id="toolbar-tooltip-container">
+              <t-tooltip
+                is-bright
+                enter-delay="1000"
+                position="rt"
+                popup-container="#toolbar-tooltip-container"
+              >
+                <template #content>
+                  <t-image width="350" height="232" :src="singleImgText" />
+                </template>
+                <div class="element-group">
+                  <iconpark-icon
+                    :name="ToolData[element.text].icon"
+                    size="18px"
+                  ></iconpark-icon>
+                  <div class="element-wrap-text">{{
+                    ToolData[element.text].chineseName
+                  }}</div>
+                </div>
+              </t-tooltip>
+            </div>
           </div>
         </transition>
       </template>
@@ -169,10 +170,10 @@ onMounted(() => {});
   background-color: #e8f4ff !important;
 }
 
-:deep(.tele-tootip-content) {
-  &.toolbar-tooltip-container {
-    max-width: 350px;
-    max-height: 232px;
+#toolbar-tooltip-container {
+  :deep(.tele-tooltip-content) {
+    max-width: none;
+    max-height: none;
   }
 }
 </style>
