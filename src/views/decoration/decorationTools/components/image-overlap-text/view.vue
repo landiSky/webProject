@@ -118,7 +118,7 @@ const validate = () => {
   return new Promise((resolve, reject) => {
     if (
       !data?.value?.mainTitle ||
-      data?.value?.mainTitle.length > 10 ||
+      data?.value?.mainTitle.length > 20 ||
       !checkConfigList(data?.value?.configValue)
     ) {
       return reject();

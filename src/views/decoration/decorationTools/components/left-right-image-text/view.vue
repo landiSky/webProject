@@ -85,7 +85,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      data?.value?.mainTitle.length > 10 ||
+      data?.value?.mainTitle.length > 20 ||
       !checkConfigList(data?.value?.configValue)
     ) {
       return reject();

@@ -149,7 +149,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      data?.value?.mainTitle.length > 10 ||
+      data?.value?.mainTitle.length > 20 ||
       !data?.value?.configValue1?.subTitle ||
       data?.value?.configValue1?.subTitle.length > 10 ||
       !checkConfigList(Object.values(data?.value?.configValue1?.config)) ||
