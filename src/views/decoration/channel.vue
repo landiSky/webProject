@@ -25,7 +25,7 @@
                 <div
                   style="margin: 0 16px"
                   class="save-btn"
-                  @click="nameEdit(form1, '1')"
+                  @click="nameEdit(form1, '1', formRef1)"
                   >保存并发布
                 </div>
                 <div
@@ -95,22 +95,22 @@
           </div>
         </t-form>
       </div>
-      <div class="form-box">
+      <div v-for="(item, idx) in channelFormMap" :key="idx" class="form-box">
         <t-space>
           <div class="vertical-line"></div>
-          <div class="title-text">顶部导航2</div>
+          <div class="title-text">{{ `顶部导航${idx + 2}` }}</div>
         </t-space>
         <t-form
-          ref="formRef2"
-          :model="form2"
+          :ref="(el: any) => setChannelRef(el, idx)"
+          :model="item"
           :rules="formRules"
           auto-label-width
         >
           <div class="row-cls">
             <t-form-item field="name" label="名称配置">
-              <div v-if="nav2NameEdit" class="input-box-edit">
+              <div v-if="item.navNameEdit" class="input-box-edit">
                 <t-input
-                  v-model="form2.name"
+                  v-model="item.name"
                   placeholder="请输入"
                   allow-clear
                   style="width: 260px"
@@ -118,61 +118,55 @@
                 <div
                   style="margin: 0 16px"
                   class="save-btn"
-                  @click="nameEdit(form2, '2')"
+                  @click="nameEdit(item, '2', channelRef[idx])"
                   >保存并发布
                 </div>
                 <div
                   class="cancel-btn"
                   @click="
                     () => {
-                      formRef2.clearValidate();
-                      nav2NameEdit = false;
-                      getPageData();
+                      channelRef[idx].clearValidate();
+                      // item.navNameEdit = false;
+                      getPageData(idx);
                     }
                   "
                   >取消</div
                 >
               </div>
               <div v-else class="input-box-show">
-                <span class="input-value">{{ form2?.name || '-' }}</span>
+                <span class="input-value">{{ item?.name || '-' }}</span>
                 <icon-edit
                   style="color: #1664ff; cursor: pointer"
                   :size="16"
-                  @click="nav2NameEdit = true"
+                  @click="item.navNameEdit = true"
                 />
               </div>
             </t-form-item>
           </div>
           <div class="row-cls row-cls-top">
             <t-form-item field="status" label="页面装修">
-              <div v-if="form2?.status === 1" class="save-btn">
+              <div v-if="item?.status === 1" class="save-btn">
                 <span style="color: #1d2129">已发布</span>
                 <span
                   class="save-btn"
                   style="margin-left: 16px"
-                  @click="goPlatProducts"
+                  @click="goPlatProducts(item?.type)"
                 >
                   查看前台页面>>
                 </span>
                 <span
                   class="save-btn"
                   style="margin-left: 16px"
-                  @click="goDecoration(form2)"
+                  @click="goDecoration(item)"
                 >
                   继续装修>>
                 </span>
               </div>
-              <div v-else-if="form2?.status === 0">
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form2)"
+              <div v-else-if="item?.status === 0">
+                <t-tag bordered style="cursor: pointer" @click="goPreview(item)"
                   >预览效果
                 </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form2)"
+                <t-tag bordered style="cursor: pointer" @click="goPreview(item)"
                   >发布
                 </t-tag>
               </div>
@@ -180,104 +174,7 @@
                 v-else
                 class="save-btn"
                 style="margin-left: 16px"
-                @click="goDecoration(form2)"
-              >
-                去装修>>
-              </div>
-            </t-form-item>
-          </div>
-        </t-form>
-      </div>
-      <div class="form-box">
-        <t-space>
-          <div class="vertical-line"></div>
-          <div class="title-text">顶部导航3</div>
-        </t-space>
-        <t-form
-          ref="formRef3"
-          :model="form3"
-          :rules="formRules"
-          auto-label-width
-        >
-          <div class="row-cls">
-            <!-- <span class="required-mark">*</span>
-          <div class="input-title">名称配置</div> -->
-            <t-form-item field="name" label="名称配置">
-              <div v-if="nav3NameEdit" class="input-box-edit">
-                <t-input
-                  v-model="form3.name"
-                  placeholder="请输入"
-                  allow-clear
-                  style="width: 260px"
-                />
-                <div
-                  style="margin: 0 16px"
-                  class="save-btn"
-                  @click="nameEdit(form3, '3')"
-                  >保存并发布
-                </div>
-                <div
-                  class="cancel-btn"
-                  @click="
-                    () => {
-                      formRef3.clearValidate();
-                      nav3NameEdit = false;
-                      getPageData();
-                    }
-                  "
-                  >取消</div
-                >
-              </div>
-              <div v-else class="input-box-show">
-                <span class="input-value">{{ form3?.name || '-' }}</span>
-                <icon-edit
-                  style="color: #1664ff; cursor: pointer"
-                  :size="16"
-                  @click="nav3NameEdit = true"
-                />
-              </div>
-            </t-form-item>
-          </div>
-          <div class="row-cls row-cls-top">
-            <!-- <span class="required-mark">*</span>
-          <div class="input-title">页面装修</div> -->
-            <t-form-item field="status" label="页面装修">
-              <div v-if="form3?.status === 1" class="save-btn">
-                <span style="color: #1d2129">已发布</span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goPlatServices"
-                >
-                  查看前台页面>>
-                </span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goDecoration(form3)"
-                >
-                  继续装修>>
-                </span>
-              </div>
-              <div v-else-if="form3?.status === 0">
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form3)"
-                  >预览效果
-                </t-tag>
-                <t-tag
-                  bordered
-                  style="cursor: pointer"
-                  @click="goPreview(form3)"
-                  >发布
-                </t-tag>
-              </div>
-              <div
-                v-else
-                class="save-btn"
-                style="margin-left: 16px"
-                @click="goDecoration(form3)"
+                @click="goDecoration(item)"
               >
                 去装修>>
               </div>
@@ -378,6 +275,11 @@ type FormItem = {
 const formRef1 = ref();
 const formRef2 = ref();
 const formRef3 = ref();
+const formRef4 = ref();
+const channelRef = ref<any[]>([]);
+
+// 频道页变成map格式统一动态宣传
+const channelFormMap = ref<any[]>([]);
 
 const form1 = ref<FormItem>({
   name: '',
@@ -407,23 +309,35 @@ const form3 = ref<FormItem>({
   draftDetail: '',
 });
 
-const publishName = (form: FormItem | null | undefined) => {
-  console.log('publishName');
+const setChannelRef = (el: any, index: number) => {
+  if (el) {
+    channelRef.value[index] = el;
+  }
+};
+
+const publishName = (form: FormItem | null | undefined | any) => {
   if (!form) return;
   const { id, name } = form;
+  console.log('publishName', form);
   apiUpdateNavData({ id, name }).then((res: any) => {
-    console.log('publishName success', res);
     if (form.type === ChannelType.PLATFORM_HOME) {
       nav1NameEdit.value = false;
-    } else if (form.type === ChannelType.PLATFORM_PRODUCT) {
-      nav2NameEdit.value = false;
-    } else if (form.type === ChannelType.PLATFORM_SERVE) {
-      nav3NameEdit.value = false;
+    } else {
+      form.navNameEdit = false;
     }
+    // else if (form.type === ChannelType.PLATFORM_PRODUCT) {
+    //   nav2NameEdit.value = false;
+    // } else if (form.type === ChannelType.PLATFORM_SERVE) {
+    //   nav3NameEdit.value = false;
+    // }
   });
 };
 
-const nameEdit = (form: FormItem | null | undefined, index: string) => {
+const nameEdit = (
+  form: FormItem | null | undefined,
+  index: string,
+  formRef: any
+) => {
   if (index === '1') {
     formRef1.value.validateField('name', (valid: any) => {
       if (!valid) {
@@ -432,25 +346,26 @@ const nameEdit = (form: FormItem | null | undefined, index: string) => {
     });
   }
   if (index === '2') {
-    formRef2.value.validateField('name', (valid: any) => {
+    formRef.validateField('name', (valid: any) => {
       if (!valid) {
         publishName(form);
       }
     });
   }
-  if (index === '3') {
-    formRef3.value.validateField('name', (valid: any) => {
-      if (!valid) {
-        publishName(form);
-      }
-    });
-    // 如果是只校验名称的话这个就不用放开，如何还校验装修的话就需要用下边的 字段还需对齐
-    // formRef3.value.validate((valid: any) => {
-    //   if (!valid) {
-    //     publishName(form);
-    //   }
-    // });
-  }
+  // if (index === '3') {
+  //   formRef3.value.validateField('name', (valid: any) => {
+  //     if (!valid) {
+  //       publishName(form);
+  //     }
+  //   });
+
+  // 如果是只校验名称的话这个就不用放开，如何还校验装修的话就需要用下边的 字段还需对齐
+  // formRef3.value.validate((valid: any) => {
+  //   if (!valid) {
+  //     publishName(form);
+  //   }
+  // });
+  // }
 };
 
 const goDecoration = (form: FormItem | null | undefined) => {
@@ -472,25 +387,40 @@ const goPreview = (form: FormItem | null | undefined) => {
   window.open(routeUrl.href, '_blank');
 };
 
-const getPageData = () => {
+const getPageData = (idx?: number) => {
   // 拉取所有导航数据
   apiGetNavData({}).then((res) => {
     if (isArray(res.data)) {
+      const tempData = JSON.parse(JSON.stringify(channelFormMap.value));
+      channelFormMap.value = [];
       res.data.forEach((item) => {
         switch (item.type) {
           case ChannelType.PLATFORM_HOME:
             form1.value = item;
             break;
-          case ChannelType.PLATFORM_PRODUCT:
-            form2.value = item;
+          // case ChannelType.PLATFORM_PRODUCT:
+          //   form2.value = item;
+          //   break;
+          case ChannelType.PLATFORM_NAME:
             break;
-          case ChannelType.PLATFORM_SERVE:
-            form3.value = item;
-            break;
+          // case ChannelType.PLATFORM_SERVE:
+          //   form3.value = item;
+          //   break;
           default:
+            channelFormMap.value.push({ ...item });
+            // 保存做单独状态处理
+            // if(idx) channelFormMap.value[idx].navNameEdit = !channelFormMap.value[idx].navNameEdit
             break;
         }
       });
+      // 保存做单独状态处理
+      channelFormMap.value.forEach((item, index) => {
+        item.navNameEdit = tempData[index]?.navNameEdit;
+      });
+      if (typeof idx === 'number' && channelFormMap.value[idx]) {
+        channelFormMap.value[idx].navNameEdit =
+          !channelFormMap.value[idx].navNameEdit;
+      }
     }
   });
   // 获取本地缓存的装修数据,注意key值！！！
@@ -502,8 +432,20 @@ const getPageData = () => {
 const goHome = () => {
   router.push({ path: '/wow/index' });
 };
-const goPlatProducts = () => {
-  router.push({ path: '/wow/platProducts' });
+// 频道页通过一个路由，不同type来区分
+const goPlatProducts = (type: number) => {
+  // router.push({ path: '/wow/platProducts' });
+  if (type === 6) {
+    localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
+    router.push({
+      name: 'publicIdhubOpen',
+    });
+    return;
+  }
+  router.push({
+    name: 'wowPlatProducts',
+    params: { type },
+  });
 };
 const goPlatServices = () => {
   router.push({ path: '/wow/platServices' });
@@ -511,7 +453,6 @@ const goPlatServices = () => {
 
 onMounted(() => {
   broadcastChannel.addEventListener('message', (event) => {
-    console.log('Received message:', event.data);
     const { name, data } = JSON.parse(event.data);
     // 其他tab发送的消息
     if (name === 'chnnelPageRefresh') {

@@ -33,6 +33,14 @@
             >商城</t-link
           >
           <t-link
+            v-for="(item, idx) in channelNameCollect"
+            :key="idx"
+            :class="{ active: setActive(item.type) }"
+            @click="goPlatProducts(item.type)"
+          >
+            {{ item.name || '平台产品' }}
+          </t-link>
+          <!-- <t-link
             :class="{ active: selectTab === TabPath.PROD }"
             @click="goPlatProducts"
             >{{ channel2Name || '平台产品' }}
@@ -42,7 +50,8 @@
             :class="{ active: selectTab === TabPath.SERV }"
             @click="goPlatServices"
             >{{ channel3Name || '平台服务' }}
-          </t-link>
+          </t-link> -->
+
           <t-link
             :class="{ active: selectTab === TabPath.DOC }"
             @click="goDocCenter"
@@ -116,14 +125,21 @@ const TabPath = {
   IDINSIDEZONE: '/wow/idInsideZone',
   MALL: '/wow/mall',
   DOC: '/wow/doc',
-  PROD: '/wow/platProducts',
-  SERV: '/wow/platServices',
+  // PROD: '/wow/platProducts',
+  // SERV: '/wow/platServices',
 };
+
+// 频道页动态生成对应的tab值
+const ChannelTabPath = ref<Record<string, any>>({});
 const userStore = useUserStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
+
+const store = storeToRefs(userStore);
+
+console.log('userStore', userStore.configInfo, store);
 
 const logo = ref('');
 const platformName = ref('');
@@ -133,6 +149,8 @@ const channel1Name = ref('');
 const channel2Name = ref('');
 // 平台服务导航栏
 const channel3Name = ref('');
+// 频道页集合
+const channelNameCollect = ref<Record<string, any>>([]);
 
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
@@ -140,6 +158,7 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
 watch(
   () => route.path,
   (newV) => {
+    console.log('watch', newV);
     // 商品详情页也激活【商城】
     if (route.name === 'wowMallDetail') {
       selectTab.value = TabPath.MALL;
@@ -148,6 +167,10 @@ watch(
     }
   }
 );
+const setActive = (key: number) => {
+  console.log('setActive', key, ChannelTabPath.value, selectTab.value);
+  return ChannelTabPath.value[key] === selectTab.value;
+};
 const handleLogout = async () => {
   await userStore.logout();
 };
@@ -182,14 +205,35 @@ const goDocCenter = () => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 19).then((res) => {
     console.log('前台文档中心打点', res);
   });
+  // 判断是不是英福平台做引流
+  if (!store.configInfo.value?.isTeleInfo) {
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+    } else {
+      window.open('https://snms.teleinfo.cn/zst/#/wow/doc');
+    }
+    return;
+  }
   router.push({ path: '/wow/doc' });
 };
 
-const goPlatProducts = () => {
+const goPlatProducts = (type: number) => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
     console.log('前台导航栏点击平台产品打点', res);
   });
-  router.push({ path: '/wow/platProducts' });
+  // router.push({ path: '/wow/platProducts' });
+  if (String(type) === '6') {
+    // 单独处理开放社区
+    localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
+    router.push({
+      name: 'publicIdhubOpen',
+    });
+    return;
+  }
+  router.push({
+    name: 'wowPlatProducts',
+    params: { type },
+  });
 };
 
 const goPlatServices = () => {
@@ -243,6 +287,14 @@ const clickIdService = () => {
     console.log('前台导航栏IDInside专区点击打点', res);
   });
   selectTab.value = TabPath.IDINSIDEZONE;
+  if (!store.configInfo.value?.isTeleInfo) {
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
+    } else {
+      window.open('https://snms.teleinfo.cn/zst/#/wow/idInsideZone');
+    }
+    return;
+  }
   router.push({ path: '/wow/idInsideZone' });
 };
 
@@ -267,12 +319,25 @@ onMounted(() => {
           document.title = res.data[0]?.name || '';
         } else if (item.type === ChannelType.PLATFORM_HOME) {
           channel1Name.value = item.name;
-        } else if (item.type === ChannelType.PLATFORM_PRODUCT) {
-          channel2Name.value = item.name;
-        } else if (item.type === ChannelType.PLATFORM_SERVE) {
-          channel3Name.value = item.name;
         }
+        // 过滤出频道页, 这里统一改造成频道页动态配置
+        else if (item.type !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
+          const pathKey = `/wow/platProducts/${item.type}`;
+          ChannelTabPath.value[item.type] =
+            item.type === 6 ? '/public/idhub-open' : pathKey;
+          channelNameCollect.value.push({ name: item.name, type: item.type });
+        }
+        // else if (item.type === ChannelType.PLATFORM_PRODUCT) {
+        //   channel2Name.value = item.name;
+        // } else if (item.type === ChannelType.PLATFORM_SERVE) {
+        //   channel3Name.value = item.name;
+        // }
       });
+      console.log(
+        'channelNameCollect',
+        channelNameCollect.value,
+        ChannelTabPath.value
+      );
     }
   });
   if (route.name === 'wowMallDetail') {

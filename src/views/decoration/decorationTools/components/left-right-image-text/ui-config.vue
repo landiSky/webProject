@@ -288,7 +288,7 @@ const addBlock = () => {
   form.value.list.push({
     title: '小标题',
     desc: '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题',
-    src: 'a34a8661-c656-42ef-92fb-d14cf97bf2dd.png',
+    src: 'adf3d564-271d-4e38-84c1-933be3e470ea.png',
     linkType: 2,
     linkUrl: '',
   });

@@ -101,6 +101,7 @@ import { getToken } from '@/utils/auth';
 import { fetchMaterialList, fetchFileDel } from '@/api/decoration/material';
 import { Message, Modal } from '@tele-design/web-vue';
 import UploadCropperModal from './upload-cropper-modal.vue';
+// import { useIntersectionObserver } from '@vueuse/core';
 
 const store = useUserStore();
 

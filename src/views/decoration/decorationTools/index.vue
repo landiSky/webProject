@@ -6,7 +6,10 @@
       width: isPreview ? '100vw' : '722px',
     }"
   >
-    <div v-if="openType === 5" class="product-bg">
+    <div
+      v-if="openType === ChannelType.PLATFORM_PRODUCT_DETAIL"
+      class="product-bg"
+    >
       <div class="product-text"></div>
     </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
@@ -51,7 +54,6 @@
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
-                <!-- element !== 'HomeHeader' 后续可以考虑写个方法 -->
                 <t-space
                   v-if="
                     selectIndex === index &&
@@ -232,7 +234,7 @@ const channelHeader = {
   configValue: {
     title: '标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
+    src: '4e0c5c42-16ac-42b0-a462-672cdb540ffe.jpg',
     linkType: LinkType.BLANK,
     linkUrl: '',
   },
@@ -605,11 +607,8 @@ watch(
   () => route.query,
   () => {
     const { type } = route.query;
-    console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
     if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-      console.log(openType.value, ChannelType);
-
       // interceptFlag.value = false;
     } else {
       // interceptFlag.value = true;
@@ -629,8 +628,8 @@ const insertFirst = (type: number) => {
       componentsList.value.unshift(homeHeader);
     }
   } else if (
-    type === ChannelType.PLATFORM_PRODUCT ||
-    type === ChannelType.PLATFORM_SERVE
+    type !== ChannelType.PLATFORM_HOME &&
+    type !== ChannelType.PLATFORM_PRODUCT_DETAIL
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
       toolList.value.unshift('ChannelHeader');
@@ -861,7 +860,6 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  // margin-top: 0;
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {

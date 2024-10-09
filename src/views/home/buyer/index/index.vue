@@ -709,9 +709,12 @@ const router = useRouter();
 const route = useRoute();
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
-// console.log(userInfoByCompany);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 
 const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
@@ -951,7 +954,8 @@ const togo = (detailData: Record<string, any>) => {
   // 标识类应用需要申请开通企业节点
   if (
     AppType.IDAPP === type &&
-    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
+    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED &&
+    !configInfo.value?.callSnmsSwitch
   ) {
     Modal.info({
       title: '使用提醒',

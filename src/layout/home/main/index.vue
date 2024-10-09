@@ -47,7 +47,7 @@ router.afterEach((to, from) => {
   width: 100%;
   height: 100%; // 页面滚动
   // overflow-x: hidden; 滚动不要在这里加
-  overflow-y: auto;
+  overflow-y: auto; // 滚动不要在这里加
 
   :deep(.tele-tabs-content) {
     padding-top: 0;
