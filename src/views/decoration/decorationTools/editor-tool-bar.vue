@@ -25,15 +25,26 @@
             :class="element.noDrag ? 'group-title' : 'element-wrap'"
           >
             <span v-if="element.type === 'title'">{{ element.title }} </span>
-            <div v-else class="element-group">
-              <iconpark-icon
-                :name="ToolData[element.text].icon"
-                size="18px"
-              ></iconpark-icon>
-              <div class="element-wrap-text">{{
-                ToolData[element.text].chineseName
-              }}</div>
-            </div>
+            <t-tooltip
+              v-else
+              is-bright
+              enter-delay="1000"
+              position="rt"
+              content-class="toolbar-tooltip-container"
+            >
+              <template #content>
+                <t-image width="350" height="232" :src="singleImgText" />
+              </template>
+              <div class="element-group">
+                <iconpark-icon
+                  :name="ToolData[element.text].icon"
+                  size="18px"
+                ></iconpark-icon>
+                <div class="element-wrap-text">{{
+                  ToolData[element.text].chineseName
+                }}</div>
+              </div>
+            </t-tooltip>
           </div>
         </transition>
       </template>
@@ -62,6 +73,7 @@ import {
   ToolData,
   toolsGroup,
 } from '@/views/decoration/decorationTools/config/tools';
+import singleImgText from '@/assets/images/decoration/sigleImgText.png';
 
 console.log('ToolData', ToolData, tools);
 
@@ -157,37 +169,10 @@ onMounted(() => {});
   background-color: #e8f4ff !important;
 }
 
-// .operate-container,
-// .section-container,
-// .components-container {
-//   float: left;
-//   width: 300px;
-//   height: 800px;
-//   padding-top: 30px;
-//   text-align: center;
-// }
-
-// .section-container {
-//   background-color: blanchedalmond;
-// }
-
-// .components-container {
-//   margin-left: 30px;
-//   background-color: rgb(184, 205, 178);
-// }
-
-// .operate-container {
-//   margin-left: 30px;
-//   background-color: rgb(125, 176, 228);
-// }
-
-// .section {
-//   width: 150px;
-//   height: 80px;
-//   margin-bottom: 30px;
-//   line-height: 80px;
-//   text-align: center;
-//   background-color: cadetblue;
-//   cursor: pointer;
-// }
+:deep(.tele-tootip-content) {
+  &.toolbar-tooltip-container {
+    max-width: 350px;
+    max-height: 232px;
+  }
+}
 </style>
