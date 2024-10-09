@@ -6,7 +6,7 @@ export const ToolData: Record<string, any> = {
   SigleImgText: {
     chineseName: '单图文',
     maxNum: 3,
-    icon: 'singleImg',
+    icon: 'singleImgTxt',
     name: 'SigleImgText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
@@ -342,7 +342,7 @@ export const ToolData: Record<string, any> = {
   MutiNavImageText: {
     chineseName: '多导航图文',
     maxNum: 8,
-    icon: 'mutiNavImg',
+    icon: 'mutiNavImgTxt',
     name: 'MutiNavImageText',
     mainTitle: '主标题',
     bgColor: '#ffffff',

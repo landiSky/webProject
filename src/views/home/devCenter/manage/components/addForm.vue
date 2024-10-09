@@ -179,26 +179,6 @@
           200px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
         >
       </t-form-item>
-      <t-form-item
-        v-if="showAuthLimitDock"
-        field="link"
-        label="链接"
-        :rules="[
-          {
-            required: true,
-            message: '链接不允许为空',
-          },
-          { maxLength: 500, message: '不允许超过500个字符' },
-        ]"
-      >
-        <t-textarea
-          v-model="form.link"
-          placeholder="请输入"
-          :max-length="500"
-          allow-clear
-          show-word-limit
-        />
-      </t-form-item>
     </t-form>
   </t-drawer>
 </template>
@@ -239,7 +219,6 @@ const form = reactive<{
   appLogo: string;
   companyId: string;
   dockingMethod: number;
-  link: string;
 }>({
   appName: '',
   appType: 0, // 1商场
@@ -247,7 +226,6 @@ const form = reactive<{
   appLogo: '',
   companyId: userInfoByCompany.value?.companyId,
   dockingMethod: 0,
-  link: '',
 });
 
 const props = defineProps({
@@ -257,13 +235,6 @@ const props = defineProps({
 
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
-    return true;
-  }
-  return false;
-});
-
-const showAuthLimitDock = computed(() => {
-  if (form.dockingMethod === 1) {
     return true;
   }
   return false;

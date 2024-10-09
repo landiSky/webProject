@@ -45,6 +45,7 @@ export const useMenuStore = defineStore({
         'ROUTE_DECORATION_CHANNEL',
         'ROUTE_DECORATION_TOOLS',
         'ROUTE_DECORATION_TOOLS_INDEX',
+        'ROUTE_DECORATION_FOOTERCONFIG',
         'ROUTE_USERAGREEMENT',
       ];
       this.menuIndex = num;

@@ -63,7 +63,7 @@
               }}</span>
             </div>
           </div>
-          <div class="list-pagination">
+          <!-- <div class="list-pagination">
             <t-pagination
               v-if="state.total > 12"
               :total="state.total"
@@ -72,7 +72,7 @@
               :page-size="params.pageSize"
               @change="onPageChange"
             />
-          </div>
+          </div> -->
         </t-tab-pane>
       </t-tabs>
     </t-spin>
@@ -94,6 +94,7 @@ import {
   onMounted,
   ref,
   defineEmits,
+  onUnmounted,
 } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 import { getToken } from '@/utils/auth';
@@ -125,6 +126,13 @@ const sidebarTitle = ref([
     id: 2,
   },
 ]);
+
+// const listContent = ref<HTMLElement[]>([]);
+
+const innerTarget = ref<any>();
+const myTarget = ref<any>();
+
+const isDone = ref<boolean>(false);
 
 const uploadCropperVisible = ref(false);
 
@@ -184,8 +192,8 @@ const onBeforeUpload = async (currentFile: Record<string, any>) => {
 };
 
 const getMaterialList = () => {
+  // 这里变成懒加载数据要进行拼接
   state.loading = true;
-  console.log(11111);
   fetchMaterialList({
     ...params,
     companyId: state.type === 1 ? -1 : userInfoByCompany?.companyId,
@@ -193,6 +201,9 @@ const getMaterialList = () => {
     .then((res) => {
       state.total = res.total;
       const recordData = res.records.map(async (name: string, idx: number) => {
+        if (res.records.length < 12) {
+          isDone.value = true;
+        }
         return new Promise((resolve) => {
           const image = new Image();
           image.src = `/server/web/file/download?name=${name}`;
@@ -220,17 +231,17 @@ const getMaterialList = () => {
         .then((res: any) => {
           state.loading = false;
           if (Array.isArray(res) || typeof res[0] === 'object') {
-            state.imgList = res || [];
+            state.imgList = [...state.imgList, ...res];
           }
         })
         .catch(() => {
           state.loading = false;
-          state.imgList = [];
+          // state.imgList = [];
         });
     })
     .catch(() => {
       state.loading = false;
-      state.imgList = [];
+      // state.imgList = [];
     });
 };
 
@@ -261,13 +272,12 @@ const uploadSuccess = () => {
   getMaterialList();
 };
 
-// const uploadError = () => {
-//   Message.error('上传失败');
-// };
-
 const onTabChange = (key: number) => {
+  // 重置操作
   params.pageNum = 1;
   state.type = key;
+  state.imgList = [];
+  isDone.value = false;
   getMaterialList();
 };
 
@@ -318,8 +328,34 @@ const uploadCropperClose = () => {
   // emits('onCancel');
 };
 
+const handleScroll = (el: HTMLElement) => {
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+    // 再次请求图片数据
+    params.pageNum += 1;
+    !isDone.value && getMaterialList();
+  }
+};
+
 onMounted(async () => {
   await getMaterialList();
+  const listContent = document.getElementsByClassName('list-content') || [];
+  const innerHtml = listContent[0];
+  const myHtml = listContent[1];
+  innerTarget.value = innerHtml;
+  myTarget.value = myHtml;
+  if (innerTarget.value && myTarget.value) {
+    innerTarget.value.addEventListener('scroll', () =>
+      handleScroll(innerTarget.value)
+    );
+    myTarget.value.addEventListener('scroll', () =>
+      handleScroll(myTarget.value)
+    );
+  }
+});
+
+onUnmounted(() => {
+  innerTarget.value.removeEventListener('scroll', handleScroll);
+  myTarget.value.removeEventListener('scroll', handleScroll);
 });
 </script>
 
@@ -418,12 +454,6 @@ onMounted(async () => {
     width: 100px;
     margin: auto;
     line-height: 140px;
-  }
-
-  .list-pagination {
-    .tele-pagination {
-      justify-content: flex-end;
-    }
   }
 }
 </style>
