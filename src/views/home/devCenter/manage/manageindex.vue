@@ -94,6 +94,25 @@
               <t-button type="text" @click="handleTableLaunchOrDel(record)"
                 >下线</t-button
               >
+              <t-dropdown position="br">
+                <t-link>
+                  <icon-more />
+                </t-link>
+                <template #content>
+                  <t-doption disabled @click="handleTableEdit(record)">
+                    <template #icon>
+                      <icon-edit />
+                    </template>
+                    编辑
+                  </t-doption>
+                  <t-doption disabled @click="handleTableDel(record)">
+                    <template #icon>
+                      <icon-delete />
+                    </template>
+                    删除
+                  </t-doption>
+                </template>
+              </t-dropdown>
             </span>
             <span v-if="record.status === 2" class="operation-section">
               <t-button type="text" @click="handleTableDetail(record)"
