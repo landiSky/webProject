@@ -803,7 +803,7 @@ onMounted(() => {
       state.companyId = res?.companyId;
       form.dockingMethod = res?.dockingMethod;
       form.link = res?.link;
-      form.authType = res?.authType ? res?.authType.split(',') : [];
+      form.authType = res?.authType ? res?.authType.split(',') : '';
     })
     .catch(() => {
       state.tableLoading = false;

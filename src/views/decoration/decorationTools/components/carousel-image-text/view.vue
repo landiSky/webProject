@@ -162,6 +162,10 @@ defineExpose({
         .content-area {
           position: relative;
 
+          &:hover .image-content {
+            transform: translateY(0);
+          }
+
           .image-content {
             position: absolute;
             bottom: 0;
@@ -179,6 +183,8 @@ defineExpose({
               rgba(0, 0, 0, 0.12) 0%,
               #000 100%
             );
+            transform: translateY(100px);
+            transition: transform 0.5s;
 
             .image-desc {
               display: flex;

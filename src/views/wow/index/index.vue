@@ -1,7 +1,7 @@
 <template>
   <div class="home-box">
     <Container :components-list="componentList" />
-    <div class="header">
+    <div v-if="!userStore.configInfo?.callSnmsSwitch" class="header">
       <div
         v-for="item in allCategList"
         :key="item.icon"
@@ -72,7 +72,7 @@
       </div>
     </div>
     <div class="policy"></div>
-    <div class="idService">
+    <div v-if="!userStore.configInfo?.callSnmsSwitch" class="idService">
       <div class="title">标识服务</div>
       <div class="content">
         <div class="left">

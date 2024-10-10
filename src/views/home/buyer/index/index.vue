@@ -709,9 +709,12 @@ const router = useRouter();
 const route = useRoute();
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
-// console.log(userInfoByCompany);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 
 const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
@@ -951,7 +954,8 @@ const togo = (detailData: Record<string, any>) => {
   // 标识类应用需要申请开通企业节点
   if (
     AppType.IDAPP === type &&
-    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED
+    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED &&
+    !configInfo.value?.callSnmsSwitch
   ) {
     Modal.info({
       title: '使用提醒',
@@ -1148,7 +1152,7 @@ const detailuploadclick = () => {
 const empowerTipConfirm = () => {
   const params = {
     productId: empowerTipData.value?.productId, // 商品id
-    memberId: selectCompany?.memberId, // 成员id
+    memberId: selectCompany.value?.memberId, // 成员id
     productDeliverySetId: empowerTipData.value?.deliveryId, // 版本id
     appId: empowerTipData.value?.saasAppId, // 应用id
   };

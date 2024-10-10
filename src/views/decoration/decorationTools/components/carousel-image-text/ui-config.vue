@@ -328,7 +328,7 @@ const addBlock = () => {
   list.push({
     title: '小标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+    src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
     linkType: 2,
     linkUrl: '',
   });

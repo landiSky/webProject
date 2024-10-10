@@ -491,16 +491,7 @@
               :column="1"
             >
               <t-descriptions-item>
-                <t-form-item
-                  field="authType"
-                  label="授权设置"
-                  :rules="[
-                    {
-                      required: true,
-                      validator: validateCheckbox,
-                    },
-                  ]"
-                >
+                <t-form-item field="authType" label="授权设置">
                   <t-checkbox-group v-model="form.authType">
                     <t-checkbox value="0">用户手机号</t-checkbox>
                     <t-checkbox value="1">企业认证信息</t-checkbox>
