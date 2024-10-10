@@ -324,7 +324,12 @@
                       style="width: 74px"
                       :ellipsis="{
                         rows: 1,
-                        showTooltip: true,
+                        showTooltip: {
+                          type: 'tooltip',
+                          props: {
+                            isBright: true,
+                          },
+                        },
                       }"
                     >
                       {{ DeliverTypeDesc[item.deliveryType] }}
@@ -339,7 +344,12 @@
                         class="tagList-color"
                         :ellipsis="{
                           rows: 1,
-                          showTooltip: true,
+                          showTooltip: {
+                            type: 'tooltip',
+                            props: {
+                              isBright: true,
+                            },
+                          },
                         }"
                       >
                         {{ item2.name }}
