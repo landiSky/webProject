@@ -211,6 +211,21 @@ const ComponentsMap: Record<string, any> = {
           )
       ),
   },
+  DoubleImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/double-image/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/double-image/ui-config.vue'
+          )
+      ),
+  },
   MutiNavText: {
     view: defineAsyncComponent(
       () =>

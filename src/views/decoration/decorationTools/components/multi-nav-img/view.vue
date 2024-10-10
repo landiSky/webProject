@@ -73,11 +73,11 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.navTitle &&
-      item.navTitle.length < 6 &&
+      item.navTitle.length <= 6 &&
       letterReg.test(item.navTitle) &&
       item.src &&
       (item.linkType === 2 ||
-        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length < 500))
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -88,7 +88,7 @@ const validate = () => {
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
       !letterReg.test(data?.value?.mainTitle) ||
-      data?.value?.mainTitle.length > 10 ||
+      data?.value?.mainTitle.length > 20 ||
       !checkConfigList(data?.value?.configValue)
     ) {
       return reject();

@@ -25,6 +25,11 @@
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
           { required: true, maxLength: 20, message: '长度不超过20个字符' },
+          {
+            required: true,
+            match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+            message: '只可填写中英文，不能填写其他特殊字符',
+          },
         ]"
       >
         <t-input
@@ -49,7 +54,7 @@
           <div>{{ `区块${UpperNumberList[index]}` }}</div>
         </t-space>
         <t-form-item
-          label="标题"
+          label="子标题"
           :field="`list.${index}.title`"
           :label-col-props="{
             flex: '90px',
@@ -60,40 +65,19 @@
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
-            { required: true, maxLength: 8, message: '长度不超过8个字符' },
+            { required: true, maxLength: 30, message: '长度不超过30个字符' },
+            {
+              required: true,
+              match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+              message: '只可填写中英文，不能填写其他特殊字符',
+            },
           ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
             :max-length="{
-              length: 8,
-              errorOnly: true,
-            }"
-            show-word-limit
-            :allow-clear="false"
-          />
-        </t-form-item>
-        <t-form-item
-          label="详情简介"
-          :field="`list.${index}.desc`"
-          :label-col-props="{
-            flex: '90px',
-            align: 'center',
-          }"
-          :validate-status="`${item.desc ? '' : 'error'}`"
-          :help="`${item.desc ? '' : '该信息为必填项，未填写不支持发布'}`"
-          validate-trigger="blur"
-          :rules="[
-            { required: true, message: '该信息为必填项，未填写不支持发布' },
-            { required: true, maxLength: 200, message: '长度不超过200个字符' },
-          ]"
-        >
-          <t-textarea
-            v-model="item.desc"
-            placeholder="请输入"
-            :max-length="{
-              length: 200,
+              length: 30,
               errorOnly: true,
             }"
             show-word-limit
@@ -143,8 +127,8 @@
               errorOnly: true,
             }"
             show-word-limit
-            :allow-clear="false"
             placeholder="请输入"
+            :allow-clear="false"
           />
           <t-select
             v-if="item.linkType === 1"
@@ -205,7 +189,7 @@
             <span style="margin-top: -20px; color: #86909c; font-size: 12px">
               {{
                 `建议图片尺寸：${stencilSize.width}px *
-              ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
+                ${stencilSize.height}px，支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。`
               }}
             </span>
           </t-space>
@@ -258,8 +242,10 @@ const { data, goodsList } = toRefs(props);
 const formRef = ref();
 // 截图尺寸
 const stencilSize = ref({
-  width: 456,
-  height: 264,
+  // width: 456,
+  // height: 264,
+  width: 585,
+  height: 438,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);

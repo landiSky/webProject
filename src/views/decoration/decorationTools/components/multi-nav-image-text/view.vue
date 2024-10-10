@@ -58,6 +58,7 @@ const props = defineProps({
 const defaultKey = ref<number>(0);
 
 const { data, isPreview } = toRefs(props);
+const letterReg = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 
 console.log('props data', data.value.configValue);
 
@@ -85,9 +86,13 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.navTitle &&
+      item.navTitle.length <= 6 &&
+      letterReg.test(item.navTitle) &&
       item.desc &&
+      item.desc.length <= 200 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -97,6 +102,8 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 20 ||
+      !letterReg.test(data?.value?.mainTitle) ||
       !checkConfigList(data?.value?.configValue)
     ) {
       return reject();

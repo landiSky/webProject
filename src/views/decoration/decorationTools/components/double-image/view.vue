@@ -1,24 +1,24 @@
-<!-- 三图 -->
+<!-- 双图 -->
 <template>
-  <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
-    <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
-    }}</div>
+  <div class="double-image-box" :class="{ 'is-preview': isPreview }">
+    <div class="double-image-title">{{ data?.mainTitle || '主标题' }}</div>
     <div class="image-box">
       <div
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title || '小标题' }}</span>
+        <div class="image-title">{{ item?.title || '副标题' }}</div>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
             data?.productId || ''
           }`"
           :preview="false"
-          :class="{ 'mouse-cursor': item?.linkType != 2 }"
-          @click="clickLink(item?.linkType, item?.linkUrl)"
-        ></t-image>
+          :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
+          @click="
+            clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
+          "
+        />
       </div>
     </div>
   </div>
@@ -56,7 +56,7 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.title.length <= 20 &&
+      item.title.length <= 30 &&
       letterReg.test(item.title) &&
       item.src &&
       (item.linkType === 2 ||
@@ -88,61 +88,54 @@ defineExpose({
 <style scoped lang="less">
 @factor: v-bind(num);
 
-.vertical-image-text-box {
+.double-image-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-
-  .vertical-image-text-title {
-    display: -webkit-box;
-    width: calc(@factor * 130px);
-    margin: calc(@factor * 24px) 0 calc(@factor * 12px);
-    overflow: hidden;
+  height: calc(@factor * 327px);
+  //color: #ffffff;
+  .double-image-title {
+    width: calc(@factor * 720px);
+    height: calc(@factor * 52px);
+    padding: calc(@factor * 24px) 0 calc(@factor * 12px) 0;
     overflow: hidden;
     color: #1d2129;
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: normal;
+    //当文本溢出容器时，在文本末尾显示省略号（...）
     text-overflow: ellipsis;
-    word-wrap: break-word;
-    word-break: break-all;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
+    // background-color: red;
   }
 
   .image-box {
     display: flex;
-    gap: calc(@factor * 15px);
+    gap: 30px;
     align-items: center;
-    justify-content: flex-start;
-    margin-top: calc(@factor * 12px);
-    padding-bottom: calc(@factor * 24px);
+    justify-content: center;
+    width: 100%;
+    height: calc(@factor * 275px);
+    padding: calc(@factor * 12px) calc(@factor * 60px) calc(@factor * 24px)
+      calc(@factor * 60px);
 
     .image-item {
       position: relative;
       display: flex;
       flex-direction: column;
-      width: calc(@factor * 190px);
+      gap: calc(@factor * 8px);
+      width: calc(@factor * 292.5px);
+      height: calc(@factor * 239px);
+      //margin: calc(@factor * 10px) calc(@factor * 7px) calc(@factor * 20px);
+      border-radius: 6px;
 
       .image-title {
-        display: -webkit-box;
-        margin-bottom: calc(@factor * 8px);
-        overflow: hidden;
-        overflow: hidden;
         color: #1d2129;
         font-weight: 400;
         font-size: calc(@factor * 8px);
-        font-family: PingFang SC;
-        line-height: calc(@factor * 12px);
-        white-space: normal;
+        text-align: left;
         text-overflow: ellipsis;
-        word-wrap: break-word;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
       }
     }
 
@@ -156,13 +149,15 @@ defineExpose({
 
 ::v-deep(.tele-image) {
   .tele-image-img {
-    width: calc(@factor * 190px) !important;
-    height: calc(@factor * 253px) !important;
+    //width: calc(@factor * 290px) !important;
+    width: 100% !important;
+    height: calc(@factor * 219px) !important;
     object-fit: cover !important;
+    border-radius: 6px;
   }
 }
-
-.mouse-cursor {
-  cursor: pointer;
-}
+// .is-preview {
+//   transform: scale(2); /* 将元素的尺寸放大2倍 */
+//   transform-origin: center center; /* 设置缩放中心点 */
+// }
 </style>

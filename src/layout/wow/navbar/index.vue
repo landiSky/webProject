@@ -66,13 +66,13 @@
     </div>
 
     <div class="right-side">
-      <t-input-search
+      <!-- <t-input-search
         v-model="searchContent"
         class="inputSearch"
         placeholder="请输入商品名称"
         @press-enter="onSearch"
         @search="onSearch"
-      />
+      /> -->
       <t-space v-if="userInfo?.id">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
 

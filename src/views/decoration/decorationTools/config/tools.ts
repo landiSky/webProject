@@ -14,6 +14,7 @@ import mutiNavText from '@/assets/images/decoration/mutiNavText.png';
 import mutiIconText from '@/assets/images/decoration/mutiIconText.png';
 import threeImg from '@/assets/images/decoration/threeImg.png';
 import multiNavImg from '@/assets/images/decoration/multiNavImg.png';
+import doubleImg from '@/assets/images/decoration/doubleImg.png';
 import treeTextNavigation from '@/assets/images/decoration/treeTextNavigation.png';
 import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
@@ -394,6 +395,30 @@ export const ToolData: Record<string, any> = {
       linkUrl: '',
     },
   },
+  DoubleImg: {
+    chineseName: '双图',
+    maxNum: 5,
+    icon: 'doubleImg',
+    name: 'DoubleImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        title: '副标题',
+        desc: '',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '副标题',
+        desc: '',
+        src: '9afb0bf5-152b-440a-b4f5-0b1a24fd4e08.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
   MutiNavText: {
     chineseName: '多导航文字',
     maxNum: 8,
@@ -556,9 +581,12 @@ export const tools = [
   'IconImageText',
   'CarouselImageText',
   'MutiNavImageText',
-  'MutiIconText',
   'SigleImg',
-  'SigleImg', // 这里替换旭蓓的双图
+  'DoubleImg',
+  'MutiNavText',
+  'MutiIconText',
+  // 'SigleImg',
+  // 'SigleImg', // 这里替换旭蓓的双图
   'ThreeImg',
   'MultiNavImg',
   'TreeTextNavigation',
@@ -647,9 +675,9 @@ export const toolsGroup = [
     tooltipImage: sigleImg,
   },
   {
-    text: 'SigleImg',
+    text: 'DoubleImg',
     noDrag: false,
-    tooltipImage: sigleImg,
+    tooltipImage: doubleImg,
   },
   {
     text: 'ThreeImg',

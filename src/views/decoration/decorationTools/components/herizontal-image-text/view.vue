@@ -62,14 +62,18 @@ const num = computed(() => {
 });
 
 const checkConfigList = (list: []) => {
+  // console.log('checkConfigList', list);
   if (!list || list.length === 0) return false;
   return list.every((item: any) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
+      item.title.length <= 8 &&
       item.desc &&
+      item.desc.length <= 30 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -79,6 +83,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 20 ||
       !checkConfigList(data?.value?.configValue)
     ) {
       return reject();

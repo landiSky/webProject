@@ -103,9 +103,12 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
+      item.title.length <= 6 &&
       item.desc &&
+      item.desc.length <= 30 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -113,7 +116,11 @@ const checkConfigList = (list: []) => {
 const validate = () => {
   console.log('图叠', data?.value);
   return new Promise((resolve, reject) => {
-    if (!data?.value?.mainTitle || !checkConfigList(data?.value?.configValue)) {
+    if (
+      !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 20 ||
+      !checkConfigList(data?.value?.configValue)
+    ) {
       return reject();
     }
     return resolve('');

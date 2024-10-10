@@ -51,6 +51,7 @@ const listType = [
   'MutiNavImageText',
   'MutiNavText',
   'MutiIconText',
+  'DoubleImg',
   'ThreeImg',
   'MultiNavImg',
   'TreeTextNavigation',
