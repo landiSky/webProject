@@ -674,7 +674,7 @@ export const toolsGroup = [
   {
     text: 'DoubleImg',
     noDrag: false,
-    tooltipImage: 'doubleImg',
+    tooltipImage: doubleImg,
   },
   {
     text: 'ThreeImg',
