@@ -41,6 +41,7 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
+const letterReg = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 // 动态倍数
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
@@ -59,6 +60,7 @@ const checkConfigList = (list: any) => {
     return (
       item.title &&
       item.title.length <= 8 &&
+      letterReg.test(item.title) &&
       item.desc &&
       item.desc.length <= 100 &&
       item.src &&
@@ -75,6 +77,7 @@ const validate = () => {
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
       data?.value?.mainTitle.length > 20 ||
+      !letterReg.test(data?.value?.mainTitle) ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();

@@ -25,6 +25,11 @@
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
           { required: true, maxLength: 20, message: '长度不超过20个字符' },
+          {
+            required: true,
+            match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+            message: '只可填写中英文，不能填写其他特殊字符',
+          },
         ]"
       >
         <t-input
@@ -66,6 +71,11 @@
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
             { required: true, maxLength: 8, message: '长度不超过8个字符' },
+            {
+              required: true,
+              match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+              message: '只可填写中英文，不能填写其他特殊字符',
+            },
           ]"
         >
           <t-input
