@@ -1152,7 +1152,7 @@ const detailuploadclick = () => {
 const empowerTipConfirm = () => {
   const params = {
     productId: empowerTipData.value?.productId, // 商品id
-    memberId: selectCompany?.memberId, // 成员id
+    memberId: selectCompany.value?.memberId, // 成员id
     productDeliverySetId: empowerTipData.value?.deliveryId, // 版本id
     appId: empowerTipData.value?.saasAppId, // 应用id
   };
