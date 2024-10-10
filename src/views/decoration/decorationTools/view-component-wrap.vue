@@ -101,7 +101,7 @@ const validate = () => {
 };
 // 统一处理链接点击事件
 const linked = (data: any) => {
-  console.log(isPreview.value, isClick.value);
+  console.log('lined init', isPreview.value, isClick.value);
   if (!isPreview.value || isClick.value) return;
   const { type, url } = data;
   if (type === 0) {
@@ -120,6 +120,7 @@ const linked = (data: any) => {
           Message.warning('该商品已下架，无法进行查看');
           return;
         }
+        console.log('gogogog  lined', url);
         router.push({
           name: 'wowMallDetail',
           params: { id: url },

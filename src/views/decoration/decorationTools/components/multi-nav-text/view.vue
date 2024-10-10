@@ -11,9 +11,17 @@
           :title="item.navTitle"
         >
           <div class="item-content">
-            <div class="item-title">{{
-              item?.title || '名称名称名称名称名称名称名称名称名称名称'
-            }}</div>
+            <div class="item-title-section">
+              <div class="item-title">{{
+                item?.title || '名称名称名称名称名称名称名称名称名称名称'
+              }}</div>
+              <div
+                v-if="item?.linkType !== 2"
+                class="image-link"
+                @click="clickLink(item?.linkType, item?.linkUrl)"
+                >查看详情>>
+              </div>
+            </div>
             <div class="item-desc">{{
               item?.desc ||
               '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字'
@@ -143,14 +151,29 @@ defineExpose({
       align-items: center;
     }
 
-    .item-title {
+    .item-title-section {
+      display: flex;
+      justify-content: space-between;
       width: calc(@factor * 600px);
       margin-top: calc(@factor * 16px);
+      line-height: calc(@factor * 12px);
+    }
+
+    .item-title {
       color: #4e5969;
       font-weight: 500;
       font-size: calc(@factor * 8px);
-      line-height: calc(@factor * 12px);
       text-align: left;
+    }
+
+    .image-link {
+      // margin-top: calc(@factor * 2px);
+      color: #1664ff;
+      font-weight: 400;
+      font-size: calc(@factor * 7px);
+      font-family: PingFang SC;
+      text-align: left;
+      cursor: pointer;
     }
 
     .item-desc {

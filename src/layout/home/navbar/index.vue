@@ -19,7 +19,10 @@
           <t-link
             v-for="item in menuList"
             :key="item.key"
-            :class="{ active: item.key === menuStore.menuIndex }"
+            :class="{
+              'active': item.key === menuStore.menuIndex,
+              'is-hide': item.hide,
+            }"
             @click="setDot(item.key)"
           >
             {{ item.name }}
@@ -98,36 +101,34 @@ import { storeToRefs } from 'pinia';
 import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
-import { useDecorationStore } from '@/store/modules/decoration';
 import { useMenuStore } from '@/store/modules/menu';
-import { NodeAuthStatus } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
-import { RouteAuthEnum } from '@/enums/authEnum';
-import { usermenuList, managemenuList } from '@/enums/menuEnum';
 import eventBus from '@/utils/bus';
 
 const userStore = useUserStore();
 // const decoration = useDecorationStore();
 const router = useRouter();
-const route = useRoute();
 const searchContent = ref();
 const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
 // const { platFormLogo, platFormName } = storeToRefs(decoration);
 const logo = ref('');
 const platformName = ref('');
 const menuStore = useMenuStore();
+const menuList = ref<Record<string, any>>([]);
 
 const userMenu = [
   {
     name: '平台管理',
+    hide: false,
     key: 1,
   },
   {
     name: '标识管理',
+    hide: userStore.configInfo?.callSnmsSwitch,
     key: 2,
   },
 ];
@@ -135,10 +136,12 @@ const userMenu = [
 const manageMenu = [
   {
     name: '平台管理',
+    hide: false,
     key: 1,
   },
   {
     name: '标识管理',
+    hide: userStore.configInfo?.callSnmsSwitch,
     key: 3,
   },
 ];
@@ -151,20 +154,21 @@ const menuChange = () => {
   }
   return dataList;
 };
-const menuList = [...menuChange()];
-const findValueInColumns = (array: string | any[], value: any) => {
-  // eslint-disable-next-line no-plusplus
-  for (let col = 0; col < array[0].length; col++) {
-    // eslint-disable-next-line no-plusplus
-    for (let row = 0; row < array.length; row++) {
-      if (array[row][col] === value) {
-        return row;
-        // return { row, column: col };
-      }
-    }
-  }
-  return 1; // 如果没有找到值，则返回null
-};
+menuList.value = [...menuChange()];
+
+// const findValueInColumns = (array: string | any[], value: any) => {
+//   // eslint-disable-next-line no-plusplus
+//   for (let col = 0; col < array[0].length; col++) {
+//     // eslint-disable-next-line no-plusplus
+//     for (let row = 0; row < array.length; row++) {
+//       if (array[row][col] === value) {
+//         return row;
+//         // return { row, column: col };
+//       }
+//     }
+//   }
+//   return 1; // 如果没有找到值，则返回null
+// };
 
 const handleLogout = async () => {
   try {
@@ -323,6 +327,8 @@ const handleMyEvent = () => {
 };
 
 onMounted(() => {
+  console.log('navar mounted');
+  userStore.getConfigInfo(); // 这里需要重新调用一次，因为navbar优先于app加载
   handleMyEvent();
   eventBus.on('updateNavData', handleMyEvent);
 });
@@ -347,6 +353,19 @@ watch(
     immediate: true,
   }
 );
+
+// 监听store变化，将数据二次赋值
+watch(
+  () => userStore.configInfo,
+  (newVal: Record<string, any>) => {
+    menuList.value.forEach((item: any) => {
+      if (item.name === '标识管理') {
+        item.hide = newVal.callSnmsSwitch;
+      }
+    });
+  },
+  { immediate: true, deep: true }
+);
 </script>
 
 <style lang="less" scoped>
@@ -360,6 +379,10 @@ watch(
 
   :deep(.tele-trigger-popup) {
     top: 48px !important;
+  }
+
+  .is-hide {
+    display: none;
   }
 
   .left-side {

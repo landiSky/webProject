@@ -136,7 +136,8 @@ export function createPermissionGuard(router: Router) {
         });
     } else if (
       whiteList.indexOf(to.path) !== -1 ||
-      to.path.startsWith('/wow/mall/detail/')
+      to.path.startsWith('/wow/mall/detail/') ||
+      to.path.startsWith('/wow/platProducts')
     ) {
       // s3: 路由在白名单里，不需要做鉴权，商城的商品详情页也不需要鉴权
       next();

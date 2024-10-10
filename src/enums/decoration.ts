@@ -31,5 +31,5 @@ export const ChannelType = {
   // 修改服务页装修
   PLATFORM_SERVE: 4,
   // 修改商品详情页装修
-  PLATFORM_PRODUCT_DETAIL: 5,
+  PLATFORM_PRODUCT_DETAIL: -1,
 };

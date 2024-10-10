@@ -6,7 +6,10 @@
       width: isPreview ? '100vw' : '722px',
     }"
   >
-    <div v-if="openType === 5" class="product-bg">
+    <div
+      v-if="openType === ChannelType.PLATFORM_PRODUCT_DETAIL"
+      class="product-bg"
+    >
       <div class="product-text"></div>
     </div>
     <div v-if="!componentsList.length && !isPreview" class="empty-box"
@@ -51,7 +54,6 @@
                   @select="selectComponent"
                   @close="close"
                 ></ViewComponentWrap>
-                <!-- element !== 'HomeHeader' 后续可以考虑写个方法 -->
                 <t-space
                   v-if="
                     selectIndex === index &&
@@ -162,7 +164,7 @@ import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
-import { ToolData, tools } from './config/tools';
+import { ToolData, tools, toolsGroup } from './config/tools';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const route = useRoute();
@@ -241,7 +243,7 @@ const channelHeader = {
   configValue: {
     title: '标题',
     desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
-    src: 'a47b8070-f32a-4200-afe9-3a7d93c3e627.png',
+    src: '4e0c5c42-16ac-42b0-a462-672cdb540ffe.jpg',
     linkType: LinkType.BLANK,
     linkUrl: '',
   },
@@ -328,9 +330,9 @@ const changeColor = (val: number) => {
 };
 
 // 左侧工具栏拖入后在列表中的位置
-const onEnd = (index: number) => {
-  selectIndex.value = index;
-};
+// const onEnd = (index: number) => {
+//   selectIndex.value = index;
+// };
 
 // 判断组件数量是否大于10个上限
 const isMaxNum = computed(() => {
@@ -528,7 +530,8 @@ const insertSort = (event: any) => {
   const { oldIndex, newIndex } = event; // oldIndex表示左侧装修组件的位置, newIndex-被拖拽区域的位置
   // todo
   selectIndex.value = newIndex;
-  const addToolData = JSON.parse(JSON.stringify(ToolData[tools[oldIndex]]));
+  const componentName = toolsGroup[oldIndex].text || '';
+  const addToolData = JSON.parse(JSON.stringify(ToolData[componentName]));
   componentsList.value.splice(newIndex, 0, addToolData);
   console.log(
     '----被拖拽区域收到新增组件事件 触发选中组件--：',
@@ -622,11 +625,8 @@ watch(
   () => route.query,
   () => {
     const { type } = route.query;
-    console.log('open model0', route.query);
     openType.value = parseInt(`${type}`, 10);
     if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
-      console.log(openType.value, ChannelType);
-
       // interceptFlag.value = false;
     } else {
       // interceptFlag.value = true;
@@ -646,8 +646,8 @@ const insertFirst = (type: number) => {
       componentsList.value.unshift(homeHeader);
     }
   } else if (
-    type === ChannelType.PLATFORM_PRODUCT ||
-    type === ChannelType.PLATFORM_SERVE
+    type !== ChannelType.PLATFORM_HOME &&
+    type !== ChannelType.PLATFORM_PRODUCT_DETAIL
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
       toolList.value.unshift('ChannelHeader');
@@ -878,7 +878,6 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  // margin-top: 0;
   // overflow-y: auto;
   // background-color: #981313;
   .product-bg {

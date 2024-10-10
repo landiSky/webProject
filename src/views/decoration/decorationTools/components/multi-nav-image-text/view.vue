@@ -11,10 +11,21 @@
           :title="item.navTitle"
         >
           <div class="item-content">
-            <div class="item-desc">{{
-              item?.desc ||
-              '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字'
-            }}</div>
+            <div class="item-desc">
+              <span>
+                {{
+                  item?.desc ||
+                  '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字'
+                }}
+              </span>
+              <div
+                v-if="item?.linkType !== 2"
+                class="image-link"
+                @click="clickLink(item?.linkType, item?.linkUrl)"
+                >查看详情>>
+              </div>
+            </div>
+
             <div class="item-image">
               <img
                 :src="`/server/web/file/download?name=${item?.src}&productId=${
@@ -115,7 +126,7 @@ defineExpose({
   align-items: center;
   // justify-content: flex-start;
   width: 100%;
-  height: calc(@factor * 405px);
+  height: calc(@factor * 432px);
 
   .nav-image-text-title {
     position: relative;
@@ -160,9 +171,20 @@ defineExpose({
       align-items: center;
     }
 
+    .image-link {
+      margin-top: calc(@factor * 2px);
+      color: #1664ff;
+      font-weight: 400;
+      font-size: calc(@factor * 7px);
+      font-family: PingFang SC;
+      line-height: 11px;
+      text-align: left;
+      cursor: pointer;
+    }
+
     .item-desc {
       width: calc(@factor * 600px);
-      height: calc(@factor * 33px);
+      // height: calc(@factor * 46px);
       margin-top: calc(@factor * 16px);
       margin-bottom: calc(@factor * 8px);
       color: #4e5969;
