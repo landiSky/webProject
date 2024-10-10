@@ -303,6 +303,11 @@ onMounted(() => {
   apiGetNavData({}).then((res) => {
     console.log('首页logo和项目名称接口获取', res);
     if (res.data) {
+      // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
+      res.data = res.data.map((i: any) => ({
+        ...i,
+        type: i.id,
+      }));
       res.data.forEach((item: any) => {
         if (item.type === ChannelType.PLATFORM_NAME) {
           logo.value = item.logo;
