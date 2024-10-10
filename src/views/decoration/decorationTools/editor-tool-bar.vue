@@ -29,11 +29,15 @@
               <t-tooltip
                 is-bright
                 enter-delay="1000"
-                position="right"
+                position="rt"
                 popup-container="#toolbar-tooltip-container"
               >
                 <template #content>
-                  <t-image width="350" height="232" :src="singleImgText" />
+                  <t-image
+                    width="350"
+                    height="232"
+                    :src="element.tooltipImage"
+                  />
                 </template>
                 <div class="element-group">
                   <iconpark-icon
@@ -174,6 +178,10 @@ onMounted(() => {});
   :deep(.tele-tooltip-content) {
     max-width: none;
     max-height: none;
+  }
+
+  :deep(.tele-tooltip-bright) {
+    padding: 0;
   }
 }
 </style>

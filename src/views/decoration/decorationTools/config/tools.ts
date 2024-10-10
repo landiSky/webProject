@@ -1,3 +1,20 @@
+import singleImgText from '@/assets/images/decoration/sigleImgText.png';
+import verticalImageText from '@/assets/images/decoration/verticalImageText.png';
+import threeImageText from '@/assets/images/decoration/threeImageText.png';
+import multiImageText from '@/assets/images/decoration/multiImageText.png';
+import iconImageText from '@/assets/images/decoration/iconImageText.png';
+import imageOverlapText from '@/assets/images/decoration/imageOverlapText.png';
+import leftRightImageText from '@/assets/images/decoration/leftRightImageText.png';
+import spliceImageText from '@/assets/images/decoration/spliceImageText.png';
+import herizontalImageText from '@/assets/images/decoration/herizontalImageText.png';
+import carouselImageText from '@/assets/images/decoration/carouselImageText.png';
+import mutiNavImageText from '@/assets/images/decoration/mutiNavImageText.png';
+import sigleImg from '@/assets/images/decoration/sigleImg.png';
+import mutiNavText from '@/assets/images/decoration/mutiNavText.png';
+import mutiIconText from '@/assets/images/decoration/mutiIconText.png';
+import threeImg from '@/assets/images/decoration/threeImg.png';
+import multiNavImg from '@/assets/images/decoration/multiNavImg.png';
+import treeTextNavigation from '@/assets/images/decoration/treeTextNavigation.png';
 import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
 
@@ -559,53 +576,65 @@ export const toolsGroup = [
     id: 2,
     text: 'SigleImgText',
     noDrag: false,
+    tooltipImage: singleImgText,
   },
   {
     id: 3,
     text: 'ImageOverlapText',
     noDrag: false,
+    tooltipImage: imageOverlapText,
   },
   {
     id: 4,
     text: 'VerticalImageText',
     noDrag: false,
+    tooltipImage: verticalImageText,
   },
   {
     id: 5,
     text: 'LeftRightImageText',
     noDrag: false,
+    tooltipImage: leftRightImageText,
   },
   {
     text: 'ThreeImageText',
     noDrag: false,
+    tooltipImage: threeImageText,
   },
   {
     text: 'SpliceImageText',
     noDrag: false,
+    tooltipImage: spliceImageText,
   },
   {
     text: 'MultiImageText',
     noDrag: false,
+    tooltipImage: multiImageText,
   },
   {
     text: 'HerizontalImageText',
     noDrag: false,
+    tooltipImage: herizontalImageText,
   },
   {
     text: 'IconImageText',
     noDrag: false,
+    tooltipImage: iconImageText,
   },
   {
     text: 'CarouselImageText',
     noDrag: false,
+    tooltipImage: carouselImageText,
   },
   {
     text: 'MutiNavImageText',
     noDrag: false,
+    tooltipImage: mutiNavImageText,
   },
   {
     text: 'MutiIconText',
     noDrag: false,
+    tooltipImage: mutiIconText,
   },
   {
     type: 'title',
@@ -615,18 +644,22 @@ export const toolsGroup = [
   {
     text: 'SigleImg',
     noDrag: false,
+    tooltipImage: sigleImg,
   },
   {
     text: 'SigleImg',
     noDrag: false,
+    tooltipImage: sigleImg,
   },
   {
     text: 'ThreeImg',
     noDrag: false,
+    tooltipImage: threeImg,
   },
   {
     text: 'MultiNavImg',
     noDrag: false,
+    tooltipImage: multiNavImg,
   },
   {
     type: 'title',
@@ -636,9 +669,11 @@ export const toolsGroup = [
   {
     text: 'TreeTextNavigation',
     noDrag: false,
+    tooltipImage: treeTextNavigation,
   },
   {
     text: 'MutiNavText',
     noDrag: false,
+    tooltipImage: mutiNavText,
   },
 ];
