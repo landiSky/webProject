@@ -290,8 +290,8 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 598,
-  height: 609,
+  width: 1200,
+  height: 520,
 });
 const curIndex = ref(0);
 const showSource = ref(false);
