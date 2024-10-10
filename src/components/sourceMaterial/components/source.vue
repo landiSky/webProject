@@ -37,11 +37,11 @@
           </div>
           <div class="list-content">
             <div
-              v-for="i in state.imgList"
+              v-for="(i, index) in state.imgList"
               :key="JSON.stringify(i.id)"
               class="list-item"
               :class="i.active ? 'active' : ''"
-              @click="onListItemClick(i.id)"
+              @click="onListItemClick(index)"
             >
               <t-upload
                 class="picture-card"
@@ -283,14 +283,10 @@ const onTabChange = (key: number) => {
 };
 
 const onListItemClick = (index: number) => {
-  state.imgList[index].active = true;
-  state.imgList.forEach((item: any, idx) => {
-    if (idx === index) {
-      item.active = true;
-    } else {
-      item.active = false;
-    }
+  state.imgList.forEach((item: any) => {
+    item.active = false;
   });
+  state.imgList[index].active = true;
 };
 
 const onPageChange = (current: number) => {
