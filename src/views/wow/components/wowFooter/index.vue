@@ -22,22 +22,18 @@
         <div class="item">
           <span class="title">买家信息</span>
           <span
-            v-if="form.buyerManualFile"
+            v-if="form.buyerManualUrl"
             class="subitem onCursor"
-            @click="
-              onClickSeeFile(form.buyerManualFileName, form.buyerManualFile)
-            "
+            @click="onClickOpen(form.buyerManualUrl)"
             >买家使用手册</span
           >
         </div>
         <div class="item">
           <span class="title">卖家信息</span>
           <span
-            v-if="form.sellerManualFile"
+            v-if="form.sellerManualUrl"
             class="subitem onCursor"
-            @click="
-              onClickSeeFile(form.sellerManualFileName, form.sellerManualFile)
-            "
+            @click="onClickOpen(form.sellerManualUrl)"
             >卖家使用手册</span
           >
         </div>
@@ -103,17 +99,6 @@ const FooterInfoDetails = async () => {
       };
     })
     .catch(() => {});
-};
-
-const onClickSeeFile = (name: string, urlName: string) => {
-  // const result = name.substring(name.indexOf('.') + 1, name.length);
-  const link = document.createElement('a');
-  const objectUrl = `/server/web/file/download?name=${urlName}`; // 创建一个新的url对象
-  link.href = objectUrl;
-  const fileName = name;
-  link.download = fileName; //  下载的时候自定义的文件名
-  link.click();
-  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
 };
 
 const onClickOpen = (url: string) => {
