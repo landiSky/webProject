@@ -508,7 +508,7 @@ export const ToolData: Record<string, any> = {
     ],
   },
   TreeTextNavigation: {
-    chineseName: '树状文本导航',
+    chineseName: '树文本导航',
     maxNum: 10,
     maxContentNum: 20,
     icon: 'verticalNavTxt',
