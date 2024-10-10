@@ -14,8 +14,8 @@ import mutiNavText from '@/assets/images/decoration/mutiNavText.png';
 import mutiIconText from '@/assets/images/decoration/mutiIconText.png';
 import threeImg from '@/assets/images/decoration/threeImg.png';
 import multiNavImg from '@/assets/images/decoration/multiNavImg.png';
-import treeTextNavigation from '@/assets/images/decoration/treeTextNavigation.png';
 import doubleImg from '@/assets/images/decoration/doubleImg.png';
+import treeTextNavigation from '@/assets/images/decoration/treeTextNavigation.png';
 import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
 
@@ -581,9 +581,9 @@ export const tools = [
   'IconImageText',
   'CarouselImageText',
   'MutiNavImageText',
-  'MutiIconText',
   'SigleImg',
-  'DoubleImg', // 这里替换旭蓓的双图
+  'DoubleImg',
+  'MutiIconText',
   'ThreeImg',
   'MultiNavImg',
   'TreeTextNavigation',
