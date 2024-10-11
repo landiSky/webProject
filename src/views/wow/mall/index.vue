@@ -26,8 +26,7 @@
             class="span-padding"
             @click="
               ((apiParams.productTypeId = null),
-              (apiParams.productChildTypeId = null),
-              (firstClassIndex = null)),
+              (apiParams.productChildTypeId = null)),
                 clickSearchBtn()
             "
             >不限</span
@@ -36,13 +35,11 @@
             v-for="(item, index) in productTypeList"
             :key="`${item.id}-${index}`"
             :class="{
-              active:
-                apiParams.productTypeId === item.id ||
-                firstClassIndex === index,
+              active: apiParams.productTypeId === item.id,
             }"
             @click="
               ((apiParams.productTypeId = item.id),
-              (firstClassIndex = index),
+              (firstClassItem = item),
               (apiParams.productChildTypeId = null)),
                 clickSearchBtn()
             "
@@ -58,7 +55,7 @@
       <span
         v-if="
           apiParams.productTypeId &&
-          apiParams.productTypeId === productTypeList[firstClassIndex || 0]?.id
+          apiParams.productTypeId === firstClassItem?.id
         "
         class="item"
         style="margin-top: -15px"
@@ -66,8 +63,7 @@
         <span class="label" style="opacity: 0">二级分类:</span>
         <span class="value">
           <span
-            v-for="itemSecond in productTypeList[firstClassIndex || 0]
-              ?.children"
+            v-for="itemSecond in firstClassItem?.children"
             :key="itemSecond.id"
             :class="{
               active: apiParams.productChildTypeId === itemSecond.id,
@@ -441,7 +437,7 @@ const btnLoading = ref(false);
 const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
 const customPriceStart = ref(); // 自定义价格区间起止
 const customPriceEnd = ref();
-const firstClassIndex = ref(); // 商品的一级标签的index
+const firstClassItem = ref<Record<string, any>>([]);
 const apiParams = ref<Record<string, any>>({
   productTypeId: null,
   productChildTypeId: null,
