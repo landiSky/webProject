@@ -675,6 +675,7 @@ onMounted(() => {
     align-items: center;
     width: 600px;
     height: 40px;
+    box-shadow: 0 4px 30px 0 #2c5bd433;
 
     .inputSearch {
       width: 500px;
