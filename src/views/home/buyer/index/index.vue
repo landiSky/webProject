@@ -1088,12 +1088,12 @@ const togoCheck = (detailData: Record<string, any>) => {
       appId: detailData.saasAppId, // 应用id
     };
     apiAuthStatus(params).then((res: any) => {
-      if (res === 1) {
-        togo(detailData);
+      if (res === 0) {
+        empowerTipVisible.value = true;
+        empowerTipData.value = detailData;
         return;
       }
-      empowerTipVisible.value = true;
-      empowerTipData.value = detailData;
+      togo(detailData);
     });
   } else {
     togo(detailData);
