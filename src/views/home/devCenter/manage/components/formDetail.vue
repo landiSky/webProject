@@ -266,7 +266,7 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item v-if="showAuthLimitDock">
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
                 <t-form-item
                   field="link"
                   label="应用地址"

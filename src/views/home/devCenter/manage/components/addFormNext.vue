@@ -319,7 +319,7 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item v-if="showAuthLimitDock">
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用地址"
@@ -327,7 +327,7 @@
                   :rules="[
                     {
                       required: true,
-                      message: '应用首页地址不允许为空',
+                      message: '应用地址不允许为空',
                     },
                     { maxLength: 500, message: '不允许超过500个字符' },
                   ]"
