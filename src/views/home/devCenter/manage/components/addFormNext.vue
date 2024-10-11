@@ -69,9 +69,11 @@
           <t-form
             ref="formRef"
             :model="form"
-            :label-col-props="{ span: 3, offset: 0 }"
-            :wrapper-col-props="{ span: 21 }"
+            :wrapper-col-props="{ span: 20 }"
             label-align="left"
+            :label-col-props="{
+              flex: '100px',
+            }"
           >
             <t-descriptions
               id="proof"
@@ -1054,7 +1056,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -1065,7 +1067,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
