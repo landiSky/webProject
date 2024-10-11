@@ -31,6 +31,7 @@
               class="image-cls"
               width="100"
               height="100"
+              fit="cover"
             ></t-image>
           </t-form-item>
         </div>
@@ -83,6 +84,7 @@
               class="image-cls"
               width="100"
               height="100"
+              fit="cover"
             ></t-image>
           </t-form-item>
         </div>

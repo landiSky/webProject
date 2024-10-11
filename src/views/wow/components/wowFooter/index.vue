@@ -161,6 +161,7 @@ onMounted(() => {
           .qrcode {
             width: 90px;
             height: 90px;
+            object-fit: cover;
           }
         }
 
@@ -185,6 +186,7 @@ onMounted(() => {
         .MobileQRcode {
           width: 120px;
           height: 120px;
+          object-fit: cover;
         }
       }
 
