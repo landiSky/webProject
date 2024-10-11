@@ -110,9 +110,6 @@
             }"
             show-word-limit
             :allow-clear="false"
-            :auto-size="{
-              minRows: 6,
-            }"
           />
         </t-form-item>
         <t-form-item
