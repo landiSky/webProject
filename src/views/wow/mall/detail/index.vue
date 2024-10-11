@@ -163,7 +163,10 @@
               <span v-else>不限</span>
             </div>
             <t-button
-              v-if="Number(selectVersion.isTry) === 1"
+              v-if="
+                selectVersion.deliveryType === 1 &&
+                Number(selectVersion.isTry) === 1
+              "
               type="outline"
               size="large"
               style="width: 140px; margin-right: 12px"
@@ -321,7 +324,10 @@
             <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <t-button
-            v-if="Number(selectVersion.isTry) === 1"
+            v-if="
+              selectVersion.deliveryType === 1 &&
+              Number(selectVersion.isTry) === 1
+            "
             type="outline"
             size="large"
             style="width: 140px; margin-right: 12px"
