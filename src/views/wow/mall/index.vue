@@ -82,6 +82,7 @@
           </span>
         </span>
       </span>
+      <!-- 商品类型 -->
       <span class="item">
         <span class="label">商品类型:</span>
         <span class="value">
