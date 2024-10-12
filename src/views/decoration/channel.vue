@@ -319,9 +319,13 @@ const getPageData = (idx?: number) => {
   // 拉取所有导航数据
   apiGetNavData({}).then((res) => {
     if (isArray(res.data)) {
+      res.data = res.data.map((i) => ({
+        ...i,
+        type: i.id,
+      }));
       const tempData = JSON.parse(JSON.stringify(channelFormMap.value));
       channelFormMap.value = [];
-      res.data.forEach((item) => {
+      res.data.forEach((item: any) => {
         switch (item.type) {
           case ChannelType.PLATFORM_HOME:
             form1.value = item;

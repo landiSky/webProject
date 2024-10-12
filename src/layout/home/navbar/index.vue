@@ -2,7 +2,6 @@
   <div class="navbar">
     <div class="left-side">
       <div class="left">
-        <!-- <t-space :size="[0]"> -->
         <t-link class="link" @click="goWow">
           <t-image
             v-if="logo"
@@ -12,7 +11,6 @@
           <iconpark-icon v-else name="logo-gray" size="28px"></iconpark-icon>
           <span class="title"> {{ platformName || 'IDSphere' }} </span>
         </t-link>
-        <!-- </t-space> -->
       </div>
       <div class="right">
         <t-space>
@@ -27,8 +25,6 @@
           >
             {{ item.name }}
           </t-link>
-          <!-- <t-link class="active" @click="setDot">平台管理</t-link>
-          <t-link @click="clickIdService">标识管理</t-link> -->
         </t-space>
       </div>
     </div>
