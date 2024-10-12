@@ -1,4 +1,5 @@
 <template>
+  <!-- 组件装修区域 -->
   <div
     class="page-editor"
     :class="{ blueBorder: flickering }"
@@ -125,7 +126,16 @@
         </draggable>
       </t-layout-content>
     </t-layout>
-    <div v-if="openModel === 0" class="floating_btn-box">
+    <!-- 预览，保存，发布 按钮框
+     openModel为0 是编辑模式，1为预览模式 -->
+    <div
+      v-if="openModel === 0"
+      class="floating_btn-box"
+      :class="{ blueBorder: flickering }"
+      :style="{
+        width: isPreview ? '100vw' : '722px',
+      }"
+    >
       <t-space size="large" class="icons-container">
         <div class="icon-text-container" @click="controlPreview">
           <icon-eye v-if="!isPreview" :size="24" />
@@ -142,7 +152,14 @@
         </div>
       </t-space>
     </div>
-    <div v-if="openModel === 1" class="floating_footer-box">
+    <div
+      v-if="openModel === 1"
+      class="floating_footer-box"
+      :class="{ blueBorder: flickering }"
+      :style="{
+        width: isPreview ? '100vw' : '722px',
+      }"
+    >
       <t-space :size="12">
         <t-button @click="edit">编辑</t-button>
         <t-button type="primary" @click="clickSaveRemote">发布</t-button>
@@ -956,14 +973,15 @@ onBeforeUnmount(() => {
 
   .floating_btn-box {
     position: fixed;
-    bottom: 24px;
-    left: 130px;
+    bottom: 0;
+    left: 12%;
+    //left: 10%;
     z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 252px;
-    height: 48px;
+    width: 58%;
+    height: 50px;
     background-color: white;
     border-radius: 2px;
     cursor: pointer;
