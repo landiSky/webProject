@@ -25,6 +25,12 @@
                 :size="12"
                 @click="handleSort('down', item)"
               />
+              <icon-delete
+                v-if="item.supportDelete"
+                style="margin-right: 12px; cursor: pointer"
+                :size="12"
+                @click="handleDel(item)"
+              />
               <icon-edit
                 style="cursor: pointer"
                 :size="12"
@@ -104,6 +110,7 @@
               </div>
             </t-form-item>
           </div>
+          <div> </div>
         </t-form>
       </div>
     </t-space>
@@ -353,6 +360,7 @@ const getPageData = (idx?: number) => {
         channelFormMap.value[idx].navNameEdit =
           !channelFormMap.value[idx].navNameEdit;
       }
+      console.log('getPageDatagetPageData', channelFormMap.value);
     }
   });
   // 获取本地缓存的装修数据,注意key值！！！
@@ -361,9 +369,9 @@ const getPageData = (idx?: number) => {
   nav3DecorationJson.value = localStorage.getItem('componentsList4') || '';
 };
 
-const goHome = () => {
-  router.push({ path: '/wow/index' });
-};
+// const goHome = () => {
+//   router.push({ path: '/wow/index' });
+// };
 // 频道页通过一个路由，不同type来区分
 const goPlatProducts = (type: number) => {
   // router.push({ path: '/wow/platProducts' });
@@ -389,6 +397,10 @@ const handleExchangeArray = (
   arr[indexA] = arr[indexB];
   arr[indexB] = temp;
   return arr;
+};
+
+const handleDel = (data: any) => {
+  console.log('handleDel', data);
 };
 
 const handleSort = async (type: string, data: any) => {

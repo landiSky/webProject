@@ -178,6 +178,7 @@ const goIndex = () => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 6).then((res) => {
     console.log('前台导航栏首页点击打点', res);
   });
+  console.log('goIndexgoIndexgoIndex');
   selectTab.value = TabPath.INDEX;
   router.push({ path: '/wow/index' });
 };
@@ -303,6 +304,10 @@ onMounted(() => {
   apiGetNavData({}).then((res) => {
     console.log('首页logo和项目名称接口获取', res);
     if (res.data) {
+      res.data = res.data.map((i: any) => ({
+        ...i,
+        type: i.id,
+      }));
       res.data.forEach((item: any) => {
         if (item.type === ChannelType.PLATFORM_NAME) {
           logo.value = item.logo;
