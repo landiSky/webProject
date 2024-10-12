@@ -74,6 +74,7 @@ export const whiteList = [
   '/wow/doc',
   '/wow/platServices',
   '/wow/idInsideZone',
+  '/public/idhub-open',
 ];
 
 const router = createRouter({

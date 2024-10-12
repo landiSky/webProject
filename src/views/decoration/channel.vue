@@ -367,6 +367,13 @@ const goHome = () => {
 // 频道页通过一个路由，不同type来区分
 const goPlatProducts = (type: number) => {
   // router.push({ path: '/wow/platProducts' });
+  if (type === 6) {
+    localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
+    router.push({
+      name: 'publicIdhubOpen',
+    });
+    return;
+  }
   router.push({
     name: 'wowPlatProducts',
     params: { type },

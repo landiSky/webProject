@@ -32,15 +32,7 @@ const props = defineProps({
 });
 const componentList = ref([]);
 onMounted(() => {
-  // type改为动态props传递
-  const routeType = route.params?.type;
-  const localType = JSON.parse(
-    localStorage.getItem('publicIdhubOpenType') || 'null'
-  );
-  console.log('platproducts', routeType, localType);
-  // 这里未过滤0 后需要注意
-  const type = routeType || localType;
-  apiGetNavData({ type }).then((res: any) => {
+  apiGetNavData({ type: 6 }).then((res: any) => {
     if (res.data.length > 0) {
       const { detail } = res.data[0];
       if (!detail) return;

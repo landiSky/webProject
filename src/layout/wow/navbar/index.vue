@@ -158,6 +158,7 @@ const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
 watch(
   () => route.path,
   (newV) => {
+    console.log('watch', newV);
     // 商品详情页也激活【商城】
     if (route.name === 'wowMallDetail') {
       selectTab.value = TabPath.MALL;
@@ -167,6 +168,7 @@ watch(
   }
 );
 const setActive = (key: number) => {
+  console.log('setActive', key, ChannelTabPath.value, selectTab.value);
   return ChannelTabPath.value[key] === selectTab.value;
 };
 const handleLogout = async () => {
@@ -220,6 +222,14 @@ const goPlatProducts = (type: number) => {
     console.log('前台导航栏点击平台产品打点', res);
   });
   // router.push({ path: '/wow/platProducts' });
+  if (String(type) === '6') {
+    // 单独处理开放社区
+    localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
+    router.push({
+      name: 'publicIdhubOpen',
+    });
+    return;
+  }
   router.push({
     name: 'wowPlatProducts',
     params: { type },
@@ -313,8 +323,8 @@ onMounted(() => {
         // 过滤出频道页, 这里统一改造成频道页动态配置
         else if (item.type !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
           const pathKey = `/wow/platProducts/${item.type}`;
-          console.log('pathkey111', pathKey);
-          ChannelTabPath.value[item.type] = pathKey;
+          ChannelTabPath.value[item.type] =
+            item.type === 6 ? '/public/idhub-open' : pathKey;
           channelNameCollect.value.push({ name: item.name, type: item.type });
         }
         // else if (item.type === ChannelType.PLATFORM_PRODUCT) {

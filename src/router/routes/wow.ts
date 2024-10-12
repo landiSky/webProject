@@ -21,6 +21,12 @@ const wowRoutesList = [
         name: 'wowPlatProducts',
         component: () => import('@/views/wow/platProducts/index.vue'),
       },
+      // 单独处理的路由
+      {
+        path: '/public/idhub-open',
+        name: 'publicIdhubOpen',
+        component: () => import('@/views/wow/idhubOpen/index.vue'),
+      },
       {
         path: '/wow/platServices',
         name: 'wowPlatServices',
