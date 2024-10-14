@@ -161,4 +161,7 @@ defineExpose({
 //   transform: scale(2); /* 将元素的尺寸放大2倍 */
 //   transform-origin: center center; /* 设置缩放中心点 */
 // }
+.mouse-cursor {
+  cursor: pointer;
+}
 </style>

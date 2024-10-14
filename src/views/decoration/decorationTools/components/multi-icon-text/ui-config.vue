@@ -147,7 +147,7 @@
           :help="`${item.linkUrl ? '' : '该信息为必填项，未填写不支持发布'}`"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
-            { required: true, maxLength: 8, message: '长度不超过500个字符' },
+            { required: true, maxLength: 500, message: '长度不超过500个字符' },
           ]"
         >
           <t-textarea
@@ -294,8 +294,8 @@ const confirmLoading = ref(false);
 
 // 截图尺寸
 const stencilSize = ref({
-  width: 205,
-  height: 205,
+  width: 80,
+  height: 80,
 });
 const curIndex = ref(-1);
 const showSource = ref(false);

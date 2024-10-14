@@ -1,4 +1,5 @@
 <template>
+  <!-- 组件装修区域 -->
   <div
     class="page-editor"
     :class="{ blueBorder: flickering }"
@@ -16,7 +17,7 @@
       >拖动左侧组件，到当前区域进行楼层配置
     </div>
     <t-layout>
-      <t-layout-content>
+      <t-layout-content style="padding-bottom: 80px">
         <draggable
           item-key="index"
           ghost-class="ghost"
@@ -125,8 +126,10 @@
         </draggable>
       </t-layout-content>
     </t-layout>
+    <!-- 预览，保存，发布 按钮框
+     openModel为0 是编辑模式，1为预览模式 -->
     <div v-if="openModel === 0" class="floating_btn-box">
-      <t-space size="large" class="icons-container">
+      <!-- <t-space size="large" class="icons-container">
         <div class="icon-text-container" @click="controlPreview">
           <icon-eye v-if="!isPreview" :size="24" />
           <icon-eye-invisible v-if="isPreview" :size="24" />
@@ -140,6 +143,27 @@
           <iconpark-icon name="saveRemote" :size="24" />
           <span style="font-size: 12px">发布</span>
         </div>
+      </t-space> -->
+      <t-space size="small" class="icons-container">
+        <t-button class="icon-text-container" @click="controlPreview">
+          <template #icon>
+            <icon-eye v-if="!isPreview" :size="24" />
+            <icon-eye-invisible v-if="isPreview" :size="24" />
+          </template>
+          <template #default>预览</template>
+        </t-button>
+        <t-button class="icon-text-container" @click="clickSave">
+          <template #icon>
+            <iconpark-icon name="saveLocal" :size="24" />
+          </template>
+          <template #default>保存</template>
+        </t-button>
+        <t-button class="icon-text-container" @click="clickSaveRemote">
+          <template #icon>
+            <iconpark-icon name="saveRemote" :size="24" />
+          </template>
+          <template #default>发布</template>
+        </t-button>
       </t-space>
     </div>
     <div v-if="openModel === 1" class="floating_footer-box">
@@ -956,14 +980,14 @@ onBeforeUnmount(() => {
 
   .floating_btn-box {
     position: fixed;
-    bottom: 24px;
-    left: 130px;
-    z-index: 1000;
+    bottom: 15px;
+    left: auto;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 252px;
-    height: 48px;
+    width: 250px;
+    height: 40px;
     background-color: white;
     border-radius: 2px;
     cursor: pointer;
@@ -973,6 +997,12 @@ onBeforeUnmount(() => {
         display: flex;
         gap: 4px;
         align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 36px;
+        padding: 6px 12px 6px 12px;
+        background: #f2f3f8;
+        border-radius: 2px 0 0 0;
       }
     }
   }

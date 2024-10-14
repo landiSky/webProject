@@ -516,16 +516,19 @@
         <span class="service-label">服务商名称:</span>
         <span class="service-name">{{ prodDetail?.companyName }}</span>
       </div>
-      <!-- 服务商手机号暂未后端接口尚未开发完成 -->
       <div class="service-content-detail">
         <span class="service-label">服务商手机号:</span>
-        <span class="service-name">
+        <!-- <span class="service-name">
           {{ phoneNumber }}
-          <iconpark-icon
+        </span> -->
+        <span>
+          <t-typography-paragraph
+            copyable
             class="copy-icon"
             name="componentCopy"
-            @click="copyPhoneNumber"
-          ></iconpark-icon>
+          >
+            {{ phoneNumber }}
+          </t-typography-paragraph>
         </span>
       </div>
     </div>
@@ -942,9 +945,6 @@ const onLineConsult = () => {
 };
 const handleCancel = () => {
   infoModalVisible.value = false;
-};
-const copyPhoneNumber = () => {
-  copyToClipboard(String(phoneNumber.value));
 };
 
 // watch(
@@ -1581,7 +1581,31 @@ onUnmounted(() => {
 .service-label {
   width: 90px;
   height: 20px;
+  padding-top: 5px;
   color: #4e5969;
+  font-weight: 400;
+  font-size: 12px;
+  font-family: PingFang SC;
+  line-height: 20px;
+  text-align: left;
+}
+
+.service-name {
+  padding-top: 5px;
+  color: #1d2129;
+  font-weight: 400;
+  font-size: 12px;
+  //styleName: CN/正文/12-Regular-小;
+  font-family: PingFang SC;
+  line-height: 20px;
+  text-align: left;
+}
+
+.copy-icon {
+  padding-top: 5px;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
 }
 
 :deep(.tele-typography) {
