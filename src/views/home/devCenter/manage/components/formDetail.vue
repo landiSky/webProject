@@ -628,8 +628,34 @@ const handleLaunch = (status: number) => {
   // formRef.value.validate((errors: undefined) => {
   //   if (!errors) {
   state.launchLoading = true;
+  let params: Record<string, any> = {};
+  if (form.appType === 1) {
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+      memberType: undefined,
+      authType: form.authType ? form.authType.join(',') : '',
+      link: '',
+    };
+  } else {
+    const memberIdList = form.memberList.map((i) => i.memberId);
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+      authType: form.authType ? form.authType.join(',') : '',
+      homeUri: form.dockingMethod !== 1 ? form.link : '',
+      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      link: form.dockingMethod !== 1 ? '' : form.link,
+    };
+    if (form.memberType === 1) {
+      params.memberIdList = memberIdList;
+    }
+  }
+  params.status = status;
   // 0 未上线 1 上线
-  fetchLaunch({ ...form, id: props.editId, status }).then((res) => {
+  fetchLaunch(params).then((res) => {
     const { data } = res;
     if (data?.code === 200) {
       Message.success({
