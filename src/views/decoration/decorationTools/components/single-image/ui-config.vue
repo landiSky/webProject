@@ -18,16 +18,28 @@
           align: 'center',
         }"
         :validate-trigger="['blur', 'input']"
+        :rules="[
+          { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 20, message: '长度不超过20个字符' },
+          {
+            required: true,
+            match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
+            message: '只可填写中英文，不能填写其他特殊字符',
+          },
+        ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="12"
+          :max-length="{
+            length: 20,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
-      <t-form-item
+      <!-- <t-form-item
         label="详情简介"
         field="desc"
         :label-col-props="{
@@ -43,7 +55,7 @@
           :max-length="50"
           show-word-limit
         />
-      </t-form-item>
+      </t-form-item> -->
 
       <t-form-item
         label="配图"
@@ -109,19 +121,27 @@
           flex: '90px',
         }"
         :validate-trigger="['blur']"
+        :rules="[
+          { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 500, message: '长度不超过500个字符' },
+        ]"
       >
         <t-textarea
           v-if="form.linkType === 0"
           v-model="form.linkUrl"
-          :max-length="500"
+          :max-length="{
+            length: 500,
+            errorOnly: true,
+          }"
           show-word-limit
-          placeholder="请输入"
+          :allow-clear="false"
         />
         <t-select
           v-if="form.linkType === 1"
           v-model="form.linkUrl"
           placeholder="请选择"
           allow-clear
+          :allow-search="true"
         >
           <t-option v-for="item in goodsList" :key="item" :value="item.id">{{
             item.name
@@ -186,7 +206,7 @@ const form = ref<ConfigData>({
 const rules = {
   mainTitle: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   src: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
-  desc: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
+  desc: [{ required: false, message: '该信息为必填项，未填写不支持发布' }],
   linkType: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
   linkUrl: [{ required: true, message: '该信息为必填项，未填写不支持发布' }],
 };
@@ -209,7 +229,7 @@ const onCancel = () => {
 
 onMounted(() => {
   // // form赋值
-  console.log('单图props', data?.value);
+  console.log('单图文props', data?.value);
   form.value.mainTitle = data?.value?.mainTitle || '';
   form.value.desc = data?.value?.configValue.desc || '';
   form.value.src = data?.value?.configValue.src || '';

@@ -71,30 +71,90 @@
           <template #status="{ record }">
             <span
               class="status-section"
-              :class="record.status ? '' : 'offline'"
+              :class="StatusClassEnum[record.status]"
               >{{ StatusEnum[record.status] ?? '-' }}</span
             >
           </template>
           <template #operation="{ record }">
-            <span class="operation-section">
+            <span v-if="record.status === 0" class="operation-section">
               <t-button type="text" @click="handleTableDetail(record)"
                 >详情</t-button
               >
-              <t-button type="text" @click="handleTableLaunchOrDel(record)">{{
-                record.status ? '下线' : '上线'
-              }}</t-button>
-              <t-button
-                type="text"
-                :disabled="record.status === 1"
-                @click="handleTableEdit(record)"
-                >编辑</t-button
+              <t-button type="text" @click="handleTableEdit(record)">
+                编辑
+              </t-button>
+              <t-button type="text" @click="handleTableDel(record)">
+                删除
+              </t-button>
+            </span>
+            <span v-if="record.status === 1" class="operation-section">
+              <t-button type="text" @click="handleTableDetail(record)"
+                >详情</t-button
               >
-              <t-button
-                type="text"
-                :disabled="record.status === 1"
-                @click="handleTableDel(record)"
-                >删除</t-button
+              <t-button type="text" @click="handleTableLaunchOrDel(record)"
+                >下线</t-button
               >
+              <t-dropdown position="br">
+                <t-link>
+                  <icon-more />
+                </t-link>
+                <template #content>
+                  <t-doption disabled @click="handleTableEdit(record)">
+                    <template #icon>
+                      <icon-edit />
+                    </template>
+                    编辑
+                  </t-doption>
+                  <t-doption disabled @click="handleTableDel(record)">
+                    <template #icon>
+                      <icon-delete />
+                    </template>
+                    删除
+                  </t-doption>
+                </template>
+              </t-dropdown>
+            </span>
+            <span v-if="record.status === 2" class="operation-section">
+              <t-button type="text" @click="handleTableDetail(record)"
+                >详情</t-button
+              >
+              <t-button type="text" @click="handleTableDebugging(record)">
+                调试
+              </t-button>
+              <t-dropdown position="br">
+                <t-link>
+                  <icon-more />
+                </t-link>
+                <template #content>
+                  <t-doption @click="handleTableCancelDebugging(record)">
+                    <template #icon>
+                      <icon-close-circle />
+                    </template>
+                    取消调试
+                  </t-doption>
+                  <t-doption @click="handleTableLaunchOrDel(record)">
+                    <template #icon>
+                      <icon-common />
+                    </template>
+                    上线
+                  </t-doption>
+                  <t-tooltip content="取消调试可编辑">
+                    <t-doption disabled @click="handleTableEdit(record)">
+                      <template #icon>
+                        <icon-edit />
+                      </template>
+                      编辑
+                    </t-doption>
+                  </t-tooltip>
+
+                  <t-doption @click="handleTableDel(record)">
+                    <template #icon>
+                      <icon-delete />
+                    </template>
+                    删除
+                  </t-doption>
+                </template>
+              </t-dropdown>
             </span>
           </template>
         </t-table>
@@ -135,10 +195,16 @@ import {
   fetchOffineStatus,
   fetchOffine,
   fetchDel,
+  fetchCancelDebug,
 } from '@/api/devCenter/manage';
+import {
+  alreadyBuyClientLogin,
+  appInfoClientLogin,
+} from '@/api/buyer/overview';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
+import { sm2 } from '@/utils/encrypt';
 
 import AddForm from './components/addForm.vue';
 import AddFormNext from './components/addFormNext.vue';
@@ -151,7 +217,8 @@ const route = useRoute();
 
 const { userInfo } = store;
 
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { selectCompany, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const baseParams: Record<string, string | number | null> = reactive<{
   appName: string;
@@ -236,11 +303,21 @@ const StatusList = [
     text: '已上线',
     value: 1,
   },
+  {
+    text: '调试中',
+    value: 2,
+  },
 ];
 
 const StatusEnum: { [name: string]: any } = {
   0: '未上线',
   1: '已上线',
+  2: '调试中',
+};
+const StatusClassEnum: { [name: string]: any } = {
+  0: 'offline',
+  1: 'already-online',
+  2: 'debugging',
 };
 
 const columns = [
@@ -295,7 +372,8 @@ const columns = [
     title: '操作',
     dataIndex: 'operation',
     slotName: 'operation',
-    width: 220,
+    fixed: 'right',
+    width: 180,
   },
 ];
 
@@ -376,7 +454,7 @@ const handleTableDetail = (record: Record<string, any>) => {
 const handleTableLaunchOrDel = (record: Record<string, any>) => {
   // 0 未上线 1 上线
   const { status, id } = record;
-  if (status) {
+  if (status === 1) {
     fetchOffineStatus(id).then((res: any) => {
       if (res) {
         Modal.warning({
@@ -501,6 +579,85 @@ const handleReset = () => {
   fetchTableData();
 };
 
+const handleTableCancelDebugging = (record: Record<string, any>) => {
+  const params = {
+    appInfoId: record.id,
+  };
+  fetchCancelDebug(params).then(() => {
+    fetchTableData();
+  });
+};
+
+const handleTableDebugging = (record: Record<string, any>) => {
+  if (record.appType === 0 && record.dockingMethod === 1) {
+    window.open(record?.link);
+    return false;
+  }
+  // const { id, productId, deliveryId, deliveryType } = record;
+
+  if (Number(record.appType) === 1) {
+    // const params = {
+    //   productId,
+    //   productDeliverySetId: deliveryId,
+    //   memberId: selectCompany.value?.memberId,
+    //   orderId: id,
+    // };
+    // alreadyBuyClientLogin(params).then((res: any) => {
+    //   const data = {
+    //     type: 'productApp',
+    //     productId,
+    //     productDeliverySetId: deliveryId,
+    //     memberId: selectCompany.value?.memberId,
+    //   };
+    //   const sm2data = sm2(
+    //     JSON.stringify(data),
+    //     userStore.configInfo?.publicKey
+    //   );
+    //   if (res.code === 102008) {
+    //     return Message.warning(res?.message);
+    //   }
+    //   if (res.code !== 200) {
+    //     return Message.error(res?.message);
+    //   }
+    //   if (deliveryType === 1) {
+    //     window.open(res.data);
+    //   } else {
+    //     window.open(`${res.data}&data=${sm2data}`);
+    //   }
+    //   return true;
+    // });
+    window.open(record?.homeUri);
+    return false;
+  }
+  if (Number(record.appType) === 0 && record.dockingMethod === 0) {
+    window.open(record?.homeUri);
+    return false;
+    // const params = {
+    //   appInfoId: id,
+    //   companyId: userInfoByCompany.value.companyId,
+    // };
+    // appInfoClientLogin(params).then((res: any) => {
+    //   if (res.code === 102008) {
+    //     return Message.warning(res?.message);
+    //   }
+    //   if (res.code !== 200) {
+    //     return Message.error(res?.message);
+    //   }
+    //   const data = {
+    //     type: 'selfApp',
+    //     companyId: userInfoByCompany.value.companyId,
+    //   };
+    //   const sm2data = sm2(
+    //     JSON.stringify(data),
+    //     userStore.configInfo?.publicKey
+    //   );
+    //   window.open(`${res.data}&data=${sm2data}`);
+    //   return true;
+    // });
+  }
+  return true;
+};
+
 watch(
   () => route.query.selectById,
   (newV) => {
@@ -548,12 +705,19 @@ onMounted(async () => {
   height: 8px;
   margin-right: 6px;
   vertical-align: middle;
-  background: #00aa2a;
   border-radius: 50%;
   content: '';
 }
 
+.already-online::before {
+  background: #00aa2a;
+}
+
 .offline::before {
   background: #c9cdd4;
+}
+
+.debugging::before {
+  background-color: rgba(22, 100, 255, 1);
 }
 </style>

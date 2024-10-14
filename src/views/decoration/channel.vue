@@ -326,10 +326,12 @@ const getPageData = (idx?: number) => {
   // 拉取所有导航数据
   apiGetNavData({}).then((res) => {
     if (isArray(res.data)) {
+      // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
       res.data = res.data.map((i) => ({
         ...i,
         type: i.id,
       }));
+      console.log('getPageData', res.data);
       const tempData = JSON.parse(JSON.stringify(channelFormMap.value));
       channelFormMap.value = [];
       res.data.forEach((item: any) => {

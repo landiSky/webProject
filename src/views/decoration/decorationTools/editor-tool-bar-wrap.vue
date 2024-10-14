@@ -1,7 +1,6 @@
 <!-- 装饰工具 -->
 <template>
   <div class="bar-box">
-    <div class="bar-title">装修组件</div>
     <t-popover position="rt" :popup-visible="isFirstUse">
       <div
         :style="{
@@ -60,7 +59,7 @@ onMounted(() => {
 .bar-box {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  // height: 100vh;
   // width: 90px;
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

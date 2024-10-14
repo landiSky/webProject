@@ -24,3 +24,20 @@ export function apiGetIsFirstUseDecoration() {
 export function apiChangeSort(data: Record<string, any>) {
   return $http.post('/operation/web/renovation/changeSort', data);
 }
+
+// Footer-更新
+export function apiFooterUpdate(data: Record<string, any>) {
+  return $http.post('/operation/web/footer/update', data);
+}
+
+// Footer-详情页
+export function apiFooterInfo() {
+  return $http.get('/operation/web/footer/info');
+}
+
+// 下载文件
+export function downloadFile(params: any) {
+  return $http.get('/server/web/file/download', {
+    params,
+  });
+}

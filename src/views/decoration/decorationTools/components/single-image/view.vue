@@ -12,10 +12,10 @@
         clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
       "
     ></t-image>
-    <div class="single-image-desc">{{
+    <!-- <div class="single-image-desc">{{
       data?.configValue?.desc ||
       '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是'
-    }}</div>
+    }}</div> -->
   </div>
 </template>
 
@@ -28,6 +28,7 @@ const props = defineProps({
 });
 
 const { data, isPreview } = toRefs(props);
+const letterReg = /^[a-zA-Z\u4e00-\u9fa5]+$/;
 const emit = defineEmits(['golink']);
 const clickLink = (type: number, url: string) => {
   emit('golink', { type, url });
@@ -43,8 +44,11 @@ const validate = () => {
     if (
       // TODO 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      !data?.value?.configValue?.desc ||
-      (!data?.value?.configValue?.linkUrl &&
+      data?.value?.mainTitle.length > 20 ||
+      !letterReg.test(data?.value?.mainTitle) ||
+      // !data?.value?.configValue?.desc ||
+      ((!data?.value?.configValue?.linkUrl ||
+        data?.value?.configValue?.linkUrl.length > 500) &&
         data?.value?.configValue?.linkType !== 2)
     ) {
       return reject();

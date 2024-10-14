@@ -1,152 +1,213 @@
 <template>
   <div class="footer">
-    <div class="header">
-      <div class="headerWraper">
-        <span>IDSphere</span>
-        <t-divider direction="vertical"></t-divider>
-        <span>智数通</span>
-      </div>
-    </div>
     <div class="content">
       <div class="navigator">
         <div class="item">
           <span class="title">联系我们</span>
-          <span class="subitem">商务合作：marketing@teleinfo.cn</span>
+          <span class="subitem">
+            <span>商务合作：</span>
+            <span v-if="form.businessCooperation" class="subitem-email">
+              {{ form.businessCooperation }}
+            </span>
+          </span>
           <span class="subitem"
             >商务服务：
-            <picture>
-              <!-- 可能是一些对兼容性有要求的，但是性能表现更好的现代图片格式-->
-              <source
-                class="qrcode"
-                :srcset="getImgPath('avif')"
-                type="image/avif"
-              />
-
-              <!-- 最终的兜底方案-->
-              <img class="qrcode" :src="getImgPath('jpg')" />
-            </picture>
+            <img
+              v-if="form.businessServicesFile"
+              class="qrcode"
+              :src="`/server/web/file/download?name=${form.businessServicesFile}`"
+            />
           </span>
         </div>
-        <!-- <div class="item">
-          <span class="title">新手上路</span>
-          <span class="subitem">新手指南</span>
-        </div> -->
         <div class="item">
-          <span class="title">我是买家</span>
-          <t-link
-            class="subitem"
-            href="智数通（IDSphere）买家使用指导手册20231207.pdf"
-            target="_blank"
-            >使用服务</t-link
+          <span class="title">买家信息</span>
+          <span
+            v-if="form.buyerManualUrl"
+            class="subitem onCursor"
+            @click="onClickOpen(form.buyerManualUrl)"
+            >买家使用手册</span
           >
-          <!-- <span class="subitem">使用服务</span> -->
         </div>
         <div class="item">
-          <span class="title">我是商家</span>
-          <t-link
-            class="subitem"
-            href="智数通（IDSphere）卖家使用指导手册20231207.pdf"
-            target="_blank"
-            >入驻指南</t-link
+          <span class="title">卖家信息</span>
+          <span
+            v-if="form.sellerManualUrl"
+            class="subitem onCursor"
+            @click="onClickOpen(form.sellerManualUrl)"
+            >卖家使用手册</span
           >
-          <!-- <span class="subitem">入驻指南</span> -->
-          <!-- <span class="subitem">管理指南</span> -->
+        </div>
+        <div class="item">
+          <span class="title">友情链接</span>
+          <div
+            v-for="item in form.linkDetail"
+            :key="item"
+            class="subitem width-ellipsis"
+            @click="onClickOpen(item?.lintUrl)"
+            >{{ item?.name }}</div
+          >
+        </div>
+        <div class="item">
+          <span class="title">移动端信息</span>
+          <img
+            v-if="form.appletCodeFile"
+            class="MobileQRcode"
+            :src="`/server/web/file/download?name=${form.appletCodeFile}`"
+          />
         </div>
       </div>
       <div class="copyright">
-        <span>Copyright © 2016-2020 北京泰尔英福科技有限公司</span>
-        <span>京ICP备12003601号-6</span>
+        <span>
+          {{ form.companyInfomation }}
+        </span>
+        <span>
+          {{ form.recordNumber }}
+        </span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import qrcodeJpg from '@/assets/images/wow/index/teleinfo-qrcode.jpg';
-import qrcodeAvif from '@/assets/images/wow/index/teleinfo-qrcode.avif';
+import { onMounted, ref } from 'vue';
+import { apiFooterInfo } from '@/api/decoration/decoration-tools';
 
-const getImgPath = (type: string) => {
-  const imgObj: Record<string, any> = {
-    jpg: qrcodeJpg,
-    avif: qrcodeAvif,
-  };
-  return imgObj[type];
+const form: Record<string, any> = ref({
+  id: '', // id
+  businessCooperation: '', // 商务合作
+  businessServicesFile: '', // 商务服务文件id
+  buyerManualFile: '', // 买家使用手册文件id
+  sellerManualFile: '', // 卖家使用手册文件id
+  appletCodeFile: '', // 小程序码文件id
+  linkDetail: [], // 友情链接
+  companyInfomation: '', // 公司信息
+  recordNumber: '', // 备案号
+});
+
+const FooterInfoDetails = async () => {
+  await apiFooterInfo()
+    .then((res: any) => {
+      if (res.code !== 200) {
+        return;
+      }
+      const linkDetail =
+        (res.data.linkDetail && JSON.parse(res.data.linkDetail)) || [];
+
+      form.value = {
+        ...res.data,
+        linkDetail,
+      };
+    })
+    .catch(() => {});
 };
+
+const onClickOpen = (url: string) => {
+  window.open(url);
+};
+
+onMounted(() => {
+  FooterInfoDetails();
+});
 </script>
 
 <style lang="less" scoped>
 .footer {
-  .header {
-    height: 92px;
-    background-image: url('@/assets/images/wow/index/footer_header_bg.png');
-    background-position: center center;
-    background-size: cover;
-
-    .headerWraper {
-      display: flex;
-      align-items: center;
-      width: 1176px;
-      height: 92px;
-      margin: 0 auto;
-      color: #fff;
-      font-weight: 500;
-      font-size: 30px;
-      line-height: 38px; /* 126.667% */
-
-      :deep(.tele-divider-vertical) {
-        margin: 0 28px;
-      }
-    }
-  }
+  padding: 9;
 
   .content {
-    padding: 57px 133px 0 133px;
-    background-image: url('@/assets/images/wow/index/footer_content_bg.svg');
+    height: 318px;
+    padding: 32px 0;
+    background-image: url('@/assets/images/wow/index/footer_content_bg.png');
     background-size: cover;
 
     .navigator {
       display: flex;
-      width: 1176px;
-      margin: 0 auto 80px auto;
+      width: 1328px;
+      margin: 0 auto;
 
       .item {
         display: flex;
         flex-direction: column;
-        margin-right: 130px;
+        margin-right: 95px;
 
         .title {
-          margin-bottom: 24px;
-          color: #1d2129;
+          margin-bottom: 8px;
+          color: #fff;
           font-weight: 500;
-          font-size: 20px;
-          line-height: 28px;
+          font-size: 16px;
+          font-family: PingFang SC;
+          line-height: 24px;
+          text-align: left;
         }
 
         .subitem {
           display: flex;
-          margin-bottom: 20px;
-          color: #4e5969;
+          margin-bottom: 8px;
+          color: #ffffffe5;
+          font-weight: 400;
           font-size: 14px;
+          font-family: PingFang SC;
           line-height: 22px;
+          text-align: left;
+
+          .subitem-email {
+            width: 242px;
+            height: 22px;
+            overflow: hidden;
+            white-space: normal;
+            text-overflow: ellipsis;
+          }
 
           .qrcode {
-            width: 64px;
-            height: 64px;
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
           }
         }
+
+        .onCursor:hover {
+          color: #4086ff;
+          cursor: pointer;
+        }
+
+        .width-ellipsis {
+          width: 300px;
+          height: 22px;
+          overflow: hidden;
+          white-space: normal;
+          text-overflow: ellipsis;
+
+          &:hover {
+            color: #4086ff;
+            cursor: pointer;
+          }
+        }
+
+        .MobileQRcode {
+          width: 120px;
+          height: 120px;
+          object-fit: cover;
+        }
+      }
+
+      .item:last-of-type {
+        margin-right: 40px;
       }
     }
 
     .copyright {
       display: flex;
       justify-content: space-between;
-      width: 1176px;
-      margin: 24px auto 20px auto;
-      padding-top: 22px;
-      color: #1d2129;
+      width: 1328px;
+      margin: 60px auto 32px auto;
+      padding-top: 24px;
+      color: #fff;
+      font-weight: 400;
       font-size: 12px;
+      font-family: PingFang SC;
       line-height: 18px;
-      border-top: 1px solid #c1c1c1;
+      text-align: left;
+      border-top: 1px solid #c9cdd4;
     }
   }
 }

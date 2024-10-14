@@ -1,6 +1,8 @@
 <template>
-  <div v-if="tools.length" class="editor-tool-bar">
+  <div v-if="toolsGroup.length" class="editor-tool-bar">
+    <!-- <div class="group-title">{{ item.name }}</div> -->
     <draggable
+      v-model="toolsGroup"
       item-key="index"
       ghost-class="ghost"
       drag-class="dragClass"
@@ -10,22 +12,60 @@
       :fallback-tolerance="0"
       :touch-start-threshold="0"
       :group="{ name: 'vehicle-station', pull: 'clone', put: false }"
-      :list="tools"
+      draggable=".draggable"
       @end="onEnd"
     >
       <template #item="{ element }">
-        <transition name="el-fade-in-linear">
-          <div v-show="true" class="element-wrap">
-            <iconpark-icon
-              :name="ToolData[element].icon"
-              size="18px"
-            ></iconpark-icon>
-            <div class="element-wrap-text">{{
-              ToolData[element].chineseName
-            }}</div>
+        <transition
+          name="el-fade-in-linear"
+          :class="{ draggable: !element.noDrag }"
+        >
+          <div
+            v-show="true"
+            :class="element.noDrag ? 'group-title' : 'element-wrap'"
+          >
+            <span v-if="element.type === 'title'">{{ element.title }} </span>
+            <div v-else id="toolbar-tooltip-container">
+              <t-tooltip
+                is-bright
+                enter-delay="1000"
+                position="rt"
+                popup-container="#toolbar-tooltip-container"
+              >
+                <template #content>
+                  <t-image
+                    width="350"
+                    height="232"
+                    :src="element.tooltipImage"
+                  />
+                </template>
+                <div class="element-group">
+                  <iconpark-icon
+                    :name="ToolData[element.text].icon"
+                    size="18px"
+                  ></iconpark-icon>
+                  <div class="element-wrap-text">{{
+                    ToolData[element.text].chineseName
+                  }}</div>
+                </div>
+              </t-tooltip>
+            </div>
           </div>
         </transition>
       </template>
+      <!-- <template #item="{ element }">
+          <transition name="el-fade-in-linear">
+            <div v-show="true" class="element-wrap">
+              <iconpark-icon
+                :name="ToolData[element].icon"
+                size="18px"
+              ></iconpark-icon>
+              <div class="element-wrap-text">{{
+                ToolData[element].chineseName
+              }}</div>
+            </div>
+          </transition>
+        </template> -->
     </draggable>
   </div>
 </template>
@@ -36,7 +76,11 @@ import draggable from 'vuedraggable';
 import {
   tools,
   ToolData,
+  toolsGroup,
 } from '@/views/decoration/decorationTools/config/tools';
+import singleImgText from '@/assets/images/decoration/sigleImgText.png';
+
+console.log('ToolData', ToolData, tools);
 
 const emit = defineEmits(['onEnd']);
 
@@ -71,19 +115,35 @@ onMounted(() => {});
 <style scoped lang="less">
 .editor-tool-bar {
   height: 100%;
-  padding-top: 20px;
+  padding: 0 8px;
   border: 1px solid #e5e8ef;
+  border-bottom: 0;
+}
+
+.group-title {
+  height: 54px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 54px;
+  text-align: center;
+  box-shadow: 0 1px 0 0 #e5e8ef;
 }
 
 .element-wrap {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 68px;
   height: 68px;
-  margin: 5px auto;
-  // background-color: red;
+  margin-bottom: 10px;
+  text-align: center;
+
+  &:nth-child(even) {
+    margin-right: 8px;
+  }
+
   &:hover {
     background-color: #f2f3f8;
     border-radius: 2px;
@@ -114,37 +174,14 @@ onMounted(() => {});
   background-color: #e8f4ff !important;
 }
 
-// .operate-container,
-// .section-container,
-// .components-container {
-//   float: left;
-//   width: 300px;
-//   height: 800px;
-//   padding-top: 30px;
-//   text-align: center;
-// }
+#toolbar-tooltip-container {
+  :deep(.tele-tooltip-content) {
+    max-width: none;
+    max-height: none;
+  }
 
-// .section-container {
-//   background-color: blanchedalmond;
-// }
-
-// .components-container {
-//   margin-left: 30px;
-//   background-color: rgb(184, 205, 178);
-// }
-
-// .operate-container {
-//   margin-left: 30px;
-//   background-color: rgb(125, 176, 228);
-// }
-
-// .section {
-//   width: 150px;
-//   height: 80px;
-//   margin-bottom: 30px;
-//   line-height: 80px;
-//   text-align: center;
-//   background-color: cadetblue;
-//   cursor: pointer;
-// }
+  :deep(.tele-tooltip-bright) {
+    padding: 0;
+  }
+}
 </style>

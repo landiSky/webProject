@@ -23,11 +23,21 @@
               >保存</t-button
             >
             <t-button
+              v-if="showButton"
+              :disabled="!showDisabled"
               type="primary"
               :loading="state.launchLoading"
               @click="handleLaunchOrSave(1)"
-              >保存并上线</t-button
-            >
+              >保存并上线
+            </t-button>
+            <t-button
+              v-else
+              :disabled="!showDisabled"
+              type="primary"
+              :loading="state.launchLoading"
+              @click="handleLaunchOrSave(2)"
+              >调试应用
+            </t-button>
           </span>
         </div>
       </template>
@@ -47,6 +57,11 @@
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
               >
+              <t-anchor-link
+                v-if="!showAuthLimit"
+                href="#authorizationInformation"
+                >授权信息</t-anchor-link
+              >
             </t-anchor>
           </t-affix>
         </t-col>
@@ -54,9 +69,11 @@
           <t-form
             ref="formRef"
             :model="form"
-            :label-col-props="{ span: 3, offset: 0 }"
-            :wrapper-col-props="{ span: 21 }"
+            :wrapper-col-props="{ span: 20 }"
             label-align="left"
+            :label-col-props="{
+              flex: '100px',
+            }"
           >
             <t-descriptions
               id="proof"
@@ -133,6 +150,22 @@
                   <t-radio-group v-model="form.appType">
                     <t-radio :value="0">企业自建应用</t-radio>
                     <t-radio :value="1">商城应用</t-radio>
+                  </t-radio-group>
+                </t-form-item>
+                <t-form-item
+                  v-if="showAuthLimit"
+                  field="dockingMethod"
+                  label="对接方式"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '对接方式不允许为空',
+                    },
+                  ]"
+                >
+                  <t-radio-group v-model="form.dockingMethod">
+                    <t-radio :value="0">SAAS</t-radio>
+                    <t-radio :value="1">链接接入</t-radio>
                   </t-radio-group>
                 </t-form-item>
                 <t-form-item
@@ -222,7 +255,13 @@
                       </div>
                     </div>
                   </div>
-                  <t-upload
+                  <IconMaterial
+                    v-if="!form.appLogo"
+                    :picture-width="200"
+                    :picture-height="200"
+                    @on-confirm="finishedUploadLogo"
+                  />
+                  <!-- <t-upload
                     v-if="form.appLogo == ''"
                     :ref="logoRef"
                     :file-list="logoList"
@@ -257,7 +296,7 @@
                         </div>
                       </t-spin>
                     </template>
-                  </t-upload>
+                  </t-upload> -->
                 </t-form-item>
                 <t-form-item label="" field="" class="hint-item">
                   <div class="hint"
@@ -280,7 +319,33 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item>
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
+                <t-form-item
+                  class="tip-content"
+                  label="应用地址"
+                  field="link"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '应用地址不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                >
+                  <t-input
+                    v-model="form.link"
+                    :max-length="{ length: 500, errorOnly: true }"
+                    :allow-clear="false"
+                    show-word-limit
+                    placeholder="请输入"
+                  >
+                  </t-input>
+                  <span class="tip"
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                  >
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item v-if="!showAuthLimit || !showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用首页地址"
@@ -291,10 +356,10 @@
                       message: '应用首页地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
@@ -319,10 +384,10 @@
                       message: '应用回调地址不允许为空',
                     },
                     { maxLength: 1000, message: '不允许超过1000个字符' },
-                    {
-                      match: /^(https?:\/\/).+$/,
-                      message: '请输入正确格式',
-                    },
+                    // {
+                    //   match: /^(https?:\/\/).+$/,
+                    //   message: '请输入正确格式',
+                    // },
                   ]"
                 >
                   <t-input
@@ -413,6 +478,29 @@
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
+            <t-descriptions
+              v-if="!showAuthLimit"
+              id="authorizationInformation"
+              title="授权信息"
+              :title-style="{
+                fontSize: '14px',
+                lineHeight: '22px',
+                marginBottom: '16px',
+              }"
+              :title-divider-style="{ height: '12px' }"
+              :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
+              size="medium"
+              :column="1"
+            >
+              <t-descriptions-item>
+                <t-form-item field="authType" label="授权设置">
+                  <t-checkbox-group v-model="form.authType">
+                    <t-checkbox value="0">用户手机号</t-checkbox>
+                    <t-checkbox value="1">企业认证信息</t-checkbox>
+                  </t-checkbox-group>
+                </t-form-item>
+              </t-descriptions-item>
+            </t-descriptions>
           </t-form>
         </t-col>
       </t-row>
@@ -451,6 +539,7 @@ import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { Message, FileItem } from '@tele-design/web-vue';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 import AddMembersModal from './addMembersModal.vue';
 
 const props = defineProps({
@@ -484,6 +573,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
+  authType: Record<string, any>[];
+  dockingMethod: number; // 0、SAAS 1、链接接入
+  link: string;
 }>({
   appType: 1,
   appName: '',
@@ -494,6 +586,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
+  authType: [],
+  dockingMethod: 1,
+  link: '',
 });
 
 const state = reactive<{
@@ -505,6 +600,10 @@ const state = reactive<{
   companyId: string;
   saveLoading: boolean;
   launchLoading: boolean;
+  status: number; // 应用状态:0-未上线,1-已上线 2-调试中
+  homeUri: string;
+  redirectUri: string;
+  link: string;
 }>({
   tableData: [],
   tableLoading: false,
@@ -514,7 +613,12 @@ const state = reactive<{
   companyId: '',
   saveLoading: false,
   launchLoading: false,
+  status: 0,
+  homeUri: '',
+  redirectUri: '',
+  link: '',
 });
+
 const emit = defineEmits(['onCancel']);
 
 const showModal = computed(() => props.visible);
@@ -522,6 +626,65 @@ const showModal = computed(() => props.visible);
 const showAuthLimit = computed(() => {
   if (form.appType === 0) {
     return true;
+  }
+  return false;
+});
+
+const showAuthLimitDock = computed(() => {
+  if (form.dockingMethod === 1) {
+    return true;
+  }
+  return false;
+});
+
+const showDisabled = computed(() => {
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (form.homeUri && form.redirectUri) {
+      return true;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (form.link) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+});
+
+const showButton = computed(() => {
+  // "appType": 1, //应用类型：0-自建应用、1-商场应用
+  // "dockingMethod": 1, //对接方式 0-SAAS 1-链接接入
+  // "status": 1, //应用状态:0-未上线,1-已上线 2 调试中
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (state.status === 2) {
+      if (form.homeUri && form.redirectUri) {
+        if (
+          (state.homeUri &&
+            state.redirectUri &&
+            form.homeUri !== state.homeUri) ||
+          form.redirectUri !== state.redirectUri
+        ) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (state.status === 2) {
+      if (form.link) {
+        if (state.link && form.link !== state.link) {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    }
+    return false;
   }
   return false;
 });
@@ -559,6 +722,14 @@ const validateRadio = (value: number, callback: (error?: string) => void) => {
   }
 };
 
+const validateCheckbox = (value: any, callback: (error?: string) => void) => {
+  if (!value || !value.length) {
+    callback('授权设置不能为空');
+    return;
+  }
+  callback();
+};
+
 const validateMembers = (
   value: Record<string, any>[],
   callback: (error?: string) => void
@@ -591,6 +762,7 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       memberType: undefined,
+      authType: form.authType ? form.authType.join(',') : '',
     };
   } else {
     const memberIdList = form.memberList.map((i) => i.memberId);
@@ -598,6 +770,7 @@ const handleLaunchOrSave = (status: number) => {
       ...form,
       memberList: undefined,
       id: props.editId,
+      authType: form.authType ? form.authType.join(',') : '',
     };
     if (form.memberType === 1) {
       params.memberIdList = memberIdList;
@@ -634,7 +807,7 @@ const handleLaunchOrSave = (status: number) => {
         const { data } = res;
         if (data?.code === 200) {
           Message.success({
-            content: '上线成功',
+            content: status === 2 ? '提交成功' : '上线成功',
             duration: 1000,
             onClose: () => {
               state.launchLoading = false;
@@ -712,6 +885,11 @@ const uploadProgress = () => {
   logoUploading.value = true;
 };
 
+const finishedUploadLogo = (logo: string) => {
+  form.appLogo = logo;
+  formRef.value.validateField('appLogo');
+};
+
 const handleAddMembers = () => {
   state.showMemberModal = true;
 };
@@ -754,6 +932,14 @@ onMounted(() => {
       form.homeUri = res?.homeUri;
       form.redirectUri = res?.redirectUri;
       state.companyId = res?.companyId;
+      form.dockingMethod = res?.dockingMethod;
+      form.link = res?.link;
+      form.authType = res?.authType ? res?.authType.split(',') : [];
+      state.status = res?.status;
+
+      state.homeUri = res?.homeUri;
+      state.redirectUri = res?.redirectUri;
+      state.link = res?.link;
     })
     .catch(() => {
       state.tableLoading = false;
@@ -870,7 +1056,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -881,7 +1067,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
@@ -941,5 +1127,9 @@ onMounted(() => {
   margin-top: 8px;
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-radio-group) {
+  display: flex;
 }
 </style>

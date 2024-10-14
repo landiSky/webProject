@@ -34,6 +34,22 @@
         </t-radio-group>
       </t-form-item>
       <t-form-item
+        v-if="showAuthLimit"
+        field="dockingMethod"
+        label="对接方式"
+        :rules="[
+          {
+            required: true,
+            message: '对接方式不允许为空',
+          },
+        ]"
+      >
+        <t-radio-group v-model="form.dockingMethod">
+          <t-radio :value="0">SAAS</t-radio>
+          <t-radio :value="1">链接接入</t-radio>
+        </t-radio-group>
+      </t-form-item>
+      <t-form-item
         field="appName"
         label="应用名称"
         :rules="[
@@ -118,7 +134,13 @@
             </div>
           </div>
         </div>
-        <t-upload
+        <IconMaterial
+          v-if="!form.appLogo"
+          :picture-width="200"
+          :picture-height="200"
+          @on-confirm="finishedUploadLogo"
+        />
+        <!-- <t-upload
           v-if="form.appLogo == ''"
           :ref="logoRef"
           :file-list="logoList"
@@ -149,7 +171,7 @@
               </div>
             </t-spin>
           </template>
-        </t-upload>
+        </t-upload> -->
       </t-form-item>
       <t-form-item label="" field="" class="hint-item">
         <div class="hint"
@@ -162,12 +184,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue';
+import {
+  ref,
+  reactive,
+  defineProps,
+  defineEmits,
+  onMounted,
+  computed,
+} from 'vue';
 import { Message, FileItem } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { fetchApplicationAdd } from '@/api/devCenter/manage';
+import IconMaterial from '@/components/iconMaterial/index.vue';
 
 const logoRef = ref();
 const logoVisible = ref(false);
@@ -188,17 +218,26 @@ const form = reactive<{
   introduction: string;
   appLogo: string;
   companyId: string;
+  dockingMethod: number;
 }>({
   appName: '',
   appType: 0, // 1商场
   introduction: '',
   appLogo: '',
   companyId: userInfoByCompany.value?.companyId,
+  dockingMethod: 0,
 });
 
 const props = defineProps({
   visible: Boolean,
   title: String,
+});
+
+const showAuthLimit = computed(() => {
+  if (form.appType === 0) {
+    return true;
+  }
+  return false;
 });
 
 const uploadHeaders = {
@@ -260,6 +299,11 @@ const uploadError = (fileItem: FileItem) => {
 
 const uploadProgress = () => {
   logoUploading.value = true;
+};
+
+const finishedUploadLogo = (logo: string) => {
+  form.appLogo = logo;
+  formRef.value.validateField('appLogo');
 };
 
 const handleCancel = () => {
@@ -324,7 +368,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -335,7 +379,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
@@ -395,5 +439,9 @@ onMounted(() => {
   margin-top: 8px;
   color: #86909c;
   font-size: 12px;
+}
+
+:deep(.tele-radio-group) {
+  display: flex;
 }
 </style>

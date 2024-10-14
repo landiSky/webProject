@@ -1,5 +1,21 @@
 <template>
-  <div class="header"></div>
+  <div class="header">
+    <div class="search">
+      <t-input
+        v-model="searchContent"
+        class="inputSearch"
+        placeholder="请输入商品名称"
+        @press-enter="onSearch"
+      >
+        <template #prefix>
+          <icon-search />
+        </template>
+      </t-input>
+      <t-button type="primary" class="searchButton" @click="onSearch"
+        >搜索</t-button
+      >
+    </div>
+  </div>
   <div class="content">
     <div class="search">
       <span class="item">
@@ -8,16 +24,61 @@
           <span
             :class="{ active: !apiParams.productTypeId }"
             class="span-padding"
-            @click="(apiParams.productTypeId = null), clickSearchBtn()"
+            @click="
+              ((apiParams.productTypeId = null),
+              (apiParams.productChildTypeId = null),
+              (firstClassIndex = null)),
+                clickSearchBtn()
+            "
             >不限</span
           >
           <span
-            v-for="item in productTypeList"
-            :key="item.id"
-            :class="{ active: apiParams.productTypeId === item.id }"
-            @click="(apiParams.productTypeId = item.id), clickSearchBtn()"
+            v-for="(item, index) in productTypeList"
+            :key="`${item.id}-${index}`"
+            :class="{
+              active:
+                apiParams.productTypeId === item.id ||
+                firstClassIndex === index,
+            }"
+            @click="
+              ((apiParams.productTypeId = item.id),
+              (firstClassIndex = index),
+              (apiParams.productChildTypeId = null)),
+                clickSearchBtn()
+            "
           >
-            {{ item.name }}
+            <span>
+              {{ item.name }}
+            </span>
+          </span>
+        </span>
+      </span>
+
+      <!-- 二级分类 -->
+      <span
+        v-if="
+          apiParams.productTypeId &&
+          apiParams.productTypeId === productTypeList[firstClassIndex || 0]?.id
+        "
+        class="item"
+        style="margin-top: -15px"
+      >
+        <span class="label" style="opacity: 0">二级分类:</span>
+        <span class="value">
+          <span
+            v-for="itemSecond in productTypeList[firstClassIndex || 0]
+              ?.children"
+            :key="itemSecond.id"
+            :class="{
+              active: apiParams.productChildTypeId === itemSecond.id,
+            }"
+            @click="
+              (apiParams.productChildTypeId = itemSecond.id), clickSearchBtn()
+            "
+          >
+            <span>
+              {{ itemSecond.name }}
+            </span>
           </span>
         </span>
       </span>
@@ -120,6 +181,28 @@
           </span>
         </span>
       </span>
+      <!-- 试用商品筛选 -->
+      <span class="item">
+        <span class="label">支持试用:</span>
+        <span class="value">
+          <span
+            :class="{ active: apiParams.isTry === null }"
+            class="span-padding"
+            @click="(apiParams.isTry = null), clickSearchBtn()"
+            >不限</span
+          >
+          <span
+            :class="{ active: apiParams.isTry === 1 }"
+            @click="(apiParams.isTry = 1), clickSearchBtn()"
+            >是</span
+          >
+          <span
+            :class="{ active: apiParams.isTry === 0 }"
+            @click="(apiParams.isTry = 0), clickSearchBtn()"
+            >否</span
+          >
+        </span>
+      </span>
 
       <!-- <span>
         <t-button
@@ -203,7 +286,7 @@
               <span class="right-top">
                 <t-typography-paragraph
                   class="name"
-                  style="width: 130px; text-align: left"
+                  style="width: 192px; text-align: left"
                   :ellipsis="{
                     rows: 1,
                     showTooltip: {
@@ -238,6 +321,7 @@
                   <span class="tag">
                     <t-typography-paragraph
                       class="tagList-color tagList firstTag"
+                      style="width: 74px"
                       :ellipsis="{
                         rows: 1,
                         showTooltip: true,
@@ -274,6 +358,9 @@
                 </template>
                 <span v-else class="prefix">价格面议</span>
               </div>
+            </span>
+            <span v-if="item.isTry == 1" class="label-try">
+              <span class="label-try-text">支持试用</span>
             </span>
           </span>
         </div>
@@ -343,13 +430,16 @@ const btnLoading = ref(false);
 const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
 const customPriceStart = ref(); // 自定义价格区间起止
 const customPriceEnd = ref();
+const firstClassIndex = ref(); // 商品的一级标签的index
 const apiParams = ref<Record<string, any>>({
   productTypeId: null,
+  productChildTypeId: null,
   deliveryType: null,
   priceSort: null,
   upShelfTimeSort: null,
   name: route.query.goodsName || null,
   tagIdList: [null, null, null],
+  isTry: null,
 });
 
 const tagList = ref<Record<string, any>>([]);
@@ -451,6 +541,7 @@ const clickSearchBtn = () => {
 const clickResetBtn = () => {
   apiParams.value.productTypeId = null;
   apiParams.value.deliveryType = null;
+  apiParams.value.isTry = null;
   selectPriceInterval.value = -1;
   customPriceStart.value = null;
   customPriceEnd.value = null;
@@ -484,6 +575,22 @@ const tagsClick = (parentsubscript: any, item: any) => {
   tagList[parentsubscript] = item?.id ?? item;
   apiParams.value.tagIdList = tagList;
   getProductList();
+};
+
+const searchContent = ref();
+const onSearch = () => {
+  // TODO w: 商城搜索打点
+  apiDataPoint(null, searchContent.value, userInfo?.value?.id, 5, 9).then(
+    () => {
+      console.log('主导航栏商品搜索打点', searchContent.value);
+    }
+  );
+  router.push({
+    name: 'wowMall',
+    query: {
+      goodsName: searchContent.value,
+    },
+  });
 };
 
 watch(
@@ -544,10 +651,34 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .header {
+  display: flex; /* 启用 Flexbox 布局 */
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
   width: 100%;
-  min-height: 480px;
+  min-height: 360px;
   background-image: url('@/assets/images/wow/mall/mall_index_bg.svg');
   background-size: cover;
+
+  .search {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    height: 40px;
+
+    .inputSearch {
+      width: 500px;
+      height: 40px;
+      margin: 0;
+      //padding: 0;
+    }
+
+    .searchButton {
+      width: 100px;
+      height: 40px;
+      margin: 0; /* 移除默认的外边距 */
+      padding: 0; /* 移除默认的内边距 */
+    }
+  }
 }
 
 .content {
@@ -850,5 +981,54 @@ onMounted(() => {
     width: 100%;
     color: #4e5969;
   }
+}
+
+.card {
+  position: relative;
+  overflow: hidden; /* 隐藏超出部分 */
+}
+
+.label-try {
+  /* 绝对定位 */
+  position: absolute;
+  top: 10px;
+  //right: 0px;
+  left: 324px;
+  //display: flex;
+  align-items: center;
+  width: 82px;
+  height: 20px;
+  margin: 0;
+
+  /* 飘带的阴影 */
+  //padding: 0 5px; /* 调整飘带的内边距 */
+
+  /* 右上角飘带的背景颜色 */
+  //overflow: hidden;
+
+  /* 文字不换行 */
+  white-space: nowrap;
+  background: #0ac8d2;
+
+  /* 右上角飘带 */
+  //background-color: #1890ff;
+  //box-shadow: 0 0 10px #888;
+
+  /* 旋转45° */
+  transform: rotate(45deg);
+}
+
+.label-try-text {
+  width: 48px;
+  //display: block;
+  //margin: 1px 0;
+  height: 20px;
+  //padding: 5px 5px;
+  color: #fff;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  //text-shadow: 0 0 5px #444;
+  //border: 1px solid #1890ff;
 }
 </style>

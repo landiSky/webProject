@@ -163,7 +163,10 @@
               <span v-else>不限</span>
             </div>
             <t-button
-              v-if="Number(selectVersion.isTry) === 1"
+              v-if="
+                selectVersion.deliveryType === 1 &&
+                Number(selectVersion.isTry) === 1
+              "
               type="outline"
               size="large"
               style="width: 140px; margin-right: 12px"
@@ -321,7 +324,10 @@
             <span v-else>{{ deliveryList.length ? '不限' : '-' }}</span>
           </div>
           <t-button
-            v-if="Number(selectVersion.isTry) === 1"
+            v-if="
+              selectVersion.deliveryType === 1 &&
+              Number(selectVersion.isTry) === 1
+            "
             type="outline"
             size="large"
             style="width: 140px; margin-right: 12px"
@@ -381,11 +387,13 @@
         </div>
       </div>
       <div v-else class="newIntro">
+        <!-- 页面导航组件 及 产品介绍 -->
         <DecorationBox
           show-anchor
           show-evaluate
           :components-list="addId(templateList)"
           :product-id="prodDetail.id"
+          class="decorationBox"
         ></DecorationBox>
       </div>
 
@@ -399,7 +407,9 @@
         <div class="body">
           <div class="score">
             <div class="score-title">综合评分</div>
-            <div class="score-num">{{ evaluateDatail?.avgEvaluate }}</div>
+            <div class="score-num" :class="{ 'score-nothing': isScoreNothing }">
+              {{ evaluateDatail?.avgEvaluate }}
+            </div>
             <div class="score-count">
               <t-rate
                 v-model="evaluateDatail.avgEvaluate"
@@ -484,7 +494,7 @@
       >
         <span class="title">服务商名称</span>
         <span class="header">{{ prodDetail?.companyName }}</span>
-        <span class="online-consult" @click="buyConsult">
+        <span class="online-consult" @click="onLineConsult">
           <iconpark-icon size="18" name="message" class="icon-message" />
           在线咨询</span
         >
@@ -498,11 +508,36 @@
     @cancel="onAuthCancel"
     @confirm="onAuthConfirm"
   ></AuthMemberModal>
+  <!-- 登录状态下咨询服务商跳出的弹窗-->
+  <t-modal v-model:visible="infoModalVisible" mask-closable>
+    <template #title> 服务商信息 </template>
+    <div class="service-content">
+      <div class="service-content-detail">
+        <span class="service-label">服务商名称:</span>
+        <span class="service-name">{{ prodDetail?.companyName }}</span>
+      </div>
+      <!-- 服务商手机号暂未后端接口尚未开发完成 -->
+      <div class="service-content-detail">
+        <span class="service-label">服务商手机号:</span>
+        <span class="service-name">
+          {{ phoneNumber }}
+          <iconpark-icon
+            class="copy-icon"
+            name="componentCopy"
+            @click="copyPhoneNumber"
+          ></iconpark-icon>
+        </span>
+      </div>
+    </div>
+    <template #footer>
+      <t-button type="primary" @click="handleCancel">关闭</t-button>
+    </template>
+  </t-modal>
   <WowFooter></WowFooter>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted, h, reactive } from 'vue';
+import { ref, onMounted, onUnmounted, h, reactive, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 
@@ -510,6 +545,7 @@ import {
   apiProductDetail,
   apiComputePrice,
   apiBypageList,
+  apiServicePhone,
 } from '@/api/wow/mall';
 import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
@@ -544,6 +580,7 @@ const priceParams = ref<Record<string, any>>({
   accountId: null,
   durationId: null,
 });
+const phoneNumber = ref();
 const previewImgList = ref<string[]>([]);
 const bigImgPath = ref();
 const versionObj: Record<string, any> = {}; // {【versionId】: {}}, 目的是 版本radio变更后，能够获取到当前选择的 version data
@@ -852,7 +889,7 @@ const BypageList = () => {
     .then((data) => {
       evaluateDatail.value = {
         ...data,
-        avgEvaluate: data.avgEvaluate ?? 5,
+        avgEvaluate: data.avgEvaluate ?? '暂无评分',
       };
       pagination.total = evaluateTotal(appraiseIndex.value, data);
     })
@@ -868,6 +905,46 @@ const appraiseClick = (value: number) => {
 const paginationchange = (current: number) => {
   pagination.current = current;
   BypageList();
+};
+
+const isScoreNothing = computed(
+  () => evaluateDatail.value.avgEvaluate === '暂无评分'
+);
+
+// 登录状态下 咨询公司信息的 弹窗
+const infoModalVisible = ref(false);
+// const {redirect} = router.currentRoute.value.query;
+const onLineConsult = () => {
+  if (userInfo !== null) {
+    // 获取商品服务商的电话
+    apiServicePhone({ productId: route.params.id })
+      .then((data) => {
+        phoneNumber.value = data;
+      })
+      .catch((error) => {
+        console.error('Error fetching service phone number:', error);
+      });
+    infoModalVisible.value = true;
+  } else {
+    Modal.warning({
+      title: '无法查看',
+      content: '未登录系统，无法查看服务商信息，请先登录。',
+      titleAlign: 'start',
+      okText: '先登录',
+      hideCancel: false,
+      onOk: () => {
+        // router.push('/login');
+        sessionStorage.setItem('mallDetailPath', route.fullPath);
+        userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+      },
+    });
+  }
+};
+const handleCancel = () => {
+  infoModalVisible.value = false;
+};
+const copyPhoneNumber = () => {
+  copyToClipboard(String(phoneNumber.value));
 };
 
 // watch(
@@ -966,6 +1043,7 @@ onUnmounted(() => {
   font-size: 14px;
 
   .productIntro {
+    position: relative;
     width: 1176px;
     margin: 32px 0 132px 0;
 
@@ -1273,11 +1351,13 @@ onUnmounted(() => {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      width: 1440px;
+      //width: 1440px;
+      width: 100%;
     }
 
     .evaluate {
       width: 900px;
+      //width: 100%;
       padding: 20px 24px;
       background: rgba(255, 255, 255, 1);
       border-top: solid rgba(229, 232, 239, 1) 1px;
@@ -1320,6 +1400,14 @@ onUnmounted(() => {
             margin: 12px 0;
             color: rgba(255, 20, 20, 1);
             font-size: 30px;
+          }
+
+          .score-nothing {
+            color: #c9cdd4;
+            font: PingFang SC;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 22px;
           }
         }
 
@@ -1416,7 +1504,7 @@ onUnmounted(() => {
     }
 
     .decorationCls {
-      width: 1440px;
+      width: 100%;
 
       .body {
         justify-content: center;
@@ -1476,6 +1564,24 @@ onUnmounted(() => {
     align-items: center;
     width: 100%;
   }
+}
+
+.service-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-content-detail {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.service-label {
+  width: 90px;
+  height: 20px;
+  color: #4e5969;
 }
 
 :deep(.tele-typography) {

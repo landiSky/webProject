@@ -1,11 +1,31 @@
+import singleImgText from '@/assets/images/decoration/sigleImgText.png';
+import verticalImageText from '@/assets/images/decoration/verticalImageText.png';
+import threeImageText from '@/assets/images/decoration/threeImageText.png';
+import multiImageText from '@/assets/images/decoration/multiImageText.png';
+import iconImageText from '@/assets/images/decoration/iconImageText.png';
+import imageOverlapText from '@/assets/images/decoration/imageOverlapText.png';
+import leftRightImageText from '@/assets/images/decoration/leftRightImageText.png';
+import spliceImageText from '@/assets/images/decoration/spliceImageText.png';
+import herizontalImageText from '@/assets/images/decoration/herizontalImageText.png';
+import carouselImageText from '@/assets/images/decoration/carouselImageText.png';
+import mutiNavImageText from '@/assets/images/decoration/mutiNavImageText.png';
+import sigleImg from '@/assets/images/decoration/sigleImg.png';
+import mutiNavText from '@/assets/images/decoration/mutiNavText.png';
+import mutiIconText from '@/assets/images/decoration/mutiIconText.png';
+import threeImg from '@/assets/images/decoration/threeImg.png';
+import multiNavImg from '@/assets/images/decoration/multiNavImg.png';
+import doubleImg from '@/assets/images/decoration/doubleImg.png';
+import treeTextNavigation from '@/assets/images/decoration/treeTextNavigation.png';
+import { getNowFormatDate } from '@/utils';
 import { LinkType } from '../constant';
+
 // 如需修改配置，请把ToolData和tools同步修改！！！
 export const ToolData: Record<string, any> = {
-  SigleImg: {
-    chineseName: '单图',
+  SigleImgText: {
+    chineseName: '单图文',
     maxNum: 3,
-    icon: 'singleImg',
-    name: 'SigleImg',
+    icon: 'singleImgTxt',
+    name: 'SigleImgText',
     mainTitle: '主标题',
     bgColor: '#ffffff',
     configValue: {
@@ -337,17 +357,351 @@ export const ToolData: Record<string, any> = {
       },
     ],
   },
+  MutiNavImageText: {
+    chineseName: '多导航图文',
+    maxNum: 8,
+    icon: 'mutiNavImgTxt',
+    name: 'MutiNavImageText',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子导航',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  SigleImg: {
+    chineseName: '单图',
+    maxNum: 1,
+    icon: 'singleImg',
+    name: 'SigleImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: {
+      src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+      desc: '',
+      linkType: LinkType.BLANK,
+      linkUrl: '',
+    },
+  },
+  DoubleImg: {
+    chineseName: '双图',
+    maxNum: 5,
+    icon: 'doubleImg',
+    name: 'DoubleImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        title: '副标题',
+        desc: '',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '副标题',
+        desc: '',
+        src: '9afb0bf5-152b-440a-b4f5-0b1a24fd4e08.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  MutiNavText: {
+    chineseName: '多导航文字',
+    maxNum: 8,
+    icon: 'mutiNavTxt',
+    name: 'MutiNavText',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子导航',
+        title: '名称名称名称名称名称名称名称名称名称名称',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: '',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        title: '名称名称名称名称名称名称名称名称名称名称',
+        desc: '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字',
+        src: '',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  MutiIconText: {
+    chineseName: '图标文字',
+    maxNum: 9,
+    icon: 'mutiIconTxt',
+    name: 'MutiIconText',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        title: '子标题',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        src: '12e87e00-67c9-448f-bad4-b6938da4d830.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '子标题',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        src: 'cfcd43ad-5be2-4ffa-a173-b2fc5061925c.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '子标题',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        src: 'e1f1abaf-2296-494c-9d7a-208b27668078.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  ThreeImg: {
+    chineseName: '三图',
+    maxNum: 5,
+    icon: 'threeImg',
+    name: 'ThreeImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        title: '小标题',
+        src: '5b9d9a1d-d523-46cb-afb8-57badb9ef3d9.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '小标题',
+        src: '9afb0bf5-152b-440a-b4f5-0b1a24fd4e08.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        title: '小标题',
+        src: '8b4cd580-5180-48c7-bef5-2b163fad1397.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  MultiNavImg: {
+    chineseName: '多导航图',
+    maxNum: 8,
+    icon: 'mutiNavImg',
+    name: 'MultiNavImg',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+      {
+        navTitle: '子导航',
+        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
+  },
+  TreeTextNavigation: {
+    chineseName: '树文本导航',
+    maxNum: 10,
+    maxContentNum: 20,
+    icon: 'verticalNavTxt',
+    name: 'TreeTextNavigation',
+    mainTitle: '主标题',
+    bgColor: '#ffffff',
+    configValue: [
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: LinkType.BLANK,
+            linkUrl: '',
+          },
+        ],
+      },
+      {
+        navTitle: '子标题',
+        contentList: [
+          {
+            time: getNowFormatDate(),
+            name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+            desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+            linkType: LinkType.BLANK,
+            linkUrl: '',
+          },
+        ],
+      },
+    ],
+  },
 };
 
 export const tools = [
-  'SigleImg',
-  'VerticalImageText',
-  'ThreeImageText',
-  'MultiImageText',
-  'IconImageText',
+  'SigleImgText',
   'ImageOverlapText',
+  'VerticalImageText',
   'LeftRightImageText',
+  'ThreeImageText',
   'SpliceImageText',
+  'MultiImageText',
   'HerizontalImageText',
+  'IconImageText',
   'CarouselImageText',
+  'MutiNavImageText',
+  'SigleImg',
+  'DoubleImg',
+  'MutiNavText',
+  'MutiIconText',
+  // 'SigleImg',
+  // 'SigleImg', // 这里替换旭蓓的双图
+  'ThreeImg',
+  'MultiNavImg',
+  'TreeTextNavigation',
+  'MutiNavText',
+];
+
+export const toolsGroup = [
+  {
+    // id: 1,
+    type: 'title',
+    title: '图文组件',
+    noDrag: true,
+  },
+  {
+    id: 2,
+    text: 'SigleImgText',
+    noDrag: false,
+    tooltipImage: singleImgText,
+  },
+  {
+    id: 3,
+    text: 'ImageOverlapText',
+    noDrag: false,
+    tooltipImage: imageOverlapText,
+  },
+  {
+    id: 4,
+    text: 'VerticalImageText',
+    noDrag: false,
+    tooltipImage: verticalImageText,
+  },
+  {
+    id: 5,
+    text: 'LeftRightImageText',
+    noDrag: false,
+    tooltipImage: leftRightImageText,
+  },
+  {
+    text: 'ThreeImageText',
+    noDrag: false,
+    tooltipImage: threeImageText,
+  },
+  {
+    text: 'SpliceImageText',
+    noDrag: false,
+    tooltipImage: spliceImageText,
+  },
+  {
+    text: 'MultiImageText',
+    noDrag: false,
+    tooltipImage: multiImageText,
+  },
+  {
+    text: 'HerizontalImageText',
+    noDrag: false,
+    tooltipImage: herizontalImageText,
+  },
+  {
+    text: 'IconImageText',
+    noDrag: false,
+    tooltipImage: iconImageText,
+  },
+  {
+    text: 'CarouselImageText',
+    noDrag: false,
+    tooltipImage: carouselImageText,
+  },
+  {
+    text: 'MutiNavImageText',
+    noDrag: false,
+    tooltipImage: mutiNavImageText,
+  },
+  {
+    text: 'MutiIconText',
+    noDrag: false,
+    tooltipImage: mutiIconText,
+  },
+  {
+    type: 'title',
+    title: '纯图组件',
+    noDrag: true,
+  },
+  {
+    text: 'SigleImg',
+    noDrag: false,
+    tooltipImage: sigleImg,
+  },
+  {
+    text: 'DoubleImg',
+    noDrag: false,
+    tooltipImage: doubleImg,
+  },
+  {
+    text: 'ThreeImg',
+    noDrag: false,
+    tooltipImage: threeImg,
+  },
+  {
+    text: 'MultiNavImg',
+    noDrag: false,
+    tooltipImage: multiNavImg,
+  },
+  {
+    type: 'title',
+    title: '纯文组件',
+    noDrag: true,
+  },
+  {
+    text: 'TreeTextNavigation',
+    noDrag: false,
+    tooltipImage: treeTextNavigation,
+  },
+  {
+    text: 'MutiNavText',
+    noDrag: false,
+    tooltipImage: mutiNavText,
+  },
 ];

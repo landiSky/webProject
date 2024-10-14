@@ -24,14 +24,18 @@
         :validate-trigger="['blur', 'input']"
         :rules="[
           { required: true, message: '该信息为必填项，未填写不支持发布' },
+          { required: true, maxLength: 20, message: '长度不超过20个字符' },
         ]"
       >
         <t-input
           v-model="form.mainTitle"
           placeholder="请输入"
-          :max-length="10"
+          :max-length="{
+            length: 20,
+            errorOnly: true,
+          }"
           show-word-limit
-          allow-clear
+          :allow-clear="false"
         />
       </t-form-item>
       <div
@@ -90,14 +94,18 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 120, message: '长度不超过120个字符' },
           ]"
         >
           <t-textarea
             v-model="item.desc"
             placeholder="请输入"
-            allow-clear
-            :max-length="50"
+            :max-length="{
+              length: 120,
+              errorOnly: true,
+            }"
             show-word-limit
+            :allow-clear="false"
           />
         </t-form-item>
 
@@ -132,20 +140,26 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
+            { required: true, maxLength: 500, message: '长度不超过500个字符' },
           ]"
         >
           <t-textarea
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
-            :max-length="500"
+            :max-length="{
+              length: 500,
+              errorOnly: true,
+            }"
             show-word-limit
             placeholder="请输入"
+            :allow-clear="false"
           />
           <t-select
             v-if="item.linkType === 1"
             v-model="item.linkUrl"
             placeholder="请选择"
             allow-clear
+            :allow-search="true"
           >
             <t-option
               v-for="itemg in goodsList"

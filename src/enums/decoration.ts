@@ -9,6 +9,16 @@ export const UpperNumberList = [
   '八',
   '九',
   '十',
+  '十一',
+  '十二',
+  '十三',
+  '十四',
+  '十五',
+  '十六',
+  '十七',
+  '十八',
+  '十九',
+  '二十',
 ];
 // 频道类型
 export const ChannelType = {

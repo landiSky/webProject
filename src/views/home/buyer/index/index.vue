@@ -457,7 +457,7 @@
                 v-if="userInfoByCompany.primary !== AccountType?.UNAUTH"
                 style="color: #1664ff; cursor: pointer"
                 class="to-container"
-                @click="togo(item)"
+                @click="togoCheck(item)"
               >
                 前往 <span class="to-img"></span></span
             ></div>
@@ -630,6 +630,16 @@
       @cancel="detailuploadclick"
     >
     </DetailsModalUpload>
+
+    <EmpowerTip
+      v-if="empowerTipVisible"
+      :visible="empowerTipVisible"
+      :empower-tip-data="empowerTipData"
+      title="授权提示"
+      @confirm="empowerTipConfirm"
+      @cancel="empowerTipCancel"
+    >
+    </EmpowerTip>
   </div>
 </template>
 
@@ -645,6 +655,8 @@ import {
   selectSelfApps,
   appInfoClientLogin,
   alreadyBuyClientLogin,
+  apiAuthStatus,
+  apiGetAuth,
 } from '@/api/buyer/overview';
 
 // 头像
@@ -691,6 +703,7 @@ import group4 from './image/group4.png';
 // import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
+import EmpowerTip from './empowerTip.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -759,6 +772,11 @@ const detailflag = ref(false);
 const editModalVisiblealter = ref(false);
 // 配置自建应用 弹窗
 const editModalApplication = ref(false);
+
+// 授权提示 弹窗
+const empowerTipVisible = ref(false);
+// 当前点击数据
+const empowerTipData: Record<string, any> = ref({});
 
 // 使用说明 弹窗
 const detailupload = ref(false);
@@ -1025,6 +1043,10 @@ const togo = (detailData: Record<string, any>) => {
         return true;
       });
     } else if (Number(tabsApplication.value) === 2) {
+      if (detailData.appType === 0 && detailData.dockingMethod === 1) {
+        window.open(detailData?.link);
+        return;
+      }
       const params = {
         appInfoId: id,
         companyId: userInfoByCompany.value.companyId,
@@ -1054,6 +1076,27 @@ const togo = (detailData: Record<string, any>) => {
     // orderGo({ id }).then((res: any) => {
     //   window.open(res, '_blank');
     // });
+  }
+};
+
+const togoCheck = (detailData: Record<string, any>) => {
+  if (detailData?.deliveryType === 0) {
+    const params = {
+      productId: detailData.productId, // 商品id
+      memberId: selectCompany.value?.memberId, // 成员id
+      productDeliverySetId: detailData.deliveryId, // 版本id
+      appId: detailData.saasAppId, // 应用id
+    };
+    apiAuthStatus(params).then((res: any) => {
+      if (res === 0) {
+        empowerTipVisible.value = true;
+        empowerTipData.value = detailData;
+        return;
+      }
+      togo(detailData);
+    });
+  } else {
+    togo(detailData);
   }
 };
 
@@ -1104,6 +1147,22 @@ const DetailModalConfirmflag = () => {
 };
 const detailuploadclick = () => {
   detailupload.value = false;
+};
+// 授权提示
+const empowerTipConfirm = () => {
+  const params = {
+    productId: empowerTipData.value?.productId, // 商品id
+    memberId: selectCompany.value?.memberId, // 成员id
+    productDeliverySetId: empowerTipData.value?.deliveryId, // 版本id
+    appId: empowerTipData.value?.saasAppId, // 应用id
+  };
+  apiGetAuth(params).then(() => {
+    togo(empowerTipData.value);
+    empowerTipVisible.value = false;
+  });
+};
+const empowerTipCancel = () => {
+  empowerTipVisible.value = false;
 };
 
 // 更多

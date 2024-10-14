@@ -1,18 +1,18 @@
 import { defineAsyncComponent } from 'vue';
 
 const ComponentsMap: Record<string, any> = {
-  SigleImg: {
+  SigleImgText: {
     view: defineAsyncComponent(
       () =>
         import(
-          '@/views/decoration/decorationTools/components/single-image/view.vue'
+          '@/views/decoration/decorationTools/components/single-image-text/view.vue'
         )
     ),
     uiConfig: () =>
       defineAsyncComponent(
         () =>
           import(
-            '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
+            '@/views/decoration/decorationTools/components/single-image-text/ui-config.vue'
           )
       ),
   },
@@ -178,6 +178,126 @@ const ComponentsMap: Record<string, any> = {
         () =>
           import(
             '@/views/decoration/decorationTools/components/channel-header/ui-config.vue'
+          )
+      ),
+  },
+  MutiNavImageText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-image-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-image-text/ui-config.vue'
+          )
+      ),
+  },
+  SigleImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/single-image/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/single-image/ui-config.vue'
+          )
+      ),
+  },
+  DoubleImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/double-image/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/double-image/ui-config.vue'
+          )
+      ),
+  },
+  MutiNavText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-text/ui-config.vue'
+          )
+      ),
+  },
+  MutiIconText: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-icon-text/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-icon-text/ui-config.vue'
+          )
+      ),
+  },
+  ThreeImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/three-img/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/three-img/ui-config.vue'
+          )
+      ),
+  },
+  MultiNavImg: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/multi-nav-img/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/multi-nav-img/ui-config.vue'
+          )
+      ),
+  },
+  TreeTextNavigation: {
+    view: defineAsyncComponent(
+      () =>
+        import(
+          '@/views/decoration/decorationTools/components/tree-text-navigation/view.vue'
+        )
+    ),
+    uiConfig: () =>
+      defineAsyncComponent(
+        () =>
+          import(
+            '@/views/decoration/decorationTools/components/tree-text-navigation/ui-config.vue'
           )
       ),
   },

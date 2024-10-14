@@ -66,13 +66,13 @@
     </div>
 
     <div class="right-side">
-      <t-input-search
+      <!-- <t-input-search
         v-model="searchContent"
         class="inputSearch"
         placeholder="请输入商品名称"
         @press-enter="onSearch"
         @search="onSearch"
-      />
+      /> -->
       <t-space v-if="userInfo?.id">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
 
@@ -304,6 +304,7 @@ onMounted(() => {
   apiGetNavData({}).then((res) => {
     console.log('首页logo和项目名称接口获取', res);
     if (res.data) {
+      // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
       res.data = res.data.map((i: any) => ({
         ...i,
         type: i.id,

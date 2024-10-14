@@ -98,8 +98,10 @@ const checkConfigList = (list: any) => {
     return (
       // item.title &&
       item.desc &&
+      item.desc.length <= 120 &&
       item.src &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };
@@ -109,6 +111,7 @@ const validate = () => {
     if (
       // 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
+      data?.value?.mainTitle.length > 20 ||
       !checkConfigList(Object.values(data?.value?.configValue))
     ) {
       return reject();
@@ -159,6 +162,10 @@ defineExpose({
         .content-area {
           position: relative;
 
+          &:hover .image-content {
+            transform: translateY(0);
+          }
+
           .image-content {
             position: absolute;
             bottom: 0;
@@ -176,6 +183,8 @@ defineExpose({
               rgba(0, 0, 0, 0.12) 0%,
               #000 100%
             );
+            transform: translateY(100px);
+            transition: transform 0.5s;
 
             .image-desc {
               display: flex;

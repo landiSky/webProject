@@ -12,11 +12,9 @@
     >
       <t-alert
         class="top-inform"
-        :type="props.tableRecord?.status ? 'success' : 'warning'"
+        :type="StatusClassEnum[props.tableRecord?.status]"
         :banner="true"
-        >应用状态：{{
-          props.tableRecord?.status ? '已上线' : '未上线'
-        }}</t-alert
+        >应用状态：{{ StatusEnum[props.tableRecord?.status] ?? '-' }}</t-alert
       >
       <template #footer>
         <div class="footer-button">
@@ -25,20 +23,26 @@
           >
           <span class="right-btn">
             <t-button
-              v-if="props.tableRecord?.status === 0"
+              v-if="props.tableRecord?.status !== 1"
               class="save-btn"
               :loading="state.delLoading"
               @click="handleDel"
               >删除</t-button
             >
             <t-button
-              v-if="!props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 2 && showButton"
               :loading="state.launchLoading"
-              @click="handleLaunch"
+              @click="handleLaunch(1)"
               >上线</t-button
             >
+            <t-button
+              v-if="props.tableRecord?.status === 0 && !showButton"
+              :loading="state.launchLoading"
+              @click="handleLaunch(2)"
+              >调试应用</t-button
+            >
             <t-tooltip
-              v-if="props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 1"
               content="该应用已上线，暂时无法编辑"
               position="top"
             >
@@ -48,15 +52,26 @@
                 >编辑</t-button
               >
             </t-tooltip>
+            <t-tooltip
+              v-if="props.tableRecord?.status === 2"
+              content="该应用调试中，暂时无法编辑"
+              position="top"
+            >
+              <t-button
+                :disabled="props.tableRecord?.status"
+                @click="handleEdit"
+                >编辑</t-button
+              >
+            </t-tooltip>
             <t-button
-              v-if="!props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 0"
               type="primary"
-              :disabled="props.tableRecord?.status"
+              :disabled="props.tableRecord?.status === 1"
               @click="handleEdit"
               >编辑</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status"
+              v-if="props.tableRecord?.status === 1"
               type="primary"
               status="danger"
               @click="handleOffine"
@@ -80,6 +95,11 @@
               <t-anchor-link v-if="showAuthLimit" href="#authInfo"
                 >权限信息</t-anchor-link
               >
+              <t-anchor-link
+                v-if="!showAuthLimit"
+                href="#authorizationInformation"
+                >授权信息</t-anchor-link
+              >
             </t-anchor>
           </t-affix>
         </t-col>
@@ -87,9 +107,11 @@
           <t-form
             ref="formRef"
             :model="form"
-            :label-col-props="{ span: 3, offset: 0 }"
-            :wrapper-col-props="{ span: 21 }"
+            :wrapper-col-props="{ span: 20 }"
             label-align="left"
+            :label-col-props="{
+              flex: '100px',
+            }"
           >
             <t-descriptions
               id="proof"
@@ -166,6 +188,20 @@
                   <span>{{ AppTypeEnum[form.appType] ?? '-' }}</span>
                 </t-form-item>
                 <t-form-item
+                  v-if="showAuthLimit"
+                  field="dockingMethod"
+                  label="对接方式"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '对接方式不允许为空',
+                    },
+                  ]"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ ModeTypeEnum[form.dockingMethod] ?? '-' }}</span>
+                </t-form-item>
+                <t-form-item
                   field="appName"
                   label="应用名称"
                   :rules="[
@@ -230,7 +266,23 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item>
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
+                <t-form-item
+                  field="link"
+                  label="应用地址"
+                  :rules="[
+                    {
+                      required: true,
+                      message: '应用地址不允许为空',
+                    },
+                    { maxLength: 500, message: '不允许超过500个字符' },
+                  ]"
+                  :hide-asterisk="true"
+                >
+                  <span>{{ form.link ?? '-' }}</span>
+                </t-form-item>
+              </t-descriptions-item>
+              <t-descriptions-item v-if="!showAuthLimit || !showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用首页地址"
@@ -331,6 +383,35 @@
                 </t-form-item>
               </t-descriptions-item>
             </t-descriptions>
+            <t-descriptions
+              v-if="!showAuthLimit"
+              id="authorizationInformation"
+              title="授权信息"
+              :title-style="{
+                fontSize: '14px',
+                lineHeight: '22px',
+                marginBottom: '16px',
+              }"
+              :title-divider-style="{ height: '12px' }"
+              :label-style="{ textAlign: 'left', verticalAlign: 'top' }"
+              size="medium"
+              :column="1"
+            >
+              <t-descriptions-item>
+                <t-form-item
+                  field="authType"
+                  label="授权设置"
+                  :hide-asterisk="true"
+                >
+                  <t-space v-if="form.authType.length">
+                    <span v-for="(item, index) in form.authType" :key="index">
+                      {{ AuthTypeEnum[Number(item)] }}
+                    </span>
+                  </t-space>
+                  <span v-else>{{ '-' }}</span>
+                </t-form-item>
+              </t-descriptions-item>
+            </t-descriptions>
           </t-form>
         </t-col>
       </t-row>
@@ -398,6 +479,18 @@ const formRef = ref();
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
+const StatusEnum: { [name: string]: any } = {
+  0: '未上线',
+  1: '已上线',
+  2: '调试中',
+};
+
+const StatusClassEnum: { [name: string]: any } = {
+  0: 'warning',
+  1: 'success',
+  2: 'info',
+};
+
 const form = reactive<{
   appType: number; // 0、自建应用 1、商城应用
   appName: string; // 应用名称
@@ -408,6 +501,9 @@ const form = reactive<{
   memberList: Record<string, any>[]; //
   memberType: number; // 0、全部 1、仅企业
   companyId: string;
+  authType: Record<string, any>[];
+  dockingMethod: number; // 0、SAAS 1、链接接入
+  link: string;
 }>({
   appType: 1,
   appName: '',
@@ -418,6 +514,9 @@ const form = reactive<{
   memberList: [],
   memberType: 0,
   companyId: userInfoByCompany.value?.companyId,
+  authType: [],
+  dockingMethod: 1,
+  link: '',
 });
 
 const state = reactive<{
@@ -461,6 +560,29 @@ const showAuthLimit = computed(() => {
   return false;
 });
 
+const showAuthLimitDock = computed(() => {
+  if (form.dockingMethod === 1) {
+    return true;
+  }
+  return false;
+});
+
+const showButton = computed(() => {
+  if (form.appType === 1 || (form.appType === 0 && form.dockingMethod === 0)) {
+    if (form.homeUri && form.redirectUri) {
+      return true;
+    }
+    return false;
+  }
+  if (form.appType === 0 && form.dockingMethod === 1) {
+    if (form.link) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+});
+
 const columns = [
   {
     title: 'APP ID',
@@ -500,16 +622,16 @@ const handleEdit = () => {
 };
 
 // 上线
-const handleLaunch = () => {
+const handleLaunch = (status: number) => {
   // formRef.value.validate((errors: undefined) => {
   //   if (!errors) {
   state.launchLoading = true;
   // 0 未上线 1 上线
-  fetchLaunch({ ...form, id: props.editId, status: 1 }).then((res) => {
+  fetchLaunch({ ...form, id: props.editId, status }).then((res) => {
     const { data } = res;
     if (data?.code === 200) {
       Message.success({
-        content: '上线成功',
+        content: status === 2 ? '提交成功' : '上线成功',
         duration: 1000,
         onClose: () => {
           state.launchLoading = false;
@@ -644,6 +766,16 @@ const AppTypeEnum: { [name: string]: any } = {
   1: '商城应用',
 };
 
+const ModeTypeEnum: { [name: string]: any } = {
+  0: 'SAAS',
+  1: '链接接入',
+};
+
+const AuthTypeEnum: { [name: string]: any } = {
+  0: '用户手机号',
+  1: '企业认证信息',
+};
+
 const MemberEnum: { [name: string]: any } = {
   1: '仅添加企业成员可用',
   0: '全部企业成员可用',
@@ -671,6 +803,9 @@ onMounted(() => {
       form.homeUri = res?.homeUri;
       form.redirectUri = res?.redirectUri;
       state.companyId = res?.companyId;
+      form.dockingMethod = res?.dockingMethod;
+      form.link = res?.link;
+      form.authType = res?.authType ? res?.authType.split(',') : '';
     })
     .catch(() => {
       state.tableLoading = false;
@@ -796,7 +931,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -807,7 +942,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-cursor {
         cursor: pointer;

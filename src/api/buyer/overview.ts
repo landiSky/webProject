@@ -59,3 +59,13 @@ export function apiMemListByProduct(params: Record<string, any>) {
 // export function apiAuthMember(data: Record<string, any>) {
 //   return $http.post('/server/web/product/appConfig', data);
 // }
+
+// 判断成员是否对应用授权
+export function apiAuthStatus(data: Record<string, any>) {
+  return $http.post('/server/web/product/member/getAuthStatus', data);
+}
+
+// 成员对应用授权
+export function apiGetAuth(data: Record<string, any>) {
+  return $http.post('/server/web/product/member/auth', data);
+}
