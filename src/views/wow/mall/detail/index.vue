@@ -1356,8 +1356,8 @@ onUnmounted(() => {
     }
 
     .evaluate {
-      //width: 900px;
-      width: 100%;
+      width: 900px;
+      //width: 100%;
       padding: 20px 24px;
       background: rgba(255, 255, 255, 1);
       border-top: solid rgba(229, 232, 239, 1) 1px;
@@ -1504,7 +1504,7 @@ onUnmounted(() => {
     }
 
     .decorationCls {
-      width: 1440px;
+      width: 100%;
 
       .body {
         justify-content: center;
