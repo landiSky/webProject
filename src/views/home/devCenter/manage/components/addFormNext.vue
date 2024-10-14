@@ -355,7 +355,7 @@
                       required: true,
                       message: '应用首页地址不允许为空',
                     },
-                    { maxLength: 1000, message: '不允许超过1000个字符' },
+                    { maxLength: 500, message: '不允许超过500个字符' },
                     // {
                     //   match: /^(https?:\/\/).+$/,
                     //   message: '请输入正确格式',
@@ -364,7 +364,7 @@
                 >
                   <t-input
                     v-model="form.homeUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
+                    :max-length="{ length: 500, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
@@ -383,7 +383,7 @@
                       required: true,
                       message: '应用回调地址不允许为空',
                     },
-                    { maxLength: 1000, message: '不允许超过1000个字符' },
+                    { maxLength: 500, message: '不允许超过500个字符' },
                     // {
                     //   match: /^(https?:\/\/).+$/,
                     //   message: '请输入正确格式',
@@ -392,7 +392,7 @@
                 >
                   <t-input
                     v-model="form.redirectUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
+                    :max-length="{ length: 500, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
@@ -772,8 +772,8 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       authType: form.authType ? form.authType.join(',') : '',
-      homeUri: form.dockingMethod !== 1 ? form.link : '',
-      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      homeUri: form.dockingMethod !== 1 ? form.homeUri : '',
+      redirectUri: form.dockingMethod !== 1 ? form.redirectUri : '',
       link: form.dockingMethod !== 1 ? '' : form.link,
     };
     if (form.memberType === 1) {
