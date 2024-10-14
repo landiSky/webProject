@@ -341,7 +341,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -371,7 +371,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
                 <t-form-item
@@ -399,7 +399,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -763,6 +763,7 @@ const handleLaunchOrSave = (status: number) => {
       id: props.editId,
       memberType: undefined,
       authType: form.authType ? form.authType.join(',') : '',
+      link: '',
     };
   } else {
     const memberIdList = form.memberList.map((i) => i.memberId);
@@ -771,6 +772,9 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       authType: form.authType ? form.authType.join(',') : '',
+      homeUri: form.dockingMethod !== 1 ? form.link : '',
+      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      link: form.dockingMethod !== 1 ? '' : form.link,
     };
     if (form.memberType === 1) {
       params.memberIdList = memberIdList;
