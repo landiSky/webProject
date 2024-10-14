@@ -17,7 +17,6 @@
       <t-layout class="layout-content">
         <PageMain />
       </t-layout>
-
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
