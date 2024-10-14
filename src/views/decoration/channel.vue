@@ -73,8 +73,26 @@
               </div>
             </t-form-item> -->
           </div>
-          <div class="row-cls row-cls-top">
-            <t-form-item field="status" label="页面装修">
+          <div
+            v-if="item.supportDelete || String(item.id) === '1'"
+            class="row-content"
+          >
+            <t-form-item
+              v-if="String(item.id) !== '1'"
+              class="row-cls"
+              field="channelType"
+              label="导航形式"
+            >
+              <span>{{
+                item.channelType === 0 ? '链接跳转' : '频道页面'
+              }}</span>
+            </t-form-item>
+            <t-form-item
+              v-if="item.channelType === 1"
+              class="row-cls"
+              field="status"
+              label="页面装修"
+            >
               <div v-if="item?.status === 1" class="save-btn">
                 <span style="color: #1d2129">已发布</span>
                 <span
@@ -108,6 +126,14 @@
               >
                 去装修>>
               </div>
+            </t-form-item>
+            <t-form-item
+              v-if="item.channelType === 0"
+              class="row-cls"
+              field="linkUrl"
+              label="跳转链接"
+            >
+              <span>{{ item.linkUrl || '-' }}</span>
             </t-form-item>
           </div>
           <div> </div>
@@ -175,7 +201,7 @@ const formRules = {
       },
     },
   ],
-  status: [{ required: true, message: '请进行页面装修' }],
+  status: [{ required: false, message: '请进行页面装修' }],
 };
 
 // 导航1名称编辑状态
@@ -521,6 +547,10 @@ onBeforeUnmount(() => {
       .tele-tag {
         margin-right: 8px;
       }
+    }
+
+    .row-content {
+      margin-left: 26px;
     }
 
     .row-cls-top {
