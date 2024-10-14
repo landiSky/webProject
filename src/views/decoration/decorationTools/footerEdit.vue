@@ -379,6 +379,8 @@ const formRules = {
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入买家使用手册');
+        if (value.length > 500) return cb('长度不超过500个字符');
+        if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
         return cb();
       },
     },
@@ -403,6 +405,8 @@ const formRules = {
       required: true,
       validator: (value: any, cb: (params?: any) => void) => {
         if (!value || value.length === 0) return cb('请输入卖家使用手册');
+        if (value.length > 500) return cb('长度不超过500个字符');
+        if (!/^(https?:\/\/).+$/.test(value)) return cb('请输入正确格式');
         return cb();
       },
     },

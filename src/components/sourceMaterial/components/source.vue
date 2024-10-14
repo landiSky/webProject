@@ -192,7 +192,8 @@ const onBeforeUpload = async (currentFile: Record<string, any>) => {
   });
 };
 
-const getMaterialList = () => {
+// 滚动时候需要拼接数据
+const getMaterialList = (type?: string) => {
   // 这里变成懒加载数据要进行拼接
   state.loading = true;
   fetchMaterialList({
@@ -232,7 +233,8 @@ const getMaterialList = () => {
         .then((res: any) => {
           state.loading = false;
           if (Array.isArray(res) || typeof res[0] === 'object') {
-            state.imgList = [...state.imgList, ...res];
+            state.imgList =
+              type === 'scroll' ? [...state.imgList, ...res] : [...res];
           }
         })
         .catch(() => {
@@ -260,6 +262,9 @@ const onBeforeRemove = (fileItem: any) => {
       fetchFileDel(saveName)
         .then(() => {
           Message.success('删除成功');
+          params.pageNum = 1;
+          // state.imgList = [];
+          isDone.value = false;
           getMaterialList();
         })
         .catch((e) => {
@@ -270,6 +275,9 @@ const onBeforeRemove = (fileItem: any) => {
 };
 
 const uploadSuccess = () => {
+  params.pageNum = 1;
+  // state.imgList = [];
+  isDone.value = false;
   getMaterialList();
 };
 
@@ -277,7 +285,7 @@ const onTabChange = (key: number) => {
   // 重置操作
   params.pageNum = 1;
   state.type = key;
-  state.imgList = [];
+  // state.imgList = [];
   isDone.value = false;
   getMaterialList();
 };
@@ -329,7 +337,7 @@ const handleScroll = (el: HTMLElement) => {
   if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
     // 再次请求图片数据
     params.pageNum += 1;
-    !isDone.value && getMaterialList();
+    !isDone.value && getMaterialList('scroll');
   }
 };
 

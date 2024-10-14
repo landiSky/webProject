@@ -14,6 +14,7 @@
             data?.productId || ''
           }`"
           :preview="false"
+          class="image-hover"
           :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
           @click="
             clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
@@ -137,12 +138,12 @@ defineExpose({
         text-align: left;
         text-overflow: ellipsis;
       }
-    }
 
-    .image-item:hover {
-      box-shadow: 6px 6px 20px 2px #7e7e7e40;
-      transform: scale(1.05);
-      transition: 0.5s;
+      .image-hover:hover {
+        box-shadow: 6px 6px 20px 2px #7e7e7e40;
+        transform: scale(1.05);
+        transition: 0.5s;
+      }
     }
   }
 }

@@ -1043,13 +1043,10 @@ const togo = (detailData: Record<string, any>) => {
         return true;
       });
     } else if (Number(tabsApplication.value) === 2) {
-      if (detailData.appType === 0 && detailData.dockingMethod === 1) {
-        window.open(detailData?.link);
-        return;
-      }
       const params = {
         appInfoId: id,
         companyId: userInfoByCompany.value.companyId,
+        memberId: selectCompany.value?.memberId,
       };
       appInfoClientLogin(params).then((res: any) => {
         if (res.code === 102008) {
@@ -1061,12 +1058,17 @@ const togo = (detailData: Record<string, any>) => {
         const data = {
           type: 'selfApp',
           companyId: userInfoByCompany.value.companyId,
+          memberId: selectCompany.value?.memberId,
         };
         const sm2data = sm2(
           JSON.stringify(data),
           userStore.configInfo?.publicKey
         );
-        window.open(`${res.data}&data=${sm2data}`);
+        if (detailData.appType === 0 && detailData.dockingMethod === 1) {
+          window.open(detailData?.link);
+        } else {
+          window.open(`${res.data}&data=${sm2data}`);
+        }
         return true;
         // window.open(
         //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
@@ -1088,12 +1090,12 @@ const togoCheck = (detailData: Record<string, any>) => {
       appId: detailData.saasAppId, // 应用id
     };
     apiAuthStatus(params).then((res: any) => {
-      if (res === 1) {
-        togo(detailData);
+      if (res === 0) {
+        empowerTipVisible.value = true;
+        empowerTipData.value = detailData;
         return;
       }
-      empowerTipVisible.value = true;
-      empowerTipData.value = detailData;
+      togo(detailData);
     });
   } else {
     togo(detailData);

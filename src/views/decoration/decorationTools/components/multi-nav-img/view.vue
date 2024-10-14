@@ -130,6 +130,11 @@ defineExpose({
   }
 
   .nav-image-text-content {
+    :deep(.tele-tabs-nav::before) {
+      width: calc(@factor * 600px);
+      margin: 0 auto;
+    }
+
     :deep(.tele-tabs-nav-tab) {
       justify-content: center;
     }

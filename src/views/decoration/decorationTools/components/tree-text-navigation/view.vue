@@ -7,7 +7,7 @@
     <div class="nav-image-text-content">
       <t-tabs :default-active-key="defaultKey" lazy-load position="left">
         <t-tab-pane
-          v-for="(item, index) in data?.configValue"
+          v-for="(item, index) in dataSortList"
           :key="index"
           :title="item.navTitle"
         >
@@ -83,6 +83,24 @@ watch(
 // 动态倍数
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
+});
+// 动态排序
+const dataSortList = computed(() => {
+  if (!isPreview.value) {
+    return data?.value?.configValue;
+  }
+  const configValue = JSON.parse(JSON.stringify(data?.value?.configValue));
+  const sortList = configValue.map((item: any) => {
+    const params = item;
+    const contentList = item.contentList.sort((front: any, after: any) => {
+      return new Date(after.time).getTime() - new Date(front.time).getTime();
+    });
+    return {
+      ...params,
+      contentList,
+    };
+  });
+  return sortList;
 });
 const checkContentBlockList = (list: []) => {
   if (!list || list.length === 0) return false;

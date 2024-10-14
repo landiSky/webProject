@@ -16,6 +16,7 @@
             data?.productId || ''
           }`"
           :preview="false"
+          class="image-hover"
           :class="{ 'mouse-cursor': item?.linkType != 2 }"
           @click="clickLink(item?.linkType, item?.linkUrl)"
         ></t-image>
@@ -131,25 +132,25 @@ defineExpose({
         display: -webkit-box;
         margin-bottom: calc(@factor * 8px);
         overflow: hidden;
-        overflow: hidden;
         color: #1d2129;
         font-weight: 400;
         font-size: calc(@factor * 8px);
         font-family: PingFang SC;
         line-height: calc(@factor * 12px);
         white-space: normal;
+        text-align: left;
         text-overflow: ellipsis;
         word-wrap: break-word;
         word-break: break-all;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
       }
-    }
 
-    .image-item:hover {
-      box-shadow: 6px 6px 20px 2px #7e7e7e40;
-      transform: scale(1.05);
-      transition: 0.5s;
+      .image-hover:hover {
+        box-shadow: 6px 6px 20px 2px #7e7e7e40;
+        transform: scale(1.05);
+        transition: 0.5s;
+      }
     }
   }
 }

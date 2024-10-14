@@ -524,12 +524,6 @@ export const ToolData: Record<string, any> = {
         linkType: LinkType.BLANK,
         linkUrl: '',
       },
-      {
-        navTitle: '子导航',
-        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
-        linkType: LinkType.BLANK,
-        linkUrl: '',
-      },
     ],
   },
   TreeTextNavigation: {

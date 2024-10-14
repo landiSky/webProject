@@ -30,13 +30,13 @@
               >删除</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status === 2 && showButton"
+              v-if="props.tableRecord?.status === 2"
               :loading="state.launchLoading"
               @click="handleLaunch(1)"
               >上线</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status === 0 && !showButton"
+              v-if="props.tableRecord?.status === 0 && showButton"
               :loading="state.launchLoading"
               @click="handleLaunch(2)"
               >调试应用</t-button
@@ -107,9 +107,11 @@
           <t-form
             ref="formRef"
             :model="form"
-            :label-col-props="{ span: 3, offset: 0 }"
-            :wrapper-col-props="{ span: 21 }"
+            :wrapper-col-props="{ span: 20 }"
             label-align="left"
+            :label-col-props="{
+              flex: '100px',
+            }"
           >
             <t-descriptions
               id="proof"
@@ -264,7 +266,7 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item v-if="showAuthLimitDock">
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
                 <t-form-item
                   field="link"
                   label="应用地址"
@@ -502,6 +504,7 @@ const form = reactive<{
   authType: Record<string, any>[];
   dockingMethod: number; // 0、SAAS 1、链接接入
   link: string;
+  status: number;
 }>({
   appType: 1,
   appName: '',
@@ -515,6 +518,7 @@ const form = reactive<{
   authType: [],
   dockingMethod: 1,
   link: '',
+  status: 0,
 });
 
 const state = reactive<{
@@ -624,8 +628,34 @@ const handleLaunch = (status: number) => {
   // formRef.value.validate((errors: undefined) => {
   //   if (!errors) {
   state.launchLoading = true;
+  let params: Record<string, any> = {};
+  if (form.appType === 1) {
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+      memberType: undefined,
+      authType: form.authType ? form.authType.join(',') : '',
+      link: '',
+    };
+  } else {
+    const memberIdList = form.memberList.map((i) => i.memberId);
+    params = {
+      ...form,
+      memberList: undefined,
+      id: props.editId,
+      authType: form.authType ? form.authType.join(',') : '',
+      homeUri: form.dockingMethod !== 1 ? form.link : '',
+      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      link: form.dockingMethod !== 1 ? '' : form.link,
+    };
+    if (form.memberType === 1) {
+      params.memberIdList = memberIdList;
+    }
+  }
+  params.status = status;
   // 0 未上线 1 上线
-  fetchLaunch({ ...form, id: props.editId, status }).then((res) => {
+  fetchLaunch(params).then((res) => {
     const { data } = res;
     if (data?.code === 200) {
       Message.success({
@@ -929,7 +959,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -940,7 +970,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-cursor {
         cursor: pointer;

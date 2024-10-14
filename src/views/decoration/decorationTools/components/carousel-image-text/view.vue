@@ -183,7 +183,7 @@ defineExpose({
               rgba(0, 0, 0, 0.12) 0%,
               #000 100%
             );
-            transform: translateY(100px);
+            transform: translateY(200px);
             transition: transform 0.5s;
 
             .image-desc {

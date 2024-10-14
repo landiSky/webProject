@@ -3,7 +3,10 @@
   <div>
     <div class="temp-anchor-wrap">
       <div class="temp-fold-anchor-box">
-        <div class="temp-fold-anchor">
+        <div
+          v-if="showAnchor && !!navFloorData.length"
+          class="temp-fold-anchor"
+        >
           <span class="temp-fold-achor-text">页面导航</span>
           <iconpark-icon name="right-arrow" size="6" class="right-arrow" />
         </div>

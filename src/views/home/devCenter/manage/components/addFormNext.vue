@@ -69,9 +69,11 @@
           <t-form
             ref="formRef"
             :model="form"
-            :label-col-props="{ span: 3, offset: 0 }"
-            :wrapper-col-props="{ span: 21 }"
+            :wrapper-col-props="{ span: 20 }"
             label-align="left"
+            :label-col-props="{
+              flex: '100px',
+            }"
           >
             <t-descriptions
               id="proof"
@@ -317,7 +319,7 @@
               size="medium"
               :column="1"
             >
-              <t-descriptions-item v-if="showAuthLimitDock">
+              <t-descriptions-item v-if="showAuthLimit && showAuthLimitDock">
                 <t-form-item
                   class="tip-content"
                   label="应用地址"
@@ -325,7 +327,7 @@
                   :rules="[
                     {
                       required: true,
-                      message: '应用首页地址不允许为空',
+                      message: '应用地址不允许为空',
                     },
                     { maxLength: 500, message: '不允许超过500个字符' },
                   ]"
@@ -339,7 +341,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -369,7 +371,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
                 <t-form-item
@@ -397,7 +399,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -761,6 +763,7 @@ const handleLaunchOrSave = (status: number) => {
       id: props.editId,
       memberType: undefined,
       authType: form.authType ? form.authType.join(',') : '',
+      link: '',
     };
   } else {
     const memberIdList = form.memberList.map((i) => i.memberId);
@@ -769,6 +772,9 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       authType: form.authType ? form.authType.join(',') : '',
+      homeUri: form.dockingMethod !== 1 ? form.link : '',
+      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      link: form.dockingMethod !== 1 ? '' : form.link,
     };
     if (form.memberType === 1) {
       params.memberIdList = memberIdList;
@@ -1054,7 +1060,7 @@ onMounted(() => {
     width: 100px;
     height: 100px;
     background: #f6f7fb;
-    border-radius: 2px;
+    border-radius: 16px;
 
     .image-div {
       position: absolute;
@@ -1065,7 +1071,7 @@ onMounted(() => {
       height: 100px;
       overflow: hidden;
       border: 1px solid #e5e8ef;
-      border-radius: 2px;
+      border-radius: 16px;
 
       .image-hover {
         position: absolute;
