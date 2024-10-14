@@ -30,13 +30,13 @@
               >删除</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status === 2 && showButton"
+              v-if="props.tableRecord?.status === 2"
               :loading="state.launchLoading"
               @click="handleLaunch(1)"
               >上线</t-button
             >
             <t-button
-              v-if="props.tableRecord?.status === 0 && !showButton"
+              v-if="props.tableRecord?.status === 0 && showButton"
               :loading="state.launchLoading"
               @click="handleLaunch(2)"
               >调试应用</t-button
@@ -504,6 +504,7 @@ const form = reactive<{
   authType: Record<string, any>[];
   dockingMethod: number; // 0、SAAS 1、链接接入
   link: string;
+  status: number;
 }>({
   appType: 1,
   appName: '',
@@ -517,6 +518,7 @@ const form = reactive<{
   authType: [],
   dockingMethod: 1,
   link: '',
+  status: 0,
 });
 
 const state = reactive<{
