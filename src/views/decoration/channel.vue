@@ -2,181 +2,154 @@
 <template>
   <div class="channel-box">
     <t-space direction="vertical" size="small" fill>
-      <div v-for="(item, idx) in channelFormMap" :key="idx" class="form-box">
-        <t-form
-          :ref="(el: any) => setChannelRef(el, idx)"
-          :model="item"
-          :rules="formRules"
-          auto-label-width
-        >
-          <div class="row-cls">
-            <div class="left">
-              <div class="vertical-line"></div>
-              <div>{{ item.name || '-' }}</div>
-            </div>
-            <div class="right">
-              <icon-to-top
-                style="margin-right: 12px; cursor: pointer"
-                :size="12"
-                @click="handleSort('up', item)"
-              />
-              <icon-to-bottom
-                style="margin-right: 12px; cursor: pointer"
-                :size="12"
-                @click="handleSort('down', item)"
-              />
-              <icon-delete
-                v-if="item.supportDelete"
-                style="margin-right: 12px; cursor: pointer"
-                :size="12"
-                @click="handleDel(item)"
-              />
-              <icon-edit
-                style="cursor: pointer"
-                :size="12"
-                @click="item.navNameEdit = true"
-              />
-            </div>
-            <!-- <t-form-item field="name" label="名称配置">
-              <div v-if="item.navNameEdit" class="input-box-edit">
-                <t-input
-                  v-model="item.name"
-                  placeholder="请输入"
-                  allow-clear
-                  style="width: 260px"
-                />
-                <div
-                  style="margin: 0 16px"
-                  class="save-btn"
-                  @click="nameEdit(item, '2', channelRef[idx])"
-                  >保存并发布
-                </div>
-                <div
-                  class="cancel-btn"
-                  @click="
-                    () => {
-                      channelRef[idx].clearValidate();
-                      // item.navNameEdit = false;
-                      getPageData(idx);
-                    }
-                  "
-                  >取消</div
-                >
-              </div>
-              <div v-else class="input-box-show">
-                <span class="input-value">{{ item?.name || '-' }}</span>
-                <icon-edit
-                  style="color: #1664ff; cursor: pointer"
-                  :size="16"
-                  @click="item.navNameEdit = true"
-                />
-              </div>
-            </t-form-item> -->
-          </div>
-          <div
-            v-if="item.supportDelete || String(item.id) === '1'"
-            class="row-content"
+      <t-spin :loading="channelLoading" :size="24">
+        <div v-for="(item, idx) in channelFormMap" :key="idx" class="form-box">
+          <t-form
+            :ref="(el: any) => setChannelRef(el, idx)"
+            :model="item"
+            :rules="formRules"
+            auto-label-width
           >
-            <t-form-item
-              v-if="String(item.id) !== '1'"
-              class="row-cls"
-              field="channelType"
-              label="导航形式"
-            >
-              <span>{{
-                item.channelType === 0 ? '链接跳转' : '频道页面'
-              }}</span>
-            </t-form-item>
-            <t-form-item
-              v-if="item.channelType === 1"
-              class="row-cls"
-              field="status"
-              label="页面装修"
-            >
-              <div v-if="item?.status === 1" class="save-btn">
-                <span style="color: #1d2129">已发布</span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goPlatProducts(item?.type)"
-                >
-                  查看前台页面>>
-                </span>
-                <span
-                  class="save-btn"
-                  style="margin-left: 16px"
-                  @click="goDecoration(item)"
-                >
-                  继续装修>>
-                </span>
+            <div class="row-cls">
+              <div class="left">
+                <div class="vertical-line"></div>
+                <div>{{ item.name || '-' }}</div>
               </div>
-              <div v-else-if="item?.status === 0">
-                <t-tag bordered style="cursor: pointer" @click="goPreview(item)"
-                  >预览效果
-                </t-tag>
-                <t-tag bordered style="cursor: pointer" @click="goPreview(item)"
-                  >发布
-                </t-tag>
+              <div class="right">
+                <icon-to-top
+                  style="margin-right: 12px; cursor: pointer"
+                  :size="12"
+                  @click="handleSort('up', item)"
+                />
+                <icon-to-bottom
+                  style="margin-right: 12px; cursor: pointer"
+                  :size="12"
+                  @click="handleSort('down', item)"
+                />
+                <icon-delete
+                  v-if="item.supportDelete"
+                  style="margin-right: 12px; cursor: pointer"
+                  :size="12"
+                  @click="handleDel(item)"
+                />
+                <icon-edit
+                  style="cursor: pointer"
+                  :size="12"
+                  @click="handleChannelEdit(item)"
+                />
               </div>
-              <div
-                v-else
-                class="save-btn"
-                style="margin-left: 16px"
-                @click="goDecoration(item)"
+            </div>
+            <div
+              v-if="item.supportDelete || String(item.id) === '1'"
+              class="row-content"
+            >
+              <t-form-item
+                v-if="String(item.id) !== '1'"
+                class="row-cls"
+                field="channelType"
+                label="导航形式"
               >
-                去装修>>
-              </div>
-            </t-form-item>
-            <t-form-item
-              v-if="item.channelType === 0"
-              class="row-cls"
-              field="linkUrl"
-              label="跳转链接"
-            >
-              <span>{{ item.linkUrl || '-' }}</span>
-            </t-form-item>
-          </div>
-          <div> </div>
-        </t-form>
-      </div>
+                <span>{{
+                  item.channelType === 0 ? '链接跳转' : '频道页面'
+                }}</span>
+              </t-form-item>
+              <t-form-item
+                v-if="item.channelType === 1"
+                class="row-cls"
+                field="status"
+                label="页面装修"
+              >
+                <div v-if="item?.status === 1" class="save-btn">
+                  <span style="color: #1d2129">已发布</span>
+                  <span
+                    class="save-btn"
+                    style="margin-left: 16px"
+                    @click="goPlatProducts(item?.type)"
+                  >
+                    查看前台页面>>
+                  </span>
+                  <span
+                    class="save-btn"
+                    style="margin-left: 16px"
+                    @click="goDecoration(item)"
+                  >
+                    继续装修>>
+                  </span>
+                </div>
+                <div v-else-if="item?.status === 0">
+                  <t-tag
+                    bordered
+                    style="cursor: pointer"
+                    @click="goPreview(item)"
+                    >预览效果
+                  </t-tag>
+                  <t-tag
+                    bordered
+                    style="cursor: pointer"
+                    @click="goPreview(item)"
+                    >发布
+                  </t-tag>
+                </div>
+                <div v-else class="save-btn" @click="goDecoration(item)">
+                  去装修>>
+                </div>
+              </t-form-item>
+              <t-form-item
+                v-if="item.channelType === 0"
+                class="row-cls"
+                field="linkUrl"
+                label="跳转链接"
+              >
+                <span class="link-url" @click="jumpToUrl(item.linkUrl)">{{
+                  item.linkUrl || '-'
+                }}</span>
+              </t-form-item>
+            </div>
+          </t-form>
+        </div>
+        <div class="add-channel">
+          <iconpark-icon
+            :name="addDisable ? 'squarePlusGray' : 'squareBluePlus'"
+            :class="addDisable ? 'square-plus-gray' : 'square-blue-plus'"
+            size="16px"
+            @click="handleChannelAdd"
+          />添加频道（最多6个）</div
+        >
+      </t-spin>
     </t-space>
+    <ChannelDrawer
+      v-if="showChannelDrawer"
+      :show-channel-drawer="showChannelDrawer"
+      :title="channelTitle"
+      :data="channelData"
+      :confirm-loading="confirmLoading"
+      @handle-ok="handleOk"
+      @handle-cancel="handleCancel"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { defineProps, onMounted, ref, watch, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import {
   apiUpdateNavData,
   apiGetNavData,
   apiChangeSort,
+  apiChannelUpdate,
+  apiChannelAdd,
+  apiChannelDel,
 } from '@/api/decoration/decoration-tools';
 import { isArray } from 'lodash';
 import { ChannelType } from '@/enums/decoration';
-// import eventBus from '@/utils/bus';
-// import { useDecorationStore } from '@/store/modules/decoration';
-// import { storeToRefs } from 'pinia';
 import { channelName } from './decorationTools/constant';
-
-console.log('Message', Message);
+import ChannelDrawer from './channelDrawer.vue';
 
 // 创建tabs通信通道
 const broadcastChannel = new BroadcastChannel(channelName);
 
 const router = useRouter();
-const props = defineProps({
-  xxx: {
-    type: Boolean,
-    default: false,
-  },
-  yyy: {
-    type: Object,
-    default() {
-      return {};
-    },
-  },
-});
 
 const formRules = {
   name: [
@@ -204,24 +177,14 @@ const formRules = {
   status: [{ required: false, message: '请进行页面装修' }],
 };
 
-// 导航1名称编辑状态
-const nav1NameEdit = ref(false);
-// 导航1装修状态
-// const nav1Publish = ref(false);
-
-// 导航2名称编辑状态
-const nav2NameEdit = ref(false);
-// 导航2装修状态
-// const nav2Publish = ref(false);
-
-// 导航3名称编辑状态
-const nav3NameEdit = ref(false);
-// 导航3装修状态
-// const nav3Publish = ref(false);
-
 const nav1DecorationJson = ref('');
 const nav2DecorationJson = ref('');
 const nav3DecorationJson = ref('');
+
+const showChannelDrawer = ref(false);
+const confirmLoading = ref(false);
+const channelTitle = ref('');
+const channelData = ref({});
 
 type FormItem = {
   name: string;
@@ -233,11 +196,9 @@ type FormItem = {
   draftDetail: string;
 };
 
-const formRef1 = ref();
-const formRef2 = ref();
-const formRef3 = ref();
-const formRef4 = ref();
 const channelRef = ref<any[]>([]);
+const addDisable = ref(false);
+const channelLoading = ref(false);
 
 // 频道页变成map格式统一动态宣传
 const channelFormMap = ref<any[]>([]);
@@ -276,57 +237,71 @@ const setChannelRef = (el: any, index: number) => {
   }
 };
 
-const publishName = (form: FormItem | null | undefined | any) => {
-  if (!form) return;
-  const { id, name } = form;
-  console.log('publishName', form);
-  apiUpdateNavData({ id, name }).then((res: any) => {
-    if (form.type === ChannelType.PLATFORM_HOME) {
-      nav1NameEdit.value = false;
-    } else {
-      form.navNameEdit = false;
+const getPageData = (idx?: number) => {
+  channelLoading.value = true;
+  // 拉取所有导航数据
+  apiGetNavData({}).then((res) => {
+    channelLoading.value = false;
+    if (isArray(res.data)) {
+      // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
+      res.data = res.data.map((i) => ({
+        ...i,
+        type: i.id,
+      }));
+      const tempData = JSON.parse(JSON.stringify(channelFormMap.value));
+      channelFormMap.value = [];
+      res.data.forEach((item: any) => {
+        switch (item.type) {
+          case ChannelType.PLATFORM_HOME:
+            form1.value = item;
+            break;
+          case ChannelType.PLATFORM_NAME:
+            break;
+          default:
+            channelFormMap.value.push({ ...item });
+            break;
+        }
+      });
+      // 保存做单独状态处理
+      channelFormMap.value.forEach((item, index) => {
+        item.navNameEdit = tempData[index]?.navNameEdit;
+      });
+      if (typeof idx === 'number' && channelFormMap.value[idx]) {
+        channelFormMap.value[idx].navNameEdit =
+          !channelFormMap.value[idx].navNameEdit;
+      }
+      const dynamicChannel = channelFormMap.value.filter(
+        (item) => item.supportDelete
+      );
+      console.log('dynamicChannel', dynamicChannel);
+      addDisable.value = dynamicChannel.length >= 6;
     }
-    // else if (form.type === ChannelType.PLATFORM_PRODUCT) {
-    //   nav2NameEdit.value = false;
-    // } else if (form.type === ChannelType.PLATFORM_SERVE) {
-    //   nav3NameEdit.value = false;
-    // }
   });
+  // 获取本地缓存的装修数据,注意key值！！！
+  nav1DecorationJson.value = localStorage.getItem('componentsList2') || '';
+  nav2DecorationJson.value = localStorage.getItem('componentsList3') || '';
+  nav3DecorationJson.value = localStorage.getItem('componentsList4') || '';
 };
 
-const nameEdit = (
-  form: FormItem | null | undefined,
-  index: string,
-  formRef: any
-) => {
-  if (index === '1') {
-    formRef1.value.validateField('name', (valid: any) => {
-      if (!valid) {
-        publishName(form);
-      }
+const handleOk = async (params: any) => {
+  confirmLoading.value = true;
+  // 有id则代表编辑反之代表新增，sort这里新增按照list长度算
+  if (!params.id) params.sort = channelFormMap.value.length;
+  await (params.id ? apiChannelUpdate(params) : apiChannelAdd(params))
+    .then(() => {
+      Message.success('修改成功');
+      getPageData();
+      confirmLoading.value = false;
+      showChannelDrawer.value = false;
+    })
+    .catch((e) => {
+      Message.error(e.message);
+      confirmLoading.value = false;
     });
-  }
-  if (index === '2') {
-    formRef.validateField('name', (valid: any) => {
-      if (!valid) {
-        publishName(form);
-      }
-    });
-  }
-  // if (index === '3') {
-  //   formRef3.value.validateField('name', (valid: any) => {
-  //     if (!valid) {
-  //       publishName(form);
-  //     }
-  //   });
+};
 
-  // 如果是只校验名称的话这个就不用放开，如何还校验装修的话就需要用下边的 字段还需对齐
-  // formRef3.value.validate((valid: any) => {
-  //   if (!valid) {
-  //     publishName(form);
-  //   }
-  // });
-  // }
+const handleCancel = () => {
+  showChannelDrawer.value = false;
 };
 
 const goDecoration = (form: FormItem | null | undefined) => {
@@ -348,58 +323,6 @@ const goPreview = (form: FormItem | null | undefined) => {
   window.open(routeUrl.href, '_blank');
 };
 
-const getPageData = (idx?: number) => {
-  // 拉取所有导航数据
-  apiGetNavData({}).then((res) => {
-    if (isArray(res.data)) {
-      // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
-      res.data = res.data.map((i) => ({
-        ...i,
-        type: i.id,
-      }));
-      console.log('getPageData', res.data);
-      const tempData = JSON.parse(JSON.stringify(channelFormMap.value));
-      channelFormMap.value = [];
-      res.data.forEach((item: any) => {
-        switch (item.type) {
-          case ChannelType.PLATFORM_HOME:
-            form1.value = item;
-            break;
-          // case ChannelType.PLATFORM_PRODUCT:
-          //   form2.value = item;
-          //   break;
-          case ChannelType.PLATFORM_NAME:
-            break;
-          // case ChannelType.PLATFORM_SERVE:
-          //   form3.value = item;
-          //   break;
-          default:
-            channelFormMap.value.push({ ...item });
-            // 保存做单独状态处理
-            // if(idx) channelFormMap.value[idx].navNameEdit = !channelFormMap.value[idx].navNameEdit
-            break;
-        }
-      });
-      // 保存做单独状态处理
-      channelFormMap.value.forEach((item, index) => {
-        item.navNameEdit = tempData[index]?.navNameEdit;
-      });
-      if (typeof idx === 'number' && channelFormMap.value[idx]) {
-        channelFormMap.value[idx].navNameEdit =
-          !channelFormMap.value[idx].navNameEdit;
-      }
-      console.log('getPageDatagetPageData', channelFormMap.value);
-    }
-  });
-  // 获取本地缓存的装修数据,注意key值！！！
-  nav1DecorationJson.value = localStorage.getItem('componentsList2') || '';
-  nav2DecorationJson.value = localStorage.getItem('componentsList3') || '';
-  nav3DecorationJson.value = localStorage.getItem('componentsList4') || '';
-};
-
-// const goHome = () => {
-//   router.push({ path: '/wow/index' });
-// };
 // 频道页通过一个路由，不同type来区分
 const goPlatProducts = (type: number) => {
   // router.push({ path: '/wow/platProducts' });
@@ -428,11 +351,51 @@ const handleExchangeArray = (
 };
 
 const handleDel = (data: any) => {
-  console.log('handleDel', data);
+  Modal.warning({
+    title: '删除后无法进行恢复，请谨慎操作！',
+    titleAlign: 'start',
+    content: '',
+    okText: '删除',
+    hideCancel: false,
+    okButtonProps: {
+      status: 'danger',
+    },
+    onOk: () => {
+      apiChannelDel(data.id)
+        .then(() => {
+          Message.success('删除成功');
+          getPageData();
+        })
+        .catch((e) => {
+          Message.error(e.message);
+        });
+    },
+  });
+};
+
+const jumpToUrl = (linkUrl: string) => {
+  window.open(linkUrl, '_blank');
+};
+
+const handleChannelEdit = (item: object) => {
+  showChannelDrawer.value = true;
+  channelTitle.value = '编辑频道';
+  channelData.value = item;
+};
+
+const handleChannelAdd = () => {
+  // 将频道页过滤出来
+  const dynamicChannel = channelFormMap.value.filter(
+    (item) => item.supportDelete
+  );
+  if (dynamicChannel.length >= 6) return;
+  showChannelDrawer.value = true;
+  channelTitle.value = '添加频道';
+  channelData.value = {};
+  console.log('handleChannelAdd');
 };
 
 const handleSort = async (type: string, data: any) => {
-  console.log('sort111', channelFormMap.value, type, data);
   if (type === 'up' && data.sort === 0) {
     Message.warning('已经到顶了');
     return;
@@ -455,7 +418,6 @@ const handleSort = async (type: string, data: any) => {
   });
   await apiChangeSort(updateParams);
   getPageData();
-  console.log('newSortData', newSortData);
 };
 
 onMounted(() => {
@@ -475,6 +437,12 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="less">
+.form-space {
+  :deep(.tele-space-item) {
+    margin-bottom: 16px;
+  }
+}
+
 .channel-box {
   width: 600px;
   height: 100%;
@@ -482,7 +450,14 @@ onBeforeUnmount(() => {
 
   .form-box {
     width: 685px;
-    // background-color: red;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e5e8ef;
+
+    :deep(.tele-form-item) {
+      margin-bottom: 0 !important;
+    }
+
     .vertical-line {
       width: 4px;
       height: 14px;
@@ -503,13 +478,16 @@ onBeforeUnmount(() => {
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      margin-top: 18px;
-      margin-left: 24px;
+      // margin-top: 10px;
       font-size: 12px;
       // background-color: red;
       .left {
         display: flex;
+        align-items: center;
         justify-content: flex-start;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
       }
 
       .input-box-edit {
@@ -547,9 +525,15 @@ onBeforeUnmount(() => {
       .tele-tag {
         margin-right: 8px;
       }
+
+      .link-url {
+        color: #1664ff;
+        cursor: pointer;
+      }
     }
 
     .row-content {
+      margin-top: 8px;
       margin-left: 26px;
     }
 
@@ -559,6 +543,23 @@ onBeforeUnmount(() => {
 
     ::v-deep(.tele-form-item) {
       margin-bottom: 10px;
+    }
+  }
+
+  .add-channel {
+    margin-bottom: 20px;
+
+    > iconpark-icon {
+      margin-right: 8px;
+      vertical-align: bottom;
+    }
+
+    .square-plus-gray {
+      cursor: not-allowed;
+    }
+
+    .square-blue-plus {
+      cursor: pointer;
     }
   }
 }
