@@ -196,11 +196,8 @@ import {
   fetchOffine,
   fetchDel,
   fetchCancelDebug,
+  fetchDebuggingLogin,
 } from '@/api/devCenter/manage';
-import {
-  alreadyBuyClientLogin,
-  appInfoClientLogin,
-} from '@/api/buyer/overview';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -593,67 +590,43 @@ const handleTableDebugging = (record: Record<string, any>) => {
     window.open(record?.link);
     return false;
   }
-  // const { id, productId, deliveryId, deliveryType } = record;
+  const { id } = record;
 
   if (Number(record.appType) === 1) {
-    // const params = {
-    //   productId,
-    //   productDeliverySetId: deliveryId,
-    //   memberId: selectCompany.value?.memberId,
-    //   orderId: id,
-    // };
-    // alreadyBuyClientLogin(params).then((res: any) => {
-    //   const data = {
-    //     type: 'productApp',
-    //     productId,
-    //     productDeliverySetId: deliveryId,
-    //     memberId: selectCompany.value?.memberId,
-    //   };
-    //   const sm2data = sm2(
-    //     JSON.stringify(data),
-    //     userStore.configInfo?.publicKey
-    //   );
-    //   if (res.code === 102008) {
-    //     return Message.warning(res?.message);
-    //   }
-    //   if (res.code !== 200) {
-    //     return Message.error(res?.message);
-    //   }
-    //   if (deliveryType === 1) {
-    //     window.open(res.data);
-    //   } else {
-    //     window.open(`${res.data}&data=${sm2data}`);
-    //   }
-    //   return true;
-    // });
-    window.open(record?.homeUri);
+    const params = {
+      appInfoId: id,
+    };
+    fetchDebuggingLogin(params).then((res: any) => {
+      const data = {
+        type: 'productApp',
+        memberId: selectCompany.value?.memberId,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res}&data=${sm2data}`);
+      return true;
+    });
     return false;
   }
   if (Number(record.appType) === 0 && record.dockingMethod === 0) {
-    window.open(record?.homeUri);
-    return false;
-    // const params = {
-    //   appInfoId: id,
-    //   companyId: userInfoByCompany.value.companyId,
-    // };
-    // appInfoClientLogin(params).then((res: any) => {
-    //   if (res.code === 102008) {
-    //     return Message.warning(res?.message);
-    //   }
-    //   if (res.code !== 200) {
-    //     return Message.error(res?.message);
-    //   }
-    //   const data = {
-    //     type: 'selfApp',
-    //     companyId: userInfoByCompany.value.companyId,
-    //   };
-    //   const sm2data = sm2(
-    //     JSON.stringify(data),
-    //     userStore.configInfo?.publicKey
-    //   );
-    //   window.open(`${res.data}&data=${sm2data}`);
-    //   return true;
-    // });
+    const params = {
+      appInfoId: id,
+      companyId: userInfoByCompany.value.companyId,
+    };
+    fetchDebuggingLogin(params).then((res: any) => {
+      const data = {
+        type: 'selfApp',
+        memberId: selectCompany.value?.memberId,
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res}&data=${sm2data}`);
+      return true;
+    });
   }
   return true;
 };
