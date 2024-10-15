@@ -128,44 +128,14 @@
     </t-layout>
     <!-- 预览，保存，发布 按钮框
      openModel为0 是编辑模式，1为预览模式 -->
-    <div v-if="openModel === 0" class="floating_btn-box">
-      <!-- <t-space size="large" class="icons-container">
-        <div class="icon-text-container" @click="controlPreview">
-          <icon-eye v-if="!isPreview" :size="24" />
-          <icon-eye-invisible v-if="isPreview" :size="24" />
-          <span style="font-size: 12px">预览</span>
-        </div>
-        <div class="icon-text-container" @click="clickSave">
-          <iconpark-icon name="saveLocal" :size="24" />
-          <span style="font-size: 12px">保存</span>
-        </div>
-        <div class="icon-text-container" @click="clickSaveRemote">
-          <iconpark-icon name="saveRemote" :size="24" />
-          <span style="font-size: 12px">发布</span>
-        </div>
-      </t-space> -->
-      <t-space size="small" class="icons-container">
-        <t-button class="icon-text-container" @click="controlPreview">
-          <template #icon>
-            <icon-eye v-if="!isPreview" :size="24" />
-            <icon-eye-invisible v-if="isPreview" :size="24" />
-          </template>
-          <template #default>预览</template>
-        </t-button>
-        <t-button class="icon-text-container" @click="clickSave">
-          <template #icon>
-            <iconpark-icon name="saveLocal" :size="24" />
-          </template>
-          <template #default>保存</template>
-        </t-button>
-        <t-button class="icon-text-container" @click="clickSaveRemote">
-          <template #icon>
-            <iconpark-icon name="saveRemote" :size="24" />
-          </template>
-          <template #default>发布</template>
-        </t-button>
-      </t-space>
-    </div>
+    <!-- 使用ThreeButton组件 -->
+    <ThreeButton
+      :open-model="openModel"
+      :is-preview="isPreview"
+      @control-preview="controlPreview"
+      @click-save="clickSave"
+      @click-save-remote="clickSaveRemote"
+    />
     <div v-if="openModel === 1" class="floating_footer-box">
       <t-space :size="12">
         <t-button @click="edit">编辑</t-button>
@@ -186,6 +156,7 @@ import {
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
+import ThreeButton from '@/views/decoration/decorationTools/threeButton.vue';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
 import { ToolData, tools, toolsGroup } from './config/tools';

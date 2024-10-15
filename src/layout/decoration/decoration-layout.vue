@@ -17,6 +17,13 @@
       <t-layout class="layout-content">
         <PageMain />
       </t-layout>
+      <ThreeButton
+        :open-model="openModel"
+        :is-preview="isPreview"
+        @control-preview="controlPreview"
+        @click-save="clickSave"
+        @click-save-remote="clickSaveRemote"
+      />
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
@@ -41,6 +48,7 @@ import DecorationTools from '@/views/decoration/decorationTools/editor-tool-bar-
 import ConfigContent from '@/views/decoration/decorationTools/config-content-wrap.vue';
 import PageMain from '@/layout/home/main/index.vue';
 import eventBus from '@/utils/bus';
+import ThreeButton from '@/views/decoration/decorationTools/threeButton.vue';
 
 const navbarHeight = '48px';
 const contentRef = ref<HTMLDivElement>();
@@ -55,6 +63,9 @@ const handleMyEvent = (payload: any) => {
 const handleScroll = (e: any) => {
   scrollY.value = e.target.scrollTop;
 };
+const openModel = ref(-1);
+const isPreview = ref(false);
+
 watch(
   () => scrollY.value,
   (n, o) => {
@@ -70,6 +81,17 @@ watch(
     }
   }
 );
+
+// 定义方法
+const controlPreview = () => {
+  // ...
+};
+const clickSave = () => {
+  // ...
+};
+const clickSaveRemote = () => {
+  // ...
+};
 
 onMounted(() => {
   console.log('preview-event 开始监听--');
