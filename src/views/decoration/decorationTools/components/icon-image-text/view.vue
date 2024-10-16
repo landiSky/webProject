@@ -1,7 +1,9 @@
 <!-- 图标叠文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="icon-image-text-box" style="position: relative">
-    <div class="icon-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="icon-image-text-title">{{
+      getInterceptString(data?.mainTitle, 20) || '主标题'
+    }}</div>
     <div class="image-box" style="position: relative">
       <div
         v-for="(item, index) in data?.configValue"
@@ -14,9 +16,12 @@
           }`"
           :preview="false"
         />
-        <span class="image-title">{{ item?.title || '小标题' }}</span>
+        <span class="image-title">{{
+          getInterceptString(item?.title, 6) || '小标题'
+        }}</span>
         <span class="image-desc">{{
-          item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+          getInterceptString(item?.desc, 30) ||
+          '我是副标题我是副标题我是副标题我是副标题'
         }}</span>
         <span
           v-if="item?.linkType !== 2"
@@ -31,6 +36,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,

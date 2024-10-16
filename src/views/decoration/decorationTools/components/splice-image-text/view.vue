@@ -1,11 +1,13 @@
 <!-- 多图文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="multi-image-text-box" style="position: relative">
-    <div class="multi-image-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="multi-image-text-title">{{
+      getInterceptString(data?.mainTitle, 20) || '主标题'
+    }}</div>
     <div class="image-box" style="position: relative">
       <div class="left-box">
         <span class="image-title">{{
-          data?.configValue1?.subTitle || '主标题'
+          getInterceptString(data?.configValue1?.subTitle, 10) || '主标题'
         }}</span>
         <t-carousel
           :auto-play="true"
@@ -31,10 +33,11 @@
                 />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
-                    item?.title || '小标题'
+                    getInterceptString(item?.title, 8) || '小标题'
                   }}</span>
                   <span class="image-desc">{{
-                    item?.desc || '我是简介我是简介我是简介我是简介我是简介'
+                    getInterceptString(item?.desc, 30) ||
+                    '我是简介我是简介我是简介我是简介我是简介'
                   }}</span>
                   <!-- <span class="image-index">{{
                     `${index + 1}/${data?.configValue1?.config.length}`
@@ -56,7 +59,7 @@
       </div>
       <div class="right-box">
         <span class="image-title">{{
-          data?.configValue2?.subTitle || '主标题'
+          getInterceptString(data?.configValue2?.subTitle, 10) || '主标题'
         }}</span>
         <t-carousel
           :auto-play="true"
@@ -82,9 +85,11 @@
                 />
                 <div class="image-desc-box">
                   <span class="image-little-title">{{
-                    item?.title || '小标题'
+                    getInterceptString(item?.title, 8) || '小标题'
                   }}</span>
-                  <span class="image-desc">{{ item?.desc || '图片简介' }}</span>
+                  <span class="image-desc">{{
+                    getInterceptString(item?.desc, 30) || '图片简介'
+                  }}</span>
                   <!-- <span class="image-index">{{
                     `${index + 1}/${data?.configValue2?.config.length}`
                   }}</span> -->
@@ -109,6 +114,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,

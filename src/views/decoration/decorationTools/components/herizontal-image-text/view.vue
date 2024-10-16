@@ -2,7 +2,7 @@
 <template>
   <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
     <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
+      getInterceptString(data?.mainTitle, 20) || '主标题'
     }}</div>
     <div class="image-box">
       <div
@@ -17,9 +17,12 @@
           :preview="false"
         />
         <div class="image-item-content">
-          <span class="image-title">{{ item?.title || '小标题' }}</span>
+          <span class="image-title">{{
+            getInterceptString(item?.title, 8) || '小标题'
+          }}</span>
           <span class="image-desc">{{
-            item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+            getInterceptString(item?.desc, 30) ||
+            '我是副标题我是副标题我是副标题我是副标题'
           }}</span>
           <span
             v-if="item?.linkType !== 2"
@@ -35,6 +38,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,

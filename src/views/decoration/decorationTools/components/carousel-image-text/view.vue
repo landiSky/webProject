@@ -2,7 +2,7 @@
   <div class="carousel-image-text-box" style="position: relative">
     <div class="carousel-box">
       <div class="carousel-image-text-title">{{
-        data?.mainTitle || '主标题'
+        getInterceptString(data?.mainTitle, 20) || '主标题'
       }}</div>
       <!-- 轮播图 -->
       <t-carousel
@@ -34,7 +34,7 @@
             />
             <div class="image-content">
               <span class="image-desc">{{
-                item?.desc ||
+                getInterceptString(item?.desc, 120) ||
                 '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介'
               }}</span>
               <span
@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,

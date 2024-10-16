@@ -1,19 +1,20 @@
 <template>
   <div class="nav-image-text-box">
     <div class="nav-image-text-title">
-      {{ data?.mainTitle || '主标题' }}
+      {{ getInterceptString(data?.mainTitle, 20) || '主标题' }}
     </div>
     <div class="nav-image-text-content">
       <t-tabs :default-active-key="defaultKey" lazy-load>
         <t-tab-pane
           v-for="(item, index) in data?.configValue"
           :key="index"
-          :title="item.navTitle"
+          :title="getInterceptString(item.navTitle, 6) || '子导航'"
         >
           <div class="item-content">
             <div class="item-title-section">
               <div class="item-title">{{
-                item?.title || '名称名称名称名称名称名称名称名称名称名称'
+                getInterceptString(item?.title, 20) ||
+                '名称名称名称名称名称名称名称名称名称名称'
               }}</div>
               <div
                 v-if="item?.linkType !== 2"
@@ -23,7 +24,7 @@
               </div>
             </div>
             <div class="item-desc">{{
-              item?.desc ||
+              getInterceptString(item.desc, 400) ||
               '简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字简介二百字'
             }}</div>
           </div>
@@ -35,6 +36,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: {

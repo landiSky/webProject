@@ -7,9 +7,13 @@
       <div class="top-left-box">
         <!-- v-if="tipshow === 0" -->
         <div class="tip-box">
-          <div class="hover-header">{{ data?.configValue[0].title }}</div>
+          <div class="hover-header">{{
+            getInterceptString(data?.configValue[0].title, 12) || '小标题'
+          }}</div>
           <div class="hover-content">
-            <div class="hover-desc">{{ data?.configValue[0].desc }} </div>
+            <div class="hover-desc"
+              >{{ getInterceptString(data?.configValue[0].desc, 20) || '简介' }}
+            </div>
             <p
               v-if="data?.configValue[0].linkType !== LinkType.BLANK"
               @click="
@@ -29,9 +33,13 @@
       <div class="top-right-box">
         <!-- v-if="tipshow === 1" -->
         <div class="tip-box">
-          <div class="hover-header">{{ data?.configValue[1].title }}</div>
+          <div class="hover-header">{{
+            getInterceptString(data?.configValue[1].title, 12) || '小标题'
+          }}</div>
           <div class="hover-content">
-            <div class="hover-desc">{{ data?.configValue[1].desc }} </div>
+            <div class="hover-desc"
+              >{{ getInterceptString(data?.configValue[1].desc, 20) || '简介' }}
+            </div>
             <p
               v-if="data?.configValue[1].linkType !== LinkType.BLANK"
               @click="
@@ -48,9 +56,13 @@
       <div class="bottom-left-box">
         <!-- v-if="tipshow === 3" -->
         <div class="tip-box">
-          <div class="hover-header">{{ data?.configValue[2].title }}</div>
+          <div class="hover-header">{{
+            getInterceptString(data?.configValue[2].title, 12) || '小标题'
+          }}</div>
           <div class="hover-content">
-            <div class="hover-desc">{{ data?.configValue[2].desc }} </div>
+            <div class="hover-desc"
+              >{{ getInterceptString(data?.configValue[2].desc, 20) || '简介' }}
+            </div>
             <p
               v-if="data?.configValue[2].linkType !== LinkType.BLANK"
               @click="
@@ -67,9 +79,13 @@
       <div class="bottom-right-box">
         <!-- v-if="tipshow === 2" -->
         <div class="tip-box">
-          <div class="hover-header">{{ data?.configValue[3].title }}</div>
+          <div class="hover-header">{{
+            getInterceptString(data?.configValue[3].title, 12) || '小标题'
+          }}</div>
           <div class="hover-content">
-            <div class="hover-desc">{{ data?.configValue[3].desc }} </div>
+            <div class="hover-desc"
+              >{{ getInterceptString(data?.configValue[3].desc, 20) || '简介' }}
+            </div>
             <p
               v-if="data?.configValue[3].linkType !== LinkType.BLANK"
               @click="
@@ -100,6 +116,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, onMounted, onBeforeUnmount } from 'vue';
+import { getInterceptString } from '@/utils';
 import { channelName, LinkType } from '../../constant';
 
 const tipshow = ref(-1);
@@ -134,8 +151,11 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
+      item.title.length <= 12 &&
       item.desc &&
-      (item.linkType === 2 || (item.linkType !== 2 && item.linkUrl))
+      item.desc.length <= 20 &&
+      (item.linkType === 2 ||
+        (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
   });
 };

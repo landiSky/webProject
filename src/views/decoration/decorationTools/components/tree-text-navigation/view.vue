@@ -2,14 +2,14 @@
 <template>
   <div class="nav-image-text-box">
     <div class="nav-image-text-title">
-      {{ data?.mainTitle || '主标题' }}
+      {{ getInterceptString(data?.mainTitle, 20) || '主标题' }}
     </div>
     <div class="nav-image-text-content">
       <t-tabs :default-active-key="defaultKey" lazy-load position="left">
         <t-tab-pane
           v-for="(item, index) in dataSortList"
           :key="index"
-          :title="item.navTitle"
+          :title="getInterceptString(item.navTitle, 8) || '子标题'"
         >
           <div class="item-content">
             <div
@@ -35,8 +35,12 @@
                 </div>
                 <div class="line"></div>
                 <div class="area">
-                  <div class="headline">{{ contentItem.name }}</div>
-                  <div class="introduce">{{ contentItem.desc }}</div>
+                  <div class="headline">{{
+                    getInterceptString(contentItem.name, 40) || '名称'
+                  }}</div>
+                  <div class="introduce">{{
+                    getInterceptString(contentItem.desc, 100) || '简介'
+                  }}</div>
                 </div>
               </div>
               <t-divider />
@@ -50,6 +54,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: {
@@ -110,7 +115,7 @@ const checkContentBlockList = (list: []) => {
       item.name.length <= 40 &&
       letterReg.test(item.name) &&
       item.desc &&
-      item.desc.length <= 200 &&
+      item.desc.length <= 100 &&
       (item.linkType === 2 ||
         (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))
     );
@@ -121,7 +126,7 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.navTitle &&
-      item.navTitle.length <= 6 &&
+      item.navTitle.length <= 8 &&
       letterReg.test(item.navTitle) &&
       checkContentBlockList(item.contentList)
     );
@@ -171,16 +176,11 @@ defineExpose({
 
   .nav-image-text-title {
     position: relative;
-    width: calc(@factor * 130px);
     margin: calc(@factor * 24px) auto calc(@factor * 24px);
-    overflow: hidden;
     color: #1d2129;
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    -webkit-line-clamp: 1;
   }
 
   .nav-image-text-content {
@@ -229,19 +229,12 @@ defineExpose({
     :deep(.tele-tabs-tab-title) {
       display: -webkit-box;
       padding: 0;
-      overflow: hidden;
       color: #1d2129;
       font-weight: 500;
       font-size: calc(@factor * 7px);
       font-family: PingFang SC;
       line-height: calc(@factor * 11px);
-      white-space: normal;
       text-align: left;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      word-break: break-all;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
     }
 
     :deep(.tele-tabs-nav-type-line .tele-tabs-tab-title::before) {
@@ -317,35 +310,21 @@ defineExpose({
         .area {
           .headline {
             display: -webkit-box;
-            overflow: hidden;
             color: rgba(29, 33, 41, 1);
             font-weight: 500;
             font-size: calc(@factor * 8px);
             line-height: calc(@factor * 12px);
-            white-space: normal;
             text-align: left;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-            word-break: break-all;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
           }
 
           .introduce {
             display: -webkit-box;
             margin-top: 12px;
-            overflow: hidden;
             color: rgba(78, 89, 105, 1);
             font-weight: 400;
             font-size: calc(@factor * 7px);
             line-height: calc(@factor * 11px);
-            white-space: normal;
             text-align: left;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-            word-break: break-all;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
           }
         }
       }

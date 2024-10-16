@@ -645,8 +645,8 @@ const handleLaunch = (status: number) => {
       memberList: undefined,
       id: props.editId,
       authType: form.authType ? form.authType.join(',') : '',
-      homeUri: form.dockingMethod !== 1 ? form.link : '',
-      redirectUri: form.dockingMethod !== 1 ? form.link : '',
+      homeUri: form.dockingMethod !== 1 ? form.homeUri : '',
+      redirectUri: form.dockingMethod !== 1 ? form.redirectUri : '',
       link: form.dockingMethod !== 1 ? '' : form.link,
     };
     if (form.memberType === 1) {

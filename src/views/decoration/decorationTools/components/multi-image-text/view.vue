@@ -2,7 +2,7 @@
 <template>
   <div class="multi-image-text-box" style="position: relative">
     <div class="multi-image-text-title">
-      <span>{{ data?.mainTitle }}</span>
+      <span>{{ getInterceptString(data?.mainTitle, 20) || '主标题' }}</span>
     </div>
     <div class="image-box" style="position: relative">
       <div
@@ -12,7 +12,9 @@
         class="image-item"
       >
         <div class="image-title-box">
-          <span class="image-title">{{ item?.title || '主标题' }}</span>
+          <span class="image-title">{{
+            getInterceptString(item?.title, 6) || '小标题'
+          }}</span>
         </div>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
@@ -22,7 +24,7 @@
           class="image-cls"
         />
         <span class="image-desc">{{
-          item?.desc || '我是副标题我是副标题我是副标题'
+          getInterceptString(item?.desc, 15) || '我是副标题我是副标题我是副标题'
         }}</span>
         <span
           v-if="item?.linkType !== 2"
@@ -43,6 +45,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
@@ -133,7 +136,7 @@ const checkConfigList = (list: any) => {
       item.title &&
       item.title.length <= 6 &&
       item.desc &&
-      item.desc.length <= 16 &&
+      item.desc.length <= 15 &&
       item.src &&
       (item.linkType === 2 ||
         (item.linkType !== 2 && item.linkUrl && item.linkUrl.length <= 500))

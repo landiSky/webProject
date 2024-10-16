@@ -2,7 +2,7 @@
 <template>
   <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
     <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
+      getInterceptString(data?.mainTitle, 20) || '主标题'
     }}</div>
     <div class="image-box">
       <div
@@ -17,9 +17,11 @@
           :preview="false"
         />
         <div class="image-item-content">
-          <span class="image-title">{{ item?.title || '小标题' }}</span>
+          <span class="image-title">{{
+            getInterceptString(item?.title, 8) || '小标题'
+          }}</span>
           <span class="image-desc">{{
-            item?.desc ||
+            getInterceptString(item?.desc, 200) ||
             '我是简介我是简介我是简介，我是简介，我是简介我是简介我是简介，我是简介我是简介我是简介我是简介。'
           }}</span>
           <span
@@ -36,6 +38,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
@@ -134,7 +137,7 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        height: calc(@factor * 107px);
+        height: calc(@factor * 154px);
         margin-top: -6px;
         padding: 12px;
         background: linear-gradient(to bottom, rgba(255, 255, 255, 1), #eee);
@@ -150,15 +153,9 @@ defineExpose({
           display: -webkit-box;
           width: 100%;
           margin: 10px 0;
-          overflow: hidden;
           color: #4e5969;
           font-size: calc(@factor * 7px);
-          white-space: normal;
           text-align: left;
-          text-overflow: ellipsis;
-          word-wrap: break-word;
-          -webkit-line-clamp: 7;
-          -webkit-box-orient: vertical;
         }
 
         .image-link {
