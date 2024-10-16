@@ -160,7 +160,7 @@
             v-if="item.linkType === 0"
             v-model="item.linkUrl"
             :max-length="{
-              length: 200,
+              length: 500,
               errorOnly: true,
             }"
             show-word-limit
