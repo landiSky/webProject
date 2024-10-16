@@ -203,34 +203,6 @@ const channelLoading = ref(false);
 // 频道页变成map格式统一动态宣传
 const channelFormMap = ref<any[]>([]);
 
-const form1 = ref<FormItem>({
-  name: '',
-  id: 0,
-  logo: '',
-  type: ChannelType.PLATFORM_HOME,
-  status: null,
-  detail: '',
-  draftDetail: '',
-});
-const form2 = ref<FormItem>({
-  name: '',
-  id: 0,
-  logo: '',
-  type: ChannelType.PLATFORM_PRODUCT,
-  status: null,
-  detail: '',
-  draftDetail: '',
-});
-const form3 = ref<FormItem>({
-  name: '',
-  id: 0,
-  logo: '',
-  type: ChannelType.PLATFORM_SERVE,
-  status: null,
-  detail: '',
-  draftDetail: '',
-});
-
 const setChannelRef = (el: any, index: number) => {
   if (el) {
     channelRef.value[index] = el;
@@ -252,11 +224,11 @@ const getPageData = (idx?: number) => {
       channelFormMap.value = [];
       res.data.forEach((item: any) => {
         switch (item.type) {
-          case ChannelType.PLATFORM_HOME:
-            form1.value = item;
-            break;
-          case ChannelType.PLATFORM_NAME:
-            break;
+          // case ChannelType.PLATFORM_HOME:
+          //   form1.value = item;
+          //   break;
+          // case ChannelType.PLATFORM_NAME:
+          //   break;
           default:
             channelFormMap.value.push({ ...item });
             break;
@@ -273,7 +245,7 @@ const getPageData = (idx?: number) => {
       const dynamicChannel = channelFormMap.value.filter(
         (item) => item.supportDelete
       );
-      console.log('dynamicChannel', dynamicChannel);
+      console.log('dynamicChannel', channelFormMap, dynamicChannel);
       addDisable.value = dynamicChannel.length >= 6;
     }
   });
@@ -307,6 +279,7 @@ const handleCancel = () => {
 const goDecoration = (form: FormItem | null | undefined) => {
   if (!form) return;
   const { id, type } = form;
+  console.log('goDecoration', type, id);
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: { model: 0, type, id },
@@ -316,6 +289,7 @@ const goDecoration = (form: FormItem | null | undefined) => {
 const goPreview = (form: FormItem | null | undefined) => {
   if (!form) return;
   const { type, id } = form;
+  console.log('goPreview', type, id);
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: { model: 1, type, id },

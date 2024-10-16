@@ -90,8 +90,8 @@ watch(
   () => route.query,
   (nv) => {
     const { type } = nv;
-    const t = parseInt(`${type}`, 10);
-    isPro.value = t === ChannelType.PLATFORM_PRODUCT_DETAIL;
+    const t = type;
+    isPro.value = t === String(ChannelType.PLATFORM_PRODUCT_DETAIL);
   },
   { deep: true, immediate: true }
 );

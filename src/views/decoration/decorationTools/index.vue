@@ -7,7 +7,7 @@
     }"
   >
     <div
-      v-if="openType === ChannelType.PLATFORM_PRODUCT_DETAIL"
+      v-if="openType === String(ChannelType.PLATFORM_PRODUCT_DETAIL)"
       class="product-bg"
     >
       <div class="product-text"></div>
@@ -190,7 +190,7 @@ const colorIndex = ref(-1);
 
 const decorationJson = ref('');
 
-const openType = ref(-1);
+const openType = ref();
 
 const interceptFlag = ref(false);
 
@@ -401,7 +401,7 @@ const clickSave = () => {
     return;
   }
   const json = JSON.stringify(componentsList.value);
-  if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+  if (openType.value === String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
     // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
     broadcastChannel.postMessage(
       JSON.stringify({ name: 'product_detail', status: 0, data: json })
@@ -453,7 +453,7 @@ const clickSaveRemote = () => {
       const { id } = route.query;
       const json = JSON.stringify(componentsList.value);
       // 分情况处理：普通渠道装修；商品详情装修
-      if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+      if (openType.value === String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
         // 给goods-add 发消息保存内容, 如果goods-add 页面没有填写基础信息，则保存失败，需要给用户在这页提示出来
         broadcastChannel.postMessage(
           JSON.stringify({ name: 'product_detail', status: 1, data: json })
@@ -625,8 +625,9 @@ watch(
   () => route.query,
   () => {
     const { type } = route.query;
-    openType.value = parseInt(`${type}`, 10);
-    if (openType.value === ChannelType.PLATFORM_PRODUCT_DETAIL) {
+    console.log('watchwatch', type);
+    openType.value = type;
+    if (openType.value === String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
       // interceptFlag.value = false;
     } else {
       // interceptFlag.value = true;
@@ -639,15 +640,17 @@ watch(
 );
 
 // 数组插入第一个元素--homeheader
-const insertFirst = (type: number) => {
-  if (type === ChannelType.PLATFORM_HOME) {
+const insertFirst = (type: string) => {
+  console.log('insertFirst', type);
+  // 首页
+  if (type === String(ChannelType.PLATFORM_HOME)) {
     if (componentsList.value[0]?.name !== 'HomeHeader') {
       toolList.value.unshift('HomeHeader');
       componentsList.value.unshift(homeHeader);
     }
   } else if (
-    type !== ChannelType.PLATFORM_HOME &&
-    type !== ChannelType.PLATFORM_PRODUCT_DETAIL
+    type !== String(ChannelType.PLATFORM_HOME) &&
+    type !== String(ChannelType.PLATFORM_PRODUCT_DETAIL)
   ) {
     if (componentsList.value[0]?.name !== 'ChannelHeader') {
       toolList.value.unshift('ChannelHeader');
@@ -657,11 +660,13 @@ const insertFirst = (type: number) => {
 };
 
 const getNavData = (type: number) => {
-  apiGetNavData({ type })
+  apiGetNavData({ id: type })
     .then((res: any) => {
+      console.log('res.data', res.data);
+      res.data[0].status = 0;
       // decorationJson.value = res.data[0].detail;
       const { status, detail, draftDetail } = res.data[0];
-      console.log('装修数据000', res.data[0].detail);
+      console.log('getNavDatagetNavDatagetNavData', res.data);
       if (status) {
         if (detail && detail !== '[]') {
           componentsList.value = JSON.parse(detail);
@@ -733,7 +738,6 @@ watch(
 onMounted(() => {
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
-    console.log('beforeunload111 inner', interceptFlag.value);
     componentsList.value = [...componentsList.value];
     if (interceptFlag.value) {
       console.log('有装修数据，是否确认离开？');
@@ -773,8 +777,9 @@ onMounted(() => {
       JSON.parse(JSON.stringify(componentsList.value))
     );
   });
-  openType.value = parseInt(`${route.query.type}`, 10);
-  if (openType.value !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
+  // openType.value = parseInt(`${route.query.type}`, 10);
+  console.log('openType.value', openType.value);
+  if (openType.value !== String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
     // 非商品详情装修的情况
     getNavData(openType.value);
   } else {

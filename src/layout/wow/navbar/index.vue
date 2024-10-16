@@ -4,8 +4,8 @@
       <div class="left">
         <t-space :size="[4]">
           <t-image
-            v-if="logo"
-            :src="`/server/web/file/download?name=${logo}`"
+            v-if="navLogo"
+            :src="`/server/web/file/download?name=${navLogo}`"
             :preview="false"
           />
           <iconpark-icon v-else name="logo" size="36px"></iconpark-icon>
@@ -15,52 +15,13 @@
       <div class="right">
         <t-space size="[0]">
           <t-link
-            :class="{ active: selectTab === TabPath.INDEX }"
-            @click="goIndex"
-            >{{ channel1Name || '首页' }}
-          </t-link>
-          <!-- <t-tooltip content="敬请期待">
-            <t-link>限免应用</t-link>
-          </t-tooltip> -->
-          <t-link
-            :class="{ active: selectTab === TabPath.IDINSIDEZONE }"
-            @click="clickIdService"
-            >IDInside专区</t-link
-          >
-          <t-link
-            :class="{ active: selectTab === TabPath.MALL }"
-            @click="gotoMall"
-            >商城</t-link
-          >
-          <t-link
             v-for="(item, idx) in channelNameCollect"
             :key="idx"
             :class="{ active: setActive(item.type) }"
-            @click="goPlatProducts(item.type)"
+            @click="goPlatProducts(item)"
           >
             {{ item.name || '平台产品' }}
           </t-link>
-          <!-- <t-link
-            :class="{ active: selectTab === TabPath.PROD }"
-            @click="goPlatProducts"
-            >{{ channel2Name || '平台产品' }}
-          </t-link>
-
-          <t-link
-            :class="{ active: selectTab === TabPath.SERV }"
-            @click="goPlatServices"
-            >{{ channel3Name || '平台服务' }}
-          </t-link> -->
-
-          <t-link
-            :class="{ active: selectTab === TabPath.DOC }"
-            @click="goDocCenter"
-            >文档中心
-          </t-link>
-
-          <!-- <t-tooltip content="敬请期待">
-            <t-link>前沿政策</t-link>
-          </t-tooltip> -->
         </t-space>
       </div>
     </div>
@@ -110,14 +71,13 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { Modal, Message } from '@tele-design/web-vue';
+import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
-import { NodeAuthStatus } from '@/enums/common';
-import { getToken } from '@/utils/auth';
 import { apiDataPoint } from '@/api/data-point';
-import { snmsClientLogin } from '@/api/login';
-import { sm2 } from '@/utils/encrypt';
-import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import {
+  apiGetNavData,
+  apiNavLogoList,
+} from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
 
 const TabPath = {
@@ -139,16 +99,8 @@ const searchContent = ref();
 
 const store = storeToRefs(userStore);
 
-console.log('userStore', userStore.configInfo, store);
-
-const logo = ref('');
+const navLogo = ref('');
 const platformName = ref('');
-// 首页导航栏
-const channel1Name = ref('');
-// 平台产品导航栏
-const channel2Name = ref('');
-// 平台服务导航栏
-const channel3Name = ref('');
 // 频道页集合
 const channelNameCollect = ref<Record<string, any>>([]);
 
@@ -168,7 +120,6 @@ watch(
   }
 );
 const setActive = (key: number) => {
-  console.log('setActive', key, ChannelTabPath.value, selectTab.value);
   return ChannelTabPath.value[key] === selectTab.value;
 };
 const handleLogout = async () => {
@@ -178,7 +129,6 @@ const goIndex = () => {
   apiDataPoint(null, null, userInfo?.value?.id, 5, 6).then((res) => {
     console.log('前台导航栏首页点击打点', res);
   });
-  console.log('goIndexgoIndexgoIndex');
   selectTab.value = TabPath.INDEX;
   router.push({ path: '/wow/index' });
 };
@@ -191,7 +141,7 @@ const gotoMall = () => {
 };
 
 const goBuyer = () => {
-  // 运营后台跳转到运营后台首页 s
+  // 运营后台跳转到运营后台首页
   if (userInfo.value?.isAdmin) {
     router.push({ path: '/goods/manage' });
   } else {
@@ -218,30 +168,73 @@ const goDocCenter = () => {
   router.push({ path: '/wow/doc' });
 };
 
-const goPlatProducts = (type: number) => {
+const clickIdService = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 20).then((res) => {
+    console.log('前台导航栏IDInside专区点击打点', res);
+  });
+  selectTab.value = TabPath.IDINSIDEZONE;
+  if (!store.configInfo.value?.isTeleInfo) {
+    if (process.env.NODE_ENV !== 'production') {
+      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
+    } else {
+      window.open('https://snms.teleinfo.cn/zst/#/wow/idInsideZone');
+    }
+    return;
+  }
+  router.push({ path: '/wow/idInsideZone' });
+};
+
+const goPlatProducts = (data: Record<string, any>) => {
+  // 首页
+  if (String(data.type) === '1') {
+    goIndex();
+    return;
+  }
+  // inside
+  if (String(data.type) === '2') {
+    clickIdService();
+    return;
+  }
+  // 商城
+  if (String(data.type) === '3') {
+    gotoMall();
+    return;
+  }
+  // 文档中心
+  if (String(data.type) === '4') {
+    goDocCenter();
+    return;
+  }
   apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
     console.log('前台导航栏点击平台产品打点', res);
   });
-  // router.push({ path: '/wow/platProducts' });
-  if (String(type) === '6') {
+  if (String(data.type) === '5') {
     // 单独处理开放社区
-    localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
+    localStorage.setItem('publicIdhubOpenType', JSON.stringify(data.type));
     router.push({
       name: 'publicIdhubOpen',
     });
     return;
   }
+  // 判断动态频道是否是外链形式
+  if (data.channelType === 0 && data.linkUrl && data.supportDelete) {
+    // 判断是不是英福平台做引流
+    selectTab.value = `/wow/platProducts/${data.type}`;
+    if (!store.configInfo.value?.isTeleInfo) {
+      if (process.env.NODE_ENV !== 'production') {
+        window.open('http://zhishutong.dev.idx.space/#/wow/doc');
+      } else {
+        window.open('https://snms.teleinfo.cn/zst/#/wow/doc');
+      }
+    } else {
+      window.open(data.linkUrl, '_blank');
+    }
+    return;
+  }
   router.push({
     name: 'wowPlatProducts',
-    params: { type },
+    params: { type: data.type },
   });
-};
-
-const goPlatServices = () => {
-  apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
-    console.log('前台导航栏点击平台服务打点', res);
-  });
-  router.push({ path: '/wow/platServices' });
 };
 
 const clickLogout = () => {
@@ -263,9 +256,6 @@ const goRegister = () => {
 };
 const goLogin = () => {
   userStore.jumpToLogin();
-  // router.push({
-  //   path: '/login',
-  // });
 };
 
 const onSearch = () => {
@@ -283,24 +273,25 @@ const onSearch = () => {
   });
 };
 
-const clickIdService = () => {
-  apiDataPoint(null, null, userInfo?.value?.id, 5, 20).then((res) => {
-    console.log('前台导航栏IDInside专区点击打点', res);
-  });
-  selectTab.value = TabPath.IDINSIDEZONE;
-  if (!store.configInfo.value?.isTeleInfo) {
-    if (process.env.NODE_ENV !== 'production') {
-      window.open('http://zhishutong.dev.idx.space/#/wow/idInsideZone');
-    } else {
-      window.open('https://snms.teleinfo.cn/zst/#/wow/idInsideZone');
-    }
-    return;
-  }
-  router.push({ path: '/wow/idInsideZone' });
-};
-
 onMounted(() => {
-  // TODO 首页logo和项目名称以及导航名称接口获取
+  // 获取导航logo
+  apiNavLogoList().then((res) => {
+    const { name, logo } = res.data[0];
+    console.log('apiNavLogoList', name, logo);
+    navLogo.value = logo;
+    platformName.value = name;
+    const link: any =
+      document.querySelector("link[rel*='icon']") ||
+      document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = logo
+      ? `/server/web/file/download?name=${logo}`
+      : '/src/assets/images/favicon.ico';
+    document.getElementsByTagName('head')[0].appendChild(link);
+    document.title = name || '';
+  });
+  // TODO 和项目名称以及导航名称接口获取
   apiGetNavData({}).then((res) => {
     console.log('首页logo和项目名称接口获取', res);
     if (res.data) {
@@ -310,40 +301,27 @@ onMounted(() => {
         type: i.id,
       }));
       res.data.forEach((item: any) => {
-        if (item.type === ChannelType.PLATFORM_NAME) {
-          logo.value = item.logo;
-          platformName.value = item.name;
-          const link: any =
-            document.querySelector("link[rel*='icon']") ||
-            document.createElement('link');
-          link.type = 'image/x-icon';
-          link.rel = 'shortcut icon';
-          link.href = res.data[0]?.logo
-            ? `/server/web/file/download?name=${res.data[0]?.logo}`
-            : '/src/assets/images/favicon.ico';
-          document.getElementsByTagName('head')[0].appendChild(link);
-          document.title = res.data[0]?.name || '';
-        } else if (item.type === ChannelType.PLATFORM_HOME) {
-          channel1Name.value = item.name;
-        }
         // 过滤出频道页, 这里统一改造成频道页动态配置
-        else if (item.type !== ChannelType.PLATFORM_PRODUCT_DETAIL) {
-          const pathKey = `/wow/platProducts/${item.type}`;
-          ChannelTabPath.value[item.type] =
-            item.type === 6 ? '/public/idhub-open' : pathKey;
-          channelNameCollect.value.push({ name: item.name, type: item.type });
+        let pathKey = '';
+        if (item.type !== String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
+          // 区分固定路由和动态频道路由
+          if (!['1', '2', '3', '4', '5'].includes(item.type)) {
+            pathKey = `/wow/platProducts/${item.type}`;
+          } else {
+            const fixedNav: any = {
+              1: '/wow/index',
+              2: '/wow/idInsideZone',
+              3: '/wow/mall',
+              4: '/wow/doc',
+              5: '/public/idhub-open',
+            };
+            pathKey = fixedNav[item.type];
+          }
+          ChannelTabPath.value[item.type] = pathKey;
+          channelNameCollect.value.push({ ...item });
         }
-        // else if (item.type === ChannelType.PLATFORM_PRODUCT) {
-        //   channel2Name.value = item.name;
-        // } else if (item.type === ChannelType.PLATFORM_SERVE) {
-        //   channel3Name.value = item.name;
-        // }
       });
-      console.log(
-        'channelNameCollect',
-        channelNameCollect.value,
-        ChannelTabPath.value
-      );
+      console.log('channelNameCollect', channelNameCollect);
     }
   });
   if (route.name === 'wowMallDetail') {
@@ -366,18 +344,13 @@ onMounted(() => {
   background-color: #fff;
   box-shadow: 0 -1px 0 0 #e5e6e8 inset;
 
-  // :deep(.tele-trigger-popup) {
-  //   top: 48px !important;
-  // }
   .left-side {
     display: flex;
     flex: 1;
     align-items: center;
     height: 100%;
-    // padding-left: 24px;
+
     .left {
-      // display: flex;
-      // align-items: center;
       margin-right: 32px;
 
       ::v-deep(.tele-image) {

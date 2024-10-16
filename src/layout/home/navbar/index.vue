@@ -101,7 +101,7 @@ import { useMenuStore } from '@/store/modules/menu';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
-import { apiGetNavData } from '@/api/decoration/decoration-tools';
+import { apiNavLogoList } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
 import eventBus from '@/utils/bus';
 
@@ -301,10 +301,9 @@ const onSearch = () => {
   });
 };
 
-// 接收bus事件调用
+// 接收bus事件调用decoration/base
 const handleMyEvent = () => {
-  apiGetNavData({ type: ChannelType.PLATFORM_NAME }).then((res) => {
-    console.log('首页logo和项目名称接口获取', res.data[0]);
+  apiNavLogoList().then((res) => {
     if (res?.data?.length > 0) {
       logo.value = res.data[0]?.logo;
       platformName.value = res.data[0]?.name;

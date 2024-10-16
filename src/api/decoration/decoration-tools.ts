@@ -5,6 +5,16 @@ export function apiGetNavData(params: Record<string, any>) {
   return $http.get('/operation/web/renovation/selectList', { params });
 }
 
+// 导航logo修改接口
+export function apiNavLogoUpdate(data: Record<string, any>) {
+  return $http.post('/operation/web/system/config/update', data);
+}
+
+// 导航logo列表接口
+export function apiNavLogoList() {
+  return $http.get('/operation/web/system/config/selectList');
+}
+
 // 更新导航栏数据接口
 export function apiUpdateNavData(data: Record<string, any>) {
   return $http.post('/operation/web/renovation/update', data);
