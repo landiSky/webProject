@@ -257,7 +257,7 @@
               placeholder="请输入商品简介"
               :max-length="{
                 length: 300,
-                errorOnly: false,
+                errorOnly: true,
               }"
               show-word-limit
               :auto-size="{

@@ -47,7 +47,6 @@ export function getNowFormatDate() {
 
 // 截取字符串,返回相应数量
 export function getInterceptString(name: string, endNum: number) {
-  console.log(!name);
   if (!name) return name;
   return name.slice(0, endNum);
 }
