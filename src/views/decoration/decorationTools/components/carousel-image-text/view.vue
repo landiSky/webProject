@@ -312,16 +312,14 @@ defineExpose({
 
 :deep(.tele-carousel-indicator-item) {
   width: 8px;
-  height: 8px; /* 假设默认高度的2倍 */
-  background: #1664ff;
-  opacity: 0.5;
+  height: 8px;
+  background: #94c2ff;
 }
 
 :deep(.tele-carousel-indicator-item-active) {
   width: 16px;
   height: 16px;
   background: #1664ff;
-  opacity: 1;
 }
 
 ::v-deep(.tele-image) {
