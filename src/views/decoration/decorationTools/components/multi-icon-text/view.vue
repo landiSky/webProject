@@ -1,7 +1,9 @@
 <!-- 图标叠文:style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }"-->
 <template>
   <div class="multi-icon-text-box" style="position: relative">
-    <div class="multi-icon-text-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="multi-icon-text-title">{{
+      getInterceptString(data?.mainTitle, 20) || '主标题'
+    }}</div>
     <div class="image-box" style="position: relative">
       <div
         v-for="(item, index) in data?.configValue"
@@ -16,9 +18,12 @@
           class="image-item"
         />
         <div class="text-item">
-          <span class="image-title">{{ item?.title || '小标题' }}</span>
+          <span class="image-title">{{
+            getInterceptString(item?.title, 8) || '小标题'
+          }}</span>
           <span class="image-desc">{{
-            item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+            getInterceptString(item?.desc, 100) ||
+            '我是副标题我是副标题我是副标题我是副标题'
           }}</span>
           <span
             v-if="item?.linkType !== 2"
@@ -34,6 +39,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
@@ -101,7 +107,8 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  width: calc(@factor * 720px);
+  //width: calc(@factor * 720px);
+  width: 100%;
   height: auto;
   // height: calc(@factor * 340px);
   .multi-icon-text-title {

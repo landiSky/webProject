@@ -2,14 +2,14 @@
 <template>
   <div class="nav-image-text-box">
     <div class="nav-image-text-title">
-      {{ data?.mainTitle || '主标题' }}
+      {{ getInterceptString(data?.mainTitle, 20) || '主标题' }}
     </div>
     <div class="nav-image-text-content">
       <t-tabs :default-active-key="defaultKey" lazy-load>
         <t-tab-pane
           v-for="(item, index) in data?.configValue"
           :key="index"
-          :title="item.navTitle"
+          :title="getInterceptString(item.navTitle, 6) || '子导航'"
         >
           <div class="item-content">
             <div class="item-image">
@@ -32,6 +32,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: {
@@ -113,23 +114,19 @@ defineExpose({
 
   .nav-image-text-title {
     position: relative;
-    display: -webkit-box;
-    width: calc(@factor * 130px);
     margin: calc(@factor * 24px) auto calc(@factor * 12px);
-    overflow: hidden;
     color: #1d2129;
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: normal;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    word-break: break-all;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
   }
 
   .nav-image-text-content {
+    :deep(.tele-tabs-nav::before) {
+      width: calc(@factor * 600px);
+      margin: 0 auto;
+    }
+
     :deep(.tele-tabs-nav-tab) {
       justify-content: center;
     }
@@ -146,13 +143,6 @@ defineExpose({
       }
     }
 
-    :deep(.tele-tabs-tab-title) {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 1;
-    }
-
     .item-content {
       display: flex;
       flex-direction: column;
@@ -162,7 +152,6 @@ defineExpose({
 
     .item-image {
       margin-bottom: calc(@factor * 24px);
-      overflow: hidden;
 
       .image-cls {
         width: calc(@factor * 600px);

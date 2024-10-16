@@ -59,3 +59,8 @@ export function fetchDel(id: string) {
 export function fetchCancelDebug(params: Record<string, any>) {
   return $http.get(`/server/web/app/info/cancelDebug`, { params });
 }
+
+// 调试中应用登录
+export function fetchDebuggingLogin(params: Record<string, any>) {
+  return $http.get(`/auth/debuggingLogin`, { params });
+}

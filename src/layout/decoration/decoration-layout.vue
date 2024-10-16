@@ -17,7 +17,6 @@
       <t-layout class="layout-content">
         <PageMain />
       </t-layout>
-
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
@@ -109,7 +108,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 0px);
+  height: calc(100vh - 60px);
   overflow-y: auto;
   background-color: #f6f7f9;
 }

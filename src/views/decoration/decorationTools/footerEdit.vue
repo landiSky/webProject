@@ -38,6 +38,19 @@
                 <div class="vertical-line"></div>
                 <div class="title-text">联系我们</div>
               </t-space>
+              <t-form-item field="technicalSupport" label="技术支持">
+                <t-input
+                  v-model.trim="form.technicalSupport"
+                  placeholder="请输入"
+                  :allow-clear="false"
+                  :max-length="{
+                    length: 50,
+                    errorOnly: true,
+                  }"
+                  show-word-limit
+                  style="width: 400px"
+                />
+              </t-form-item>
               <t-form-item field="businessCooperation" label="商务合作">
                 <t-input
                   v-model.trim="form.businessCooperation"
@@ -364,6 +377,16 @@ const uploadHeaders = {
 };
 
 const formRules = {
+  technicalSupport: [
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!value || value.length === 0) return cb('请输入技术支持');
+        if (value.length > 50) return cb('长度不超过50个字符');
+        return cb();
+      },
+    },
+  ],
   businessCooperation: [
     {
       required: true,
@@ -452,6 +475,7 @@ const formRef = ref();
 
 const form: Record<string, any> = ref({
   id: '', // id
+  technicalSupport: '', // 技术支持
   businessCooperation: '', // 商务合作
   businessServicesFile: [], // 商务服务文件id
   buyerManualUrl: '', // 买家使用手册文件id

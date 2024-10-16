@@ -91,14 +91,14 @@
           validate-trigger="blur"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
-            { required: true, maxLength: 16, message: '长度不超过16个字符' },
+            { required: true, maxLength: 15, message: '长度不超过15个字符' },
           ]"
         >
           <t-textarea
             v-model="item.desc"
             placeholder="请输入"
             :max-length="{
-              length: 16,
+              length: 15,
               errorOnly: true,
             }"
             show-word-limit

@@ -55,7 +55,7 @@
             <div
               v-if="form.list.length > 2"
               class="delete"
-              @click="deleteSpace(index)"
+              @click.stop="deleteSpace(index)"
               >删除</div
             >
           </template>
@@ -71,7 +71,7 @@
             :validate-trigger="['blur']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
-              { required: true, maxLength: 6, message: '长度不超过6个字符' },
+              { required: true, maxLength: 8, message: '长度不超过8个字符' },
               {
                 required: true,
                 match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
@@ -83,7 +83,7 @@
               v-model="item.navTitle"
               placeholder="请输入"
               :max-length="{
-                length: 6,
+                length: 8,
                 errorOnly: true,
               }"
               show-word-limit
@@ -105,7 +105,7 @@
                 <div
                   v-if="item.contentList.length > 1"
                   class="delete"
-                  @click="deleteSpaceContent(index, contentIndex)"
+                  @click.stop="deleteSpaceContent(index, contentIndex)"
                   >删除</div
                 >
               </template>
@@ -190,8 +190,8 @@
                   },
                   {
                     required: true,
-                    maxLength: 200,
-                    message: '长度不超过200个字符',
+                    maxLength: 100,
+                    message: '长度不超过100个字符',
                   },
                 ]"
               >
@@ -200,13 +200,10 @@
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
-                    length: 200,
+                    length: 100,
                     errorOnly: true,
                   }"
                   :allow-clear="false"
-                  :auto-size="{
-                    minRows: 6,
-                  }"
                 />
               </t-form-item>
               <t-form-item
@@ -360,7 +357,8 @@
 import { toRefs, ref, onMounted, PropType } from 'vue';
 import Source from '@/components/sourceMaterial/components/source.vue';
 import { UpperNumberList } from '@/enums/decoration';
-import { ToolData } from '../../config/tools';
+import { getNowFormatDate } from '@/utils';
+import { LinkType } from '../../constant';
 
 type GoodsItem = {
   name: string;
@@ -398,12 +396,25 @@ const changeRadio = (value: number) => {
 };
 const addBlock = () => {
   form.value.list.push({
-    ...ToolData?.TreeTextNavigation?.configValue[0],
+    navTitle: '子标题',
+    contentList: [
+      {
+        time: getNowFormatDate(),
+        name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+        desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+        linkType: LinkType.BLANK,
+        linkUrl: '',
+      },
+    ],
   });
 };
 const addContent = (index: number) => {
   form.value.list[index].contentList.push({
-    ...ToolData?.TreeTextNavigation?.configValue[0]?.contentList[0],
+    time: getNowFormatDate(),
+    name: '我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称我是名称',
+    desc: '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介',
+    linkType: LinkType.BLANK,
+    linkUrl: '',
   });
 };
 

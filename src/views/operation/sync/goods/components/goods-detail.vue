@@ -409,6 +409,8 @@ import {
 import { SaleType } from '@/enums/common';
 import { Message, Modal } from '@tele-design/web-vue';
 import { comfirmLabel } from '@/api/inventory/fetchLabel';
+import { useUserStore } from '@/store/modules/user';
+import { sm2 } from '@/utils/encrypt';
 
 import Label from './label.vue';
 
@@ -457,7 +459,7 @@ const StatusEnum: { [name: string]: any } = {
   0: '未同步',
   1: '同步中',
 };
-
+const userStore = useUserStore();
 const props = defineProps({
   data: {
     type: Object,
@@ -568,7 +570,11 @@ const statusColor = computed(() => {
 // 应用跳转详情
 const applicationlink = (saasAppId: any) => {
   operationLogin({ appInfoId: saasAppId }).then((res: any) => {
-    window.open(res);
+    const data = {
+      type: 'productApp',
+    };
+    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
+    window.open(`${res.data}&data=${sm2data}`);
   });
 };
 const labelVisible = ref(false);

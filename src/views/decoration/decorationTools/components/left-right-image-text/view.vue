@@ -1,15 +1,19 @@
 <template>
   <div class="lr-image-text-box">
     <div class="lr-image-text-title">
-      <span>{{ data?.mainTitle || '左右图片+文字' }}</span>
+      <span>{{
+        getInterceptString(data?.mainTitle, 20) || '左右图片+文字'
+      }}</span>
     </div>
     <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
           <div class="image-item-content">
-            <div class="image-title">{{ item?.title || '小标题' }}</div>
+            <div class="image-title">{{
+              getInterceptString(item?.title, 8) || '小标题'
+            }}</div>
             <div class="image-desc">{{
-              item?.desc ||
+              getInterceptString(item?.desc, 400) ||
               '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题'
             }}</div>
             <span
@@ -34,6 +38,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: {
@@ -148,7 +153,7 @@ defineExpose({
         align-items: flex-start;
         justify-content: flex-start;
         width: calc(@factor * 300px);
-        height: calc(@factor * 192px);
+        // height: calc(@factor * 192px);
         margin-right: 15.5px;
         padding: calc(@factor * 11px) 0;
 
@@ -174,12 +179,7 @@ defineExpose({
           color: #4e5969;
           font-size: calc(@factor * 7px);
           line-height: calc(@factor * 18px);
-          white-space: pre-wrap;
           text-align: left;
-          text-overflow: ellipsis;
-          word-wrap: break-word;
-          -webkit-line-clamp: 7;
-          -webkit-box-orient: vertical;
         }
 
         .image-link {
@@ -209,6 +209,7 @@ defineExpose({
 
     :deep(.tele-carousel-indicator-wrapper-bottom) {
       bottom: 10px;
+      height: auto;
     }
 
     :deep(.tele-carousel-indicator-item:hover) {

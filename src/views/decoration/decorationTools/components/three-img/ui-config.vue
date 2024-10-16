@@ -146,7 +146,7 @@
         </t-form-item>
 
         <t-form-item
-          label="配图"
+          label="图片"
           :field="`list.${index}.src`"
           :label-col-props="{
             flex: '90px',

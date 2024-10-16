@@ -2,7 +2,7 @@
 <template>
   <div class="vertical-image-text-box" :class="{ 'is-preview': isPreview }">
     <div class="vertical-image-text-title">{{
-      data?.mainTitle || '主标题'
+      getInterceptString(data?.mainTitle, 20) || '主标题'
     }}</div>
     <div class="image-box">
       <div
@@ -10,7 +10,9 @@
         :key="index"
         class="image-item"
       >
-        <span class="image-title">{{ item?.title || '小标题' }}</span>
+        <span class="image-title">{{
+          getInterceptString(item?.title, 20) || '小标题'
+        }}</span>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
             data?.productId || ''
@@ -27,6 +29,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
@@ -98,20 +101,11 @@ defineExpose({
 
   .vertical-image-text-title {
     display: -webkit-box;
-    width: calc(@factor * 130px);
     margin: calc(@factor * 24px) 0 calc(@factor * 12px);
-    overflow: hidden;
-    overflow: hidden;
     color: #1d2129;
     font-weight: 500;
     font-size: calc(@factor * 12px);
     line-height: calc(@factor * 14px);
-    white-space: normal;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    word-break: break-all;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
   }
 
   .image-box {
@@ -131,19 +125,12 @@ defineExpose({
       .image-title {
         display: -webkit-box;
         margin-bottom: calc(@factor * 8px);
-        overflow: hidden;
         color: #1d2129;
         font-weight: 400;
         font-size: calc(@factor * 8px);
         font-family: PingFang SC;
         line-height: calc(@factor * 12px);
-        white-space: normal;
         text-align: left;
-        text-overflow: ellipsis;
-        word-wrap: break-word;
-        word-break: break-all;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
       }
 
       .image-hover:hover {

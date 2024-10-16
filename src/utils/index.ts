@@ -44,3 +44,9 @@ export function getNowFormatDate() {
 
   return `${year}-${month}-${strDate}`;
 }
+
+// 截取字符串,返回相应数量
+export function getInterceptString(name: string, endNum: number) {
+  if (!name) return name;
+  return name.slice(0, endNum);
+}

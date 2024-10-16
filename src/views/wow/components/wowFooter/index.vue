@@ -5,6 +5,12 @@
         <div class="item">
           <span class="title">联系我们</span>
           <span class="subitem">
+            <span>技术支持：</span>
+            <span v-if="form.technicalSupport" class="subitem-email">
+              {{ form.technicalSupport }}
+            </span>
+          </span>
+          <span class="subitem">
             <span>商务合作：</span>
             <span v-if="form.businessCooperation" class="subitem-email">
               {{ form.businessCooperation }}
@@ -74,6 +80,7 @@ import { apiFooterInfo } from '@/api/decoration/decoration-tools';
 
 const form: Record<string, any> = ref({
   id: '', // id
+  technicalSupport: '', // 技术支持
   businessCooperation: '', // 商务合作
   businessServicesFile: '', // 商务服务文件id
   buyerManualFile: '', // 买家使用手册文件id

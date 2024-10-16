@@ -454,6 +454,9 @@ import { operationLogin } from '@/api/operation/sync-class';
 import { SaleType } from '@/enums/common';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
+import { useUserStore } from '@/store/modules/user';
+import { sm2 } from '@/utils/encrypt';
+
 import RejectModal from './reject-modal.vue';
 
 const router = useRouter();
@@ -515,6 +518,7 @@ const StatusEnum: { [name: string]: any } = {
   1: '已上架',
 };
 
+const userStore = useUserStore();
 const props = defineProps({
   data: {
     type: Object,
@@ -656,7 +660,11 @@ const clickDeleteBtn = () => {
 // 应用跳转详情
 const applicationlink = (saasAppId: any) => {
   operationLogin({ appInfoId: saasAppId }).then((res: any) => {
-    window.open(res);
+    const data = {
+      type: 'productApp',
+    };
+    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
+    window.open(`${res}&data=${sm2data}`);
   });
 };
 </script>

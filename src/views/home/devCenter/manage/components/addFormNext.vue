@@ -341,7 +341,7 @@
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -355,7 +355,7 @@
                       required: true,
                       message: '应用首页地址不允许为空',
                     },
-                    { maxLength: 1000, message: '不允许超过1000个字符' },
+                    { maxLength: 500, message: '不允许超过500个字符' },
                     // {
                     //   match: /^(https?:\/\/).+$/,
                     //   message: '请输入正确格式',
@@ -364,14 +364,14 @@
                 >
                   <t-input
                     v-model="form.homeUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
+                    :max-length="{ length: 500, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
                 <t-form-item
@@ -383,7 +383,7 @@
                       required: true,
                       message: '应用回调地址不允许为空',
                     },
-                    { maxLength: 1000, message: '不允许超过1000个字符' },
+                    { maxLength: 500, message: '不允许超过500个字符' },
                     // {
                     //   match: /^(https?:\/\/).+$/,
                     //   message: '请输入正确格式',
@@ -392,14 +392,14 @@
                 >
                   <t-input
                     v-model="form.redirectUri"
-                    :max-length="{ length: 1000, errorOnly: true }"
+                    :max-length="{ length: 500, errorOnly: true }"
                     allow-clear
                     show-word-limit
                     placeholder="请输入"
                   >
                   </t-input>
                   <span class="tip"
-                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址，可以为域名也可以为“公网IP：端口”</span
+                    >请输入以http或https开头的地址，展示在用户端“应用与服务”的地址。</span
                   >
                 </t-form-item>
               </t-descriptions-item>
@@ -763,6 +763,7 @@ const handleLaunchOrSave = (status: number) => {
       id: props.editId,
       memberType: undefined,
       authType: form.authType ? form.authType.join(',') : '',
+      link: '',
     };
   } else {
     const memberIdList = form.memberList.map((i) => i.memberId);
@@ -771,6 +772,9 @@ const handleLaunchOrSave = (status: number) => {
       memberList: undefined,
       id: props.editId,
       authType: form.authType ? form.authType.join(',') : '',
+      homeUri: form.dockingMethod !== 1 ? form.homeUri : '',
+      redirectUri: form.dockingMethod !== 1 ? form.redirectUri : '',
+      link: form.dockingMethod !== 1 ? '' : form.link,
     };
     if (form.memberType === 1) {
       params.memberIdList = memberIdList;

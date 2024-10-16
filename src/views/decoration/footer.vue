@@ -21,6 +21,9 @@
             <div class="vertical-line"></div>
             <div class="title-text">联系我们</div>
           </t-space>
+          <t-form-item field="technicalSupport" label="技术支持">
+            {{ form.technicalSupport || '-' }}
+          </t-form-item>
           <t-form-item field="businessCooperation" label="商务合作">
             {{ form.businessCooperation || '-' }}
           </t-form-item>
@@ -156,6 +159,7 @@ const formRef = ref();
 
 const form: Record<string, any> = ref({
   id: '', // id
+  technicalSupport: '', // 技术支持
   businessCooperation: '', // 商务合作
   businessServicesFile: '', // 商务服务文件id
   buyerManualFile: '', // 买家使用手册文件id

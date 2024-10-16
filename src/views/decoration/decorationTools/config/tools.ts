@@ -455,21 +455,21 @@ export const ToolData: Record<string, any> = {
     configValue: [
       {
         title: '子标题',
-        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一',
         src: '12e87e00-67c9-448f-bad4-b6938da4d830.png',
         linkType: LinkType.BLANK,
         linkUrl: '',
       },
       {
         title: '子标题',
-        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一',
         src: 'cfcd43ad-5be2-4ffa-a173-b2fc5061925c.png',
         linkType: LinkType.BLANK,
         linkUrl: '',
       },
       {
         title: '子标题',
-        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字',
+        desc: '副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一百字副标题一',
         src: 'e1f1abaf-2296-494c-9d7a-208b27668078.png',
         linkType: LinkType.BLANK,
         linkUrl: '',
@@ -512,12 +512,6 @@ export const ToolData: Record<string, any> = {
     mainTitle: '主标题',
     bgColor: '#ffffff',
     configValue: [
-      {
-        navTitle: '子导航',
-        src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
-        linkType: LinkType.BLANK,
-        linkUrl: '',
-      },
       {
         navTitle: '子导航',
         src: 'f9075041-c2f9-4e7d-b75c-3afeee079129.png',
@@ -583,10 +577,7 @@ export const tools = [
   'MutiNavImageText',
   'SigleImg',
   'DoubleImg',
-  'MutiNavText',
   'MutiIconText',
-  // 'SigleImg',
-  // 'SigleImg', // 这里替换旭蓓的双图
   'ThreeImg',
   'MultiNavImg',
   'TreeTextNavigation',
