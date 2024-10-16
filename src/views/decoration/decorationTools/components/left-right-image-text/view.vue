@@ -153,7 +153,7 @@ defineExpose({
         align-items: flex-start;
         justify-content: flex-start;
         width: calc(@factor * 300px);
-        height: calc(@factor * 192px);
+        // height: calc(@factor * 192px);
         margin-right: 15.5px;
         padding: calc(@factor * 11px) 0;
 
@@ -179,12 +179,7 @@ defineExpose({
           color: #4e5969;
           font-size: calc(@factor * 7px);
           line-height: calc(@factor * 18px);
-          white-space: pre-wrap;
           text-align: left;
-          text-overflow: ellipsis;
-          word-wrap: break-word;
-          -webkit-line-clamp: 7;
-          -webkit-box-orient: vertical;
         }
 
         .image-link {
