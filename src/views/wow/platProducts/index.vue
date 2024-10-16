@@ -40,7 +40,7 @@ onMounted(() => {
   console.log('platproducts', routeType, localType);
   // 这里未过滤0 后需要注意
   const type = routeType || localType;
-  apiGetNavData({ type }).then((res: any) => {
+  apiGetNavData({ id: type }).then((res: any) => {
     if (res.data.length > 0) {
       const { detail } = res.data[0];
       if (!detail) return;

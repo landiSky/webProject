@@ -32,7 +32,7 @@ const props = defineProps({
 });
 const componentList = ref([]);
 onMounted(() => {
-  apiGetNavData({ type: 6 }).then((res: any) => {
+  apiGetNavData({ id: 5 }).then((res: any) => {
     if (res.data.length > 0) {
       const { detail } = res.data[0];
       if (!detail) return;

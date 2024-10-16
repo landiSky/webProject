@@ -91,8 +91,8 @@ import {
 } from 'vue';
 import SourceMaterial from '@/components/sourceMaterial/index.vue';
 import {
-  apiUpdateNavData,
-  apiGetNavData,
+  apiNavLogoList,
+  apiNavLogoUpdate,
 } from '@/api/decoration/decoration-tools';
 import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
@@ -150,7 +150,6 @@ const formRules = {
 const handleSubmit = (data: any) => {
   console.log(data);
   formRef.value.validate((valid: any) => {
-    console.log('form 验证', valid, form);
     if (!valid) {
       Modal.info({
         title: '保存成功，信息将展示用户，请确认！',
@@ -165,12 +164,11 @@ const handleSubmit = (data: any) => {
         cancelText: '取消',
         okText: '确定',
         onOk: () => {
-          apiUpdateNavData({
-            id: ChannelType.PLATFORM_NAME,
+          apiNavLogoUpdate({
+            id: data.id,
             name: data.name,
             logo: data.logo,
           }).then((res) => {
-            console.log(res);
             if (res.code !== 200) return;
             // 暂时不用
             // decoration.setPlatFormLogo(data.logo);
@@ -224,9 +222,11 @@ const onUploadChange = (fileList: any) => {
   });
 };
 onMounted(() => {
-  apiGetNavData({ type: ChannelType.PLATFORM_NAME }).then((res: any) => {
+  console.log('onMounted');
+  apiNavLogoList().then((res: any) => {
     console.log('platform 名称', res);
-    const { name, logo } = res.data[0];
+    const { name, logo, id } = res.data[0];
+    form.id = id;
     form.name = name;
     form.logo = logo;
   });

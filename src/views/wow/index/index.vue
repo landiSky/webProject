@@ -510,7 +510,7 @@ const goCardDetail = (item: Record<string, any>) => {
 };
 
 onMounted(() => {
-  apiGetNavData({ type: ChannelType.PLATFORM_HOME }).then((res: any) => {
+  apiGetNavData({ id: ChannelType.PLATFORM_HOME }).then((res: any) => {
     if (res.data.length > 0) {
       const { detail } = res.data[0];
       if (!detail) return;
