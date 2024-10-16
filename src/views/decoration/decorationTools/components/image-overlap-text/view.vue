@@ -1,7 +1,7 @@
 <template>
   <div class="image-overlap-text">
     <div class="image-overlap-text-title">
-      <span>{{ data?.mainTitle || '主标题' }}</span>
+      <span>{{ getInterceptString(data?.mainTitle, 20) || '主标题' }}</span>
     </div>
     <div class="mask"></div>
     <t-space class="image-overlap-text-content" fill :size="15 * num">
@@ -26,10 +26,11 @@
             />
           </div>
           <div class="image-overlap-item-title">{{
-            item?.title || '小标题'
+            getInterceptString(item?.title, 6) || '小标题'
           }}</div>
           <div class="image-overlap-item-desc">{{
-            item?.desc || '我是副标题我是副标题我是副标题我是副标题'
+            getInterceptString(item?.desc, 30) ||
+            '我是副标题我是副标题我是副标题我是副标题'
           }}</div>
           <t-space
             v-if="item.linkType !== LinkType.BLANK"
@@ -52,7 +53,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref } from 'vue';
-
+import { getInterceptString } from '@/utils';
 import item1 from '@/assets/images/decoration/image-overlap-text-1.png';
 import item2 from '@/assets/images/decoration/image-overlap-text-2.png';
 import item3 from '@/assets/images/decoration/image-overlap-text-3.png';

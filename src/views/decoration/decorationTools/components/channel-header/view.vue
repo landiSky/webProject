@@ -10,10 +10,12 @@
     >
     </t-image>
     <div class="contnet-box">
-      <div class="header-title">{{ data?.mainTitle || '主标题' }} </div>
+      <div class="header-title"
+        >{{ getInterceptString(data?.mainTitle, 20) || '主标题' }}
+      </div>
       <div class="header-desc"
         >{{
-          data?.configValue?.desc ||
+          getInterceptString(data?.configValue?.desc, 500) ||
           '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是'
         }}
       </div>
@@ -23,6 +25,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
@@ -40,7 +43,7 @@ const validate = () => {
     if (
       // TODO 可能需要完善校验逻辑
       !data?.value?.mainTitle ||
-      data?.value?.mainTitle.length > 10 ||
+      data?.value?.mainTitle.length > 20 ||
       !data?.value?.configValue?.desc ||
       data?.value?.configValue?.desc.length > 500
     ) {
@@ -76,9 +79,8 @@ defineExpose({
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    width: calc(@factor * 228px);
-    height: calc(@factor * 130px);
-    // background-color: red;
+    width: calc(@factor * 240px);
+
     .header-title {
       margin-bottom: calc(@factor * 15px);
       overflow: hidden;
@@ -91,16 +93,10 @@ defineExpose({
     .header-desc {
       display: -webkit-box;
       width: 100%;
-      overflow: hidden;
       color: #4e5969;
       font-size: calc(@factor * 7px);
       line-height: calc(@factor * 11px);
-      white-space: normal;
       text-align: left;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      -webkit-line-clamp: 8;
-      -webkit-box-orient: vertical;
     }
   }
 }

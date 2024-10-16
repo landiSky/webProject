@@ -1,15 +1,19 @@
 <template>
   <div class="lr-image-text-box">
     <div class="lr-image-text-title">
-      <span>{{ data?.mainTitle || '左右图片+文字' }}</span>
+      <span>{{
+        getInterceptString(data?.mainTitle, 20) || '左右图片+文字'
+      }}</span>
     </div>
     <t-carousel :auto-play="true" class="image-box" show-arrow="never">
       <t-carousel-item v-for="(item, index) in data?.configValue" :key="index">
         <div class="image-item">
           <div class="image-item-content">
-            <div class="image-title">{{ item?.title || '小标题' }}</div>
+            <div class="image-title">{{
+              getInterceptString(item?.title, 8) || '小标题'
+            }}</div>
             <div class="image-desc">{{
-              item?.desc ||
+              getInterceptString(item?.desc, 400) ||
               '我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题我是副标题。我是副标题，我是副标题我是副标题，我是副标题我是副标题我是副标题我是副标题我是副标题'
             }}</div>
             <span
@@ -34,6 +38,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch, onMounted } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: {

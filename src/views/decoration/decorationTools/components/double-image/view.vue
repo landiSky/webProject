@@ -1,14 +1,18 @@
 <!-- 双图 -->
 <template>
   <div class="double-image-box" :class="{ 'is-preview': isPreview }">
-    <div class="double-image-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="double-image-title">{{
+      getInterceptString(data?.mainTitle, 20) || '主标题'
+    }}</div>
     <div class="image-box">
       <div
         v-for="(item, index) in data?.configValue"
         :key="index"
         class="image-item"
       >
-        <div class="image-title">{{ item?.title || '副标题' }}</div>
+        <div class="image-title">{{
+          getInterceptString(item?.title, 30) || '子标题'
+        }}</div>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
             data?.productId || ''
@@ -27,6 +31,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed, ref, watch } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,

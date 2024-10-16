@@ -1,6 +1,8 @@
 <template>
   <div class="single-image">
-    <div class="single-image-title">{{ data?.mainTitle || '主标题' }}</div>
+    <div class="single-image-title">{{
+      getInterceptString(data?.mainTitle, 20) || '主标题'
+    }}</div>
     <t-image
       :src="`/server/web/file/download?name=${
         data?.configValue?.src
@@ -13,7 +15,7 @@
       "
     ></t-image>
     <div class="single-image-desc">{{
-      data?.configValue?.desc ||
+      getInterceptString(data?.configValue?.desc, 60) ||
       '我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是简介我是'
     }}</div>
   </div>
@@ -21,6 +23,7 @@
 
 <script setup lang="ts">
 import { toRefs, computed } from 'vue';
+import { getInterceptString } from '@/utils';
 
 const props = defineProps({
   data: Object,
