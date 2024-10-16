@@ -17,7 +17,7 @@
       >拖动左侧组件，到当前区域进行楼层配置
     </div>
     <t-layout>
-      <t-layout-content style="padding-bottom: 80px">
+      <t-layout-content>
         <draggable
           item-key="index"
           ghost-class="ghost"
