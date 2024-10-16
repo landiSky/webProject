@@ -209,6 +209,7 @@ defineExpose({
 
     :deep(.tele-carousel-indicator-wrapper-bottom) {
       bottom: 10px;
+      height: auto;
     }
 
     :deep(.tele-carousel-indicator-item:hover) {
