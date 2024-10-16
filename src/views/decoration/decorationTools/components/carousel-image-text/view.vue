@@ -4,12 +4,16 @@
       <div class="carousel-image-text-title">{{
         data?.mainTitle || '主标题'
       }}</div>
+      <!-- 轮播图 -->
       <t-carousel
         class="image-box"
         animation-name="card"
         :auto-play="true"
-        indicator-type="outer"
-        show-arrow="hover"
+        indicator-type="dot"
+        indicator-position="outer"
+        show-arrow="never"
+        :current="carouselCurrent"
+        @change="currentChange"
       >
         <t-carousel-item
           v-for="(item, index) in data?.configValue"
@@ -43,6 +47,17 @@
           </div>
         </t-carousel-item>
       </t-carousel>
+      <!-- 按钮 -->
+      <div class="instructions">
+        <div
+          class="instructions-left"
+          @click="about('Left', carouselCurrent)"
+        ></div>
+        <div
+          class="instructions-right"
+          @click="about('right', carouselCurrent)"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +75,24 @@ const { data, isPreview } = toRefs(props);
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
 });
+
+// 轮播图组件相关属性及方法
+const carouseSize = ref(0);
+const carouselCurrent = ref(1 as number);
+const currentClick = (num: number) => {
+  carouselCurrent.value = num;
+};
+const currentChange = (index: number) => {
+  carouselCurrent.value = index;
+};
+const about = (name: string, num: number) => {
+  if (name === 'Left') {
+    carouselCurrent.value = num === 1 ? carouseSize.value : num - 1;
+  } else if (name === 'right') {
+    carouselCurrent.value = num === carouseSize.value ? 1 : num + 1;
+  }
+};
+
 const currentOffset = ref(0);
 const windowSize = ref(4);
 const paginationFactor = 163 * num.value;
@@ -82,10 +115,13 @@ watch(
   () => props.data,
   (val: any) => {
     console.log('multi image data', val);
+    // console.log('carouseSize', data?.value?.configValue.length);
     currentOffset.value =
       paginationFactor *
       -1 *
       (Object.values(data?.value?.configValue).length - windowSize.value);
+    // 获取轮播图中的图片个数
+    carouseSize.value = data?.value?.configValue.length;
   },
   { immediate: true, deep: true }
 );
@@ -230,7 +266,61 @@ defineExpose({
         }
       }
     }
+
+    .instructions {
+      position: relative;
+      bottom: 35px;
+      display: flex;
+      gap: 140px;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      //overflow: hidden;
+      .instructions-left {
+        width: 24px;
+        height: 24px;
+        background: url(@/assets/images/devCenter/left_arrow_01.png) no-repeat;
+        background-size: 100% 100%;
+        cursor: pointer;
+      }
+
+      .instructions-left:hover {
+        opacity: 0.5;
+      }
+
+      .instructions-right {
+        width: 24px;
+        height: 24px;
+        margin-left: 0;
+        background: url(@/assets/images/devCenter/right_arrow_01.png) no-repeat;
+        background-size: 100% 100%;
+        cursor: pointer;
+      }
+
+      .instructions-right:hover {
+        opacity: 0.5;
+      }
+    }
   }
+}
+
+:deep(.tele-carousel-indicator-outer) {
+  gap: 6px;
+  align-items: center;
+}
+
+:deep(.tele-carousel-indicator-item) {
+  width: 8px;
+  height: 8px; /* 假设默认高度的2倍 */
+  background: #1664ff;
+  opacity: 0.5;
+}
+
+:deep(.tele-carousel-indicator-item-active) {
+  width: 16px;
+  height: 16px;
+  background: #1664ff;
+  opacity: 1;
 }
 
 ::v-deep(.tele-image) {
