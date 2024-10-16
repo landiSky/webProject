@@ -8,7 +8,7 @@
       <t-carousel
         class="image-box"
         animation-name="card"
-        :auto-play="true"
+        :auto-play="false"
         indicator-type="dot"
         indicator-position="outer"
         show-arrow="never"
@@ -75,6 +75,10 @@ const { data, isPreview } = toRefs(props);
 // 动态倍数
 const num = computed(() => {
   return isPreview.value ? 2 : 1;
+});
+
+const numInstrcution = computed(() => {
+  return isPreview.value ? 1.1 : 1;
 });
 
 // 轮播图组件相关属性及方法
@@ -166,6 +170,7 @@ defineExpose({
 
 <style scoped lang="less">
 @factor: v-bind(num);
+@factorInstruction: v-bind(numInstrcution);
 
 .carousel-image-text-box {
   width: 100%;
@@ -270,56 +275,68 @@ defineExpose({
 
     .instructions {
       position: relative;
-      bottom: 35px;
+      bottom: calc(@factorInstruction * 32px);
       display: flex;
-      gap: 140px;
+      gap: calc(@factor * 70px);
       align-items: center;
       justify-content: center;
       height: 32px;
       //overflow: hidden;
       .instructions-left {
-        width: 24px;
-        height: 24px;
+        width: calc(@factor * 12px);
+        height: calc(@factor * 12px);
         background: url(@/assets/images/devCenter/left_arrow_01.png) no-repeat;
         background-size: 100% 100%;
         cursor: pointer;
-      }
-
-      .instructions-left:hover {
         opacity: 0.5;
       }
 
+      .instructions-left:hover {
+        opacity: 1;
+      }
+
       .instructions-right {
-        width: 24px;
-        height: 24px;
+        width: calc(@factor * 12px);
+        height: calc(@factor * 12px);
         margin-left: 0;
         background: url(@/assets/images/devCenter/right_arrow_01.png) no-repeat;
         background-size: 100% 100%;
         cursor: pointer;
+        opacity: 0.5;
       }
 
       .instructions-right:hover {
-        opacity: 0.5;
+        opacity: 1;
       }
     }
   }
 }
 
 :deep(.tele-carousel-indicator-outer) {
-  gap: 6px;
+  gap: calc(@factor * 6px);
   align-items: center;
 }
 
 :deep(.tele-carousel-indicator-item) {
-  width: 8px;
-  height: 8px;
+  width: calc(@factor * 4px);
+  height: calc(@factor * 4px);
   background: #94c2ff;
+
+  &:hover {
+    background: #1664ff;
+  }
 }
 
 :deep(.tele-carousel-indicator-item-active) {
-  width: 16px;
-  height: 16px;
+  width: calc(@factor * 8px);
+  height: calc(@factor * 8px);
   background: #1664ff;
+}
+
+:deep(
+    .tele-carousel-indicator-dot .tele-carousel-indicator-item:not(:last-child)
+  ) {
+  margin-right: 0;
 }
 
 ::v-deep(.tele-image) {
