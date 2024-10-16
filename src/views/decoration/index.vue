@@ -119,6 +119,7 @@ const formRef = ref();
 const form = reactive({
   name: '',
   logo: '',
+  id: '',
 });
 
 const formRules = {

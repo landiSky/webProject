@@ -664,7 +664,7 @@ watch(
 );
 
 // 数组插入第一个元素--homeheader
-const insertFirst = (type: string) => {
+const insertFirst = (type: any) => {
   console.log('insertFirst', type);
   // 首页
   if (type === String(ChannelType.PLATFORM_HOME)) {
