@@ -113,7 +113,6 @@ const checkContentBlockList = (list: []) => {
     return (
       item.name &&
       item.name.length <= 40 &&
-      letterReg.test(item.name) &&
       item.desc &&
       item.desc.length <= 100 &&
       (item.linkType === 2 ||
