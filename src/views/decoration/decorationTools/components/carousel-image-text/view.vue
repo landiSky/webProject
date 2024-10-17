@@ -8,7 +8,7 @@
       <t-carousel
         class="image-box"
         animation-name="card"
-        :auto-play="false"
+        :auto-play="true"
         indicator-type="dot"
         indicator-position="outer"
         show-arrow="never"
@@ -84,9 +84,6 @@ const numInstrcution = computed(() => {
 // 轮播图组件相关属性及方法
 const carouseSize = ref(0);
 const carouselCurrent = ref(1 as number);
-const currentClick = (num: number) => {
-  carouselCurrent.value = num;
-};
 const currentChange = (index: number) => {
   carouselCurrent.value = index;
 };
