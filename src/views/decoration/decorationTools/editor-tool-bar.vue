@@ -2,7 +2,7 @@
   <div v-if="toolsGroup.length" class="editor-tool-bar">
     <!-- <div class="group-title">{{ item.name }}</div> -->
     <draggable
-      v-model="toolsGroup"
+      :list="toolsGroup"
       item-key="index"
       ghost-class="ghost"
       drag-class="dragClass"

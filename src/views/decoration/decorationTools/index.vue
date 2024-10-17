@@ -686,10 +686,8 @@ const insertFirst = (type: any) => {
 const getNavData = (type: number) => {
   apiGetNavData({ id: type })
     .then((res: any) => {
-      console.log('res.data', res.data);
-      res.data[0].status = 0;
       // decorationJson.value = res.data[0].detail;
-      const { status, detail, draftDetail } = res.data[0];
+      const { status, detail, draftDetail } = res.data[0] || {};
       console.log('getNavDatagetNavDatagetNavData', res.data);
       if (status) {
         if (detail && detail !== '[]') {

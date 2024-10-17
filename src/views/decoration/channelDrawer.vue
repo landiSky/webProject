@@ -118,6 +118,14 @@ const drawerFormRules = {
   linkUrl: [
     { required: true, message: '请输入跳转链接' },
     { maxLength: 500, message: '长度不超过500个字符' },
+    {
+      required: true,
+      validator: (value: any, cb: (params?: any) => void) => {
+        if (!/^(https?:\/\/).+$/.test(value))
+          return cb('请输入以http://或https://开头的格式');
+        return cb();
+      },
+    },
   ],
 };
 
