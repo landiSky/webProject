@@ -73,7 +73,7 @@ defineExpose({
 
   .contnet-box {
     position: absolute;
-    top: calc(@factor * 14%);
+    top: calc(@factor * 10%);
     left: calc(@factor * 7%);
     display: flex;
     flex-direction: column;
@@ -97,6 +97,7 @@ defineExpose({
       font-size: calc(@factor * 7px);
       line-height: calc(@factor * 11px);
       text-align: left;
+      word-break: break-all;
     }
   }
 }
