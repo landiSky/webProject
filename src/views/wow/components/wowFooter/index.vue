@@ -43,7 +43,7 @@
             >卖家使用手册</span
           >
         </div>
-        <div class="item">
+        <div class="item item-width">
           <span class="title">友情链接</span>
           <div
             v-for="item in form.linkDetail"
@@ -178,7 +178,8 @@ onMounted(() => {
         }
 
         .width-ellipsis {
-          width: 300px;
+          width: fit-content;
+          max-width: 300px;
           height: 22px;
           overflow: hidden;
           white-space: normal;
@@ -195,6 +196,10 @@ onMounted(() => {
           height: 120px;
           object-fit: cover;
         }
+      }
+
+      .item-width {
+        width: 300px;
       }
 
       .item:last-of-type {

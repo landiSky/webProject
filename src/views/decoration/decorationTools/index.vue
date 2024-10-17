@@ -983,7 +983,7 @@ onBeforeUnmount(() => {
 
   .floating_btn-box {
     position: fixed;
-    bottom: 15px;
+    bottom: 10px;
     left: auto;
     z-index: 2;
     display: flex;
@@ -1026,6 +1026,12 @@ onBeforeUnmount(() => {
 
   ::v-deep(.tele-layout) {
     width: 100%;
+  }
+
+  :deep(.tele-btn-size-medium:not(.tele-btn-only-icon) .tele-btn-icon) {
+    margin-right: 0;
+    margin-bottom: -4px;
+    padding-bottom: 0;
   }
 }
 

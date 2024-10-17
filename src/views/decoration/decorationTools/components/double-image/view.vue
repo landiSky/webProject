@@ -19,10 +19,8 @@
           }`"
           :preview="false"
           class="image-hover"
-          :class="{ 'mouse-cursor': data?.configValue?.linkType != 2 }"
-          @click="
-            clickLink(data?.configValue?.linkType, data?.configValue?.linkUrl)
-          "
+          :class="{ 'mouse-cursor': item?.linkType != 2 }"
+          @click="clickLink(item?.linkType, item?.linkUrl)"
         />
       </div>
     </div>
