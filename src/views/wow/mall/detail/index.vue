@@ -386,7 +386,7 @@
           >
         </div>
       </div>
-      <div v-else class="newIntro">
+      <div v-if="versionType === 1" class="newIntro">
         <!-- 页面导航组件 及 产品介绍 -->
         <DecorationBox
           show-anchor
@@ -577,7 +577,7 @@ const orderStore = useOrderStore();
 const { userInfo } = userStore;
 const authModalVisible = ref(false);
 // 是否装修
-const versionType = ref(0);
+const versionType = ref(null);
 const showView = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
