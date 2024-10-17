@@ -22,10 +22,10 @@ export const UpperNumberList = [
 ];
 // 频道类型
 export const ChannelType = {
-  // 修改平台名称
-  PLATFORM_NAME: 1,
+  // 修改平台名称logo和首页
+  // PLATFORM_NAME: 1,
   // 修改首页装修
-  PLATFORM_HOME: 2,
+  PLATFORM_HOME: 1,
   // 修改产品页装修
   PLATFORM_PRODUCT: 3,
   // 修改服务页装修
