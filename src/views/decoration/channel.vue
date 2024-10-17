@@ -279,7 +279,6 @@ const handleCancel = () => {
 const goDecoration = (form: FormItem | null | undefined) => {
   if (!form) return;
   const { id, type } = form;
-  console.log('goDecoration', type, id);
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: { model: 0, type, id },
@@ -300,7 +299,12 @@ const goPreview = (form: FormItem | null | undefined) => {
 // 频道页通过一个路由，不同type来区分
 const goPlatProducts = (type: number) => {
   // router.push({ path: '/wow/platProducts' });
-  if (type === 6) {
+  console.log('goPlatProductsgoPlatProducts', type);
+  if (String(type) === '1') {
+    router.push({ path: '/wow/index' });
+    return;
+  }
+  if (String(type) === '5') {
     localStorage.setItem('publicIdhubOpenType', JSON.stringify(type));
     router.push({
       name: 'publicIdhubOpen',
