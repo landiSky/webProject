@@ -149,12 +149,15 @@ const handleOk = () => {
     console.log('errors', errors);
     if (!errors) {
       // 区分编辑
-      const params = {
+      const params: any = {
         ...formModal,
         id: props.data?.id,
         sort: props.data?.sort,
         status: props.data.status || '',
       };
+      if (formModal.channelType === 1) {
+        params.linkUrl = '';
+      }
       emits('handleOk', params);
     }
   });
