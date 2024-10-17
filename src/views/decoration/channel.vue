@@ -370,7 +370,6 @@ const handleChannelAdd = () => {
   showChannelDrawer.value = true;
   channelTitle.value = '添加频道';
   channelData.value = {};
-  console.log('handleChannelAdd');
 };
 
 const handleSort = async (type: string, data: any) => {
