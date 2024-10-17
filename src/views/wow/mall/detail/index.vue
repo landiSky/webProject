@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div v-if="showView" class="wrap">
     <div
       class="productIntro"
       :class="{ decorationIntroCls: versionType === 1 }"
@@ -536,7 +536,7 @@
       <t-button type="primary" @click="handleCancel">关闭</t-button>
     </template>
   </t-modal>
-  <WowFooter></WowFooter>
+  <WowFooter v-if="showView"></WowFooter>
 </template>
 
 <script lang="ts" setup>
@@ -578,6 +578,7 @@ const { userInfo } = userStore;
 const authModalVisible = ref(false);
 // 是否装修
 const versionType = ref(0);
+const showView = ref(false);
 const priceParams = ref<Record<string, any>>({
   deliveryVersionId: null,
   accountId: null,
@@ -972,6 +973,7 @@ onMounted(() => {
       previewImgList.value = data.detailImg.split(',');
       bigImgPath.value = previewImgList.value?.[0];
       versionType.value = data.versionType;
+      showView.value = true;
       if (data.draftStatus === 0) {
         // 装修组件的草稿状态
         if (!data.draftDetail) return;
