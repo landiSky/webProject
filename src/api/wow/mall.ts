@@ -36,3 +36,8 @@ export function apiBypageList(data: Record<string, any>) {
 export function apiServicePhone(params: Record<string, any>) {
   return $http.get(`/server/web/reception/getServicePhone`, { params });
 }
+
+// 保存打点信息
+export function apiServicePhoneSave(params: Record<string, any>) {
+  return $http.get(`/server/web/dataPoint/save`, { params });
+}

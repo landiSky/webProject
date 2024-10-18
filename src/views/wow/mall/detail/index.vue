@@ -549,6 +549,7 @@ import {
   apiComputePrice,
   apiBypageList,
   apiServicePhone,
+  apiServicePhoneSave,
 } from '@/api/wow/mall';
 import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
@@ -923,6 +924,7 @@ const onLineConsult = () => {
     // 获取商品服务商的电话
     apiServicePhone({ productId: route.params.id })
       .then((data) => {
+        apiServicePhoneSave({ productId: route.params.id });
         phoneNumber.value = data;
       })
       .catch((error) => {
