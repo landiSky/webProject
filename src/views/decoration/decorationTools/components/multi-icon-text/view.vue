@@ -125,11 +125,11 @@ defineExpose({
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     width: calc(@factor * 720px);
     padding-bottom: calc(@factor * 20px);
     // height: calc(@factor * 260px);
-    padding-left: calc(@factor * 33px);
+    padding-left: calc(@factor * 15px);
     // background-color: rgb(168, 158, 158);
     overflow: hidden;
 
