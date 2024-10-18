@@ -220,15 +220,7 @@ const goPlatProducts = (data: Record<string, any>) => {
   if (data.channelType === 0 && data.linkUrl && data.supportDelete) {
     // 判断是不是英福平台做引流
     selectTab.value = `/wow/platProducts/${data.type}`;
-    if (!store.configInfo.value?.isTeleInfo) {
-      if (process.env.NODE_ENV !== 'production') {
-        window.open('http://zhishutong.dev.idx.space/#/wow/doc');
-      } else {
-        window.open('https://snms.teleinfo.cn/zst/#/wow/doc');
-      }
-    } else {
-      window.open(data.linkUrl, '_blank');
-    }
+    window.open(data.linkUrl, '_blank');
     return;
   }
   router.push({
