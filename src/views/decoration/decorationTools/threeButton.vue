@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import eventBus from '@/utils/bus';
 import { useDecorationStore } from '@/store/modules/decoration';
-import { watchEffect, onMounted, ref } from 'vue';
+import { watchEffect, onMounted, ref, onUnmounted } from 'vue';
 
 const store = useDecorationStore();
 
@@ -57,6 +57,10 @@ const setOpenModel = (newValue) => {
 
 onMounted(() => {
   eventBus.on('openModelChange', setOpenModel);
+});
+
+onUnmounted(() => {
+  eventBus.off('openModelChange', setOpenModel);
 });
 </script>
 
