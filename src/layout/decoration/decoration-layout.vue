@@ -17,13 +17,7 @@
       <t-layout class="layout-content">
         <PageMain />
       </t-layout>
-      <ThreeButton
-        :open-model="openModel"
-        :is-preview="isPreview"
-        @control-preview="controlPreview"
-        @click-save="clickSave"
-        @click-save-remote="clickSaveRemote"
-      />
+      <ThreeButton class="three-button" />
       <t-layout-sider
         class="layout-sider"
         :breakpoint="'xl'"
@@ -63,8 +57,6 @@ const handleMyEvent = (payload: any) => {
 const handleScroll = (e: any) => {
   scrollY.value = e.target.scrollTop;
 };
-const openModel = ref(-1);
-const isPreview = ref(false);
 
 watch(
   () => scrollY.value,
@@ -81,17 +73,6 @@ watch(
     }
   }
 );
-
-// 定义方法
-const controlPreview = () => {
-  // ...
-};
-const clickSave = () => {
-  // ...
-};
-const clickSaveRemote = () => {
-  // ...
-};
 
 onMounted(() => {
   console.log('preview-event 开始监听--');
@@ -133,6 +114,11 @@ onMounted(() => {
   height: calc(100vh - 60px);
   overflow-y: auto;
   background-color: #f6f7f9;
+}
+
+.three-button {
+  position: fixed;
+  left: 185px;
 }
 
 .collapse-btn {

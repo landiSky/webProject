@@ -128,14 +128,6 @@
     </t-layout>
     <!-- 预览，保存，发布 按钮框
      openModel为0 是编辑模式，1为预览模式 -->
-    <!-- 使用ThreeButton组件 -->
-    <ThreeButton
-      :open-model="openModel"
-      :is-preview="isPreview"
-      @control-preview="controlPreview"
-      @click-save="clickSave"
-      @click-save-remote="clickSaveRemote"
-    />
     <div v-if="openModel === 1" class="floating_footer-box">
       <t-space :size="12">
         <t-button @click="edit">编辑</t-button>
@@ -156,7 +148,6 @@ import {
 } from '@/api/decoration/decoration-tools';
 import { Message, Modal } from '@tele-design/web-vue';
 import { ChannelType } from '@/enums/decoration';
-import ThreeButton from '@/views/decoration/decorationTools/threeButton.vue';
 import ViewComponentWrap from './view-component-wrap.vue';
 import { channelName, LinkType } from './constant';
 import { ToolData, tools, toolsGroup } from './config/tools';
@@ -633,6 +624,12 @@ watch(
   }
 );
 
+watch(
+  () => openModel.value,
+  (newValue) => {
+    eventBus.emit('openModelChange', newValue);
+  }
+);
 // 数组插入第一个元素--homeheader
 const insertFirst = (type: number) => {
   if (type === ChannelType.PLATFORM_HOME) {
@@ -848,12 +845,18 @@ onMounted(() => {
       }
     }
   });
+  // 关于按钮 保存，预览，发布
+  eventBus.on('message-preview', controlPreview);
+  eventBus.on('message-save', clickSave);
+  eventBus.on('message-saveRemote', clickSaveRemote);
 });
-
 onBeforeUnmount(() => {
   // bus 关闭监听
   eventBus.off('configEvent');
   eventBus.off('isFirstUseDecoration');
+  eventBus.off('message-preview');
+  eventBus.off('message-save');
+  eventBus.off('message-saveRemote');
   // tab 关闭拦截关闭
   interceptFlag.value = false;
   window.removeEventListener('beforeunload', (event) => {});

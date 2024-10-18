@@ -25,28 +25,68 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
+<script lang="ts" setup>
+import eventBus from '@/utils/bus';
+import { useDecorationStore } from '@/store/modules/decoration';
+import { watchEffect, onMounted, ref } from 'vue';
 
-export default defineComponent({
-  name: 'ThreeButton',
-  props: {
-    openModel: Number,
-    isPreview: Boolean,
-  },
-  emits: ['controlPreview', 'clickSave', 'clickSaveRemote'],
-  methods: {
-    controlPreview() {
-      this.$emit('controlPreview');
-    },
-    clickSave() {
-      this.$emit('clickSave');
-    },
-    clickSaveRemote() {
-      this.$emit('clickSaveRemote');
-    },
-  },
+const store = useDecorationStore();
+
+const { isPreview, setPreview } = store;
+
+const openModel = ref(0);
+
+const controlPreview = () => {
+  eventBus.emit('message-preview');
+};
+const clickSave = () => {
+  eventBus.emit('message-save');
+};
+
+const clickSaveRemote = () => {
+  eventBus.emit('message-saveRemote');
+};
+
+watchEffect(() => {
+  console.log('isPreview changed:', isPreview);
+});
+
+const setOpenModel = (newValue) => {
+  openModel.value = newValue;
+};
+
+onMounted(() => {
+  eventBus.on('openModelChange', setOpenModel);
 });
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.floating_btn-box {
+  position: fixed;
+  bottom: 15px;
+  left: auto;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  height: 40px;
+  background-color: white;
+  border-radius: 2px;
+  cursor: pointer;
+
+  .icons-container {
+    .icon-text-container {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 36px;
+      padding: 6px 12px 6px 12px;
+      background: #f2f3f8;
+      border-radius: 2px 0 0 0;
+    }
+  }
+}
+</style>
