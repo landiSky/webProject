@@ -28,7 +28,7 @@
             <div v-else id="toolbar-tooltip-container">
               <t-tooltip
                 is-bright
-                enter-delay="1000"
+                enter-delay="200"
                 position="rt"
                 popup-container="#toolbar-tooltip-container"
               >
