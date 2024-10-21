@@ -164,7 +164,7 @@
             </div>
             <t-button
               v-if="
-                selectVersion.deliveryType === 1 &&
+                prodDetail.deliveryType === 1 &&
                 Number(selectVersion.isTry) === 1
               "
               type="outline"
@@ -325,8 +325,7 @@
           </div>
           <t-button
             v-if="
-              selectVersion.deliveryType === 1 &&
-              Number(selectVersion.isTry) === 1
+              prodDetail.deliveryType === 1 && Number(selectVersion.isTry) === 1
             "
             type="outline"
             size="large"
