@@ -33,11 +33,7 @@
                 popup-container="#toolbar-tooltip-container"
               >
                 <template #content>
-                  <t-image
-                    width="350"
-                    height="232"
-                    :src="element.tooltipImage"
-                  />
+                  <t-image width="350" :src="element.tooltipImage" />
                 </template>
                 <div class="element-group">
                   <iconpark-icon
