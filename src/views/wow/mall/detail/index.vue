@@ -495,7 +495,7 @@
         <span class="header">{{ prodDetail?.companyName }}</span>
         <span class="online-consult" @click="onLineConsult">
           <iconpark-icon size="18" name="message" class="icon-message" />
-          在线咨询</span
+          电话咨询</span
         >
       </div>
     </div>
