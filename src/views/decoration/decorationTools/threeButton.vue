@@ -32,7 +32,7 @@ import { watchEffect, onMounted, ref, onUnmounted } from 'vue';
 
 const store = useDecorationStore();
 
-const { isPreview, setPreview } = store;
+const { isPreview } = store;
 
 const openModel = ref(0);
 
