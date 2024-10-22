@@ -26,7 +26,23 @@
                   :size="12"
                   @click="handleSort('down', item)"
                 />
-                <icon-delete
+                <t-dropdown position="br">
+                  <t-link>
+                    <icon-more />
+                  </t-link>
+                  <template #content>
+                    <t-doption
+                      v-if="item.supportDelete"
+                      @click="handleDel(item)"
+                    >
+                      编辑
+                    </t-doption>
+                    <t-doption @click="handleChannelEdit(item)">
+                      删除
+                    </t-doption>
+                  </template>
+                </t-dropdown>
+                <!-- <icon-delete
                   v-if="item.supportDelete"
                   style="margin-right: 12px; cursor: pointer"
                   :size="12"
@@ -36,7 +52,7 @@
                   style="cursor: pointer"
                   :size="12"
                   @click="handleChannelEdit(item)"
-                />
+                /> -->
               </div>
             </div>
             <div
