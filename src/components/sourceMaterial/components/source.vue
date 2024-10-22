@@ -334,7 +334,8 @@ const uploadCropperClose = () => {
 };
 
 const handleScroll = (el: HTMLElement) => {
-  if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+  const ratio = parseFloat((1 / window.devicePixelRatio).toFixed(2)) + 0.01;
+  if (el.scrollTop + el.clientHeight + ratio >= el.scrollHeight) {
     // 再次请求图片数据
     params.pageNum += 1;
     !isDone.value && getMaterialList('scroll');
