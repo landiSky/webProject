@@ -150,7 +150,7 @@
             <icon-eye v-if="!isPreview" :size="24" />
             <icon-eye-invisible v-if="isPreview" :size="24" />
           </template>
-          <template #default>预览</template>
+          <template #default> {{ isPreview ? '取消预览' : '预览' }}</template>
         </t-button>
         <t-button class="icon-text-container" @click="clickSave">
           <template #icon>
@@ -1001,7 +1001,7 @@ onBeforeUnmount(() => {
         gap: 4px;
         align-items: center;
         justify-content: center;
-        width: 76px;
+        min-width: 76px;
         height: 36px;
         padding: 6px 12px 6px 12px;
         background: #f2f3f8;
