@@ -142,4 +142,12 @@ onMounted(() => {
     }
   }
 }
+
+.menu-wrapper {
+  :deep(.tele-tooltip-content) {
+    max-width: none;
+    max-height: none;
+    padding: 0;
+  }
+}
 </style>

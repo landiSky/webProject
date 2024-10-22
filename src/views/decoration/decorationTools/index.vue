@@ -565,6 +565,16 @@ const insertSort = (event: any) => {
     oldIndex,
     newIndex
   );
+  if (
+    newIndex === 0 &&
+    openType.value !== String(ChannelType.PLATFORM_PRODUCT_DETAIL)
+  ) {
+    res = false;
+    componentsList.value.splice(newIndex, 1);
+    toolList.value.splice(newIndex, 1);
+    viewComponentWrapRef.value.splice(newIndex, 1);
+    return res;
+  }
   if (componentsList.value.length > 10) {
     // 此处 res 值没什么实际作用
     res = false;

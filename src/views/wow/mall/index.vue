@@ -517,10 +517,15 @@ const onPageSizeChange = (size: number) => {
 
 const goMallDetail = (id: string) => {
   console.log('goMallDetail');
-  router.push({
+  // router.push({
+  //   name: 'wowMallDetail',
+  //   params: { id },
+  // });
+  const routeData = router.resolve({
     name: 'wowMallDetail',
     params: { id },
   });
+  window.open(routeData?.href, '_blank');
 };
 
 const getProductType = () => {
