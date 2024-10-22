@@ -25,12 +25,12 @@
             :class="element.noDrag ? 'group-title' : 'element-wrap'"
           >
             <span v-if="element.type === 'title'">{{ element.title }} </span>
-            <div v-else id="toolbar-tooltip-container">
+            <div v-else>
               <t-tooltip
                 is-bright
-                enter-delay="200"
-                position="rt"
-                popup-container="#toolbar-tooltip-container"
+                :enter-delay="200"
+                position="right"
+                popup-container=".menu-wrapper"
               >
                 <template #content>
                   <t-image width="350" :src="element.tooltipImage" />
@@ -168,16 +168,5 @@ onMounted(() => {});
 
 .ghost {
   background-color: #e8f4ff !important;
-}
-
-#toolbar-tooltip-container {
-  :deep(.tele-tooltip-content) {
-    max-width: none;
-    max-height: none;
-  }
-
-  :deep(.tele-tooltip-bright) {
-    padding: 0;
-  }
 }
 </style>
