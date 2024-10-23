@@ -31,13 +31,13 @@
                     <icon-more />
                   </t-link>
                   <template #content>
+                    <t-doption @click="handleChannelEdit(item)">
+                      编辑
+                    </t-doption>
                     <t-doption
                       v-if="item.supportDelete"
                       @click="handleDel(item)"
                     >
-                      编辑
-                    </t-doption>
-                    <t-doption @click="handleChannelEdit(item)">
                       删除
                     </t-doption>
                   </template>
