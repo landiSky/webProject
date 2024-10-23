@@ -157,6 +157,13 @@ defineExpose({
         width: calc(@factor * 600px);
         height: calc(@factor * 260px);
       }
+
+      .image-cls:hover {
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+        transform: scale(1.01);
+        transition: transform 0.5s, box-shadow 0.5s;
+      }
     }
   }
 
