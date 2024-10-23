@@ -155,6 +155,7 @@ defineExpose({
           margin: 10px 0;
           color: #4e5969;
           font-size: calc(@factor * 7px);
+          line-height: calc(@factor * 11px);
           text-align: left;
         }
 
