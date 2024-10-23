@@ -135,9 +135,11 @@ defineExpose({
       border-radius: 6px;
 
       .image-title {
-        color: #1d2129;
+        color: #4e5969;
         font-weight: 400;
         font-size: calc(@factor * 8px);
+        font-family: PingFang SC;
+        line-height: calc(@factor * 12px);
         text-align: left;
         text-overflow: ellipsis;
       }

@@ -125,7 +125,7 @@ defineExpose({
       .image-title {
         display: -webkit-box;
         margin-bottom: calc(@factor * 8px);
-        color: #1d2129;
+        color: #4e5969;
         font-weight: 400;
         font-size: calc(@factor * 8px);
         font-family: PingFang SC;
