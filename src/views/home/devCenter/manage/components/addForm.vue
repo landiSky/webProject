@@ -63,9 +63,12 @@
         <t-textarea
           v-model="form.appName"
           placeholder="请输入"
-          :max-length="50"
-          allow-clear
+          :max-length="{
+            length: 50,
+            errorOnly: true,
+          }"
           show-word-limit
+          :allow-clear="false"
         />
       </t-form-item>
       <t-form-item
@@ -82,9 +85,12 @@
         <t-textarea
           v-model="form.introduction"
           placeholder="请输入"
-          :max-length="500"
-          allow-clear
+          :max-length="{
+            length: 500,
+            errorOnly: true,
+          }"
           show-word-limit
+          :allow-clear="false"
         />
       </t-form-item>
       <t-form-item
