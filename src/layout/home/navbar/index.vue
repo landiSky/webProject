@@ -101,18 +101,18 @@ import { useMenuStore } from '@/store/modules/menu';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
-import { apiNavLogoList } from '@/api/decoration/decoration-tools';
+import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
 import eventBus from '@/utils/bus';
 
 const userStore = useUserStore();
-// const decoration = useDecorationStore();
+const decoration = useDecorationStore();
 const router = useRouter();
 const searchContent = ref();
 const { userInfo, userInfoByCompany, selectCompany } = storeToRefs(userStore);
-// const { platFormLogo, platFormName } = storeToRefs(decoration);
-const logo = ref('');
-const platformName = ref('');
+const { platFormLogo, platFormName } = storeToRefs(decoration);
+const logo = ref(platFormLogo);
+const platformName = ref(platFormName);
 const menuStore = useMenuStore();
 const menuList = ref<Record<string, any>>([]);
 
@@ -301,35 +301,9 @@ const onSearch = () => {
   });
 };
 
-// 接收bus事件调用decoration/base
-const handleMyEvent = () => {
-  apiNavLogoList().then((res) => {
-    if (res?.data?.length > 0) {
-      logo.value = res.data[0]?.logo;
-      platformName.value = res.data[0]?.name;
-      const link: any =
-        document.querySelector("link[rel*='icon']") ||
-        document.createElement('link');
-      link.type = 'image/x-icon';
-      link.rel = 'shortcut icon';
-      link.href = res.data[0]?.logo
-        ? `/server/web/file/download?name=${res.data[0]?.logo}`
-        : '/src/assets/images/favicon.ico';
-      document.getElementsByTagName('head')[0].appendChild(link);
-      document.title = res.data[0]?.name || '';
-    }
-  });
-};
-
 onMounted(() => {
-  console.log('navar mounted');
   userStore.getConfigInfo(); // 这里需要重新调用一次，因为navbar优先于app加载
-  handleMyEvent();
-  eventBus.on('updateNavData', handleMyEvent);
-});
-
-onBeforeUnmount(() => {
-  eventBus.off('updateNavData');
+  eventBus.emit('updateNavData');
 });
 
 watch(

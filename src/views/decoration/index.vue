@@ -80,27 +80,16 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  defineProps,
-  reactive,
-  toRefs,
-  onBeforeMount,
-  onMounted,
-  ref,
-  h,
-} from 'vue';
+import { defineProps, reactive, toRefs, onMounted, ref, h } from 'vue';
 import SourceMaterial from '@/components/sourceMaterial/index.vue';
 import {
   apiNavLogoList,
   apiNavLogoUpdate,
 } from '@/api/decoration/decoration-tools';
-import { useDecorationStore } from '@/store/modules/decoration';
 import { ChannelType } from '@/enums/decoration';
 import { Message, Modal } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
 import eventBus from '@/utils/bus';
-
-const decoration = useDecorationStore();
 
 const props = defineProps({
   xxx: {

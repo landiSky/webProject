@@ -3,13 +3,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch, provide, ref } from 'vue';
+import { onMounted, onBeforeUnmount, watch, provide, ref } from 'vue';
 
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
 import { useRouter } from 'vue-router';
 import { userMenu, manageMenu } from '@/enums/menuEnum';
+import { apiNavLogoList } from '@/api/decoration/decoration-tools';
+import { useDecorationStore } from '@/store/modules/decoration';
+import eventBus from '@/utils/bus';
 import { clearToken } from './utils/auth';
 
 const router = useRouter();
@@ -25,6 +28,7 @@ const reload = () => {
     isRouterAlive.value = true;
   });
 };
+const decoration = useDecorationStore();
 
 provide('reload', reload);
 
@@ -84,6 +88,26 @@ watch(
   }
 );
 
+// 接收bus事件调用decoration/base
+const handleMyEvent = () => {
+  apiNavLogoList().then((res) => {
+    if (res?.data?.length > 0) {
+      decoration.setPlatFormLogo(res.data[0]?.logo);
+      decoration.setPlatFormName(res.data[0]?.name);
+      const link: any =
+        document.querySelector("link[rel*='icon']") ||
+        document.createElement('link');
+      link.type = 'image/x-icon';
+      link.rel = 'shortcut icon';
+      link.href = res.data[0]?.logo
+        ? `/server/web/file/download?name=${res.data[0]?.logo}`
+        : '/src/assets/images/favicon.ico';
+      document.getElementsByTagName('head')[0].appendChild(link);
+      document.title = res.data[0]?.name || '';
+    }
+  });
+};
+
 onMounted(() => {
   userStore.getConfigInfo();
   // 统一添加网络异常提示
@@ -130,6 +154,13 @@ onMounted(() => {
       clearToken();
     }
   });
+
+  handleMyEvent();
+  eventBus.on('updateNavData', handleMyEvent);
+});
+
+onBeforeUnmount(() => {
+  eventBus.off('updateNavData');
 });
 </script>
 

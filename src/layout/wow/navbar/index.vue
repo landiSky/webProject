@@ -73,12 +73,11 @@ import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
+import { useDecorationStore } from '@/store/modules/decoration';
 import { apiDataPoint } from '@/api/data-point';
-import {
-  apiGetNavData,
-  apiNavLogoList,
-} from '@/api/decoration/decoration-tools';
+import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
+import eventBus from '@/utils/bus';
 
 const TabPath = {
   INDEX: '/wow/index',
@@ -92,15 +91,16 @@ const TabPath = {
 // 频道页动态生成对应的tab值
 const ChannelTabPath = ref<Record<string, any>>({});
 const userStore = useUserStore();
+const decoration = useDecorationStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
 const searchContent = ref();
 
 const store = storeToRefs(userStore);
-
-const navLogo = ref('');
-const platformName = ref('');
+const { platFormLogo, platFormName } = storeToRefs(decoration);
+const navLogo = ref(platFormLogo);
+const platformName = ref(platFormName);
 // 频道页集合
 const channelNameCollect = ref<Record<string, any>>([]);
 
@@ -267,22 +267,7 @@ const onSearch = () => {
 
 onMounted(() => {
   // 获取导航logo
-  apiNavLogoList().then((res) => {
-    const { name, logo } = res.data[0];
-    console.log('apiNavLogoList', name, logo);
-    navLogo.value = logo;
-    platformName.value = name;
-    const link: any =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement('link');
-    link.type = 'image/x-icon';
-    link.rel = 'shortcut icon';
-    link.href = logo
-      ? `/server/web/file/download?name=${logo}`
-      : '/src/assets/images/favicon.ico';
-    document.getElementsByTagName('head')[0].appendChild(link);
-    document.title = name || '';
-  });
+  eventBus.emit('updateNavData');
   // TODO 和项目名称以及导航名称接口获取
   apiGetNavData({}).then((res) => {
     console.log('首页logo和项目名称接口获取', res);

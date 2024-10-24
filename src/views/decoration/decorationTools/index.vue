@@ -768,6 +768,7 @@ watch(
 );
 
 onMounted(() => {
+  eventBus.emit('updateNavData');
   // 二次弹框不能定制，只有系统弹框
   window.addEventListener('beforeunload', (event) => {
     componentsList.value = [...componentsList.value];
