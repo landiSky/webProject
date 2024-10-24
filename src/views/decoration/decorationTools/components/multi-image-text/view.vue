@@ -286,7 +286,8 @@ defineExpose({
     }
 
     .image-item:hover {
-      box-shadow: 6px 6px 10px 6px #7e7e7e40;
+      box-shadow: 0 4px 16px 0 #0000001a;
+
       // transform: scale(1.05);//和平移效果冲突，暂时去掉
       // transition: 0.5s;
       // filter: blur(1px); /* 轻微模糊 */
