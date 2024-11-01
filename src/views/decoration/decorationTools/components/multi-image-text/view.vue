@@ -13,7 +13,7 @@
       >
         <div class="image-title-box">
           <span class="image-title">{{
-            getInterceptString(item?.title, 8) || '小标题'
+            getInterceptString(item?.title, 30) || '小标题'
           }}</span>
         </div>
         <t-image
@@ -134,7 +134,7 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.title.length <= 8 &&
+      item.title.length <= 30 &&
       item.desc &&
       item.desc.length <= 15 &&
       item.src &&
