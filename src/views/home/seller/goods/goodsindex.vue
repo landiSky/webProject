@@ -112,19 +112,19 @@
       </template>
       <template #operations="{ record }">
         <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-        <t-link
+        <!-- <t-link
           v-if="record.status === StatusEnum.YSJ && record.tagStatus === 1"
           @click="certificateBtn(record)"
         >
           证书下载
-        </t-link>
-        <t-tooltip
+        </t-link> -->
+        <!-- <t-tooltip
           v-if="record.status !== StatusEnum.YSJ || record.tagStatus === 0"
           content="该商品未上架或未打标，无法证书下载"
           position="top"
         >
           <t-link disabled style="color: #86909c"> 证书下载 </t-link>
-        </t-tooltip>
+        </t-tooltip> -->
         <t-link
           v-if="record.status === StatusEnum.YSJ"
           class="action-down"
