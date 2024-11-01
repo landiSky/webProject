@@ -142,11 +142,19 @@
       </div>
     </div>
     <WowFooter></WowFooter>
+
+    <UserAuthentication
+      v-if="state.showUserEdit"
+      :visible="state.showUserEdit"
+      title="设置用户信息，完成企业认证"
+      @on-confirm="handleEditConfirm"
+      @on-cancel="handleEditCancel"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, h, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -178,9 +186,11 @@ import { snmsClientLogin } from '@/api/login';
 import { apiDataPoint } from '@/api/data-point';
 import { Vue3SeamlessScroll } from 'vue3-seamless-scroll';
 import { sm2 } from '@/utils/encrypt';
+import { setToken } from '@/utils/auth';
 import Container from '@/views/decoration/decorationTools/pageContainer.vue';
 import { apiGetNavData } from '@/api/decoration/decoration-tools';
 import { ChannelType } from '@/enums/decoration';
+import UserAuthentication from './components/third-party-user-authentication.vue';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const userStore = useUserStore();
@@ -193,6 +203,12 @@ const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
 
 const accessProductIds = ref<Record<string, any>>({});
+
+const state = reactive<{
+  showUserEdit: boolean;
+}>({
+  showUserEdit: false,
+});
 
 // 轮播图图片枚举
 const carouselList = [
@@ -509,6 +525,89 @@ const goCardDetail = (item: Record<string, any>) => {
   });
 };
 
+const handleSubmit = () => {
+  state.showUserEdit = true;
+};
+
+const handleEditCancel = () => {
+  state.showUserEdit = false;
+};
+
+const handleEditConfirm = (tokenValue: any) => {
+  userStore.clearUserInfo();
+  setToken(tokenValue);
+  const uriHash = '/buyer/index';
+  router.push({ path: uriHash });
+};
+
+const enterpriseCertification = (params: any) => {
+  Modal.warning({
+    title: '企业已认证',
+    content: () => {
+      return h('div', { class: 'info-modal-content' }, [
+        h('div', '该企业已完成「企业认证」'),
+        h(
+          'div',
+          { style: 'margin: 12px 0;padding: 16px;background: #F2F3F8;' },
+          [
+            h('div', { style: 'font-weight: 500;' }, '企业信息'),
+            h('div', { style: 'display: flex;margin-top: 12px;' }, [
+              h(
+                'div',
+                { style: 'width: 60px;margin-right: 8px;color: #4E5969;' },
+                '管理员'
+              ),
+              h('div', { style: '' }, params.name),
+            ]),
+            h('div', { style: 'display: flex;margin-top: 12px;' }, [
+              h(
+                'div',
+                { style: 'width: 60px;margin-right: 8px;color: #4E5969;' },
+                '联系方式'
+              ),
+              h('div', { style: '' }, params.phone),
+            ]),
+          ]
+        ),
+        h('div', '是否加入该企业成为子账号？'),
+      ]);
+    },
+    titleAlign: 'start',
+    hideCancel: false,
+    cancelText: '取消',
+    okText: '加入',
+    onOk: () => {
+      // 点击加入后弹出用户信息认证;
+      handleSubmit();
+    },
+  });
+};
+
+const singleSignOn = () => {
+  // 手机号和认证信息都存在时直接单点登录进本系统  token
+  // handleEditConfirm('123')
+  // 手机号在本系统不存，并且企业不存在
+  // handleSubmit();
+  // 手机号在本系统不存，并且企业存在
+  // const params = {
+  //   name: '张大三',
+  //   phone: '15515551555',
+  // };
+  // enterpriseCertification(params);
+  // 同手机号在平台上已经注册，引导用户登录
+  // Modal.warning({
+  //   title: '本手机号已在平台完成注册，请使用手机号登录',
+  //   content: '',
+  //   titleAlign: 'start',
+  //   hideCancel: false,
+  //   cancelText: '取消',
+  //   okText: '去登录',
+  //   onOk: () => {
+  //     userStore.jumpToLogin();
+  //   },
+  // });
+};
+
 onMounted(() => {
   apiGetNavData({ id: ChannelType.PLATFORM_HOME }).then((res: any) => {
     if (res.data.length > 0) {
@@ -539,6 +638,8 @@ onMounted(() => {
   if (videoElement) {
     videoElement.playbackRate = 0.65; // 视频将以正常速度的0.65倍播放
   }
+
+  singleSignOn();
 });
 </script>
 
