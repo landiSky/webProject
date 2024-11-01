@@ -18,7 +18,7 @@
         />
         <div class="image-item-content">
           <span class="image-title">{{
-            getInterceptString(item?.title, 8) || '小标题'
+            getInterceptString(item?.title, 20) || '小标题'
           }}</span>
           <span class="image-desc">{{
             getInterceptString(item?.desc, 30) ||
@@ -72,7 +72,7 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
-      item.title.length <= 8 &&
+      item.title.length <= 20 &&
       item.desc &&
       item.desc.length <= 30 &&
       item.src &&
@@ -143,7 +143,7 @@ defineExpose({
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-        width: calc(@factor * 124px);
+        width: calc(@factor * 210px);
         padding: 0 calc(@factor * 12px);
         border-radius: 6px;
 
@@ -157,7 +157,8 @@ defineExpose({
 
         .image-desc {
           display: -webkit-box;
-          width: 100%;
+          // width: 100%;
+          width: calc(@factor * 124px);
           margin: 10px 0;
           margin-top: calc(@factor * 12px);
           margin-bottom: calc(@factor * 5px);

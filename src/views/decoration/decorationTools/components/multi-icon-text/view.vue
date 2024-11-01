@@ -19,7 +19,7 @@
         />
         <div class="text-item">
           <span class="image-title">{{
-            getInterceptString(item?.title, 8) || '小标题'
+            getInterceptString(item?.title, 15) || '小标题'
           }}</span>
           <span class="image-desc">{{
             getInterceptString(item?.desc, 100) ||
@@ -65,7 +65,7 @@ const checkConfigList = (list: any) => {
     console.log('竖图遍历000', item);
     return (
       item.title &&
-      item.title.length <= 8 &&
+      item.title.length <= 15 &&
       letterReg.test(item.title) &&
       item.desc &&
       item.desc.length <= 100 &&
