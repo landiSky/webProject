@@ -111,7 +111,7 @@
         {{ SaleTypeList[record.saleType] || '-' }}
       </template>
       <template #operations="{ record }">
-        <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
+        <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
         <!-- <t-link
           v-if="record.status === StatusEnum.YSJ && record.tagStatus === 1"
           @click="certificateBtn(record)"
@@ -146,12 +146,12 @@
             <icon-more />
           </t-link>
           <template #content>
-            <t-doption @click="clickDetailBtn(record)">
+            <!-- <t-doption @click="clickDetailBtn(record)">
               <template #icon>
                 <icon-common />
               </template>
               详情
-            </t-doption>
+            </t-doption> -->
             <t-doption @click="clickEditBtn(record)">
               <template #icon>
                 <icon-edit />
