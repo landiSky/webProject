@@ -59,14 +59,14 @@
           :validate-trigger="['blur']"
           :rules="[
             { required: true, message: '该信息为必填项，未填写不支持发布' },
-            { required: true, maxLength: 20, message: '长度不超过20个字符' },
+            { required: true, maxLength: 30, message: '长度不超过30个字符' },
           ]"
         >
           <t-input
             v-model="item.title"
             placeholder="请输入"
             :max-length="{
-              length: 20,
+              length: 30,
               errorOnly: true,
             }"
             show-word-limit

@@ -8,7 +8,7 @@
         <t-tab-pane
           v-for="(item, index) in data?.configValue"
           :key="index"
-          :title="getInterceptString(item.navTitle, 6) || '子导航'"
+          :title="getInterceptString(item.navTitle, 30) || '子导航'"
         >
           <div class="item-content">
             <div class="item-title-section">
@@ -79,7 +79,7 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.navTitle &&
-      item.navTitle.length <= 6 &&
+      item.navTitle.length <= 30 &&
       letterReg.test(item.navTitle) &&
       item.desc &&
       item.desc.length <= 400 &&

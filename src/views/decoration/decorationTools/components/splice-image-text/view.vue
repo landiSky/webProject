@@ -7,7 +7,7 @@
     <div class="image-box" style="position: relative">
       <div class="left-box">
         <span class="image-title">{{
-          getInterceptString(data?.configValue1?.subTitle, 10) || '主标题'
+          getInterceptString(data?.configValue1?.subTitle, 30) || '主标题'
         }}</span>
         <t-carousel
           :auto-play="true"
@@ -59,7 +59,7 @@
       </div>
       <div class="right-box">
         <span class="image-title">{{
-          getInterceptString(data?.configValue2?.subTitle, 10) || '主标题'
+          getInterceptString(data?.configValue2?.subTitle, 30) || '主标题'
         }}</span>
         <t-carousel
           :auto-play="true"
@@ -157,10 +157,10 @@ const validate = () => {
       !data?.value?.mainTitle ||
       data?.value?.mainTitle.length > 20 ||
       !data?.value?.configValue1?.subTitle ||
-      data?.value?.configValue1?.subTitle.length > 10 ||
+      data?.value?.configValue1?.subTitle.length > 30 ||
       !checkConfigList(Object.values(data?.value?.configValue1?.config)) ||
       !data?.value?.configValue2?.subTitle ||
-      data?.value?.configValue2?.subTitle.length > 10 ||
+      data?.value?.configValue2?.subTitle.length > 30 ||
       !checkConfigList(Object.values(data?.value?.configValue2?.config))
     ) {
       return reject();

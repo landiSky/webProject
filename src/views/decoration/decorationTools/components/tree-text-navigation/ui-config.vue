@@ -71,7 +71,7 @@
             :validate-trigger="['blur']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
-              { required: true, maxLength: 12, message: '长度不超过12个字符' },
+              { required: true, maxLength: 30, message: '长度不超过30个字符' },
               {
                 required: true,
                 match: /^[a-zA-Z\u4e00-\u9fa5]+$/,
@@ -83,7 +83,7 @@
               v-model="item.navTitle"
               placeholder="请输入"
               :max-length="{
-                length: 12,
+                length: 30,
                 errorOnly: true,
               }"
               show-word-limit

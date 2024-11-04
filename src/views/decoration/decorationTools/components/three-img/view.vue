@@ -11,7 +11,7 @@
         class="image-item"
       >
         <span class="image-title">{{
-          getInterceptString(item?.title, 20) || '小标题'
+          getInterceptString(item?.title, 30) || '小标题'
         }}</span>
         <t-image
           :src="`/server/web/file/download?name=${item?.src}&productId=${
@@ -60,7 +60,7 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.title.length <= 20 &&
+      item.title.length <= 30 &&
       letterReg.test(item.title) &&
       item.src &&
       (item.linkType === 2 ||
