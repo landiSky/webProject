@@ -10,6 +10,9 @@ const wowRoutesList = [
         path: '/wow/index',
         name: 'wowIndex',
         component: () => import('@/views/wow/index/index.vue'),
+        props: (route: any) => ({
+          type: route.query.type,
+        }),
       },
       {
         path: '/wow/freeApp',

@@ -17,6 +17,7 @@ interface UserState {
   updateMenu: boolean;
   authPathList: string[];
   menuIndex: number;
+  authData: Record<string, any> | null;
 }
 
 export const useUserStore = defineStore({
@@ -34,6 +35,7 @@ export const useUserStore = defineStore({
     updateMenu: false,
     authPathList: [], // 存放已有权限的 path 列表
     menuIndex: 1,
+    authData: {},
   }),
   getters: {
     // 获取用户信息
@@ -45,8 +47,14 @@ export const useUserStore = defineStore({
     getToken(): string | null {
       return this.token || getToken();
     },
+    getUserAuthData(): any | null {
+      return this.authData || {};
+    },
   },
   actions: {
+    setUserAuthData(data: any) {
+      this.authData = data;
+    },
     setUserMenuIndex(index: number) {
       this.menuIndex = index;
     },

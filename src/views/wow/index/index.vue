@@ -146,6 +146,7 @@
     <UserAuthentication
       v-if="state.showUserEdit"
       :visible="state.showUserEdit"
+      :data="state.showData"
       title="设置用户信息，完成企业认证"
       @on-confirm="handleEditConfirm"
       @on-cancel="handleEditCancel"
@@ -154,7 +155,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, h, reactive } from 'vue';
+import { ref, onMounted, h, reactive, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -199,6 +200,9 @@ const componentList = ref([]);
 const { userInfo, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 
+const props = defineProps({
+  type: String,
+});
 const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
 
@@ -206,8 +210,10 @@ const accessProductIds = ref<Record<string, any>>({});
 
 const state = reactive<{
   showUserEdit: boolean;
+  showData: object;
 }>({
   showUserEdit: false,
+  showData: {},
 });
 
 // 轮播图图片枚举
@@ -584,28 +590,39 @@ const enterpriseCertification = (params: any) => {
 };
 
 const singleSignOn = () => {
-  // 手机号和认证信息都存在时直接单点登录进本系统  token
-  // handleEditConfirm('123')
-  // 手机号在本系统不存，并且企业不存在
-  // handleSubmit();
-  // 手机号在本系统不存，并且企业存在
-  // const params = {
-  //   name: '张大三',
-  //   phone: '15515551555',
-  // };
-  // enterpriseCertification(params);
-  // 同手机号在平台上已经注册，引导用户登录
-  // Modal.warning({
-  //   title: '本手机号已在平台完成注册，请使用手机号登录',
-  //   content: '',
-  //   titleAlign: 'start',
-  //   hideCancel: false,
-  //   cancelText: '取消',
-  //   okText: '去登录',
-  //   onOk: () => {
-  //     userStore.jumpToLogin();
-  //   },
-  // });
+  console.log(userStore.getUserAuthData, '最后的数据');
+  const data = userStore.getUserAuthData;
+  if (!props.type && !data.tokenValue) return;
+  if (Number(data.checkStatus) === 1) {
+    if (!data?.tokenValue) return;
+    // 手机号和认证信息都存在时直接单点登录进本系统  token
+    handleEditConfirm(data?.tokenValue);
+  } else if (Number(data.checkStatus) === 2) {
+    state.showData = data;
+    // 手机号在本系统不存，并且企业不存在
+    handleSubmit();
+  } else if (Number(data.checkStatus) === 3) {
+    state.showData = data;
+    // 手机号在本系统不存，并且企业存在
+    const params = {
+      name: data.userInfoBO?.companyName,
+      phone: data.userInfoBO?.phone,
+    };
+    enterpriseCertification(params);
+  } else if (Number(data.checkStatus) === 4) {
+    // 同手机号在平台上已经注册，引导用户登录
+    Modal.warning({
+      title: '本手机号已在平台完成注册，请使用手机号登录',
+      content: '',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '取消',
+      okText: '去登录',
+      onOk: () => {
+        userStore.jumpToLogin();
+      },
+    });
+  }
 };
 
 onMounted(() => {

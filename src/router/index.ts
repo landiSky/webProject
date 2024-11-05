@@ -38,6 +38,15 @@ const constantRoutes = [
     name: 'safetyCheck',
     component: () => import('@/views/login/safetyCheck.vue'),
   },
+  {
+    // 第三方登录
+    path: '/authCenter',
+    name: 'wow',
+    component: () => import('@/views/loginFromAuthCenter/authCenter.vue'),
+    props: (route: any) => ({
+      code: route.query.code,
+    }),
+  },
 ];
 
 const errorRoutes: RouteRecordRaw[] = [
@@ -75,6 +84,7 @@ export const whiteList = [
   '/wow/platServices',
   '/wow/idInsideZone',
   '/public/idhub-open',
+  '/authCenter',
 ];
 
 const router = createRouter({

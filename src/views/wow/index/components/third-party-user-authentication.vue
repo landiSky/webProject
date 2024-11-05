@@ -121,19 +121,20 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, computed } from 'vue';
 import { Message } from '@tele-design/web-vue';
-import {
-  apiFooterInfo,
-  apiFooterUpdate,
-} from '@/api/decoration/decoration-tools';
+import { useUserStore } from '@/store/modules/user';
+import { thirdPartyRegister } from '@/api/wow/index';
 import { useRouter } from 'vue-router';
+import { sm2 } from '@/utils/encrypt';
 
 const props = defineProps({
   visible: Boolean,
   title: String,
+  data: Object,
 });
 
 const formRef = ref();
 const router = useRouter();
+const userStore = useUserStore();
 
 const form: Record<string, any> = ref({
   phone: '', // 手机号
@@ -145,7 +146,7 @@ const form: Record<string, any> = ref({
 });
 
 const btnDisabled = computed(() => {
-  const { phone, name, password, confirmPassword, agreement } = form.value;
+  const { agreement } = form.value;
 
   // return !(phone && name && password && confirmPassword && agreement);
   return !agreement;
@@ -234,17 +235,6 @@ const emit = defineEmits(['onConfirm', 'onCancel']);
 
 const showModal = computed(() => props.visible);
 
-const FooterInfoDetails = async () => {
-  await apiFooterInfo()
-    .then((res: any) => {
-      if (res.code !== 200) {
-        return;
-      }
-      form.value.phone = res.data.phone ?? '';
-    })
-    .catch(() => {});
-};
-
 const goAgreement = () => {
   const routeData = router.resolve({
     path: '/agreement',
@@ -254,6 +244,7 @@ const goAgreement = () => {
 
 // 取消
 const handleCancel = () => {
+  if (state.launchLoading === true) return;
   emit('onCancel');
 };
 
@@ -262,20 +253,39 @@ const handleSubmit = () => {
   console.log(form.value);
   formRef.value.validate((valid: any) => {
     if (!valid) {
+      state.launchLoading = true;
+      const { phone, name, password, confirmPassword, email } = form.value;
       const params = {
-        ...form.value,
+        mobile: phone, // 手机号
+        email, // 邮箱
+        contactName: name, // 联系人姓名
+        password: sm2(password, userStore.configInfo?.publicKey), // 密码
+        confirmPassword: sm2(confirmPassword, userStore.configInfo?.publicKey), // 确认密码
+        companyName: props.data?.userInfoBO.companyName, // 企业名称
+        legaPersonName: props.data?.userInfoBO.legalName, // 法人
+        creditCode: props.data?.userInfoBO.businessLicenseCode, // 统一社会信用代码
+        companyId:
+          Number(props.data?.checkStatus) === 3
+            ? props.data?.companyId || ''
+            : '', // 企业id，已存在企业时传值
       };
-      apiFooterUpdate(params).then((res) => {
-        if (res.code !== 200) return;
-        Message.success('提交成功');
-        emit('onConfirm', '123');
-      });
+      thirdPartyRegister(params)
+        .then((res: any) => {
+          console.log('表单提交接口', res);
+          state.launchLoading = false;
+          Message.success('认证成功');
+          emit('onConfirm', props.data?.tokenValue);
+        })
+        .catch(() => {
+          state.launchLoading = false;
+        });
     }
   });
 };
 
 onMounted(() => {
-  FooterInfoDetails();
+  console.log(props.data, '填写用户信息接受参数');
+  form.value.phone = props.data?.userInfoBO?.phone ?? '';
 });
 </script>
 
