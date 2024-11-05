@@ -17,15 +17,22 @@ const singleSignOn = () => {
   const params = {
     code: props.code,
   };
-  thirdPartyUserInfo(params).then((data: any) => {
-    useUserStore().setUserAuthData(data);
-    router.push({
-      path: '/wow/index',
-      query: {
-        type: '1',
-      },
+  thirdPartyUserInfo(params)
+    .then((data: any) => {
+      useUserStore().setUserAuthData(data);
+      router.push({
+        path: '/wow/index',
+        query: {
+          type: '1',
+        },
+      });
+    })
+    .catch(() => {
+      router.push({
+        path: '/wow/index',
+        query: {},
+      });
     });
-  });
 };
 onMounted(() => {
   singleSignOn();

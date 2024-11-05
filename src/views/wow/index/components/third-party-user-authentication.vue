@@ -123,6 +123,7 @@ import { onMounted, ref, reactive, computed } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { thirdPartyRegister } from '@/api/wow/index';
+import { apiLogin } from '@/api/login';
 import { useRouter } from 'vue-router';
 import { sm2 } from '@/utils/encrypt';
 
@@ -272,9 +273,14 @@ const handleSubmit = () => {
       thirdPartyRegister(params)
         .then((res: any) => {
           console.log('表单提交接口', res);
-          state.launchLoading = false;
-          Message.success('认证成功');
-          emit('onConfirm', props.data?.tokenValue);
+          apiLogin({
+            username: phone,
+            password: sm2(password, userStore.configInfo?.publicKey),
+          }).then((loginData: any) => {
+            state.launchLoading = false;
+            Message.success('认证成功');
+            emit('onConfirm', loginData?.tokenValue);
+          });
         })
         .catch(() => {
           state.launchLoading = false;
