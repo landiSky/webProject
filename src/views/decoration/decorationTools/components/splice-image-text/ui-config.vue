@@ -69,14 +69,14 @@
             :validate-trigger="['blur', 'input']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
-              { required: true, maxLength: 10, message: '长度不超过10个字符' },
+              { required: true, maxLength: 30, message: '长度不超过30个字符' },
             ]"
           >
             <t-input
               v-model="form.configValue1.subTitle"
               placeholder="请输入"
               :max-length="{
-                length: 10,
+                length: 30,
                 errorOnly: true,
               }"
               show-word-limit
@@ -343,14 +343,14 @@
             :validate-trigger="['blur', 'input']"
             :rules="[
               { required: true, message: '该信息为必填项，未填写不支持发布' },
-              { required: true, maxLength: 10, message: '长度不超过10个字符' },
+              { required: true, maxLength: 30, message: '长度不超过30个字符' },
             ]"
           >
             <t-input
               v-model="form.configValue2.subTitle"
               placeholder="请输入"
               :max-length="{
-                length: 10,
+                length: 30,
                 errorOnly: true,
               }"
               show-word-limit

@@ -22,7 +22,10 @@
         />
         <div class="image-item-content">
           <span class="image-title">{{
-            getInterceptString(item?.title, 6) || '小标题'
+            getInterceptString(
+              item?.title,
+              index === curUnFoldIndex ? 30 : 8
+            ) || '小标题'
           }}</span>
           <span class="image-desc">{{
             getInterceptString(item?.desc, 200) ||
@@ -78,7 +81,7 @@ const checkConfigList = (list: any) => {
   return list.every((item: any) => {
     return (
       item.title &&
-      item.title.length <= 6 &&
+      item.title.length <= 30 &&
       item.desc &&
       item.desc.length <= 200 &&
       item.src &&

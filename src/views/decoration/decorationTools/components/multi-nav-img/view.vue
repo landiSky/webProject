@@ -9,7 +9,7 @@
         <t-tab-pane
           v-for="(item, index) in data?.configValue"
           :key="index"
-          :title="getInterceptString(item.navTitle, 6) || '子导航'"
+          :title="getInterceptString(item.navTitle, 30) || '子导航'"
         >
           <div class="item-content">
             <div class="item-image">
@@ -74,7 +74,7 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.navTitle &&
-      item.navTitle.length <= 6 &&
+      item.navTitle.length <= 30 &&
       letterReg.test(item.navTitle) &&
       item.src &&
       (item.linkType === 2 ||
@@ -132,8 +132,6 @@ defineExpose({
     }
 
     :deep(.tele-tabs-tab) {
-      max-width: calc(@factor * 60px);
-      margin: 0 calc(@factor * 10px);
       color: #4e5969;
       font-weight: 500;
       font-size: calc(@factor * 8px);

@@ -122,7 +122,7 @@ onMounted(() => {
   padding: 9;
 
   .content {
-    height: 318px;
+    height: 340px;
     padding: 32px 0;
     background-image: url('@/assets/images/wow/index/footer_content_bg.png');
     background-size: cover;

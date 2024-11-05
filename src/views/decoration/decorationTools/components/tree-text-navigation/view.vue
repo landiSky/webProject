@@ -9,7 +9,7 @@
         <t-tab-pane
           v-for="(item, index) in dataSortList"
           :key="index"
-          :title="getInterceptString(item.navTitle, 8) || '子标题'"
+          :title="getInterceptString(item.navTitle, 30) || '子标题'"
         >
           <div class="item-content">
             <div
@@ -125,7 +125,7 @@ const checkConfigList = (list: []) => {
   return list.every((item: any) => {
     return (
       item.navTitle &&
-      item.navTitle.length <= 8 &&
+      item.navTitle.length <= 30 &&
       letterReg.test(item.navTitle) &&
       checkContentBlockList(item.contentList)
     );

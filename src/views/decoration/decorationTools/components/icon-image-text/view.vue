@@ -17,7 +17,7 @@
           :preview="false"
         />
         <span class="image-title">{{
-          getInterceptString(item?.title, 6) || '小标题'
+          getInterceptString(item?.title, 30) || '小标题'
         }}</span>
         <span class="image-desc">{{
           getInterceptString(item?.desc, 30) ||
@@ -61,7 +61,7 @@ const checkConfigList = (list: any) => {
     console.log('竖图遍历000', item);
     return (
       item.title &&
-      item.title.length <= 6 &&
+      item.title.length <= 30 &&
       item.desc &&
       item.desc.length <= 30 &&
       item.src &&

@@ -26,7 +26,7 @@
             />
           </div>
           <div class="image-overlap-item-title">{{
-            getInterceptString(item?.title, 6) || '小标题'
+            getInterceptString(item?.title, 30) || '小标题'
           }}</div>
           <div class="image-overlap-item-desc">{{
             getInterceptString(item?.desc, 30) ||
@@ -104,7 +104,7 @@ const checkConfigList = (list: []) => {
     console.log('竖图遍历', item);
     return (
       item.title &&
-      item.title.length <= 6 &&
+      item.title.length <= 30 &&
       item.desc &&
       item.desc.length <= 30 &&
       item.src &&
