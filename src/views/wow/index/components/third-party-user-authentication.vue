@@ -266,8 +266,8 @@ const handleSubmit = () => {
         creditCode: props.data?.userInfoBO.businessLicenseCode, // 统一社会信用代码
         companyId:
           Number(props.data?.checkStatus) === 3
-            ? props.data?.companyId || ''
-            : '', // 企业id，已存在企业时传值
+            ? props.data?.companyId || null
+            : null, // 企业id，已存在企业时传值
       };
       thirdPartyRegister(params)
         .then((res: any) => {

@@ -540,10 +540,11 @@ const handleEditCancel = () => {
 };
 
 const handleEditConfirm = (tokenValue: any) => {
+  console.log(tokenValue, 'tokenValue');
   userStore.clearUserInfo();
   setToken(tokenValue);
-  const uriHash = '/buyer/index';
-  router.push({ path: uriHash });
+  state.showUserEdit = false;
+  router.push({ path: '/buyer/index' });
 };
 
 const enterpriseCertification = (params: any) => {
