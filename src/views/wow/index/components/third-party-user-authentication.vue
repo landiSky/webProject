@@ -147,10 +147,10 @@ const form: Record<string, any> = ref({
 });
 
 const btnDisabled = computed(() => {
-  const { agreement } = form.value;
+  const { phone, name, password, confirmPassword, email, agreement } =
+    form.value;
 
-  // return !(phone && name && password && confirmPassword && agreement);
-  return !agreement;
+  return !(phone && name && password && confirmPassword && email && agreement);
 });
 
 const formRules = {

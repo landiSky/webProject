@@ -147,7 +147,7 @@
       v-if="state.showUserEdit"
       :visible="state.showUserEdit"
       :data="state.showData"
-      title="设置用户信息，完成企业认证"
+      :title="state.showTitle"
       @on-confirm="handleEditConfirm"
       @on-cancel="handleEditCancel"
     />
@@ -211,9 +211,11 @@ const accessProductIds = ref<Record<string, any>>({});
 const state = reactive<{
   showUserEdit: boolean;
   showData: object;
+  showTitle: string;
 }>({
   showUserEdit: false,
   showData: {},
+  showTitle: '设置用户信息，完成企业认证',
 });
 
 // 轮播图图片枚举
@@ -600,10 +602,12 @@ const singleSignOn = () => {
     handleEditConfirm(data?.tokenValue);
   } else if (Number(data.checkStatus) === 2) {
     state.showData = data;
+    state.showTitle = '设置用户信息，完成企业认证';
     // 手机号在本系统不存，并且企业不存在
     handleSubmit();
   } else if (Number(data.checkStatus) === 3) {
     state.showData = data;
+    state.showTitle = '设置用户信息，完成注册';
     // 手机号在本系统不存，并且企业存在
     const params = {
       name: data?.companyName,
