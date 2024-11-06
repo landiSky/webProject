@@ -606,7 +606,7 @@ const singleSignOn = () => {
     state.showData = data;
     // 手机号在本系统不存，并且企业存在
     const params = {
-      name: data?.compangName,
+      name: data?.companyName,
       phone: data?.companyContactPhone,
     };
     enterpriseCertification(params);
