@@ -60,10 +60,14 @@
         </t-descriptions-item>
         <!--测试1 企业地址-->
         <t-descriptions-item label="企业地址">
-          {{ currentData.itemInfo?.orgAddrProvinceValue }}/{{
-            currentData.itemInfo?.orgAddrCityValue
-          }}{{ currentData.itemInfo?.orgAddrCountyValue ? '/' : ''
-          }}{{ currentData.itemInfo?.orgAddrCountyValue }}
+          <span v-if="currentData.itemInfo?.orgAddrProvinceValue">
+            {{ currentData.itemInfo?.orgAddrProvinceValue
+            }}{{ currentData.itemInfo?.orgAddrCityValue ? '/' : ''
+            }}{{ currentData.itemInfo?.orgAddrCityValue
+            }}{{ currentData.itemInfo?.orgAddrCountyValue ? '/' : ''
+            }}{{ currentData.itemInfo?.orgAddrCountyValue }}
+          </span>
+          <span v-else>-</span>
         </t-descriptions-item>
         <t-descriptions-item>
           <t-typography-paragraph style="width: 492px">
