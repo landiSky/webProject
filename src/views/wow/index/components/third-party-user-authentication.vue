@@ -265,6 +265,7 @@ const handleSubmit = () => {
         companyName: props.data?.userInfoBO.companyName, // 企业名称
         legaPersonName: props.data?.userInfoBO.legalName, // 法人
         creditCode: props.data?.userInfoBO.businessLicenseCode, // 统一社会信用代码
+        clientUserId: props.data?.userInfoBO.userBid, // 第三方用户bid
         companyId:
           Number(props.data?.checkStatus) === 3
             ? props.data?.companyId || null
