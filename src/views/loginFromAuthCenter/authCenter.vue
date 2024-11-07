@@ -30,6 +30,7 @@ const singleSignOn = () => {
       }
       router.push({
         path: '/wow/index',
+        replace: true,
         query: {
           type: '1',
         },
