@@ -155,7 +155,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, h, reactive, defineProps, inject } from 'vue';
+import { ref, onMounted, h, reactive, defineProps } from 'vue';
 import { useRouter } from 'vue-router';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -207,7 +207,6 @@ const activeNodeList = ref<Record<string, any>[]>([]); // 活跃节点数
 const activeOverall = ref<Record<string, any>>({}); // 企业节点概览
 
 const accessProductIds = ref<Record<string, any>>({});
-const reload: any = inject('reload');
 
 const state = reactive<{
   showUserEdit: boolean;
@@ -555,7 +554,7 @@ const handleEditConfirm2 = (tokenValue: any) => {
   userStore.clearUserInfo();
   setToken(tokenValue);
   state.showUserEdit = false;
-  reload();
+  window.location.reload();
 };
 
 const enterpriseCertification = (params: any) => {

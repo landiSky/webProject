@@ -6,8 +6,10 @@
 import { onMounted, defineProps } from 'vue';
 import { thirdPartyUserInfo } from '@/api/wow/index';
 import { useRouter } from 'vue-router';
+import { setToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 
+const userStore = useUserStore();
 const router = useRouter();
 const props = defineProps({
   code: String,
@@ -19,7 +21,13 @@ const singleSignOn = () => {
   };
   thirdPartyUserInfo(params)
     .then((data: any) => {
-      useUserStore().setUserAuthData(data);
+      if (Number(data.checkStatus) === 1) {
+        // 手机号和认证信息都存在时直接单点登录进本系统  token
+        userStore.clearUserInfo();
+        setToken(data?.tokenValue);
+      } else {
+        useUserStore().setUserAuthData(data);
+      }
       router.push({
         path: '/wow/index',
         query: {
