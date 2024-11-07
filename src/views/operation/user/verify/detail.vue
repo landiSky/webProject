@@ -129,7 +129,8 @@
             v-if="
               !currentData.itemInfo.idCardz && !currentData.itemInfo.idCardf
             "
-          ></span>
+            >-</span
+          >
         </t-descriptions-item>
       </t-descriptions>
     </div>
