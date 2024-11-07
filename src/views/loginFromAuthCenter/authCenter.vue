@@ -38,6 +38,7 @@ const singleSignOn = () => {
     .catch(() => {
       router.push({
         path: '/wow/index',
+        replace: true,
         query: {},
       });
     });
