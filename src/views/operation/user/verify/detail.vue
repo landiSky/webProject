@@ -79,12 +79,14 @@
         </t-descriptions-item>
         <t-descriptions-item label="营业执照">
           <t-image
+            v-if="currentData.itemInfo.businessLicense"
             :src="`/server/web/file/download?name=${currentData.itemInfo.businessLicense}`"
             height="100"
             width="158"
             fit="contain"
             style="border-radius: 2px"
           />
+          <span v-else>-</span>
         </t-descriptions-item>
       </t-descriptions>
       <t-descriptions
@@ -107,6 +109,7 @@
         </t-descriptions-item>
         <t-descriptions-item label="联系人身份证">
           <t-image
+            v-if="currentData.itemInfo.idCardz"
             class="first-img"
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardz}`"
             height="100"
@@ -115,12 +118,18 @@
             style="border-radius: 2px"
           />
           <t-image
+            v-if="currentData.itemInfo.idCardf"
             :src="`/server/web/file/download?name=${currentData.itemInfo.idCardf}`"
             height="100"
             width="158"
             fit="contain"
             style="border-radius: 2px"
           />
+          <span
+            v-if="
+              !currentData.itemInfo.idCardz && !currentData.itemInfo.idCardf
+            "
+          ></span>
         </t-descriptions-item>
       </t-descriptions>
     </div>
