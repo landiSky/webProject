@@ -549,6 +549,13 @@ const handleEditConfirm = (tokenValue: any) => {
   router.push({ path: '/buyer/index' });
 };
 
+const handleEditConfirm2 = (tokenValue: any) => {
+  console.log(tokenValue, 'tokenValue');
+  userStore.clearUserInfo();
+  setToken(tokenValue);
+  state.showUserEdit = false;
+};
+
 const enterpriseCertification = (params: any) => {
   Modal.warning({
     title: '企业已认证',
@@ -599,7 +606,7 @@ const singleSignOn = () => {
   if (Number(data.checkStatus) === 1) {
     if (!data?.tokenValue) return;
     // 手机号和认证信息都存在时直接单点登录进本系统  token
-    handleEditConfirm(data?.tokenValue);
+    handleEditConfirm2(data?.tokenValue);
   } else if (Number(data.checkStatus) === 2) {
     state.showData = data;
     state.showTitle = '设置用户信息，完成企业认证';
