@@ -11,6 +11,7 @@ export const usermenuList = [
     'ROUTE_SYSTEM',
     'ROUTE_SYSTEM_USERS', // 企业管理-用户
     'ROUTE_SYSTEM_ROLES', // 企业管理-角色
+    'ROUTE_SYSTEM_FRAME', // 企业管理-架构
     'ROUTE_SYSTEM_DEVELOPER', // 开发者中心
     'ROUTE_SYSTEM_APP', // 开发者中心-应用接入管理
   ],

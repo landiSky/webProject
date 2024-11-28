@@ -10,6 +10,7 @@ const BaseRouteAuth: { [name: string]: any } = {
   '/system': 'ROUTE_SYSTEM',
   '/system/users': 'ROUTE_SYSTEM_USERS', // 企业管理-用户
   '/system/roles': 'ROUTE_SYSTEM_ROLES', // 企业管理-角色
+  '/system/frame': 'ROUTE_SYSTEM_FRAME', // 企业管理-架构
   '/devCenter': 'ROUTE_SYSTEM_DEVELOPER', // 开发者中心
   '/devCenter/manage': 'ROUTE_SYSTEM_APP', // 开发者中心-应用接入管理
 
