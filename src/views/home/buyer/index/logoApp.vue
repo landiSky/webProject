@@ -22,10 +22,13 @@
           </div>
           <div class="foot">
             <div>
-              <span class="discounted-price">
+              <span class="discounted-price orange-yellow">
                 {{ item?.lowPrice }}
               </span>
-              <span class="company">.00元/年</span>
+              <span class="company">
+                <span class="orange-yellow">.00</span>
+                元/年
+              </span>
             </div>
             <div class="foot-explain">
               <span class="original-price">
@@ -241,11 +244,6 @@ onMounted(async () => {
 
       &.wathet {
         background: #e7f0fca8;
-
-        .foot > .bottom-wathet {
-          color: #fff;
-          background: #4086ff;
-        }
       }
 
       &.navy-blue {
@@ -309,7 +307,6 @@ onMounted(async () => {
         text-decoration-skip-ink: none;
 
         .discounted-price {
-          color: #fa9600;
           font-weight: 500;
           font-size: 24px;
           line-height: 32px;
@@ -320,6 +317,10 @@ onMounted(async () => {
           font-weight: 500;
           font-size: 20px;
           line-height: 28px;
+        }
+
+        .orange-yellow {
+          color: #fa9600;
         }
 
         .foot-explain {
@@ -340,20 +341,19 @@ onMounted(async () => {
         }
 
         .foot-bottom {
+          display: flex;
           gap: 10px;
+          align-items: center;
+          justify-content: center;
           width: 296px;
           height: 32px;
           padding: 6px 16px;
-          color: #1d2129;
+          color: #1664ff;
           font-weight: 400;
           font-size: 12px;
           font-family: PingFang SC;
-          line-height: 20px;
-          text-align: left;
-          text-align: center;
-          background: #f2f3f8;
-          border: 1px;
-          border: 1px solid #e5e8ef;
+          background: #fff;
+          border: 1px solid #1664ff;
           border-radius: 2px;
           cursor: pointer;
           text-underline-position: from-font;
