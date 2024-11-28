@@ -170,6 +170,12 @@
                   <div class="imgs">
                     <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
+                      v-if="item.productType === 1"
+                      :src="`/server/web/file/download?name=${item.productLogo}`"
+                      alt=""
+                    />
+                    <img
+                      v-else
                       :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
@@ -278,7 +284,7 @@
                           (item.orderStatus === 0 || item.orderStatus === 4))
                       "
                       type="text"
-                      style="width: 100%"
+                      class="button-height"
                       @click="modificationamount(item.id)"
                       >上传支付凭证</t-button
                     >
@@ -287,7 +293,7 @@
                     <t-button
                       v-if="item.orderStatus === 5"
                       type="text"
-                      style="width: 100%"
+                      class="button-height"
                       @click="delivery(item.id)"
                       >确认已交付</t-button
                     >
@@ -295,9 +301,16 @@
                     <t-button
                       v-if="item.orderStatus === 3 && item.evaluateStatus !== 1"
                       type="text"
-                      style="width: 100%"
+                      class="button-height"
                       @click="review(item.id)"
                       >立即评价</t-button
+                    >
+                    <t-button
+                      v-if="item.deliveryType === 0 && item.productType === 1"
+                      type="text"
+                      class="button-height"
+                      @click="serviceAuthorization(item)"
+                      >服务授权</t-button
                     >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
                       >订单详情</span
@@ -375,6 +388,13 @@
       "
     >
     </ReviewModal>
+    <ServiceModel
+      v-if="serviceModalVisible"
+      :visible="serviceModalVisible"
+      :data="state.serviceAuthorizationData"
+      @confirm="onServiceModalConfirm"
+      @cancel="serviceModalVisible = false"
+    />
     <!-- 订单交付 -->
     <!-- <EditModalDelivery
       v-if="deliveryVisible"
@@ -409,6 +429,7 @@ import error from './images/error.png';
 import success from './images/success.png';
 import EditModal from './components/edit-modal.vue';
 import ReviewModal from './components/review-modal.vue';
+import ServiceModel from './components/service-authorization.vue';
 
 const userStore = useUserStore();
 const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
@@ -445,6 +466,8 @@ const state = reactive({
     companyId: '',
     orderId: '',
   },
+  // 服务授权
+  serviceAuthorizationData: {},
 });
 const tableData: Record<string, any> = ref([]);
 // 交付类型
@@ -639,6 +662,9 @@ const editModalVisible = ref(false);
 // const deliveryVisible = ref(false);
 // 评论弹窗
 const reviewModalVisible = ref(false);
+// 服务授权弹窗
+const serviceModalVisible = ref(false);
+
 // 全屏弹窗 开关
 const FullscreenDetailsModal = ref(false);
 
@@ -724,6 +750,15 @@ const review = (id: string) => {
   state.evaluateContent.orderId = id ?? '';
   console.log('00001111', state.evaluateContent);
   reviewModalVisible.value = true;
+};
+// 服务授权
+const serviceAuthorization = (item: any) => {
+  state.serviceAuthorizationData = item;
+  serviceModalVisible.value = true;
+};
+const onServiceModalConfirm = () => {
+  serviceModalVisible.value = false;
+  init();
 };
 // 查询
 const getTableData = () => {
@@ -996,6 +1031,11 @@ onMounted(() => {
             .bottom {
               color: #86909c;
               line-height: 20px;
+            }
+
+            .button-height {
+              width: 100%;
+              height: auto;
             }
           }
 

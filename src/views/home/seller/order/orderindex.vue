@@ -167,6 +167,12 @@
                   <div class="imgs">
                     <!-- :src="`/server/web/file/download?name=${item.productLogo}&productId=${item.productId}`" -->
                     <img
+                      v-if="item.productType === 1"
+                      :src="`/server/web/file/download?name=${item.productLogo}`"
+                      alt=""
+                    />
+                    <img
+                      v-else
                       :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.productSource}&serverId=${item.productServerId}`"
                       alt=""
                     />
@@ -296,7 +302,15 @@
                       v-if="item.orderStatus === 2"
                       type="text"
                       style="width: 100%"
-                      @click="delivery(item.deliveryType, item.id)"
+                      @click="
+                        delivery(
+                          item.deliveryType,
+                          item.id,
+                          item.productId,
+                          item.productType,
+                          item.companyId
+                        )
+                      "
                       >立即交付</t-button
                     >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
@@ -389,9 +403,15 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
-import { orderList, merchantSub, orderNum } from '@/api/seller/order';
+import {
+  orderList,
+  merchantSub,
+  orderNum,
+  getQingFlowCount,
+} from '@/api/seller/order';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
+import { orderTypes } from '@/enums/common';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import tobepaid from './images/tobepaid.png';
@@ -704,8 +724,26 @@ const onEditModalConfirm = () => {
   editModalVisible.value = false;
   init();
 };
+
+const clickMerchant = (deliveryType: number, id: string, productId: string) => {
+  merchantSub({
+    id: state.editData.id,
+    productId,
+    deliveryType,
+  }).then((res) => {
+    init();
+    Message.success('交付成功');
+  });
+};
+
 // 交付应用
-const delivery = (deliveryType: number, id: string) => {
+const delivery = (
+  deliveryType: number,
+  id: string,
+  productId: string,
+  productType: number,
+  companyId: string
+) => {
   if (deliveryType === 0) {
     Modal.warning({
       title: '我已完成账号重置，确定交付该应用',
@@ -719,12 +757,17 @@ const delivery = (deliveryType: number, id: string) => {
       // },
       onOk: () => {
         // deleteUsers(params);
-        merchantSub({
-          id: state.editData.id,
-        }).then((res) => {
-          init();
-          Message.success('交付成功');
-        });
+        if (productType === orderTypes.SPECIAL_SAAS) {
+          const packageUserParams = {
+            companyId, // 企业id
+            servicePackageId: productId, // 套餐id
+          };
+          getQingFlowCount(packageUserParams).then(() => {
+            clickMerchant(deliveryType, id, productId);
+          });
+          return;
+        }
+        clickMerchant(deliveryType, id, productId);
       },
       onCancel: () => {
         // Message.success('取消交付成功');

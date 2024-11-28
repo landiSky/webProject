@@ -45,3 +45,18 @@ export function fileDownload(params: Record<string, any>) {
 export function apiCreateOrder(data: Record<string, any>) {
   return $http.post('/server/web/order/create', data);
 }
+
+// 购买套餐-保存套餐成员关联
+export function apiSaveServicePackageUser(data: Record<string, any>) {
+  return $http.post('/server/web/qingFlow/saveServicePackageUser', data);
+}
+
+// 获取套餐成员
+export function getServicePackageMember(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/getServicePackageMember', { params });
+}
+
+// 修改套餐成员
+export function apiEditServicePackageMember(data: Record<string, any>) {
+  return $http.post('/server/web/qingFlow/editServicePackageMember', data);
+}

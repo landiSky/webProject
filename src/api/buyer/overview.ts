@@ -69,3 +69,8 @@ export function apiAuthStatus(data: Record<string, any>) {
 export function apiGetAuth(data: Record<string, any>) {
   return $http.post('/server/web/product/member/auth', data);
 }
+
+// 获取套餐列表
+export function getServicePackage(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/getServicePackage', { params });
+}
