@@ -88,6 +88,14 @@ const homeRoutesList = [
           name: '企业角色管理',
         },
       },
+      {
+        path: '/system/frame',
+        name: 'systemFrame',
+        component: () => import('@/views/home/system/frame/index.vue'),
+        meta: {
+          name: '企业架构管理',
+        },
+      },
     ],
     meta: {
       name: '企业管理',

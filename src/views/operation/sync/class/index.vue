@@ -113,6 +113,7 @@ function fetchData() {
       if (res.code === 200) {
         state.oriTableData = res.data;
         state.tableData = deepClone(state.oriTableData);
+        console.log('tableDatatableData', state.tableData);
       }
     })
     .finally(() => {

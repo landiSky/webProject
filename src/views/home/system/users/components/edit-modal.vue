@@ -54,6 +54,20 @@
             >
           </t-select>
         </t-form-item>
+        <!-- <t-form-item field="deptList" label="部门名称" validate-trigger="blur">
+          <t-select
+            v-model="state.formModel.deptList"
+            placeholder="请选择"
+            multiple
+          >
+            <t-option
+              v-for="item in roleSelect"
+              :key="item.id"
+              :value="item.id"
+              >{{ item.roleName }}</t-option
+            >
+          </t-select>
+        </t-form-item> -->
         <t-form-item field="phone" label="手机号" validate-trigger="blur">
           <t-input
             v-model="state.formModel.phone"
@@ -74,9 +88,11 @@ import {
   ref,
   onMounted,
   computed,
+  watch,
 } from 'vue';
 import { menberAdd, memberPhone } from '@/api/system/member';
 import { rolelist } from '@/api/system/role';
+// import { deptList } from '@/api/system/dept';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
@@ -91,6 +107,7 @@ const props = defineProps({
     default: () => {},
   },
 });
+
 const emit = defineEmits(['confirm', 'cancel']);
 
 const roleSelect = ref([
@@ -119,9 +136,47 @@ const state = reactive({
     memberId: undefined, // 成员id
     status: undefined, // 0:在职 1:离职
     roleList: undefined,
+    // deptList: undefined,
     roleName: undefined, // 角色名称
   },
 });
+
+watch(
+  () => props.data,
+  (newVal) => {
+    if (newVal.memberId) {
+      const {
+        id,
+        userId,
+        username,
+        phone,
+        companyId,
+        memberId,
+        status,
+        roleList,
+        // deptList,
+        roleName,
+      } = props.data;
+      state.formModel = {
+        id,
+        userId,
+        username,
+        phone,
+        companyId,
+        memberId,
+        status,
+        roleList,
+        // deptList,
+        roleName,
+      };
+      rolePhones.value = phone;
+    }
+  },
+  {
+    immediate: true,
+    deep: true,
+  }
+);
 
 const formRules = {
   username: [
@@ -176,14 +231,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
         companyId: userInfoByCompany.value.companyId,
         username: state.formModel.username,
         roleList: state.formModel.roleList,
+        // deptList: state.formModel.deptList,
         phone: state.formModel.phone,
       })
-        .then((res) => {
+        .then(() => {
           done(true);
           emit('confirm');
           // Message.success(`${isEdit.value ? '编辑' : '新增'}用户成功`);
         })
-        .catch((err) => {
+        .catch(() => {
           done(false);
         });
     } else {
@@ -201,33 +257,17 @@ onMounted(() => {
   })
     .then((res: any) => {
       roleSelect.value = res.records;
-      if (isEdit.value) {
-        const {
-          id,
-          userId,
-          username,
-          phone,
-          companyId,
-          memberId,
-          status,
-          roleList,
-          roleName,
-        } = props.data;
-        state.formModel = {
-          id,
-          userId,
-          username,
-          phone,
-          companyId,
-          memberId,
-          status,
-          roleList,
-          roleName,
-        };
-        rolePhones.value = phone;
-      }
     })
-    .catch((err) => {});
+    .catch(() => {});
+
+  // 获取部门数据
+  // deptList({
+  //   companyId: userInfoByCompany.value.companyId,
+  // })
+  //   .then((res: any) => {
+  //     console.log('resres', res);
+  //   })
+  //   .catch(() => {});
 });
 </script>
 
