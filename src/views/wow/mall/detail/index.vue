@@ -550,7 +550,12 @@ import {
   apiServicePhone,
   apiServicePhoneSave,
 } from '@/api/wow/mall';
-import { SaleType, AccountType, DeliverTypeDesc } from '@/enums/common';
+import {
+  SaleType,
+  AccountType,
+  DeliverTypeDesc,
+  orderTypes,
+} from '@/enums/common';
 import { useUserStore } from '@/store/modules/user';
 
 import { useOrderStore } from '@/store/modules/order';
@@ -687,6 +692,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     orderSource: source,
     saleType,
     memberIdList,
+    productType: orderTypes.ORDINARY,
   };
 
   router.push({

@@ -106,9 +106,14 @@ import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
-import { apiCreateOrder } from '@/api/buyer/order';
+import { apiCreateOrder, apiSaveServicePackageUser } from '@/api/buyer/order';
 
-import { DeliverType, DeliverTypeDesc, SaleType } from '@/enums/common';
+import {
+  DeliverType,
+  DeliverTypeDesc,
+  SaleType,
+  orderTypes,
+} from '@/enums/common';
 
 const router = useRouter();
 const route = useRoute();
@@ -134,6 +139,9 @@ const clickCreateOrder = () => {
     durationId,
     memberIdList,
     saasAppId,
+    productType,
+    accountCount,
+    buyDuration,
   } = createOrderInfo.value;
   console.log(`Create order`, createOrderInfo.value);
   const params = {
@@ -151,10 +159,29 @@ const clickCreateOrder = () => {
     // saasAppId---来源？
     saasAppId,
     userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
+    productType,
+    accountCount,
+    buyDuration,
   };
   submitLoading.value = true;
   apiCreateOrder(params)
     .then((data) => {
+      if (productType === orderTypes.SPECIAL_SAAS) {
+        const packageUserParams = {
+          companyId: userStore.selectCompany?.companyId, // 企业id
+          servicePackageId: productId, // 套餐id
+          memberIdList, // 成员列表
+        };
+        apiSaveServicePackageUser(packageUserParams).then(() => {
+          router.push({
+            name: 'buyerOrderDetail',
+            params: {
+              id: data.id,
+            },
+          });
+        });
+        return;
+      }
       router.push({
         name: 'buyerOrderDetail',
         params: {

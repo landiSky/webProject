@@ -65,3 +65,8 @@ export function fileDownload(params: Record<string, any>) {
 export function apiCreateOrder(data: Record<string, any>) {
   return $http.post('/server/web/order/create', data);
 }
+
+// 获取轻流订单数量
+export function getQingFlowCount(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/getQingFlowCount', { params });
+}

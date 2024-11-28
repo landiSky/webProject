@@ -507,11 +507,15 @@
 <script lang="ts" setup>
 import { defineProps, reactive, defineEmits, ref, onMounted } from 'vue';
 import { utilsCopy } from '@/utils/tools';
-import { sellerDetail, sellerPass, merchantSub } from '@/api/seller/order';
+import {
+  sellerDetail,
+  sellerPass,
+  merchantSub,
+  getQingFlowCount,
+} from '@/api/seller/order';
 import { getOrderDetailEstimate } from '@/api/order';
-
+import { orderTypes } from '@/enums/common';
 import { Message, Modal } from '@tele-design/web-vue';
-
 import noData from '@/assets/images/noData.png';
 import EditModal from './edit-modal.vue';
 import EditModalTurndown from './edit-modal-turndown.vue';
@@ -667,6 +671,8 @@ const passok = (id: string) => {
       // onBeforeOk;
       sellerPass({
         id: dataList.value.id,
+        productId: dataList.value.productId,
+        deliveryType: dataList.value.deliveryType,
       }).then((res) => {
         Message.success('已通过');
         init();
@@ -677,38 +683,53 @@ const passok = (id: string) => {
     },
   });
 };
+const clickMerchant = () => {
+  merchantSub({
+    id: dataList.value.id,
+    productId: dataList.value.productId,
+    deliveryType: dataList.value.deliveryType,
+  }).then((res) => {
+    init();
+    Message.success('交付成功');
+  });
+};
 // 交付应用
 const delivery = () => {
   // 这版交付只有私有部署了,saas免费
-  state.editData.id = dataList.value.id;
-  deliveryVisible.value = true;
-  // if (dataList.value.deliveryType === 0) {
-  //   Modal.warning({
-  //     title: '我已完成账号重置，确定交付该应用',
-  //     content: '交付订单流转到买家确定状态。',
-  //     titleAlign: 'start',
-  //     okText: ' 确定',
-  //     hideCancel: false,
-  //     // okButtonProps: {
-  //     //   status: 'danger',
-  //     // },
-  //     onOk: () => {
-  //       // deleteUsers(params);
-  //       merchantSub({
-  //         id: dataList.value.id,
-  //       }).then((res) => {
-  //         init();
-  //         Message.success('交付成功');
-  //       });
-  //     },
-  //     onCancel: () => {
-  //       // Message.success('取消交付成功');
-  //     },
-  //   });
-  // } else if (dataList.value.deliveryType === 1) {
-  //   state.editData.id = dataList.value.id;
-  //   deliveryVisible.value = true;
-  // }
+  // state.editData.id = dataList.value.id;
+  // deliveryVisible.value = true;
+  if (dataList.value.deliveryType === 0) {
+    Modal.warning({
+      title: '我已完成账号重置，确定交付该应用',
+      content: '交付订单流转到买家确定状态。',
+      titleAlign: 'start',
+      okText: ' 确定',
+      hideCancel: false,
+      // okButtonProps: {
+      //   status: 'danger',
+      // },
+      onOk: () => {
+        // deleteUsers(params);
+        if (dataList.value.productType === orderTypes.SPECIAL_SAAS) {
+          const packageUserParams = {
+            companyId: dataList.value.companyId, // 企业id
+            servicePackageId: dataList.value.productId, // 套餐id
+          };
+          getQingFlowCount(packageUserParams).then(() => {
+            clickMerchant();
+          });
+          return;
+        }
+        clickMerchant();
+      },
+      onCancel: () => {
+        // Message.success('取消交付成功');
+      },
+    });
+  } else if (dataList.value.deliveryType === 1) {
+    state.editData.id = dataList.value.id;
+    deliveryVisible.value = true;
+  }
 };
 // 交付应用 完成
 const ondeliveryModalConfirm = () => {

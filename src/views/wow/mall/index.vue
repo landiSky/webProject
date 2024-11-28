@@ -84,9 +84,11 @@
         <span class="value">
           <span
             :class="{
-              active: ![DeliverType.DEPLOY, DeliverType.SAAS].includes(
-                apiParams.deliveryType
-              ),
+              active: ![
+                DeliverType.DEPLOY,
+                DeliverType.SAAS,
+                DeliverType.PLUGIN,
+              ].includes(apiParams.deliveryType),
             }"
             class="span-padding"
             @click="(apiParams.deliveryType = null), clickSearchBtn()"
@@ -106,6 +108,19 @@
             "
             >{{ DeliverTypeDesc[DeliverType.SAAS] }}</span
           >
+          <span
+            :class="{ active: apiParams.deliveryType === DeliverType.PLUGIN }"
+            @click="
+              (apiParams.deliveryType = DeliverType.PLUGIN), clickSearchBtn()
+            "
+          >
+            {{ DeliverTypeDesc[DeliverType.PLUGIN] }}
+            <t-tooltip
+              content="插件可安装在企业节点IDHub中用于完成数据接入标识解析体系！"
+            >
+              <icon-info-circle />
+            </t-tooltip>
+          </span>
         </span>
       </span>
       <span class="item goods-price">

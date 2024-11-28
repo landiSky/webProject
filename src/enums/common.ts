@@ -1,11 +1,13 @@
 export const DeliverType = {
   SAAS: 0,
   DEPLOY: 1,
+  PLUGIN: 3,
 };
 
 export const DeliverTypeDesc = {
   [DeliverType.SAAS]: 'SaaS',
   [DeliverType.DEPLOY]: '独立部署',
+  [DeliverType.PLUGIN]: '插件',
 };
 
 export const SaleType = {
@@ -64,4 +66,9 @@ export const AppType = {
 export const rolestatusled = {
   // 2 普通用户
   ROLESTATUS: 2,
+};
+
+export const orderTypes = {
+  ORDINARY: 0, // 普通订单
+  SPECIAL_SAAS: 1, // 特殊处理订单-saas付费对接轻流
 };

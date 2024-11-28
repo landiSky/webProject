@@ -366,50 +366,8 @@
         </div>
       </div>
     </div>
-    <!-- 热门应用服务 -->
-    <!-- <div class="content">
-      <h3 style="margin: 20px 0">热门应用服务</h3>
-      <div class="catimg">
-        <t-carousel
-          :style="{
-            width: '100%',
-            height: '240px',
-          }"
-        >
-          <t-carousel-item v-for="(item, index) in images" :key="index">
-            <div class="catimglist">
-              <div
-                v-for="(it, index) in item"
-                :key="index"
-                class="catimglistleft"
-              >
-                <div style="width: 30%">
-                  <img :src="it" alt="" style="width: 100%; height: 100%" />
-                </div>
-                <div class="leftcont">
-                  <div class="tophead"
-                    ><p>企业统计台账</p
-                    ><p style="color: #1664ff" @click="togo"> 前往 》</p></div
-                  >
-                  <div style="float: left; height: 70%; margin-top: 20px"
-                    ><p
-                      >支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。支持多底层类型子链接入骨干节点，提供多种接入方式，为用户提供加入子链的通道共建子链。</p
-                    >
-                  </div>
-                  <div class="tophead"
-                    ><p style="color: #1664ff" @click="configurationapp"
-                      >配置应用</p
-                    ><p style="color: #86909c" @click="instructionsuse">
-                      使用说明下载</p
-                    ></div
-                  >
-                </div>
-              </div>
-            </div>
-          </t-carousel-item>
-        </t-carousel>
-      </div>
-    </div> -->
+    <!-- 标识轻应用 -->
+    <LogoApp />
     <!-- 已购应用 -->
     <div class="purchased">
       <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
@@ -704,6 +662,8 @@ import group4 from './image/group4.png';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 import EmpowerTip from './empowerTip.vue';
+// 服务开通和应用
+import LogoApp from './logoApp.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -1735,123 +1695,6 @@ onMounted(() => {
                 color: #e63f3f;
                 background-color: #ffece8;
               }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .content {
-    height: 340px;
-    margin: 0 2% 30px 2%;
-    padding: 7px 0 0 20px;
-    background-image: url('./image/contimg.png');
-    border: 1px solid #e5e8ef;
-
-    .catimg {
-      width: 99%;
-      height: 100%;
-
-      :deep(.tele-carousel-arrow-left) {
-        top: 106%;
-        left: 44%;
-        background: transparent;
-      }
-
-      :deep(.tele-carousel-arrow-right) {
-        top: 106%;
-        right: 45%;
-        background: transparent;
-      }
-
-      :deep(.tele-carousel-arrow-left > svg) {
-        color: #56555f;
-        font-weight: 600;
-        font-size: 20px;
-      }
-
-      :deep(.tele-carousel-arrow-right > svg) {
-        color: #56555f;
-        font-weight: 600;
-        font-size: 20px;
-      }
-
-      :deep(.tele-carousel-indicator-wrapper-bottom) {
-        bottom: -35px;
-        background: transparent;
-      }
-
-      :deep(.tele-carousel-indicator) {
-        display: flex;
-        align-items: center;
-      }
-
-      :deep(.tele-carousel-indicator-item) {
-        width: 8px;
-        height: 8px;
-        margin-right: 16px;
-        background-color: #84adff;
-        border-radius: 0;
-        transform: rotate(45deg);
-        transform-origin: center center;
-      }
-
-      :deep(.tele-carousel-indicator-item-active) {
-        width: 16px;
-        height: 16px;
-        background-color: #1664ff;
-        border-radius: 0;
-        transform: rotate(45deg);
-        transform-origin: center center;
-      }
-
-      .catimglist {
-        display: flex;
-        justify-content: space-between;
-        height: 100%;
-
-        .catimglistleft {
-          display: flex;
-          justify-content: space-between;
-          width: 48%;
-          height: 90%;
-          padding: 20px;
-          background-color: #fff;
-
-          .leftcont {
-            // display: flex;
-            // flex-direction: column;
-            width: 67%;
-            height: 100%;
-            // justify-content: space-between;
-            // align-items: flex-end;
-            // align-content: space-between;
-            .tophead {
-              display: flex;
-              justify-content: space-between;
-              width: 100%;
-            }
-          }
-        }
-
-        .catimglistright {
-          display: flex;
-          justify-content: space-between;
-          width: 48%;
-          height: 90%;
-          padding: 20px;
-          background-color: #fff;
-
-          .leftcont {
-            display: flex;
-            flex-direction: column;
-            width: 67%;
-            // align-items: flex-end;
-            .tophead {
-              display: flex;
-              justify-content: space-between;
-              width: 100%;
             }
           }
         }
