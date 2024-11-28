@@ -305,11 +305,8 @@ const clickAddBtn = () => {
 };
 // 新增编辑弹窗确定后的回调
 const onEditModalConfirm = () => {
-  console.log('e');
-
   editModalVisible.value = false;
-
-  fetchData();
+  //   fetchData();
 };
 const delectdata = () => {};
 // 删除

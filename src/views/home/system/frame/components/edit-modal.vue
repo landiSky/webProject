@@ -4,16 +4,13 @@
       v-model:visible="visible"
       :on-before-ok="onConfirm"
       :width="445"
+      :mask-closable="false"
       popup-container=".drawer-container"
-      :ok-text="isEdit ? '完成' : '完成'"
+      ok-text="确定"
       @cancel="onConfirmflag"
     >
       <!-- "下一步:角色授权" -->
-      <template #title>
-        {{ isEdit ? '编辑' : '新增' }}部门{{
-          isEdit ? '' : ':基本信息 '
-        }}</template
-      >
+      <template #title> {{ isEdit ? '编辑' : '新增' }}部门</template>
       <t-form
         ref="formRef"
         class="form-container"
@@ -36,15 +33,18 @@
           label="部门主管"
           validate-trigger="blur"
         >
-          <t-input
+          <t-select
             v-model="state.formModel.deptCharge"
-            placeholder="请输入"
-            :max-length="{
-              length: 30,
-              errorOnly: true,
-            }"
-            show-word-limit
-          />
+            placeholder="请选择"
+            allow-clear
+          >
+            <t-option
+              v-for="item in state.memberList"
+              :key="item.memberId"
+              :value="item.memberId"
+              >{{ item.username }}
+            </t-option>
+          </t-select>
         </t-form-item>
         <t-form-item
           field="memberSelect"
@@ -118,7 +118,7 @@ import {
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 import { apiMemberList } from '@/api/common';
-import { apiRoleAdd } from '@/api/system/role';
+import { updateDept } from '@/api/system/dept';
 import { Message } from '@tele-design/web-vue';
 
 const userStore = useUserStore();
@@ -150,8 +150,9 @@ const state = reactive<{
     deptCharge: '',
     memberSelect: [], // 成员列表
     remark: '',
-    componentId: '',
+    companyId: '',
     id: undefined, // 新增时候不传
+    oldMemberIdList: [], // 新增时候传空
   },
   memberList: [],
 });
@@ -160,7 +161,7 @@ const formRules = {
   deptName: [
     {
       required: true,
-      message: isEdit.value ? '角色名称不能为空' : '请输入角色名称',
+      message: '请输入部门名称',
       validator: (value: any, cb: any) => {
         // @ts-ignore
         if (!state.formModel.deptName?.split(' ').join('')) {
@@ -185,46 +186,28 @@ const handleDynamicList = () => {
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
-    if (!isEdit.value) {
-      if (!errors) {
-        apiRoleAdd({
-          deptName: state.formModel.deptName,
-          remark: state.formModel.remark,
-          companyId: userInfoByCompany.value?.companyId,
+    const params = state.formModel;
+    params.memberList = handleDynamicList();
+    params.companyId = userInfoByCompany.value?.companyId;
+    delete params.memberSelect;
+    // if (!isEdit.value) {
+    // 新增
+    if (!errors) {
+      console.log('onConfirm', params); // 成员列表
+      updateDept({
+        ...params,
+      })
+        .then(() => {
+          Message.success('新增成功');
+          // emit('confirm');
+          done(true);
         })
-          .then((res) => {
-            Message.success('新增成功');
-            emit('confirm');
-
-            done(true);
-          })
-          .catch((err) => {
-            done(false);
-          });
-      } else {
-        done(false);
-      }
-    } else if (isEdit.value) {
-      // 编辑
-
-      if (!errors) {
-        apiRoleAdd({
-          deptName: state.formModel.deptName,
-          remark: state.formModel.remark,
-          companyId: userInfoByCompany.value?.companyId,
-          id: state.formModel.id,
-        })
-          .then((res) => {
-            Message.success('编辑成功');
-            emit('confirm');
-            done(true);
-          })
-          .catch((err) => {
-            done(false);
-          });
-      } else {
-        done(false);
-      }
+        .catch(() => {
+          done(false);
+        });
+    } else {
+      console.log('else');
+      done(false);
     }
   });
 };
@@ -243,33 +226,9 @@ onMounted(async () => {
     companyId: userInfoByCompany.value?.companyId,
   })
     .then((res: any) => {
-      console.log('apiMemberList res', res);
-      for (let i = 0; i < 100; i += 1) {
-        res.push({
-          memberId: Math.random() * 1000,
-          phone: '15330058808',
-          username: '陈佳佳',
-        });
-      }
       state.memberList = res;
     })
     .catch((e) => {});
-
-  // if (isEdit.value) {
-  //   // 这里分两种情况
-  //   // 一是编辑信息从列表传入
-  //   const { deptName, remark, id } = props?.data
-  //     ? props.data
-  //     : { deptName: '', remark: '', id: '' };
-  //   state.formModel = { deptName, remark, id };
-  //   // 二是从接口获取
-  //   // getDetail();
-  // } else if (props.data) {
-  //   const { deptName, remark, id } = props?.data
-  //     ? props.data
-  //     : { deptName: '', remark: '', id: '' };
-  //   state.formModel = { deptName, remark, id };
-  // }
 });
 </script>
 
