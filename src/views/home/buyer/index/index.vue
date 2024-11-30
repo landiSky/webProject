@@ -367,7 +367,8 @@
       </div>
     </div>
     <!-- 标识轻应用 -->
-    <LogoApp />
+    <ServiceActivation />
+
     <!-- 已购应用 -->
     <div class="purchased">
       <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
@@ -661,9 +662,9 @@ import group4 from './image/group4.png';
 // import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
-import EmpowerTip from './empowerTip.vue';
-// 服务开通和应用
-import LogoApp from './logoApp.vue';
+import EmpowerTip from './components/empowerTip.vue';
+// 服务开通
+import ServiceActivation from './components/service-activation.vue';
 
 const router = useRouter();
 const route = useRoute();

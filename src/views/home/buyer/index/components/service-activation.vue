@@ -1,6 +1,6 @@
 <template>
-  <div class="serviceLogoApp">
-    <div v-if="packageList.length" class="activate-service">
+  <div v-if="packageList.length" class="service-app">
+    <div>
       <div class="title">标识轻应用</div>
       <div class="card">
         <div
@@ -46,15 +46,16 @@
         </div>
       </div>
     </div>
-
-    <AuthMemberModal
-      v-if="authModalVisible"
-      :product-id="prodDetail.id"
-      :delivery-set-id="selectVersion.id"
-      @cancel="onAuthCancel"
-      @confirm="onAuthConfirm"
-    ></AuthMemberModal>
   </div>
+  <LightApplication v-if="!packageList.length" />
+  <DigitizedApplications v-if="!packageList.length" />
+  <AuthMemberModal
+    v-if="authModalVisible"
+    :product-id="prodDetail.id"
+    :delivery-set-id="selectVersion.id"
+    @cancel="onAuthCancel"
+    @confirm="onAuthConfirm"
+  ></AuthMemberModal>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +70,10 @@ import { NodeAuthStatus, SaleType, orderTypes } from '@/enums/common';
 import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import AuthMemberModal from '@/views/wow/mall/detail/authMember.vue';
+// 标识轻应用
+import LightApplication from './light-application.vue';
+// 企业数智化应用
+import DigitizedApplications from './digitized-applications.vue';
 
 const packageEnum: Record<string, any> = {
   0: '',
@@ -203,162 +208,155 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="less">
-.serviceLogoApp {
+.service-app {
   width: 1200px;
-  margin: 0 auto 24px;
-}
-
-.activate-service {
   height: 380px;
-  padding: 16px 24px;
+  margin: 0 auto 24px;
+  padding: 16px 24px 32px;
   background: url('./image/light -application-bg.png') no-repeat;
   background-size: cover;
   border: 1px solid rgba(229, 232, 239, 1);
   border-radius: 4px;
+}
 
-  .title {
-    color: #223354;
-    font-weight: 500;
-    font-size: 20px;
-    font-family: PingFang SC;
-    line-height: 28px;
-    text-align: left;
-    text-underline-position: from-font;
-    text-decoration-skip-ink: none;
-  }
+.title {
+  color: #223354;
+  font-weight: 500;
+  font-size: 20px;
+  font-family: PingFang SC;
+  line-height: 28px;
+  text-align: left;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+}
 
-  .card {
+.card {
+  display: flex;
+  gap: 36px;
+  margin-top: 20px;
+
+  .package {
     display: flex;
-    gap: 36px;
-    margin-top: 20px;
+    flex-direction: column;
+    gap: 8px;
+    width: 360px;
+    height: 278px;
+    background: #f2f3f8a8;
+    border: 1px solid #fff;
+    border-radius: 4px;
 
-    .package {
+    &.wathet {
+      background: #e7f0fca8;
+    }
+
+    &.navy-blue {
+      background: #b9d3ff54;
+
+      .foot > .bottom-navy-blue {
+        color: #fff;
+        background: linear-gradient(271.13deg, #1664ff 14.58%, #3ca8e7 100.85%);
+      }
+    }
+
+    .top {
       display: flex;
+      flex: 0 1 50%;
       flex-direction: column;
-      gap: 8px;
-      width: 360px;
-      height: 278px;
-      background: #f2f3f8a8;
-      border: 1px solid #fff;
-      border-radius: 4px;
+      gap: 12px;
+      padding: 24px 32px 12px;
+      font-family: PingFang SC;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
 
-      &.wathet {
-        background: #e7f0fca8;
+      .top-name {
+        color: #223354;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 24px;
       }
 
-      &.navy-blue {
-        background: #b9d3ff54;
-
-        .foot > .bottom-navy-blue {
-          color: #fff;
-          background: linear-gradient(
-            271.13deg,
-            #1664ff 14.58%,
-            #3ca8e7 100.85%
-          );
-        }
-      }
-
-      .top {
+      .top-text {
         display: flex;
-        flex: 0 1 50%;
-        flex-direction: column;
-        gap: 12px;
-        padding: 24px 32px 12px;
-        font-family: PingFang SC;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
+        font-size: 14px;
+        line-height: 22px;
 
-        .top-name {
-          color: #223354;
+        .label {
+          width: 70px;
+          margin-right: 8px;
+          color: #4e5969;
+          font-weight: 400;
+        }
+
+        .quantity {
+          color: #1d2129;
           font-weight: 500;
-          font-size: 16px;
-          line-height: 24px;
+        }
+      }
+    }
+
+    .foot {
+      display: flex;
+      flex: 0 1 50%;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 32px 24px;
+      font-family: PingFang SC;
+      background: #fff;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+
+      .discounted-price {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 32px;
+      }
+
+      .company {
+        color: #4e5969;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
+      }
+
+      .orange-yellow {
+        color: #fa9600;
+      }
+
+      .foot-explain {
+        display: flex;
+        gap: 12px;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 22px;
+
+        .original-price {
+          color: #86909c;
+          text-decoration: line-through;
         }
 
-        .top-text {
-          display: flex;
-          font-size: 14px;
-          line-height: 22px;
-
-          .label {
-            width: 70px;
-            margin-right: 8px;
-            color: #4e5969;
-            font-weight: 400;
-          }
-
-          .quantity {
-            color: #1d2129;
-            font-weight: 500;
-          }
+        .about {
+          color: #4e5969;
         }
       }
 
-      .foot {
+      .foot-bottom {
         display: flex;
-        flex: 0 1 50%;
-        flex-direction: column;
-        gap: 12px;
-        padding: 12px 32px 24px;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        width: 296px;
+        height: 32px;
+        padding: 6px 16px;
+        color: #1664ff;
+        font-weight: 400;
+        font-size: 12px;
         font-family: PingFang SC;
         background: #fff;
+        border: 1px solid #1664ff;
+        border-radius: 2px;
+        cursor: pointer;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
-
-        .discounted-price {
-          font-weight: 500;
-          font-size: 24px;
-          line-height: 32px;
-        }
-
-        .company {
-          color: #4e5969;
-          font-weight: 500;
-          font-size: 20px;
-          line-height: 28px;
-        }
-
-        .orange-yellow {
-          color: #fa9600;
-        }
-
-        .foot-explain {
-          display: flex;
-          gap: 12px;
-          font-weight: 400;
-          font-size: 13px;
-          line-height: 22px;
-
-          .original-price {
-            color: #86909c;
-            text-decoration: line-through;
-          }
-
-          .about {
-            color: #4e5969;
-          }
-        }
-
-        .foot-bottom {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          justify-content: center;
-          width: 296px;
-          height: 32px;
-          padding: 6px 16px;
-          color: #1664ff;
-          font-weight: 400;
-          font-size: 12px;
-          font-family: PingFang SC;
-          background: #fff;
-          border: 1px solid #1664ff;
-          border-radius: 2px;
-          cursor: pointer;
-          text-underline-position: from-font;
-          text-decoration-skip-ink: none;
-        }
       }
     }
   }
