@@ -118,7 +118,7 @@
             <t-tooltip
               content="插件可安装在企业节点IDHub中用于完成数据接入标识解析体系！"
             >
-              <icon-info-circle />
+              <icon-question-circle style="margin-left: 4px" :size="12" />
             </t-tooltip>
           </span>
         </span>
