@@ -1,47 +1,49 @@
 <template>
   <div v-if="packageList.length" class="service-app">
-    <div>
-      <div class="title">标识轻应用</div>
-      <div class="card">
-        <div
-          v-for="(item, index) in packageList"
-          :key="index"
-          class="package"
-          :class="packageEnum[index]"
-        >
-          <div class="top">
+    <div class="title">标识轻应用</div>
+    <div class="card">
+      <div
+        v-for="(item, index) in packageList"
+        :key="index"
+        class="package"
+        :class="packageClassEnum[index]"
+      >
+        <div class="top">
+          <div class="top-header">
             <div class="top-name">{{ item?.name }}</div>
-            <div class="top-text">
-              <span class="label">免费应用</span>
-              <span class="quantity"> {{ item?.freeAppCount }}个 </span>
-            </div>
-            <div class="top-text">
-              <span class="label">企业子账号</span>
-              <span class="quantity"> {{ item?.companyChildCount }}个 </span>
-            </div>
+            <div class="top-name-desc">{{
+              packageDataListEnum[index].desc
+            }}</div>
           </div>
-          <div class="foot">
-            <div>
-              <span class="discounted-price orange-yellow">
-                {{ item?.lowPrice }}
-              </span>
-              <span class="company">
-                <span class="orange-yellow">.00</span>
-                元/年
-              </span>
-            </div>
-            <div class="foot-explain">
-              <span class="original-price">
-                {{ item?.originalPrice }}元/年
-              </span>
-              <span class="about"> 约{{ item?.avgPrice }}每月 </span>
-            </div>
-            <div
-              class="foot-bottom bottom-wathet bottom-navy-blue"
-              @click="activateService(item)"
-            >
-              开通服务
-            </div>
+          <div
+            v-for="(item2, index2) in packageDataListEnum[index].textList"
+            :key="index2"
+            class="top-text"
+          >
+            <iconpark-icon name="success"></iconpark-icon>
+            <span class="introduce">{{ item2 }}</span>
+          </div>
+        </div>
+        <div class="foot">
+          <div>
+            <span class="discounted-price orange-yellow">
+              {{ item?.lowPrice }}
+            </span>
+            <span class="company">
+              <span class="orange-yellow">.00</span>
+              起/年
+            </span>
+          </div>
+          <div class="light-gray-color">
+            支持{{ item?.companyChildCount }}人，增购{{
+              item?.avgPrice
+            }}元/人/年
+          </div>
+          <div
+            class="foot-bottom bottom-wathet bottom-navy-blue"
+            @click="activateService(item)"
+          >
+            开通服务
           </div>
         </div>
       </div>
@@ -62,7 +64,7 @@
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getServicePackage } from '@/api/buyer/overview';
 import { snmsClientLogin } from '@/api/login';
@@ -75,11 +77,45 @@ import LightApplication from './light-application.vue';
 // 企业数智化应用
 import DigitizedApplications from './digitized-applications.vue';
 
-const packageEnum: Record<string, any> = {
+const packageClassEnum: Record<string, any> = {
   0: '',
   1: 'wathet',
   2: 'navy-blue',
 };
+
+const packageDataListEnum: Record<string, any> = [
+  {
+    desc: '简单业务场景 灵活快速易上手',
+    textList: [
+      '支持50人',
+      '百款免费标识轻应用',
+      '应用个性化搭建',
+      '60万条数据总量',
+      '企业数据报表',
+      '免费在线培训',
+    ],
+  },
+  {
+    desc: '多业务场景 多系统对接 打通内外用户 开放性更高',
+    textList: [
+      '支持80人',
+      '包括基础版所有功能',
+      '100万条数据总量',
+      '多来源数据采集管理',
+      '开放系统对接能力',
+    ],
+  },
+  {
+    desc: '简单业务场景 灵活快速易上手',
+    textList: [
+      '支持100人',
+      '包括增强版所有功能',
+      '200万条数据总量',
+      '企业级安全能力',
+    ],
+  },
+];
+
 const orderStore = useOrderStore();
 const router = useRouter();
 const userStore = useUserStore();
@@ -98,7 +134,6 @@ const getPackageList = () => {
   };
   getServicePackage(params).then((res: any) => {
     packageList.value = res;
-    console.log(res);
   });
 };
 
@@ -116,6 +151,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     saleType,
     logo,
     source,
+    duration,
   } = prodDetail.value;
 
   const durationDesc = '12个月';
@@ -149,7 +185,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     memberIdList,
     productType: orderTypes.SPECIAL_SAAS,
     accountCount: prodDetail.value.companyChildCount,
-    buyDuration: 12,
+    buyDuration: duration,
   };
 
   router.push({
@@ -202,6 +238,15 @@ const activateService = (item: any) => {
   return true;
 };
 
+watch(
+  () => userInfoByCompany.value,
+  (newV: any) => {
+    if (newV?.companyId) {
+      getPackageList();
+    }
+  }
+);
+
 onMounted(async () => {
   getPackageList();
 });
@@ -210,12 +255,11 @@ onMounted(async () => {
 <style scoped lang="less">
 .service-app {
   width: 1200px;
-  height: 380px;
+  height: 530px;
   margin: 0 auto 24px;
-  padding: 16px 24px 32px;
-  background: url('./image/light -application-bg.png') no-repeat;
-  background-size: cover;
-  border: 1px solid rgba(229, 232, 239, 1);
+  padding: 20px 24px;
+  background: #f3f6fd;
+  border: 1px solid #e5e8ef;
   border-radius: 4px;
 }
 
@@ -238,19 +282,18 @@ onMounted(async () => {
   .package {
     display: flex;
     flex-direction: column;
-    gap: 8px;
     width: 360px;
-    height: 278px;
-    background: #f2f3f8a8;
+    background: url('../image/package_01.png') no-repeat;
+    background-size: 100% 100%;
     border: 1px solid #fff;
     border-radius: 4px;
 
     &.wathet {
-      background: #e7f0fca8;
+      background: url('../image/package_02.png') no-repeat;
     }
 
     &.navy-blue {
-      background: #b9d3ff54;
+      background: url('../image/package_03.png') no-repeat;
 
       .foot > .bottom-navy-blue {
         color: #fff;
@@ -260,34 +303,39 @@ onMounted(async () => {
 
     .top {
       display: flex;
-      flex: 0 1 50%;
       flex-direction: column;
       gap: 12px;
+      height: 294px;
       padding: 24px 32px 12px;
       font-family: PingFang SC;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
 
-      .top-name {
-        color: #223354;
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 24px;
+      .top-header {
+        .top-name {
+          color: #223354;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        .top-name-desc {
+          margin-top: 4px;
+          color: #86909c;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 18px;
+        }
       }
 
       .top-text {
         display: flex;
+        gap: 8px;
+        align-items: center;
+        height: 22px;
         font-size: 14px;
-        line-height: 22px;
 
-        .label {
-          width: 70px;
-          margin-right: 8px;
-          color: #4e5969;
-          font-weight: 400;
-        }
-
-        .quantity {
+        .introduce {
           color: #1d2129;
           font-weight: 500;
         }
@@ -296,10 +344,9 @@ onMounted(async () => {
 
     .foot {
       display: flex;
-      flex: 0 1 50%;
       flex-direction: column;
-      gap: 12px;
-      padding: 12px 32px 24px;
+      height: 142px;
+      padding: 12px 32px 24px 32px;
       font-family: PingFang SC;
       background: #fff;
       text-underline-position: from-font;
@@ -322,21 +369,13 @@ onMounted(async () => {
         color: #fa9600;
       }
 
-      .foot-explain {
+      .light-gray-color {
         display: flex;
-        gap: 12px;
+        margin: 4px 0 16px 0;
+        color: #4e5969;
         font-weight: 400;
         font-size: 13px;
         line-height: 22px;
-
-        .original-price {
-          color: #86909c;
-          text-decoration: line-through;
-        }
-
-        .about {
-          color: #4e5969;
-        }
       }
 
       .foot-bottom {

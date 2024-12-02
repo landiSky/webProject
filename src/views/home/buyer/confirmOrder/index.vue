@@ -170,6 +170,7 @@ const clickCreateOrder = () => {
         const packageUserParams = {
           companyId: userStore.selectCompany?.companyId, // 企业id
           servicePackageId: productId, // 套餐id
+          duration: buyDuration, // 有效期
           memberIdList, // 成员列表
         };
         apiSaveServicePackageUser(packageUserParams).then(() => {
