@@ -309,6 +309,8 @@
                     >
                       <img
                         v-if="dataList.productType === 1"
+                        class="pay-img"
+                        style="width: 80px; height: 80px"
                         :src="`/server/web/file/download?name=${dataList.productLogo}`"
                         alt=""
                       />
