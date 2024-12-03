@@ -93,3 +93,10 @@ export function saveCompanyNumberIntelligence(params: Record<string, any>) {
     params,
   });
 }
+
+// 获取轻流门户列表
+export function getDashBoardList(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/getDashBoardList', {
+    params,
+  });
+}
