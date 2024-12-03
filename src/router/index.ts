@@ -85,6 +85,7 @@ export const whiteList = [
   '/wow/idInsideZone',
   '/public/idhub-open',
   '/authCenter',
+  '/wow/lightApplicationMall',
 ];
 
 const router = createRouter({
