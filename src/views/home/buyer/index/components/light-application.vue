@@ -53,12 +53,12 @@ import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany }: Record<string, any> =
+const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 const appDataList: Record<string, any> = ref([]);
 const getPackageList = () => {
   const params = {
-    companyId: userInfoByCompany.value?.companyId,
+    companyId: selectCompany.value?.companyId,
   };
   getServicePackage(params).then((res: any) => {
     appDataList.value = res;

@@ -67,6 +67,18 @@ const wowRoutesList = [
         name: 'wowFileFreview',
         component: () => import('@/views/wow/filepreview/index.vue'),
       },
+      // 轻应用商城
+      {
+        path: '/wow/lightApplicationMall',
+        name: 'wowLightApplicationMall',
+        component: () => import('@/views/wow/lightApplicationMall/index.vue'),
+      },
+      {
+        path: '/wow/lightApplicationMall/detail/:id',
+        name: 'wowLightApplicationMallDetail',
+        component: () =>
+          import('@/views/wow/lightApplicationMall/detail/index.vue'),
+      },
     ],
   },
 ];

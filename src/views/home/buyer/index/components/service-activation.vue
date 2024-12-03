@@ -11,9 +11,9 @@
         <div class="top">
           <div class="top-header">
             <div class="top-name">{{ item?.name }}</div>
-            <div class="top-name-desc">{{
+            <!-- <div class="top-name-desc">{{
               packageDataListEnum[index].desc
-            }}</div>
+            }}</div> -->
           </div>
           <div
             v-for="(item2, index2) in packageDataListEnum[index].textList"
@@ -68,7 +68,12 @@ import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getServicePackage } from '@/api/buyer/overview';
 import { snmsClientLogin } from '@/api/login';
-import { NodeAuthStatus, SaleType, orderTypes } from '@/enums/common';
+import {
+  NodeAuthStatus,
+  SaleType,
+  orderTypes,
+  AccountType,
+} from '@/enums/common';
 import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import AuthMemberModal from '@/views/wow/mall/detail/authMember.vue';
@@ -154,7 +159,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     duration,
   } = prodDetail.value;
 
-  const durationDesc = '12个月';
+  const durationDesc = `${duration}个月`;
 
   if (memberIdList?.length > prodDetail.value?.companyChildCount) {
     Message.warning(
@@ -195,7 +200,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
 // 开通服务
 const activateService = (item: any) => {
-  if (userInfoByCompany?.nodeStatus === NodeAuthStatus?.AUTHED) {
+  if (userInfoByCompany.value?.nodeStatus === NodeAuthStatus?.AUTHED) {
     Modal.info({
       title: '使用提醒',
       content: '本服务需申请企业节点后使用，请先开通或绑定企业节点。',
@@ -230,6 +235,18 @@ const activateService = (item: any) => {
           window.open(`${res?.data?.data}&data=${sm2data}`);
         });
       },
+    });
+    return false;
+  }
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业认证后使用，请先进行企业认证。',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '关闭',
+      onOk: () => {},
     });
     return false;
   }

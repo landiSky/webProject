@@ -100,7 +100,7 @@
         >
       </t-form-item>
       <t-form-item
-        field="qingFlowPortalId"
+        field="dashKey"
         label="选择应用"
         :rules="[
           {
@@ -110,16 +110,16 @@
         ]"
       >
         <t-select
-          v-model="form.qingFlowPortalId"
+          v-model="form.dashKey"
           :style="{ width: '190px' }"
           placeholder="请选择"
           :trigger-props="{ autoFitPopupMinWidth: true }"
         >
           <t-option
-            v-for="item in memberList"
-            :key="item.memberId"
-            :value="item.memberId"
-            >{{ item.username }}
+            v-for="item in portalAppList"
+            :key="item.dashKey"
+            :value="item.dashKey"
+            >{{ item.dashName }}
           </t-option>
         </t-select>
       </t-form-item>
@@ -132,33 +132,37 @@ import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
-import { saveCompanyNumberIntelligence } from '@/api/buyer/overview';
+import {
+  saveCompanyNumberIntelligence,
+  getDashBoardList,
+} from '@/api/buyer/overview';
 import IconMaterial from '@/components/iconMaterial/index.vue';
 
 const logoVisible = ref(false);
 const formRef = ref();
 
-const memberList = ref<any[]>([]);
+const portalAppList = ref<any[]>([]);
 
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfoByCompany, selectCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const emit = defineEmits(['onConfirm', 'onCancel']);
 
 const form = reactive<{
   id: string;
-  qingFlowPortalId: string;
-  qingFlowPortalUrl: string;
+  dashKey: string;
+  dashName: string;
   name: string;
   logo: string;
   companyId: string;
 }>({
   id: '', // id
-  qingFlowPortalId: '', // 轻流门户id
-  qingFlowPortalUrl: '', // 轻流门户地址
+  dashKey: '', // 轻流门户key
+  dashName: '', // 轻流门户名称
   name: '', // 名称
   logo: '', // 图标
-  companyId: userInfoByCompany.value?.companyId, // 企业id
+  companyId: selectCompany.value?.companyId, // 企业id
 });
 
 const props = defineProps({
@@ -185,7 +189,18 @@ const handleConfirm = () => {
   });
 };
 
-onMounted(() => {});
+const getPortalApplicationList = () => {
+  const params = {
+    companyId: selectCompany.value?.companyId, // 企业id
+  };
+  getDashBoardList(params).then((res: any) => {
+    portalAppList.value = res;
+  });
+};
+
+onMounted(() => {
+  getPortalApplicationList();
+});
 </script>
 
 <style lang="less" scoped>

@@ -71,7 +71,7 @@ import { useUserStore } from '@/store/modules/user';
 import AddForm from './addForm.vue';
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany }: Record<string, any> =
+const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 const appDataList: Record<string, any> = ref([]);
 const state = reactive<{
@@ -82,7 +82,7 @@ const state = reactive<{
 
 const getDigitizedApplicationsList = () => {
   const params = {
-    companyId: userInfoByCompany.value?.companyId,
+    companyId: selectCompany.value?.companyId,
   };
   getCompanyNumeberIntelligence(params).then((res: any) => {
     appDataList.value = res;
@@ -94,7 +94,7 @@ const goLightFlow = (item: any) => {
   console.log(item);
   const params = {
     userId: userInfo.value?.id,
-    wsId: item?.qingFlowPortalId,
+    wsId: item?.id,
   };
   apiLoginQingFlow(params).then((res: any) => {
     console.log('轻流登录接口返回', res);
