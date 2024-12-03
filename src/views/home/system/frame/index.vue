@@ -1,161 +1,52 @@
 <template>
-  <div>
+  <div class="edit-modal">
     <t-page-header flex title="企业架构管理" :show-back="false">
-      <t-row :wrap="false">
+      <t-row :wrap="false" class="add-dept">
         <t-col flex="auto">
-          <t-button
-            v-if="userInfoByCompany.primary !== rolestatusled.ROLESTATUS"
-            type="primary"
-            @click="clickAddBtn"
-          >
-            新建部门
-          </t-button>
-        </t-col>
-        <t-col flex="auto">
-          <t-form :model="state.formModel">
-            <t-row :gutter="12" justify="end">
-              <t-col flex="192px">
-                <t-form-item field="name" hide-label>
-                  <t-input
-                    v-model="state.formModel.name"
-                    placeholder="请输入角色名称"
-                    allow-clear
-                  />
-                </t-form-item>
-              </t-col>
-              <t-col flex="70px">
-                <t-button type="primary" @click="clickSearchBtn">
-                  查询
-                </t-button>
-              </t-col>
-              <t-col flex="68px">
-                <t-button @click="handleReset"> 重置 </t-button>
-              </t-col>
-            </t-row>
-          </t-form>
+          <t-button type="primary" @click="clickAddBtn"> 新建部门 </t-button>
         </t-col>
       </t-row>
-
       <t-table
         row-key="id"
         :loading="state.tableLoading"
         :columns="columns"
         :data="state.tableData"
-        :pagination="{
-          'show-total': true,
-          'show-jumper': true,
-          'show-page-size': true,
-          'hide-on-single-page': hideOnSinglePage,
-          ...pagination,
-        }"
+        :pagination="false"
         bordered
-        @page-change="onPageChange"
-        @page-size-change="onPageSizeChange"
       >
-        <template #enabled="{ record }">
-          <span
-            v-if="record.enabled === UserStatusEnum.UNUSED"
-            class="circle danger"
-          ></span>
-          <span v-else class="circle green"></span>
-          {{ record.enabled === UserStatusEnum.UNUSED ? '停用' : '正常' }}
-        </template>
-        <template #empty> </template>
         <template #operations="{ record }">
-          <!-- <t-link @click="clickDetailBtn(record)"> 详情 </t-link> -->
-          <t-link
-            v-if="
-              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
-              record.isAdmin === false
-            "
-            @click="onEditTreeConfirmsldrole(record)"
-          >
-            授权管理
-          </t-link>
-
-          <t-link
-            v-if="
-              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
-              record.isAdmin === false
-            "
-            @click="clickEditBtn(record)"
-            >编辑</t-link
-          >
-          <t-link
-            v-if="
-              userInfoByCompany.primary !== rolestatusled.ROLESTATUS &&
-              record.isAdmin === false
-            "
-            @click="delectlist(record.id, record.memberCount)"
+          <t-link @click="addDept(record)"> 添加子部门 </t-link>
+          <t-link @click="editDept(record)">编辑</t-link>
+          <t-link @click="deleteDept(record.id, record.memberCount)"
             >删除</t-link
           >
-          <span
-            v-if="
-              userInfoByCompany.primary === rolestatusled.ROLESTATUS ||
-              record.isAdmin === true
-            "
-            >-</span
-          >
-          <!-- <t-link @click="handleEditFullscreen(record)">全屏展示编辑</t-link> -->
+          <t-link @click="showDept()">查看</t-link>
         </template>
       </t-table>
     </t-page-header>
-    <div v-if="pagination.total === 0 && noDatalist === true" class="noClass">
-      <div>
-        <img :src="noSearch" alt="" />
-        <div>
-          <span class="zwjg">暂无查询结果</span>
-
-          <span class="qkclass" @click="clearSearchles()">清空查询项</span>
-        </div>
-      </div>
-    </div>
-    <div v-if="pagination.total === 0 && noDatalist === false" class="noClass">
-      <div>
-        <img :src="noData" alt="" />
-        <div class="zwclass">暂无数据</div>
-      </div>
-    </div>
-
     <EditModal
       v-if="editModalVisible"
       :data="state.editData"
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
-    ></EditModal>
-    <!-- 角色权限 -->
-    <TreeModalsles
-      v-if="flagModalTree"
-      :data="state.editData"
-      @confirm="onEditTreeConfirmsld"
-      @cancel="onEditTreeCancelsld"
-    >
-    </TreeModalsles>
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
-// import dayjs from 'dayjs';
+import { ref, reactive, onMounted } from 'vue';
 import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
-import { rolelist, apiRoleDelete, apiRoleDetails } from '@/api/system/role';
-import { deptList } from '@/api/system/dept';
+import { apiRoleDelete } from '@/api/system/role';
+import { deptTreeData, deptInfo } from '@/api/system/dept';
 import { rolestatusled } from '@/enums/common';
-
-import noSearch from '@/assets/images/noSearch.png';
-
-import noData from '@/assets/images/noData.png';
 
 import EditModal from './components/edit-modal.vue';
 
-import TreeModalsles from './components/tree-modals.vue';
-
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
 
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: undefined,
@@ -164,7 +55,7 @@ const defaultFormModel: Record<string, string | number | undefined> = {
   startTime: undefined,
   endTime: undefined,
 };
-const noDatalist = ref(false);
+
 const state = reactive<{
   tableLoading: boolean;
   formModel: Record<string, any>;
@@ -187,11 +78,6 @@ const state = reactive<{
   detailData: {},
 });
 
-const UserStatusEnum: { [name: string]: any } = {
-  USED: 0, // 启用
-  UNUSED: 1, // 停用
-};
-
 const columns = [
   {
     title: '部门名称',
@@ -210,6 +96,8 @@ const columns = [
   {
     title: '备注',
     dataIndex: 'remark',
+    ellipsis: true,
+    tooltip: true,
     width: '20%',
   },
   {
@@ -220,97 +108,65 @@ const columns = [
   },
 ];
 
-const pagination = reactive<{
-  current: number; // 当前页码
-  pageSize: number;
-  total: number;
-}>({
-  current: 1,
-  pageSize: 10,
-  total: 0,
-});
-
-// 分页，总页数不到10页，不显示分页器
-const hideOnSinglePage = computed(() => pagination.total <= 10);
-
 const editModalVisible = ref(false);
 
-// 角色弹窗
-const flagModalTree = ref(false);
-// const aaa = ref({});
-
-function fetchData() {
-  // @ts-ignore
-  const { current, pageSize } = pagination;
-  console.log(current, pageSize);
-
-  // mock数据
+const fetchData = () => {
   state.tableLoading = false;
-  deptList({
+  deptTreeData({
     companyId: userInfoByCompany.value?.companyId,
   })
     .then((res: any) => {
       console.log('resres', res);
-      state.tableData = res.records;
-      pagination.total = res.total;
+
+      state.tableData = JSON.parse(
+        JSON.stringify(res).replace(/childNodes/, 'children')
+      );
     })
-    .catch((err) => {});
-}
-
-// 每页显示条数发生变化
-const onPageSizeChange = (size: number) => {
-  pagination.pageSize = size;
-  pagination.current = 1;
-  fetchData();
+    .catch(() => {});
 };
 
-// 页码发生变化
-const onPageChange = (current: number) => {
-  pagination.current = current;
-  fetchData();
-};
-// 查询
-const clickSearchBtn = () => {
-  console.log(state.formModel.name, ' state.formModel.name');
-  onPageChange(1);
-  noDatalist.value = true;
-  fetchData();
-};
-// 清空查询项
-const clearSearchles = () => {
-  state.formModel.name = '';
-  onPageChange(1);
-  noDatalist.value = false;
-};
-
-// 重置后，触发一次查询
-const handleReset = () => {
-  // 如果都没有默认项，可以使用state.formModel.resetFields()函数
-  // state.formModel = { ...defaultFormModel };
-  // state.rangeTimeList = [];
-  state.formModel.name = '';
-  clickSearchBtn();
+const addDept = (record: Record<string, any>) => {
+  state.editData = {};
+  state.editData.parentId = record.id; // 新增传当前id
+  state.editData.title = '新增子部门';
+  editModalVisible.value = true;
+  console.log('addDept', record);
 };
 
 // 点击编辑按钮
-const clickEditBtn = (data: any) => {
-  console.log(data);
-  state.editData = data;
-  editModalVisible.value = true;
+const editDept = async (record: Record<string, any>) => {
+  console.log('editDept', record);
+  let memberList: [] = [];
+  await deptInfo({ deptId: record.id })
+    .then((res: any) => {
+      memberList = res.memberList;
+    })
+    .catch(() => {})
+    .finally(() => {
+      state.editData = record;
+      state.editData.memberList = memberList;
+      state.editData.parentId = record.parentId; // 编辑传父级id
+      state.editData.title = '编辑部门信息';
+      editModalVisible.value = true;
+      console.log('stateData', state.editData);
+    });
 };
 // 点击新增按钮
 const clickAddBtn = () => {
-  state.editData = undefined; // 编辑、新增复用一个modal时，清除编辑数据
+  state.editData = {}; // 编辑、新增复用一个modal时，清除编辑数据
+  state.editData.parentId = 0;
+  state.editData.title = '新增部门';
   editModalVisible.value = true;
 };
+
 // 新增编辑弹窗确定后的回调
 const onEditModalConfirm = () => {
   editModalVisible.value = false;
-  //   fetchData();
+  fetchData();
 };
-const delectdata = () => {};
+
 // 删除
-const delectlist = (id: number, memberCount: number) => {
+const deleteDept = (id: number, memberCount: number) => {
   console.log(id);
   if (memberCount === 0) {
     Modal.warning({
@@ -346,71 +202,61 @@ const delectlist = (id: number, memberCount: number) => {
     });
   }
 };
-
-// 权限管理
-const onEditTreeConfirmsldrole = (data: any) => {
-  state.editData = data;
-  flagModalTree.value = true;
-};
-// 完成
-const onEditTreeConfirmsld = () => {
-  flagModalTree.value = false;
-  fetchData();
-};
-// 取消
-const onEditTreeCancelsld = () => {
-  flagModalTree.value = false;
-};
-
+// 查看
+const showDept = () => {};
 onMounted(() => {
-  console.log(userInfo.value);
   fetchData();
 });
 </script>
 
 <style lang="less" scoped>
-.noClass {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 500px;
-  color: #86909c;
-  font-weight: 400;
-  font-size: 12px;
-  font-family: 'PingFang SC';
-  font-style: normal;
-  line-height: 20px;
-  text-align: center;
-
-  .zwclass {
-    color: #86909c;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
-    text-align: center;
-  }
-
-  .qkclass {
-    margin-left: 4px;
-    color: #1664ff;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
-    cursor: pointer;
-  }
-
-  .zwjg {
-    color: #86909c;
-    font-weight: 400;
-    font-size: 12px;
-    font-family: 'PingFang SC';
-    font-style: normal;
-    line-height: 20px;
+.edit-modal {
+  .add-dept {
+    margin-bottom: 16px;
   }
 }
+// .noClass {
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   height: 500px;
+//   color: #86909c;
+//   font-weight: 400;
+//   font-size: 12px;
+//   font-family: 'PingFang SC';
+//   font-style: normal;
+//   line-height: 20px;
+//   text-align: center;
+
+//   .zwclass {
+//     color: #86909c;
+//     font-weight: 400;
+//     font-size: 12px;
+//     font-family: 'PingFang SC';
+//     font-style: normal;
+//     line-height: 20px;
+//     text-align: center;
+//   }
+
+//   .qkclass {
+//     margin-left: 4px;
+//     color: #1664ff;
+//     font-weight: 400;
+//     font-size: 12px;
+//     font-family: 'PingFang SC';
+//     font-style: normal;
+//     line-height: 20px;
+//     cursor: pointer;
+//   }
+
+//   .zwjg {
+//     color: #86909c;
+//     font-weight: 400;
+//     font-size: 12px;
+//     font-family: 'PingFang SC';
+//     font-style: normal;
+//     line-height: 20px;
+//   }
+// }
 </style>

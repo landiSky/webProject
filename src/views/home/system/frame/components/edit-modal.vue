@@ -9,8 +9,7 @@
       ok-text="确定"
       @cancel="onConfirmflag"
     >
-      <!-- "下一步:角色授权" -->
-      <template #title> {{ isEdit ? '编辑' : '新增' }}部门</template>
+      <template #title> {{ props.data.title || '-' }}</template>
       <t-form
         ref="formRef"
         class="form-container"
@@ -114,6 +113,7 @@ import {
   ref,
   onMounted,
   computed,
+  watch,
 } from 'vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -139,7 +139,7 @@ const emit = defineEmits(['confirm', 'cancel', 'getValue']);
 const formRef = ref();
 const visible = ref(true);
 
-const isEdit = computed(() => Boolean(props.data?.id ?? false)); // 这里的id替换为编辑数据的唯一属性
+const isEdit = computed(() => !!props.data?.id); // 这里的id替换为编辑数据的唯一属性
 const state = reactive<{
   formModel: Record<string, any>;
   memberList: Record<string, any>;
@@ -156,6 +156,27 @@ const state = reactive<{
   },
   memberList: [],
 });
+
+watch(
+  () => props.data,
+  (val) => {
+    if (val.id) {
+      console.log('props.data', props.data);
+      state.formModel.parentId = props.data.parentId;
+      state.formModel.id = props.data.id || undefined;
+      state.formModel.deptName = props.data.deptName;
+      state.formModel.deptCharge = props.data.deptCharge;
+      state.formModel.remark = props.data.remark;
+      state.formModel.memberSelect =
+        props.data.memberList.map((item: any) => item.memberId) || []; // 这里传数组 列表没返回
+      state.formModel.companyId = props.data.companyId;
+    }
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 
 const formRules = {
   deptName: [
@@ -177,6 +198,7 @@ const formRules = {
 };
 
 const handleDynamicList = () => {
+  console.log('state.formModel.memberSelect', state.formModel.memberSelect);
   const dynamicMemberList = state.memberList.filter(
     (item: Record<string, any>) =>
       state.formModel.memberSelect.includes(item.memberId)
@@ -186,27 +208,34 @@ const handleDynamicList = () => {
 
 const onConfirm = (done: (closed: boolean) => void) => {
   formRef.value.validate((errors: any) => {
-    const params = state.formModel;
+    const params = JSON.parse(JSON.stringify(state.formModel));
     params.memberList = handleDynamicList();
-    params.companyId = userInfoByCompany.value?.companyId;
+    params.parentId = props.data.parentId;
     delete params.memberSelect;
-    // if (!isEdit.value) {
     // 新增
     if (!errors) {
       console.log('onConfirm', params); // 成员列表
+      if (!isEdit.value) {
+        // 新增
+        params.companyId = userInfoByCompany.value?.companyId;
+        params.oldMemberIdList = [];
+      } else {
+        // 编辑
+        console.log('编辑', props.data.oldMemberIdList);
+        params.oldMemberIdList = props.data.memberList || [];
+      }
       updateDept({
         ...params,
       })
         .then(() => {
           Message.success('新增成功');
-          // emit('confirm');
+          emit('confirm');
           done(true);
         })
         .catch(() => {
           done(false);
         });
     } else {
-      console.log('else');
       done(false);
     }
   });
