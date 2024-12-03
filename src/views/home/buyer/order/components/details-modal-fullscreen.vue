@@ -285,6 +285,14 @@
                       style="float: left; width: 80px; margin: 0 12px"
                     >
                       <img
+                        v-if="dataList.productType === 1"
+                        class="pay-img"
+                        style="width: 80px; height: 80px"
+                        :src="`/server/web/file/download?name=${dataList.productLogo}`"
+                        alt=""
+                      />
+                      <img
+                        v-else
                         class="pay-img"
                         style="width: 80px; height: 80px"
                         :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.orderSource}&serverId=${dataList.productServerId}`"

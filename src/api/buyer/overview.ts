@@ -74,3 +74,22 @@ export function apiGetAuth(data: Record<string, any>) {
 export function getServicePackage(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/getServicePackage', { params });
 }
+
+// 登录轻流
+export function apiLoginQingFlow(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/loginQingFlow', { params });
+}
+
+// 查询企业的数智化应用列表
+export function getCompanyNumeberIntelligence(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/getCompanyNumeberIntelligence', {
+    params,
+  });
+}
+
+// 新增数智化应用
+export function saveCompanyNumberIntelligence(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/saveCompanyNumberIntelligence', {
+    params,
+  });
+}

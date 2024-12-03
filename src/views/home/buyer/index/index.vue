@@ -367,8 +367,9 @@
       </div>
     </div>
     <!-- 标识轻应用 -->
-    <LogoApp />
-    <!-- 已购应用 -->
+    <ServiceActivation />
+
+    <!-- 已购其他应用 -->
     <div class="purchased">
       <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
         <t-tab-pane key="1">
@@ -379,7 +380,7 @@
               src="./image/application_01.png"
               alt=""
             />
-            已购应用
+            已购其他应用
           </template>
         </t-tab-pane>
         <t-tab-pane key="2">
@@ -390,11 +391,11 @@
               src="./image/application_02.png"
               alt=""
             />
-            企业自建应用
+            企业自建其他应用
           </template>
         </t-tab-pane>
       </t-tabs>
-      <!-- <h3>已购应用</h3> -->
+      <!-- <h3>已购其他应用</h3> -->
       <div class="Applysd">
         <div
           v-for="(item, index) in authDialogVisible"
@@ -452,7 +453,7 @@
             >
           </div>
 
-          <!-- 企业自建应用 -->
+          <!-- 企业自建其他应用 -->
           <div v-if="tabsApplication == 2" style="width: 102px">
             <img
               :src="`/server/web/file/download?name=${item.appLogo}`"
@@ -495,7 +496,7 @@
         <div v-if="authDialogVisible.length === 0" class="nothing-application">
           <div class="nothing-application-img"></div>
           <div>{{
-            tabsApplication == 1 ? '暂无已购应用' : '暂无企业自建应用'
+            tabsApplication == 1 ? '暂无已购其他应用' : '暂无企业自建其他应用'
           }}</div>
           <t-button
             class="nothing-application-button"
@@ -661,9 +662,9 @@ import group4 from './image/group4.png';
 // import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
-import EmpowerTip from './empowerTip.vue';
-// 服务开通和应用
-import LogoApp from './logoApp.vue';
+import EmpowerTip from './components/empowerTip.vue';
+// 服务开通
+import ServiceActivation from './components/service-activation.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -1211,11 +1212,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-// * {
-//   padding: 0;
-//   margin: 0;
-//   list-style: none;
-// }
 .cverbox {
   width: 100%;
   height: 100%;
@@ -1905,105 +1901,6 @@ onMounted(() => {
           font-weight: 700;
           font-size: 30px;
           line-height: 38px;
-        }
-      }
-    }
-  }
-  // pdf导出
-  .zhengshu-container-box {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: -9999;
-    box-sizing: border-box;
-    // position: fixed;
-    // // top: 100000px;
-    width: 664px;
-    height: 856px;
-    margin: 10px auto 0;
-    padding: 24px;
-    background-color: #fff;
-    box-shadow: 0 0 10px 0 #ccc;
-
-    .zhengshu-container-box-title {
-      margin-top: 24px;
-      color: #1d2129;
-      font-weight: 400;
-      font-size: 32px;
-      font-family: 'PingFang SC';
-      font-style: normal;
-      text-align: center;
-    }
-
-    .zhengshu-container-box-bid {
-      color: #1d2129;
-      font-weight: 400;
-      font-size: 14px;
-      font-family: 'PingFang SC';
-      font-style: normal;
-      text-align: center;
-    }
-
-    .zhengshu-container-box-center {
-      width: 100%;
-      margin-top: 58px;
-      padding-left: 17px;
-
-      div {
-        display: flex;
-        align-items: center;
-        margin-top: 18px;
-
-        span:nth-child(1) {
-          min-width: 85px;
-          color: #86909c;
-          font-weight: 400;
-          font-size: 13px;
-          font-family: 'PingFang SC';
-          font-style: normal;
-        }
-
-        span:nth-child(2) {
-          color: #1d2129;
-          font-weight: 400;
-          font-size: 14px;
-          font-family: 'PingFang SC';
-          font-style: normal;
-        }
-      }
-    }
-
-    .zhengshu-container-box-shuoming {
-      box-sizing: border-box;
-      width: 100%;
-      // position: absolute;
-      // bottom: 24px;
-      // left: 0;
-      min-height: 145px;
-      padding: 0 24px;
-
-      .zhengshu-container-box-shuoming-box {
-        box-sizing: border-box;
-        // border-top: 1px solid #e8e9ea;
-        width: 100%;
-        height: 100%;
-        padding-top: 20px;
-
-        .zhengshu-container-box-shuoming-box-title {
-          color: #1d2129;
-          font-weight: 400;
-          font-size: 14px;
-          font-family: 'PingFang SC';
-          font-style: normal;
-        }
-
-        .zhengshu-container-box-shuoming-box-center {
-          margin-top: 10px;
-          color: #86909c;
-          font-weight: 400;
-          font-size: 12px;
-          font-family: 'PingFang SC';
-          font-style: normal;
         }
       }
     }

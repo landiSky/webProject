@@ -228,7 +228,7 @@ onMounted(async () => {});
     width: 281px;
     height: 201px;
     margin: auto;
-    background: url('./image/security_01.png') no-repeat;
+    background: url('../image/security_01.png') no-repeat;
     background-size: 100%;
   }
 
@@ -258,7 +258,7 @@ onMounted(async () => {});
   .explain-icon {
     width: 13px;
     height: 10px;
-    background: url('./image/security_02.png') no-repeat;
+    background: url('../image/security_02.png') no-repeat;
     background-size: 100%;
   }
 
