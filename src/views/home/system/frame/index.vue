@@ -10,17 +10,16 @@
         row-key="id"
         :loading="state.tableLoading"
         :columns="columns"
+        :hide-expand-button-on-empty="true"
         :data="state.tableData"
         :pagination="false"
         bordered
       >
-        <template #operations="{ record }">
+        <template #operations="{ column, record }">
           <t-link @click="addDept(record)"> 添加子部门 </t-link>
           <t-link @click="editDept(record)">编辑</t-link>
-          <t-link @click="deleteDept(record.id, record.memberCount)"
-            >删除</t-link
-          >
-          <t-link @click="showDept()">查看</t-link>
+          <t-link @click="deleteDept(record)">删除</t-link>
+          <t-link @click="showDept(column, record)">查看</t-link>
         </template>
       </t-table>
     </t-page-header>
@@ -39,10 +38,15 @@ import { Modal, Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
 
-import { apiRoleDelete } from '@/api/system/role';
-import { deptTreeData, deptInfo } from '@/api/system/dept';
+import {
+  deptTreeData,
+  deptInfo,
+  delDept,
+  hasDeptMemeber,
+} from '@/api/system/dept';
 import { rolestatusled } from '@/enums/common';
 
+import { startsWith } from 'lodash';
 import EditModal from './components/edit-modal.vue';
 
 const userStore = useUserStore();
@@ -58,6 +62,7 @@ const defaultFormModel: Record<string, string | number | undefined> = {
 
 const state = reactive<{
   tableLoading: boolean;
+  delLoading: boolean;
   formModel: Record<string, any>;
   tableData: Record<string, any>[];
   statusOptions: { value: string; label: string }[];
@@ -66,6 +71,7 @@ const state = reactive<{
   detailData: Record<string, any>; // 详情数据，如果是从列表获取，同editData字段，如果是从接口获取，请完善接口逻辑
 }>({
   tableLoading: false,
+  delLoading: false,
   formModel: { ...defaultFormModel },
   tableData: [],
   statusOptions: [
@@ -111,18 +117,19 @@ const columns = [
 const editModalVisible = ref(false);
 
 const fetchData = () => {
-  state.tableLoading = false;
+  state.tableLoading = true;
   deptTreeData({
     companyId: userInfoByCompany.value?.companyId,
   })
     .then((res: any) => {
-      console.log('resres', res);
-
+      state.tableLoading = false;
       state.tableData = JSON.parse(
-        JSON.stringify(res).replace(/childNodes/, 'children')
+        JSON.stringify(res).replace(/childNodes/g, 'children')
       );
     })
-    .catch(() => {});
+    .catch(() => {
+      state.tableLoading = false;
+    });
 };
 
 const addDept = (record: Record<string, any>) => {
@@ -130,12 +137,10 @@ const addDept = (record: Record<string, any>) => {
   state.editData.parentId = record.id; // 新增传当前id
   state.editData.title = '新增子部门';
   editModalVisible.value = true;
-  console.log('addDept', record);
 };
 
 // 点击编辑按钮
 const editDept = async (record: Record<string, any>) => {
-  console.log('editDept', record);
   let memberList: [] = [];
   await deptInfo({ deptId: record.id })
     .then((res: any) => {
@@ -148,7 +153,6 @@ const editDept = async (record: Record<string, any>) => {
       state.editData.parentId = record.parentId; // 编辑传父级id
       state.editData.title = '编辑部门信息';
       editModalVisible.value = true;
-      console.log('stateData', state.editData);
     });
 };
 // 点击新增按钮
@@ -166,44 +170,50 @@ const onEditModalConfirm = () => {
 };
 
 // 删除
-const deleteDept = (id: number, memberCount: number) => {
-  console.log(id);
-  if (memberCount === 0) {
-    Modal.warning({
-      title: '确定删除该角色吗？',
-      titleAlign: 'start',
-      content: '',
-      okText: '删除',
-      hideCancel: false,
-      okButtonProps: {
-        status: 'danger',
-      },
-      onOk: () => {
-        apiRoleDelete({ roleId: id }).then((res) => {
-          console.log(res);
-
-          if (res.data.code === 200) {
-            fetchData();
-            Message.success('删除成功');
-          }
-        });
-      },
-    });
-  } else {
-    Modal.warning({
-      title: '该角色下已有成员，暂无法删除。',
-      titleAlign: 'start',
-      content: '',
-      okText: '好的',
-      hideCancel: true,
-      onOk: () => {
-        // modifyUserStatus([id], UserStatusEnum.UNUSED);
-      },
-    });
-  }
+const deleteDept = (record: Record<string, any>) => {
+  hasDeptMemeber({ deptId: record.id }).then((res: any) => {
+    if (res) {
+      Modal.warning({
+        title: '确定删除该企业架构吗？',
+        titleAlign: 'start',
+        content: '删除后数据无法进行操作',
+        okText: '确认',
+        hideCancel: false,
+        okLoading: state.delLoading,
+        okButtonProps: {
+          status: 'danger',
+        },
+        onOk: () => {
+          state.delLoading = true;
+          delDept({ deptId: record.id })
+            .then(() => {
+              state.delLoading = false;
+              Message.success('删除成功');
+              fetchData();
+            })
+            .catch(() => {
+              state.delLoading = false;
+            });
+        },
+      });
+    } else {
+      Modal.warning({
+        title: '该企业组织架构下存在成员无法删除',
+        titleAlign: 'start',
+        content: '请移除该组织下成员进行删除操作',
+        okText: '取消',
+        hideCancel: true,
+        okButtonProps: {
+          type: 'secondary',
+        },
+      });
+    }
+  });
 };
 // 查看
-const showDept = () => {};
+const showDept = (column, record) => {
+  console.log('showDept', column, record);
+};
 onMounted(() => {
   fetchData();
 });

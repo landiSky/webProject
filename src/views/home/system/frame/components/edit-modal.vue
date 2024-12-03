@@ -161,7 +161,6 @@ watch(
   () => props.data,
   (val) => {
     if (val.id) {
-      console.log('props.data', props.data);
       state.formModel.parentId = props.data.parentId;
       state.formModel.id = props.data.id || undefined;
       state.formModel.deptName = props.data.deptName;
@@ -198,7 +197,6 @@ const formRules = {
 };
 
 const handleDynamicList = () => {
-  console.log('state.formModel.memberSelect', state.formModel.memberSelect);
   const dynamicMemberList = state.memberList.filter(
     (item: Record<string, any>) =>
       state.formModel.memberSelect.includes(item.memberId)
@@ -214,21 +212,19 @@ const onConfirm = (done: (closed: boolean) => void) => {
     delete params.memberSelect;
     // 新增
     if (!errors) {
-      console.log('onConfirm', params); // 成员列表
       if (!isEdit.value) {
         // 新增
         params.companyId = userInfoByCompany.value?.companyId;
         params.oldMemberIdList = [];
       } else {
         // 编辑
-        console.log('编辑', props.data.oldMemberIdList);
         params.oldMemberIdList = props.data.memberList || [];
       }
       updateDept({
         ...params,
       })
         .then(() => {
-          Message.success('新增成功');
+          Message.success(!isEdit.value ? '新增成功' : '编辑成功');
           emit('confirm');
           done(true);
         })
