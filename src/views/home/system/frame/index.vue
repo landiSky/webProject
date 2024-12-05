@@ -15,11 +15,11 @@
         :pagination="false"
         bordered
       >
-        <template #operations="{ column, record }">
+        <template #operations="{ record }">
           <t-link @click="addDept(record)"> 添加子部门 </t-link>
           <t-link @click="editDept(record)">编辑</t-link>
           <t-link @click="deleteDept(record)">删除</t-link>
-          <t-link @click="showDept(column, record)">查看</t-link>
+          <t-link @click="showDept(record)">查看</t-link>
         </template>
       </t-table>
     </t-page-header>
@@ -28,6 +28,13 @@
       :data="state.editData"
       @confirm="onEditModalConfirm"
       @cancel="editModalVisible = false"
+    />
+    <DetailModal
+      v-if="detailModalVisible"
+      :visible="detailModalVisible"
+      :data="state.detailData"
+      @confirm="detailModalVisible = false"
+      @cancel="detailModalVisible = false"
     />
   </div>
 </template>
@@ -44,10 +51,9 @@ import {
   delDept,
   hasDeptMemeber,
 } from '@/api/system/dept';
-import { rolestatusled } from '@/enums/common';
 
-import { startsWith } from 'lodash';
 import EditModal from './components/edit-modal.vue';
+import DetailModal from './components/detail-modal.vue';
 
 const userStore = useUserStore();
 const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
@@ -84,6 +90,10 @@ const state = reactive<{
   detailData: {},
 });
 
+const editModalVisible = ref(false);
+
+const detailModalVisible = ref(false);
+
 const columns = [
   {
     title: '部门名称',
@@ -113,8 +123,6 @@ const columns = [
     width: '30%',
   },
 ];
-
-const editModalVisible = ref(false);
 
 const fetchData = () => {
   state.tableLoading = true;
@@ -155,6 +163,7 @@ const editDept = async (record: Record<string, any>) => {
       editModalVisible.value = true;
     });
 };
+
 // 点击新增按钮
 const clickAddBtn = () => {
   state.editData = {}; // 编辑、新增复用一个modal时，清除编辑数据
@@ -211,8 +220,15 @@ const deleteDept = (record: Record<string, any>) => {
   });
 };
 // 查看
-const showDept = (column, record) => {
-  console.log('showDept', column, record);
+const showDept = async (record: Record<string, any>) => {
+  await deptInfo({ deptId: record.id })
+    .then((res: any) => {
+      state.detailData = res;
+    })
+    .catch(() => {})
+    .finally(() => {
+      detailModalVisible.value = true;
+    });
 };
 onMounted(() => {
   fetchData();
