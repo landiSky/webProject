@@ -259,8 +259,12 @@ const AppTypeList = [
 const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
+  LightApp: 2, // 标识轻应用
+  PluginClass: 3, // 插件
   0: 'SaaS',
   1: '独立部署',
+  2: '标识轻应用',
+  3: '插件',
 };
 
 const DeliveryTypeList = [

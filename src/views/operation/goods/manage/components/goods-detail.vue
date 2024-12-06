@@ -306,7 +306,13 @@
                 {{ DeliveryTypeEnum[formModel.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[formModel.saleType] || '-' }}
+                {{
+                  (formModel.deliveryType === 2 ||
+                    formModel.deliveryType === 3) &&
+                  formModel.saleType === 1
+                    ? '付费'
+                    : PriceTypeEnum[formModel.saleType] || '-'
+                }}
               </t-descriptions-item>
             </t-descriptions>
             <div
@@ -330,6 +336,19 @@
               >
                 <t-descriptions-item label="交付版本名称">
                   {{ st.name || '-' }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="formModel.deliveryType === 3"
+                  label="上传插件jar包"
+                >
+                  <a
+                    v-if="st.pluginPackage"
+                    class="link-href"
+                    :href="`/server/web/file/download?name=${st.pluginPackage}`"
+                    download
+                    >{{ st.pluginPackageSource }}</a
+                  >
+                  <span v-else>-</span>
                 </t-descriptions-item>
                 <t-descriptions-item
                   v-if="formModel.deliveryType == 0 && formModel.saleType == 3"
@@ -373,7 +392,19 @@
                   {{ desDeuration(st.durationList) || '-' }}
                 </t-descriptions-item>
                 <t-descriptions-item
-                  v-if="formModel.saleType === 1"
+                  v-if="
+                    formModel.saleType === 1 &&
+                    (formModel.deliveryType === 2 ||
+                      formModel.deliveryType === 3)
+                  "
+                  label="模板售价"
+                >
+                  {{ st.accountNumList[0].price || '-' }} 元
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="
+                    formModel.saleType === 1 && formModel.deliveryType === 1
+                  "
                   label="一口价金额"
                 >
                   {{
@@ -468,8 +499,12 @@ const rejectVisible = ref(false);
 const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
+  LightApp: 2, // 标识轻应用
+  PluginClass: 3, // 插件
   0: 'SaaS',
   1: '独立部署',
+  2: '标识轻应用',
+  3: '插件',
 };
 
 // 定价方式

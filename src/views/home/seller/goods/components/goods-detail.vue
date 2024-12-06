@@ -235,14 +235,17 @@
                 {{ dataInfo.introduction || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
-                <a
-                  v-for="item in dataInfo.useExplainMap"
-                  :key="item"
-                  class="link-href"
-                  :href="`/server/web/file/download?name=${item.useExplain}`"
-                  download
-                  >{{ item.useExplainOriginal }}</a
-                >
+                <span v-if="dataInfo.useExplainMap?.length">
+                  <a
+                    v-for="item in dataInfo.useExplainMap"
+                    :key="item"
+                    class="link-href"
+                    :href="`/server/web/file/download?name=${item.useExplain}`"
+                    download
+                    >{{ item.useExplainOriginal }}</a
+                  >
+                </span>
+                <span v-else>-</span>
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="!dataInfo.versionType"
@@ -275,7 +278,13 @@
                 {{ DeliveryTypeEnum[dataInfo.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{ PriceTypeEnum[dataInfo.saleType] || '-' }}
+                {{
+                  (dataInfo.deliveryType === 2 ||
+                    dataInfo.deliveryType === 3) &&
+                  dataInfo.saleType === 1
+                    ? '付费'
+                    : PriceTypeEnum[dataInfo.saleType] || '-'
+                }}
               </t-descriptions-item>
             </t-descriptions>
             <div class="line"></div>
@@ -300,6 +309,19 @@
               >
                 <t-descriptions-item label="交付版本名称">
                   {{ st.name }}
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="dataInfo.deliveryType === 3"
+                  label="上传插件jar包"
+                >
+                  <a
+                    v-if="st.pluginPackage"
+                    class="link-href"
+                    :href="`/server/web/file/download?name=${st.pluginPackage}`"
+                    download
+                    >{{ st.pluginPackageSource }}</a
+                  >
+                  <span v-else>-</span>
                 </t-descriptions-item>
                 <t-descriptions-item
                   v-if="dataInfo.deliveryType == 0 && dataInfo.saleType == 3"
@@ -343,7 +365,16 @@
                   {{ desDeuration(st.durationList) }}
                 </t-descriptions-item>
                 <t-descriptions-item
-                  v-if="dataInfo.saleType === 1"
+                  v-if="
+                    dataInfo.saleType === 1 &&
+                    (dataInfo.deliveryType === 2 || dataInfo.deliveryType === 3)
+                  "
+                  label="模板售价"
+                >
+                  {{ st.accountNumList[0].price || '-' }} 元
+                </t-descriptions-item>
+                <t-descriptions-item
+                  v-if="dataInfo.saleType === 1 && dataInfo.deliveryType === 1"
                   label="一口价金额"
                 >
                   {{ st.accountNumList[0].price }} 元
@@ -463,13 +494,16 @@ const statusColor = computed(() => {
   }
   return '#FFFAE8';
 });
-
 // 交付方式
 const DeliveryTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
+  LightApp: 2, // 标识轻应用
+  PluginClass: 3, // 插件
   0: 'SaaS',
   1: '独立部署',
+  2: '标识轻应用',
+  3: '插件',
 };
 // 应用分类
 const TypeEnum: { [name: string]: any } = {

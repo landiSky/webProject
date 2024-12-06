@@ -1145,6 +1145,7 @@ const copyModal4 = ref<any[]>([
 const copyModal5 = ref<any[]>([
   {
     name: '',
+    productDeliverySetInfoList: [{ price: null }],
     appPackageId: '',
     pluginPackage: '',
     onePiece: null,
@@ -1187,7 +1188,6 @@ const addCopy = () => {
       tryPwd: '',
     });
   } else if (formModel2.value.saleType === 1) {
-    console.log(formModel2.value.deliveryType === deliveryTypeMap.LightApp);
     if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
       copyModal2.value.push({
         name: '',
@@ -1203,6 +1203,7 @@ const addCopy = () => {
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
       copyModal5.value.push({
         name: '',
+        productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
         onePiece: null,
       });
@@ -1210,6 +1211,7 @@ const addCopy = () => {
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
       copyModal5.value.push({
         name: '',
+        productDeliverySetInfoList: [{ price: null }],
         pluginPackage: '',
         onePiece: null,
       });
@@ -1520,27 +1522,28 @@ const validateAccountPrice = () => {
 
 const buildForm2 = () => {
   let modalList;
+  let tempList;
   if (formModel2.value.saleType === 0) {
     modalList = copyModal.value;
   } else if (formModel2.value.saleType === 1) {
     if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
-      let tempList = deepClone(copyModal2.value);
-      for (let index = 0; index < tempList.length; index += 1) {
-        tempList[index].productDeliverySetInfoList[0].price = parseInt(
-          tempList[index].onePiece,
-          10
-        );
-        tempList[index].onePiece = null;
-        tempList = JSON.parse(JSON.stringify(tempList));
-      }
-      modalList = tempList;
+      tempList = deepClone(copyModal2.value);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      modalList = copyModal5.value;
+      tempList = deepClone(copyModal5.value);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      modalList = copyModal5.value;
+      tempList = deepClone(copyModal5.value);
     }
+    for (let index = 0; index < tempList.length; index += 1) {
+      tempList[index].productDeliverySetInfoList[0].price = parseInt(
+        tempList[index].onePiece,
+        10
+      );
+      tempList[index].onePiece = null;
+      tempList = JSON.parse(JSON.stringify(tempList));
+    }
+    modalList = tempList;
   } else if (formModel2.value.saleType === 3) {
     if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
       modalList = copyModal4.value;
@@ -1710,24 +1713,25 @@ const getDetail = (id: any) => {
         });
       }
     } else if (formModel2.value.saleType === 1) {
-      if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
-        copyModal2.value = [];
-        const list = res.productDeliverySetList;
+      copyModal2.value = [];
+      copyModal5.value = [];
+      const list = res.productDeliverySetList;
 
-        if (list && list.length > 0) {
-          for (const one of list) {
-            const list1: any[] = [];
-            const pList = one.accountNumList;
-            let onePiece;
-            if (pList && pList.length > 0) {
-              for (const two of pList) {
-                onePiece = parseInt(two.price, 10);
-                list1.push({ price: onePiece });
-                break;
-              }
-            } else {
-              list1.push({ price: '' });
+      if (list && list.length > 0) {
+        for (const one of list) {
+          const list1: any[] = [];
+          const pList = one.accountNumList;
+          let onePiece;
+          if (pList && pList.length > 0) {
+            for (const two of pList) {
+              onePiece = parseInt(two.price, 10);
+              list1.push({ price: onePiece });
+              break;
             }
+          } else {
+            list1.push({ price: '' });
+          }
+          if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
             copyModal2.value.push({
               name: one.name,
               url: one.url,
@@ -1739,7 +1743,25 @@ const getDetail = (id: any) => {
               tryPwd: one.tryPwd,
             });
           }
-        } else {
+          if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+            copyModal5.value.push({
+              name: one.name,
+              productDeliverySetInfoList: list1,
+              appPackageId: one.appPackageId,
+              onePiece,
+            });
+          }
+          if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+            copyModal5.value.push({
+              name: one.name,
+              productDeliverySetInfoList: list1,
+              pluginPackage: one.pluginPackage,
+              onePiece,
+            });
+          }
+        }
+      } else {
+        if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
           copyModal2.value.push({
             name: '',
             url: '',
@@ -1750,40 +1772,18 @@ const getDetail = (id: any) => {
             tryPwd: '',
           });
         }
-      }
-      if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-        copyModal5.value = [];
-        const list = res.productDeliverySetList;
-        if (list && list.length > 0) {
-          for (const one of list) {
-            copyModal5.value.push({
-              name: one.name,
-              appPackageId: one.appPackageId,
-              onePiece: one.onePiece,
-            });
-          }
-        } else {
+        if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
           copyModal5.value.push({
             name: '',
+            productDeliverySetInfoList: [{ price: '' }],
             appPackageId: '',
             onePiece: null,
           });
         }
-      }
-      if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-        copyModal5.value = [];
-        const list = res.productDeliverySetList;
-        if (list && list.length > 0) {
-          for (const one of list) {
-            copyModal5.value.push({
-              name: one.name,
-              pluginPackage: one.pluginPackage,
-              onePiece: one.onePiece,
-            });
-          }
-        } else {
+        if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
           copyModal5.value.push({
             name: '',
+            productDeliverySetInfoList: [{ price: '' }],
             pluginPackage: '',
             onePiece: null,
           });
