@@ -79,3 +79,8 @@ export function selectOnlineMallApps(params: any) {
 export function certDownload(params: any) {
   return $http.get(`/server/web/product/certDownload`, { params });
 }
+
+// 获取工作区应用包列表
+export function getProductAppList(params: any) {
+  return $http.get(`/server/web/product/getProductAppList`, { params });
+}

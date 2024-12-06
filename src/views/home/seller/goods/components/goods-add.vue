@@ -150,95 +150,6 @@
               >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
             >
           </t-form-item>
-          <!-- <t-form-item
-            label="详情展示图"
-            field="detailImg"
-            class="pic-item"
-            validate-trigger="blur"
-          >
-            <div class="file-list">
-              <div v-for="url of imageList" :key="url" class="file-container">
-                <div class="file-image">
-                  <div class="image-div">
-                    <t-image
-                      width="100px"
-                      height="100px"
-                      fit="cover"
-                      :src="`/server/web/file/download?name=${url}`"
-                      :preview-visible="imageVisible[`${url}`]"
-                      :preview-props="{
-                        src: `/server/web/file/download?name=${url}`,
-                      }"
-                      @preview-visible-change="
-                        () => (imageVisible[`${url}`] = false)
-                      "
-                    />
-                    <div class="image-hover">
-                      <div class="hover-bg"> </div>
-                      <div class="icon-list">
-                        <icon-eye
-                          :style="{
-                            fontSize: '20px',
-                            color: '#fff',
-                            cursor: 'pointer',
-                          }"
-                          @click="() => (imageVisible[`${url}`] = true)"
-                        />
-                        <icon-delete
-                          :style="{
-                            fontSize: '20px',
-                            color: '#fff',
-                            cursor: 'pointer',
-                          }"
-                          @click="deletedetailImg(url)"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <t-upload
-                v-if="imageList.length < 5"
-                :ref="detailImageRef"
-                :file-list="detailList"
-                :show-cancel-button="false"
-                :show-file-list="false"
-                :headers="uploadHeaders"
-                action="/server/web/file/upload"
-                accept=".png,.jpg,.bmp,.jpeg,.gif"
-                @before-upload="beforeUpload"
-                @success="uploadDetailSuccess"
-                @progress="uploadDetailProgress"
-                @error="uploadDetailError"
-              >
-                <template #upload-button>
-                  <t-spin :size="24" :loading="detailUploading">
-                    <div :class="`tele-upload-list-item`">
-                      <div class="tele-upload-picture-card">
-                        <div class="tele-upload-picture-card-text">
-                          <IconPlus :size="16" :stroke-width="6" />
-                          <div
-                            style="
-                              margin-top: 8px;
-                              font-weight: 500;
-                              font-size: 12px;
-                            "
-                            >点击上传</div
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </t-spin>
-                </template>
-              </t-upload>
-            </div>
-          </t-form-item>
-          <t-form-item label="" field="" class="hint-item">
-            <div class="hint"
-              >支持jpg、jpeg、png、bmp、gif文件格式，文件大小限制10M以内。</div
-            >
-          </t-form-item> -->
           <t-form-item label="商品分类" field="productTypeId">
             <t-cascader
               v-model="formModel.productTypeId"
@@ -357,7 +268,7 @@
             <t-form-item label="商品定价方式">
               <t-radio-group v-model="formModel2.saleType">
                 <t-radio
-                  v-if="formModel2.deliveryType == 1"
+                  v-if="formModel2.deliveryType == deliveryTypeMap.Deploy"
                   :value="priceTypeList[0].value"
                 >
                   {{ priceTypeList[0].label }}
@@ -368,7 +279,7 @@
                   </t-tooltip>
                 </t-radio>
                 <t-radio
-                  v-if="formModel2.deliveryType == 1"
+                  v-if="formModel2.deliveryType == deliveryTypeMap.Deploy"
                   :value="priceTypeList[1].value"
                 >
                   {{ priceTypeList[1].label }}
@@ -377,13 +288,17 @@
                   </t-tooltip>
                 </t-radio>
                 <t-radio
-                  v-if="formModel2.deliveryType == 1"
+                  v-if="formModel2.deliveryType == deliveryTypeMap.Deploy"
                   :value="priceTypeList[2].value"
                 >
                   {{ priceTypeList[2].label }}
                 </t-radio>
                 <t-radio
-                  v-if="formModel2.deliveryType == 0"
+                  v-if="
+                    formModel2.deliveryType == deliveryTypeMap.SaaS ||
+                    formModel2.deliveryType == deliveryTypeMap.LightApp ||
+                    formModel2.deliveryType == deliveryTypeMap.PluginClass
+                  "
                   :value="priceTypeList[3].value"
                 >
                   {{ priceTypeList[3].label }}
@@ -392,6 +307,15 @@
                   >
                     <icon-question-circle style="color: #86909c" :size="12" />
                   </t-tooltip>
+                </t-radio>
+                <t-radio
+                  v-if="
+                    formModel2.deliveryType !== deliveryTypeMap.SaaS &&
+                    formModel2.deliveryType !== deliveryTypeMap.Deploy
+                  "
+                  :value="priceTypeList[4].value"
+                >
+                  {{ priceTypeList[4].label }}
                 </t-radio>
               </t-radio-group>
             </t-form-item>
@@ -431,7 +355,7 @@
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="formModel2.deliveryType == 0"
+                v-if="formModel2.deliveryType == deliveryTypeMap.SaaS"
                 label="应用服务地址"
                 field="url"
               >
@@ -592,7 +516,12 @@
             </t-form>
           </div>
         </div>
-        <div v-if="formModel2.saleType == priceTypeList[1].value">
+        <div
+          v-if="
+            formModel2.deliveryType == deliveryTypeMap.Deploy &&
+            formModel2.saleType == priceTypeList[1].value
+          "
+        >
           <div v-for="(c, index) of copyModal2" :key="index" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
@@ -625,7 +554,7 @@
                 </t-input>
               </t-form-item>
               <t-form-item
-                v-if="formModel2.deliveryType == 0"
+                v-if="formModel2.deliveryType == deliveryTypeMap.SaaS"
                 label="应用服务地址"
                 field="url"
               >
@@ -820,7 +749,7 @@
             </t-form>
           </div>
         </div>
-        <div v-if="formModel2.saleType == priceTypeList[3].value">
+        <div v-if="formModel2.deliveryType == deliveryTypeMap.SaaS">
           <div v-for="(c, index) of copyModal4" :key="index" class="sale-copy">
             <div class="body-title">
               <div class="body-title-left">
@@ -875,6 +804,101 @@
             </t-form>
           </div>
         </div>
+        <div
+          v-if="
+            formModel2.deliveryType == deliveryTypeMap.LightApp ||
+            formModel2.deliveryType == deliveryTypeMap.PluginClass
+          "
+        >
+          <div v-for="(c, index) of copyModal5" :key="index" class="sale-copy">
+            <div class="body-title">
+              <div class="body-title-left">
+                <div class="body-title-icon" />
+                <div>交付版本{{ index + 1 }}</div>
+              </div>
+              <div
+                v-if="copyModal5.length > 1"
+                class="body-title-right"
+                @click="deleteSaleCopy(index)"
+                >删除</div
+              >
+            </div>
+            <t-form
+              :ref="copyFormRef[index]"
+              :model="copyModal5[index]"
+              :rules="copyRules"
+              :label-col-props="{
+                span: 6,
+                offset: 0,
+              }"
+            >
+              <t-form-item label="交付版本名称" class="sale-item" field="name">
+                <t-input
+                  v-model.trim="copyModal5[index].name"
+                  placeholder="请输入"
+                  show-word-limit
+                  :max-length="{
+                    length: 10,
+                    errorOnly: true,
+                  }"
+                  @input="validateArray(copyFormRef[index].value, 'name')"
+                >
+                </t-input>
+              </t-form-item>
+              <t-form-item
+                v-if="formModel2.deliveryType == deliveryTypeMap.LightApp"
+                label="请选择应用包ID"
+                field="appPackageId"
+              >
+                <t-select
+                  v-model="copyModal5[index].appPackageId"
+                  :style="{ width: '100%' }"
+                  placeholder="请选择"
+                  :show-extra-options="false"
+                >
+                  <t-option
+                    v-for="item in ProductAppList"
+                    :key="item.tagId"
+                    :value="item.tagId"
+                  >
+                    {{ item.tagName }}
+                  </t-option>
+                </t-select>
+              </t-form-item>
+              <t-form-item
+                v-if="formModel2.deliveryType == deliveryTypeMap.PluginClass"
+                label="上传插件jar包"
+                field="pluginPackage"
+              >
+                <JarUpload
+                  v-model:pluginPackage="copyModal5[index].pluginPackage"
+                />
+              </t-form-item>
+              <t-form-item
+                v-if="formModel2.saleType == priceTypeList[4].value"
+                label="模版售价"
+                field="onePiece"
+                :rules="[
+                  { required: true, message: '请输入模版售价' },
+                  {
+                    match: /^[0-9]\d*$/,
+                    maxLength: 10,
+                    message: '请输入10位以内整数',
+                  },
+                ]"
+                required
+              >
+                <t-input
+                  v-model.trim="copyModal5[index].onePiece"
+                  placeholder="请输入"
+                  style="width: 200px"
+                  @input="validateArray(copyFormRef[index].value, 'onePiece')"
+                  ><template #suffix><div class="yuan">元</div></template>
+                </t-input>
+              </t-form-item>
+            </t-form>
+          </div>
+        </div>
         <t-divider v-if="showAddCopy"></t-divider>
         <div v-if="showAddCopy" class="copy-add" @click="addCopy">
           <iconpark-icon name="squarePlus" :size="20"></iconpark-icon>
@@ -906,6 +930,7 @@ import {
   saveAndUp,
   goodsDetail,
   selectOnlineMallApps,
+  getProductAppList,
 } from '@/api/goods-manage';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
@@ -915,6 +940,7 @@ import { ChannelType } from '@/enums/decoration';
 import { channelName } from '@/views/decoration/decorationTools/constant';
 // import TemplateDrawer from './template.vue';
 import IconMaterial from '@/components/iconMaterial/index.vue';
+import JarUpload from './jar-upload/index.vue';
 
 const broadcastChannel = new BroadcastChannel(channelName);
 const emit = defineEmits(['cancel', 'preview']);
@@ -944,6 +970,8 @@ const detailSetOk = ref(true);
 // 分类
 const classList = ref<any[]>([]);
 const classFiledNames = { value: 'id', label: 'name' };
+// 轻应用
+const ProductAppList = ref<any[]>([]);
 
 // 详情
 const detailImageRef = ref();
@@ -977,15 +1005,24 @@ const expList = ref<any[]>([]);
 // 应用
 const applicationList = ref<any[]>([]);
 
+const deliveryTypeMap = {
+  SaaS: 0, // SaaS类
+  Deploy: 1, // 独立部署类
+  LightApp: 2, // 标识轻应用
+  PluginClass: 3, // 插件
+};
 const deliveryTypeList = ref([
-  { label: 'SaaS类', value: 0 },
-  { label: '独立部署类', value: 1 },
+  { label: 'SaaS类', value: deliveryTypeMap.SaaS },
+  { label: '独立部署类', value: deliveryTypeMap.Deploy },
+  { label: '标识轻应用', value: deliveryTypeMap.LightApp },
+  { label: '插件', value: deliveryTypeMap.PluginClass },
 ]);
 const priceTypeList = ref([
   { label: '套餐定价(账号+时长)', value: 0 },
   { label: '一口价定价', value: 1 },
   { label: '价格面议', value: 2 },
   { label: '免费', value: 3 },
+  { label: '付费', value: 1 },
 ]);
 
 const isTryList = ref([
@@ -995,7 +1032,7 @@ const isTryList = ref([
 
 const formModel2 = ref({
   productId: undefined,
-  deliveryType: 0,
+  deliveryType: deliveryTypeMap.SaaS,
   saleType: 3,
   productDeliveryList: [] as any,
 });
@@ -1105,6 +1142,14 @@ const copyModal4 = ref<any[]>([
     saasAppId: '',
   },
 ]);
+const copyModal5 = ref<any[]>([
+  {
+    name: '',
+    appPackageId: '',
+    pluginPackage: '',
+    onePiece: null,
+  },
+]);
 
 // 服务交付方式change事件
 const radiogroupChange = (c: any) => {
@@ -1142,21 +1187,56 @@ const addCopy = () => {
       tryPwd: '',
     });
   } else if (formModel2.value.saleType === 1) {
-    copyModal2.value.push({
-      name: '',
-      url: '',
-      onePiece: null,
-      productDeliverySetInfoList: [{ price: null }],
-      isTry: 1,
-      tryUrl: '',
-      tryAccount: '',
-      tryPwd: '',
-    });
+    console.log(formModel2.value.deliveryType === deliveryTypeMap.LightApp);
+    if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+      copyModal2.value.push({
+        name: '',
+        url: '',
+        onePiece: null,
+        productDeliverySetInfoList: [{ price: null }],
+        isTry: 1,
+        tryUrl: '',
+        tryAccount: '',
+        tryPwd: '',
+      });
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      copyModal5.value.push({
+        name: '',
+        appPackageId: '',
+        onePiece: null,
+      });
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      copyModal5.value.push({
+        name: '',
+        pluginPackage: '',
+        onePiece: null,
+      });
+    }
   } else if (formModel2.value.saleType === 3) {
-    copyModal4.value.push({
-      name: '',
-      saasAppId: '',
-    });
+    console.log(formModel2.value.deliveryType === deliveryTypeMap.LightApp);
+    if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+      copyModal4.value.push({
+        name: '',
+        saasAppId: '',
+      });
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      copyModal5.value.push({
+        name: '',
+        appPackageId: '',
+        onePiece: null,
+      });
+      console.log(copyModal5.value, 'copyModal5.value');
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      copyModal5.value.push({
+        name: '',
+        pluginPackage: '',
+        onePiece: null,
+      });
+    }
   } else {
     copyModal3.value.push({
       name: '',
@@ -1171,9 +1251,25 @@ const deleteSaleCopy = (index: number) => {
   if (formModel2.value.saleType === 0) {
     copyModal.value.splice(index, 1);
   } else if (formModel2.value.saleType === 1) {
-    copyModal2.value.splice(index, 1);
+    if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+      copyModal2.value.splice(index, 1);
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      copyModal5.value.splice(index, 1);
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      copyModal5.value.splice(index, 1);
+    }
   } else if (formModel2.value.saleType === 3) {
-    copyModal4.value.splice(index, 1);
+    if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+      copyModal4.value.splice(index, 1);
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      copyModal5.value.splice(index, 1);
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      copyModal5.value.splice(index, 1);
+    }
   } else {
     copyModal3.value.splice(index, 1);
   }
@@ -1216,6 +1312,8 @@ const copyRules = {
       required: true,
     },
   ],
+  appPackageId: [{ required: true, message: '请选择工作区应用包' }],
+  pluginPackage: [{ required: true, message: '请上传插件jar包' }],
   onePiece: [
     {
       required: true,
@@ -1325,6 +1423,15 @@ const getClassList = () => {
   });
 };
 
+const getProductApplicationList = () => {
+  const params = {
+    companyId: userInfoByCompany.value?.companyId,
+  };
+  getProductAppList(params).then((data: any) => {
+    ProductAppList.value = data;
+  });
+};
+
 function deepClone(source: any) {
   if (!source && typeof source !== 'object') {
     throw new Error('error arguments');
@@ -1345,10 +1452,26 @@ const showAddCopy = computed(() => {
     return copyModal.value.length < 3;
   }
   if (formModel2.value.saleType === 1) {
-    return copyModal2.value.length < 3;
+    if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+      return copyModal2.value.length < 3;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      return copyModal5.value.length < 3;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      return copyModal5.value.length < 3;
+    }
   }
   if (formModel2.value.saleType === 3) {
-    return copyModal4.value.length < 3;
+    if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+      return copyModal4.value.length < 3;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      return copyModal5.value.length < 3;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      return copyModal5.value.length < 3;
+    }
   }
   return copyModal3.value.length < 3;
 });
@@ -1400,18 +1523,34 @@ const buildForm2 = () => {
   if (formModel2.value.saleType === 0) {
     modalList = copyModal.value;
   } else if (formModel2.value.saleType === 1) {
-    let tempList = deepClone(copyModal2.value);
-    for (let index = 0; index < tempList.length; index += 1) {
-      tempList[index].productDeliverySetInfoList[0].price = parseInt(
-        tempList[index].onePiece,
-        10
-      );
-      tempList[index].onePiece = null;
-      tempList = JSON.parse(JSON.stringify(tempList));
+    if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+      let tempList = deepClone(copyModal2.value);
+      for (let index = 0; index < tempList.length; index += 1) {
+        tempList[index].productDeliverySetInfoList[0].price = parseInt(
+          tempList[index].onePiece,
+          10
+        );
+        tempList[index].onePiece = null;
+        tempList = JSON.parse(JSON.stringify(tempList));
+      }
+      modalList = tempList;
     }
-    modalList = tempList;
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      modalList = copyModal5.value;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      modalList = copyModal5.value;
+    }
   } else if (formModel2.value.saleType === 3) {
-    modalList = copyModal4.value;
+    if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+      modalList = copyModal4.value;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      modalList = copyModal5.value;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      modalList = copyModal5.value;
+    }
   } else {
     modalList = copyModal3.value;
   }
@@ -1429,9 +1568,25 @@ const validForm2 = async () => {
   if (formModel2.value.saleType === 0) {
     length = copyModal.value.length;
   } else if (formModel2.value.saleType === 1) {
-    length = copyModal2.value.length;
+    if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+      length = copyModal2.value.length;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      length = copyModal5.value.length;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      length = copyModal5.value.length;
+    }
   } else if (formModel2.value.saleType === 3) {
-    length = copyModal4.value.length;
+    if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+      length = copyModal4.value.length;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+      length = copyModal5.value.length;
+    }
+    if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+      length = copyModal5.value.length;
+    }
   } else {
     length = copyModal3.value.length;
   }
@@ -1468,7 +1623,8 @@ const getModalJson = () => {
     JSON.stringify(copyModal.value) +
     JSON.stringify(copyModal2.value) +
     JSON.stringify(copyModal3.value) +
-    JSON.stringify(copyModal4.value)
+    JSON.stringify(copyModal4.value) +
+    JSON.stringify(copyModal5.value)
   );
 };
 
@@ -1492,7 +1648,7 @@ const getDetail = (id: any) => {
     formModel.value.productTypeId = res.productTypeId;
     formModel.value.introduction = res.introduction;
     formModel2.value.productId = res.id;
-    formModel2.value.deliveryType = res.deliveryType ?? 0;
+    formModel2.value.deliveryType = res.deliveryType ?? deliveryTypeMap.SaaS;
     formModel2.value.saleType = res.saleType ?? 3;
     // templateDetail.value = JSON.parse(res.detail);
     // templateRef.value.templateData = JSON.parse(res.detail);
@@ -1554,60 +1710,140 @@ const getDetail = (id: any) => {
         });
       }
     } else if (formModel2.value.saleType === 1) {
-      copyModal2.value = [];
-      const list = res.productDeliverySetList;
+      if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+        copyModal2.value = [];
+        const list = res.productDeliverySetList;
 
-      if (list && list.length > 0) {
-        for (const one of list) {
-          const list1: any[] = [];
-          const pList = one.accountNumList;
-          let onePiece;
-          if (pList && pList.length > 0) {
-            for (const two of pList) {
-              onePiece = parseInt(two.price, 10);
-              list1.push({ price: onePiece });
-              break;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            const list1: any[] = [];
+            const pList = one.accountNumList;
+            let onePiece;
+            if (pList && pList.length > 0) {
+              for (const two of pList) {
+                onePiece = parseInt(two.price, 10);
+                list1.push({ price: onePiece });
+                break;
+              }
+            } else {
+              list1.push({ price: '' });
             }
-          } else {
-            list1.push({ price: '' });
+            copyModal2.value.push({
+              name: one.name,
+              url: one.url,
+              productDeliverySetInfoList: list1,
+              onePiece,
+              isTry: one.isTry,
+              tryUrl: one.tryUrl,
+              tryAccount: one.tryAccount,
+              tryPwd: one.tryPwd,
+            });
           }
+        } else {
           copyModal2.value.push({
-            name: one.name,
-            url: one.url,
-            productDeliverySetInfoList: list1,
-            onePiece,
-            isTry: one.isTry,
-            tryUrl: one.tryUrl,
-            tryAccount: one.tryAccount,
-            tryPwd: one.tryPwd,
+            name: '',
+            url: '',
+            productDeliverySetInfoList: [{ price: '' }],
+            isTry: 1,
+            tryUrl: '',
+            tryAccount: '',
+            tryPwd: '',
           });
         }
-      } else {
-        copyModal2.value.push({
-          name: '',
-          url: '',
-          productDeliverySetInfoList: [{ price: '' }],
-          isTry: 1,
-          tryUrl: '',
-          tryAccount: '',
-          tryPwd: '',
-        });
+      }
+      if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+        copyModal5.value = [];
+        const list = res.productDeliverySetList;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            copyModal5.value.push({
+              name: one.name,
+              appPackageId: one.appPackageId,
+              onePiece: one.onePiece,
+            });
+          }
+        } else {
+          copyModal5.value.push({
+            name: '',
+            appPackageId: '',
+            onePiece: null,
+          });
+        }
+      }
+      if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+        copyModal5.value = [];
+        const list = res.productDeliverySetList;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            copyModal5.value.push({
+              name: one.name,
+              pluginPackage: one.pluginPackage,
+              onePiece: one.onePiece,
+            });
+          }
+        } else {
+          copyModal5.value.push({
+            name: '',
+            pluginPackage: '',
+            onePiece: null,
+          });
+        }
       }
     } else if (formModel2.value.saleType === 3) {
-      copyModal4.value = [];
-      const list = res.productDeliverySetList;
-      if (list && list.length > 0) {
-        for (const one of list) {
+      if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
+        copyModal4.value = [];
+        const list = res.productDeliverySetList;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            copyModal4.value.push({
+              name: one.name,
+              saasAppId: one.saasAppId,
+            });
+          }
+        } else {
           copyModal4.value.push({
-            name: one.name,
-            saasAppId: one.saasAppId,
+            name: '',
+            saasAppId: '',
           });
         }
-      } else {
-        copyModal4.value.push({
-          name: '',
-          saasAppId: '',
-        });
+      }
+      if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+        copyModal5.value = [];
+        const list = res.productDeliverySetList;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            copyModal5.value.push({
+              name: one.name,
+              appPackageId: one.appPackageId,
+              onePiece: one.onePiece,
+            });
+          }
+        } else {
+          copyModal5.value.push({
+            name: '',
+            appPackageId: '',
+            onePiece: null,
+          });
+        }
+      }
+      if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+        copyModal5.value = [];
+        const list = res.productDeliverySetList;
+        if (list && list.length > 0) {
+          for (const one of list) {
+            copyModal5.value.push({
+              name: one.name,
+              pluginPackage: one.pluginPackage,
+              onePiece: one.onePiece,
+            });
+          }
+        } else {
+          copyModal5.value.push({
+            name: '',
+            pluginPackage: '',
+            onePiece: null,
+          });
+        }
       }
     } else {
       copyModal3.value = [];
@@ -1987,6 +2223,7 @@ const clickPreview = () => {
 
 // 上架
 const clickUp = async () => {
+  console.log(formModel2.value, 'formModel2.value');
   const r = await validForm2();
   if (r) {
     Modal.warning({
@@ -2105,6 +2342,7 @@ onMounted(() => {
 
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
   getClassList();
+  getProductApplicationList();
   getSelectApplication();
   if (props.data?.id) {
     formModel.value.id = props.data?.id;
