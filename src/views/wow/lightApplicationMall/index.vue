@@ -57,12 +57,12 @@
         >
         <span class="mall-select">
           <t-select
-            v-model="apiParams.priceType"
-            :style="{ width: '104px' }"
-            placeholder="请选择"
+            v-model="apiParams.saleType"
+            :style="{ width: '104px', fontSize: '14px' }"
+            placeholder="全部价格"
             :bordered="false"
-            :options="priceTypeList"
-            @change="changePriceType"
+            :options="saleTypeList"
+            @change="changeSaleType"
           >
           </t-select>
         </span>
@@ -151,7 +151,7 @@
                 <span v-else class="prefix">价格面议</span>
               </div>
             </span>
-            <span v-if="item.isTry == 1" class="label-try">
+            <span v-if="item.lowPrice > 0" class="label-try">
               <span class="label-try-text">付费</span>
             </span>
           </span>
@@ -192,7 +192,6 @@ import { selectIdentificationPageList } from '@/api/wow/mall';
 import { tagIdentificationList } from '@/api/common';
 import { apiDataPoint } from '@/api/data-point';
 import { useUserStore } from '@/store/modules/user';
-import { PriceEnum } from './constant';
 import WowFooter from '../components/wowFooter/index.vue';
 
 const router = useRouter();
@@ -216,17 +215,17 @@ const shelveSortEnum = {
 const productsList = ref<Record<string, any>>([]);
 const hideOnSinglePage = computed(() => pagination.total <= 10);
 const btnLoading = ref(false);
-const priceTypeList = ref<Record<string, any>>([
+const saleTypeList = ref<Record<string, any>>([
   {
-    value: '0',
+    value: -1,
     label: '全部价格',
   },
   {
-    value: '1',
+    value: 3,
     label: '免费',
   },
   {
-    value: '2',
+    value: 1,
     label: '付费',
   },
 ]);
@@ -235,7 +234,7 @@ const apiParams = ref<Record<string, any>>({
   name: route.query.goodsName || null, // 商品名称
   tagIdList: [null, null, null], // 标签ids
   isTry: null, // 是否免费
-  priceType: '0', // 价格类型
+  saleType: -1, // 价格类型
 });
 
 const tagList = ref<Record<string, any>>([]);
@@ -329,7 +328,7 @@ const onSearch = () => {
   getProductList();
 };
 // 选择定价方式时触发
-const changePriceType = () => {
+const changeSaleType = () => {
   pagination.page = 1;
   getProductList();
 };
