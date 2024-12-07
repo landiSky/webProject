@@ -114,6 +114,7 @@
           :style="{ width: '190px' }"
           placeholder="请选择"
           :trigger-props="{ autoFitPopupMinWidth: true }"
+          @change="changeSelectDashName"
         >
           <t-option
             v-for="item in portalAppList"
@@ -150,14 +151,12 @@ const { userInfoByCompany, selectCompany }: Record<string, any> =
 const emit = defineEmits(['onConfirm', 'onCancel']);
 
 const form = reactive<{
-  id: string;
   dashKey: string;
   dashName: string;
   name: string;
   logo: string;
   companyId: string;
 }>({
-  id: '', // id
   dashKey: '', // 轻流门户key
   dashName: '', // 轻流门户名称
   name: '', // 名称
@@ -189,6 +188,12 @@ const handleConfirm = () => {
   });
 };
 
+const changeSelectDashName = (value: any) => {
+  const data = portalAppList.value.find((item: any) => {
+    return item.dashKey === value;
+  });
+  form.dashName = data.dashName ?? '';
+};
 const getPortalApplicationList = () => {
   const params = {
     companyId: selectCompany.value?.companyId, // 企业id

@@ -84,6 +84,7 @@ const TabPath = {
   IDINSIDEZONE: '/wow/idInsideZone',
   MALL: '/wow/mall',
   DOC: '/wow/doc',
+  LIGHTAPPLICATIONMALL: '/wow/lightApplicationMall',
   // PROD: '/wow/platProducts',
   // SERV: '/wow/platServices',
 };
@@ -114,6 +115,12 @@ watch(
     // 商品详情页也激活【商城】
     if (route.name === 'wowMallDetail') {
       selectTab.value = TabPath.MALL;
+    } else {
+      selectTab.value = newV;
+    }
+    // 轻应用商品详情页也激活【轻应用商城】
+    if (route.name === 'wowLightApplicationMallDetail') {
+      selectTab.value = TabPath.LIGHTAPPLICATIONMALL;
     } else {
       selectTab.value = newV;
     }
@@ -184,6 +191,14 @@ const clickIdService = () => {
   router.push({ path: '/wow/idInsideZone' });
 };
 
+const goLightAppMall = () => {
+  apiDataPoint(null, null, userInfo?.value?.id, 5, 7).then((res) => {
+    console.log('前台导航栏商城点击打点', res);
+  });
+  selectTab.value = TabPath.LIGHTAPPLICATIONMALL;
+  router.push({ path: '/wow/lightApplicationMall' });
+};
+
 const goPlatProducts = (data: Record<string, any>) => {
   // 首页
   if (String(data.type) === '1') {
@@ -203,6 +218,11 @@ const goPlatProducts = (data: Record<string, any>) => {
   // 文档中心
   if (String(data.type) === '4') {
     goDocCenter();
+    return;
+  }
+  // 轻应用商城
+  if (String(data.type) === '8') {
+    goLightAppMall();
     return;
   }
   apiDataPoint(null, null, userInfo?.value?.id, 5, 11).then((res) => {
@@ -282,7 +302,7 @@ onMounted(() => {
         let pathKey = '';
         if (item.type !== String(ChannelType.PLATFORM_PRODUCT_DETAIL)) {
           // 区分固定路由和动态频道路由
-          if (!['1', '2', '3', '4', '5'].includes(item.type)) {
+          if (!['1', '2', '3', '4', '5', '8'].includes(item.type)) {
             pathKey = `/wow/platProducts/${item.type}`;
           } else {
             const fixedNav: any = {
@@ -291,6 +311,7 @@ onMounted(() => {
               3: '/wow/mall',
               4: '/wow/doc',
               5: '/public/idhub-open',
+              8: '/wow/lightApplicationMall',
             };
             pathKey = fixedNav[item.type];
           }
@@ -304,6 +325,12 @@ onMounted(() => {
   if (route.name === 'wowMallDetail') {
     // 商品详情页也激活【商城】
     selectTab.value = TabPath.MALL;
+  } else {
+    selectTab.value = route.path || TabPath.INDEX;
+  }
+  if (route.name === 'wowLightApplicationMallDetail') {
+    // 轻应用商品详情页也激活【轻应用商城】
+    selectTab.value = TabPath.LIGHTAPPLICATIONMALL;
   } else {
     selectTab.value = route.path || TabPath.INDEX;
   }

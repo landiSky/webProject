@@ -76,8 +76,8 @@ export function getServicePackage(params: Record<string, any>) {
 }
 
 // 登录轻流
-export function apiLoginQingFlow(params: Record<string, any>) {
-  return $http.get('/server/web/qingFlow/loginQingFlow', { params });
+export function dashBoardRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/dashBoardRedirect', { params });
 }
 
 // 查询企业的数智化应用列表
@@ -88,15 +88,20 @@ export function getCompanyNumeberIntelligence(params: Record<string, any>) {
 }
 
 // 新增数智化应用
-export function saveCompanyNumberIntelligence(params: Record<string, any>) {
-  return $http.get('/server/web/qingFlow/saveCompanyNumberIntelligence', {
-    params,
-  });
+export function saveCompanyNumberIntelligence(data: Record<string, any>) {
+  return $http.post('/server/web/qingFlow/saveCompanyNumberIntelligence', data);
 }
 
 // 获取轻流门户列表
 export function getDashBoardList(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/getDashBoardList', {
+    params,
+  });
+}
+
+// 应用创建跳转
+export function appCraeteRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/appCraeteRedirect', {
     params,
   });
 }

@@ -16,7 +16,11 @@
         @click="goLightFlow(item)"
       >
         <div class="card-img">
-          <img :src="`/server/web/file/download?name=${item.logo}`" alt="" />
+          <img
+            :src="`/server/web/file/download?name=${item.logo}`"
+            alt=""
+            class="card-img"
+          />
         </div>
         <div class="card-name">
           <t-typography-paragraph
@@ -24,7 +28,7 @@
               rows: 1,
               showTooltip: true,
             }"
-            style="margin-bottom: 0"
+            style="margin-bottom: 0; word-break: break-all"
           >
             {{ item?.name }}
           </t-typography-paragraph>
@@ -63,7 +67,7 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue';
 import {
-  apiLoginQingFlow,
+  dashBoardRedirect,
   getCompanyNumeberIntelligence,
 } from '@/api/buyer/overview';
 import { storeToRefs } from 'pinia';
@@ -94,10 +98,11 @@ const goLightFlow = (item: any) => {
   console.log(item);
   const params = {
     userId: userInfo.value?.id,
-    wsId: item?.id,
+    dashKey: item?.dashKey,
   };
-  apiLoginQingFlow(params).then((res: any) => {
+  dashBoardRedirect(params).then((res: any) => {
     console.log('轻流登录接口返回', res);
+    window.open(res);
   });
 };
 const showAddDrawer = () => {
@@ -173,6 +178,7 @@ onMounted(async () => {
       font-size: 16px;
       font-family: PingFang SC;
       line-height: 24px;
+      text-align: center;
     }
   }
 }

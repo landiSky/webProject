@@ -10,7 +10,13 @@
     <div class="app-body">
       <div v-for="(item, index) in appDataList" :key="index" class="card">
         <div class="card-img">
-          <img :src="`/server/web/file/download?name=${item.logo}`" alt="" />
+          <t-avatar
+            :size="58"
+            shape="square"
+            :style="{ backgroundColor: '#1664FF' }"
+          >
+            {{ captureOne(item?.tagName) }}
+          </t-avatar>
         </div>
         <div class="card-name">
           <t-typography-paragraph
@@ -18,9 +24,9 @@
               rows: 1,
               showTooltip: true,
             }"
-            style="margin-bottom: 0"
+            style="margin-bottom: 0; word-break: break-all"
           >
-            {{ item?.name }}
+            {{ item?.tagName }}
           </t-typography-paragraph>
         </div>
       </div>
@@ -48,30 +54,45 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getServicePackage } from '@/api/buyer/overview';
+import { useRouter } from 'vue-router';
+import { appCraeteRedirect } from '@/api/buyer/overview';
+import { getProductAppList } from '@/api/goods-manage';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 
 const userStore = useUserStore();
 const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
+const router = useRouter();
 const appDataList: Record<string, any> = ref([]);
 const getPackageList = () => {
   const params = {
     companyId: selectCompany.value?.companyId,
   };
-  getServicePackage(params).then((res: any) => {
+  getProductAppList(params).then((res: any) => {
     appDataList.value = res;
     console.log(res);
   });
 };
+const captureOne = (name: string) => {
+  return name.substring(0, 1);
+};
 // 跳转频道页 标识轻应用
-const goLightApplication = () => {};
+const goLightApplication = () => {
+  router.push({ path: '/wow/lightApplicationMall' });
+};
 // 跳转轻流平台
-const goNewApplication = () => {};
+const goNewApplication = () => {
+  const params = {
+    userId: userInfo.value?.id,
+  };
+  appCraeteRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
 
 onMounted(async () => {
-  //   getPackageList();
+  getPackageList();
 });
 </script>
 
@@ -123,6 +144,7 @@ onMounted(async () => {
     }
 
     .card-name {
+      width: 100%;
       color: #223354;
       font-weight: 500;
       font-size: 16px;
