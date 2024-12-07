@@ -188,8 +188,8 @@
 <script lang="ts" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { apiProductList } from '@/api/wow/mall';
-import { apiTagList } from '@/api/common';
+import { selectIdentificationPageList } from '@/api/wow/mall';
+import { tagIdentificationList } from '@/api/common';
 import { apiDataPoint } from '@/api/data-point';
 import { useUserStore } from '@/store/modules/user';
 import { PriceEnum } from './constant';
@@ -216,9 +216,6 @@ const shelveSortEnum = {
 const productsList = ref<Record<string, any>>([]);
 const hideOnSinglePage = computed(() => pagination.total <= 10);
 const btnLoading = ref(false);
-const selectPriceInterval = ref<number | null | -1>(-1); // 选择的价格区间，-1 是 【不限】， null是不选择任何一个
-const customPriceStart = ref(); // 自定义价格区间起止
-const customPriceEnd = ref();
 const priceTypeList = ref<Record<string, any>>([
   {
     value: '0',
@@ -234,15 +231,11 @@ const priceTypeList = ref<Record<string, any>>([
   },
 ]);
 const apiParams = ref<Record<string, any>>({
-  productTypeId: null,
-  productChildTypeId: null,
-  deliveryType: null,
-  priceSort: null,
-  upShelfTimeSort: null,
-  name: route.query.goodsName || null,
-  tagIdList: [null, null, null],
-  isTry: null,
-  priceType: '0',
+  upShelfTimeSort: null, // 上架时间排序：0-正序 1-倒序
+  name: route.query.goodsName || null, // 商品名称
+  tagIdList: [null, null, null], // 标签ids
+  isTry: null, // 是否免费
+  priceType: '0', // 价格类型
 });
 
 const tagList = ref<Record<string, any>>([]);
@@ -258,23 +251,8 @@ const getProductList = () => {
     ...apiParams.value,
     tagIdList: tagIdList.length > 0 ? tagIdList : null,
   };
-  // 价格区间是选择了已有的，还是自定义的
-  if (customPriceStart.value || customPriceEnd.value) {
-    params.startPrice = customPriceStart.value || null;
-    params.endPrice = customPriceEnd.value || null;
-  } else {
-    const temp =
-      Number(selectPriceInterval.value) >= 0
-        ? PriceEnum[selectPriceInterval.value as number]
-        : [];
 
-    [params.startPrice, params.endPrice] =
-      selectPriceInterval.value === -1 ? [] : temp;
-  }
-  params.free =
-    selectPriceInterval.value === -2 ? selectPriceInterval.value : null;
-
-  apiProductList(params) // TODO 添加查询参数
+  selectIdentificationPageList(params) // TODO 添加查询参数
     .then((response) => {
       const { total, records } = response || {};
       const dataList = records.map((item: any) => {
@@ -312,7 +290,7 @@ const goMallDetail = (id: string) => {
 };
 
 const getTagList = () => {
-  apiTagList() // TODO 添加查询参数
+  tagIdentificationList() // TODO 添加查询参数
     .then((data: any) => {
       tagList.value = data || [];
     })
@@ -320,14 +298,12 @@ const getTagList = () => {
 };
 
 const clickUpShelfSort = (value: number) => {
-  apiParams.value.priceSort = null;
   apiParams.value.upShelfTimeSort = value;
   pagination.page = 1;
   getProductList();
 };
 
 const clickAllSort = () => {
-  apiParams.value.priceSort = null;
   apiParams.value.upShelfTimeSort = null;
   pagination.page = 1;
   getProductList();

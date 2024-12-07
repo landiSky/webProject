@@ -12,6 +12,11 @@ export function apiProductDetail(params: Record<string, any>) {
   });
 }
 
+// 获取商品列表-前台标识轻应用频道列表
+export function selectIdentificationPageList(data: Record<string, any>) {
+  return $http.post('/server/web/reception/selectIdentificationPageList', data);
+}
+
 // 获取商品详情页-idinside用的
 export function apiProductDetail2(params: Record<string, any>) {
   return $http.get('/server/web/reception/selectById', {

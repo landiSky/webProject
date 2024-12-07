@@ -10,6 +10,11 @@ export function apiTagList() {
   return $http.get('/server/web/reception/tagList');
 }
 
+// 前台标识轻应用频道列表
+export function tagIdentificationList() {
+  return $http.get('/server/web/reception/tagIdentificationList');
+}
+
 //  获取企业下成员列表
 export function apiMemberList(params: Record<string, any>) {
   return $http.get('/server/web/member/getCompanyMember', { params });
