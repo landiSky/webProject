@@ -1,12 +1,14 @@
 export const DeliverType = {
   SAAS: 0,
   DEPLOY: 1,
+  LightApp: 2,
   PLUGIN: 3,
 };
 
 export const DeliverTypeDesc = {
   [DeliverType.SAAS]: 'SaaS',
   [DeliverType.DEPLOY]: '独立部署',
+  [DeliverType.LightApp]: '标识轻应用',
   [DeliverType.PLUGIN]: '插件',
 };
 

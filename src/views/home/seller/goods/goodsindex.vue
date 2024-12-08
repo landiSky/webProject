@@ -108,7 +108,12 @@
       </template>
       <!-- 测试定价方式 -->
       <template #saleType="{ record }">
-        {{ SaleTypeList[record.saleType] || '-' }}
+        {{
+          (record.deliveryType === 2 || record.deliveryType === 3) &&
+          record.saleType === 1
+            ? '付费'
+            : SaleTypeList[record.saleType] || '-'
+        }}
       </template>
       <template #operations="{ record }">
         <t-link @click="clickDetailBtn(record)"> 详情 </t-link>
@@ -219,7 +224,8 @@ import Add from './components/goods-add.vue';
 
 const tableRef = ref();
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfoByCompany, configInfo }: Record<string, any> =
+  storeToRefs(userStore);
 
 const defaultFormModel: Record<string, string | null> = {
   name: null,
@@ -290,20 +296,34 @@ const DeliveryTypeEnum: { [name: string]: any } = {
   3: '插件',
 };
 
-const deliveryTypeList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: 'SaaS',
-    value: 0,
-  },
-  {
-    text: '独立部署',
-    value: 1,
-  },
-];
+const deliveryTypeList = computed(() => {
+  const data = [
+    {
+      text: '全部',
+      value: null,
+    },
+    {
+      text: 'SaaS',
+      value: 0,
+    },
+    {
+      text: '独立部署',
+      value: 1,
+    },
+    {
+      text: '插件',
+      value: 3,
+    },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = {
+      text: '标识轻应用',
+      value: 2,
+    };
+    data.splice(3, 0, app);
+  }
+  return data;
+});
 
 // 状态
 const StatusEnum: { [name: string]: any } = {
@@ -367,6 +387,10 @@ const PricingMethodList = [
   {
     text: '免费',
     value: 3,
+  },
+  {
+    text: '付费',
+    value: 4,
   },
 ];
 
@@ -504,6 +528,7 @@ function fetchData() {
     pageSize,
     companyId,
     ...state.formModel,
+    saleType: state.formModel.saleType === 4 ? 1 : state.formModel.saleType,
   };
   state.tableLoading = true;
   goodsList(params)

@@ -367,7 +367,7 @@
       </div>
     </div>
     <!-- 标识轻应用 -->
-    <ServiceActivation />
+    <ServiceActivation v-if="configInfo?.qingFlowSwitch" />
 
     <!-- 已购其他应用 -->
     <div class="purchased">

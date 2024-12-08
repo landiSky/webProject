@@ -62,7 +62,7 @@
                 >
                   <template #prefix> 交付类型: </template>
                   <t-option
-                    v-for="list in deliveryType"
+                    v-for="list in deliveryTypeList"
                     :key="list.value"
                     :label="list.label"
                     :value="list.value"
@@ -312,6 +312,13 @@
                       @click="serviceAuthorization(item)"
                       >服务授权</t-button
                     >
+                    <t-button
+                      v-if="item.deliveryType === 3 && item.orderStatus === 3"
+                      type="text"
+                      class="button-height"
+                      @click="downloadPlugins(item)"
+                      >下载插件</t-button
+                    >
                     <span style="cursor: pointer" @click="clickDetail(item.id)"
                       >订单详情</span
                     >
@@ -432,8 +439,12 @@ import ReviewModal from './components/review-modal.vue';
 import ServiceModel from './components/service-authorization.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 // import EditModalDelivery from './components/edit-modal-delivery.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
@@ -471,20 +482,34 @@ const state = reactive({
 });
 const tableData: Record<string, any> = ref([]);
 // 交付类型
-const deliveryType = reactive([
-  {
-    value: '',
-    label: '全部',
-  },
-  {
-    value: '0',
-    label: 'SaaS',
-  },
-  {
-    value: '1',
-    label: '独立部署',
-  },
-]);
+const deliveryTypeList = computed(() => {
+  const data = [
+    {
+      label: '全部',
+      value: null,
+    },
+    {
+      label: 'SaaS',
+      value: 0,
+    },
+    {
+      label: '独立部署',
+      value: 1,
+    },
+    {
+      label: '插件',
+      value: 3,
+    },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = {
+      label: '标识轻应用',
+      value: 2,
+    };
+    data.splice(3, 0, app);
+  }
+  return data;
+});
 // 订单状态1
 const orderStatusTypeNav = reactive([
   {
@@ -759,6 +784,16 @@ const serviceAuthorization = (item: any) => {
 const onServiceModalConfirm = () => {
   serviceModalVisible.value = false;
   init();
+};
+// 下载插件
+const downloadPlugins = (item: any) => {
+  const link = document.createElement('a');
+  const objectUrl = `/server/web/file/orderDownloadBySource?name=${item?.pluginPackage}&source=${item?.orderSource}&serverId=${item?.productServerId}`; // 创建一个新的url对象
+  link.href = objectUrl;
+  const fileName = item?.pluginPackageSource;
+  link.download = fileName; //  下载的时候自定义的文件名
+  link.click();
+  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
 };
 // 查询
 const getTableData = () => {

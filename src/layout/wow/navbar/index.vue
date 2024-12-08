@@ -17,7 +17,10 @@
           <t-link
             v-for="(item, idx) in channelNameCollect"
             :key="idx"
-            :class="{ active: setActive(item.type) }"
+            :class="{
+              'active': setActive(item.type),
+              'link-hidden': setLinkHidden(item.type),
+            }"
             @click="goPlatProducts(item)"
           >
             {{ item.name || '平台产品' }}
@@ -105,8 +108,12 @@ const platformName = ref(platFormName);
 // 频道页集合
 const channelNameCollect = ref<Record<string, any>>([]);
 
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -126,6 +133,10 @@ watch(
     }
   }
 );
+const setLinkHidden = (type: number) => {
+  return !configInfo.value?.qingFlowSwitch && Number(type) === 8;
+};
+
 const setActive = (key: number) => {
   return ChannelTabPath.value[key] === selectTab.value;
 };
@@ -384,6 +395,10 @@ onMounted(() => {
         &.active {
           color: #1664ff;
           border-bottom: 4px solid #165dff;
+        }
+
+        &.link-hidden {
+          display: none;
         }
       }
 

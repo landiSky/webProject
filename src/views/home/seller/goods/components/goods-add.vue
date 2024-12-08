@@ -932,6 +932,7 @@ import {
   selectOnlineMallApps,
   getProductAppList,
 } from '@/api/goods-manage';
+import { getServicePackage } from '@/api/buyer/overview';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -947,7 +948,8 @@ const emit = defineEmits(['cancel', 'preview']);
 
 let needSave = false;
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfoByCompany, configInfo }: Record<string, any> =
+  storeToRefs(userStore);
 
 const visible: Record<string, any> = ref(true);
 // const templateRef: Record<string, any> = ref();
@@ -1011,12 +1013,18 @@ const deliveryTypeMap = {
   LightApp: 2, // 标识轻应用
   PluginClass: 3, // 插件
 };
-const deliveryTypeList = ref([
-  { label: 'SaaS类', value: deliveryTypeMap.SaaS },
-  { label: '独立部署类', value: deliveryTypeMap.Deploy },
-  { label: '标识轻应用', value: deliveryTypeMap.LightApp },
-  { label: '插件', value: deliveryTypeMap.PluginClass },
-]);
+const deliveryTypeList = computed(() => {
+  const data = [
+    { label: 'SaaS类', value: deliveryTypeMap.SaaS },
+    { label: '独立部署类', value: deliveryTypeMap.Deploy },
+    { label: '插件', value: deliveryTypeMap.PluginClass },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = { label: '标识轻应用', value: deliveryTypeMap.LightApp };
+    data.splice(2, 0, app);
+  }
+  return data;
+});
 const priceTypeList = ref([
   { label: '套餐定价(账号+时长)', value: 0 },
   { label: '一口价定价', value: 1 },
@@ -1425,10 +1433,14 @@ const getClassList = () => {
   });
 };
 
-const getProductApplicationList = () => {
+const getProductApplicationList = async () => {
   const params = {
     companyId: userInfoByCompany.value?.companyId,
   };
+  const dataList = await getServicePackage(params);
+  if (!configInfo.value?.qingFlowSwitch || dataList.length) {
+    return;
+  }
   getProductAppList(params).then((data: any) => {
     ProductAppList.value = data;
   });

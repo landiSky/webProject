@@ -79,6 +79,13 @@ const wowRoutesList = [
         component: () =>
           import('@/views/wow/lightApplicationMall/detail/index.vue'),
       },
+      {
+        // 前台轻应用商城商品详情页预览
+        path: '/wow/lightApplicationMall/preview/:id',
+        name: 'wowLightApplicationMallPreview',
+        component: () =>
+          import('@/views/wow/lightApplicationMall/detail/index.vue'),
+      },
     ],
   },
 ];

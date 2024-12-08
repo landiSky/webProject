@@ -337,7 +337,7 @@
                 </t-col>
                 <t-col :span="3" class="margintop-10">
                   <div class="grid-content bg-purple-light">
-                    {{ dataList.deliveryType === 0 ? 'SaaS' : '独立部署' }}
+                    {{ DeliverTypeDesc[dataList?.deliveryType] }}
                     <p v-if="dataList.saleType === 3" style="color: #86909c"
                       >(免费)
                     </p>
@@ -522,7 +522,7 @@ import {
   getQingFlowCount,
 } from '@/api/seller/order';
 import { getOrderDetailEstimate } from '@/api/order';
-import { orderTypes } from '@/enums/common';
+import { orderTypes, DeliverTypeDesc } from '@/enums/common';
 import { Message, Modal } from '@tele-design/web-vue';
 import noData from '@/assets/images/noData.png';
 import EditModal from './edit-modal.vue';

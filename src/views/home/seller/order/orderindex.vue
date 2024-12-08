@@ -56,7 +56,7 @@
                 <t-select v-model="formInline.deliveryType" placeholder="全部">
                   <template #prefix> 交付类型: </template>
                   <t-option
-                    v-for="list in deliveryType"
+                    v-for="list in deliveryTypeList"
                     :key="list.value"
                     :label="list.label"
                     :value="list.value"
@@ -424,8 +424,12 @@ import EditModalDelivery from './components/edit-modal-delivery.vue';
 import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 
 const userStore = useUserStore();
-const { userInfo, selectCompany, userInfoByCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  selectCompany,
+  userInfoByCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 const formInline = reactive({
   commodityName: '',
   deliveryType: null,
@@ -454,20 +458,34 @@ const noDatalist = ref(false);
 // list
 const tableData: Record<string, any> = ref([]);
 // 交付类型
-const deliveryType = reactive([
-  {
-    value: '',
-    label: '全部',
-  },
-  {
-    value: '0',
-    label: 'SaaS',
-  },
-  {
-    value: '1',
-    label: '独立部署',
-  },
-]);
+const deliveryTypeList = computed(() => {
+  const data = [
+    {
+      label: '全部',
+      value: null,
+    },
+    {
+      label: 'SaaS',
+      value: 0,
+    },
+    {
+      label: '独立部署',
+      value: 1,
+    },
+    {
+      label: '插件',
+      value: 3,
+    },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = {
+      label: '标识轻应用',
+      value: 2,
+    };
+    data.splice(3, 0, app);
+  }
+  return data;
+});
 // 订单状态1
 const orderStatusTypeNav = reactive([
   {

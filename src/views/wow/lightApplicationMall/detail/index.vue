@@ -634,7 +634,7 @@ onMounted(() => {
   apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 3).then(() => {
     console.log('商品详情打点', route.params.id);
   });
-  isPreview.value = route.name === 'wowMallPreview'; // 预览模式不允许点击【立即安装】
+  isPreview.value = route.name === 'wowLightApplicationMallPreview'; // 预览模式不允许点击【立即安装】
   apiProductDetail({ id: route.params.id })
     .then((data) => {
       const tagMap = data.tagMap.filter(

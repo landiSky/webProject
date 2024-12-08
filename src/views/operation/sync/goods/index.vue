@@ -133,7 +133,12 @@
         {{ DeliveryTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #saleType="{ record }">
-        {{ SaleTypeEnum[record.saleType] ?? '-' }}
+        {{
+          (record.deliveryType === 2 || record.deliveryType === 3) &&
+          record.saleType === 1
+            ? '付费'
+            : SaleTypeEnum[record.saleType] || '-'
+        }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
@@ -180,12 +185,16 @@ import {
   stopSync,
   classList,
 } from '@/api/operation/sync-class';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import { comfirmLabel } from '@/api/inventory/fetchLabel';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
 import Label from './components/label.vue';
 
+const userStore = useUserStore();
+const { configInfo }: Record<string, any> = storeToRefs(userStore);
 const tableRef = ref();
 const recordData = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
@@ -267,20 +276,34 @@ const DeliveryTypeEnum: { [name: string]: any } = {
   3: '插件',
 };
 
-const DeliveryTypeList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: 'SaaS',
-    value: 0,
-  },
-  {
-    text: '独立部署',
-    value: 1,
-  },
-];
+const DeliveryTypeList = computed(() => {
+  const data = [
+    {
+      text: '全部',
+      value: null,
+    },
+    {
+      text: 'SaaS',
+      value: 0,
+    },
+    {
+      text: '独立部署',
+      value: 1,
+    },
+    {
+      text: '插件',
+      value: 3,
+    },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = {
+      text: '标识轻应用',
+      value: 2,
+    };
+    data.splice(3, 0, app);
+  }
+  return data;
+});
 
 // 定价方式
 const SaleTypeEnum: { [name: string]: any } = {
@@ -310,6 +333,10 @@ const SaleTypeList = [
   {
     text: '免费',
     value: 3,
+  },
+  {
+    text: '付费',
+    value: 4,
   },
 ];
 
@@ -458,6 +485,7 @@ function fetchData() {
     pageNum: current,
     pageSize,
     ...state.formModel,
+    saleType: state.formModel.saleType === 4 ? 1 : state.formModel.saleType,
   };
 
   // 接口请求

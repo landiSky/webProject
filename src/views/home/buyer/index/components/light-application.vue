@@ -71,7 +71,6 @@ const getPackageList = () => {
   };
   getProductAppList(params).then((res: any) => {
     appDataList.value = res;
-    console.log(res);
   });
 };
 const captureOne = (name: string) => {
@@ -91,7 +90,7 @@ const goNewApplication = () => {
   });
 };
 
-onMounted(async () => {
+onMounted(() => {
   getPackageList();
 });
 </script>

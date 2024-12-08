@@ -134,7 +134,12 @@
       </template>
       <!-- 测试定价方式 -->
       <template #saleType="{ record }">
-        {{ SaleTypeList[record.saleType] || '-' }}
+        {{
+          (record.deliveryType === 2 || record.deliveryType === 3) &&
+          record.saleType === 1
+            ? '付费'
+            : SaleTypeList[record.saleType] || '-'
+        }}
       </template>
       <template #operations="{ record }">
         <t-link class="action-list" @click="clickDetailBtn(record)">
@@ -200,12 +205,16 @@ import {
   upGoods,
   classList,
 } from '@/api/operation/goods';
+import { useUserStore } from '@/store/modules/user';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import Detail from './components/goods-detail.vue';
 
 const router = useRouter();
+const userStore = useUserStore();
+const { configInfo }: Record<string, any> = storeToRefs(userStore);
 const tableRef = ref();
 const defaultFormModel: Record<string, string | number | undefined> = {
   name: '',
@@ -296,24 +305,42 @@ const AppTypeList = [
 const SaleTypeEnum: { [name: string]: any } = {
   SAAS: 0,
   DLBS: 1,
+  LightApp: 2, // 标识轻应用
+  PluginClass: 3, // 插件
   0: 'SaaS',
   1: '独立部署',
+  2: '标识轻应用',
+  3: '插件',
 };
 
-const DeliverTypeList = [
-  {
-    text: '全部',
-    value: null,
-  },
-  {
-    text: 'SaaS',
-    value: 0,
-  },
-  {
-    text: '独立部署',
-    value: 1,
-  },
-];
+const DeliverTypeList = computed(() => {
+  const data = [
+    {
+      text: '全部',
+      value: null,
+    },
+    {
+      text: 'SaaS',
+      value: 0,
+    },
+    {
+      text: '独立部署',
+      value: 1,
+    },
+    {
+      text: '插件',
+      value: 3,
+    },
+  ];
+  if (configInfo.value?.qingFlowSwitch) {
+    const app = {
+      text: '标识轻应用',
+      value: 2,
+    };
+    data.splice(3, 0, app);
+  }
+  return data;
+});
 
 // 状态
 const StatusEnum: { [name: string]: any } = {
@@ -376,6 +403,10 @@ const PricingMethodList = [
   {
     text: '免费',
     value: 3,
+  },
+  {
+    text: '付费',
+    value: 4,
   },
 ];
 const columns = [
@@ -503,6 +534,7 @@ function fetchData() {
     pageNum: current, // 从0开始
     pageSize,
     ...state.formModel,
+    saleType: state.formModel.saleType === 4 ? 1 : state.formModel.saleType,
   };
 
   state.tableLoading = true;
@@ -579,7 +611,10 @@ const clickDetailBtn = (record: Record<string, any>) => {
 // 预览
 const clickPreviewBtn = (record: Record<string, any>) => {
   const routeData = router.resolve({
-    name: 'wowMallPreview',
+    name:
+      record?.deliveryType === 2
+        ? 'wowLightApplicationMallPreview'
+        : 'wowMallPreview',
     params: { id: record.id },
   });
   window.open(routeData?.href, '_blank');

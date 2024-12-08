@@ -90,18 +90,15 @@ const getDigitizedApplicationsList = () => {
   };
   getCompanyNumeberIntelligence(params).then((res: any) => {
     appDataList.value = res;
-    console.log(res);
   });
 };
 // 跳转到轻流 对应的应用包
 const goLightFlow = (item: any) => {
-  console.log(item);
   const params = {
     userId: userInfo.value?.id,
     dashKey: item?.dashKey,
   };
   dashBoardRedirect(params).then((res: any) => {
-    console.log('轻流登录接口返回', res);
     window.open(res);
   });
 };

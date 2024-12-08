@@ -624,8 +624,11 @@ const clickRejectBtn = () => {
 // 预览
 const clickPreviewBtn = () => {
   const routeData = router.resolve({
-    name: 'wowMallPreview',
-    params: { id: props.data.id },
+    name:
+      formModel.value?.deliveryType === 2
+        ? 'wowLightApplicationMallPreview'
+        : 'wowMallPreview',
+    params: { id: props.data?.id },
   });
   window.open(routeData?.href, '_blank');
 };

@@ -49,8 +49,8 @@
       </div>
     </div>
   </div>
-  <LightApplication v-if="!packageList.length" />
-  <DigitizedApplications v-if="!packageList.length" />
+  <LightApplication v-if="showApp" />
+  <DigitizedApplications v-if="showApp" />
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
@@ -132,13 +132,15 @@ const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const selectVersion = ref<Record<string, any>>({});
 
 const packageList: Record<string, any> = ref([]);
+const showApp = ref(false);
 
-const getPackageList = () => {
+const getPackageList = async () => {
   const params = {
     companyId: userInfoByCompany.value?.companyId,
   };
   getServicePackage(params).then((res: any) => {
     packageList.value = res;
+    showApp.value = !res.length;
   });
 };
 
@@ -182,7 +184,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     accountId: '',
     durationId: '',
     companyName,
-    name,
+    name: `标识轻应用服务-${name}`,
     deliveryType: deliveryType ?? 0,
     logo,
     orderSource: source,
