@@ -9,6 +9,7 @@ import IconFaceFrownFill from '@tele-design/web-vue/es/icon/icon-face-frown-fill
 import iconPdf from '@/assets/images/upload-icon/icon-pdf.png';
 import iconWord from '@/assets/images/upload-icon/icon-word.png';
 import iconZip from '@/assets/images/upload-icon/icon-zip.png';
+import iconJar from '@/assets/images/upload-icon/icon-jar.png';
 import iconDelete from '@/assets/images/upload-icon/icon-delete.png';
 
 export function downloadFile(url: string, data: any) {
@@ -67,25 +68,38 @@ export const getCustomIcon = () => {
     retryIcon: () => h(IconUpload),
     cancelIcon: () => h(IconClose),
     fileIcon: (file: any) => {
-      if (/(\.pdf)$/gi.test(file.name.toLowerCase()))
+      const name = file?.name.toLowerCase() as any;
+      if (name.endsWith('.pdf')) {
         return h('div', {
           style: `width: 16px;height: 16px;background: url(${iconPdf});background-size: 100% 100%;cursor: pointer;`,
         });
-      if (/[.docx.doc]$/gi.test(file.name.toLowerCase()))
+      }
+      if (name.endsWith('.doc') || name.endsWith('.docx')) {
         return h('div', {
           style: `width: 16px;height: 16px;background: url(${iconWord});background-size: 100% 100%;cursor: pointer;`,
         });
-      if (/[.zip.rar.7z]$/gi.test(file.name.toLowerCase()))
+      }
+      if (name.endsWith('.jar')) {
+        return h('div', {
+          style: `width: 16px;height: 16px;background: url(${iconJar});background-size: 100% 100%;cursor: pointer;`,
+        });
+      }
+      if (
+        name.endsWith('.zip') ||
+        name.endsWith('.rar') ||
+        name.endsWith('.7z')
+      ) {
         return h('div', {
           style: `width: 16px;height: 16px;background: url(${iconZip});background-size: 100% 100%;cursor: pointer;`,
         });
+      }
       return h(IconFileAudio);
     },
-    removeIcon: () => h(IconClose),
-    // removeIcon: () =>
-    //   h('div', {
-    //     style: `width: 12px;height: 12px;background: url(${iconDelete});background-size: 100% 100%;cursor: pointer;`,
-    //   }),
+    // removeIcon: () => h(IconClose),
+    removeIcon: () =>
+      h('div', {
+        style: `width: 12px;height: 12px;background: url(${iconDelete});background-size: 100% 100%;cursor: pointer;`,
+      }),
     errorIcon: () => h(IconFaceFrownFill),
     fileName: (file: any) => {
       return `${file.name}`;

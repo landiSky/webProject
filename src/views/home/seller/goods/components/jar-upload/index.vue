@@ -6,24 +6,44 @@
     action="/server/web/file/upload"
     :headers="uploadHeaders"
     :show-cancel-button="false"
-    accept=".pdf,.doc,.docx"
+    accept=".jar"
     :tip="dataFileList.length ? '' : '支持jar文件格式，文件大小限制100M以内。'"
     tip-position="bottom"
+    :custom-icon="getCustomIcon()"
     @before-upload="beforeUpload100"
     @before-remove="beforeRemove100"
     @success="uploadJarSuccess"
     @error="uploadJarError"
     @change="uploadJarChange"
-  ></t-upload>
+  >
+    <template #upload-button>
+      <div
+        style="
+          width: 100px;
+          height: 100px;
+          color: var(--color-text-1);
+          text-align: center;
+          background-color: var(--color-fill-2);
+          border: 1px dashed var(--color-fill-4);
+        "
+      >
+        <div style="margin-top: 30px">
+          <div> <IconPlus /></div>
+          <div style="">点击上传</div>
+        </div>
+      </div>
+    </template>
+  </t-upload>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, defineModel } from 'vue';
 import { FileItem, Message } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
+import { getCustomIcon } from '@/utils/file';
 
 const pluginPackage = defineModel('pluginPackage');
-console.log(pluginPackage);
+
 const dataFileList = ref<any[]>([]);
 const uploadHeaders = {
   Authorization: `${getToken()}`,
@@ -31,13 +51,8 @@ const uploadHeaders = {
 
 const beforeUpload100 = (file: File) => {
   return new Promise<void>((resolve, reject) => {
-    const type = file.type as string;
-    console.log(type);
-    if (
-      !type.endsWith(
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      )
-    ) {
+    const name = file?.name.toLowerCase() as any;
+    if (!name.endsWith('.jar')) {
       Message.warning(`上传失败，请检查文件类型`);
       reject();
     }
@@ -85,7 +100,6 @@ const uploadJarError = (fileItem: FileItem) => {
 };
 
 const uploadJarChange = (fileList: FileItem[]) => {
-  console.log(fileList);
   dataFileList.value = fileList;
 };
 
