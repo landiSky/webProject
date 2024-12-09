@@ -872,6 +872,7 @@
               >
                 <JarUpload
                   v-model:pluginPackage="copyModal5[index].pluginPackage"
+                  :plugin-package-list="copyModal5[index].pluginPackageList"
                 />
               </t-form-item>
               <t-form-item
@@ -1156,6 +1157,7 @@ const copyModal5 = ref<any[]>([
     productDeliverySetInfoList: [{ price: null }],
     appPackageId: '',
     pluginPackage: '',
+    pluginPackageList: [],
     onePiece: null,
   },
 ]);
@@ -1221,6 +1223,7 @@ const addCopy = () => {
         name: '',
         productDeliverySetInfoList: [{ price: null }],
         pluginPackage: '',
+        pluginPackageList: [],
         onePiece: null,
       });
     }
@@ -1244,6 +1247,7 @@ const addCopy = () => {
       copyModal5.value.push({
         name: '',
         pluginPackage: '',
+        pluginPackageList: [],
         onePiece: null,
       });
     }
@@ -1768,6 +1772,13 @@ const getDetail = (id: any) => {
               name: one.name,
               productDeliverySetInfoList: list1,
               pluginPackage: one.pluginPackage,
+              pluginPackageList: [
+                {
+                  uid: one.pluginPackage,
+                  name: one.pluginPackageSource,
+                  status: 'done',
+                },
+              ],
               onePiece,
             });
           }
@@ -1797,6 +1808,7 @@ const getDetail = (id: any) => {
             name: '',
             productDeliverySetInfoList: [{ price: '' }],
             pluginPackage: '',
+            pluginPackageList: [],
             onePiece: null,
           });
         }
@@ -1846,6 +1858,13 @@ const getDetail = (id: any) => {
             copyModal5.value.push({
               name: one.name,
               pluginPackage: one.pluginPackage,
+              pluginPackageList: [
+                {
+                  uid: one.pluginPackage,
+                  name: one.pluginPackageSource,
+                  status: 'done',
+                },
+              ],
               onePiece: one.onePiece,
             });
           }
@@ -1853,6 +1872,7 @@ const getDetail = (id: any) => {
           copyModal5.value.push({
             name: '',
             pluginPackage: '',
+            pluginPackageList: [],
             onePiece: null,
           });
         }

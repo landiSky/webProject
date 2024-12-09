@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, defineModel } from 'vue';
+import { onMounted, ref, defineModel, defineProps } from 'vue';
 import { FileItem, Message } from '@tele-design/web-vue';
 import { getToken } from '@/utils/auth';
 import { getCustomIcon } from '@/utils/file';
@@ -48,6 +48,13 @@ const dataFileList = ref<any[]>([]);
 const uploadHeaders = {
   Authorization: `${getToken()}`,
 };
+
+const props = defineProps({
+  pluginPackageList: {
+    type: Array as any,
+    default: () => [],
+  },
+});
 
 const beforeUpload100 = (file: File) => {
   return new Promise<void>((resolve, reject) => {
@@ -103,7 +110,11 @@ const uploadJarChange = (fileList: FileItem[]) => {
   dataFileList.value = fileList;
 };
 
-onMounted(() => {});
+onMounted(() => {
+  if (pluginPackage.value) {
+    dataFileList.value = props.pluginPackageList;
+  }
+});
 </script>
 
 <style lang="less" scoped>
