@@ -251,13 +251,7 @@
                 {{ DeliveryTypeEnum[formModel.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{
-                  (formModel.deliveryType === 2 ||
-                    formModel.deliveryType === 3) &&
-                  formModel.saleType === 1
-                    ? '付费'
-                    : PriceTypeEnum[formModel.saleType] || '-'
-                }}
+                {{ PriceTypeEnum[formModel.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <div

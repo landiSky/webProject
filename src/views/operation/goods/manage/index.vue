@@ -134,12 +134,7 @@
       </template>
       <!-- 测试定价方式 -->
       <template #saleType="{ record }">
-        {{
-          (record.deliveryType === 2 || record.deliveryType === 3) &&
-          record.saleType === 1
-            ? '付费'
-            : SaleTypeList[record.saleType] || '-'
-        }}
+        {{ SaleTypeList[record.saleType] || '-' }}
       </template>
       <template #operations="{ record }">
         <t-link class="action-list" @click="clickDetailBtn(record)">
@@ -404,10 +399,6 @@ const PricingMethodList = [
     text: '免费',
     value: 3,
   },
-  {
-    text: '付费',
-    value: 4,
-  },
 ];
 const columns = [
   {
@@ -534,7 +525,6 @@ function fetchData() {
     pageNum: current, // 从0开始
     pageSize,
     ...state.formModel,
-    saleType: state.formModel.saleType === 4 ? 1 : state.formModel.saleType,
   };
 
   state.tableLoading = true;

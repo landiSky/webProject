@@ -1030,7 +1030,7 @@ const priceTypeList = ref([
   { label: '一口价定价', value: 1 },
   { label: '价格面议', value: 2 },
   { label: '免费', value: 3 },
-  { label: '付费', value: 1 },
+  { label: '一口价定价', value: 1 },
 ]);
 
 const isTryList = ref([

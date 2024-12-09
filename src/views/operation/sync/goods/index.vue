@@ -133,12 +133,7 @@
         {{ DeliveryTypeEnum[record.deliveryType] ?? '-' }}
       </template>
       <template #saleType="{ record }">
-        {{
-          (record.deliveryType === 2 || record.deliveryType === 3) &&
-          record.saleType === 1
-            ? '付费'
-            : SaleTypeEnum[record.saleType] || '-'
-        }}
+        {{ SaleTypeEnum[record.saleType] || '-' }}
       </template>
       <template #status="{ record }">
         <span v-if="record.status === StatusEnum.WTB" class="circle red"></span>
@@ -334,10 +329,6 @@ const SaleTypeList = [
     text: '免费',
     value: 3,
   },
-  {
-    text: '付费',
-    value: 4,
-  },
 ];
 
 // 状态
@@ -485,7 +476,6 @@ function fetchData() {
     pageNum: current,
     pageSize,
     ...state.formModel,
-    saleType: state.formModel.saleType === 4 ? 1 : state.formModel.saleType,
   };
 
   // 接口请求

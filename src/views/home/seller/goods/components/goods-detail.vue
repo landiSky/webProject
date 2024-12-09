@@ -278,13 +278,7 @@
                 {{ DeliveryTypeEnum[dataInfo.deliveryType] || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="商品定价方式">
-                {{
-                  (dataInfo.deliveryType === 2 ||
-                    dataInfo.deliveryType === 3) &&
-                  dataInfo.saleType === 1
-                    ? '付费'
-                    : PriceTypeEnum[dataInfo.saleType] || '-'
-                }}
+                {{ PriceTypeEnum[dataInfo.saleType] || '-' }}
               </t-descriptions-item>
             </t-descriptions>
             <div class="line"></div>

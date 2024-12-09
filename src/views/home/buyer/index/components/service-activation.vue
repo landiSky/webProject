@@ -11,12 +11,9 @@
         <div class="top">
           <div class="top-header">
             <div class="top-name">{{ item?.name }}</div>
-            <!-- <div class="top-name-desc">{{
-              packageDataListEnum[index].desc
-            }}</div> -->
           </div>
           <div
-            v-for="(item2, index2) in packageDataListEnum[index].textList"
+            v-for="(item2, index2) in item?.introduction"
             :key="index2"
             class="top-text"
           >
@@ -34,13 +31,8 @@
               起/年
             </span>
           </div>
-          <div class="light-gray-color">
-            支持{{ item?.companyChildCount }}人，增购{{
-              item?.avgPrice
-            }}元/人/年
-          </div>
           <div
-            class="foot-bottom bottom-wathet bottom-navy-blue"
+            class="foot-bottom bottom-navy-blue"
             @click="activateService(item)"
           >
             开通服务
@@ -88,43 +80,10 @@ const packageClassEnum: Record<string, any> = {
   2: 'navy-blue',
 };
 
-const packageDataListEnum: Record<string, any> = [
-  {
-    desc: '简单业务场景 灵活快速易上手',
-    textList: [
-      '支持50人',
-      '百款免费标识轻应用',
-      '应用个性化搭建',
-      '60万条数据总量',
-      '企业数据报表',
-      '免费在线培训',
-    ],
-  },
-  {
-    desc: '多业务场景 多系统对接 打通内外用户 开放性更高',
-    textList: [
-      '支持80人',
-      '包括基础版所有功能',
-      '100万条数据总量',
-      '多来源数据采集管理',
-      '开放系统对接能力',
-    ],
-  },
-  {
-    desc: '简单业务场景 灵活快速易上手',
-    textList: [
-      '支持100人',
-      '包括增强版所有功能',
-      '200万条数据总量',
-      '企业级安全能力',
-    ],
-  },
-];
-
 const orderStore = useOrderStore();
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany, configInfo }: Record<string, any> =
+const { userInfo, userInfoByCompany }: Record<string, any> =
   storeToRefs(userStore);
 
 const authModalVisible = ref(false);
@@ -139,7 +98,15 @@ const getPackageList = async () => {
     companyId: userInfoByCompany.value?.companyId,
   };
   getServicePackage(params).then((res: any) => {
-    packageList.value = res;
+    const packageData = res.map((data: any) => {
+      const introduction = data?.introduction.split(',') || [];
+      const params = {
+        ...data,
+        introduction,
+      };
+      return params;
+    });
+    packageList.value = packageData;
     showApp.value = !res.length;
   });
 };
@@ -274,7 +241,6 @@ onMounted(async () => {
 <style scoped lang="less">
 .service-app {
   width: 1200px;
-  height: 530px;
   margin: 0 auto 24px;
   padding: 20px 24px;
   background: #f3f6fd;
@@ -324,7 +290,7 @@ onMounted(async () => {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      height: 294px;
+      height: 272px;
       padding: 24px 32px 12px;
       font-family: PingFang SC;
       text-underline-position: from-font;
@@ -336,14 +302,6 @@ onMounted(async () => {
           font-weight: 500;
           font-size: 16px;
           line-height: 24px;
-        }
-
-        .top-name-desc {
-          margin-top: 4px;
-          color: #86909c;
-          font-weight: 400;
-          font-size: 12px;
-          line-height: 18px;
         }
       }
 
@@ -364,7 +322,6 @@ onMounted(async () => {
     .foot {
       display: flex;
       flex-direction: column;
-      height: 142px;
       padding: 12px 32px 24px 32px;
       font-family: PingFang SC;
       background: #fff;
@@ -388,15 +345,6 @@ onMounted(async () => {
         color: #fa9600;
       }
 
-      .light-gray-color {
-        display: flex;
-        margin: 4px 0 16px 0;
-        color: #4e5969;
-        font-weight: 400;
-        font-size: 13px;
-        line-height: 22px;
-      }
-
       .foot-bottom {
         display: flex;
         gap: 10px;
@@ -404,6 +352,7 @@ onMounted(async () => {
         justify-content: center;
         width: 296px;
         height: 32px;
+        margin-top: 16px;
         padding: 6px 16px;
         color: #1664ff;
         font-weight: 400;
