@@ -8,7 +8,7 @@
     :footer="false"
     @cancel="emit('cancel')"
   >
-    <template #title> 服务商认证指南 </template>
+    <template #title> 企业认证指南 </template>
     <div class="centfe">
       <div class="leftauth">
         <div class="leftimg">
