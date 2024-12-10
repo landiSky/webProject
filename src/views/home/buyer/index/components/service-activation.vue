@@ -46,7 +46,6 @@
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
-    :delivery-set-id="selectVersion.id"
     @cancel="onAuthCancel"
     @confirm="onAuthConfirm"
   ></AuthMemberModal>
@@ -68,7 +67,7 @@ import {
 } from '@/enums/common';
 import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
-import AuthMemberModal from '@/views/wow/mall/detail/authMember.vue';
+import AuthMemberModal from '@/views/home/buyer/index/components/authMember.vue';
 // 标识轻应用
 import LightApplication from './light-application.vue';
 // 企业数智化应用
@@ -169,7 +168,19 @@ const onAuthConfirm = (memberIdList: string[]): any => {
 
 // 开通服务
 const activateService = (item: any) => {
-  if (userInfoByCompany.value?.nodeStatus === NodeAuthStatus?.AUTHED) {
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    Modal.info({
+      title: '使用提醒',
+      content: '需申请企业认证后使用，请先进行企业认证。',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '关闭',
+      onOk: () => {},
+    });
+    return false;
+  }
+  if (userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED) {
     Modal.info({
       title: '使用提醒',
       content: '本服务需申请企业节点后使用，请先开通或绑定企业节点。',
@@ -204,18 +215,6 @@ const activateService = (item: any) => {
           window.open(`${res?.data?.data}&data=${sm2data}`);
         });
       },
-    });
-    return false;
-  }
-  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
-    Modal.info({
-      title: '使用提醒',
-      content: '需申请企业认证后使用，请先进行企业认证。',
-      titleAlign: 'start',
-      hideCancel: true,
-      cancelText: '',
-      okText: '关闭',
-      onOk: () => {},
     });
     return false;
   }
