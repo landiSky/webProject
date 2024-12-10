@@ -156,15 +156,15 @@ onMounted(async () => {
     gap: 16px;
     align-items: center;
     width: 144px;
-    height: 176px;
-    padding: 25px 9px;
+    height: 170px;
+    padding: 24px 9px;
     background: #fff;
     border: 1px solid #e5e8ef;
     border-radius: 4px;
 
     .card-img {
-      width: 84px;
-      height: 84px;
+      width: 80px;
+      height: 80px;
       border-radius: 2px;
     }
 

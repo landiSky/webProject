@@ -8,12 +8,14 @@
       </t-space>
     </div>
     <div class="app-body">
+      <!-- font-family -->
       <div v-for="(item, index) in appDataList" :key="index" class="card">
         <div class="card-img">
           <t-avatar
-            :size="58"
+            :size="80"
             shape="square"
-            :style="{ backgroundColor: '#1664FF' }"
+            class="font-alimnma"
+            :style="{ backgroundColor: '#1664FF', fontSize: '44px' }"
           >
             {{ captureOne(item?.tagName) }}
           </t-avatar>
@@ -127,18 +129,19 @@ onMounted(() => {
 
   .card {
     display: flex;
-    gap: 24px;
+    flex-direction: column;
+    gap: 16px;
     align-items: center;
-    width: 270px;
-    height: 82px;
-    padding: 12px;
+    width: 144px;
+    height: 170px;
+    padding: 24px 9px;
     background: #fff;
     border: 1px solid #e5e8ef;
     border-radius: 4px;
 
     .card-img {
-      width: 58px;
-      height: 58px;
+      width: 80px;
+      height: 80px;
       border-radius: 2px;
     }
 
@@ -149,6 +152,7 @@ onMounted(() => {
       font-size: 16px;
       font-family: PingFang SC;
       line-height: 24px;
+      text-align: center;
     }
   }
 }
