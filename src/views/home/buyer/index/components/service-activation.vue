@@ -1,5 +1,5 @@
 <template>
-  <div v-if="packageList.length" class="service-app">
+  <div v-if="packageList.length && showService" class="service-app">
     <div class="title">标识轻应用</div>
     <div class="card">
       <div
@@ -41,8 +41,8 @@
       </div>
     </div>
   </div>
-  <LightApplication v-if="showApp" />
-  <DigitizedApplications v-if="showApp" />
+  <LightApplication v-if="showApp && showService" />
+  <DigitizedApplications v-if="showApp && showService" />
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
@@ -57,7 +57,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { getServicePackage } from '@/api/buyer/overview';
+import { getServicePackage, userAuthStatus } from '@/api/buyer/overview';
 import { snmsClientLogin } from '@/api/login';
 import {
   NodeAuthStatus,
@@ -91,6 +91,7 @@ const selectVersion = ref<Record<string, any>>({});
 
 const packageList: Record<string, any> = ref([]);
 const showApp = ref(false);
+const showService = ref(false);
 
 const getPackageList = async () => {
   const params = {
@@ -106,7 +107,14 @@ const getPackageList = async () => {
       return params;
     });
     packageList.value = packageData;
-    showApp.value = !res.length;
+    const userData = {
+      memberId: userInfoByCompany.value?.memberId,
+      companyId: userInfoByCompany.value?.companyId,
+    };
+    userAuthStatus(userData).then((data: any) => {
+      showApp.value = !res.length;
+      showService.value = data;
+    });
   });
 };
 

@@ -479,8 +479,8 @@ const clickAddCart = async (): Promise<void> => {
 
   if (userInfoByCompany?.primary === AccountType.MAIN) {
     // 标识应用需要判断是否做过企业节点认证
-    authModalVisible.value = true;
-
+    // authModalVisible.value = true;
+    onAuthConfirm([]);
     return;
   }
 
