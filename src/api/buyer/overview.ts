@@ -105,3 +105,10 @@ export function appCraeteRedirect(params: Record<string, any>) {
     params,
   });
 }
+
+// 判断用户是否被授权
+export function userAuthStatus(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/userAuthStatus', {
+    params,
+  });
+}

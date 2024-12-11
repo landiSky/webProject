@@ -85,6 +85,7 @@ const goLightApplication = () => {
 // 跳转轻流平台
 const goNewApplication = () => {
   const params = {
+    userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
   };
   appCraeteRedirect(params).then((res: any) => {
