@@ -8,6 +8,7 @@
       popup-container=".drawer-container"
       ok-text="确定"
       :on-before-ok="onConfirm"
+      @cancel="emit('cancel')"
     >
       <template #title> {{ state.deptNodeNameList.join(' > ') }}</template>
       <ul>
@@ -63,7 +64,7 @@ watch(
   }
 );
 
-const emit = defineEmits(['confirm']);
+const emit = defineEmits(['confirm', 'cancel']);
 
 const onConfirm = () => {
   // 这里和onOk有什么区别？？

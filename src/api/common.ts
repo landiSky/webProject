@@ -39,3 +39,13 @@ export function apiUpdateOrLineStatus(data: Record<string, any>) {
 export function apiAuthMember(data: Record<string, any>) {
   return $http.post('/server/web/product/member/saveConfig', data);
 }
+
+// 获取前缀列表
+export function getPrefixList(params: Record<string, any>) {
+  return $http.get('/server/web/company/getPrefixList', { params });
+}
+
+// 修改前缀的轻流绑定状态
+export function changePrefixBind(params: Record<string, any>) {
+  return $http.get('/server/web/company/changePrefixBind', { params });
+}

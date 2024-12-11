@@ -31,7 +31,7 @@
             userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH
           "
           class="datatitle"
-          >您还没有完成服务商认证，完成认证后可开通以下服务</div
+          >您还没有完成企业认证，完成认证后可开通以下服务</div
         >
         <!-- 审核中 -->
         <div
