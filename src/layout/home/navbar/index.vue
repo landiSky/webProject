@@ -23,7 +23,11 @@
             }"
             @click="setDot(item.key)"
           >
-            {{ item.name }}
+            <template
+              v-if="String(item.id) === '8' && !configInfo.qingFlowSwitch"
+            >
+              {{ item.name }}
+            </template>
           </t-link>
         </t-space>
       </div>
@@ -92,9 +96,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { useMenuStore } from '@/store/modules/menu';
@@ -102,7 +106,6 @@ import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import { sm2 } from '@/utils/encrypt';
 import { useDecorationStore } from '@/store/modules/decoration';
-import { ChannelType } from '@/enums/decoration';
 import eventBus from '@/utils/bus';
 
 const userStore = useUserStore();
@@ -115,6 +118,7 @@ const logo = ref(platFormLogo);
 const platformName = ref(platFormName);
 const menuStore = useMenuStore();
 const menuList = ref<Record<string, any>>([]);
+const configInfo = JSON.parse(localStorage.getItem('configInfo') || '');
 
 const userMenu = [
   {
@@ -151,20 +155,6 @@ const menuChange = () => {
   return dataList;
 };
 menuList.value = [...menuChange()];
-
-// const findValueInColumns = (array: string | any[], value: any) => {
-//   // eslint-disable-next-line no-plusplus
-//   for (let col = 0; col < array[0].length; col++) {
-//     // eslint-disable-next-line no-plusplus
-//     for (let row = 0; row < array.length; row++) {
-//       if (array[row][col] === value) {
-//         return row;
-//         // return { row, column: col };
-//       }
-//     }
-//   }
-//   return 1; // 如果没有找到值，则返回null
-// };
 
 const handleLogout = async () => {
   try {

@@ -10,10 +10,17 @@
             :rules="formRules"
             auto-label-width
           >
-            <div class="row-cls">
+            <div
+              class="row-cls operate-section"
+              :class="
+                String(item.id) === '8' && !configInfo.qingFlowSwitch
+                  ? 'disabled'
+                  : ''
+              "
+            >
               <div class="left">
                 <div class="vertical-line"></div>
-                <div>{{ item.name || '-' }}</div>
+                <div class="title">{{ item.name || '-' }}</div>
               </div>
               <div class="right">
                 <icon-to-top
@@ -42,17 +49,6 @@
                     </t-doption>
                   </template>
                 </t-dropdown>
-                <!-- <icon-delete
-                  v-if="item.supportDelete"
-                  style="margin-right: 12px; cursor: pointer"
-                  :size="12"
-                  @click="handleDel(item)"
-                />
-                <icon-edit
-                  style="cursor: pointer"
-                  :size="12"
-                  @click="handleChannelEdit(item)"
-                /> -->
               </div>
             </div>
             <div
@@ -215,6 +211,7 @@ type FormItem = {
 const channelRef = ref<any[]>([]);
 const addDisable = ref(false);
 const channelLoading = ref(false);
+const configInfo = JSON.parse(localStorage.getItem('configInfo') || '');
 
 // 频道页变成map格式统一动态宣传
 const channelFormMap = ref<any[]>([]);
@@ -240,11 +237,6 @@ const getPageData = (idx?: number) => {
       channelFormMap.value = [];
       res.data.forEach((item: any) => {
         switch (item.type) {
-          // case ChannelType.PLATFORM_HOME:
-          //   form1.value = item;
-          //   break;
-          // case ChannelType.PLATFORM_NAME:
-          //   break;
           default:
             channelFormMap.value.push({ ...item });
             break;
@@ -261,7 +253,6 @@ const getPageData = (idx?: number) => {
       const dynamicChannel = channelFormMap.value.filter(
         (item) => item.supportDelete
       );
-      console.log('dynamicChannel', channelFormMap, dynamicChannel);
       addDisable.value = dynamicChannel.length >= 6;
     }
   });
@@ -304,7 +295,6 @@ const goDecoration = (form: FormItem | null | undefined) => {
 const goPreview = (form: FormItem | null | undefined) => {
   if (!form) return;
   const { type, id } = form;
-  console.log('goPreview', type, id);
   const routeUrl = router.resolve({
     name: 'decorationTools',
     query: { model: 1, type, id },
@@ -314,8 +304,6 @@ const goPreview = (form: FormItem | null | undefined) => {
 
 // 频道页通过一个路由，不同type来区分
 const goPlatProducts = (type: number) => {
-  // router.push({ path: '/wow/platProducts' });
-  console.log('goPlatProductsgoPlatProducts', type);
   if (String(type) === '1') {
     router.push({ path: '/wow/index' });
     return;
@@ -449,6 +437,18 @@ onBeforeUnmount(() => {
 
     :deep(.tele-form-item) {
       margin-bottom: 0 !important;
+    }
+
+    .operate-section {
+      &.disabled {
+        .vertical-line {
+          background: #bedcff;
+        }
+
+        .title {
+          color: #c9cdd4;
+        }
+      }
     }
 
     .vertical-line {

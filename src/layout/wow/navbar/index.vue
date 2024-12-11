@@ -14,29 +14,52 @@
       </div>
       <div class="right">
         <t-space size="[0]">
-          <t-link
-            v-for="(item, idx) in channelNameCollect"
+          <template
+            v-for="(item, idx) in computeChannel(channelNameCollect)"
             :key="idx"
-            :class="{
-              'active': setActive(item.type),
-              'link-hidden': setLinkHidden(item.type),
-            }"
-            @click="goPlatProducts(item)"
           >
-            {{ item.name || '平台产品' }}
-          </t-link>
+            <t-link
+              :class="{
+                active: setActive(item.type),
+              }"
+              @click="goPlatProducts(item, '')"
+            >
+              <span>{{ item.name || '平台产品' }}</span>
+            </t-link>
+          </template>
+          <div v-if="moreMenuData.length" class="select-more-box">
+            <t-link
+              class="more"
+              :class="{
+                active: setMoreActive(),
+              }"
+              @mouseenter="handleMoreEnter"
+            >
+              更多
+            </t-link>
+            <ul
+              v-if="moreStatus"
+              class="select-menu"
+              @mouseleave="handleMoreLeave"
+            >
+              <li
+                v-for="item in moreMenuData"
+                :key="item.id"
+                :class="{
+                  active: setActive(item.type),
+                }"
+                class="select-menu-item"
+                @click="goPlatProducts(item, 'more')"
+              >
+                {{ item.name }}
+              </li>
+            </ul>
+          </div>
         </t-space>
       </div>
     </div>
 
     <div class="right-side">
-      <!-- <t-input-search
-        v-model="searchContent"
-        class="inputSearch"
-        placeholder="请输入商品名称"
-        @press-enter="onSearch"
-        @search="onSearch"
-      /> -->
       <t-space v-if="userInfo?.id">
         <t-link class="controller" @click="goBuyer">控制台</t-link>
 
@@ -99,7 +122,6 @@ const decoration = useDecorationStore();
 const router = useRouter();
 const route = useRoute();
 const selectTab = ref(TabPath.INDEX);
-const searchContent = ref();
 
 const store = storeToRefs(userStore);
 const { platFormLogo, platFormName } = storeToRefs(decoration);
@@ -108,12 +130,12 @@ const platformName = ref(platFormName);
 // 频道页集合
 const channelNameCollect = ref<Record<string, any>>([]);
 
-const {
-  userInfo,
-  selectCompany,
-  userInfoByCompany,
-  configInfo,
-}: Record<string, any> = storeToRefs(userStore);
+const moreMenuData = ref<Record<string, any>>([]);
+
+const moreStatus = ref(false);
+
+const { userInfo, selectCompany, configInfo }: Record<string, any> =
+  storeToRefs(userStore);
 
 watch(
   () => route.path,
@@ -133,8 +155,38 @@ watch(
     }
   }
 );
-const setLinkHidden = (type: number) => {
-  return !configInfo.value?.qingFlowSwitch && Number(type) === 8;
+
+const computeChannel = (channelData: any) => {
+  // 过滤标识轻应用
+  const data = channelData.filter((item: any) => {
+    if (String(item.id) === '8') {
+      return configInfo.value.qingFlowSwitch;
+    }
+    return true;
+  });
+  if (data.length > 9) {
+    moreMenuData.value = data.slice(9);
+    return data.slice(0, 9);
+  }
+  moreMenuData.value = [];
+  return data;
+};
+
+const handleMoreEnter = () => {
+  moreStatus.value = true;
+};
+
+const handleMoreLeave = () => {
+  moreStatus.value = false;
+};
+
+const setMoreActive = () => {
+  if (moreMenuData.value.length) {
+    return moreMenuData.value.some(
+      (item: any) => ChannelTabPath.value[item.id] === selectTab.value
+    );
+  }
+  return false;
 };
 
 const setActive = (key: number) => {
@@ -210,7 +262,10 @@ const goLightAppMall = () => {
   router.push({ path: '/wow/lightApplicationMall' });
 };
 
-const goPlatProducts = (data: Record<string, any>) => {
+const goPlatProducts = (data: Record<string, any>, type: string) => {
+  if (type !== 'more') {
+    moreStatus.value = false;
+  }
   // 首页
   if (String(data.type) === '1') {
     goIndex();
@@ -279,21 +334,6 @@ const goRegister = () => {
 };
 const goLogin = () => {
   userStore.jumpToLogin();
-};
-
-const onSearch = () => {
-  // TODO w: 商城搜索打点
-  apiDataPoint(null, searchContent.value, userInfo?.value?.id, 5, 9).then(
-    () => {
-      console.log('主导航栏商品搜索打点', searchContent.value);
-    }
-  );
-  router.push({
-    name: 'wowMall',
-    query: {
-      goodsName: searchContent.value,
-    },
-  });
 };
 
 onMounted(() => {
@@ -397,9 +437,13 @@ onMounted(() => {
           border-bottom: 4px solid #165dff;
         }
 
-        &.link-hidden {
-          display: none;
+        &.more {
+          border-bottom: none;
         }
+      }
+
+      .more:hover {
+        color: #1664ff;
       }
 
       :deep(.tele-space) {
@@ -408,6 +452,33 @@ onMounted(() => {
         .tele-space-item {
           height: 100%;
           margin-right: 0;
+        }
+      }
+
+      .select-more-box {
+        position: relative;
+
+        .select-menu {
+          position: absolute;
+          z-index: 100;
+          width: 190px;
+          // height: 220px;
+          padding: 12px 16px;
+          background: #fff;
+          border-radius: 2px;
+
+          .select-menu-item {
+            line-height: 44px;
+
+            &.active {
+              color: #1664ff;
+            }
+
+            &:hover {
+              color: #1664ff;
+              cursor: pointer;
+            }
+          }
         }
       }
     }
