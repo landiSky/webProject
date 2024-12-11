@@ -14,7 +14,7 @@
           <t-avatar
             :size="80"
             shape="square"
-            class="font-alimnma"
+            class="font-pangmen"
             :style="{ backgroundColor: '#1664FF', fontSize: '44px' }"
           >
             {{ captureOne(item?.tagName) }}
