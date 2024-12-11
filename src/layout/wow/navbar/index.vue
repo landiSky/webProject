@@ -462,8 +462,9 @@ onMounted(() => {
           position: absolute;
           z-index: 100;
           width: 190px;
-          // height: 220px;
+          max-height: 220px;
           padding: 12px 16px;
+          overflow-y: scroll;
           background: #fff;
           border-radius: 2px;
 
