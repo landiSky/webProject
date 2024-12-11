@@ -95,7 +95,7 @@ const getDigitizedApplicationsList = () => {
 // 跳转到轻流 对应的应用包
 const goLightFlow = (item: any) => {
   const params = {
-    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
     dashKey: item?.dashKey,
   };
   dashBoardRedirect(params).then((res: any) => {
