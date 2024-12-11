@@ -20,7 +20,7 @@
           >
             <t-link
               :class="{
-                active: setActive(item.type),
+                active: setActive(item),
               }"
               @click="goPlatProducts(item, '')"
             >
@@ -38,7 +38,7 @@
               更多
             </t-link>
             <ul
-              v-if="moreStatus"
+              v-show="moreStatus"
               class="select-menu"
               @mouseleave="handleMoreLeave"
             >
@@ -46,7 +46,7 @@
                 v-for="item in moreMenuData"
                 :key="item.id"
                 :class="{
-                  active: setActive(item.type),
+                  active: item.channelType && !item.linkUrl && setActive(item),
                 }"
                 class="select-menu-item"
                 @click="goPlatProducts(item, 'more')"
@@ -140,7 +140,6 @@ const { userInfo, selectCompany, configInfo }: Record<string, any> =
 watch(
   () => route.path,
   (newV) => {
-    console.log('watch', newV);
     // 商品详情页也激活【商城】
     if (route.name === 'wowMallDetail') {
       selectTab.value = TabPath.MALL;
@@ -183,14 +182,18 @@ const handleMoreLeave = () => {
 const setMoreActive = () => {
   if (moreMenuData.value.length) {
     return moreMenuData.value.some(
-      (item: any) => ChannelTabPath.value[item.id] === selectTab.value
+      // 过滤出外链
+      (item: any) =>
+        !!item.channelType &&
+        !item.linkUrl &&
+        ChannelTabPath.value[item.id] === selectTab.value
     );
   }
   return false;
 };
 
-const setActive = (key: number) => {
-  return ChannelTabPath.value[key] === selectTab.value;
+const setActive = (data: any) => {
+  return ChannelTabPath.value[data.id] === selectTab.value;
 };
 const handleLogout = async () => {
   await userStore.logout();
@@ -263,9 +266,6 @@ const goLightAppMall = () => {
 };
 
 const goPlatProducts = (data: Record<string, any>, type: string) => {
-  if (type !== 'more') {
-    moreStatus.value = false;
-  }
   // 首页
   if (String(data.type) === '1') {
     goIndex();
@@ -305,7 +305,9 @@ const goPlatProducts = (data: Record<string, any>, type: string) => {
   // 判断动态频道是否是外链形式
   if (data.channelType === 0 && data.linkUrl && data.supportDelete) {
     // 判断是不是英福平台做引流
-    selectTab.value = `/wow/platProducts/${data.type}`;
+    moreStatus.value = false;
+    // 更多如果外链跳出不设置active
+    if (type !== 'more') selectTab.value = `/wow/platProducts/${data.type}`;
     window.open(data.linkUrl, '_blank');
     return;
   }
@@ -341,7 +343,6 @@ onMounted(() => {
   eventBus.emit('updateNavData');
   // TODO 和项目名称以及导航名称接口获取
   apiGetNavData({}).then((res) => {
-    console.log('首页logo和项目名称接口获取', res);
     if (res.data) {
       // 因为type字段换成了id，改的地方比较多，所以在这里统一做同步处理
       res.data = res.data.map((i: any) => ({
@@ -370,7 +371,6 @@ onMounted(() => {
           channelNameCollect.value.push({ ...item });
         }
       });
-      console.log('channelNameCollect', channelNameCollect);
     }
   });
   if (route.name === 'wowMallDetail') {
