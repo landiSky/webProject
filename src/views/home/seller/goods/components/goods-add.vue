@@ -1326,7 +1326,7 @@ const copyRules = {
       required: true,
     },
   ],
-  appPackageId: [{ required: true, message: '请选择工作区应用包' }],
+  appPackageId: [{ required: true, message: '请选择应用包ID' }],
   pluginPackage: [{ required: true, message: '请上传插件jar包' }],
   onePiece: [
     {
@@ -1446,7 +1446,14 @@ const getProductApplicationList = async () => {
     return;
   }
   getProductAppList(params).then((data: any) => {
-    ProductAppList.value = data;
+    const list = data.map((item: any) => {
+      const params = {
+        ...item,
+        tagId: String(item.tagId),
+      };
+      return params;
+    });
+    ProductAppList.value = list;
   });
 };
 
