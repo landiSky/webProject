@@ -12,7 +12,7 @@
         v-for="(item, index) in appDataList"
         :key="index"
         class="card"
-        @click="goLightFlow"
+        @click="goLightFlow(item)"
       >
         <div class="card-img">
           <t-avatar
