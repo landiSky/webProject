@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { appCraeteRedirect } from '@/api/buyer/overview';
+import { appCreateRedirect } from '@/api/buyer/overview';
 import { getProductAppList } from '@/api/goods-manage';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
@@ -88,7 +88,7 @@ const goNewApplication = () => {
     userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
   };
-  appCraeteRedirect(params).then((res: any) => {
+  appCreateRedirect(params).then((res: any) => {
     window.open(res);
   });
 };

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="packageList.length && showService" class="service-app">
+  <div v-if="packageList.length" class="service-app">
     <div class="title">标识轻应用</div>
     <div class="card">
       <div
@@ -82,7 +82,7 @@ const packageClassEnum: Record<string, any> = {
 const orderStore = useOrderStore();
 const router = useRouter();
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany }: Record<string, any> =
+const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 
 const authModalVisible = ref(false);
@@ -95,7 +95,7 @@ const showService = ref(false);
 
 const getPackageList = async () => {
   const params = {
-    companyId: userInfoByCompany.value?.companyId,
+    companyId: selectCompany.value?.memberId,
   };
   getServicePackage(params).then((res: any) => {
     const packageData = res.map((data: any) => {
@@ -108,8 +108,8 @@ const getPackageList = async () => {
     });
     packageList.value = packageData;
     const userData = {
-      memberId: userInfoByCompany.value?.memberId,
-      companyId: userInfoByCompany.value?.companyId,
+      memberId: selectCompany.value?.memberId,
+      companyId: selectCompany.value?.memberId,
     };
     userAuthStatus(userData).then((data: any) => {
       showApp.value = !res.length;

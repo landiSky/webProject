@@ -100,8 +100,8 @@ export function getDashBoardList(params: Record<string, any>) {
 }
 
 // 应用创建跳转
-export function appCraeteRedirect(params: Record<string, any>) {
-  return $http.get('/server/web/qingFlow/appCraeteRedirect', {
+export function appCreateRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/appCreateRedirect', {
     params,
   });
 }
