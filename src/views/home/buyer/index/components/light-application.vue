@@ -8,8 +8,12 @@
       </t-space>
     </div>
     <div class="app-body">
-      <!-- font-family -->
-      <div v-for="(item, index) in appDataList" :key="index" class="card">
+      <div
+        v-for="(item, index) in appDataList"
+        :key="index"
+        class="card"
+        @click="goLightFlow"
+      >
         <div class="card-img">
           <t-avatar
             :size="80"
@@ -57,7 +61,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { appCreateRedirect } from '@/api/buyer/overview';
+import { appCreateRedirect, appAppPackageRedirect } from '@/api/buyer/overview';
 import { getProductAppList } from '@/api/goods-manage';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
@@ -89,6 +93,18 @@ const goNewApplication = () => {
     companyId: selectCompany.value?.companyId,
   };
   appCreateRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
+
+// 跳转到轻流 对应的应用包
+const goLightFlow = (item: any) => {
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+    tagId: item?.tagId,
+  };
+  appAppPackageRedirect(params).then((res: any) => {
     window.open(res);
   });
 };

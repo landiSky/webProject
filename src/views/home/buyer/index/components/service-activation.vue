@@ -95,7 +95,7 @@ const showService = ref(false);
 
 const getPackageList = async () => {
   const params = {
-    companyId: selectCompany.value?.memberId,
+    companyId: selectCompany.value?.companyId,
   };
   getServicePackage(params).then((res: any) => {
     const packageData = res.map((data: any) => {
@@ -107,16 +107,14 @@ const getPackageList = async () => {
       return params;
     });
     packageList.value = packageData;
-    showApp.value = !res.length;
-    showService.value = true;
-    // const userData = {
-    //   memberId: selectCompany.value?.memberId,
-    //   companyId: selectCompany.value?.memberId,
-    // };
-    // userAuthStatus(userData).then((data: any) => {
-    //   showApp.value = !res.length;
-    //   showService.value = data;
-    // });
+    const userData = {
+      companyId: selectCompany.value?.companyId,
+      memberId: selectCompany.value?.memberId,
+    };
+    userAuthStatus(userData).then((data: any) => {
+      showApp.value = !res.length;
+      showService.value = data;
+    });
   });
 };
 

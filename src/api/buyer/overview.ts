@@ -75,9 +75,14 @@ export function getServicePackage(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/getServicePackage', { params });
 }
 
-// 登录轻流
+// 门户跳转
 export function dashBoardRedirect(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/dashBoardRedirect', { params });
+}
+
+// 应用包跳转
+export function appAppPackageRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/appAppPackageRedirect', { params });
 }
 
 // 查询企业的数智化应用列表

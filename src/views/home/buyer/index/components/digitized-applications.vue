@@ -92,7 +92,7 @@ const getDigitizedApplicationsList = () => {
     appDataList.value = res;
   });
 };
-// 跳转到轻流 对应的应用包
+// 跳转到轻流 对应的门户
 const goLightFlow = (item: any) => {
   const params = {
     userId: userInfo.value?.id,
