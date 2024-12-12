@@ -1445,7 +1445,11 @@ const getProductApplicationList = async () => {
   if (!configInfo.value?.qingFlowSwitch || dataList.length) {
     return;
   }
-  getProductAppList(params).then((data: any) => {
+  const ProductAppData = {
+    companyId: userInfoByCompany.value?.companyId,
+    type: 1, // 0 是全部 其他值是返回不是空的应用宝
+  };
+  getProductAppList(ProductAppData).then((data: any) => {
     const list = data.map((item: any) => {
       const params = {
         ...item,
@@ -1846,7 +1850,7 @@ const getDetail = (id: any) => {
             copyModal5.value.push({
               name: one.name,
               appPackageId: one.appPackageId,
-              onePiece: one.onePiece,
+              onePiece: parseInt(one.onePiece, 10),
             });
           }
         } else {
@@ -1872,7 +1876,7 @@ const getDetail = (id: any) => {
                   status: 'done',
                 },
               ],
-              onePiece: one.onePiece,
+              onePiece: parseInt(one.onePiece, 10),
             });
           }
         } else {
@@ -1907,7 +1911,6 @@ const getDetail = (id: any) => {
         });
       }
     }
-
     modalJsonString.value = getModalJson();
   });
 };

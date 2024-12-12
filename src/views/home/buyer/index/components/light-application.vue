@@ -74,6 +74,7 @@ const appDataList: Record<string, any> = ref([]);
 const getPackageList = () => {
   const params = {
     companyId: selectCompany.value?.companyId,
+    type: 0, // 0 是全部 其他值是返回不是空的应用宝
   };
   getProductAppList(params).then((res: any) => {
     appDataList.value = res;
