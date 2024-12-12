@@ -159,7 +159,7 @@ const computeChannel = (channelData: any) => {
   // 过滤标识轻应用
   const data = channelData.filter((item: any) => {
     if (String(item.id) === '8') {
-      return !configInfo.value.qingFlowSwitch;
+      return configInfo.value.qingFlowSwitch;
     }
     return true;
   });
