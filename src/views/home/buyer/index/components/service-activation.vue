@@ -107,14 +107,16 @@ const getPackageList = async () => {
       return params;
     });
     packageList.value = packageData;
-    const userData = {
-      memberId: selectCompany.value?.memberId,
-      companyId: selectCompany.value?.memberId,
-    };
-    userAuthStatus(userData).then((data: any) => {
-      showApp.value = !res.length;
-      showService.value = data;
-    });
+    showApp.value = !res.length;
+    showService.value = true;
+    // const userData = {
+    //   memberId: selectCompany.value?.memberId,
+    //   companyId: selectCompany.value?.memberId,
+    // };
+    // userAuthStatus(userData).then((data: any) => {
+    //   showApp.value = !res.length;
+    //   showService.value = data;
+    // });
   });
 };
 
