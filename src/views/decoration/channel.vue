@@ -125,7 +125,7 @@
             :class="addDisable ? 'square-plus-gray' : 'square-blue-plus'"
             size="16px"
             @click="handleChannelAdd"
-          />添加频道（最多6个）</div
+          />添加频道</div
         >
       </t-spin>
     </t-space>
@@ -142,7 +142,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, onMounted, ref, watch, onBeforeUnmount } from 'vue';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { Message, Modal } from '@tele-design/web-vue';
 import {
@@ -250,10 +250,10 @@ const getPageData = (idx?: number) => {
         channelFormMap.value[idx].navNameEdit =
           !channelFormMap.value[idx].navNameEdit;
       }
-      const dynamicChannel = channelFormMap.value.filter(
-        (item) => item.supportDelete
-      );
-      addDisable.value = dynamicChannel.length >= 6;
+      // const dynamicChannel = channelFormMap.value.filter(
+      //   (item) => item.supportDelete
+      // );
+      // addDisable.value = dynamicChannel.length >= 6;
     }
   });
   // 获取本地缓存的装修数据,注意key值！！！
@@ -367,10 +367,10 @@ const handleChannelEdit = (item: object) => {
 
 const handleChannelAdd = () => {
   // 将频道页过滤出来
-  const dynamicChannel = channelFormMap.value.filter(
-    (item) => item.supportDelete
-  );
-  if (dynamicChannel.length >= 6) return;
+  // const dynamicChannel = channelFormMap.value.filter(
+  //   (item) => item.supportDelete
+  // );
+  // if (dynamicChannel.length >= 6) return;
   showChannelDrawer.value = true;
   channelTitle.value = '添加频道';
   channelData.value = {};
