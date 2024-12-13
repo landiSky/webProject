@@ -315,7 +315,7 @@
                         alt=""
                       />
                       <img
-                        v-else
+                        v-if="dataList.productType === 0"
                         class="pay-img"
                         style="width: 80px; height: 80px"
                         :src="`/server/web/file/orderDownloadBySource?name=${dataList.productLogo}&source=${dataList.productSource}&serverId=${dataList.productServerId}`"
