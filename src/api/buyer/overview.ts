@@ -75,9 +75,14 @@ export function getServicePackage(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/getServicePackage', { params });
 }
 
-// 登录轻流
+// 门户跳转
 export function dashBoardRedirect(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/dashBoardRedirect', { params });
+}
+
+// 应用包跳转
+export function appAppPackageRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/appAppPackageRedirect', { params });
 }
 
 // 查询企业的数智化应用列表
@@ -100,8 +105,8 @@ export function getDashBoardList(params: Record<string, any>) {
 }
 
 // 应用创建跳转
-export function appCraeteRedirect(params: Record<string, any>) {
-  return $http.get('/server/web/qingFlow/appCraeteRedirect', {
+export function appCreateRedirect(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/appCreateRedirect', {
     params,
   });
 }

@@ -1326,7 +1326,7 @@ const copyRules = {
       required: true,
     },
   ],
-  appPackageId: [{ required: true, message: '请选择工作区应用包' }],
+  appPackageId: [{ required: true, message: '请选择应用包ID' }],
   pluginPackage: [{ required: true, message: '请上传插件jar包' }],
   onePiece: [
     {
@@ -1445,8 +1445,19 @@ const getProductApplicationList = async () => {
   if (!configInfo.value?.qingFlowSwitch || dataList.length) {
     return;
   }
-  getProductAppList(params).then((data: any) => {
-    ProductAppList.value = data;
+  const ProductAppData = {
+    companyId: userInfoByCompany.value?.companyId,
+    type: 1, // 0 是全部 其他值是返回不是空的应用宝
+  };
+  getProductAppList(ProductAppData).then((data: any) => {
+    const list = data.map((item: any) => {
+      const params = {
+        ...item,
+        tagId: String(item.tagId),
+      };
+      return params;
+    });
+    ProductAppList.value = list;
   });
 };
 
@@ -1839,7 +1850,7 @@ const getDetail = (id: any) => {
             copyModal5.value.push({
               name: one.name,
               appPackageId: one.appPackageId,
-              onePiece: one.onePiece,
+              onePiece: parseInt(one.onePiece, 10),
             });
           }
         } else {
@@ -1865,7 +1876,7 @@ const getDetail = (id: any) => {
                   status: 'done',
                 },
               ],
-              onePiece: one.onePiece,
+              onePiece: parseInt(one.onePiece, 10),
             });
           }
         } else {
@@ -1900,7 +1911,6 @@ const getDetail = (id: any) => {
         });
       }
     }
-
     modalJsonString.value = getModalJson();
   });
 };

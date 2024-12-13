@@ -23,11 +23,7 @@
             }"
             @click="setDot(item.key)"
           >
-            <template
-              v-if="String(item.id) === '8' && !configInfo.qingFlowSwitch"
-            >
-              {{ item.name }}
-            </template>
+            {{ item.name }}
           </t-link>
         </t-space>
       </div>

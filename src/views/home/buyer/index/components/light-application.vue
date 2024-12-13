@@ -8,13 +8,17 @@
       </t-space>
     </div>
     <div class="app-body">
-      <!-- font-family -->
-      <div v-for="(item, index) in appDataList" :key="index" class="card">
+      <div
+        v-for="(item, index) in appDataList"
+        :key="index"
+        class="card"
+        @click="goLightFlow(item)"
+      >
         <div class="card-img">
           <t-avatar
             :size="80"
             shape="square"
-            class="font-alimnma"
+            class="font-pangmen"
             :style="{ backgroundColor: '#1664FF', fontSize: '44px' }"
           >
             {{ captureOne(item?.tagName) }}
@@ -57,7 +61,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { appCraeteRedirect } from '@/api/buyer/overview';
+import { appCreateRedirect, appAppPackageRedirect } from '@/api/buyer/overview';
 import { getProductAppList } from '@/api/goods-manage';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
@@ -70,6 +74,7 @@ const appDataList: Record<string, any> = ref([]);
 const getPackageList = () => {
   const params = {
     companyId: selectCompany.value?.companyId,
+    type: 0, // 0 是全部 其他值是返回不是空的应用宝
   };
   getProductAppList(params).then((res: any) => {
     appDataList.value = res;
@@ -88,7 +93,19 @@ const goNewApplication = () => {
     userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
   };
-  appCraeteRedirect(params).then((res: any) => {
+  appCreateRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
+
+// 跳转到轻流 对应的应用包
+const goLightFlow = (item: any) => {
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+    tagId: item?.tagId,
+  };
+  appAppPackageRedirect(params).then((res: any) => {
     window.open(res);
   });
 };
