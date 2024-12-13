@@ -879,8 +879,7 @@
                 v-if="formModel2.saleType == priceTypeList[4].value"
                 label="模版售价"
                 field="onePiece"
-                :rules="[{ validator: validatorOnePiece }]"
-                required
+                :rules="[{ required: true, validator: validatorOnePiece }]"
               >
                 <t-input
                   v-model.trim="copyModal5[index].onePiece"
@@ -1165,8 +1164,14 @@ const copyModal5 = ref<any[]>([
 
 // 服务交付方式change事件
 const radiogroupChange = (c: any) => {
-  if (c === 1) {
+  if (c === 0) {
+    formModel2.value.saleType = 3;
+  } else if (c === 1) {
     formModel2.value.saleType = 0;
+  } else if (c === 2) {
+    formModel2.value.saleType = 3;
+  } else if (c === 3) {
+    formModel2.value.saleType = 3;
   } else {
     formModel2.value.saleType = 3;
   }
@@ -1216,6 +1221,8 @@ const addCopy = () => {
         name: '',
         productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
+        pluginPackage: '',
+        pluginPackageList: [],
         onePiece: null,
       });
     }
@@ -1223,6 +1230,7 @@ const addCopy = () => {
       copyModal5.value.push({
         name: '',
         productDeliverySetInfoList: [{ price: null }],
+        appPackageId: '',
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
@@ -1238,13 +1246,18 @@ const addCopy = () => {
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
       copyModal5.value.push({
         name: '',
+        productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
+        pluginPackage: '',
+        pluginPackageList: [],
         onePiece: null,
       });
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
       copyModal5.value.push({
         name: '',
+        productDeliverySetInfoList: [{ price: null }],
+        appPackageId: '',
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
@@ -1742,8 +1755,15 @@ const getDetail = (id: any) => {
         });
       }
     } else if (formModel2.value.saleType === 1) {
-      copyModal2.value = [];
-      copyModal5.value = [];
+      if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
+        copyModal2.value = [];
+      }
+      if (
+        formModel2.value.deliveryType === deliveryTypeMap.LightApp ||
+        formModel2.value.deliveryType === deliveryTypeMap.PluginClass
+      ) {
+        copyModal5.value = [];
+      }
       const list = res.productDeliverySetList;
 
       if (list && list.length > 0) {
