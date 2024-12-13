@@ -48,6 +48,7 @@
     :product-id="prodDetail.id"
     @cancel="onAuthCancel"
     @confirm="onAuthConfirm"
+    @jump-node="goNode"
   ></AuthMemberModal>
 </template>
 
@@ -92,6 +93,35 @@ const selectVersion = ref<Record<string, any>>({});
 const packageList: Record<string, any> = ref([]);
 const showApp = ref(false);
 const showService = ref(false);
+
+// 跳转二级公共方法
+const clickIdService = (pageUrl: any) => {
+  const { companyId } = userInfoByCompany.value || {};
+  const params = {
+    companyId: userInfo.value?.isAdmin ? userInfo.value?.companyId : companyId,
+  };
+  snmsClientLogin(params).then((res: any) => {
+    if (res?.data?.code === 102006) {
+      Message.error(res?.data?.message);
+    }
+    if (!res?.data?.data) {
+      return;
+    }
+    const data = {
+      type: 'snms',
+      companyId: userInfo.value?.isAdmin
+        ? userInfo.value?.companyId
+        : companyId,
+      pageUrl,
+    };
+    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
+    window.open(`${res?.data?.data}&data=${sm2data}`);
+  });
+};
+// 跳转二级前缀配置页面
+const goNode = () => {
+  clickIdService('/prefix/apply');
+};
 
 const getPackageList = async () => {
   const params = {
@@ -188,6 +218,15 @@ const activateService = (item: any) => {
     });
     return false;
   }
+  if (userInfoByCompany.value?.primary === AccountType.MEMBER) {
+    Modal.warning({
+      title: '使用提醒',
+      content: `请联系企业管理员开通标识轻应用服务：${userInfoByCompany.value?.companyPhone}`,
+      titleAlign: 'start',
+      okText: '好的',
+    });
+    return false;
+  }
   if (userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED) {
     Modal.info({
       title: '使用提醒',
@@ -197,31 +236,7 @@ const activateService = (item: any) => {
       cancelText: '暂不开通',
       okText: '去开通',
       onOk: () => {
-        const { companyId } = userInfoByCompany.value || {};
-        const params = {
-          companyId: userInfo.value?.isAdmin
-            ? userInfo.value?.companyId
-            : companyId,
-        };
-        snmsClientLogin(params).then((res: any) => {
-          if (res?.data?.code === 102006) {
-            Message.error(res?.data?.message);
-          }
-          if (!res?.data?.data) {
-            return;
-          }
-          const data = {
-            type: 'snms',
-            companyId: userInfo.value?.isAdmin
-              ? userInfo.value?.companyId
-              : companyId,
-          };
-          const sm2data = sm2(
-            JSON.stringify(data),
-            userStore.configInfo?.publicKey
-          );
-          window.open(`${res?.data?.data}&data=${sm2data}`);
-        });
+        clickIdService('/ent/apply');
       },
     });
     return false;

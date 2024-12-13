@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { Message } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
 import { apiMemberList, getPrefixList, changePrefixBind } from '@/api/common';
 
@@ -64,15 +64,44 @@ const { selectCompany } = storeToRefs(store);
 const props = defineProps({
   productId: String,
 });
-const emit = defineEmits(['confirm', 'cancel']);
+const emit = defineEmits(['confirm', 'cancel', 'jumpNode']);
 const visible = ref(false);
 const enterprisePrefixList = ref<any[]>([]);
 const memberList = ref<{ username: string; memberId: string }[] | []>([]); // 不在当前应用下的成员列表
 const selectMemList = ref<string[]>([]);
 const prefixId = ref();
 
+const verificationPrefix = (res: any) => {
+  if (res?.code === 801010) {
+    Modal.info({
+      title: '使用提醒',
+      content: '请检查企业节点是否部署成功并完成开机引导配置',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '关闭',
+      onOk: () => {},
+    });
+    return false;
+  }
+  if (res?.code === 801011) {
+    Modal.info({
+      title: '使用提醒',
+      content: '若已完成，请检查解析路由是否配置正确。',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '去查看',
+      onOk: () => {
+        emit('jumpNode');
+      },
+    });
+    return false;
+  }
+  return true;
+};
+
 const onConfirm = () => {
-  console.log(prefixId.value);
   if (!selectMemList.value.length) {
     return Message.warning(' 请选择要授权的成员');
   }
@@ -83,8 +112,11 @@ const onConfirm = () => {
     prefixId: prefixId.value,
     companyId: selectCompany.value?.companyId,
   };
-  changePrefixBind(params).then(() => {
-    return emit('confirm', selectMemList.value);
+  changePrefixBind(params).then((res: any) => {
+    const checkPrefix = verificationPrefix(res);
+    if (checkPrefix) {
+      emit('confirm', selectMemList.value);
+    }
   });
   return true;
 };
@@ -97,8 +129,11 @@ const onSkip = () => {
     prefixId: prefixId.value,
     companyId: selectCompany.value?.companyId,
   };
-  changePrefixBind(params).then(() => {
-    return emit('confirm', []);
+  changePrefixBind(params).then((res: any) => {
+    const checkPrefix = verificationPrefix(res);
+    if (checkPrefix) {
+      emit('confirm', []);
+    }
   });
   return true;
 };

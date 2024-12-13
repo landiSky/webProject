@@ -47,5 +47,10 @@ export function getPrefixList(params: Record<string, any>) {
 
 // 修改前缀的轻流绑定状态
 export function changePrefixBind(params: Record<string, any>) {
-  return $http.get('/server/web/company/changePrefixBind', { params });
+  return $http.get('/server/web/company/changePrefixBind', {
+    params,
+    customFields: {
+      returnRawData: true,
+    },
+  });
 }

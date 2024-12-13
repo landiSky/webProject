@@ -1042,7 +1042,7 @@ const formModel2 = ref({
 const validatorOnePiece = (value: any, cb: (params?: any) => void) => {
   if ((!value && value !== 0) || value.length === 0)
     return cb('请输入模版售价');
-  if (!/^[0-9]\d*$/.test(value) || value.length > 10)
+  if (!/^[1-9]\d*$/.test(value) || value.length > 10)
     return cb('模版售价请填写10位以内整数');
   return cb();
 };
