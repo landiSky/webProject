@@ -163,9 +163,9 @@ const computeChannel = (channelData: any) => {
     }
     return true;
   });
-  if (data.length > 9) {
-    moreMenuData.value = data.slice(9);
-    return data.slice(0, 9);
+  if (data.length > 8) {
+    moreMenuData.value = data.slice(8);
+    return data.slice(0, 8);
   }
   moreMenuData.value = [];
   return data;
@@ -266,6 +266,7 @@ const goLightAppMall = () => {
 };
 
 const goPlatProducts = (data: Record<string, any>, type: string) => {
+  if (type !== 'more') moreStatus.value = false;
   // 首页
   if (String(data.type) === '1') {
     goIndex();
@@ -460,7 +461,7 @@ onMounted(() => {
 
         .select-menu {
           position: absolute;
-          z-index: 100;
+          z-index: 9999;
           width: 190px;
           max-height: 220px;
           padding: 12px 16px;
