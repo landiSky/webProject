@@ -36,6 +36,11 @@
         <div class="tbody">
           <span>
             <img
+              v-if="createOrderInfo?.productType === 1"
+              :src="`/server/web/file/download?name=${createOrderInfo?.logo}`"
+            />
+            <img
+              v-else
               :src="`/server/web/file/download?name=${createOrderInfo?.logo}&productId=${createOrderInfo.productId}`"
             />
             <span>{{ createOrderInfo?.name }}</span>

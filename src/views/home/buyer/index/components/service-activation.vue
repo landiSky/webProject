@@ -158,7 +158,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     accountId: '',
     durationId: '',
     companyName,
-    name: `标识轻应用服务-${name}`,
+    name,
     deliveryType: deliveryType ?? 0,
     logo,
     orderSource: source,
