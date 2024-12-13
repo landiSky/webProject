@@ -879,14 +879,7 @@
                 v-if="formModel2.saleType == priceTypeList[4].value"
                 label="模版售价"
                 field="onePiece"
-                :rules="[
-                  { required: true, message: '请输入模版售价' },
-                  {
-                    match: /^[0-9]\d*$/,
-                    maxLength: 10,
-                    message: '请输入10位以内整数',
-                  },
-                ]"
+                :rules="[{ validator: validatorOnePiece }]"
                 required
               >
                 <t-input
@@ -1045,6 +1038,14 @@ const formModel2 = ref({
   saleType: 3,
   productDeliveryList: [] as any,
 });
+
+const validatorOnePiece = (value: any, cb: (params?: any) => void) => {
+  if ((!value && value !== 0) || value.length === 0)
+    return cb('请输入模版售价');
+  if (!/^[0-9]\d*$/.test(value) || value.length > 10)
+    return cb('模版售价请填写10位以内整数');
+  return cb();
+};
 const formRules = {
   name: [
     { required: true, message: '请输入商品名称' },
@@ -1228,7 +1229,6 @@ const addCopy = () => {
       });
     }
   } else if (formModel2.value.saleType === 3) {
-    console.log(formModel2.value.deliveryType === deliveryTypeMap.LightApp);
     if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
       copyModal4.value.push({
         name: '',
@@ -1241,7 +1241,6 @@ const addCopy = () => {
         appPackageId: '',
         onePiece: null,
       });
-      console.log(copyModal5.value, 'copyModal5.value');
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
       copyModal5.value.push({
@@ -1567,7 +1566,10 @@ const buildForm2 = () => {
         tempList[index].onePiece,
         10
       );
-      tempList[index].onePiece = null;
+      tempList[index].onePiece =
+        formModel2.value.deliveryType === deliveryTypeMap.Deploy
+          ? null
+          : tempList[index].onePiece;
       tempList = JSON.parse(JSON.stringify(tempList));
     }
     modalList = tempList;
@@ -1850,7 +1852,7 @@ const getDetail = (id: any) => {
             copyModal5.value.push({
               name: one.name,
               appPackageId: one.appPackageId,
-              onePiece: parseInt(one.onePiece, 10),
+              onePiece: one.onePiece,
             });
           }
         } else {
@@ -1876,7 +1878,7 @@ const getDetail = (id: any) => {
                   status: 'done',
                 },
               ],
-              onePiece: parseInt(one.onePiece, 10),
+              onePiece: one.onePiece,
             });
           }
         } else {
