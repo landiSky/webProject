@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, defineEmits, ref, onMounted, h } from 'vue';
 import { storeToRefs } from 'pinia';
 import { Message, Modal } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -72,22 +72,15 @@ const selectMemList = ref<string[]>([]);
 const prefixId = ref();
 
 const verificationPrefix = (res: any) => {
-  if (res?.code === 801010) {
+  if (res?.data) {
     Modal.info({
       title: '使用提醒',
-      content: '请检查企业节点是否部署成功并完成开机引导配置',
-      titleAlign: 'start',
-      hideCancel: true,
-      cancelText: '',
-      okText: '关闭',
-      onOk: () => {},
-    });
-    return false;
-  }
-  if (res?.code === 801011) {
-    Modal.info({
-      title: '使用提醒',
-      content: '若已完成，请检查解析路由是否配置正确。',
+      content: () => {
+        return h('div', { class: 'info-modal-content' }, [
+          h('div', '1、请检查企业节点是否部署成功并完成开机引导配置'),
+          h('div', '2、若已完成，请检查解析路由是否配置正确。'),
+        ]);
+      },
       titleAlign: 'start',
       hideCancel: true,
       cancelText: '',
