@@ -2271,7 +2271,10 @@ const clickPreview = () => {
         const res = await doSave();
         if (res) {
           if (formModel.value.id) {
-            emit('preview', formModel.value.id);
+            emit('preview', {
+              id: formModel.value.id,
+              deliveryType: formModel2.value.deliveryType,
+            });
           }
         } else {
           Message.error('信息暂时无法保存');
@@ -2281,7 +2284,10 @@ const clickPreview = () => {
     return;
   }
   if (formModel.value.id) {
-    emit('preview', formModel.value.id);
+    emit('preview', {
+      id: formModel.value.id,
+      deliveryType: formModel2.value.deliveryType,
+    });
   }
 };
 

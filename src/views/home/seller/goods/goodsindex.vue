@@ -726,10 +726,13 @@ const clickDelBtn = (record: any) => {
 };
 
 // 跳转到前台商品详情页
-const onPreview = (productId: string) => {
+const onPreview = (record: Record<string, any>) => {
   const routeData = router.resolve({
-    name: 'wowMallPreview',
-    params: { id: productId },
+    name:
+      record?.deliveryType === 2
+        ? 'wowLightApplicationMallPreview'
+        : 'wowMallPreview',
+    params: { id: record.id },
   });
   window.open(routeData?.href, '_blank');
 };

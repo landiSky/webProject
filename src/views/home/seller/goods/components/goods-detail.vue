@@ -529,7 +529,10 @@ const DurationEnum: { [name: string]: string } = {
 // 预览
 const clickPreview = () => {
   if (props.data?.id) {
-    emit('preview', props.data?.id);
+    emit('preview', {
+      id: props.data?.id,
+      deliveryType: dataInfo.value.deliveryType,
+    });
   }
 };
 
@@ -638,7 +641,10 @@ const clickDown = () => {
 };
 
 const clickView = () => {
-  emit('preview', dataInfo.value.id);
+  emit('preview', {
+    id: dataInfo.value.id,
+    deliveryType: dataInfo.value.deliveryType,
+  });
 };
 
 const toAnchor = (link: string) => {
