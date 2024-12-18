@@ -138,6 +138,44 @@
                     >{{ item.introduction }}
                   </t-typography-paragraph>
                   <span class="companyName">{{ item.companyName }}</span>
+
+                  <span class="tag">
+                    <t-typography-paragraph
+                      class="tagList-color tagList firstTag"
+                      style="width: 74px"
+                      :ellipsis="{
+                        rows: 1,
+                        showTooltip: {
+                          type: 'tooltip',
+                          props: {
+                            isBright: true,
+                          },
+                        },
+                      }"
+                    >
+                      {{ DeliverTypeDesc[item.deliveryType] }}
+                    </t-typography-paragraph>
+                    <div
+                      v-for="(item2, index) in item?.tagList"
+                      :key="index"
+                      class="tagList"
+                    >
+                      <t-typography-paragraph
+                        class="tagList-color"
+                        :ellipsis="{
+                          rows: 1,
+                          showTooltip: {
+                            type: 'tooltip',
+                            props: {
+                              isBright: true,
+                            },
+                          },
+                        }"
+                      >
+                        {{ item2.name }}
+                      </t-typography-paragraph>
+                    </div>
+                  </span>
                 </span>
               </span>
               <div class="price">
@@ -190,6 +228,7 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { selectIdentificationPageList } from '@/api/wow/mall';
 import { tagIdentificationList } from '@/api/common';
+import { DeliverType, DeliverTypeDesc } from '@/enums/common';
 import { apiDataPoint } from '@/api/data-point';
 import { useUserStore } from '@/store/modules/user';
 import WowFooter from '../components/wowFooter/index.vue';
@@ -649,6 +688,32 @@ onMounted(() => {
         justify-content: center;
       }
     }
+  }
+}
+
+.tagList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 22px;
+  margin-left: 8px;
+  padding: 1px 8px;
+  font-weight: 500;
+  font-size: 12px;
+  font-family: PingFang SC;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 2px;
+
+  &.firstTag {
+    margin-left: 0;
+    color: #4e5969;
+  }
+
+  .tagList-color {
+    width: 100%;
+    color: #4e5969;
   }
 }
 
