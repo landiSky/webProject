@@ -18,7 +18,7 @@
       >
         <t-form-item field="deptName" label="部门名称" validate-trigger="blur">
           <t-input
-            v-model="state.formModel.deptName"
+            v-model.trim="state.formModel.deptName"
             placeholder="请输入"
             :max-length="{
               length: 30,
@@ -67,7 +67,7 @@
 
         <t-form-item field="remark" label="备注" class="remark">
           <t-textarea
-            v-model="state.formModel.remark"
+            v-model.trim="state.formModel.remark"
             placeholder="请输入"
             :max-length="{
               length: 100,
