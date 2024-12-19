@@ -46,6 +46,11 @@ export function apiCreateOrder(data: Record<string, any>) {
   return $http.post('/server/web/order/create', data);
 }
 
+// 订单新建时判断轻应用是否需要重新安装
+export function apiReInstall(data: Record<string, any>) {
+  return $http.post('/server/web/order/reInstall', data);
+}
+
 // 购买套餐-保存套餐成员关联
 export function apiSaveServicePackageUser(data: Record<string, any>) {
   return $http.post('/server/web/qingFlow/saveServicePackageUser', data);

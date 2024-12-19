@@ -111,7 +111,11 @@ import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
-import { apiCreateOrder, apiSaveServicePackageUser } from '@/api/buyer/order';
+import {
+  apiCreateOrder,
+  apiSaveServicePackageUser,
+  apiReInstall,
+} from '@/api/buyer/order';
 
 import {
   DeliverType,
@@ -169,6 +173,7 @@ const clickCreateOrder = () => {
     buyDuration,
   };
   submitLoading.value = true;
+  apiReInstall(params);
   apiCreateOrder(params)
     .then((data) => {
       if (productType === orderTypes.SPECIAL_SAAS) {
