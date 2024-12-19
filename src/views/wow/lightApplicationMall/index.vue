@@ -139,7 +139,7 @@
                   </t-typography-paragraph>
                   <span class="companyName">{{ item.companyName }}</span>
 
-                  <span class="tag">
+                  <!-- <span class="tag">
                     <t-typography-paragraph
                       class="tagList-color tagList firstTag"
                       style="width: 74px"
@@ -175,7 +175,7 @@
                         {{ item2.name }}
                       </t-typography-paragraph>
                     </div>
-                  </span>
+                  </span> -->
                 </span>
               </span>
               <div class="price">
