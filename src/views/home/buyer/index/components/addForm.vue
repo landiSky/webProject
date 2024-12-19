@@ -29,7 +29,7 @@
         ]"
       >
         <t-textarea
-          v-model="form.name"
+          v-model.trim="form.name"
           placeholder="请输入"
           :max-length="{
             length: 50,
