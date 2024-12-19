@@ -857,7 +857,7 @@
                   :show-extra-options="false"
                 >
                   <t-option
-                    v-for="item in ProductAppList"
+                    v-for="item in productAppList"
                     :key="item.tagId"
                     :value="item.tagId"
                   >
@@ -965,8 +965,11 @@ const detailSetOk = ref(true);
 // 分类
 const classList = ref<any[]>([]);
 const classFiledNames = { value: 'id', label: 'name' };
+// 套餐包集合 用来判断是否服务到期 0 是没到期，3是到期
+const packageTimeLimit = ref(1);
+
 // 轻应用
-const ProductAppList = ref<any[]>([]);
+const productAppList = ref<any[]>([]);
 
 // 详情
 const detailImageRef = ref();
@@ -1012,7 +1015,7 @@ const deliveryTypeList = computed(() => {
     { label: '独立部署类', value: deliveryTypeMap.Deploy },
     { label: '插件', value: deliveryTypeMap.PluginClass },
   ];
-  if (configInfo.value?.qingFlowSwitch) {
+  if (configInfo.value?.qingFlowSwitch && !packageTimeLimit.value) {
     const app = { label: '标识轻应用', value: deliveryTypeMap.LightApp };
     data.splice(2, 0, app);
   }
@@ -1073,10 +1076,10 @@ const formRules = {
   // useExplain: [{ required: true, message: '请上传产品使用说明' }],
   useExplain: [
     {
-      required: true,
+      required: false,
       validator: (value: string, cb: (params?: any) => void) => {
         console.log(value.length);
-        if (value.length === 0) return cb('请上传产品使用说明');
+        // if (value.length === 0) return cb('请上传产品使用说明');
         const aggregate = expList.value.filter((item: any) => {
           return item.status !== 'done';
         });
@@ -1454,6 +1457,7 @@ const getProductApplicationList = async () => {
     companyId: userInfoByCompany.value?.companyId,
   };
   const dataList = await getServicePackage(params);
+  packageTimeLimit.value = dataList.length;
   if (!configInfo.value?.qingFlowSwitch || dataList.length) {
     return;
   }
@@ -1469,7 +1473,7 @@ const getProductApplicationList = async () => {
       };
       return params;
     });
-    ProductAppList.value = list;
+    productAppList.value = list;
   });
 };
 
