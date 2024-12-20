@@ -1504,7 +1504,7 @@ const showAddCopy = computed(() => {
       return copyModal5.value.length < 3;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      return copyModal5.value.length < 3;
+      return copyModal5.value.length < 1;
     }
   }
   if (formModel2.value.saleType === 3) {
@@ -1515,7 +1515,7 @@ const showAddCopy = computed(() => {
       return copyModal5.value.length < 3;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      return copyModal5.value.length < 3;
+      return copyModal5.value.length < 1;
     }
   }
   return copyModal3.value.length < 3;
