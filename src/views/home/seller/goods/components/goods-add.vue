@@ -1585,10 +1585,7 @@ const buildForm2 = () => {
         tempList[index].onePiece,
         10
       );
-      tempList[index].onePiece =
-        formModel2.value.deliveryType === deliveryTypeMap.Deploy
-          ? null
-          : tempList[index].onePiece;
+      tempList[index].onePiece = null;
       tempList = JSON.parse(JSON.stringify(tempList));
     }
     modalList = tempList;
@@ -1878,6 +1875,7 @@ const getDetail = (id: any) => {
             copyModal5.value.push({
               name: one.name,
               appPackageId: one.appPackageId,
+              productDeliverySetInfoList: [{ price: '' }],
               onePiece: one.onePiece,
             });
           }
@@ -1885,6 +1883,7 @@ const getDetail = (id: any) => {
           copyModal5.value.push({
             name: '',
             appPackageId: '',
+            productDeliverySetInfoList: [{ price: '' }],
             onePiece: null,
           });
         }
@@ -1904,6 +1903,7 @@ const getDetail = (id: any) => {
                   status: 'done',
                 },
               ],
+              productDeliverySetInfoList: [{ price: '' }],
               onePiece: one.onePiece,
             });
           }
@@ -1912,6 +1912,7 @@ const getDetail = (id: any) => {
             name: '',
             pluginPackage: '',
             pluginPackageList: [],
+            productDeliverySetInfoList: [{ price: '' }],
             onePiece: null,
           });
         }
