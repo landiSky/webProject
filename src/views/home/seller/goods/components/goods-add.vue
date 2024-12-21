@@ -340,6 +340,7 @@
               :ref="copyFormRef[index]"
               :model="copyModal[index]"
               :rules="copyRules"
+              label-align="left"
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
@@ -539,6 +540,7 @@
               :ref="copyFormRef[index]"
               :model="copyModal2[index]"
               :rules="copyRules"
+              label-align="left"
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
@@ -667,6 +669,7 @@
               :ref="copyFormRef[index]"
               :model="copyModal3[index]"
               :rules="copyRules"
+              label-align="left"
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
@@ -767,10 +770,8 @@
               :ref="copyFormRef[index]"
               :model="copyModal4[index]"
               :rules="copyRules"
-              :label-col-props="{
-                span: 6,
-                offset: 0,
-              }"
+              label-align="left"
+              auto-label-width
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
@@ -827,10 +828,8 @@
               :ref="copyFormRef[index]"
               :model="copyModal5[index]"
               :rules="copyRules"
-              :label-col-props="{
-                span: 6,
-                offset: 0,
-              }"
+              label-align="left"
+              auto-label-width
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
@@ -1044,8 +1043,11 @@ const formModel2 = ref({
 const validatorOnePiece = (value: any, cb: (params?: any) => void) => {
   if ((!value && value !== 0) || value.length === 0)
     return cb('请输入模版售价');
-  if (!/^[1-9]\d*$/.test(value) || value.length > 10)
-    return cb('模版售价请填写10位以内整数');
+  if (value > 10000000) {
+    return cb('最大可输入10000000元');
+  }
+  if (!/^[1-9]\d*$/.test(value) || value.length > 8)
+    return cb('模版售价请填写8位以内整数');
   return cb();
 };
 const formRules = {
