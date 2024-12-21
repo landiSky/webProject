@@ -258,14 +258,17 @@
                 {{ formModel.introduction || '-' }}
               </t-descriptions-item>
               <t-descriptions-item label="产品使用说明">
-                <a
-                  v-for="item in formModel.useExplainMap"
-                  :key="item"
-                  class="link-href"
-                  :href="`/server/web/file/download?name=${item.useExplain}&productId=${formModel.id}`"
-                  download
-                  >{{ item.useExplainOriginal }}</a
-                >
+                <span v-if="formModel.useExplainMap?.length">
+                  <a
+                    v-for="item in formModel.useExplainMap"
+                    :key="item"
+                    class="link-href"
+                    :href="`/server/web/file/download?name=${item.useExplain}&productId=${formModel.id}`"
+                    download
+                    >{{ item.useExplainOriginal }}</a
+                  >
+                </span>
+                <span v-else>-</span>
               </t-descriptions-item>
               <t-descriptions-item
                 v-if="!formModel.versionType"
