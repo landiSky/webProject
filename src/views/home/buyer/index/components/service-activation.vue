@@ -182,7 +182,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     productId: id,
     deliveryVersionId: selectVersion.value.id ?? '',
     saasAppId: selectVersion.value.saasAppId ?? '',
-    price: prodDetail.value.lowPrice,
+    price: `${prodDetail.value.lowPrice}.00`,
     accountDesc: prodDetail.value.companyChildCount,
     durationDesc,
     accountId: '',
