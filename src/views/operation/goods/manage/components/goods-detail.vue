@@ -599,7 +599,7 @@ const doPass = () => {
 // 通过
 const clickPassBtn = () => {
   Modal.warning({
-    title: '确定通过该认证申请吗？',
+    title: '确认审核吗？审核完成商品将展示商城',
     titleAlign: 'start',
     content: '',
     okText: '通过',
