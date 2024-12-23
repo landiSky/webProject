@@ -782,6 +782,11 @@ const clickAddCart = (): void => {
   }
 
   if (userInfoByCompany?.primary === AccountType.MAIN) {
+    // 等于插件时不弹出成员框
+    if (Number(prodDetail.value.deliveryType) === 3) {
+      onAuthConfirm([]);
+      return;
+    }
     // 标识应用需要判断是否做过企业节点认证
     authModalVisible.value = true;
 
