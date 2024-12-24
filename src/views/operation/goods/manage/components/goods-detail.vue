@@ -599,7 +599,7 @@ const doPass = () => {
 // 通过
 const clickPassBtn = () => {
   Modal.warning({
-    title: '确认审核吗？审核完成商品将展示商城',
+    title: '确认审核通过吗？通过后该商品将展示用户。',
     titleAlign: 'start',
     content: '',
     okText: '通过',
