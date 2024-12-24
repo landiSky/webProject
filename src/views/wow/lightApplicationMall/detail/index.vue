@@ -268,6 +268,7 @@ import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
 import WowFooter from '@/views/wow/components/wowFooter/index.vue';
 import { apiDataPoint } from '@/api/data-point';
+import { apiReInstall } from '@/api/buyer/order';
 import { addId } from '@/utils/index';
 import { sm2 } from '@/utils/encrypt';
 import avatar from '@/assets/images/avatar.png';
@@ -379,9 +380,29 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     memberIdList,
     productType: orderTypes.ORDINARY,
   };
-
-  router.push({
-    path: '/order/confirm',
+  const params = {
+    memberId: userStore.selectCompany?.memberId,
+    memberIdList,
+    sellerId: companyId, // 卖家id（商品创者所属机构id）
+    productId: id, // 商品id
+    deliveryType, // 交付类型 0-saas类,1-独立部署类
+    productPrice: price.value ?? 0, // 商品金额
+    deliveryVersionId: selectVersion.value.id, // 交付版本id
+    orderSource: source, // 订单来源：0-本平台，1-跨平台
+    accountId, // 账号id
+    durationId, // 时长id
+    saasAppId: selectVersion.value.saasAppId,
+    userCompanyId: userStore.selectCompany?.companyId, // 用户企业id
+    productType: orderTypes.ORDINARY,
+  };
+  apiReInstall(params).then((res: any) => {
+    if (res) {
+      Message.warning('应用安装中');
+      return;
+    }
+    router.push({
+      path: '/order/confirm',
+    });
   });
 };
 // 套餐包接口 获取用户试用开通服务
