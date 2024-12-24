@@ -119,7 +119,7 @@ const columns = [
   },
   {
     title: '部门主管',
-    dataIndex: 'deptCharge',
+    dataIndex: 'deptChargeName',
     ellipsis: true,
     tooltip: true,
     width: '20%',
@@ -238,7 +238,11 @@ const deleteDept = (record: Record<string, any>) => {
 const showDept = async (record: Record<string, any>) => {
   await deptInfo({ deptId: record.id })
     .then((res: any) => {
-      state.detailData = res;
+      // 排序 主管身份排第一位
+      const memberList = res.memberList.sort((a: any, b: any) =>
+        a.isDeptCharge === true ? -1 : 0
+      );
+      state.detailData = { ...res, memberList };
     })
     .catch(() => {})
     .finally(() => {

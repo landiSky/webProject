@@ -21,7 +21,7 @@
             v-model.trim="state.formModel.deptName"
             placeholder="请输入"
             :max-length="{
-              length: 30,
+              length: 50,
               errorOnly: true,
             }"
             show-word-limit
@@ -192,7 +192,7 @@ const formRules = {
     },
     { maxLength: 50, message: '长度不超过50个字符' },
   ],
-  deptCharge: [{ maxLength: 30, message: '长度不超过30个字符' }],
+  // deptCharge: [{ maxLength: 30, message: '长度不超过30个字符' }],
   remark: [{ maxLength: 100, message: '长度不超过100个字符' }],
 };
 

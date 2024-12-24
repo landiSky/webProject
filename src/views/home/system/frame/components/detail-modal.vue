@@ -10,7 +10,17 @@
       :on-before-ok="onConfirm"
       @cancel="emit('cancel')"
     >
-      <template #title> {{ state.deptNodeNameList.join(' > ') }}</template>
+      <template #title>
+        <t-typography-paragraph
+          :ellipsis="{
+            rows: 1,
+            showTooltip: true,
+          }"
+          style="width: 445px; margin-bottom: 0; word-break: break-all"
+        >
+          {{ state.deptNodeNameList.join(' > ') }}
+        </t-typography-paragraph>
+      </template>
       <ul>
         <li
           v-for="item in state.memberList"
