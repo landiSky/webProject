@@ -811,14 +811,18 @@
             formModel2.deliveryType == deliveryTypeMap.PluginClass
           "
         >
-          <div v-for="(c, index) of copyModal5" :key="index" class="sale-copy">
+          <div
+            v-for="(c, index) of changeModel(formModel2.saleType)"
+            :key="index"
+            class="sale-copy"
+          >
             <div class="body-title">
               <div class="body-title-left">
                 <div class="body-title-icon" />
                 <div>交付版本{{ index + 1 }}</div>
               </div>
               <div
-                v-if="copyModal5.length > 1"
+                v-if="changeModel(formModel2.saleType).length > 1"
                 class="body-title-right"
                 @click="deleteSaleCopy(index)"
                 >删除</div
@@ -826,14 +830,14 @@
             </div>
             <t-form
               :ref="copyFormRef[index]"
-              :model="copyModal5[index]"
+              :model="changeModel(formModel2.saleType)[index]"
               :rules="copyRules"
               label-align="left"
               auto-label-width
             >
               <t-form-item label="交付版本名称" class="sale-item" field="name">
                 <t-input
-                  v-model.trim="copyModal5[index].name"
+                  v-model.trim="changeModel(formModel2.saleType)[index].name"
                   placeholder="请输入"
                   show-word-limit
                   :max-length="{
@@ -850,7 +854,7 @@
                 field="appPackageId"
               >
                 <t-select
-                  v-model="copyModal5[index].appPackageId"
+                  v-model="changeModel(formModel2.saleType)[index].appPackageId"
                   :style="{ width: '100%' }"
                   placeholder="请选择"
                   :show-extra-options="false"
@@ -865,13 +869,37 @@
                 </t-select>
               </t-form-item>
               <t-form-item
-                v-if="formModel2.deliveryType == deliveryTypeMap.PluginClass"
+                v-if="
+                  formModel2.deliveryType == deliveryTypeMap.PluginClass &&
+                  formModel2.saleType == priceTypeList[1].value
+                "
                 label="上传插件jar包"
                 field="pluginPackage"
               >
                 <JarUpload
-                  v-model:pluginPackage="copyModal5[index].pluginPackage"
-                  :plugin-package-list="copyModal5[index].pluginPackageList"
+                  v-model:pluginPackage="
+                    changeModel(formModel2.saleType)[index].pluginPackage
+                  "
+                  :plugin-package-list="
+                    changeModel(formModel2.saleType)[index].pluginPackageList
+                  "
+                />
+              </t-form-item>
+              <t-form-item
+                v-if="
+                  formModel2.deliveryType == deliveryTypeMap.PluginClass &&
+                  formModel2.saleType == priceTypeList[3].value
+                "
+                label="上传插件jar包"
+                field="pluginPackage"
+              >
+                <JarUpload
+                  v-model:pluginPackage="
+                    changeModel(formModel2.saleType)[index].pluginPackage
+                  "
+                  :plugin-package-list="
+                    changeModel(formModel2.saleType)[index].pluginPackageList
+                  "
                 />
               </t-form-item>
               <t-form-item
@@ -881,7 +909,9 @@
                 :rules="[{ required: true, validator: validatorOnePiece }]"
               >
                 <t-input
-                  v-model.trim="copyModal5[index].onePiece"
+                  v-model.trim="
+                    changeModel(formModel2.saleType)[index].onePiece
+                  "
                   placeholder="请输入"
                   style="width: 200px"
                   @input="validateArray(copyFormRef[index].value, 'onePiece')"
@@ -924,7 +954,7 @@ import {
   selectOnlineMallApps,
   getProductAppList,
 } from '@/api/goods-manage';
-import { getServicePackage } from '@/api/buyer/overview';
+import { getServicePackage, userAuthStatus } from '@/api/buyer/overview';
 import { getToken } from '@/utils/auth';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
@@ -940,7 +970,7 @@ const emit = defineEmits(['cancel', 'preview']);
 
 let needSave = false;
 const userStore = useUserStore();
-const { userInfoByCompany, configInfo }: Record<string, any> =
+const { userInfoByCompany, configInfo, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 
 const visible: Record<string, any> = ref(true);
@@ -966,6 +996,8 @@ const classList = ref<any[]>([]);
 const classFiledNames = { value: 'id', label: 'name' };
 // 套餐包集合 用来判断是否服务到期 0 是没到期，3是到期
 const packageTimeLimit = ref(1);
+// 判断这个用户是否授权
+const showService: Record<string, any> = ref(false);
 
 // 轻应用
 const productAppList = ref<any[]>([]);
@@ -1014,7 +1046,11 @@ const deliveryTypeList = computed(() => {
     { label: '独立部署类', value: deliveryTypeMap.Deploy },
     { label: '插件', value: deliveryTypeMap.PluginClass },
   ];
-  if (configInfo.value?.qingFlowSwitch && !packageTimeLimit.value) {
+  if (
+    configInfo.value?.qingFlowSwitch &&
+    !packageTimeLimit.value &&
+    showService
+  ) {
     const app = { label: '标识轻应用', value: deliveryTypeMap.LightApp };
     data.splice(2, 0, app);
   }
@@ -1164,6 +1200,43 @@ const copyModal5 = ref<any[]>([
     pluginPackage: '',
     pluginPackageList: [],
     onePiece: null,
+    isTry: 0,
+  },
+]);
+
+const copyModal6 = ref<any[]>([
+  {
+    name: '',
+    productDeliverySetInfoList: [{ price: null }],
+    appPackageId: '',
+    pluginPackage: '',
+    pluginPackageList: [],
+    onePiece: null,
+    isTry: 0,
+  },
+]);
+
+const copyModal7 = ref<any[]>([
+  {
+    name: '',
+    productDeliverySetInfoList: [{ price: null }],
+    appPackageId: '',
+    pluginPackage: '',
+    pluginPackageList: [],
+    onePiece: null,
+    isTry: 0,
+  },
+]);
+
+const copyModal8 = ref<any[]>([
+  {
+    name: '',
+    productDeliverySetInfoList: [{ price: null }],
+    appPackageId: '',
+    pluginPackage: '',
+    pluginPackageList: [],
+    onePiece: null,
+    isTry: 0,
   },
 ]);
 
@@ -1222,23 +1295,25 @@ const addCopy = () => {
       });
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      copyModal5.value.push({
+      copyModal6.value.push({
         name: '',
         productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
+        isTry: 0,
       });
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      copyModal5.value.push({
+      copyModal8.value.push({
         name: '',
         productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
+        isTry: 0,
       });
     }
   } else if (formModel2.value.saleType === 3) {
@@ -1256,16 +1331,18 @@ const addCopy = () => {
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
+        isTry: 0,
       });
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      copyModal5.value.push({
+      copyModal7.value.push({
         name: '',
         productDeliverySetInfoList: [{ price: null }],
         appPackageId: '',
         pluginPackage: '',
         pluginPackageList: [],
         onePiece: null,
+        isTry: 0,
       });
     }
   } else {
@@ -1286,10 +1363,10 @@ const deleteSaleCopy = (index: number) => {
       copyModal2.value.splice(index, 1);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      copyModal5.value.splice(index, 1);
+      copyModal6.value.splice(index, 1);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      copyModal5.value.splice(index, 1);
+      copyModal8.value.splice(index, 1);
     }
   } else if (formModel2.value.saleType === 3) {
     if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
@@ -1299,7 +1376,7 @@ const deleteSaleCopy = (index: number) => {
       copyModal5.value.splice(index, 1);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      copyModal5.value.splice(index, 1);
+      copyModal7.value.splice(index, 1);
     }
   } else {
     copyModal3.value.splice(index, 1);
@@ -1460,6 +1537,12 @@ const getProductApplicationList = async () => {
   };
   const dataList = await getServicePackage(params);
   packageTimeLimit.value = dataList.length;
+  const userData = {
+    companyId: selectCompany.value?.companyId,
+    memberId: selectCompany.value?.memberId,
+  };
+  const data = await userAuthStatus(userData);
+  showService.value = data;
   if (!configInfo.value?.qingFlowSwitch || dataList.length) {
     return;
   }
@@ -1503,10 +1586,10 @@ const showAddCopy = computed(() => {
       return copyModal2.value.length < 3;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      return copyModal5.value.length < 3;
+      return copyModal6.value.length < 3;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      return copyModal5.value.length < 1;
+      return copyModal8.value.length < 1;
     }
   }
   if (formModel2.value.saleType === 3) {
@@ -1517,7 +1600,7 @@ const showAddCopy = computed(() => {
       return copyModal5.value.length < 3;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      return copyModal5.value.length < 1;
+      return copyModal7.value.length < 1;
     }
   }
   return copyModal3.value.length < 3;
@@ -1575,10 +1658,10 @@ const buildForm2 = () => {
       tempList = deepClone(copyModal2.value);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      tempList = deepClone(copyModal5.value);
+      tempList = deepClone(copyModal6.value);
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      tempList = deepClone(copyModal5.value);
+      tempList = deepClone(copyModal8.value);
     }
     for (let index = 0; index < tempList.length; index += 1) {
       tempList[index].productDeliverySetInfoList[0].price = parseInt(
@@ -1597,7 +1680,7 @@ const buildForm2 = () => {
       modalList = copyModal5.value;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      modalList = copyModal5.value;
+      modalList = copyModal7.value;
     }
   } else {
     modalList = copyModal3.value;
@@ -1620,10 +1703,10 @@ const validForm2 = async () => {
       length = copyModal2.value.length;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-      length = copyModal5.value.length;
+      length = copyModal6.value.length;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      length = copyModal5.value.length;
+      length = copyModal8.value.length;
     }
   } else if (formModel2.value.saleType === 3) {
     if (formModel2.value.deliveryType === deliveryTypeMap.SaaS) {
@@ -1633,7 +1716,7 @@ const validForm2 = async () => {
       length = copyModal5.value.length;
     }
     if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-      length = copyModal5.value.length;
+      length = copyModal7.value.length;
     }
   } else {
     length = copyModal3.value.length;
@@ -1672,7 +1755,10 @@ const getModalJson = () => {
     JSON.stringify(copyModal2.value) +
     JSON.stringify(copyModal3.value) +
     JSON.stringify(copyModal4.value) +
-    JSON.stringify(copyModal5.value)
+    JSON.stringify(copyModal5.value) +
+    JSON.stringify(copyModal6.value) +
+    JSON.stringify(copyModal7.value) +
+    JSON.stringify(copyModal8.value)
   );
 };
 
@@ -1761,11 +1847,11 @@ const getDetail = (id: any) => {
       if (formModel2.value.deliveryType === deliveryTypeMap.Deploy) {
         copyModal2.value = [];
       }
-      if (
-        formModel2.value.deliveryType === deliveryTypeMap.LightApp ||
-        formModel2.value.deliveryType === deliveryTypeMap.PluginClass
-      ) {
-        copyModal5.value = [];
+      if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+        copyModal6.value = [];
+      }
+      if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+        copyModal8.value = [];
       }
       const list = res.productDeliverySetList;
 
@@ -1796,15 +1882,16 @@ const getDetail = (id: any) => {
             });
           }
           if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-            copyModal5.value.push({
+            copyModal6.value.push({
               name: one.name,
               productDeliverySetInfoList: list1,
               appPackageId: one.appPackageId,
               onePiece,
+              isTry: 0,
             });
           }
           if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-            copyModal5.value.push({
+            copyModal8.value.push({
               name: one.name,
               productDeliverySetInfoList: list1,
               pluginPackage: one.pluginPackage,
@@ -1816,6 +1903,7 @@ const getDetail = (id: any) => {
                 },
               ],
               onePiece,
+              isTry: 0,
             });
           }
         }
@@ -1832,20 +1920,22 @@ const getDetail = (id: any) => {
           });
         }
         if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
-          copyModal5.value.push({
+          copyModal6.value.push({
             name: '',
             productDeliverySetInfoList: [{ price: '' }],
             appPackageId: '',
             onePiece: null,
+            isTry: 0,
           });
         }
         if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-          copyModal5.value.push({
+          copyModal8.value.push({
             name: '',
             productDeliverySetInfoList: [{ price: '' }],
             pluginPackage: '',
             pluginPackageList: [],
             onePiece: null,
+            isTry: 0,
           });
         }
       }
@@ -1877,6 +1967,7 @@ const getDetail = (id: any) => {
               appPackageId: one.appPackageId,
               productDeliverySetInfoList: [{ price: '' }],
               onePiece: one.onePiece,
+              isTry: 0,
             });
           }
         } else {
@@ -1885,15 +1976,16 @@ const getDetail = (id: any) => {
             appPackageId: '',
             productDeliverySetInfoList: [{ price: '' }],
             onePiece: null,
+            isTry: 0,
           });
         }
       }
       if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
-        copyModal5.value = [];
+        copyModal7.value = [];
         const list = res.productDeliverySetList;
         if (list && list.length > 0) {
           for (const one of list) {
-            copyModal5.value.push({
+            copyModal7.value.push({
               name: one.name,
               pluginPackage: one.pluginPackage,
               pluginPackageList: [
@@ -1905,15 +1997,17 @@ const getDetail = (id: any) => {
               ],
               productDeliverySetInfoList: [{ price: '' }],
               onePiece: one.onePiece,
+              isTry: 0,
             });
           }
         } else {
-          copyModal5.value.push({
+          copyModal7.value.push({
             name: '',
             pluginPackage: '',
             pluginPackageList: [],
             productDeliverySetInfoList: [{ price: '' }],
             onePiece: null,
+            isTry: 0,
           });
         }
       }
@@ -2369,6 +2463,26 @@ const validateAP = (index: number, key: string) => {
   nextTick(() => {
     validateAPT(key === 'account', index);
   });
+};
+
+const changeModel = (type: any) => {
+  if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+    if (type === 3) {
+      return copyModal5.value;
+    }
+    if (type === 1) {
+      return copyModal6.value;
+    }
+  }
+  if (formModel2.value.deliveryType === deliveryTypeMap.PluginClass) {
+    if (type === 3) {
+      return copyModal7.value;
+    }
+    if (type === 1) {
+      return copyModal8.value;
+    }
+  }
+  return copyModal5.value;
 };
 
 onMounted(() => {
