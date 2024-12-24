@@ -198,7 +198,7 @@ export const useUserStore = defineStore({
       }
       // /zst
       window.location.href = `${window.location.origin}/zst/#/login`;
-      window.location.reload(); // 防止白屏
+      // window.location.reload(); // 防止白屏
 
       // window.location.href = loginUrl;
       // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
