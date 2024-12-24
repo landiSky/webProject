@@ -5,7 +5,6 @@ import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
-import { useRouter } from 'vue-router';
 
 // import { useMenuStore } from './menu';
 
