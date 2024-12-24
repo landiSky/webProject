@@ -5,6 +5,8 @@ import { apiUserProfile } from '@/api/buyer/overview';
 import { UserInfo } from '@/types/store';
 import { clearToken, getToken } from '@/utils/auth';
 import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
+import { useRouter } from 'vue-router';
+
 // import { useMenuStore } from './menu';
 
 interface UserState {
@@ -196,6 +198,7 @@ export const useUserStore = defineStore({
       }
       // /zst
       window.location.href = `${window.location.origin}/zst/#/login`;
+      window.location.reload(); // 防止白屏
 
       // window.location.href = loginUrl;
       // window.location.href = `${import.meta.env.VITE_APP_DEV_LOGIN}`;
