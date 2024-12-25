@@ -359,6 +359,12 @@
                   {{ desDeuration(st.durationList) }}
                 </t-descriptions-item>
                 <t-descriptions-item
+                  v-if="dataInfo.deliveryType === 2"
+                  label="应用包名称"
+                >
+                  {{ st.appPackageName || '-' }}
+                </t-descriptions-item>
+                <t-descriptions-item
                   v-if="
                     dataInfo.saleType === 1 &&
                     (dataInfo.deliveryType === 2 || dataInfo.deliveryType === 3)
