@@ -1079,11 +1079,11 @@ const formModel2 = ref({
 const validatorOnePiece = (value: any, cb: (params?: any) => void) => {
   if ((!value && value !== 0) || value.length === 0)
     return cb('请输入模版售价');
-  if (value > 10000000) {
-    return cb('最大可输入10000000元');
+  if (value > 100000000) {
+    return cb('最大可输入100000000元');
   }
   if (!/^[1-9]\d*$/.test(value) || value.length > 8)
-    return cb('模版售价请填写8位以内整数');
+    return cb('模版售价请填写9位以内整数');
   return cb();
 };
 const formRules = {
