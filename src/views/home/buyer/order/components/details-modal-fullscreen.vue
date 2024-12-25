@@ -33,17 +33,13 @@
               >
               <t-step
                 :description="
-                  dataList.deliveryType === 0
-                    ? ''
-                    : dataList.confirmDeployedTime
+                  dataList.saleType === 3 ? '' : dataList.confirmDeployedTime
                 "
                 >买家确认交付</t-step
               >
               <t-step
                 :description="
-                  dataList.deliveryType === 0
-                    ? dataList.confirmDeployedTime
-                    : ''
+                  dataList.saleType === 3 ? dataList.confirmDeployedTime : ''
                 "
                 >订单已交付</t-step
               >
