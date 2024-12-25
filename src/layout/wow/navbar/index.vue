@@ -336,7 +336,7 @@ const goRegister = () => {
   });
 };
 const goLogin = () => {
-  userStore.jumpToLogin();
+  router.push('/login');
 };
 
 onMounted(() => {

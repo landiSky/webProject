@@ -753,7 +753,6 @@ const clickProbation = () => {
     okText: '进入试用',
     onOk: () => {
       window.open(selectVersion.value.tryUrl);
-      // userStore.jumpToLogin();
     },
   });
 };
@@ -766,13 +765,9 @@ const clickAddCart = (): void => {
   });
 
   if (!userInfo?.id) {
-    console.log(route.fullPath, 'route.fullPath');
-    sessionStorage.setItem('mallDetailPath', route.fullPath);
-    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
-    // router.push({
-    //   path: '/login',
-    //   query: { id, title: appName },
-    // });
+    router.push({
+      path: '/login',
+    });
     return;
   }
 
@@ -949,9 +944,7 @@ const onLineConsult = () => {
       okText: '先登录',
       hideCancel: false,
       onOk: () => {
-        // router.push('/login');
-        sessionStorage.setItem('mallDetailPath', route.fullPath);
-        userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+        router.push('/login');
       },
     });
   }

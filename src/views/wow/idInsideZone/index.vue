@@ -509,9 +509,7 @@ const authentication = () => {
 const immediatelisting = () => {
   const { userInfo, userInfoByCompany } = userStore;
   if (!userInfo?.id) {
-    console.log(route.fullPath, 'route.fullPath');
-    sessionStorage.setItem('mallDetailPath', route.fullPath);
-    userStore.jumpToLogin('wowMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+    router.push('/login');
     return;
   }
   if (userInfoByCompany?.primary === AccountType.UNAUTH) {

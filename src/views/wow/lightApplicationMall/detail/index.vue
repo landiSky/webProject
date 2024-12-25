@@ -406,17 +406,15 @@ const onAuthConfirm = (memberIdList: string[]): any => {
   });
 };
 // 套餐包接口 获取用户试用开通服务
-const getPackageList = () => {
+const getPackageList = async () => {
   const params = {
     companyId: userInfoByCompany?.companyId,
   };
-  getServicePackage(params).then((res: any) => {
-    return res;
-  });
-  return [];
+  const data = await getServicePackage(params);
+  return data;
 };
 
-const clickAddCart = async (): Promise<void> => {
+const clickAddCart = async () => {
   const { userInfo, userInfoByCompany, configInfo } = userStore;
   // TODO w: 立即安装打点
   // apiDataPoint(route.params.id as string, null, userInfo?.id, 4, 4).then(() => {
@@ -431,8 +429,7 @@ const clickAddCart = async (): Promise<void> => {
       okText: '先登录',
       hideCancel: false,
       onOk: () => {
-        sessionStorage.setItem('mallDetailPath', route.fullPath);
-        userStore.jumpToLogin('wowLightApplicationMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+        router.push('/login');
       },
     });
     return;
@@ -639,9 +636,7 @@ const onLineConsult = () => {
       okText: '先登录',
       hideCancel: false,
       onOk: () => {
-        // router.push('/login');
-        sessionStorage.setItem('mallDetailPath', route.fullPath);
-        userStore.jumpToLogin('wowLightApplicationMallDetail'); // 目的是从这里跳到登录页的，登录后再回来
+        router.push('/login');
       },
     });
   }

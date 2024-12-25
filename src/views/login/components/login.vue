@@ -476,7 +476,6 @@ const btnDisabled3 = computed(() => {
 });
 
 const goRegister = () => {
-  // window.location.href = configInfo?.registerUrl;
   router.push({ path: '/register' });
 };
 
@@ -573,9 +572,16 @@ const realLoginRequest = () => {
         userStore.clearUserInfo();
         // orgFormRef.value.submit();
         setToken(data.tokenValue);
-        const mallDetailPath = sessionStorage.getItem('mallDetailPath');
-        const uriHash = mallDetailPath || '/buyer/index';
-        router.push({ path: uriHash });
+        const uriHash = router.options.history.state.back ?? '';
+        if (
+          uriHash.toLocaleString().includes('/wow/mall/detail/') ||
+          uriHash.toLocaleString().includes('/wow/lightApplicationMall') ||
+          uriHash.toLocaleString().includes('/wow/idInsideZone')
+        ) {
+          router.go(-1);
+          return;
+        }
+        router.push({ path: '/buyer/index' });
       })
       .catch(() => {
         loginLoading.value = false;

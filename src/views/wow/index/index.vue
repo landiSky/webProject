@@ -247,7 +247,7 @@ const clickIdService = () => {
       cancelText: '暂不登录',
       okText: '去登录',
       onOk: () => {
-        userStore.jumpToLogin();
+        router.push('/login');
       },
     });
   } else {
@@ -302,7 +302,7 @@ const goIdService = () => {
       cancelText: '暂不登录',
       okText: '去登录',
       onOk: () => {
-        userStore.jumpToLogin();
+        router.push('/login');
       },
     });
   } else {
@@ -632,7 +632,7 @@ const singleSignOn = () => {
       cancelText: '取消',
       okText: '去登录',
       onOk: () => {
-        userStore.jumpToLogin();
+        router.push('/login');
       },
     });
   }
