@@ -16,7 +16,7 @@
             rows: 1,
             showTooltip: true,
           }"
-          style="width: 445px; margin-bottom: 0; word-break: break-all"
+          style="width: 390px; margin-bottom: 0; word-break: break-all"
         >
           {{ state.deptNodeNameList.join(' > ') }}
         </t-typography-paragraph>
