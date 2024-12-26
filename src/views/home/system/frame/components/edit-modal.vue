@@ -164,7 +164,10 @@ watch(
       state.formModel.parentId = props.data.parentId;
       state.formModel.id = props.data.id || undefined;
       state.formModel.deptName = props.data.deptName;
-      state.formModel.deptCharge = props.data.deptCharge;
+      const deptChargeItem = props.data.memberList.some((itemT: any) => {
+        return itemT.id === props.data.deptCharge;
+      });
+      state.formModel.deptCharge = deptChargeItem ? props.data.deptCharge : '';
       state.formModel.remark = props.data.remark;
       state.formModel.memberSelect =
         props.data.memberList.map((item: any) => item.memberId) || []; // 这里传数组 列表没返回

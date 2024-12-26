@@ -1882,10 +1882,15 @@ const getDetail = (id: any) => {
             });
           }
           if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
+            const appPackageIdCheck = productAppList.value.some(
+              (itemT: any) => {
+                return itemT.id === one.appPackageId;
+              }
+            );
             copyModal6.value.push({
               name: one.name,
               productDeliverySetInfoList: list1,
-              appPackageId: one.appPackageId,
+              appPackageId: appPackageIdCheck ? one.appPackageId : '',
               onePiece,
               isTry: 0,
             });
@@ -1962,9 +1967,14 @@ const getDetail = (id: any) => {
         const list = res.productDeliverySetList;
         if (list && list.length > 0) {
           for (const one of list) {
+            const appPackageIdCheck = productAppList.value.some(
+              (itemT: any) => {
+                return itemT.id === one.appPackageId;
+              }
+            );
             copyModal5.value.push({
               name: one.name,
-              appPackageId: one.appPackageId,
+              appPackageId: appPackageIdCheck ? one.appPackageId : '',
               productDeliverySetInfoList: [{ price: '' }],
               onePiece: one.onePiece,
               isTry: 0,
