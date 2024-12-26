@@ -1082,7 +1082,7 @@ const validatorOnePiece = (value: any, cb: (params?: any) => void) => {
   if (value > 100000000) {
     return cb('最大可输入100000000元');
   }
-  if (!/^[1-9]\d*$/.test(value) || value.length > 8)
+  if (!/^[1-9]\d*$/.test(value) || value.length > 9)
     return cb('模版售价请填写9位以内整数');
   return cb();
 };
