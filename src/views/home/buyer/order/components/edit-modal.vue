@@ -1,7 +1,7 @@
 <template>
   <t-modal
     v-model:visible="visible"
-    :width="572"
+    :width="592"
     :height="272"
     :on-before-ok="onConfirm"
     ok-text="提交审核"
