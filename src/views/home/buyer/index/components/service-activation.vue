@@ -165,6 +165,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     duration,
   } = prodDetail.value;
 
+  const accountDesc = `${prodDetail.value.companyChildCount}个`;
   const durationDesc = `${duration}个月`;
 
   if (memberIdList?.length > prodDetail.value?.companyChildCount) {
@@ -183,7 +184,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
     deliveryVersionId: selectVersion.value.id ?? '',
     saasAppId: selectVersion.value.saasAppId ?? '',
     price: `${prodDetail.value.lowPrice}.00`,
-    accountDesc: prodDetail.value.companyChildCount,
+    accountDesc,
     durationDesc,
     accountId: '',
     durationId: '',
