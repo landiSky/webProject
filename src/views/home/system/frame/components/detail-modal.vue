@@ -18,7 +18,11 @@
           }"
           style="width: 390px; margin-bottom: 0; word-break: break-all"
         >
-          {{ state.deptNodeNameList.join(' > ') }}
+          {{
+            selectCompany?.companyName +
+            '〉' +
+            state.deptNodeNameList.join(' > ')
+          }}
         </t-typography-paragraph>
       </template>
       <ul>
@@ -39,7 +43,12 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
 import { defineProps, defineEmits, computed, ref, watch, reactive } from 'vue';
+
+const userStore = useUserStore();
+const { selectCompany }: Record<string, any> = storeToRefs(userStore);
 
 const state = reactive<{
   deptNodeNameList: Record<string, any>[];
