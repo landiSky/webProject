@@ -1884,7 +1884,7 @@ const getDetail = (id: any) => {
           if (formModel2.value.deliveryType === deliveryTypeMap.LightApp) {
             const appPackageIdCheck = productAppList.value.some(
               (itemT: any) => {
-                return itemT.id === one.appPackageId;
+                return itemT.tagId === one.appPackageId;
               }
             );
             copyModal6.value.push({
@@ -1969,7 +1969,7 @@ const getDetail = (id: any) => {
           for (const one of list) {
             const appPackageIdCheck = productAppList.value.some(
               (itemT: any) => {
-                return itemT.id === one.appPackageId;
+                return itemT.tagId === one.appPackageId;
               }
             );
             copyModal5.value.push({

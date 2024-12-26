@@ -165,8 +165,9 @@ watch(
       state.formModel.id = props.data.id || undefined;
       state.formModel.deptName = props.data.deptName;
       const deptChargeItem = props.data.memberList.some((itemT: any) => {
-        return itemT.id === props.data.deptCharge;
+        return itemT.memberId === props.data.deptCharge;
       });
+      console.log(deptChargeItem);
       state.formModel.deptCharge = deptChargeItem ? props.data.deptCharge : '';
       state.formModel.remark = props.data.remark;
       state.formModel.memberSelect =
