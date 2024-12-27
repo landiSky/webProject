@@ -169,9 +169,7 @@ const onAuthConfirm = (memberIdList: string[]): any => {
   const durationDesc = `${duration}个月`;
 
   if (memberIdList?.length > prodDetail.value?.companyChildCount) {
-    Message.warning(
-      '已超出授权人数已超出购买套餐人数，请修改套餐或授权人数购买账号数'
-    );
+    Message.warning('授权人数已超出购买套餐人数，请修改套餐或授权人数');
     return;
   }
 
