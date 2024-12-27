@@ -169,6 +169,7 @@ watch(
         // deptList,
         roleName,
       };
+      console.log(state.formModel);
       rolePhones.value = phone;
     }
   },
@@ -233,6 +234,7 @@ const onConfirm = (done: (closed: boolean) => void) => {
         roleList: state.formModel.roleList,
         // deptList: state.formModel.deptList,
         phone: state.formModel.phone,
+        userId: state.formModel.userId,
       })
         .then(() => {
           done(true);
