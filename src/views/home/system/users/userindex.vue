@@ -326,6 +326,17 @@ const clickEditBtn = (data: any) => {
 
 // 点击新增按钮
 const clickAddBtn = () => {
+  state.editData = {
+    id: undefined,
+    memberId: undefined,
+    userId: undefined,
+    companyId: undefined,
+    phone: '',
+    roleList: [],
+    status: undefined,
+    roleName: '', // 角色名称
+    username: '',
+  };
   editModalVisible.value = true;
 };
 // 取消 清空
