@@ -3,23 +3,238 @@
     <div class="title">应用使用引导</div>
     <div class="guide-box">
       <div class="item-box">
-        <div class="sub-title">应用介绍</div>
+        <div class="header-box">
+          <span class="sub-title">应用介绍</span>
+          <span class="step step1" />
+        </div>
+        <div class="content">
+          <div class="group-title"> <div class="no-top">初步了解</div></div>
+          <div
+            class="content-item"
+            :class="showClick ? 'click' : ''"
+            @click="authentication"
+            ><iconpark-icon class="icon" name="intro1" size="20px" />企业认证
+          </div>
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro2"
+              size="20px"
+            />标识轻应用服务开通
+          </div>
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro3"
+              size="20px"
+            />平台能力介绍
+          </div>
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro4"
+              size="20px"
+            />典型应用介绍
+          </div>
+        </div>
       </div>
       <div class="item-box item-360-box">
-        <div class="sub-title">
-          <span> 应用构建 </span>
-          <span class="step"> step2 </span>
+        <div class="header-box">
+          <span class="sub-title">应用构建</span>
+          <span class="step step2" />
+        </div>
+        <div class="content">
+          <div class="content-group">
+            <div class="group-title">
+              <div class="no-top">
+                创建标识轻应用
+                <t-tooltip
+                  content="标识轻应用提供模版创建可支持一键安装，可从头开始创建，根据你的需求进行增添功能"
+                  is-bright
+                  ><icon-question-circle :size="14" class="icon-circle" />
+                </t-tooltip>
+              </div>
+            </div>
+            <div class="group-section">
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro5"
+                  size="20px"
+                />通过模版创建</div
+              >
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro6"
+                  size="20px"
+                />从头开始创建</div
+              >
+            </div>
+          </div>
+
+          <div class="content-group">
+            <div class="group-title">
+              <div>自建应用链接接入</div>
+              <div>创建标识轻应用</div>
+            </div>
+            <div class="group-section">
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro7"
+                  size="20px"
+                />链接接入应用</div
+              >
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro8"
+                  size="20px"
+                />新建企业数智化应用</div
+              >
+            </div>
+          </div>
+          <div class="content-group">
+            <div class="group-title">
+              <div>SAAS应用接入</div>
+            </div>
+            <div class="group-section">
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro9"
+                  size="20px"
+                />应用接入</div
+              >
+              <div class="content-item"
+                ><iconpark-icon
+                  class="icon"
+                  name="intro10"
+                  size="20px"
+                />应用开发指南</div
+              >
+            </div>
+          </div>
         </div>
       </div>
       <div class="item-box">
-        <div class="sub-title">应用价值变现</div>
+        <div class="header-box">
+          <span class="sub-title">应用价值变现</span>
+          <span class="step step3" />
+        </div>
+        <div class="content">
+          <div class="group-title">
+            <div class="no-top">通过标识分布式网络推广</div></div
+          >
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro11"
+              size="20px"
+            />应用发布</div
+          >
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro12"
+              size="20px"
+            />应用发布指南</div
+          >
+          <div class="content-item"
+            ><iconpark-icon
+              class="icon"
+              name="intro13"
+              size="20px"
+            />交易中心</div
+          >
+        </div>
       </div>
     </div>
+    <EditModalFullscreen
+      v-if="gotoverifys"
+      :data="state.editData"
+      @confirm="onEditModalConfirmcode"
+      @cancel="cancelgotoverifys"
+    />
+    <!-- 详情弹窗 -->
+    <DetailsModalFullscreen
+      v-if="detailflag"
+      :data="state.editData"
+      @confirm="onEditModalConfirmflag"
+      @cancel="detailflagclick"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/store/modules/user';
+import { CompanyAuthStatus } from '@/enums/common';
+import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
+import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
+
+const state = reactive({
+  editData: {
+    id: '1111',
+    statusled: 0,
+  },
+});
+
+const detailflag = ref(false);
+const gotoverifys = ref(false);
+
+const userStore = useUserStore();
+const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+
+const showClick = computed(
+  () =>
+    userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH ||
+    [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
+      userInfoByCompany.certificateStatus
+    )
+);
+
+const authentication = () => {
+  // detailflag.value = true;
+  if (userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH) {
+    gotoverifys.value = true;
+  } else if (
+    [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
+      userInfoByCompany.certificateStatus
+    )
+  ) {
+    detailflag.value = true;
+  }
+};
+
+// 认证填写完成
+const onEditModalConfirmcode = () => {
+  state.editData.statusled = 0;
+  gotoverifys.value = false;
+};
+// 认证填写 取消
+const cancelgotoverifys = (status: number) => {
+  if (status === 1) {
+    detailflag.value = true;
+    gotoverifys.value = false;
+  } else {
+    gotoverifys.value = false;
+  }
+  state.editData.statusled = 0;
+};
+
+//  修改认证信息
+const onEditModalConfirmflag = () => {
+  detailflag.value = false;
+  state.editData.statusled = 1;
+  gotoverifys.value = true;
+};
+// 查看详情 取消
+const detailflagclick = () => {
+  detailflag.value = false;
+};
 </script>
 
 <style scoped lang="less">
@@ -37,14 +252,6 @@ import { ref } from 'vue';
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
-
-    .sub-title {
-      display: flex;
-      justify-content: space-between;
-      color: #1d2129;
-      font-weight: 500;
-      font-size: 14px;
-    }
   }
 
   .guide-box {
@@ -64,6 +271,98 @@ import { ref } from 'vue';
 
       &.item-360-box {
         width: 360px;
+      }
+
+      .header-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .sub-title {
+          display: flex;
+          justify-content: space-between;
+          color: #1d2129;
+          font-weight: 500;
+          font-size: 14px;
+        }
+
+        .step {
+          width: 52px;
+          height: 35px;
+          background: url('../image/step1.png') no-repeat;
+          background-size: cover;
+        }
+
+        .step2 {
+          background: url('../image/step2.png') no-repeat;
+          background-size: cover;
+        }
+
+        .step3 {
+          background: url('../image/step3.png') no-repeat;
+          background-size: cover;
+        }
+      }
+
+      .content {
+        .group-title {
+          display: flex;
+
+          > div {
+            width: 160px;
+            margin-top: 12px;
+            margin-right: 8px;
+            color: #4e5969;
+            font-size: 12px;
+            line-height: 20px;
+          }
+
+          .no-top {
+            margin-top: 0;
+          }
+        }
+        // 分组
+        .content-group {
+          .group-title {
+            > div {
+              margin-bottom: 8px;
+            }
+          }
+
+          .group-section {
+            display: flex;
+
+            .content-item {
+              margin-top: 0;
+              margin-right: 8px;
+            }
+          }
+
+          .icon-circle {
+            margin-left: 4px;
+          }
+        }
+
+        .content-item {
+          // cursor: pointer;
+          width: 160px;
+          height: 36px;
+          margin-top: 8px;
+          padding: 0 8px;
+          font-size: 12px;
+          line-height: 36px;
+          background: #fff;
+          border-radius: 3px;
+
+          &.click {
+            cursor: pointer;
+          }
+
+          .icon {
+            margin-right: 8px;
+            vertical-align: middle;
+          }
+        }
       }
     }
   }
