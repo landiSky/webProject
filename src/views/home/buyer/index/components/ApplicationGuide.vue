@@ -37,6 +37,11 @@
             />典型应用介绍
           </div>
         </div>
+        <iconpark-icon
+          class="blue-right-arrow"
+          name="blue-right-arrow"
+          size="24px"
+        />
       </div>
       <div class="item-box item-360-box">
         <div class="header-box">
@@ -117,6 +122,11 @@
             </div>
           </div>
         </div>
+        <iconpark-icon
+          class="blue-right-arrow"
+          name="blue-right-arrow"
+          size="24px"
+        />
       </div>
       <div class="item-box">
         <div class="header-box">
@@ -258,12 +268,20 @@ const detailflagclick = () => {
     display: flex;
 
     .item-box {
+      position: relative;
       width: 192px;
       height: 274px;
       margin-right: 24px;
       padding: 12px 16px;
       background: #f6f7fb;
       border-radius: 6px;
+
+      .blue-right-arrow {
+        position: absolute;
+        top: 50%;
+        right: -24px;
+        transform: translateY(-50%);
+      }
 
       &:last-child {
         margin-right: 0;
