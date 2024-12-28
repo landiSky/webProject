@@ -1,303 +1,435 @@
 <template>
   <div class="cverbox">
     <!-- 买家中心概览 头部 -->
-    <div class="left-section">
-      <ApplicationGuide v-if="userInfoByCompany.primary !== 2"
-        >应用使用引导</ApplicationGuide
-      >
-      <!-- 标识轻应用 -->
-      <ServiceActivation v-if="configInfo?.qingFlowSwitch" />
-      <!-- 已购其他应用 -->
-    </div>
-    <div class="right-section">
-      <div class="headers">
-        <div style="width: '100%'';; margin: 0 auto">
-          <!-- 用户信息 -->
-          <div class="tops">
-            <div class="imgs">
-              <img :src="avatar" alt="" />
-            </div>
-            <div class="rights">
-              <t-typography-paragraph
-                :ellipsis="{
-                  rows: 1,
-                  showTooltip: true,
-                }"
-                class="name"
-                >{{ userInfoByCompany?.username || userInfo?.mobile }}
-              </t-typography-paragraph>
-              <div class="inofs">
-                <div
-                  v-if="
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED
-                  "
-                  class="inofslist"
-                >
-                  <div style="max-width: 750px">
-                    <ellipsis
-                      class="companyname"
-                      :copy="false"
-                      :value="userInfoByCompany.companyName || '暂未认证'"
-                    >
-                    </ellipsis>
-                  </div>
-
-                  <p>|</p
-                  ><p>{{
-                    userInfoByCompany.companyId
-                      ? AccountTypeDesc[userInfoByCompany.primary]
-                      : '-'
-                  }}</p
-                  ><p>|</p>
-                  <div
-                    v-if="userInfoByCompany?.entPrefixList?.length"
-                    class="extPrefix"
+    <div class="headers">
+      <div style="width: 1200px; margin: 0 auto">
+        <!-- 用户信息 -->
+        <div class="tops">
+          <div class="imgs">
+            <img :src="avatar" alt="" />
+          </div>
+          <div class="rights">
+            <t-typography-paragraph
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              class="name"
+              >{{ userInfoByCompany?.username || userInfo?.mobile }}
+            </t-typography-paragraph>
+            <div class="inofs">
+              <div
+                v-if="
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED
+                "
+                class="inofslist"
+              >
+                <div style="max-width: 750px">
+                  <ellipsis
+                    class="companyname"
+                    :copy="false"
+                    :value="userInfoByCompany.companyName || '暂未认证'"
                   >
-                    <span
-                      v-for="(
-                        item, index
-                      ) in userInfoByCompany?.entPrefixList?.slice(0, 2)"
-                      :key="index"
-                    >
-                      {{ item }}
-                      <span
-                        v-if="
-                          userInfoByCompany?.entPrefixList?.length > 1 &&
-                          index === 0
-                        "
-                        >、</span
-                      >
-                    </span>
-                    <t-popover
-                      position="bottom"
-                      :title="`全部前缀（${userInfoByCompany.entPrefixList?.length}）`"
-                    >
-                      <t-link v-if="entPrefixListSuffix?.length"
-                        >更多前缀 ({{
-                          userInfoByCompany.entPrefixList?.length
-                        }})</t-link
-                      >
-                      <template #content>
-                        <div class="popover-bottom">
-                          <div
-                            v-for="(
-                              item, index
-                            ) in userInfoByCompany.entPrefixList"
-                            :key="index"
-                            >{{ item }}</div
-                          >
-                        </div>
-                      </template>
-                    </t-popover>
-                    <span class="divider">|</span>
-                  </div>
+                  </ellipsis>
                 </div>
 
-                <p
-                  class="statuslist"
-                  :class="[
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED ||
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      ? 'authenticated'
-                      : 'notcertified',
-                  ]"
-                  >{{
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED ||
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      ? '已认证'
-                      : '未认证'
-                  }}</p
+                <p>|</p
+                ><p>{{
+                  userInfoByCompany.companyId
+                    ? AccountTypeDesc[userInfoByCompany.primary]
+                    : '-'
+                }}</p
+                ><p>|</p>
+                <div
+                  v-if="userInfoByCompany?.entPrefixList?.length"
+                  class="extPrefix"
                 >
+                  <span
+                    v-for="(
+                      item, index
+                    ) in userInfoByCompany?.entPrefixList?.slice(0, 2)"
+                    :key="index"
+                  >
+                    {{ item }}
+                    <span
+                      v-if="
+                        userInfoByCompany?.entPrefixList?.length > 1 &&
+                        index === 0
+                      "
+                      >、</span
+                    >
+                  </span>
+                  <t-popover
+                    position="bottom"
+                    :title="`全部前缀（${userInfoByCompany.entPrefixList?.length}）`"
+                  >
+                    <t-link v-if="entPrefixListSuffix?.length"
+                      >更多前缀 ({{
+                        userInfoByCompany.entPrefixList?.length
+                      }})</t-link
+                    >
+                    <template #content>
+                      <div class="popover-bottom">
+                        <div
+                          v-for="(
+                            item, index
+                          ) in userInfoByCompany.entPrefixList"
+                          :key="index"
+                          >{{ item }}</div
+                        >
+                      </div>
+                    </template>
+                  </t-popover>
+                  <span class="divider">|</span>
+                </div>
+              </div>
+
+              <p
+                class="statuslist"
+                :class="[
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                    ? 'authenticated'
+                    : 'notcertified',
+                ]"
+                >{{
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.AUTHED ||
+                  userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
+                    ? '已认证'
+                    : '未认证'
+                }}</p
+              >
+            </div>
+          </div>
+        </div>
+        <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
+        <div
+          v-if="userInfoByCompany.certificateStatus !== NodeAuthStatus.AUTHED"
+          class="direction"
+        >
+          <div class="dirleft">
+            <div class="titleleft">
+              <h3 style="margin-bottom: 24px">使用引导 </h3>
+              <div class="dirlist">
+                <div>
+                  <img :src="group1" alt="" />
+                  <span class="dirlist-step">完成企业认证</span>
+                  <div class="btns">
+                    <p style="margin: 10px 0 12px"> 确定企业身份</p>
+                    <t-button
+                      v-if="
+                        !userInfoByCompany.companyId ||
+                        userInfoByCompany.certificateStatus ===
+                          CompanyAuthStatus.UNAUTH
+                      "
+                      type="text"
+                      class="dirlist-btn"
+                      @click="authentication"
+                      >去认证</t-button
+                    >
+
+                    <div v-else class="states">
+                      <p
+                        style="
+                          width: 50px;
+                          padding: 3px;
+                          font-size: 12px;
+                          text-align: center;
+                        "
+                        :class="stateClass[userInfoByCompany.certificateStatus]"
+                        >{{
+                          CompanyAuthStatusDESC[
+                            userInfoByCompany.certificateStatus
+                          ]
+                        }}</p
+                      >
+
+                      <span
+                        v-if="
+                          [
+                            CompanyAuthStatus.TO_CHECK,
+                            CompanyAuthStatus.REJECT,
+                          ].includes(userInfoByCompany.certificateStatus)
+                        "
+                        style="font-size: 12px"
+                        ><t-button
+                          type="text"
+                          class="dirlist-btn"
+                          @click="viewdetails"
+                          >查看详情</t-button
+                        ></span
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <p class="ition"></p>
+                  <img :src="group2" alt="" />
+                  <span class="dirlist-step">企业成员管理</span>
+                  <div class="btns">
+                    <p style="margin: 10px 0 12px">
+                      管理企业组织架构&成员权限</p
+                    >
+                    <t-button
+                      type="text"
+                      class="dirlist-btn"
+                      @click="distributionrole()"
+                    >
+                      邀请成员/分配权限</t-button
+                    >
+                  </div></div
+                >
+
+                <div>
+                  <p class="ition"></p>
+                  <img :src="group3" alt="" />
+                  <span class="dirlist-step">浏览开通应用</span>
+                  <div class="btns">
+                    <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
+                    <t-button type="text" class="dirlist-btn" @click="tomall"
+                      >去应用商城
+                    </t-button>
+                  </div>
+                </div>
+                <div>
+                  <p class="ition"></p>
+                  <img :src="group4" alt="" />
+                  <span class="dirlist-step">企业中心使用应用</span>
+                  <div class="btns">
+                    <p style="margin: 10px 0"> 应用配置，使用应用</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
-          <div
-            v-if="userInfoByCompany.certificateStatus !== NodeAuthStatus.AUTHED"
-            class="direction"
-          >
-            <div class="dirleft">
-              <div class="titleleft">
-                <h3 style="margin-bottom: 24px">使用引导 </h3>
-                <div class="dirlist">
-                  <div>
-                    <img :src="group1" alt="" />
-                    <span class="dirlist-step">完成企业认证</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px"> 确定企业身份</p>
-                      <t-button
-                        v-if="
-                          !userInfoByCompany.companyId ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.UNAUTH
-                        "
-                        type="text"
-                        class="dirlist-btn"
-                        @click="authentication"
-                        >去认证</t-button
-                      >
-
-                      <div v-else class="states">
-                        <p
-                          style="
-                            width: 50px;
-                            padding: 3px;
-                            font-size: 12px;
-                            text-align: center;
-                          "
-                          :class="
-                            stateClass[userInfoByCompany.certificateStatus]
-                          "
-                          >{{
-                            CompanyAuthStatusDESC[
-                              userInfoByCompany.certificateStatus
-                            ]
-                          }}</p
-                        >
-
-                        <span
-                          v-if="
-                            [
-                              CompanyAuthStatus.TO_CHECK,
-                              CompanyAuthStatus.REJECT,
-                            ].includes(userInfoByCompany.certificateStatus)
-                          "
-                          style="font-size: 12px"
-                          ><t-button
-                            type="text"
-                            class="dirlist-btn"
-                            @click="viewdetails"
-                            >查看详情</t-button
-                          ></span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group2" alt="" />
-                    <span class="dirlist-step">企业成员管理</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px">
-                        管理企业组织架构&成员权限</p
-                      >
-                      <t-button
-                        type="text"
-                        class="dirlist-btn"
-                        @click="distributionrole()"
-                      >
-                        邀请成员/分配权限</t-button
-                      >
-                    </div></div
-                  >
-
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group3" alt="" />
-                    <span class="dirlist-step">浏览开通应用</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
-                      <t-button type="text" class="dirlist-btn" @click="tomall"
-                        >去应用商城
-                      </t-button>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group4" alt="" />
-                    <span class="dirlist-step">企业中心使用应用</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0"> 应用配置，使用应用</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- 企业认证 -->
-            <div class="firmright">
-              <div class="firm">
-                <div class="firm-title">企业认证</div
-                ><span
-                  style="padding: 1px 8px; line-height: 22px"
-                  :class="stateClass[userInfoByCompany.certificateStatus]"
-                  >{{
-                    CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
-                  }}</span
-                >
-              </div>
-              <div
-                class="fimelist"
-                style="float: left; width: 90%; font-size: 12px"
+          <!-- 企业认证 -->
+          <div class="firmright">
+            <div class="firm">
+              <div class="firm-title">企业认证</div
+              ><span
+                style="padding: 1px 8px; line-height: 22px"
+                :class="stateClass[userInfoByCompany.certificateStatus]"
+                >{{
+                  CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
+                }}</span
               >
-                <p style="margin: 12px 0 0 0">开通权益:</p>
-                <ul style="margin-left: 10px">
-                  <li style="width: 100%">
-                    <span></span><span style="float: left">使用限免应用</span>
-                  </li>
-                  <li style="width: 100%">
-                    <span></span><span>免费上架应用，跨平台推广</span>
-                  </li>
-                  <li> <span></span><span>免费使用开发者能力</span> </li>
-                </ul>
-                <div class="fimelistdata">
-                  <t-button
-                    v-if="
-                      !userInfoByCompany.companyId ||
-                      userInfoByCompany.certificateStatus ===
-                        CompanyAuthStatus.UNAUTH
-                    "
-                    type="primary"
-                    class="dirlist-btn"
-                    style="display: block; margin: 12px auto 0"
-                    @click="authentication"
-                    >去认证</t-button
-                  >
+            </div>
+            <div
+              class="fimelist"
+              style="float: left; width: 90%; font-size: 12px"
+            >
+              <p style="margin: 12px 0 0 0">开通权益:</p>
+              <ul style="margin-left: 10px">
+                <li style="width: 100%">
+                  <span></span><span style="float: left">使用限免应用</span>
+                </li>
+                <li style="width: 100%">
+                  <span></span><span>免费上架应用，跨平台推广</span>
+                </li>
+                <li> <span></span><span>免费使用开发者能力</span> </li>
+              </ul>
+              <div class="fimelistdata">
+                <t-button
+                  v-if="
+                    !userInfoByCompany.companyId ||
+                    userInfoByCompany.certificateStatus ===
+                      CompanyAuthStatus.UNAUTH
+                  "
+                  type="primary"
+                  class="dirlist-btn"
+                  style="display: block; margin: 12px auto 0"
+                  @click="authentication"
+                  >去认证</t-button
+                >
 
-                  <div v-else class="states">
-                    <p
-                      v-if="
-                        [
-                          CompanyAuthStatus.TO_CHECK,
-                          CompanyAuthStatus.REJECT,
-                        ].includes(userInfoByCompany.certificateStatus)
-                      "
-                      style="width: 80px; margin: 12px auto 0; font-size: 12px"
+                <div v-else class="states">
+                  <p
+                    v-if="
+                      [
+                        CompanyAuthStatus.TO_CHECK,
+                        CompanyAuthStatus.REJECT,
+                      ].includes(userInfoByCompany.certificateStatus)
+                    "
+                    style="width: 80px; margin: 12px auto 0; font-size: 12px"
+                  >
+                    <t-button type="text" @click="viewdetails"
+                      >查看详情</t-button
                     >
-                      <t-button type="text" @click="viewdetails"
-                        >查看详情</t-button
-                      >
-                    </p>
-                  </div>
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- 订单概览 -->
-      <div class="views">
-        <div class="tooplist">
-          <h3>订单概览</h3>
-          <p style="color: #3975fb; cursor: pointer" @click="multiples">更多</p>
-        </div>
-        <div class="overlist">
-          <div
-            v-for="(item, index) in orderOverall"
-            :key="index"
-            class="overlistdata"
-          >
-            <div>
-              <span style="display: block" class="overlist-title">{{
-                item.title
-              }}</span>
-              <span class="overlist-num" style="font-size: 30px">{{
-                (orderlist[item.field] || '').toLocaleString() || 0
-              }}</span>
+    </div>
+    <ApplicationGuide v-if="userInfoByCompany.primary !== 2"
+      >应用使用引导</ApplicationGuide
+    >
+    <!-- 标识轻应用 -->
+    <ServiceActivation v-if="configInfo?.qingFlowSwitch" />
+
+    <!-- 已购其他应用 -->
+    <div class="purchased">
+      <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
+        <t-tab-pane key="1">
+          <template #title>
+            <img
+              class="application-img"
+              :class="tabsApplication == 1 ? 'application-blue-img' : ''"
+              src="./image/application_01.png"
+              alt=""
+            />
+            已购其他应用
+          </template>
+        </t-tab-pane>
+        <t-tab-pane key="2">
+          <template #title>
+            <img
+              class="application-img"
+              :class="tabsApplication == 2 ? 'application-blue-img' : ''"
+              src="./image/application_02.png"
+              alt=""
+            />
+            企业自建其他应用
+          </template>
+        </t-tab-pane>
+      </t-tabs>
+      <!-- <h3>已购其他应用</h3> -->
+      <div class="Applysd">
+        <div
+          v-for="(item, index) in authDialogVisible"
+          :key="index"
+          class="purchasedlist"
+        >
+          <div v-if="tabsApplication == 1" style="width: 102px">
+            <img
+              :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
+              alt=""
+              style="width: 102px; height: 102px"
+            />
+          </div>
+          <div v-if="tabsApplication == 1" class="leftcont">
+            <div class="tophead-to"
+              ><span>{{ item.productName }}</span
+              ><span
+                v-if="userInfoByCompany.primary !== AccountType?.UNAUTH"
+                style="color: #1664ff; cursor: pointer"
+                class="to-container"
+                @click="togoCheck(item)"
+              >
+                前往 <span class="to-img"></span></span
+            ></div>
+            <div class="tophead-intro">
+              <t-typography-paragraph
+                style="width: 100%"
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ item.introduction }}
+              </t-typography-paragraph>
             </div>
+            <div class="tophead"
+              ><span
+                v-if="userInfoByCompany.primary === AccountType?.MAIN"
+                style="color: #1664ff; cursor: pointer"
+                @click="configurationapp(item)"
+                >配置应用</span
+              ><span
+                v-if="tabsApplication == 1"
+                style="margin-left: auto; color: #86909c; cursor: pointer"
+                @click="
+                  instructionsuse(
+                    item.useExplainMap,
+                    item.orderSource,
+                    item.productServerId
+                  )
+                "
+              >
+                使用说明</span
+              ></div
+            >
+          </div>
+
+          <!-- 企业自建其他应用 -->
+          <div v-if="tabsApplication == 2" style="width: 102px">
+            <img
+              :src="`/server/web/file/download?name=${item.appLogo}`"
+              alt=""
+              style="width: 102px; height: 102px"
+            />
+          </div>
+          <div v-if="tabsApplication == 2" class="leftcont">
+            <div class="tophead-to"
+              ><span>{{ item.appName }}</span
+              ><span
+                style="color: #1664ff; cursor: pointer"
+                class="to-container"
+                @click="togo(item)"
+              >
+                前往 <span class="to-img"></span></span
+            ></div>
+            <div class="tophead-intro">
+              <t-typography-paragraph
+                style="width: 100%"
+                :ellipsis="{
+                  rows: 1,
+                  showTooltip: true,
+                }"
+              >
+                {{ item.introduction }}
+              </t-typography-paragraph>
+            </div>
+            <div class="tophead"
+              ><span
+                v-if="userInfoByCompany.primary === AccountType?.MAIN"
+                style="color: #1664ff; cursor: pointer"
+                @click="configurationapp(item)"
+              >
+                配置应用
+              </span>
+            </div>
+          </div>
+        </div>
+        <div v-if="authDialogVisible.length === 0" class="nothing-application">
+          <div class="nothing-application-img"></div>
+          <div>{{
+            tabsApplication == 1 ? '暂无已购其他应用' : '暂无企业自建其他应用'
+          }}</div>
+          <t-button
+            class="nothing-application-button"
+            type="primary"
+            @click="goapply"
+            >{{ tabsApplication == 1 ? '查看应用商城' : '创建应用' }}</t-button
+          >
+        </div>
+      </div>
+    </div>
+    <!-- 订单概览 -->
+    <div class="views">
+      <div class="tooplist">
+        <h3>订单概览</h3>
+        <p style="color: #3975fb; cursor: pointer" @click="multiples">更多</p>
+      </div>
+      <div class="overlist">
+        <div
+          v-for="(item, index) in orderOverall"
+          :key="index"
+          class="overlistdata"
+        >
+          <div>
+            <span style="display: block" class="overlist-title">{{
+              item.title
+            }}</span>
+            <span class="overlist-num" style="font-size: 30px">{{
+              (orderlist[item.field] || '').toLocaleString() || 0
+            }}</span>
           </div>
         </div>
       </div>
@@ -986,28 +1118,13 @@ onMounted(() => {
 
 <style scoped lang="less">
 .cverbox {
-  display: flex;
-  justify-content: center;
   width: 100%;
-  // width: 1320px;
-  // margin: 0 auto;
   height: 100%;
-  padding: 16px;
   overflow-y: auto;
   background-color: #f2f3f8;
   background-image: url('./image/header.png');
   background-repeat: no-repeat;
   background-size: 100% auto;
-
-  .left-section {
-    width: 840px;
-    // overflow: hidden;
-    margin-right: 16px;
-  }
-
-  .right-section {
-    width: 360px;
-  }
 
   .headers {
     margin-bottom: 24px;
@@ -1446,7 +1563,7 @@ onMounted(() => {
 
   .purchased {
     // width: 96%;
-    width: 100%;
+    width: 1200px;
     margin: 0 auto 24px;
     padding: 16px 24px 27px;
     background-color: #fff;
@@ -1582,7 +1699,7 @@ onMounted(() => {
 
   .views {
     // width: 96%;
-    width: 100%;
+    width: 1200px;
     margin: 0 auto 24px;
     padding: 16px 24px;
     background-image: url('./image/btn.png');

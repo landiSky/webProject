@@ -261,7 +261,7 @@ onMounted(async () => {
 
 <style scoped lang="less">
 .service-app {
-  width: 1200px;
+  width: 100%;
   margin: 0 auto 24px;
   padding: 20px 24px;
   background: #f3f6fd;
@@ -288,7 +288,7 @@ onMounted(async () => {
   .package {
     display: flex;
     flex-direction: column;
-    width: 360px;
+    width: 242px;
     background: url('../image/package_01.png') no-repeat;
     background-size: 100% 100%;
     border: 1px solid #fff;
