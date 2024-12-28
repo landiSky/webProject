@@ -270,7 +270,7 @@ const detailflagclick = () => {
     .item-box {
       position: relative;
       width: 192px;
-      height: 274px;
+      height: 278px;
       margin-right: 24px;
       padding: 12px 16px;
       background: #f6f7fb;
@@ -336,7 +336,7 @@ const detailflagclick = () => {
           }
 
           .no-top {
-            margin-top: 0;
+            margin-top: 4px;
           }
         }
         // 分组
