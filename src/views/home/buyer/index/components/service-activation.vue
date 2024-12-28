@@ -1,6 +1,6 @@
 <template>
   <div v-if="packageList.length" class="service-app">
-    <div class="title">标识轻应用</div>
+    <div class="title">标识轻应用开通</div>
     <div class="card">
       <div
         v-for="(item, index) in packageList"
@@ -17,7 +17,7 @@
             :key="index2"
             class="top-text"
           >
-            <iconpark-icon name="success"></iconpark-icon>
+            <iconpark-icon name="success" :size="12"></iconpark-icon>
             <span class="introduce">{{ item2 }}</span>
           </div>
         </div>
@@ -41,8 +41,6 @@
       </div>
     </div>
   </div>
-  <LightApplication v-if="showApp && showService" />
-  <DigitizedApplications v-if="showApp && showService" />
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
@@ -70,9 +68,9 @@ import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import AuthMemberModal from '@/views/home/buyer/index/components/authMember.vue';
 // 标识轻应用
-import LightApplication from './light-application.vue';
+// import LightApplication from './light-application.vue';
 // 企业数智化应用
-import DigitizedApplications from './digitized-applications.vue';
+// import DigitizedApplications from './digitized-applications.vue';
 
 const packageClassEnum: Record<string, any> = {
   0: '',
@@ -137,14 +135,14 @@ const getPackageList = async () => {
       return params;
     });
     packageList.value = packageData;
-    const userData = {
-      companyId: selectCompany.value?.companyId,
-      memberId: selectCompany.value?.memberId,
-    };
-    userAuthStatus(userData).then((data: any) => {
-      showApp.value = !res.length;
-      showService.value = data;
-    });
+    // const userData = {
+    //   companyId: selectCompany.value?.companyId,
+    //   memberId: selectCompany.value?.memberId,
+    // };
+    // userAuthStatus(userData).then((data: any) => {
+    //   showApp.value = !res.length;
+    //   showService.value = data;
+    // });
   });
 };
 
@@ -300,19 +298,14 @@ onMounted(async () => {
 
     &.navy-blue {
       background: url('../image/package_03.png') no-repeat;
-
-      .foot > .bottom-navy-blue {
-        color: #fff;
-        background: linear-gradient(271.13deg, #1664ff 14.58%, #3ca8e7 100.85%);
-      }
     }
 
     .top {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      height: 272px;
-      padding: 24px 32px 12px;
+      height: 242px;
+      padding: 16px 20px 12px 20px;
       font-family: PingFang SC;
       text-underline-position: from-font;
       text-decoration-skip-ink: none;
@@ -321,7 +314,7 @@ onMounted(async () => {
         .top-name {
           color: #223354;
           font-weight: 500;
-          font-size: 16px;
+          font-size: 14px;
           line-height: 24px;
         }
       }
@@ -334,8 +327,10 @@ onMounted(async () => {
         font-size: 14px;
 
         .introduce {
-          color: #1d2129;
-          font-weight: 500;
+          color: #4e5969;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 20px;
         }
       }
     }
@@ -343,7 +338,8 @@ onMounted(async () => {
     .foot {
       display: flex;
       flex-direction: column;
-      padding: 12px 32px 24px 32px;
+      gap: 16px;
+      padding: 12px 20px 20px 20px;
       font-family: PingFang SC;
       background: #fff;
       text-underline-position: from-font;
@@ -351,14 +347,14 @@ onMounted(async () => {
 
       .discounted-price {
         font-weight: 500;
-        font-size: 24px;
-        line-height: 32px;
+        font-size: 20px;
+        line-height: 28px;
       }
 
       .company {
         color: #4e5969;
         font-weight: 500;
-        font-size: 20px;
+        font-size: 14px;
         line-height: 28px;
       }
 
@@ -371,9 +367,7 @@ onMounted(async () => {
         gap: 10px;
         align-items: center;
         justify-content: center;
-        width: 296px;
         height: 32px;
-        margin-top: 16px;
         padding: 6px 16px;
         color: #1664ff;
         font-weight: 400;
