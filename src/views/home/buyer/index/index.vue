@@ -973,6 +973,7 @@ onMounted(() => {
 
             .companyname {
               // flex: 1;
+              max-width: 100px;
               margin-right: 12px;
               margin-bottom: 0;
               color: #86909c;
