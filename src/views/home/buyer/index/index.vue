@@ -2,12 +2,16 @@
   <div class="cverbox">
     <!-- 买家中心概览 头部 -->
     <div class="left-section">
+      <!-- 轻应用待办 -->
+      <LightFlowTodoView v-if="configInfo?.qingFlowSwitch" />
+
       <ApplicationGuide v-if="userInfoByCompany.primary !== 2"
         >应用使用引导</ApplicationGuide
       >
       <!-- 标识轻应用 -->
       <ServiceActivation v-if="configInfo?.qingFlowSwitch" />
-      <!-- 已购其他应用 -->
+      <!-- 已够应用展示 -->
+      <PurchasedAppView />
     </div>
     <div class="right-section">
       <div class="headers">
@@ -278,49 +282,146 @@
           </div>
         </div>
       </div>
-      <!-- 订单概览 -->
-      <div class="views">
-        <div class="tooplist">
-          <h3>订单概览</h3>
-          <p style="color: #3975fb; cursor: pointer" @click="multiples">更多</p>
+      <!-- 个人用户信息 -->
+
+      <!-- 快捷导航 -->
+      <div class="card-view">
+        <div class="head">
+          <div class="head-icon">
+            <iconpark-icon name="overview-nav-icon" size="20px" />
+          </div>
+          <div class="head-title">快捷导航</div>
         </div>
-        <div class="overlist">
+        <div class="middle">
+          <div class="nav" @click="goNewApplication">
+            <div>
+              <iconpark-icon name="overview-identity-icon" size="20px" />
+            </div>
+            <div class="nav-title">标识轻应用管理</div>
+          </div>
+          <div class="nav" @click="goSign">
+            <div>
+              <iconpark-icon name="overview-identity-icon" size="20px" />
+            </div>
+            <div class="nav-title">标识管理中心企业节点认证</div>
+          </div>
+        </div>
+      </div>
+      <!-- 买家订单概览 -->
+      <div class="card-view">
+        <div class="head">
+          <div class="head-icon">
+            <iconpark-icon name="overview-nav-icon" size="20px" />
+          </div>
+          <div class="head-title">买家订单概览</div>
+        </div>
+        <div class="middle">
           <div
             v-for="(item, index) in orderOverall"
             :key="index"
-            class="overlistdata"
+            class="goods-list goods-list-4"
           >
-            <div>
-              <span style="display: block" class="overlist-title">{{
-                item.title
-              }}</span>
-              <span class="overlist-num" style="font-size: 30px">{{
-                (orderlist[item.field] || '').toLocaleString() || 0
-              }}</span>
+            <div class="head-name">{{ item.title }}</div>
+            <div class="block">
+              <div
+                v-if="(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number">
+                  {{ (orderList[item.field] || '').toLocaleString() || 0 }}
+                </span>
+                <span class="unit">项</span>
+              </div>
+              <div
+                v-if="!(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number"> -- </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 应用资产概览 -->
+      <div class="card-view">
+        <div class="head">
+          <div class="head-icon">
+            <iconpark-icon name="overview-nav-icon" size="20px" />
+          </div>
+          <div class="head-title">应用资产概览</div>
+        </div>
+        <div class="middle middle-wrap">
+          <div
+            v-for="(item, index) in propertyOverall"
+            :key="index"
+            class="goods-list goods-list-2"
+          >
+            <div class="head-name">{{ item.title }}</div>
+            <div class="block">
+              <div
+                v-if="(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number">
+                  {{ (orderList[item.field] || '').toLocaleString() || 0 }}
+                </span>
+                <span class="unit">项</span>
+              </div>
+              <div
+                v-if="!(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number"> -- </span>
+              </div>
+              <t-divider
+                style="border-bottom-color: #c9cdd4"
+                type="dashed"
+                :margin="4"
+              />
+              <div class="desc">
+                {{ item.desc }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 发布商品概览 -->
+      <div class="card-view">
+        <div class="head">
+          <div class="head-icon">
+            <iconpark-icon name="overview-nav-icon" size="20px" />
+          </div>
+          <div class="head-title">发布商品概览</div>
+        </div>
+        <div class="middle">
+          <div
+            v-for="(item, index) in goodsOverall"
+            :key="index"
+            class="goods-list goods-list-4"
+          >
+            <div class="head-name">{{ item.title }}</div>
+            <div class="block">
+              <div
+                v-if="(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number">
+                  {{ (orderList[item.field] || '').toLocaleString() || 0 }}
+                </span>
+                <span class="unit">项</span>
+              </div>
+              <div
+                v-if="!(orderList[item.field] || '').toLocaleString() || 0"
+                class="block-inner"
+              >
+                <span class="number"> -- </span>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 配置应用 -->
-    <AuthMemberModal
-      v-if="editModalVisiblealter"
-      :product-id="selectProduct.productId"
-      :delivery-set-id="selectProduct.deliveryId"
-      :account-count="selectProduct.accountCount"
-      @confirm="onEditModalConfirmAlter"
-      @cancel="editModalVisiblealter = false"
-    >
-    </AuthMemberModal>
-    <!-- 配置自建应用 -->
-    <AuthApplicationsModal
-      v-if="editModalApplication"
-      :product-id="selectProduct.id"
-      @confirm="onEditModalConfirmselfbuilt"
-      @cancel="editModalApplication = false"
-    >
-    </AuthApplicationsModal>
     <!-- 认证指南 -->
     <EditModal
       v-if="editModalVisible"
@@ -352,25 +453,6 @@
       @confirm="onAuthModalConfirm"
       @cancel="authModalVisible = false"
     ></AuthModal>
-
-    <!-- 文件展示弹窗 -->
-    <DetailsModalUpload
-      v-if="detailupload"
-      :data="uploadList"
-      @confirm="DetailModalConfirmflag"
-      @cancel="detailuploadclick"
-    >
-    </DetailsModalUpload>
-
-    <EmpowerTip
-      v-if="empowerTipVisible"
-      :visible="empowerTipVisible"
-      :empower-tip-data="empowerTipData"
-      title="授权提示"
-      @confirm="empowerTipConfirm"
-      @cancel="empowerTipCancel"
-    >
-    </EmpowerTip>
   </div>
 </template>
 
@@ -388,20 +470,14 @@ import {
   alreadyBuyClientLogin,
   apiAuthStatus,
   apiGetAuth,
+  appCreateRedirect,
 } from '@/api/buyer/overview';
-
-// 头像
-import AuthMemberModal from '@/components/auth-member/index.vue';
-// 自建应用
-import AuthApplicationsModal from '@/components/auth-member/self-built-applications.vue';
 
 import EditModal from '@/components/dataoverview/components/edit-modal.vue';
 
 import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
 
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
-
-import DetailsModalUpload from '@/components/dataoverview/components/details-modal-upload.vue';
 
 import { useRouter, useRoute } from 'vue-router';
 // import EditModalAlter from '@/components/home/edit-modal-alter.vue';
@@ -435,9 +511,12 @@ import group4 from './image/group4.png';
 // import EditModal from './components/edit-modal.vue';
 // import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
 // import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
-import EmpowerTip from './components/empowerTip.vue';
 // 服务开通
 import ServiceActivation from './components/service-activation.vue';
+// 已够应用展示页面
+import PurchasedAppView from './components/purchased-app-view.vue';
+// 轻流待办展示页面
+import LightFlowTodoView from './components/lightflow-todo.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -450,7 +529,6 @@ const {
   configInfo,
 }: Record<string, any> = storeToRefs(userStore);
 
-const selectProduct = ref<Record<string, any>>({});
 const authModalVisible = ref(false);
 
 const stateClass = {
@@ -502,24 +580,11 @@ const editModalVisible = ref(false);
 const gotoverifys = ref(false);
 // 详情弹窗
 const detailflag = ref(false);
-// 配置应用 弹窗
-const editModalVisiblealter = ref(false);
-// 配置自建应用 弹窗
-const editModalApplication = ref(false);
-
-// 授权提示 弹窗
-const empowerTipVisible = ref(false);
-// 当前点击数据
-const empowerTipData: Record<string, any> = ref({});
-
-// 使用说明 弹窗
-const detailupload = ref(false);
-const uploadList: Record<string, any> = ref([]);
 
 // //已购应用
 const authDialogVisible: Record<string, any> = ref([]);
 // 订单概览
-const orderlist = ref<Record<string, any>>({
+const orderList = ref<Record<string, any>>({
   count: 0, // 全部订单数量
   payCount: 0, // 待支付页数量
   auditCount: 0, // 待审核页数量
@@ -528,26 +593,68 @@ const orderlist = ref<Record<string, any>>({
   servicesDeliverCount: 0, // 服务商交付数量
   completeCount: 0, // 已完成数量
 });
-// 概览状态
+// 订单概览
 const orderOverall = [
-  {
-    title: '全部订单',
-    field: 'count',
-  },
-  {
-    title: '待支付',
-    field: 'payCount',
-  },
-  {
-    title: '待审核',
-    field: 'auditCount',
-  },
+  // {
+  //   title: '全部订单',
+  //   field: 'count',
+  // },
   {
     title: '待交付',
     field: 'deliverCount',
   },
   {
     title: '已完成',
+    field: 'completeCount',
+  },
+  {
+    title: '待审核',
+    field: 'auditCount',
+  },
+  {
+    title: '待支付',
+    field: 'payCount',
+  },
+];
+// 应用资产概览
+const propertyOverall = [
+  {
+    title: 'SAAS应用',
+    field: 'deliverCount',
+    desc: '平台打通应用数',
+  },
+  {
+    title: '独立部署',
+    field: 'completeCount',
+    desc: '独立部署应用数',
+  },
+  {
+    title: '标识轻应用',
+    field: 'auditCount',
+    desc: '低代码标识轻应用',
+  },
+  {
+    title: '企业数智化应用',
+    field: 'payCount',
+    desc: '低代码标识轻应用',
+  },
+];
+// 发布商品概览
+const goodsOverall = [
+  {
+    title: '全部商品',
+    field: 'count',
+  },
+  {
+    title: '已驳回',
+    field: 'deliverCount',
+  },
+  {
+    title: '审核中',
+    field: 'auditCount',
+  },
+  {
+    title: '已上架',
     field: 'completeCount',
   },
 ];
@@ -564,7 +671,7 @@ const orderlistdata = () => {
       payCount: res.payCount + res.rejectCount,
       deliverCount: res.deliverCount + res.servicesDeliverCount,
     };
-    orderlist.value = data;
+    orderList.value = data;
   });
 };
 // 已购应用
@@ -681,179 +788,6 @@ const compareDate = (dateTime1: string, dateTime2: string) => {
   }
   return false;
 };
-// 前往
-const togo = (detailData: Record<string, any>) => {
-  const { id, dueDate, type, productId, deliveryId, deliveryType } = detailData;
-  const { snmsUrls, companyId } = userInfo.value || {};
-  // 标识类应用需要申请开通企业节点
-  if (
-    AppType.IDAPP === type &&
-    userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED &&
-    !configInfo.value?.callSnmsSwitch
-  ) {
-    Modal.info({
-      title: '使用提醒',
-      content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
-      titleAlign: 'start',
-      hideCancel: false,
-      cancelText: '暂不开通',
-      okText: '去开通',
-      onOk: () => {
-        // authModalVisible.value = true;
-        const { companyId } = userInfoByCompany.value || {};
-        const params = {
-          companyId: userInfo.value?.isAdmin
-            ? userInfo.value?.companyId
-            : companyId,
-          snmsLoginId: snmsUrls?.snmsLoginId,
-        };
-        snmsClientLogin(params).then((res: any) => {
-          if (res?.data?.code === 102006) {
-            Message.error(res?.data?.message);
-          }
-          if (!res?.data?.data) {
-            return;
-          }
-          const data = {
-            type: 'snms',
-            companyId: userInfo.value?.isAdmin
-              ? userInfo.value?.companyId
-              : companyId,
-          };
-          const sm2data = sm2(
-            JSON.stringify(data),
-            userStore.configInfo?.publicKey
-          );
-          window.open(`${res?.data?.data}&data=${sm2data}`);
-        });
-      },
-    });
-    return;
-  }
-
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = `0${now.getMonth() + 1}`.slice(-2);
-  const day = `0${now.getDate()}`.slice(-2);
-  const hours = `0${now.getHours()}`.slice(-2);
-  const minutes = `0${now.getMinutes()}`.slice(-2);
-  const seconds = `0${now.getSeconds()}`.slice(-2);
-  const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  if (!dueDate || compareDate(dueDate, formattedTime)) {
-    // TODO 过期时间判断
-    if (Number(tabsApplication.value) === 1) {
-      const params = {
-        productId,
-        productDeliverySetId: deliveryId,
-        memberId: selectCompany.value?.memberId,
-        orderId: id,
-      };
-
-      alreadyBuyClientLogin(params).then((res: any) => {
-        const data = {
-          type: 'productApp',
-          productId,
-          productDeliverySetId: deliveryId,
-          memberId: selectCompany.value?.memberId,
-        };
-        const sm2data = sm2(
-          JSON.stringify(data),
-          userStore.configInfo?.publicKey
-        );
-        if (res.code === 102008) {
-          return Message.warning(res?.message);
-        }
-        if (res.code !== 200) {
-          return Message.error(res?.message);
-        }
-        if (deliveryType === 1) {
-          window.open(res.data);
-        } else {
-          window.open(`${res.data}&data=${sm2data}`);
-        }
-        // window.open(
-        //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
-        // );
-        return true;
-      });
-    } else if (Number(tabsApplication.value) === 2) {
-      const params = {
-        appInfoId: id,
-        companyId: userInfoByCompany.value.companyId,
-        memberId: selectCompany.value?.memberId,
-      };
-      appInfoClientLogin(params).then((res: any) => {
-        if (res.code === 102008) {
-          return Message.warning(res?.message);
-        }
-        if (res.code !== 200) {
-          return Message.error(res?.message);
-        }
-        const data = {
-          type: 'selfApp',
-          companyId: userInfoByCompany.value.companyId,
-          memberId: selectCompany.value?.memberId,
-        };
-        const sm2data = sm2(
-          JSON.stringify(data),
-          userStore.configInfo?.publicKey
-        );
-        if (detailData.appType === 0 && detailData.dockingMethod === 1) {
-          window.open(detailData?.link);
-        } else {
-          window.open(`${res.data}&data=${sm2data}`);
-        }
-        return true;
-        // window.open(
-        //   'http://10.14.148.65:18080/auth/oauth2/authorize?response_type=code&client_id=7a6e7bcd7fa14c8d8e8fc9d1ddc9c81f&redirect_uri=http://10.14.148.65:3100/api/v1/login/code&scope=userinfo&Authorization=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpblR5cGUiOiJsb2dpbiIsImxvZ2luSWQiOiIxODAxMTgzMDYyOTQwMzIzODQwIiwicm5TdHIiOiJmdkN2SWNuNTlmY1Y5MTUzcFYwWTlnbWV5aXhmZjlaTCJ9.-iXmaHhnyyMD300uCfLKc9gNDM3I1TKeyAa8zUjB2b4'
-        // );
-      });
-    }
-    // orderGo({ id }).then((res: any) => {
-    //   window.open(res, '_blank');
-    // });
-  }
-};
-
-const togoCheck = (detailData: Record<string, any>) => {
-  if (detailData?.deliveryType === 0) {
-    const params = {
-      productId: detailData.productId, // 商品id
-      memberId: selectCompany.value?.memberId, // 成员id
-      productDeliverySetId: detailData.deliveryId, // 版本id
-      appId: detailData.saasAppId, // 应用id
-    };
-    apiAuthStatus(params).then((res: any) => {
-      if (res === 0) {
-        empowerTipVisible.value = true;
-        empowerTipData.value = detailData;
-        return;
-      }
-      togo(detailData);
-    });
-  } else {
-    togo(detailData);
-  }
-};
-
-// 配置应用
-const configurationapp = (item: Record<string, any>) => {
-  selectProduct.value = item; // 配置的应用 id
-  if (Number(tabsApplication.value) === 1) {
-    editModalVisiblealter.value = true;
-  } else if (Number(tabsApplication.value) === 2) {
-    editModalApplication.value = true;
-  }
-};
-// 配置应用 确定
-const onEditModalConfirmAlter = () => {
-  editModalVisiblealter.value = false;
-};
-
-// 配置自建应用 确定
-const onEditModalConfirmselfbuilt = () => {
-  editModalApplication.value = false;
-};
 
 const filetype = (val: any) => {
   if (val === 'doc') {
@@ -863,42 +797,6 @@ const filetype = (val: any) => {
     return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8';
   }
   return 'application/pdf;charset=utf-8';
-};
-// 使用说明
-const instructionsuse = (
-  useExplainMap: Array<object>,
-  orderSource: string,
-  productServerId: string
-) => {
-  uploadList.value = useExplainMap.map((item: any) => {
-    const params = item;
-    params.orderSource = orderSource;
-    params.productServerId = productServerId;
-    return params;
-  });
-  detailupload.value = true;
-};
-const DetailModalConfirmflag = () => {
-  detailupload.value = false;
-};
-const detailuploadclick = () => {
-  detailupload.value = false;
-};
-// 授权提示
-const empowerTipConfirm = () => {
-  const params = {
-    productId: empowerTipData.value?.productId, // 商品id
-    memberId: selectCompany.value?.memberId, // 成员id
-    productDeliverySetId: empowerTipData.value?.deliveryId, // 版本id
-    appId: empowerTipData.value?.saasAppId, // 应用id
-  };
-  apiGetAuth(params).then(() => {
-    togo(empowerTipData.value);
-    empowerTipVisible.value = false;
-  });
-};
-const empowerTipCancel = () => {
-  empowerTipVisible.value = false;
 };
 
 // 更多
@@ -914,32 +812,6 @@ const multiples = () => {
     Message.error('未分配订单管理权限,请联系企业管理员查看订单');
   }
 };
-// 应用切换
-const TabClickApplication = (key: any) => {
-  tabsApplication.value = key;
-  if (
-    userInfoByCompany.value.certificateStatus === 1 ||
-    userInfoByCompany.value.nodeStatus === 1
-  ) {
-    authDialog();
-  }
-};
-
-const goapply = () => {
-  if (Number(tabsApplication.value) === 1) {
-    // 跳转应用商城
-    router.push('/wow/mall');
-  } else {
-    if (
-      !userInfoByCompany.value?.menuCodes.includes('ROUTE_SYSTEM_DEVELOPER')
-    ) {
-      Message.warning('暂无权限');
-      return;
-    }
-    // 跳转应用模块
-    router.push('/devCenter/manage');
-  }
-};
 
 const initOpt = () => {
   if (
@@ -952,6 +824,46 @@ const initOpt = () => {
 
   // 订单概览
   orderlistdata();
+};
+
+// 跳转轻流平台
+const goNewApplication = () => {
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+  };
+  appCreateRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
+// 跳转二级公共方法
+const clickIdService = (pageUrl: any) => {
+  const { companyId } = userInfoByCompany.value || {};
+  const params = {
+    companyId: userInfo.value?.isAdmin ? userInfo.value?.companyId : companyId,
+  };
+  snmsClientLogin(params).then((res: any) => {
+    if (res?.data?.code === 102006) {
+      Message.error(res?.data?.message);
+    }
+    if (!res?.data?.data) {
+      return;
+    }
+    const data = {
+      type: 'snms',
+      companyId: userInfo.value?.isAdmin
+        ? userInfo.value?.companyId
+        : companyId,
+      pageUrl,
+    };
+    const sm2data = sm2(JSON.stringify(data), userStore.configInfo?.publicKey);
+    window.open(`${res?.data?.data}&data=${sm2data}`);
+  });
+};
+
+// 跳转二级
+const goSign = () => {
+  clickIdService('');
 };
 
 watch(
@@ -1010,12 +922,10 @@ onMounted(() => {
   }
 
   .headers {
-    margin-bottom: 24px;
-
     .tops {
       display: flex;
       height: 80px;
-      margin: 24px 0;
+      // margin: 24px 0;
       padding: 0 24px;
       background-color: #fff;
       border-radius: 4px;
@@ -1645,6 +1555,106 @@ onMounted(() => {
           font-weight: 700;
           font-size: 30px;
           line-height: 38px;
+        }
+      }
+    }
+  }
+
+  .card-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 4px;
+
+    .head {
+      display: flex;
+      gap: 8px;
+
+      .head-title {
+        font-weight: 500;
+        font-size: 16px;
+        font-family: PingFang SC;
+      }
+    }
+
+    .middle-wrap {
+      flex-wrap: wrap;
+    }
+
+    .middle {
+      display: flex;
+      gap: 12px;
+
+      .nav {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        height: 36px;
+        padding: 8px;
+        background: linear-gradient(98.94deg, #fafcff 16.99%, #e9f1ff 92.6%);
+        border-radius: 4px;
+        cursor: pointer;
+
+        .nav-title {
+          font-weight: 400;
+          font-size: 12px;
+        }
+      }
+
+      .goods-list-2 {
+        flex: 0 2 calc(50% - 6px);
+      }
+
+      .goods-list-4 {
+        flex: 0 4 calc(25% - 6px);
+      }
+
+      .goods-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .head-name {
+          font-weight: 500;
+          font-size: 13px;
+          line-height: 22px;
+        }
+
+        .block {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          padding: 8px;
+          background: #ecf3ff;
+          border-radius: 4px;
+
+          .block-inner {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+
+            .number {
+              font-weight: 700;
+              font-size: 24px;
+              font-family: DIN Alternate;
+            }
+
+            .unit {
+              height: 16px;
+              color: #4e5969;
+              font-weight: 400;
+              font-size: 12px;
+            }
+          }
+        }
+
+        .desc {
+          color: #4e5969;
+          font-weight: 400;
+          font-size: 12px;
         }
       }
     }
