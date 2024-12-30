@@ -117,7 +117,7 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .light-application {
-  width: 1200px;
+  width: 100%;
   margin: 0 auto 24px;
   padding: 16px 24px 24px;
   background: #fff;
@@ -150,7 +150,7 @@ onMounted(() => {
     flex-direction: column;
     gap: 16px;
     align-items: center;
-    width: 144px;
+    width: 139px;
     height: 170px;
     padding: 24px 9px;
     background: #fff;

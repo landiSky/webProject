@@ -41,6 +41,8 @@
       </div>
     </div>
   </div>
+  <LightApplication v-if="showApp && showService" />
+  <DigitizedApplications v-if="showApp && showService" />
   <AuthMemberModal
     v-if="authModalVisible"
     :product-id="prodDetail.id"
@@ -68,9 +70,9 @@ import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import AuthMemberModal from '@/views/home/buyer/index/components/authMember.vue';
 // 标识轻应用
-// import LightApplication from './light-application.vue';
+import LightApplication from './light-application.vue';
 // 企业数智化应用
-// import DigitizedApplications from './digitized-applications.vue';
+import DigitizedApplications from './digitized-applications.vue';
 
 const packageClassEnum: Record<string, any> = {
   0: '',
@@ -135,14 +137,14 @@ const getPackageList = async () => {
       return params;
     });
     packageList.value = packageData;
-    // const userData = {
-    //   companyId: selectCompany.value?.companyId,
-    //   memberId: selectCompany.value?.memberId,
-    // };
-    // userAuthStatus(userData).then((data: any) => {
-    //   showApp.value = !res.length;
-    //   showService.value = data;
-    // });
+    const userData = {
+      companyId: selectCompany.value?.companyId,
+      memberId: selectCompany.value?.memberId,
+    };
+    userAuthStatus(userData).then((data: any) => {
+      showApp.value = !res.length;
+      showService.value = data;
+    });
   });
 };
 
