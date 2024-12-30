@@ -120,11 +120,11 @@
             </div>
           </div>
           <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
-          <div
+          <!-- <div
             v-if="userInfoByCompany.certificateStatus !== NodeAuthStatus.AUTHED"
             class="direction"
-          >
-            <div class="dirleft">
+          > -->
+          <!-- <div class="dirleft">
               <div class="titleleft">
                 <h3 style="margin-bottom: 24px">使用引导 </h3>
                 <div class="dirlist">
@@ -220,9 +220,9 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- 企业认证 -->
-            <div class="firmright">
+            </div> -->
+          <!-- 企业认证 -->
+          <!-- <div class="firmright">
               <div class="firm">
                 <div class="firm-title">企业认证</div
                 ><span
@@ -278,8 +278,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div> -->
+          <!-- </div> -->
         </div>
       </div>
       <!-- 个人用户信息 -->
