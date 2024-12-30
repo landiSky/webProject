@@ -1049,7 +1049,7 @@ const deliveryTypeList = computed(() => {
   if (
     configInfo.value?.qingFlowSwitch &&
     !packageTimeLimit.value &&
-    showService
+    showService.value
   ) {
     const app = { label: '标识轻应用', value: deliveryTypeMap.LightApp };
     data.splice(2, 0, app);
