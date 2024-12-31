@@ -18,6 +18,7 @@ export const usermenuList = [
   [
     'ROUTE_OVERVIEW', // 标识服务-概览页
     'ROUTE_LICENSE', // 标识服务-License管理
+    'ROUTE_ENTERPRISE_NODE', // 标识服务-企业节点
   ],
 ];
 

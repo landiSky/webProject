@@ -181,6 +181,25 @@ const homeRoutesList = [
       name: 'License管理',
     },
   },
+  {
+    path: '/enterprise-node',
+    component: PAGE_LAYOUT,
+    redirect: '/enterprise-node/index',
+    children: [
+      {
+        path: '/enterprise-node/index',
+        name: 'enterpriseNodeIndex',
+        component: () => import('@/views/home/license/index.vue'),
+        meta: {
+          name: 'index',
+          hideInMenu: true,
+        },
+      },
+    ],
+    meta: {
+      name: '标识服务',
+    },
+  },
 ];
 
 export default homeRoutesList;

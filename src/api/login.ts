@@ -71,3 +71,10 @@ export function snmsClientLogin(params: Record<string, any>) {
     },
   });
 }
+
+// 企业节点第三方跳转
+export function saasCompanyNodeCodeLogin(params: Record<string, any>) {
+  return $http.get('/auth/saasCompanyNodeCodeLogin', {
+    params,
+  });
+}

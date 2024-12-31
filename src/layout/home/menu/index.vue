@@ -46,7 +46,8 @@ import { useRouter, useRoute } from 'vue-router';
 import { useMenuStore } from '@/store/modules/menu';
 import { apiDataPoint } from '@/api/data-point';
 import { useUserStore } from '@/store/modules/user';
-import { snmsClientLogin } from '@/api/login';
+import { snmsClientLogin, saasCompanyNodeCodeLogin } from '@/api/login';
+import { NodeAuthStatus } from '@/enums/common';
 import { sm2 } from '@/utils/encrypt';
 
 const router = useRouter();
@@ -54,7 +55,7 @@ const route = useRoute();
 const collapsed = ref(false);
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany } = userStore;
+const { userInfo, userInfoByCompany, configInfo } = userStore;
 
 const menuStore = useMenuStore();
 
@@ -108,27 +109,55 @@ const clickIdService = () => {
   });
   const { primary, companyId } = userInfoByCompany || {};
   if (Number(primary) !== 2 || userInfo?.isAdmin) {
-    const { snmsUrls } = userInfo || {};
+    if (
+      userInfoByCompany?.nodeStatus !== NodeAuthStatus.AUTHED &&
+      !configInfo?.callSnmsSwitch
+    ) {
+      Modal.info({
+        title: '使用提醒',
+        content: '本应用需申请企业节点后使用，请先开通或绑定企业节点。',
+        titleAlign: 'start',
+        hideCancel: false,
+        cancelText: '暂不开通',
+        okText: '去开通',
+        onOk: () => {
+          const params = {
+            companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+          };
+          snmsClientLogin(params).then((res: any) => {
+            if (res?.data?.code === 102006) {
+              Message.error(res?.data?.message);
+            }
+            if (!res?.data?.data) {
+              return;
+            }
+            const data = {
+              type: 'snms',
+              companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
+            };
+            const sm2data = sm2(
+              JSON.stringify(data),
+              userStore.configInfo?.publicKey
+            );
+            window.open(`${res?.data?.data}&data=${sm2data}`);
+          });
+        },
+      });
+      return;
+    }
     const params = {
       companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
-      snmsLoginId: snmsUrls?.snmsLoginId,
     };
-    snmsClientLogin(params).then((res: any) => {
-      if (res?.data?.code === 102006) {
-        Message.error(res?.data?.message);
-      }
-      if (!res?.data?.data) {
-        return;
-      }
+    saasCompanyNodeCodeLogin(params).then((res: any) => {
       const data = {
-        type: 'snms',
+        type: 'saasCompanyNode',
         companyId: userInfo?.isAdmin ? userInfo?.companyId : companyId,
       };
       const sm2data = sm2(
         JSON.stringify(data),
         userStore.configInfo?.publicKey
       );
-      window.open(`${res?.data?.data}&data=${sm2data}`);
+      window.open(`${res}&data=${sm2data}`);
     });
   } else {
     Modal.warning({
@@ -148,11 +177,11 @@ const clickMenuItem = (key: string) => {
   if (/http(s)?:/.test(key)) {
     window.open(key);
   } else {
-    // if (key === '/overview') {
-    //   // 二级节点业务管理系统
-    //   clickIdService();
-    //   return;
-    // }
+    if (key === '/enterprise-node') {
+      // saas版企业节点
+      clickIdService();
+      return;
+    }
     router.push({ path: key });
     // TODO w: 各个菜单的打点统计
     const num = findKeyByValue(pathMap, key);
