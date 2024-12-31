@@ -71,7 +71,7 @@ onMounted(() => {
   //   state.info = JSON.parse(decodeURIComponent(route?.query?.info));
   state.info = route?.query || {};
   console.log(state.info);
-  state.filePath = `${state.baseUrl}/server/web/file/orderDownloadBySource?name=${state.info?.fileurl}&source=${state.info?.orderSource}&serverId=${state.info?.productServerId}`;
+  state.filePath = state.info.fileurl;
   const str = state.info.fileurl.toString();
   const strIndex = str.lastIndexOf('.');
   const fileType = str.slice(strIndex + 1, str.length);

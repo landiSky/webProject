@@ -126,7 +126,7 @@ const preview = (
   productServerId: string
 ) => {
   const info = {
-    fileurl,
+    fileurl: `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`,
     orderSource,
     productServerId,
   };

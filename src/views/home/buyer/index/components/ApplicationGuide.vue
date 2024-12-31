@@ -1,6 +1,9 @@
 <template>
   <div class="application-guide-box">
     <div class="title">应用使用引导</div>
+    <!-- <pdf src="">111</pdf> -->
+    <!-- <vue-pdf></vue-pdf> -->
+    <div @click="showPreview">预览</div>
     <div class="guide-box">
       <div class="item-box">
         <div class="header-box">
@@ -12,10 +15,10 @@
           <div
             class="content-item"
             :class="showClick ? 'click' : ''"
-            @click="authentication"
+            @click="authCompany"
             ><iconpark-icon class="icon" name="intro1" size="20px" />企业认证
           </div>
-          <div class="content-item"
+          <div class="content-item" @click="authLightApply"
             ><iconpark-icon
               class="icon"
               name="intro2"
@@ -181,22 +184,30 @@
 import { ref, reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
-import { CompanyAuthStatus } from '@/enums/common';
+import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
+import { snmsClientLogin } from '@/api/login';
+import { Message } from '@tele-design/web-vue';
+import { sm2 } from '@/utils/encrypt';
+import { useRouter } from 'vue-router';
 import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
+
+const router = useRouter();
 
 const state = reactive({
   editData: {
     id: '1111',
     statusled: 0,
   },
+  showPreview: false,
 });
 
 const detailflag = ref(false);
 const gotoverifys = ref(false);
 
 const userStore = useUserStore();
-const { userInfoByCompany }: Record<string, any> = storeToRefs(userStore);
+const { userInfo, userInfoByCompany }: Record<string, any> =
+  storeToRefs(userStore);
 
 const showClick = computed(
   () =>
@@ -206,7 +217,19 @@ const showClick = computed(
     )
 );
 
-const authentication = () => {
+const showPreview = () => {
+  const routeData = router.resolve({
+    name: 'wowFileFreview',
+    query: {
+      fileurl:
+        '/server/web/file/download?name=f3357b3f-8f4e-44e2-99b6-0bfe6a3d1c1c.pdf',
+    },
+  });
+  window.open(routeData?.href, '_blank');
+};
+
+// 企业认证
+const authCompany = () => {
   // detailflag.value = true;
   if (userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH) {
     gotoverifys.value = true;
@@ -217,6 +240,44 @@ const authentication = () => {
   ) {
     detailflag.value = true;
   }
+};
+
+// 轻流开通服务
+const authLightApply = () => {
+  console.log('authLightApply');
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    authCompany();
+    return false;
+  }
+  if (userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED) {
+    const { companyId } = userInfoByCompany.value || {};
+    const params = {
+      companyId: userInfo.value?.isAdmin
+        ? userInfo.value?.companyId
+        : companyId,
+    };
+    snmsClientLogin(params).then((res: any) => {
+      if (res?.data?.code === 102006) {
+        Message.error(res?.data?.message);
+      }
+      if (!res?.data?.data) {
+        return;
+      }
+      const data = {
+        type: 'snms',
+        companyId: userInfo.value?.isAdmin
+          ? userInfo.value?.companyId
+          : companyId,
+        pageUrl: '/ent/apply', // 跳到标识前缀开通
+      };
+      const sm2data = sm2(
+        JSON.stringify(data),
+        userStore.configInfo?.publicKey
+      );
+      window.open(`${res?.data?.data}&data=${sm2data}`);
+    });
+  }
+  return false;
 };
 
 // 认证填写完成
