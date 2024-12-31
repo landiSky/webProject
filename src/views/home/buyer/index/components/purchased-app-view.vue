@@ -2,7 +2,14 @@
   <div class="purchased">
     <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
       <t-tab-pane key="1" title="商城购买应用">
-        <t-button type="outline" class="botton-top">+创建新应用</t-button>
+        <t-button
+          v-if="packageList.length"
+          type="outline"
+          class="botton-top"
+          @click="onClickNewApp"
+        >
+          +创建新应用
+        </t-button>
         <div class="mall-application">
           <div
             v-for="(item, index) in packageList"
@@ -66,7 +73,14 @@
         </div>
       </t-tab-pane>
       <t-tab-pane key="2" title="企业自建应用">
-        <t-button type="outline" class="botton-top">+创建新应用</t-button>
+        <t-button
+          v-if="packageList.length"
+          type="outline"
+          class="botton-top"
+          @click="onClickNewApp"
+        >
+          +创建新应用
+        </t-button>
         <div class="mall-application">
           <div
             v-for="(item, index) in packageList"
@@ -130,6 +144,18 @@
         </div>
       </t-tab-pane>
     </t-tabs>
+    <EmptyStateView
+      v-if="!packageList.length"
+      :tabs-application="tabsApplication"
+    />
+    <!-- 创建新应用 -->
+    <NewApp
+      v-if="newAppShow"
+      :visible="newAppShow"
+      :tabs-application="tabsApplication"
+      @confirm="onClickCancelNewApp"
+      @cancel="newAppShow = false"
+    />
 
     <!-- 配置应用 -->
     <AuthMemberModal
@@ -195,6 +221,10 @@ import AuthApplicationsModal from '@/components/auth-member/self-built-applicati
 import DetailsModalUpload from '@/components/dataoverview/components/details-modal-upload.vue';
 // 授权提示弹窗
 import EmpowerTip from './empowerTip.vue';
+// 空状态视图展示
+import EmptyStateView from './empty-state-view.vue';
+// 创建新应用弹窗
+import NewApp from './new-app.vue';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -208,6 +238,7 @@ const {
 // tabs来回切换值
 const tabsApplication = ref('1');
 console.log(tabsApplication.value, 'tabsApplication');
+const newAppShow = ref(false);
 // 配置应用存储对象
 const selectProduct = ref<Record<string, any>>({});
 // 配置应用 弹窗
@@ -282,6 +313,13 @@ const TabClickApplication = (key: any) => {
   ) {
     getPackageList();
   }
+};
+
+const onClickNewApp = () => {
+  newAppShow.value = true;
+};
+const onClickCancelNewApp = () => {
+  newAppShow.value = false;
 };
 
 // 配置应用
