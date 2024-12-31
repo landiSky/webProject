@@ -84,7 +84,7 @@
           <div class="content-group">
             <div class="group-title">
               <div>自建应用链接接入</div>
-              <div>创建标识轻应用</div>
+              <div>创建数智化应用</div>
             </div>
             <div class="group-section">
               <div class="content-item"

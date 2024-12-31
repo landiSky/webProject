@@ -1,7 +1,7 @@
 <template>
   <div class="boxModal">
     <t-modal
-      :visible="props.visible"
+      :visible="visible"
       :width="642"
       :height="400"
       :on-before-ok="onConfirm"
@@ -25,6 +25,7 @@
           v-for="item in memberList"
           :key="item.memberId"
           :value="item.memberId"
+          :disabled="item.memberId === userInfoByCompany?.memberId && checkUser"
           >{{ item.username }}
         </t-option>
       </t-select>
@@ -33,7 +34,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted } from 'vue';
+import { defineProps, defineEmits, ref, onMounted, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { Message } from '@tele-design/web-vue';
 import { useUserStore } from '@/store/modules/user';
@@ -44,7 +45,7 @@ import {
 } from '@/api/buyer/order';
 
 const store = useUserStore();
-const { selectCompany } = storeToRefs(store);
+const { selectCompany, userInfoByCompany } = storeToRefs(store);
 
 const props = defineProps({
   visible: {
@@ -82,6 +83,15 @@ const onConfirm = (done: (closed: boolean) => void) => {
       done(false);
     });
 };
+
+// 是否存在这个用户
+const checkUser = computed(() => {
+  const data = selectMemList.value.some(
+    (ele) => ele === userInfoByCompany.value?.memberId
+  );
+  return data;
+});
+
 onMounted(() => {
   apiMemberList({
     productId: props.data.productId,
