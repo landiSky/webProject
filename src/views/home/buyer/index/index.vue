@@ -359,16 +359,16 @@
             <div class="head-name">{{ item.title }}</div>
             <div class="block">
               <div
-                v-if="(orderList[item.field] || '').toLocaleString() || 0"
+                v-if="(propertyList[item.field] || '').toLocaleString() || 0"
                 class="block-inner"
               >
                 <span class="number">
-                  {{ (orderList[item.field] || '').toLocaleString() || 0 }}
+                  {{ (propertyList[item.field] || '').toLocaleString() || 0 }}
                 </span>
                 <span class="unit">项</span>
               </div>
               <div
-                v-if="!(orderList[item.field] || '').toLocaleString() || 0"
+                v-if="!(propertyList[item.field] || '').toLocaleString() || 0"
                 class="block-inner"
               >
                 <span class="number"> -- </span>
@@ -402,16 +402,16 @@
             <div class="head-name">{{ item.title }}</div>
             <div class="block">
               <div
-                v-if="(orderList[item.field] || '').toLocaleString() || 0"
+                v-if="(goodsList[item.field] || '').toLocaleString() || 0"
                 class="block-inner"
               >
                 <span class="number">
-                  {{ (orderList[item.field] || '').toLocaleString() || 0 }}
+                  {{ (goodsList[item.field] || '').toLocaleString() || 0 }}
                 </span>
                 <span class="unit">项</span>
               </div>
               <div
-                v-if="!(orderList[item.field] || '').toLocaleString() || 0"
+                v-if="!(goodsList[item.field] || '').toLocaleString() || 0"
                 class="block-inner"
               >
                 <span class="number"> -- </span>
@@ -463,6 +463,8 @@ import { Modal, Message } from '@tele-design/web-vue';
 
 import {
   orderOver,
+  publishProductOverview,
+  appPropertyOverview,
   authDialogdata,
   orderGo,
   selectSelfApps,
@@ -593,6 +595,20 @@ const orderList = ref<Record<string, any>>({
   servicesDeliverCount: 0, // 服务商交付数量
   completeCount: 0, // 已完成数量
 });
+// 应用资产概览
+const propertyList = ref<Record<string, any>>({
+  saasApp: 0, // SAAS应用
+  deploy: 0, // 独立部署
+  identifyLightApp: 0, // 标识轻应用
+  companyNumberIntelligence: 0, // 企业数智化应用
+});
+// 发布商品概览
+const goodsList = ref<Record<string, any>>({
+  all: 0, // 全部商品
+  reject: 0, // 已驳回
+  verifying: 0, // 审核中
+  upShelf: 0, // 已上架
+});
 // 订单概览
 const orderOverall = [
   // {
@@ -620,22 +636,22 @@ const orderOverall = [
 const propertyOverall = [
   {
     title: 'SAAS应用',
-    field: 'deliverCount',
+    field: 'saasApp',
     desc: '平台打通应用数',
   },
   {
     title: '独立部署',
-    field: 'completeCount',
+    field: 'deploy',
     desc: '独立部署应用数',
   },
   {
     title: '标识轻应用',
-    field: 'auditCount',
+    field: 'identifyLightApp',
     desc: '低代码标识轻应用',
   },
   {
     title: '企业数智化应用',
-    field: 'payCount',
+    field: 'companyNumberIntelligence',
     desc: '低代码标识轻应用',
   },
 ];
@@ -643,19 +659,19 @@ const propertyOverall = [
 const goodsOverall = [
   {
     title: '全部商品',
-    field: 'count',
+    field: 'all',
   },
   {
     title: '已驳回',
-    field: 'deliverCount',
+    field: 'reject',
   },
   {
     title: '审核中',
-    field: 'auditCount',
+    field: 'verifying',
   },
   {
     title: '已上架',
-    field: 'completeCount',
+    field: 'upShelf',
   },
 ];
 
@@ -672,6 +688,30 @@ const orderlistdata = () => {
       deliverCount: res.deliverCount + res.servicesDeliverCount,
     };
     orderList.value = data;
+  });
+};
+// 应用资产概览 接口
+const propertyListData = () => {
+  appPropertyOverview({
+    companyId: String(userInfoByCompany.value?.companyId),
+  }).then((res) => {
+    // @ts-ignore
+    const data = {
+      ...res,
+    };
+    propertyList.value = data;
+  });
+};
+// 发布商品概览 接口
+const goodsListData = () => {
+  publishProductOverview({
+    companyId: String(userInfoByCompany.value?.companyId),
+  }).then((res) => {
+    // @ts-ignore
+    const data = {
+      ...res,
+    };
+    goodsList.value = data;
   });
 };
 // 已购应用
@@ -824,6 +864,10 @@ const initOpt = () => {
 
   // 订单概览
   orderlistdata();
+  // 应用资产概览
+  propertyListData();
+  // 发布商品概览
+  goodsListData();
 };
 
 // 跳转轻流平台

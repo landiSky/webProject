@@ -4,6 +4,14 @@ import $http from '@/utils/http';
 export function orderOver(params: Record<string, any>) {
   return $http.get('/server/web/order/dataStatistics', { params });
 }
+// 买家中心  发布商品概览
+export function publishProductOverview(params: Record<string, any>) {
+  return $http.get('/server/web/product/publishProductOverview', { params });
+}
+// 买家中心   应用资产概览
+export function appPropertyOverview(params: Record<string, any>) {
+  return $http.get('/server/web/product/appPropertyOverview', { params });
+}
 // 买家中心 前往
 export function orderGo(params: Record<string, any>) {
   return $http.get('/server/web/order/jumpApps', { params });
