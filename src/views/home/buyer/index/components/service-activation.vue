@@ -260,7 +260,7 @@ onMounted(async () => {
 <style scoped lang="less">
 .service-app {
   width: 100%;
-  margin: 0 auto 24px;
+  margin: 0 auto;
   padding: 20px 24px;
   background: #f3f6fd;
   border: 1px solid #e5e8ef;

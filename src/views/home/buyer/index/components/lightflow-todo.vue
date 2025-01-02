@@ -91,7 +91,7 @@ onMounted(async () => {});
 <style scoped lang="less">
 .light-flow-todo {
   width: 100%;
-  margin: 0 auto 24px;
+  margin: 0 auto;
   padding: 20px 24px;
   background-color: #fff;
   border-radius: 4px;

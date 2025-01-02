@@ -677,8 +677,10 @@ onMounted(() => {
   background-size: 100% auto;
 
   .left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 840px;
-    // overflow: hidden;
     margin-right: 16px;
   }
 

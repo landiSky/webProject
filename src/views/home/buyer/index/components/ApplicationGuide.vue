@@ -311,7 +311,7 @@ const detailflagclick = () => {
 <style scoped lang="less">
 .application-guide-box {
   width: 100%;
-  margin: 0 auto 24px;
+  margin: 0 auto;
   padding: 20px 24px;
   background: #fff;
   border: 1px solid #e5e8ef;
