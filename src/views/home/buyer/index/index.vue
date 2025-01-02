@@ -14,276 +14,87 @@
       <PurchasedAppView />
     </div>
     <div class="right-section">
-      <div class="headers">
-        <div style="width: '100%'';; margin: 0 auto">
-          <!-- 用户信息 -->
-          <div class="tops">
-            <div class="imgs">
-              <img :src="avatar" alt="" />
-            </div>
-            <div class="rights">
-              <t-typography-paragraph
-                :ellipsis="{
-                  rows: 1,
-                  showTooltip: true,
-                }"
-                class="name"
-                >{{ userInfoByCompany?.username || userInfo?.mobile }}
-              </t-typography-paragraph>
-              <div class="inofs">
-                <div
-                  v-if="
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED ||
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED
-                  "
-                  class="inofslist"
-                >
-                  <div style="max-width: 750px">
-                    <ellipsis
-                      class="companyname"
-                      :copy="false"
-                      :value="userInfoByCompany.companyName || '暂未认证'"
-                    >
-                    </ellipsis>
-                  </div>
-
-                  <p>|</p
-                  ><p>{{
-                    userInfoByCompany.companyId
-                      ? AccountTypeDesc[userInfoByCompany.primary]
-                      : '-'
-                  }}</p
-                  ><p>|</p>
-                  <div
-                    v-if="userInfoByCompany?.entPrefixList?.length"
-                    class="extPrefix"
-                  >
-                    <span
-                      v-for="(
-                        item, index
-                      ) in userInfoByCompany?.entPrefixList?.slice(0, 2)"
-                      :key="index"
-                    >
-                      {{ item }}
-                      <span
-                        v-if="
-                          userInfoByCompany?.entPrefixList?.length > 1 &&
-                          index === 0
-                        "
-                        >、</span
-                      >
-                    </span>
-                    <t-popover
-                      position="bottom"
-                      :title="`全部前缀（${userInfoByCompany.entPrefixList?.length}）`"
-                    >
-                      <t-link v-if="entPrefixListSuffix?.length"
-                        >更多前缀 ({{
-                          userInfoByCompany.entPrefixList?.length
-                        }})</t-link
-                      >
-                      <template #content>
-                        <div class="popover-bottom">
-                          <div
-                            v-for="(
-                              item, index
-                            ) in userInfoByCompany.entPrefixList"
-                            :key="index"
-                            >{{ item }}</div
-                          >
-                        </div>
-                      </template>
-                    </t-popover>
-                    <span class="divider">|</span>
-                  </div>
-                </div>
-
-                <p
-                  class="statuslist"
-                  :class="[
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED ||
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      ? 'authenticated'
-                      : 'notcertified',
-                  ]"
-                  >{{
-                    userInfoByCompany.certificateStatus ===
-                      CompanyAuthStatus.AUTHED ||
-                    userInfoByCompany.nodeStatus === NodeAuthStatus.AUTHED
-                      ? '已认证'
-                      : '未认证'
-                  }}</p
-                >
-              </div>
-            </div>
+      <!-- 个人用户信息 -->
+      <div class="Personal-data">
+        <div class="data-title">
+          <div class="data-title-image">
+            <img :src="avatar" alt="" />
           </div>
-          <!-- 使用指导 v-if="userInfoByCompany.nodeStatus !== 1" -->
-          <!-- <div
-            v-if="userInfoByCompany.certificateStatus !== NodeAuthStatus.AUTHED"
-            class="direction"
-          > -->
-          <!-- <div class="dirleft">
-              <div class="titleleft">
-                <h3 style="margin-bottom: 24px">使用引导 </h3>
-                <div class="dirlist">
-                  <div>
-                    <img :src="group1" alt="" />
-                    <span class="dirlist-step">完成企业认证</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px"> 确定企业身份</p>
-                      <t-button
-                        v-if="
-                          !userInfoByCompany.companyId ||
-                          userInfoByCompany.certificateStatus ===
-                            CompanyAuthStatus.UNAUTH
-                        "
-                        type="text"
-                        class="dirlist-btn"
-                        @click="authentication"
-                        >去认证</t-button
-                      >
-
-                      <div v-else class="states">
-                        <p
-                          style="
-                            width: 50px;
-                            padding: 3px;
-                            font-size: 12px;
-                            text-align: center;
-                          "
-                          :class="
-                            stateClass[userInfoByCompany.certificateStatus]
-                          "
-                          >{{
-                            CompanyAuthStatusDESC[
-                              userInfoByCompany.certificateStatus
-                            ]
-                          }}</p
-                        >
-
-                        <span
-                          v-if="
-                            [
-                              CompanyAuthStatus.TO_CHECK,
-                              CompanyAuthStatus.REJECT,
-                            ].includes(userInfoByCompany.certificateStatus)
-                          "
-                          style="font-size: 12px"
-                          ><t-button
-                            type="text"
-                            class="dirlist-btn"
-                            @click="viewdetails"
-                            >查看详情</t-button
-                          ></span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group2" alt="" />
-                    <span class="dirlist-step">企业成员管理</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px">
-                        管理企业组织架构&成员权限</p
-                      >
-                      <t-button
-                        type="text"
-                        class="dirlist-btn"
-                        @click="distributionrole()"
-                      >
-                        邀请成员/分配权限</t-button
-                      >
-                    </div></div
-                  >
-
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group3" alt="" />
-                    <span class="dirlist-step">浏览开通应用</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0 12px"> 搜索购买开通应用</p>
-                      <t-button type="text" class="dirlist-btn" @click="tomall"
-                        >去应用商城
-                      </t-button>
-                    </div>
-                  </div>
-                  <div>
-                    <p class="ition"></p>
-                    <img :src="group4" alt="" />
-                    <span class="dirlist-step">企业中心使用应用</span>
-                    <div class="btns">
-                      <p style="margin: 10px 0"> 应用配置，使用应用</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-          <!-- 企业认证 -->
-          <!-- <div class="firmright">
-              <div class="firm">
-                <div class="firm-title">企业认证</div
-                ><span
-                  style="padding: 1px 8px; line-height: 22px"
-                  :class="stateClass[userInfoByCompany.certificateStatus]"
-                  >{{
-                    CompanyAuthStatusDESC[userInfoByCompany.certificateStatus]
-                  }}</span
-                >
-              </div>
-              <div
-                class="fimelist"
-                style="float: left; width: 90%; font-size: 12px"
+          <div class="data-title-value">
+            <t-typography-paragraph
+              :ellipsis="{
+                rows: 1,
+                showTooltip: true,
+              }"
+              style="margin-bottom: 0; word-break: break-all"
+              >{{ userInfoByCompany?.username || userInfo?.mobile }}
+            </t-typography-paragraph>
+          </div>
+        </div>
+        <div class="data-body">
+          <div class="data-columns">
+            <span class="data-columns-label">所属企业：</span>
+            <span class="data-columns-value">
+              {{ userInfoByCompany.companyName || '--' }}
+            </span>
+          </div>
+          <div class="data-columns">
+            <span class="data-columns-label">账号类型：</span>
+            <span class="data-columns-value">
+              {{
+                userInfoByCompany.companyId
+                  ? AccountTypeDesc[userInfoByCompany.primary]
+                  : '--'
+              }}
+            </span>
+          </div>
+          <div class="data-columns data-columns-items">
+            <span class="data-columns-label">标识前缀：</span>
+            <span class="data-columns-value">
+              {{
+                userInfoByCompany?.entPrefixList
+                  ? userInfoByCompany?.entPrefixList.join('：')
+                  : '--'
+              }}
+            </span>
+          </div>
+          <div class="data-columns">
+            <span class="data-columns-label">认证状态：</span>
+            <span
+              class="data-columns-value status-list"
+              :class="stateClass[userInfoByCompany.certificateStatus]"
+            >
+              {{ CompanyAuthStatusDESC[userInfoByCompany.certificateStatus] }}
+            </span>
+            （
+            <t-space>
+              <t-link
+                v-if="
+                  !userInfoByCompany.companyId ||
+                  userInfoByCompany.certificateStatus ===
+                    CompanyAuthStatus.UNAUTH
+                "
+                :hoverable="false"
+                @click="authentication"
+                >去认证</t-link
               >
-                <p style="margin: 12px 0 0 0">开通权益:</p>
-                <ul style="margin-left: 10px">
-                  <li style="width: 100%">
-                    <span></span><span style="float: left">使用限免应用</span>
-                  </li>
-                  <li style="width: 100%">
-                    <span></span><span>免费上架应用，跨平台推广</span>
-                  </li>
-                  <li> <span></span><span>免费使用开发者能力</span> </li>
-                </ul>
-                <div class="fimelistdata">
-                  <t-button
-                    v-if="
-                      !userInfoByCompany.companyId ||
-                      userInfoByCompany.certificateStatus ===
-                        CompanyAuthStatus.UNAUTH
-                    "
-                    type="primary"
-                    class="dirlist-btn"
-                    style="display: block; margin: 12px auto 0"
-                    @click="authentication"
-                    >去认证</t-button
-                  >
-
-                  <div v-else class="states">
-                    <p
-                      v-if="
-                        [
-                          CompanyAuthStatus.TO_CHECK,
-                          CompanyAuthStatus.REJECT,
-                        ].includes(userInfoByCompany.certificateStatus)
-                      "
-                      style="width: 80px; margin: 12px auto 0; font-size: 12px"
-                    >
-                      <t-button type="text" @click="viewdetails"
-                        >查看详情</t-button
-                      >
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-          <!-- </div> -->
+              <t-link
+                v-if="
+                  [
+                    CompanyAuthStatus.TO_CHECK,
+                    CompanyAuthStatus.REJECT,
+                    CompanyAuthStatus.AUTHED,
+                  ].includes(userInfoByCompany.certificateStatus)
+                "
+                :hoverable="false"
+                @click="viewdetails"
+                >查看详情</t-link
+              >
+            </t-space>
+            ）
+          </div>
         </div>
       </div>
-      <!-- 个人用户信息 -->
-
       <!-- 快捷导航 -->
       <div class="card-view">
         <div class="head">
@@ -539,34 +350,7 @@ const stateClass = {
   [CompanyAuthStatus.REJECT]: 'override',
   [CompanyAuthStatus.UNAUTH]: 'notcertified',
 };
-const nodeStateClass = {
-  [NodeAuthStatus.TO_CHECK]: 'tobereviewed',
-  [NodeAuthStatus.AUTHED]: 'authenticated',
-  [NodeAuthStatus.REJECT]: 'override',
-  [NodeAuthStatus.UNAUTH]: 'notcertified',
-};
-// const nodeStateText = {
-//   [TextStatus.TO_CHECK]: 'tobereviewed',
-//   [TextStatus.AUTHED]: 'authenticated',
-//   [TextStatus.REJECT]: 'override',
-//   [TextStatus.UNAUTH]: 'notcertified',
-// };
 
-// 认证状态
-// const stateles = ref({
-//   companyStatus: 3, // 认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-//   nodeStatus: 0, // 节点认证状态 0:待审核 1:已认证 2:已驳回 3:未认证
-// });
-
-// 前缀后几个 tooltip 显示
-const entPrefixListSuffix = computed(() => {
-  const arr = userInfoByCompany.value?.entPrefixList;
-  // arr =
-  if (Array.isArray(arr) && arr.length > 2) {
-    return arr.slice(2);
-  }
-  return [];
-});
 const state = reactive({
   editData: {
     id: '1111',
@@ -790,69 +574,6 @@ const detailflagclick = () => {
   // editModalVisible.value = true;
 };
 
-// 企业节点查看详情
-const viewdetailsredf = () => {
-  const { snmsUrls } = userInfo.value || {};
-
-  window.open(snmsUrls.addNode, '_blank'); // 跳转到二级企业节点认证页面
-};
-// 邀请成员/分配权限
-const distributionrole = () => {
-  if (
-    userInfoByCompany.value?.certificateStatus === CompanyAuthStatus?.AUTHED ||
-    userInfoByCompany.value?.nodeStatus === NodeAuthStatus?.AUTHED
-  ) {
-    const start = userInfoByCompany.value?.menuCodes.findIndex(
-      (item: string, index: number) => {
-        return item === 'ROUTE_SYSTEM_USERS';
-      }
-    );
-    if (start !== -1) {
-      router.push('/system/users');
-    } else {
-      Message.error('未分配企业管理权限，请联系企业管理员');
-    }
-  } else {
-    Message.error('请先完成企业认证');
-  }
-};
-// 去商城
-const tomall = () => {
-  router.push('/wow/mall');
-};
-const compareDate = (dateTime1: string, dateTime2: string) => {
-  const formatDate1 = new Date(dateTime1);
-  const formatDate2 = new Date(dateTime2);
-  if (formatDate1 > formatDate2) {
-    return true;
-  }
-  return false;
-};
-
-const filetype = (val: any) => {
-  if (val === 'doc') {
-    return 'application/msword;charset=utf-8';
-  }
-  if (val === 'docx') {
-    return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=utf-8';
-  }
-  return 'application/pdf;charset=utf-8';
-};
-
-// 更多
-const multiples = () => {
-  const start = userInfoByCompany.value?.menuCodes.findIndex(
-    (item: string, index: number) => {
-      return item === 'ROUTE_BUYER_ORDER';
-    }
-  );
-  if (start !== -1) {
-    router.push('/buyer/order');
-  } else {
-    Message.error('未分配订单管理权限,请联系企业管理员查看订单');
-  }
-};
-
 const initOpt = () => {
   if (
     userInfoByCompany.value.certificateStatus === 1 ||
@@ -948,7 +669,7 @@ onMounted(() => {
   // width: 1320px;
   // margin: 0 auto;
   height: 100%;
-  padding: 16px;
+  padding: 16px 0;
   overflow-y: auto;
   background-color: #f2f3f8;
   background-image: url('./image/header.png');
@@ -963,440 +684,6 @@ onMounted(() => {
 
   .right-section {
     width: 360px;
-  }
-
-  .headers {
-    .tops {
-      display: flex;
-      height: 80px;
-      // margin: 24px 0;
-      padding: 0 24px;
-      background-color: #fff;
-      border-radius: 4px;
-
-      .imgs {
-        float: left;
-        width: 44px;
-        height: 44px;
-        margin-top: 14px;
-      }
-
-      .rights {
-        flex: 1;
-        height: 44px;
-        margin: 10px 0 0 12px;
-
-        .name {
-          margin-bottom: 0;
-          // height: 0;
-          color: #223354;
-          font-weight: 600;
-          font-size: 15px;
-          font-style: normal;
-          line-height: 34px;
-        }
-
-        .inofs {
-          display: flex;
-
-          .inofslist {
-            display: flex;
-            // flex: 1;
-            margin-top: 2px;
-            font-weight: 400;
-            font-size: 12px;
-            line-height: 20px;
-
-            :deep(.tele-space-item) {
-              margin-right: 12px !important;
-            }
-
-            p {
-              float: left;
-            }
-
-            .companyname {
-              // flex: 1;
-              max-width: 100px;
-              margin-right: 12px;
-              margin-bottom: 0;
-              color: #86909c;
-            }
-
-            .extPrefix {
-              color: #86909c;
-
-              .divider {
-                display: inline-block;
-                margin-right: 12px;
-                margin-left: 8px;
-                color: #8c95a7;
-              }
-            }
-
-            // p:nth-child(1) {
-            //   margin-right: 12px;
-            //   color: #86909c;
-            // }
-            p:nth-child(2) {
-              margin-right: 12px;
-              color: #86909c;
-              text-align: center;
-              // padding: 3px 10px;
-            }
-
-            p:nth-child(3) {
-              margin-right: 12px;
-              color: #86909c;
-            }
-
-            p:nth-child(4) {
-              margin-right: 12px;
-              color: #86909c;
-              // color: #86909c;
-              text-align: center;
-            }
-
-            .popover-bottom {
-              display: flex;
-              flex-direction: columns;
-
-              &div {
-                margin-top: 16px;
-                color: rgba(78, 89, 105, 1);
-                font-weight: 400;
-                font-size: 12px;
-                font-family: PingFang SC;
-                line-height: 20px;
-                text-align: left;
-              }
-            }
-          }
-
-          // 已认证
-          .statuslist {
-            width: 52px;
-            padding: 1px 8px;
-            font-weight: 400;
-            font-size: 12px;
-            line-height: 22px;
-          }
-
-          .suffix {
-            float: left;
-            margin-top: 2px;
-
-            p {
-              float: left;
-              margin-right: 9px;
-              color: #86909c;
-            }
-          }
-
-          .authenticated {
-            color: #009a29;
-            background-color: #e8ffea;
-          }
-          // 未认证
-          .notcertified {
-            color: #fa9600;
-            background-color: #fffae8;
-          }
-          // 待审核
-          .tobereviewed {
-            color: #1664ff;
-            background-color: #e8f4ff;
-          }
-          //以驳回
-          .override {
-            color: #e63f3f;
-            background-color: #ffece8;
-          }
-        }
-      }
-    }
-
-    .direction {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      height: 240px;
-
-      .dirleft {
-        width: 78%;
-        height: 100%;
-        padding: 16px 24px;
-        background-color: #fff;
-        border: 1px solid #e5e8ef;
-        border-radius: 4px;
-
-        h3 {
-          color: #223354;
-          font-weight: 500;
-          font-size: 20px;
-          line-height: 34px;
-        }
-
-        .titleleft {
-          .dirlist {
-            display: flex;
-            justify-content: space-between;
-            // width: 90%;
-            > div {
-              width: 25%;
-            }
-
-            :deep(.tele-btn-size-medium) {
-              height: 0;
-              padding: 0;
-            }
-
-            .dirlist-step {
-              display: inline-block;
-              margin-top: 2px;
-              color: #1d2129;
-              font-weight: 500;
-              font-size: 16px;
-              line-height: 24px;
-            }
-
-            img {
-              float: left;
-              width: 28px;
-              height: 28px;
-              margin-right: 8px;
-            }
-
-            .ition {
-              width: 80px;
-              height: 1px;
-              margin-top: 13px;
-              margin-left: -80px;
-              background-color: #4e5969;
-            }
-
-            .btns {
-              margin-left: 36px;
-
-              p {
-                color: #9098a9;
-                font-weight: 400;
-                font-size: 14px;
-                line-height: 20px;
-              }
-
-              .dirlist-btn {
-                height: 20px;
-                color: var(--b-161664-ff, #1664ff);
-                font-weight: 400;
-                font-size: 14px;
-                font-family: PingFang SC;
-                font-style: normal;
-                line-height: normal;
-              }
-            }
-
-            div:nth-child(1) {
-              .btns {
-                float: left;
-                width: 100%;
-
-                .states {
-                  // 已认证
-                  .authenticated {
-                    color: #009a29;
-                    background-color: #e8ffea;
-                  }
-                  // 未认证
-                  .notcertified {
-                    color: #fa9600;
-                    background-color: #fffae8;
-                  }
-                  // 待审核
-                  .tobereviewed {
-                    color: #1664ff;
-                    background-color: #e8f4ff;
-                  }
-                  //以驳回
-                  .override {
-                    color: #e63f3f;
-                    background-color: #ffece8;
-                  }
-                }
-              }
-            }
-
-            div:nth-child(2) {
-              img {
-                float: left;
-              }
-
-              .ition {
-                float: left;
-              }
-
-              .btns {
-                float: left;
-                width: 100%;
-                // margin-left: 116px;
-                p:nth-child(1) {
-                  color: #9098a9;
-                }
-
-                p:nth-child(2) {
-                  color: #1664ff;
-                }
-              }
-            }
-
-            div:nth-child(3) {
-              img {
-                float: left;
-              }
-
-              .ition {
-                float: left;
-              }
-
-              .btns {
-                float: left;
-                width: 100%;
-                // margin-left: 116px;
-                p:nth-child(1) {
-                  color: #9098a9;
-                }
-
-                p:nth-child(2) {
-                  color: #1664ff;
-                }
-              }
-            }
-
-            div:nth-child(4) {
-              // width: 35%;
-              img {
-                float: left;
-                // width: 20px;
-                // height: 20px;
-                // margin-right: 7px;
-              }
-
-              .ition {
-                float: left;
-              }
-
-              .btns {
-                float: left;
-                width: 100%;
-                // margin-left: 116px;
-                p:nth-child(1) {
-                  color: #9098a9;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      .firmright {
-        width: 20%;
-        height: 100%;
-        padding: 16px 0 0 24px;
-        background-image: url('./image/backgroup.png');
-        // background-color: #fff;
-        background-size: cover;
-        border-radius: 4px;
-
-        .firm {
-          display: flex;
-          align-items: center;
-          width: 100%;
-
-          .firm-title {
-            display: inline-block;
-            margin-right: 8px;
-            color: #223354;
-            font-weight: 500;
-            font-size: 20px;
-            line-height: 34px;
-          }
-
-          span {
-            font-size: 12px;
-          }
-          // 已认证
-          .authenticated {
-            color: #009a29;
-            background-color: #e8ffea;
-          }
-          // 未认证
-          .notcertified {
-            color: #fa9600;
-            background-color: #fffae8;
-          }
-          // 待审核
-          .tobereviewed {
-            color: #1664ff;
-            background-color: #e8f4ff;
-          }
-          //以驳回
-          .override {
-            color: #e63f3f;
-            background-color: #ffece8;
-          }
-        }
-
-        .fimelist {
-          font-weight: 400;
-          font-size: 12px;
-          line-height: 20px;
-
-          ul {
-            li {
-              display: flex;
-              align-items: center;
-              margin-top: 10px;
-              color: #4e5969;
-
-              span:nth-child(1) {
-                float: left;
-                width: 4px;
-                height: 4px;
-                margin-right: 8px;
-                background-color: #4e5969;
-                border-radius: 6px;
-              }
-            }
-          }
-
-          .fimelistdata {
-            .states {
-              margin: 0 auto;
-              // 已认证
-              .authenticated {
-                color: #009a29;
-                background-color: #e8ffea;
-              }
-              // 未认证
-              .notcertified {
-                color: #fa9600;
-                background-color: #fffae8;
-              }
-              // 待审核
-              .tobereviewed {
-                color: #1664ff;
-                background-color: #e8f4ff;
-              }
-              //以驳回
-              .override {
-                color: #e63f3f;
-                background-color: #ffece8;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   .purchased {
@@ -1535,72 +822,91 @@ onMounted(() => {
     }
   }
 
-  .views {
-    // width: 96%;
-    width: 100%;
-    margin: 0 auto 24px;
-    padding: 16px 24px;
-    background-image: url('./image/btn.png');
-    background-size: cover;
-    border: 1px solid #e5e8ef;
+  .Personal-data {
+    gap: 16px;
+    padding: 16px;
+    background: #fff;
     border-radius: 4px;
 
-    .tooplist {
+    .data-title {
       display: flex;
+      gap: 12px;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 24px;
 
-      h3 {
-        color: #223354;
-        font-weight: 500;
-        font-size: 20px;
-        line-height: 34px;
+      .data-title-image {
+        width: 24px;
+        height: 24px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
       }
 
-      p {
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 22px;
+      .data-title-value {
+        width: calc(100% - 24px);
+        font-weight: 500;
+        font-size: 16px;
       }
     }
 
-    .overlist {
+    .data-body {
       display: flex;
-      justify-content: space-between;
-      width: 100%;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 16px;
 
-      .overlistdata {
-        width: 20%;
-        height: 100px;
-        margin-right: 16px;
-        padding: 16px 16px 22px;
-        background: rgba(255, 255, 255, 0.4);
+      .data-columns {
+        display: flex;
+        align-items: center;
 
-        &:last-of-type {
-          margin-right: 0;
-        }
-
-        &:hover {
-          background-image: url('./image/overdata-bg.jpg');
-          background-size: auto 100%;
-          box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .overlist-title {
-          color: #86909c;
+        .data-columns-label {
+          width: 60px;
+          color: #4e5969;
           font-weight: 400;
-          font-size: 14px;
-          line-height: 22px;
+          font-size: 12px;
+          line-height: 20px;
         }
 
-        .overlist-num {
+        .data-columns-value {
+          width: calc(100% - 60px);
           color: #1d2129;
-          font-weight: 700;
-          font-size: 30px;
-          line-height: 38px;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 20px;
         }
+
+        .status-list {
+          width: 52px;
+          padding: 3px 8px;
+          font-weight: 400;
+          font-size: 12px;
+          border-radius: 2px;
+        }
+        // 已认证
+        .authenticated {
+          color: #009a29;
+          background-color: #e8ffea;
+        }
+        // 未认证
+        .notcertified {
+          color: #fa9600;
+          background-color: #fffae8;
+        }
+        // 待审核
+        .tobereviewed {
+          color: #1664ff;
+          background-color: #e8f4ff;
+        }
+        //以驳回
+        .override {
+          color: #e63f3f;
+          background-color: #ffece8;
+        }
+      }
+
+      .data-columns-items {
+        align-items: normal;
       }
     }
   }
