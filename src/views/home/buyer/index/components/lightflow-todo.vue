@@ -7,17 +7,31 @@
         v-for="(item, index) in todoOverall"
         :key="index"
         class="todo-list todo-list-4"
+        @click="goNewApplication(item.state)"
       >
         <div
           class="number"
           :class="{
-            'color-red': item.title === '已超时',
+            'color-red':
+              item.title === '已超时' &&
+              ((todoList[item.field] || '').toLocaleString() || 0) !== 0,
+            'color-yellow':
+              item.title === '即将超时' &&
+              ((todoList[item.field] || '').toLocaleString() || 0) !== 0,
+            'color-purple':
+              item.title === '催办' &&
+              ((todoList[item.field] || '').toLocaleString() || 0) !== 0,
           }"
-          @click="goNewApplication"
         >
           {{ (todoList[item.field] || '').toLocaleString() || 0 }}
         </div>
-        <div class="name">{{ item.title }}</div>
+        <div class="foot">
+          <div class="name">{{ item.title }}</div>
+          <div class="handle">
+            立即处理
+            <icon-arrow-right />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -25,7 +39,11 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted, ref } from 'vue';
-import { appCreateRedirect } from '@/api/buyer/overview';
+import {
+  appCreateRedirect,
+  dynamicAudits,
+  dynamicAuditsUrl,
+} from '@/api/buyer/overview';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 
@@ -45,54 +63,70 @@ const props = defineProps({
 
 // 我的待办概览
 const todoList = ref<Record<string, any>>({
-  count: 0, // 全部订单数量
-  payCount: 0, // 待支付页数量
-  auditCount: 0, // 待审核页数量
-  deliverCount: 0, // 待交付数量
-  rejectCount: 0, // 已驳回数量
-  servicesDeliverCount: 0, // 服务商交付数量
-  completeCount: 0, // 已完成数量
+  all: 0, // 全部待办
+  timeout: 0, // 已超时
+  approachingTimeout: 0, // 即将超时
+  urging: 0, // 催办
 });
 
 // 发布商品概览
 const todoOverall = [
   {
-    title: '全部代办',
-    field: 'count',
+    title: '全部待办',
+    field: 'all',
+    state: '1',
   },
   {
     title: '已超时',
-    field: 'deliverCount',
+    field: 'timeout',
+    state: '7',
   },
   {
     title: '即将超时',
-    field: 'auditCount',
+    field: 'approachingTimeout',
+    state: '8',
   },
   {
     title: '催办',
-    field: 'completeCount',
+    field: 'urging',
+    state: '6',
   },
 ];
 
 // 跳转轻流平台
-const goNewApplication = () => {
+const goNewApplication = (status: string) => {
   const params = {
     userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
+    status,
   };
-  appCreateRedirect(params).then((res: any) => {
+  dynamicAuditsUrl(params).then((res: any) => {
     window.open(res);
   });
 };
 
-onMounted(async () => {});
+// 发布商品概览 接口
+const toDoListData = () => {
+  dynamicAudits({
+    companyId: userInfoByCompany.value?.companyId,
+  }).then((res: any) => {
+    const data = {
+      ...res,
+    };
+    todoList.value = data;
+  });
+};
+
+onMounted(() => {
+  toDoListData();
+});
 </script>
 
 <style scoped lang="less">
 .light-flow-todo {
   width: 100%;
   margin: 0 auto;
-  padding: 20px 24px;
+  padding: 20px 24px 0 20px;
   background-color: #fff;
   border-radius: 4px;
 
@@ -128,20 +162,55 @@ onMounted(async () => {});
       flex: 0 4 calc(25% - 6px);
     }
 
+    .todo-list:hover {
+      .foot {
+        .name {
+          transform: translateY(-30px); /* 初始状态在上方隐藏 */
+          opacity: 0;
+          transition: transform 0.5s ease-in-out; /* 控制动画时间 */
+        }
+
+        .handle {
+          transform: translateY(0); /* 最终状态在可视区域 */
+          opacity: 1;
+          transition: transform 0.5s ease-in-out; /* 控制动画时间 */
+        }
+      }
+    }
+
     .todo-list {
+      position: relative;
       display: flex;
       flex-direction: column;
       gap: 8px;
       align-items: center;
+      cursor: pointer;
 
-      .name {
-        color: #9098a9;
-        font-weight: 400;
-        font-size: 12px;
-        font-family: PingFang SC;
-        line-height: 20px;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
+      .foot {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 40px;
+        overflow: hidden;
+
+        .name {
+          position: absolute;
+          color: #9098a9;
+          font-weight: 400;
+          font-size: 12px;
+          font-family: PingFang SC;
+          transition: all 0.7s ease;
+        }
+
+        .handle {
+          color: #9098a9;
+          font-weight: 400;
+          font-size: 12px;
+          font-family: PingFang SC;
+          transform: translateY(30px);
+          opacity: 0;
+          transition: all 0.7s ease;
+        }
       }
 
       .number {
@@ -150,12 +219,19 @@ onMounted(async () => {});
         font-size: 32px;
         font-family: DIN Alternate;
         line-height: 32px;
-        cursor: pointer;
         text-underline-position: from-font;
         text-decoration-skip-ink: none;
 
         &.color-red {
           color: #ff0004;
+        }
+
+        &.color-yellow {
+          color: #fb9337;
+        }
+
+        &.color-purple {
+          color: #d164fb;
         }
       }
     }

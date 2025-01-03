@@ -125,3 +125,17 @@ export function userAuthStatus(params: Record<string, any>) {
     params,
   });
 }
+
+// 待办展示数据
+export function dynamicAudits(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/dynamicAudits', {
+    params,
+  });
+}
+
+// 待办跳转
+export function dynamicAuditsUrl(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/dynamicAuditsUrl', {
+    params,
+  });
+}
