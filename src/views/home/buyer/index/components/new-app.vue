@@ -13,7 +13,15 @@
       <t-button type="primary" @click="handleOk">确认</t-button>
     </template>
     <div class="new-app-box">
-      <EmptyStateView :tabs-application="tabsApplication" />
+      <EmptyStateView
+        :tabs-application="tabsApplication"
+        :package-list="packageListData"
+        :show-service="showServiceData"
+        @get-application-list-data="getApplicationListData"
+        @on-positioning-service="onPositioningService"
+        @on-authentication="onAuthentication"
+        @on-view-details="onViewDetails"
+      />
     </div>
   </t-modal>
 </template>
@@ -23,14 +31,35 @@ import { defineProps, defineEmits, computed, onMounted, ref } from 'vue';
 // 空状态视图展示
 import EmptyStateView from './empty-state-view.vue';
 
-const emits = defineEmits(['confirm', 'cancel']);
+const emits = defineEmits([
+  'confirm',
+  'cancel',
+  'getApplicationListData',
+  'onPositioningService',
+  'onAuthentication',
+  'onViewDetails',
+]);
 
 const props = defineProps({
   visible: Boolean,
   tabsApplication: String,
+  packageList: {
+    type: Array as any,
+    default() {
+      return [];
+    },
+  },
+  showService: {
+    type: Boolean,
+    default() {
+      return false;
+    },
+  },
 });
 
 const showModal = computed(() => props.visible);
+const packageListData = computed(() => props.packageList);
+const showServiceData = computed(() => props.showService);
 
 const handleOk = () => {
   emits('confirm');
@@ -38,6 +67,19 @@ const handleOk = () => {
 
 const handleCancel = () => {
   emits('cancel');
+};
+
+const getApplicationListData = () => {
+  emits('getApplicationListData');
+};
+const onPositioningService = () => {
+  emits('onPositioningService');
+};
+const onAuthentication = () => {
+  emits('onAuthentication');
+};
+const onViewDetails = () => {
+  emits('onViewDetails');
 };
 
 onMounted(async () => {});

@@ -1,17 +1,30 @@
 <template>
-  <div class="cverbox">
+  <div id="cverbox" class="cverbox">
     <!-- 买家中心概览 头部 -->
     <div class="left-section">
       <!-- 轻应用待办 -->
-      <LightFlowTodoView v-if="configInfo?.qingFlowSwitch" />
+      <LightFlowTodoView
+        v-if="configInfo?.qingFlowSwitch && !packageList.length && showService"
+      />
 
       <ApplicationGuide v-if="userInfoByCompany.primary !== 2"
         >应用使用引导</ApplicationGuide
       >
       <!-- 标识轻应用 -->
-      <ServiceActivation v-if="configInfo?.qingFlowSwitch" />
+      <div id="serviceId">
+        <ServiceActivation
+          v-if="configInfo?.qingFlowSwitch"
+          :package-list="packageList"
+        />
+      </div>
       <!-- 已够应用展示 -->
-      <PurchasedAppView />
+      <PurchasedAppView
+        :package-list="packageList"
+        :show-service="showService"
+        @positioning-service="positioningService"
+        @authentication="authentication"
+        @viewdetails="viewdetails"
+      />
     </div>
     <div class="right-section">
       <!-- 个人用户信息 -->
@@ -104,7 +117,13 @@
           <div class="head-title">快捷导航</div>
         </div>
         <div class="middle">
-          <div class="nav" @click="goNewApplication">
+          <div
+            v-if="
+              configInfo?.qingFlowSwitch && !packageList.length && showService
+            "
+            class="nav"
+            @click="goNewApplication"
+          >
             <div>
               <iconpark-icon name="overview-identity-icon" size="20px" />
             </div>
@@ -277,13 +296,10 @@ import {
   publishProductOverview,
   appPropertyOverview,
   authDialogdata,
-  orderGo,
   selectSelfApps,
-  appInfoClientLogin,
-  alreadyBuyClientLogin,
-  apiAuthStatus,
-  apiGetAuth,
   appCreateRedirect,
+  getServicePackage,
+  userAuthStatus,
 } from '@/api/buyer/overview';
 
 import EditModal from '@/components/dataoverview/components/edit-modal.vue';
@@ -293,37 +309,20 @@ import EditModalFullscreen from '@/components/dataoverview/components/edit-modal
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
 
 import { useRouter, useRoute } from 'vue-router';
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
-// import EditModalAlter from '@/components/home/edit-modal-alter.vue';
 import { useUserStore } from '@/store/modules/user';
 import {
-  AppType,
-  AccountType,
   AccountTypeDesc,
   CompanyAuthStatus,
   CompanyAuthStatusDESC,
-  NodeAuthStatus,
-  NodeAuthStatusDESC,
 } from '@/enums/common';
 import { sm2 } from '@/utils/encrypt';
-// import { fileDownloadto2 } from '@/api/file';
 
 import AuthModal from '@/components/auth-modal/index.vue';
-import ellipsis from '@/components/ellipsis/index.vue';
 import { apiDataPoint } from '@/api/data-point';
 import { snmsClientLogin } from '@/api/login';
 import ApplicationGuide from './components/ApplicationGuide.vue';
 import avatar from './image/avatar.png';
-import group1 from './image/group1.png';
-import group2 from './image/group2.png';
-import group3 from './image/group3.png';
-import group4 from './image/group4.png';
 
-// import frame from './image/frame.png';
-
-// import EditModal from './components/edit-modal.vue';
-// import EditModalFullscreen from './components/edit-modal-fullscreen.vue';
-// import DetailsModalFullscreen from './components/details-modal-fullscreen.vue';
 // 服务开通
 import ServiceActivation from './components/service-activation.vue';
 // 已够应用展示页面
@@ -358,6 +357,8 @@ const state = reactive({
     statusled: 0,
   },
 });
+const packageList: Record<string, any> = ref([]);
+const showService = ref(false);
 // tabs来回切换值
 const tabsApplication = ref(1);
 // 立即认证弹窗
@@ -574,7 +575,33 @@ const detailflagclick = () => {
   // editModalVisible.value = true;
 };
 
+const getPackageList = async () => {
+  const params = {
+    companyId: selectCompany.value?.companyId,
+  };
+  getServicePackage(params).then((res: any) => {
+    const packageData = res.map((data: any) => {
+      const introduction = data?.introduction.split(',') || [];
+      const params = {
+        ...data,
+        introduction,
+      };
+      return params;
+    });
+    packageList.value = packageData;
+    const userData = {
+      companyId: selectCompany.value?.companyId,
+      memberId: selectCompany.value?.memberId,
+    };
+    userAuthStatus(userData).then((data: any) => {
+      showService.value = data;
+    });
+  });
+};
+
 const initOpt = () => {
+  // 是否购买服务和是否被授权
+  getPackageList();
   if (
     userInfoByCompany.value.certificateStatus === 1 ||
     userInfoByCompany.value.nodeStatus === 1
@@ -582,7 +609,6 @@ const initOpt = () => {
     // 已购应用
     authDialog();
   }
-
   // 订单概览
   orderlistdata();
   // 应用资产概览
@@ -629,6 +655,14 @@ const clickIdService = (pageUrl: any) => {
 // 跳转二级
 const goSign = () => {
   clickIdService('');
+};
+// 定位到开通服务元素
+const positioningService = () => {
+  const target = document.getElementById('serviceId');
+  const parent = document.getElementById('cverbox');
+  parent &&
+    target &&
+    parent.scrollTo(0, target.offsetTop - 200 - parent.offsetTop);
 };
 
 watch(
@@ -686,142 +720,6 @@ onMounted(() => {
 
   .right-section {
     width: 360px;
-  }
-
-  .purchased {
-    // width: 96%;
-    width: 100%;
-    margin: 0 auto 24px;
-    padding: 16px 24px 27px;
-    background-color: #fff;
-    border: 1px solid #e5e8ef;
-    border-radius: 4px;
-
-    h3 {
-      color: #223354;
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 34px;
-    }
-
-    :deep(.tele-tabs-tab) {
-      margin: 0 16px 0 0;
-    }
-
-    :deep(.tele-tabs-tab-active) {
-      color: rgba(34, 51, 84, 1);
-    }
-
-    :deep(.tele-tabs-tab-title) {
-      display: flex;
-      align-items: center;
-    }
-
-    .application-img {
-      width: 16px;
-      height: 16px;
-      margin-right: 8px;
-    }
-
-    .application-blue-img {
-      transform: translateY(-60px);
-      // 颜色、x轴偏移量、y轴偏移量,这里的颜色就是你要指定的颜色，不管原来的图片是什么颜色，都会变成这个颜色
-      filter: drop-shadow(rgba(22, 100, 255, 1) 0 60px);
-    }
-
-    .Applysd {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      width: 100%;
-      height: 100%;
-
-      .purchasedlist {
-        display: flex;
-        justify-content: space-between;
-        width: 47%;
-        height: 138px;
-        margin-top: 24px;
-        padding: 16px;
-        // flex-shrink: 0;
-        background-color: #fff;
-        border: 1px solid #e5e8ef;
-        border-radius: 4px;
-
-        .leftcont {
-          display: flex;
-          flex-direction: column;
-          width: 77%;
-          // align-items: flex-end;
-          .tophead-intro {
-            word-break: break-all;
-          }
-
-          .tophead-to {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 12px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-
-            .to-container {
-              display: flex;
-              align-items: center;
-            }
-
-            .to-img {
-              display: inline-block;
-              width: 16px;
-              height: 16px;
-              margin-left: 4px;
-              background: url('./image/togo.svg');
-            }
-          }
-
-          .tophead {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 22px;
-          }
-
-          .purchased-content {
-            color: #4e5969;
-            font-weight: 400;
-            font-size: 14px;
-            line-height: 22px;
-          }
-        }
-      }
-
-      .purchasedlist:nth-child(-n + 2) {
-        margin-top: 20px;
-      }
-
-      .nothing-application {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 425px;
-      }
-
-      .nothing-application-img {
-        width: 120px;
-        height: 120px;
-        background: url(@/assets/images/home/empty.png) no-repeat;
-        background-size: 100% 100%;
-      }
-
-      .nothing-application-button {
-        margin-top: 12px;
-      }
-    }
   }
 
   .Personal-data {

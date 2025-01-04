@@ -3,7 +3,7 @@
     <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
       <t-tab-pane key="1" title="商城购买应用">
         <t-button
-          v-if="packageList.length"
+          v-if="applicationListData.length"
           type="outline"
           class="botton-top"
           @click="onClickNewApp"
@@ -12,41 +12,31 @@
         </t-button>
         <div class="mall-application">
           <div
-            v-for="(item, index) in packageList"
+            v-for="(item, index) in applicationListData"
             :key="index"
             class="purchased-list"
           >
             <div class="header" @click="togoCheck(item)">
               <div class="avatar">
                 <img
-                  v-if="item.deliveryType !== 2"
+                  v-if="item.productLogo"
                   :src="`/server/web/file/orderDownloadBySource?name=${item.productLogo}&source=${item.orderSource}&serverId=${item.productServerId}`"
                   alt=""
                 />
-                <t-avatar
-                  v-if="item.deliveryType == 2"
-                  :size="36"
-                  shape="square"
-                  class="font-pangmen"
-                  :style="{ fontSize: '20px' }"
-                >
-                  {{ captureOne(item.productName) }}
-                  <!-- {{ captureOne(item?.tagName) }} -->
-                </t-avatar>
               </div>
               <div class="desc">
                 <span class="title">
                   {{ item.productName }}
                 </span>
                 <span class="permission">
-                  <span class="left">用户权限:</span>
-                  <span class="right">普通用户/管理员/工作区创建人</span>
+                  <span class="left">应用购买者:</span>
+                  <span class="right">{{ item.createName }}</span>
                 </span>
               </div>
             </div>
             <t-divider :margin="12" />
             <div class="footer">
-              <div class="creation-time">创建时间：2024-12-12 15:00</div>
+              <div class="creation-time">创建时间：{{ item.createTime }}</div>
               <div class="button-position">
                 <t-space :size="20">
                   <t-link
@@ -74,7 +64,7 @@
       </t-tab-pane>
       <t-tab-pane key="2" title="企业自建应用">
         <t-button
-          v-if="packageList.length"
+          v-if="applicationListData.length"
           type="outline"
           class="botton-top"
           @click="onClickNewApp"
@@ -83,59 +73,51 @@
         </t-button>
         <div class="mall-application">
           <div
-            v-for="(item, index) in packageList"
+            v-for="(item, index) in applicationListData"
             :key="index"
             class="purchased-list"
           >
-            <div class="header" @click="togo(item)">
+            <div class="header" @click="jumpCheck(item)">
               <div class="avatar">
                 <img
-                  :v-if="item.deliveryType != 2"
+                  v-if="item.type !== 1"
                   :src="`/server/web/file/download?name=${item.appLogo}`"
                   alt=""
                 />
                 <t-avatar
-                  :v-if="item.deliveryType == 2"
+                  v-if="item.type === 1"
                   :size="36"
                   shape="square"
                   class="font-pangmen"
+                  :class="item.appLogo"
                   :style="{ fontSize: '20px' }"
                 >
-                  {{ captureOne(item.productName) }}
-                  <!-- {{ captureOne(item?.tagName) }} -->
+                  {{ captureOne(item.appName) }}
                 </t-avatar>
               </div>
               <div class="desc">
                 <span class="title">
-                  {{ item.productName }}
+                  {{ item.appName }}
                 </span>
                 <span class="permission">
-                  <span class="left">用户权限:</span>
-                  <span class="right">普通用户/管理员/工作区创建人</span>
+                  <span class="left">应用创建者:</span>
+                  <span class="right">{{ item.creatorName }}</span>
                 </span>
               </div>
             </div>
             <t-divider :margin="12" />
             <div class="footer">
-              <div class="creation-time">创建时间：2024-12-12 15:00</div>
+              <div class="creation-time">创建时间：{{ item.createTime }}</div>
               <div class="button-position">
                 <t-space :size="20">
                   <t-link
-                    v-if="userInfoByCompany.primary === AccountType?.MAIN"
+                    v-if="
+                      userInfoByCompany.primary === AccountType?.MAIN &&
+                      item.type === 0
+                    "
                     :hoverable="false"
                     @click="configurationapp(item)"
                     >配置应用</t-link
-                  >
-                  <t-link
-                    :hoverable="false"
-                    @click="
-                      instructionsuse(
-                        item.useExplainMap,
-                        item.orderSource,
-                        item.productServerId
-                      )
-                    "
-                    >使用说明</t-link
                   >
                 </t-space>
               </div>
@@ -144,17 +126,30 @@
         </div>
       </t-tab-pane>
     </t-tabs>
+
     <EmptyStateView
-      v-if="!packageList.length"
+      v-if="!applicationListData.length"
       :tabs-application="tabsApplication"
+      :package-list="packageListData"
+      :show-service="showServiceData"
+      @get-application-list-data="getApplicationListData"
+      @on-positioning-service="onPositioningService"
+      @on-authentication="onAuthentication"
+      @on-view-details="onViewDetails"
     />
     <!-- 创建新应用 -->
     <NewApp
       v-if="newAppShow"
       :visible="newAppShow"
       :tabs-application="tabsApplication"
+      :package-list="packageListData"
+      :show-service="showServiceData"
       @confirm="onClickCancelNewApp"
       @cancel="newAppShow = false"
+      @get-application-list-data="getApplicationListData"
+      @on-positioning-service="onPositioningService"
+      @on-authentication="onAuthentication"
+      @on-view-details="onViewDetails"
     />
 
     <!-- 配置应用 -->
@@ -199,7 +194,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, defineProps, computed, defineEmits } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   authDialogdata,
@@ -208,6 +203,8 @@ import {
   alreadyBuyClientLogin,
   apiAuthStatus,
   apiGetAuth,
+  appAppPackageRedirect,
+  dashBoardRedirect,
 } from '@/api/buyer/overview';
 import { snmsClientLogin } from '@/api/login';
 import { Modal, Message } from '@tele-design/web-vue';
@@ -235,9 +232,29 @@ const {
   configInfo,
 }: Record<string, any> = storeToRefs(userStore);
 
+const emits = defineEmits([
+  'positioningService',
+  'authentication',
+  'viewdetails',
+]);
+const props = defineProps({
+  packageList: {
+    type: Array as any,
+    default() {
+      return [];
+    },
+  },
+  showService: {
+    type: Boolean,
+    default() {
+      return false;
+    },
+  },
+});
+const packageListData = computed(() => props.packageList);
+const showServiceData = computed(() => props.showService);
 // tabs来回切换值
 const tabsApplication = ref('1');
-console.log(tabsApplication.value, 'tabsApplication');
 const newAppShow = ref(false);
 // 配置应用存储对象
 const selectProduct = ref<Record<string, any>>({});
@@ -253,7 +270,7 @@ const empowerTipVisible = ref(false);
 // 当前点击数据
 const empowerTipData: Record<string, any> = ref({});
 // 列表展示
-const packageList: Record<string, any> = ref([]);
+const applicationListData: Record<string, any> = ref([]);
 
 // 跳转二级公共方法
 const clickIdService = (pageUrl: any) => {
@@ -284,22 +301,22 @@ const goNode = () => {
   clickIdService('/prefix/apply');
 };
 
-const getPackageList = async () => {
-  packageList.value = [];
-  if (Number(tabsApplication.value) === 1) {
+const getApplicationListData = () => {
+  applicationListData.value = [];
+  if (tabsApplication.value === '1') {
     // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
     authDialogdata({
       companyId: userInfoByCompany.value?.companyId,
       userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id,
     }).then((res) => {
-      packageList.value = res || [];
+      applicationListData.value = res || [];
     });
-  } else if (Number(tabsApplication.value) === 2) {
+  } else if (tabsApplication.value === '2') {
     selectSelfApps({
       companyId: userInfoByCompany.value?.companyId,
       userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id,
     }).then((res) => {
-      packageList.value = res || [];
+      applicationListData.value = res || [];
     });
   }
 };
@@ -311,7 +328,7 @@ const TabClickApplication = (key: any) => {
     userInfoByCompany.value.certificateStatus === 1 ||
     userInfoByCompany.value.nodeStatus === 1
   ) {
-    getPackageList();
+    getApplicationListData();
   }
 };
 
@@ -473,6 +490,30 @@ const togo = (detailData: Record<string, any>) => {
   }
 };
 
+// 跳转到轻流 对应的应用包
+const goLightFlowApplicationPackage = (item: any) => {
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+    tagId: item?.tagId,
+  };
+  appAppPackageRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
+
+// 跳转到轻流 对应的门户
+const goLightFlowGateway = (item: any) => {
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+    dashKey: item?.dashKey,
+  };
+  dashBoardRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+};
+
 const togoCheck = (detailData: Record<string, any>) => {
   if (detailData?.deliveryType === 0) {
     const params = {
@@ -494,6 +535,21 @@ const togoCheck = (detailData: Record<string, any>) => {
   }
 };
 
+const jumpCheck = (detailData: Record<string, any>) => {
+  if (detailData.type === 0) {
+    // 智数通自建
+    togo(detailData);
+  } else if (detailData.type === 1) {
+    if (!showServiceData.value) return;
+    // 轻应用
+    goLightFlowApplicationPackage(detailData);
+  } else if (detailData.type === 2) {
+    if (!showServiceData.value) return;
+    // 门户
+    goLightFlowGateway(detailData);
+  }
+};
+
 // 授权提示
 const empowerTipConfirm = () => {
   const params = {
@@ -510,18 +566,27 @@ const empowerTipConfirm = () => {
 const empowerTipCancel = () => {
   empowerTipVisible.value = false;
 };
+const onPositioningService = () => {
+  emits('positioningService');
+};
+const onAuthentication = () => {
+  emits('authentication');
+};
+const onViewDetails = () => {
+  emits('viewdetails');
+};
 
 watch(
   () => userInfoByCompany.value,
   (newV: any) => {
     if (newV?.companyId) {
-      getPackageList();
+      getApplicationListData();
     }
   }
 );
 
 onMounted(() => {
-  getPackageList();
+  getApplicationListData();
 });
 </script>
 
@@ -595,6 +660,66 @@ onMounted(() => {
           img {
             width: 100%;
             height: 100%;
+          }
+
+          .qing-orange {
+            color: #fb9337;
+            background: #ffebdb;
+          }
+
+          .yellow {
+            color: #fab300;
+            background: #fff1d8;
+          }
+
+          .green {
+            color: #67c200;
+            background: #e7f4d7;
+          }
+
+          .emerald {
+            color: #00bd77;
+            background: #ddf4e6;
+          }
+
+          .blue {
+            color: #00c5fb;
+            background: #e2f4ff;
+          }
+
+          .azure {
+            color: #268bfb;
+            background: #e3e9ff;
+          }
+
+          .indigo {
+            color: #6468fb;
+            background: #e8e2ff;
+          }
+
+          .qing-purple {
+            color: #392fc2;
+            background: #e1d7f5;
+          }
+
+          .purple {
+            color: #9e64fb;
+            background: #f0e3ff;
+          }
+
+          .pink {
+            color: #d164fb;
+            background: #f9e4ff;
+          }
+
+          .red {
+            color: #fb4b51;
+            background: #ffe1dd;
+          }
+
+          .orange {
+            color: #fa6f32;
+            background: #ffe6d9;
           }
         }
 

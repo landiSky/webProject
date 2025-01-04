@@ -1,9 +1,9 @@
 <template>
-  <div v-if="packageList.length" class="service-app">
+  <div v-if="packageListData.length" class="service-app">
     <div class="title">标识轻应用开通</div>
     <div class="card">
       <div
-        v-for="(item, index) in packageList"
+        v-for="(item, index) in packageListData"
         :key="index"
         class="package"
         :class="packageClassEnum[index]"
@@ -54,23 +54,13 @@
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, defineProps, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { getServicePackage, userAuthStatus } from '@/api/buyer/overview';
 import { snmsClientLogin } from '@/api/login';
-import {
-  NodeAuthStatus,
-  SaleType,
-  orderTypes,
-  AccountType,
-} from '@/enums/common';
+import { NodeAuthStatus, orderTypes, AccountType } from '@/enums/common';
 import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import AuthMemberModal from '@/views/home/buyer/index/components/authMember.vue';
-// 标识轻应用
-// import LightApplication from './light-application.vue';
-// 企业数智化应用
-// import DigitizedApplications from './digitized-applications.vue';
 
 const packageClassEnum: Record<string, any> = {
   0: '',
@@ -84,13 +74,18 @@ const userStore = useUserStore();
 const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 
+const props = defineProps({
+  packageList: {
+    type: Array as any,
+    default() {
+      return [];
+    },
+  },
+});
+const packageListData = computed(() => props.packageList);
 const authModalVisible = ref(false);
 const prodDetail = ref<Record<string, any>>({}); // 商品详情数据
 const selectVersion = ref<Record<string, any>>({});
-
-const packageList: Record<string, any> = ref([]);
-const showApp = ref(false);
-const showService = ref(false);
 
 // 跳转二级公共方法
 const clickIdService = (pageUrl: any) => {
@@ -119,31 +114,6 @@ const clickIdService = (pageUrl: any) => {
 // 跳转二级前缀配置页面
 const goNode = () => {
   clickIdService('/prefix/apply');
-};
-
-const getPackageList = async () => {
-  const params = {
-    companyId: selectCompany.value?.companyId,
-  };
-  getServicePackage(params).then((res: any) => {
-    const packageData = res.map((data: any) => {
-      const introduction = data?.introduction.split(',') || [];
-      const params = {
-        ...data,
-        introduction,
-      };
-      return params;
-    });
-    packageList.value = packageData;
-    // const userData = {
-    //   companyId: selectCompany.value?.companyId,
-    //   memberId: selectCompany.value?.memberId,
-    // };
-    // userAuthStatus(userData).then((data: any) => {
-    //   showApp.value = !res.length;
-    //   showService.value = data;
-    // });
-  });
 };
 
 const onAuthCancel = () => {
@@ -243,18 +213,7 @@ const activateService = (item: any) => {
   return true;
 };
 
-watch(
-  () => userInfoByCompany.value,
-  (newV: any) => {
-    if (newV?.companyId) {
-      getPackageList();
-    }
-  }
-);
-
-onMounted(async () => {
-  getPackageList();
-});
+onMounted(async () => {});
 </script>
 
 <style scoped lang="less">
