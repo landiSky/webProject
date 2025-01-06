@@ -16,6 +16,7 @@ const BaseRouteAuth: { [name: string]: any } = {
 
   '/license': 'ROUTE_LICENSE', // 标识服务-License管理
   '/overview': 'ROUTE_OVERVIEW', // 标识服务-概览页
+  '/enterprise-node': 'ROUTE_ENTERPRISE_NODE', // 标识服务-企业节点
   // '/seller/dataoverview': 'ROUTE_SYSTEM_DATAOVERVIEW', // 企业管理-角色
 };
 

@@ -146,16 +146,30 @@
                   </div>
 
                   <div class="order-success-text">
-                    待交付：已确认收款，请完成订单交付。
+                    {{
+                      dataList?.reinstallStatus
+                        ? '自动触发安装失败，需手动进行安装，请尽快处理！'
+                        : '待交付：已确认收款，请完成订单交付。'
+                    }}
                   </div>
                 </t-space>
                 <div>
-                  <t-button
-                    type="primary"
-                    class="margintop-16"
-                    @click="delivery"
-                    >立即交付</t-button
-                  >
+                  <t-space>
+                    <t-button
+                      v-if="!dataList?.reinstallStatus"
+                      type="primary"
+                      class="margintop-16"
+                      @click="delivery"
+                      >立即交付</t-button
+                    >
+                    <t-button
+                      v-if="dataList?.reinstallStatus"
+                      type="primary"
+                      class="margintop-16"
+                      @click="clickAddCart"
+                      >立即安装</t-button
+                    >
+                  </t-space>
                 </div>
               </div>
               <div v-if="dataList.orderStatus === 5">
@@ -517,6 +531,7 @@ import {
   merchantSub,
   getQingFlowCount,
 } from '@/api/seller/order';
+import { apiReInstall } from '@/api/buyer/order';
 import { getOrderDetailEstimate } from '@/api/order';
 import { orderTypes, DeliverTypeDesc } from '@/enums/common';
 import { Message, Modal } from '@tele-design/web-vue';
@@ -739,6 +754,31 @@ const delivery = () => {
 const ondeliveryModalConfirm = () => {
   deliveryVisible.value = false;
   init();
+};
+
+const clickAddCart = () => {
+  const params = {
+    memberId: '',
+    memberIdList: [],
+    sellerId: '', // 卖家id（商品创者所属机构id）
+    productId: dataList.value.productId, // 商品id
+    deliveryType: dataList.value.deliveryType, // 交付类型 0-saas类,1-独立部署类
+    productPrice: dataList.value.productPrice ?? 0, // 商品金额
+    deliveryVersionId: '', // 交付版本id
+    orderSource: dataList.value.orderSource, // 订单来源：0-本平台，1-跨平台
+    accountId: '', // 账号id
+    durationId: '', // 时长id
+    saasAppId: '',
+    userCompanyId: dataList.value.companyId, // 用户企业id
+    productType: orderTypes.ORDINARY,
+  };
+  apiReInstall(params).then((res: any) => {
+    if (res) {
+      Message.warning('应用安装中');
+      return;
+    }
+    init();
+  });
 };
 
 onMounted(() => {

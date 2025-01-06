@@ -299,7 +299,7 @@
                     >
                     <!-- v-if="item.orderStatus === 5" -->
                     <t-button
-                      v-if="item.orderStatus === 2"
+                      v-if="item.orderStatus === 2 && item?.deliveryType !== 2"
                       type="text"
                       style="width: 100%"
                       @click="
