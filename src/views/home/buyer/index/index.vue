@@ -7,7 +7,12 @@
         v-if="configInfo?.qingFlowSwitch && !packageList.length && showService"
       />
 
-      <ApplicationGuide v-if="userInfoByCompany.primary !== 2"
+      <ApplicationGuide
+        v-if="userInfoByCompany.primary !== 2"
+        :package-list="packageList"
+        :show-service="showService"
+        @positioning-service="positioningService"
+        @get-child-list="getChildList"
         >应用使用引导</ApplicationGuide
       >
       <!-- 标识轻应用 -->
@@ -19,11 +24,12 @@
       </div>
       <!-- 已够应用展示 -->
       <PurchasedAppView
+        ref="purchasedAppViewRef"
         :package-list="packageList"
         :show-service="showService"
         @positioning-service="positioningService"
         @authentication="authentication"
-        @viewdetails="viewdetails"
+        @view-details="viewdetails"
       />
     </div>
     <div class="right-section">
@@ -357,6 +363,9 @@ const state = reactive({
     statusled: 0,
   },
 });
+// 已购组件ref
+const purchasedAppViewRef: Record<string, any> = ref(null);
+
 const packageList: Record<string, any> = ref([]);
 const showService = ref(false);
 // tabs来回切换值
@@ -664,6 +673,11 @@ const positioningService = () => {
     target &&
     parent.scrollTo(0, target.offsetTop - 200 - parent.offsetTop);
 };
+// 定义调用已购组件列表
+const getChildList = () => {
+  // 调用子组件的方法或者变量，通过value
+  purchasedAppViewRef.value.getApplicationListData();
+};
 
 watch(
   () => userInfoByCompany.value,
@@ -688,7 +702,6 @@ onMounted(() => {
     console.log('概览页全页面打点', res);
   });
   initOpt();
-
   if (route.query?.openAuthModal) {
     authModalVisible.value = true;
   }

@@ -1,9 +1,6 @@
 <template>
   <div class="application-guide-box">
     <div class="title">应用使用引导</div>
-    <!-- <pdf src="">111</pdf> -->
-    <!-- <vue-pdf></vue-pdf> -->
-    <div @click="showPreview">预览</div>
     <div class="guide-box">
       <div class="item-box">
         <div class="header-box">
@@ -12,10 +9,7 @@
         </div>
         <div class="content">
           <div class="group-title"> <div class="no-top">初步了解</div></div>
-          <div
-            class="content-item"
-            :class="showClick ? 'click' : ''"
-            @click="authCompany"
+          <div class="content-item" @click="authCompany"
             ><iconpark-icon class="icon" name="intro1" size="20px" />企业认证
           </div>
           <div class="content-item" @click="authLightApply"
@@ -25,14 +19,14 @@
               size="20px"
             />标识轻应用服务开通
           </div>
-          <div class="content-item"
+          <div class="content-item" @click="showPreview"
             ><iconpark-icon
               class="icon"
               name="intro3"
               size="20px"
             />平台能力介绍
           </div>
-          <div class="content-item"
+          <div class="content-item" @click="jumpLightMall"
             ><iconpark-icon
               class="icon"
               name="intro4"
@@ -64,14 +58,14 @@
               </div>
             </div>
             <div class="group-section">
-              <div class="content-item"
+              <div class="content-item" @click="templateCreation"
                 ><iconpark-icon
                   class="icon"
                   name="intro5"
                   size="20px"
                 />通过模版创建</div
               >
-              <div class="content-item"
+              <div class="content-item" @click="createFromScratch"
                 ><iconpark-icon
                   class="icon"
                   name="intro6"
@@ -87,14 +81,14 @@
               <div>创建数智化应用</div>
             </div>
             <div class="group-section">
-              <div class="content-item"
+              <div class="content-item" @click="linkAccessApplication"
                 ><iconpark-icon
                   class="icon"
                   name="intro7"
                   size="20px"
                 />链接接入应用</div
               >
-              <div class="content-item"
+              <div class="content-item" @click="showAddDrawer"
                 ><iconpark-icon
                   class="icon"
                   name="intro8"
@@ -108,14 +102,14 @@
               <div>SAAS应用接入</div>
             </div>
             <div class="group-section">
-              <div class="content-item"
+              <div class="content-item" @click="jumpApplicationAccess"
                 ><iconpark-icon
                   class="icon"
                   name="intro9"
                   size="20px"
                 />应用接入</div
               >
-              <div class="content-item"
+              <div class="content-item" @click="jumpPlatformIntegrationDocument"
                 ><iconpark-icon
                   class="icon"
                   name="intro10"
@@ -140,21 +134,21 @@
           <div class="group-title">
             <div class="no-top">通过标识分布式网络推广</div></div
           >
-          <div class="content-item"
+          <div class="content-item" @click="jumpNewProduct"
             ><iconpark-icon
               class="icon"
               name="intro11"
               size="20px"
             />应用发布</div
           >
-          <div class="content-item"
+          <div class="content-item" @click="applicationReleaseGuide"
             ><iconpark-icon
               class="icon"
               name="intro12"
               size="20px"
             />应用发布指南</div
           >
-          <div class="content-item"
+          <div class="content-item" @click="jumpOrder"
             ><iconpark-icon
               class="icon"
               name="intro13"
@@ -177,22 +171,65 @@
       @confirm="onEditModalConfirmflag"
       @cancel="detailflagclick"
     />
+    <AddForm
+      v-if="state.showDrawer"
+      :visible="state.showDrawer"
+      title="添加企业数智化应用"
+      @on-confirm="handleDrawerConfirm"
+      @on-cancel="handleDrawerCancel"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import {
+  ref,
+  reactive,
+  computed,
+  defineEmits,
+  defineProps,
+  onMounted,
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { AccountType, CompanyAuthStatus, NodeAuthStatus } from '@/enums/common';
 import { snmsClientLogin } from '@/api/login';
-import { Message } from '@tele-design/web-vue';
+import { appCreateRedirect } from '@/api/buyer/overview';
+import { apiFooterInfo } from '@/api/decoration/decoration-tools';
+import { Modal, Message } from '@tele-design/web-vue';
 import { sm2 } from '@/utils/encrypt';
 import { useRouter } from 'vue-router';
 import EditModalFullscreen from '@/components/dataoverview/components/edit-modal-fullscreen.vue';
 import DetailsModalFullscreen from '@/components/dataoverview/components/details-modal-fullscreen.vue';
+// 添加企业数智化应用
+import AddForm from './addForm.vue';
 
 const router = useRouter();
+
+const emits = defineEmits(['positioningService', 'getChildList']);
+const props = defineProps({
+  packageList: {
+    type: Array as any,
+    default() {
+      return [];
+    },
+  },
+  showService: {
+    type: Boolean,
+    default() {
+      return false;
+    },
+  },
+});
+
+// 服务是否开通
+const serviceChecks = computed(() => {
+  return props.packageList.length;
+});
+// 服务是否授权
+const authorizationChecks = computed(() => {
+  return props.showService;
+});
 
 const state = reactive({
   editData: {
@@ -200,22 +237,16 @@ const state = reactive({
     statusled: 0,
   },
   showPreview: false,
+  showDrawer: false,
 });
+const footerData: Record<string, any> = ref({});
 
 const detailflag = ref(false);
 const gotoverifys = ref(false);
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany }: Record<string, any> =
+const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
-
-const showClick = computed(
-  () =>
-    userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH ||
-    [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
-      userInfoByCompany.certificateStatus
-    )
-);
 
 const showPreview = () => {
   const routeData = router.resolve({
@@ -230,54 +261,139 @@ const showPreview = () => {
 
 // 企业认证
 const authCompany = () => {
-  // detailflag.value = true;
-  if (userInfoByCompany.certificateStatus === CompanyAuthStatus.UNAUTH) {
+  if (userInfoByCompany.value.certificateStatus === CompanyAuthStatus.UNAUTH) {
     gotoverifys.value = true;
   } else if (
-    [CompanyAuthStatus.TO_CHECK, CompanyAuthStatus.REJECT].includes(
-      userInfoByCompany.certificateStatus
-    )
+    [
+      CompanyAuthStatus.TO_CHECK,
+      CompanyAuthStatus.REJECT,
+      CompanyAuthStatus.AUTHED,
+    ].includes(userInfoByCompany.value.certificateStatus)
   ) {
     detailflag.value = true;
   }
 };
-
+const clickActivateService = () => {
+  Modal.warning({
+    title: '未开通标识轻应用服务',
+    content: '账号未开通标识轻应用服务，无法使用该功能，是否开通？',
+    titleAlign: 'start',
+    hideCancel: false,
+    cancelText: '取消',
+    okText: '去开通',
+    onOk: () => {
+      emits('positioningService');
+    },
+  });
+};
 // 轻流开通服务
 const authLightApply = () => {
-  console.log('authLightApply');
+  if (serviceChecks.value) {
+    clickActivateService();
+    return false;
+  }
+  return true;
+};
+// 通过模版创建
+const templateCreation = () => {
+  router.push({
+    path: '/wow/lightApplicationMall',
+  });
+};
+// 从头开始创建
+const createFromScratch = () => {
+  if (serviceChecks.value) {
+    clickActivateService();
+    return false;
+  }
+  // 跳转轻流平台
+  const params = {
+    userId: userInfo.value?.id,
+    companyId: selectCompany.value?.companyId,
+  };
+  appCreateRedirect(params).then((res: any) => {
+    window.open(res);
+  });
+  return true;
+};
+// 链接接入应用
+const linkAccessApplication = () => {
   if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
     authCompany();
     return false;
   }
-  if (userInfoByCompany.value?.nodeStatus !== NodeAuthStatus.AUTHED) {
-    const { companyId } = userInfoByCompany.value || {};
-    const params = {
-      companyId: userInfo.value?.isAdmin
-        ? userInfo.value?.companyId
-        : companyId,
-    };
-    snmsClientLogin(params).then((res: any) => {
-      if (res?.data?.code === 102006) {
-        Message.error(res?.data?.message);
-      }
-      if (!res?.data?.data) {
-        return;
-      }
-      const data = {
-        type: 'snms',
-        companyId: userInfo.value?.isAdmin
-          ? userInfo.value?.companyId
-          : companyId,
-        pageUrl: '/ent/apply', // 跳到标识前缀开通
-      };
-      const sm2data = sm2(
-        JSON.stringify(data),
-        userStore.configInfo?.publicKey
-      );
-      window.open(`${res?.data?.data}&data=${sm2data}`);
-    });
+  router.push({
+    path: '/devCenter/manage',
+  });
+  return true;
+};
+const showAddDrawer = () => {
+  if (serviceChecks.value) {
+    clickActivateService();
+    return false;
   }
-  return false;
+  state.showDrawer = true;
+  return true;
+};
+
+const handleDrawerCancel = () => {
+  state.showDrawer = false;
+};
+const handleDrawerConfirm = () => {
+  handleDrawerCancel();
+  emits('getChildList');
+};
+// 典型应用介绍
+const jumpLightMall = () => {
+  router.push({
+    path: '/wow/lightApplicationMall',
+  });
+};
+// 应用接入
+const jumpApplicationAccess = () => {
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    authCompany();
+  }
+  router.push({
+    path: '/devCenter/manage',
+  });
+};
+// 应用开发指南
+const jumpPlatformIntegrationDocument = () => {
+  // router.push({
+  //   path: '/wow/doc',
+  // });
+  const url =
+    process.env.NODE_ENV !== 'production'
+      ? 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose'
+      : 'https://snms.teleinfo.cn/zst-docs/saas/writing-purpose';
+  window.open(url, '_self');
+};
+// 应用发布指南
+const applicationReleaseGuide = () => {
+  window.open(footerData.value.sellerManualUrl);
+};
+// 应用发布-商品管理
+const jumpNewProduct = () => {
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    authCompany();
+    return false;
+  }
+  router.push({
+    path: '/seller/goods',
+  });
+  return true;
+};
+// 订单管理-卖家
+const jumpOrder = () => {
+  if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
+    authCompany();
+    return false;
+  }
+  router.push({
+    path: '/seller/order',
+  });
+  return true;
 };
 
 // 认证填写完成
@@ -306,6 +422,27 @@ const onEditModalConfirmflag = () => {
 const detailflagclick = () => {
   detailflag.value = false;
 };
+
+const footerInfoDetails = async () => {
+  await apiFooterInfo()
+    .then((res: any) => {
+      if (res.code !== 200) {
+        return;
+      }
+      const linkDetail =
+        (res.data.linkDetail && JSON.parse(res.data.linkDetail)) || [];
+
+      footerData.value = {
+        ...res.data,
+        linkDetail,
+      };
+    })
+    .catch(() => {});
+};
+
+onMounted(() => {
+  footerInfoDetails();
+});
 </script>
 
 <style scoped lang="less">
@@ -423,7 +560,6 @@ const detailflagclick = () => {
         }
 
         .content-item {
-          // cursor: pointer;
           width: 160px;
           height: 36px;
           margin-top: 8px;
@@ -432,6 +568,7 @@ const detailflagclick = () => {
           line-height: 36px;
           background: #fff;
           border-radius: 3px;
+          cursor: pointer;
 
           &.click {
             cursor: pointer;

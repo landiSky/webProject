@@ -576,6 +576,11 @@ const onViewDetails = () => {
   emits('viewdetails');
 };
 
+// 暴露方法
+defineExpose({
+  getApplicationListData,
+});
+
 watch(
   () => userInfoByCompany.value,
   (newV: any) => {
