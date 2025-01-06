@@ -25,7 +25,7 @@
         立即前往商城
       </t-button>
     </div>
-    <div class="empty-page">
+    <div v-if="configInfo?.qingFlowSwitch" class="empty-page">
       <div class="empty-page-head">
         <div class="empty-page-img empty-page-img-02"></div>
         <div v-if="!authentication" class="empty-page-desc">
@@ -48,7 +48,7 @@
     </div>
   </div>
   <div v-if="tabsApplication === '2'" class="empty-state-view">
-    <div class="empty-page">
+    <div v-if="configInfo?.qingFlowSwitch" class="empty-page">
       <div class="empty-page-head">
         <div class="empty-page-img empty-page-img-02"></div>
         <div v-if="serviceChecks" class="empty-page-desc">
@@ -75,7 +75,7 @@
         创建标识轻应用
       </t-button>
     </div>
-    <div class="empty-page">
+    <div v-if="configInfo?.qingFlowSwitch" class="empty-page">
       <div class="empty-page-head">
         <div class="empty-page-img empty-page-img-03"></div>
         <div v-if="serviceChecks" class="empty-page-desc">
@@ -146,8 +146,12 @@ import { CompanyAuthStatus } from '@/enums/common';
 import AddForm from './addForm.vue';
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  userInfoByCompany,
+  selectCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 
 const router = useRouter();
 const emits = defineEmits([
@@ -219,21 +223,34 @@ const jumpLightMall = () => {
 };
 
 const clickActivateService = () => {
-  Modal.warning({
-    title: '未开通标识轻应用服务',
-    content: '账号未开通标识轻应用服务，无法使用该功能，是否开通？',
-    titleAlign: 'start',
-    hideCancel: false,
-    cancelText: '取消',
-    okText: '去开通',
-    onOk: () => {
-      emits('onPositioningService');
-    },
-  });
+  if (serviceChecks.value) {
+    Modal.warning({
+      title: '未开通标识轻应用服务',
+      content: '账号未开通标识轻应用服务，无法使用该功能，是否开通？',
+      titleAlign: 'start',
+      hideCancel: false,
+      cancelText: '取消',
+      okText: '去开通',
+      onOk: () => {
+        emits('onPositioningService');
+      },
+    });
+  }
+  if (!authorizationChecks.value) {
+    Modal.warning({
+      title: '使用提醒',
+      content: '暂未权限访问，联系企业管理员开通',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '好的',
+      onOk: () => {},
+    });
+  }
 };
 
 const createLightweightApp = () => {
-  if (serviceChecks.value) {
+  if (serviceChecks.value && !authorizationChecks.value) {
     clickActivateService();
     return false;
   }
@@ -249,7 +266,7 @@ const createLightweightApp = () => {
 };
 
 const showAddDrawer = () => {
-  if (serviceChecks.value) {
+  if (serviceChecks.value && !authorizationChecks.value) {
     clickActivateService();
     return false;
   }

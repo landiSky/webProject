@@ -4,7 +4,8 @@
     <div class="left-section">
       <!-- 轻应用待办 -->
       <LightFlowTodoView
-        v-if="configInfo?.qingFlowSwitch && !packageList.length && showService"
+        v-if="configInfo?.qingFlowSwitch && !packageList.length"
+        :show-service="showService"
       />
 
       <ApplicationGuide
@@ -16,11 +17,11 @@
         >应用使用引导</ApplicationGuide
       >
       <!-- 标识轻应用 -->
-      <div id="serviceId">
-        <ServiceActivation
-          v-if="configInfo?.qingFlowSwitch"
-          :package-list="packageList"
-        />
+      <div
+        v-if="configInfo?.qingFlowSwitch && packageList.length"
+        id="serviceId"
+      >
+        <ServiceActivation :package-list="packageList" />
       </div>
       <!-- 已够应用展示 -->
       <PurchasedAppView
@@ -124,9 +125,7 @@
         </div>
         <div class="middle">
           <div
-            v-if="
-              configInfo?.qingFlowSwitch && !packageList.length && showService
-            "
+            v-if="configInfo?.qingFlowSwitch && !packageList.length"
             class="nav"
             @click="goNewApplication"
           >
@@ -301,8 +300,6 @@ import {
   orderOver,
   publishProductOverview,
   appPropertyOverview,
-  authDialogdata,
-  selectSelfApps,
   appCreateRedirect,
   getServicePackage,
   userAuthStatus,
@@ -377,8 +374,6 @@ const gotoverifys = ref(false);
 // 详情弹窗
 const detailflag = ref(false);
 
-// //已购应用
-const authDialogVisible: Record<string, any> = ref([]);
 // 订单概览
 const orderList = ref<Record<string, any>>({
   count: 0, // 全部订单数量
@@ -508,26 +503,6 @@ const goodsListData = () => {
     goodsList.value = data;
   });
 };
-// 已购应用
-const authDialog = () => {
-  authDialogVisible.value = [];
-  if (Number(tabsApplication.value) === 1) {
-    // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
-    authDialogdata({
-      companyId: userInfoByCompany.value?.companyId,
-      userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id, // userInfoByCompany.value?.id || '',
-    }).then((res) => {
-      authDialogVisible.value = res || [];
-    });
-  } else if (Number(tabsApplication.value) === 2) {
-    selectSelfApps({
-      companyId: userInfoByCompany.value?.companyId,
-      userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id, // userInfoByCompany.value?.id || '',
-    }).then((res) => {
-      authDialogVisible.value = res || [];
-    });
-  }
-};
 
 // 去认证
 const authentication = () => {
@@ -611,13 +586,6 @@ const getPackageList = async () => {
 const initOpt = () => {
   // 是否购买服务和是否被授权
   getPackageList();
-  if (
-    userInfoByCompany.value.certificateStatus === 1 ||
-    userInfoByCompany.value.nodeStatus === 1
-  ) {
-    // 已购应用
-    authDialog();
-  }
   // 订单概览
   orderlistdata();
   // 应用资产概览
@@ -628,6 +596,18 @@ const initOpt = () => {
 
 // 跳转轻流平台
 const goNewApplication = () => {
+  if (!showService.value) {
+    Modal.warning({
+      title: '使用提醒',
+      content: '暂未权限访问，联系企业管理员开通',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '好的',
+      onOk: () => {},
+    });
+    return false;
+  }
   const params = {
     userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
@@ -635,6 +615,7 @@ const goNewApplication = () => {
   appCreateRedirect(params).then((res: any) => {
     window.open(res);
   });
+  return true;
 };
 // 跳转二级公共方法
 const clickIdService = (pageUrl: any) => {
@@ -732,6 +713,9 @@ onMounted(() => {
   }
 
   .right-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 360px;
   }
 
@@ -828,7 +812,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 16px;
     padding: 16px;
     background: #fff;
     border-radius: 4px;

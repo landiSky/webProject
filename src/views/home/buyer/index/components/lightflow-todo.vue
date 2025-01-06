@@ -38,12 +38,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, onMounted, ref } from 'vue';
-import {
-  appCreateRedirect,
-  dynamicAudits,
-  dynamicAuditsUrl,
-} from '@/api/buyer/overview';
+import { defineProps, onMounted, ref, computed } from 'vue';
+import { Modal } from '@tele-design/web-vue';
+import { dynamicAudits, dynamicAuditsUrl } from '@/api/buyer/overview';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 
@@ -51,14 +48,18 @@ const userStore = useUserStore();
 const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
   storeToRefs(userStore);
 
-const emits = defineEmits(['confirm', 'cancel']);
-
 const props = defineProps({
-  visible: Boolean,
-  confirmLoading: Boolean,
-  title: String,
-  empowerTipData: Object,
-  companyId: String,
+  showService: {
+    type: Boolean,
+    default() {
+      return false;
+    },
+  },
+});
+
+// 服务是否授权
+const authorizationChecks = computed(() => {
+  return props.showService;
 });
 
 // 我的待办概览
@@ -69,7 +70,7 @@ const todoList = ref<Record<string, any>>({
   urging: 0, // 催办
 });
 
-// 发布商品概览
+// 待办概览
 const todoOverall = [
   {
     title: '全部待办',
@@ -95,6 +96,18 @@ const todoOverall = [
 
 // 跳转轻流平台
 const goNewApplication = (status: string) => {
+  if (!authorizationChecks.value) {
+    Modal.warning({
+      title: '使用提醒',
+      content: '暂未权限访问，联系企业管理员开通',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '好的',
+      onOk: () => {},
+    });
+    return false;
+  }
   const params = {
     userId: userInfo.value?.id,
     companyId: selectCompany.value?.companyId,
@@ -103,9 +116,10 @@ const goNewApplication = (status: string) => {
   dynamicAuditsUrl(params).then((res: any) => {
     window.open(res);
   });
+  return true;
 };
 
-// 发布商品概览 接口
+// 待办概览 接口
 const toDoListData = () => {
   dynamicAudits({
     companyId: userInfoByCompany.value?.companyId,

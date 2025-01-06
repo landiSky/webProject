@@ -514,6 +514,20 @@ const goLightFlowGateway = (item: any) => {
   });
 };
 
+const clickActivateService = () => {
+  if (!showServiceData.value) {
+    Modal.warning({
+      title: '使用提醒',
+      content: '暂未权限访问，联系企业管理员开通',
+      titleAlign: 'start',
+      hideCancel: true,
+      cancelText: '',
+      okText: '好的',
+      onOk: () => {},
+    });
+  }
+};
+
 const togoCheck = (detailData: Record<string, any>) => {
   if (detailData?.deliveryType === 0) {
     const params = {
@@ -540,11 +554,17 @@ const jumpCheck = (detailData: Record<string, any>) => {
     // 智数通自建
     togo(detailData);
   } else if (detailData.type === 1) {
-    if (!showServiceData.value) return;
+    if (!showServiceData.value) {
+      clickActivateService();
+      return;
+    }
     // 轻应用
     goLightFlowApplicationPackage(detailData);
   } else if (detailData.type === 2) {
-    if (!showServiceData.value) return;
+    if (!showServiceData.value) {
+      clickActivateService();
+      return;
+    }
     // 门户
     goLightFlowGateway(detailData);
   }
@@ -598,8 +618,8 @@ onMounted(() => {
 <style scoped lang="less">
 .purchased {
   width: 100%;
-  margin: 0 auto 24px;
-  padding: 16px 24px 27px;
+  margin: 0 auto;
+  padding: 16px 24px 28px;
   background-color: #fff;
   border: 1px solid #e5e8ef;
   border-radius: 4px;

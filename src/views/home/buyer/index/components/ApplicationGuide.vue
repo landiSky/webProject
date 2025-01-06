@@ -12,7 +12,10 @@
           <div class="content-item" @click="authCompany"
             ><iconpark-icon class="icon" name="intro1" size="20px" />企业认证
           </div>
-          <div class="content-item" @click="authLightApply"
+          <div
+            v-if="configInfo?.qingFlowSwitch"
+            class="content-item"
+            @click="authLightApply"
             ><iconpark-icon
               class="icon"
               name="intro2"
@@ -26,7 +29,10 @@
               size="20px"
             />平台能力介绍
           </div>
-          <div class="content-item" @click="jumpLightMall"
+          <div
+            v-if="configInfo?.qingFlowSwitch"
+            class="content-item"
+            @click="jumpLightMall"
             ><iconpark-icon
               class="icon"
               name="intro4"
@@ -46,7 +52,7 @@
           <span class="step step2" />
         </div>
         <div class="content">
-          <div class="content-group">
+          <div v-if="configInfo?.qingFlowSwitch" class="content-group">
             <div class="group-title">
               <div class="no-top">
                 创建标识轻应用
@@ -78,7 +84,7 @@
           <div class="content-group">
             <div class="group-title">
               <div>自建应用链接接入</div>
-              <div>创建数智化应用</div>
+              <div v-if="configInfo?.qingFlowSwitch">创建数智化应用</div>
             </div>
             <div class="group-section">
               <div class="content-item" @click="linkAccessApplication"
@@ -88,7 +94,10 @@
                   size="20px"
                 />链接接入应用</div
               >
-              <div class="content-item" @click="showAddDrawer"
+              <div
+                v-if="configInfo?.qingFlowSwitch"
+                class="content-item"
+                @click="showAddDrawer"
                 ><iconpark-icon
                   class="icon"
                   name="intro8"
@@ -245,8 +254,12 @@ const detailflag = ref(false);
 const gotoverifys = ref(false);
 
 const userStore = useUserStore();
-const { userInfo, userInfoByCompany, selectCompany }: Record<string, any> =
-  storeToRefs(userStore);
+const {
+  userInfo,
+  userInfoByCompany,
+  selectCompany,
+  configInfo,
+}: Record<string, any> = storeToRefs(userStore);
 
 const showPreview = () => {
   const routeData = router.resolve({
