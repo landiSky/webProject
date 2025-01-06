@@ -235,6 +235,7 @@ const clickActivateService = () => {
         emits('onPositioningService');
       },
     });
+    return;
   }
   if (!authorizationChecks.value) {
     Modal.warning({
