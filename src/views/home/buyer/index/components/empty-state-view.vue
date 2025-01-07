@@ -285,6 +285,12 @@ const handleDrawerConfirm = () => {
 
 const jumpApplicationAccess = () => {
   if (!authentication.value) return;
+  const menuCheck = userInfoByCompany.value.menuCodes.some(
+    (ele: any) => ele === 'ROUTE_SYSTEM_APP'
+  );
+  if (!menuCheck) {
+    return;
+  }
   router.push({
     path: '/devCenter/manage',
   });

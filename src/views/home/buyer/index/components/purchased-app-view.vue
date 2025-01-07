@@ -3,14 +3,14 @@
     <t-tabs :active-key="tabsApplication" @tab-click="TabClickApplication">
       <t-tab-pane key="1" title="商城购买应用">
         <t-button
-          v-if="applicationListData.length"
+          v-if="tabsApplication === '1' && applicationListData.length"
           type="outline"
           class="botton-top"
           @click="onClickNewApp"
         >
           +创建新应用
         </t-button>
-        <div class="mall-application">
+        <div v-if="tabsApplication === '1'" class="mall-application">
           <div
             v-for="(item, index) in applicationListData"
             :key="index"
@@ -40,12 +40,16 @@
               <div class="button-position">
                 <t-space :size="20">
                   <t-link
-                    v-if="userInfoByCompany.primary === AccountType?.MAIN"
+                    v-if="
+                      userInfoByCompany.primary === AccountType?.MAIN &&
+                      item.deliveryType !== 2
+                    "
                     :hoverable="false"
                     @click="configurationapp(item)"
                     >配置应用</t-link
                   >
                   <t-link
+                    v-if="item?.useExplainMap && item?.useExplainMap.length"
                     :hoverable="false"
                     @click="
                       instructionsuse(
@@ -64,14 +68,14 @@
       </t-tab-pane>
       <t-tab-pane key="2" title="企业自建应用">
         <t-button
-          v-if="applicationListData.length"
+          v-if="tabsApplication === '2' && applicationListData.length"
           type="outline"
           class="botton-top"
           @click="onClickNewApp"
         >
           +创建新应用
         </t-button>
-        <div class="mall-application">
+        <div v-if="tabsApplication === '2'" class="mall-application">
           <div
             v-for="(item, index) in applicationListData"
             :key="index"
@@ -80,7 +84,7 @@
             <div class="header" @click="jumpCheck(item)">
               <div class="avatar">
                 <img
-                  v-if="item.type !== 1"
+                  v-if="item.type !== 1 && item.appLogo"
                   :src="`/server/web/file/download?name=${item.appLogo}`"
                   alt=""
                 />
@@ -380,6 +384,7 @@ const detailuploadclick = () => {
 };
 // 解析json
 const captureOne = (name: string) => {
+  if (!name) return '';
   return name.substring(0, 1);
 };
 
@@ -543,6 +548,16 @@ const togoCheck = (detailData: Record<string, any>) => {
         return;
       }
       togo(detailData);
+    });
+  } else if (detailData?.deliveryType === 2) {
+    if (!showServiceData.value) {
+      clickActivateService();
+      return;
+    }
+    // 轻应用
+    goLightFlowApplicationPackage({
+      ...detailData,
+      tagId: detailData.appPackageId,
     });
   } else {
     togo(detailData);
