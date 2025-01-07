@@ -308,9 +308,10 @@ const authLightApply = () => {
 };
 // 通过模版创建
 const templateCreation = () => {
-  router.push({
+  const routeData = router.resolve({
     path: '/wow/lightApplicationMall',
   });
+  window.open(routeData?.href, '_blank');
 };
 // 从头开始创建
 const createFromScratch = () => {
@@ -357,9 +358,10 @@ const handleDrawerConfirm = () => {
 };
 // 典型应用介绍
 const jumpLightMall = () => {
-  router.push({
-    path: '/wow/lightApplicationMall',
+  const routeData = router.resolve({
+    path: '/wow/mall',
   });
+  window.open(routeData?.href, '_blank');
 };
 // 应用接入
 const jumpApplicationAccess = () => {
@@ -379,7 +381,7 @@ const jumpPlatformIntegrationDocument = () => {
     process.env.NODE_ENV !== 'production'
       ? 'http://id-pointer-sdk.pre.idx.space/docs/saas/writing-purpose'
       : 'https://snms.teleinfo.cn/zst-docs/saas/writing-purpose';
-  window.open(url, '_self');
+  window.open(url, '_blank');
 };
 // 应用发布指南
 const applicationReleaseGuide = () => {

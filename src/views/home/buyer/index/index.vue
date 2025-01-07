@@ -55,14 +55,18 @@
           <div class="data-columns">
             <span class="data-columns-label">所属企业：</span>
             <span class="data-columns-value">
-              {{ userInfoByCompany.companyName || '--' }}
+              {{
+                userInfoByCompany.primary !== 3
+                  ? userInfoByCompany.companyName
+                  : '--'
+              }}
             </span>
           </div>
           <div class="data-columns">
             <span class="data-columns-label">账号类型：</span>
             <span class="data-columns-value">
               {{
-                userInfoByCompany.companyId
+                userInfoByCompany.companyId && userInfoByCompany.primary !== 3
                   ? AccountTypeDesc[userInfoByCompany.primary]
                   : '--'
               }}
@@ -72,7 +76,8 @@
             <span class="data-columns-label">标识前缀：</span>
             <span class="data-columns-value">
               {{
-                userInfoByCompany?.entPrefixList.length
+                userInfoByCompany?.entPrefixList.length &&
+                userInfoByCompany.primary !== 3
                   ? userInfoByCompany?.entPrefixList.join('：')
                   : '--'
               }}

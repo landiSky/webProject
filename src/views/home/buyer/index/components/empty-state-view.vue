@@ -30,10 +30,10 @@
         <div class="empty-page-img empty-page-img-02"></div>
         <div v-if="!authentication" class="empty-page-desc">
           如需购买<span class="desc-blue">标识轻应用</span
-          >，账号需为企业主账号，同时需完成企业认证，「<span
+          >，账号需为企业主账号，同时需完成标识轻应用开通，「<span
             class="desc-blue desc-cursor"
-            @click="authCompany"
-            >去认证</span
+            @click="clickActivateService"
+            >去开通</span
           >」
         </div>
         <div v-if="authentication" class="empty-page-desc">
