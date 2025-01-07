@@ -72,7 +72,7 @@
             <span class="data-columns-label">标识前缀：</span>
             <span class="data-columns-value">
               {{
-                userInfoByCompany?.entPrefixList
+                userInfoByCompany?.entPrefixList.length
                   ? userInfoByCompany?.entPrefixList.join('：')
                   : '--'
               }}
