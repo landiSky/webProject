@@ -692,10 +692,14 @@ const passok = (id: string) => {
         id: dataList.value.id,
         productId: dataList.value.productId,
         deliveryType: dataList.value.deliveryType,
-      }).then((res) => {
-        Message.success('已通过');
-        init();
-      });
+      })
+        .then((res) => {
+          Message.success('已通过');
+          init();
+        })
+        .catch(() => {
+          init();
+        });
     },
     onCancel: () => {
       // Message.success('取消交付成功');
