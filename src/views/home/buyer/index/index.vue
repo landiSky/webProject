@@ -652,7 +652,10 @@ const positioningService = () => {
   const parent = document.getElementById('cverbox');
   parent &&
     target &&
-    parent.scrollTo(0, target.offsetTop - 200 - parent.offsetTop);
+    parent.scrollTo({
+      top: target.offsetTop - parent.offsetTop,
+      behavior: 'smooth',
+    });
 };
 // 定义调用已购组件列表
 const getChildList = () => {

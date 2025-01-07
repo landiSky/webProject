@@ -251,7 +251,7 @@ const clickActivateService = () => {
 };
 
 const createLightweightApp = () => {
-  if (serviceChecks.value && !authorizationChecks.value) {
+  if (serviceChecks.value || !authorizationChecks.value) {
     clickActivateService();
     return false;
   }
@@ -267,7 +267,7 @@ const createLightweightApp = () => {
 };
 
 const showAddDrawer = () => {
-  if (serviceChecks.value && !authorizationChecks.value) {
+  if (serviceChecks.value || !authorizationChecks.value) {
     clickActivateService();
     return false;
   }

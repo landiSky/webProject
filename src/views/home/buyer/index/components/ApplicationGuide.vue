@@ -265,8 +265,7 @@ const showPreview = () => {
   const routeData = router.resolve({
     name: 'wowFileFreview',
     query: {
-      fileurl:
-        '/server/web/file/download?name=f3357b3f-8f4e-44e2-99b6-0bfe6a3d1c1c.pdf',
+      fileurl: `/server/web/file/download?name=${configInfo.value?.platformIntroduction}`,
     },
   });
   window.open(routeData?.href, '_blank');
