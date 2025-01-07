@@ -8,7 +8,7 @@
           class="botton-top"
           @click="onClickNewApp"
         >
-          +创建新应用
+          +购买新应用
         </t-button>
         <div v-if="tabsApplication === '1'" class="mall-application">
           <div

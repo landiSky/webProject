@@ -4,7 +4,7 @@
     <div class="left-section">
       <!-- 轻应用待办 -->
       <LightFlowTodoView
-        v-if="configInfo?.qingFlowSwitch && !packageList.length"
+        v-if="configInfo?.qingFlowSwitch && !packageList.length && showService"
         :show-service="showService"
       />
 
