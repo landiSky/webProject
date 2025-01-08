@@ -171,7 +171,7 @@
       @get-application-list-data="getApplicationListData"
       @on-positioning-service="onPositioningService"
       @on-authentication="onAuthentication"
-      @on-view-details="onViewDetails"
+      @on-view-details="clickViewDetails"
     />
     <!-- 创建新应用 -->
     <NewApp
@@ -185,7 +185,7 @@
       @get-application-list-data="getApplicationListData"
       @on-positioning-service="onPositioningService"
       @on-authentication="onAuthentication"
-      @on-view-details="onViewDetails"
+      @on-view-details="clickViewDetails"
     />
 
     <!-- 配置应用 -->
@@ -279,7 +279,7 @@ const {
 const emits = defineEmits([
   'positioningService',
   'authentication',
-  'viewdetails',
+  'viewDetails',
 ]);
 const props = defineProps({
   packageList: {
@@ -668,8 +668,8 @@ const onPositioningService = () => {
 const onAuthentication = () => {
   emits('authentication');
 };
-const onViewDetails = () => {
-  emits('viewdetails');
+const clickViewDetails = () => {
+  emits('viewDetails');
 };
 
 // 暴露方法
