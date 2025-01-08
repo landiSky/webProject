@@ -74,15 +74,14 @@
           class="pagination-view"
         >
           <t-pagination
-            v-model:current="pagination.page"
-            v-model:page-size="pagination.size"
+            v-model:current="pagination.pageNum"
+            v-model:page-size="pagination.pageSize"
             :total="pagination.total"
             show-total
             show-jumper
             show-page-size
             :page-size-options="[30, 60, 90, 120, 150]"
             @change="onPageChange"
-            @page-size-change="onPageSizeChange"
           />
         </div>
       </t-tab-pane>
@@ -157,14 +156,13 @@
           class="pagination-view"
         >
           <t-pagination
-            v-model:current="pagination.page"
-            v-model:page-size="pagination.size"
+            v-model:current="pagination.pageNum"
+            v-model:page-size="pagination.pageSize"
             :total="pagination.total"
             show-total
             show-jumper
             :page-size-options="[30, 60, 90, 120, 150]"
             @change="onPageChange"
-            @page-size-change="onPageSizeChange"
           />
         </div>
       </t-tab-pane>
@@ -322,7 +320,7 @@ const empowerTipVisible = ref(false);
 const empowerTipData: Record<string, any> = ref({});
 // 列表展示
 const applicationListData: Record<string, any> = ref([]);
-const paginationData = {
+const paginationData: Record<string, any> = {
   pageNum: 1,
   pageSize: 30,
   total: 0,
@@ -387,11 +385,6 @@ const getApplicationListData = () => {
 
 const onPageChange = (current: number) => {
   pagination.pageNum = current;
-  getApplicationListData();
-};
-const onPageSizeChange = (size: number) => {
-  pagination.pageSize = size;
-  pagination.pageNum = 1;
   getApplicationListData();
 };
 
