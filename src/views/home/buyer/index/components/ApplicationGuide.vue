@@ -301,7 +301,8 @@ const clickActivateService = () => {
 // 轻流开通服务
 const authLightApply = () => {
   if (serviceChecks.value) {
-    clickActivateService();
+    // clickActivateService();
+    emits('positioningService');
     return false;
   }
   return true;

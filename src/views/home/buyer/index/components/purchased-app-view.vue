@@ -65,6 +65,26 @@
             </div>
           </div>
         </div>
+        <div
+          v-if="
+            tabsApplication === '1' &&
+            applicationListData.length &&
+            !hideOnSinglePage
+          "
+          class="pagination-view"
+        >
+          <t-pagination
+            v-model:current="pagination.page"
+            v-model:page-size="pagination.size"
+            :total="pagination.total"
+            show-total
+            show-jumper
+            show-page-size
+            :page-size-options="[30, 60, 90, 120, 150]"
+            @change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          />
+        </div>
       </t-tab-pane>
       <t-tab-pane key="2" title="企业自建应用">
         <t-button
@@ -127,6 +147,25 @@
               </div>
             </div>
           </div>
+        </div>
+        <div
+          v-if="
+            tabsApplication === '2' &&
+            applicationListData.length &&
+            !hideOnSinglePage
+          "
+          class="pagination-view"
+        >
+          <t-pagination
+            v-model:current="pagination.page"
+            v-model:page-size="pagination.size"
+            :total="pagination.total"
+            show-total
+            show-jumper
+            :page-size-options="[30, 60, 90, 120, 150]"
+            @change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          />
         </div>
       </t-tab-pane>
     </t-tabs>
@@ -198,7 +237,15 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
-import { onMounted, ref, watch, defineProps, computed, defineEmits } from 'vue';
+import {
+  onMounted,
+  ref,
+  watch,
+  defineProps,
+  computed,
+  defineEmits,
+  reactive,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import {
   authDialogdata,
@@ -275,6 +322,15 @@ const empowerTipVisible = ref(false);
 const empowerTipData: Record<string, any> = ref({});
 // 列表展示
 const applicationListData: Record<string, any> = ref([]);
+const paginationData = {
+  pageNum: 1,
+  pageSize: 30,
+  total: 0,
+};
+const pagination = reactive({ ...paginationData });
+const hideOnSinglePage = computed(
+  () => pagination.total <= paginationData.pageSize
+);
 
 // 跳转二级公共方法
 const clickIdService = (pageUrl: any) => {
@@ -310,24 +366,41 @@ const getApplicationListData = () => {
   if (tabsApplication.value === '1') {
     // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
     authDialogdata({
+      ...pagination,
       companyId: userInfoByCompany.value?.companyId,
       userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id,
     }).then((res) => {
-      applicationListData.value = res || [];
+      applicationListData.value = res?.records || [];
+      pagination.total = res?.total;
     });
   } else if (tabsApplication.value === '2') {
     selectSelfApps({
+      ...pagination,
       companyId: userInfoByCompany.value?.companyId,
       userId: userInfoByCompany.value.primary === 1 ? '' : userInfo.value?.id,
     }).then((res) => {
-      applicationListData.value = res || [];
+      applicationListData.value = res?.records || [];
+      pagination.total = res?.total;
     });
   }
+};
+
+const onPageChange = (current: number) => {
+  pagination.pageNum = current;
+  getApplicationListData();
+};
+const onPageSizeChange = (size: number) => {
+  pagination.pageSize = size;
+  pagination.pageNum = 1;
+  getApplicationListData();
 };
 
 // 应用切换
 const TabClickApplication = (key: any) => {
   tabsApplication.value = key;
+  pagination.pageNum = paginationData.pageNum;
+  pagination.pageSize = paginationData.pageSize;
+  pagination.total = paginationData.total;
   if (
     userInfoByCompany.value.certificateStatus === 1 ||
     userInfoByCompany.value.nodeStatus === 1
@@ -703,63 +776,75 @@ onMounted(() => {
           }
 
           .qing-orange {
-            color: #fb9337;
-            background: #ffebdb;
+            // color: #fb9337;
+            // background: #ffebdb;
+            background: #f59a81;
           }
 
           .yellow {
-            color: #fab300;
-            background: #fff1d8;
+            // color: #fab300;
+            // background: #fff1d8;
+            background: #ffb457;
           }
 
           .green {
-            color: #67c200;
-            background: #e7f4d7;
+            // color: #67c200;
+            // background: #e7f4d7;
+            background: #79dd88;
           }
 
           .emerald {
-            color: #00bd77;
-            background: #ddf4e6;
+            // color: #00bd77;
+            // background: #ddf4e6;
+            background: #3ac0c0;
           }
 
           .blue {
-            color: #00c5fb;
-            background: #e2f4ff;
+            // color: #00c5fb;
+            // background: #e2f4ff;
+            background: #1664ff;
           }
 
           .azure {
-            color: #268bfb;
-            background: #e3e9ff;
+            // color: #268bfb;
+            // background: #e3e9ff;
+            background: #16c1ff;
           }
 
           .indigo {
-            color: #6468fb;
-            background: #e8e2ff;
+            // color: #6468fb;
+            // background: #e8e2ff;
+            background: #4086ff;
           }
 
           .qing-purple {
-            color: #392fc2;
-            background: #e1d7f5;
+            // color: #392fc2;
+            // background: #e1d7f5;
+            background: #787cf8;
           }
 
           .purple {
-            color: #9e64fb;
-            background: #f0e3ff;
+            // color: #9e64fb;
+            // background: #f0e3ff;
+            background: #9d5fee;
           }
 
           .pink {
-            color: #d164fb;
-            background: #f9e4ff;
+            // color: #d164fb;
+            // background: #f9e4ff;
+            background: #d481ed;
           }
 
           .red {
-            color: #fb4b51;
-            background: #ffe1dd;
+            // color: #fb4b51;
+            // background: #ffe1dd;
+            background: #61b0f0;
           }
 
           .orange {
-            color: #fa6f32;
-            background: #ffe6d9;
+            // color: #fa6f32;
+            // background: #ffe6d9;
+            background: #4bdbe3;
           }
         }
 
@@ -820,6 +905,12 @@ onMounted(() => {
         }
       }
     }
+  }
+
+  .pagination-view {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
   }
 }
 </style>
