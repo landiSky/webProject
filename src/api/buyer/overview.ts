@@ -83,6 +83,11 @@ export function getServicePackage(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/getServicePackage', { params });
 }
 
+// 判断用户是否开通服务
+export function userServiceStatus(params: Record<string, any>) {
+  return $http.get('/server/web/qingFlow/userServiceStatus', { params });
+}
+
 // 门户跳转
 export function dashBoardRedirect(params: Record<string, any>) {
   return $http.get('/server/web/qingFlow/dashBoardRedirect', { params });

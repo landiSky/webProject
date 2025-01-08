@@ -54,6 +54,7 @@
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { useOrderStore } from '@/store/modules/order';
+import { userServiceStatus } from '@/api/buyer/overview';
 import { onMounted, ref, defineProps, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { snmsClientLogin } from '@/api/login';
@@ -208,8 +209,15 @@ const activateService = (item: any) => {
     });
     return false;
   }
-  prodDetail.value = item;
-  authModalVisible.value = true;
+  const userData = {
+    companyId: selectCompany.value?.companyId,
+  };
+  userServiceStatus(userData).then((data: any) => {
+    if (data) {
+      prodDetail.value = item;
+      authModalVisible.value = true;
+    }
+  });
   return true;
 };
 
