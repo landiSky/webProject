@@ -17,7 +17,7 @@
             :key="index2"
             class="top-text"
           >
-            <iconpark-icon name="success" :size="12"></iconpark-icon>
+            <iconpark-icon name="success-blue" :size="12"></iconpark-icon>
             <span class="introduce">{{ item2 }}</span>
           </div>
         </div>
@@ -256,7 +256,6 @@ onMounted(async () => {});
     width: 242px;
     background: url('../image/package_01.png') no-repeat;
     background-size: 100% 100%;
-    border: 1px solid #fff;
     border-radius: 4px;
 
     &.wathet {
