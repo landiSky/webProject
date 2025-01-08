@@ -78,9 +78,6 @@
             v-model:page-size="pagination.pageSize"
             :total="pagination.total"
             show-total
-            show-jumper
-            show-page-size
-            :page-size-options="[30, 60, 90, 120, 150]"
             @change="onPageChange"
           />
         </div>
@@ -160,8 +157,6 @@
             v-model:page-size="pagination.pageSize"
             :total="pagination.total"
             show-total
-            show-jumper
-            :page-size-options="[30, 60, 90, 120, 150]"
             @change="onPageChange"
           />
         </div>
@@ -902,7 +897,7 @@ onMounted(() => {
 
   .pagination-view {
     display: flex;
-    justify-content: center;
+    justify-content: right;
     margin-top: 16px;
   }
 }
