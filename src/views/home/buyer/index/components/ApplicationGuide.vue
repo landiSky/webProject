@@ -368,10 +368,12 @@ const jumpLightMall = () => {
 const jumpApplicationAccess = () => {
   if (userInfoByCompany.value?.primary === AccountType.UNAUTH) {
     authCompany();
+    return false;
   }
   router.push({
     path: '/devCenter/manage',
   });
+  return true;
 };
 // 应用开发指南
 const jumpPlatformIntegrationDocument = () => {
