@@ -305,6 +305,7 @@ const authLightApply = () => {
     emits('positioningService');
     return false;
   }
+  Message.warning('已开通标识轻应用服务');
   return true;
 };
 // 通过模版创建
