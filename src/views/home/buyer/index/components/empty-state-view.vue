@@ -137,7 +137,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, onMounted, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { Modal } from '@tele-design/web-vue';
+import { Message, Modal } from '@tele-design/web-vue';
 import { appCreateRedirect } from '@/api/buyer/overview';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
@@ -296,11 +296,15 @@ const handleDrawerConfirm = () => {
 };
 // 创建自建接入应用
 const jumpApplicationAccess = () => {
-  if (!authentication.value) return;
+  if (!authentication.value) {
+    Message.warning('当前账号未认证企业，认证完成可进行操作！');
+    return;
+  }
   const menuCheck = userInfoByCompany.value.menuCodes.some(
     (ele: any) => ele === 'ROUTE_SYSTEM_APP'
   );
   if (!menuCheck) {
+    Message.warning('暂无权限，联系管理员开通！');
     return;
   }
   router.push({
