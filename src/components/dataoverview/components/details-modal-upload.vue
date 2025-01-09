@@ -125,14 +125,12 @@ const preview = (
   orderSource: number,
   productServerId: string
 ) => {
-  const info = {
-    fileurl: `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`,
-    orderSource,
-    productServerId,
-  };
+  // 多个参数时文件名一定要放到最后
   const routeData = router.resolve({
     name: 'wowFileFreview',
-    query: { ...info },
+    query: {
+      fileurl: `/server/web/file/orderDownloadBySource?source=${orderSource}&serverId=${productServerId}&name=${fileurl}`,
+    },
   });
   window.open(routeData?.href, '_blank');
 };

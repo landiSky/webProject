@@ -63,6 +63,7 @@ const rendered = () => {
 };
 /* pdf,word组件渲染出错 */
 const HandlError = (errorInfo: any) => {
+  console.log(errorInfo, 'errorInfo----');
   Message.error('该文件暂不支持在线预览');
   state.loading = false;
 };
@@ -74,6 +75,7 @@ onMounted(() => {
   state.filePath = state.info.fileurl;
   const str = state.info.fileurl.toString();
   const strIndex = str.lastIndexOf('.');
+  // 多个参数时文件名一定要放到最后
   const fileType = str.slice(strIndex + 1, str.length);
   state.fileType = fileType;
   console.log(state);
