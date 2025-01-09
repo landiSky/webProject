@@ -162,9 +162,9 @@
         </div>
       </t-tab-pane>
     </t-tabs>
-
+    <t-spin v-if="loading" :size="24" tip="正在加载中，请稍后..."></t-spin>
     <EmptyStateView
-      v-if="!applicationListData.length"
+      v-if="!applicationListData.length && !loading"
       :tabs-application="tabsApplication"
       :package-list="packageListData"
       :show-service="showServiceData"
@@ -295,6 +295,7 @@ const props = defineProps({
     },
   },
 });
+const loading = ref(false);
 const packageListData = computed(() => props.packageList);
 const showServiceData = computed(() => props.showService);
 // tabs来回切换值
@@ -356,6 +357,7 @@ const goNode = () => {
 
 const getApplicationListData = () => {
   applicationListData.value = [];
+  loading.value = true;
   if (tabsApplication.value === '1') {
     // userId 用户id,如果登陆人是企业，则不需要传，如果是企业下得成员，则需要传
     authDialogdata({
@@ -365,6 +367,7 @@ const getApplicationListData = () => {
     }).then((res) => {
       applicationListData.value = res?.records || [];
       pagination.total = res?.total;
+      loading.value = false;
     });
   } else if (tabsApplication.value === '2') {
     selectSelfApps({
@@ -374,6 +377,7 @@ const getApplicationListData = () => {
     }).then((res) => {
       applicationListData.value = res?.records || [];
       pagination.total = res?.total;
+      loading.value = false;
     });
   }
 };
@@ -475,7 +479,7 @@ const togo = (detailData: Record<string, any>) => {
       cancelText: '暂不开通',
       okText: '去开通',
       onOk: () => {
-        clickIdService('');
+        clickIdService('/ent/apply');
       },
     });
     return;
