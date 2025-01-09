@@ -78,7 +78,7 @@
               {{
                 userInfoByCompany?.entPrefixList.length &&
                 userInfoByCompany.primary !== 3
-                  ? userInfoByCompany?.entPrefixList.join('：')
+                  ? userInfoByCompany?.entPrefixList.join('；')
                   : '--'
               }}
             </span>
@@ -649,7 +649,7 @@ const clickIdService = (pageUrl: any) => {
 
 // 跳转二级
 const goSign = () => {
-  clickIdService('');
+  clickIdService('/ent/apply');
 };
 // 定位到开通服务元素
 const positioningService = () => {
