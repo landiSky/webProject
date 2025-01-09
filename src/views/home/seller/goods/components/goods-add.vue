@@ -1550,16 +1550,15 @@ const getProductApplicationList = async () => {
     companyId: userInfoByCompany.value?.companyId,
     type: 1, // 0 是全部 其他值是返回不是空的应用宝
   };
-  getProductAppList(ProductAppData).then((data: any) => {
-    const list = data.map((item: any) => {
-      const params = {
-        ...item,
-        tagId: String(item.tagId),
-      };
-      return params;
-    });
-    productAppList.value = list;
+  const AppList = await getProductAppList(ProductAppData);
+  const list = AppList.map((item: any) => {
+    const params = {
+      ...item,
+      tagId: String(item.tagId),
+    };
+    return params;
   });
+  productAppList.value = list;
 };
 
 function deepClone(source: any) {
@@ -2495,7 +2494,7 @@ const changeModel = (type: any) => {
   return copyModal5.value;
 };
 
-onMounted(() => {
+onMounted(async () => {
   window.addEventListener('online', () => {
     online.value = true;
   });
@@ -2542,9 +2541,11 @@ onMounted(() => {
   });
 
   formModel.value.companyId = String(userInfoByCompany.value?.companyId);
-  getClassList();
-  getProductApplicationList();
-  getSelectApplication();
+  await Promise.all([
+    getClassList(),
+    getProductApplicationList(),
+    getSelectApplication(),
+  ]);
   if (props.data?.id) {
     formModel.value.id = props.data?.id;
     formModel2.value.productId = props.data?.id;
