@@ -287,7 +287,7 @@ onMounted(async () => {});
 
       .top-text {
         display: flex;
-        gap: 8px;
+        gap: 4px;
         align-items: center;
         height: 22px;
         font-size: 14px;
