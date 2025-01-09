@@ -28,15 +28,15 @@
     <div v-if="configInfo?.qingFlowSwitch" class="empty-page">
       <div class="empty-page-head">
         <div class="empty-page-img empty-page-img-02"></div>
-        <div v-if="!authentication" class="empty-page-desc">
+        <div v-if="serviceChecks" class="empty-page-desc">
           如需购买<span class="desc-blue">标识轻应用</span
           >，账号需为企业主账号，同时需完成标识轻应用开通，「<span
             class="desc-blue desc-cursor"
-            @click="clickActivateService"
+            @click="goOpenIt"
             >去开通</span
           >」
         </div>
-        <div v-if="authentication" class="empty-page-desc">
+        <div v-if="!serviceChecks" class="empty-page-desc">
           立即「<span class="desc-blue desc-cursor" @click="jumpLightMall"
             >前往</span
           >」标识轻应用选购安装标识轻应用、数智化应用。
@@ -210,16 +210,12 @@ const authCompany = () => {
     emits('onViewDetails');
   }
 };
-
+// 立即前往商城
 const jumpShoppingMall = () => {
-  router.push({
+  const routeData = router.resolve({
     path: '/wow/mall',
   });
-};
-const jumpLightMall = () => {
-  router.push({
-    path: '/wow/lightApplicationMall',
-  });
+  window.open(routeData?.href, '_blank');
 };
 
 const clickActivateService = () => {
@@ -249,7 +245,23 @@ const clickActivateService = () => {
     });
   }
 };
-
+// 去开通服务
+const goOpenIt = () => {
+  emits('onPositioningService');
+};
+// 前往标识轻应用商城
+const jumpLightMall = () => {
+  if (serviceChecks.value || !authorizationChecks.value) {
+    clickActivateService();
+    return false;
+  }
+  const routeData = router.resolve({
+    path: '/wow/lightApplicationMall',
+  });
+  window.open(routeData?.href, '_blank');
+  return true;
+};
+// 创建标识轻应用
 const createLightweightApp = () => {
   if (serviceChecks.value || !authorizationChecks.value) {
     clickActivateService();
@@ -265,7 +277,7 @@ const createLightweightApp = () => {
   });
   return true;
 };
-
+// 创建企业数智化应用
 const showAddDrawer = () => {
   if (serviceChecks.value || !authorizationChecks.value) {
     clickActivateService();
@@ -282,7 +294,7 @@ const handleDrawerConfirm = () => {
   handleDrawerCancel();
   emits('getApplicationListData');
 };
-
+// 创建自建接入应用
 const jumpApplicationAccess = () => {
   if (!authentication.value) return;
   const menuCheck = userInfoByCompany.value.menuCodes.some(
