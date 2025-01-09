@@ -236,7 +236,7 @@ const clickActivateService = () => {
   if (!authorizationChecks.value) {
     Modal.warning({
       title: '使用提醒',
-      content: '暂未权限访问，联系企业管理员开通',
+      content: '暂无权限访问，联系企业管理员开通',
       titleAlign: 'start',
       hideCancel: true,
       cancelText: '',
