@@ -191,7 +191,7 @@
               action="/server/web/file/upload"
               :headers="uploadHeaders"
               :show-cancel-button="false"
-              accept=".pdf,.doc,.docx"
+              accept=".pdf,.docx"
               tip-position="bottom"
               @before-upload="beforeUpload50"
               @before-remove="beforeRemove50"
