@@ -25,6 +25,7 @@
                 type: 'popover',
               },
             }"
+            style="margin-bottom: 0; word-break: break-all"
           >
             {{ item?.useExplainOriginal }}
           </t-typography-paragraph>
