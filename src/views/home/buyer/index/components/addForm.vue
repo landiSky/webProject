@@ -182,6 +182,7 @@ const handleConfirm = () => {
   formRef.value.validate((errors: undefined) => {
     if (!errors) {
       saveCompanyNumberIntelligence(form).then(() => {
+        Message.success('创建成功');
         emit('onConfirm');
       });
     }
