@@ -7,10 +7,12 @@
     modal-class="modal-container-app"
     @cancel="handleCancel"
   >
-    <template #title> 创建新应用 </template>
+    <template #title>
+      {{ tabsApplication === '1' ? '购买新应用' : '创建新应用' }}
+    </template>
     <template #footer>
       <t-button @click="handleCancel">取消</t-button>
-      <t-button type="primary" @click="handleOk">确认</t-button>
+      <!-- <t-button type="primary" @click="handleOk">确认</t-button> -->
     </template>
     <div class="new-app-box">
       <EmptyStateView
@@ -70,6 +72,7 @@ const handleCancel = () => {
 };
 
 const getApplicationListData = () => {
+  handleOk();
   emits('getApplicationListData');
 };
 const onPositioningService = () => {
