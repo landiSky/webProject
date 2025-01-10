@@ -259,7 +259,7 @@ const detaillist = ref({
   legalPersonName: '',
   type: 1,
   businessLicense: '',
-  certificateStatus: 0,
+  certificateStatus: null,
   remark: '驳理由',
   orgAddr: '',
   orgAddrCity: '',
