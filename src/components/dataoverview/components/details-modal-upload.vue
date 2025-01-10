@@ -114,8 +114,8 @@ const instructionsuse = (
   const link = document.createElement('a');
   const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
   link.href = objectUrl;
-  const fileName = useExplainOriginal;
-  link.download = fileName; //  下载的时候自定义的文件名
+  // const fileName = useExplainOriginal;
+  // link.download = fileName; //  下载的时候自定义的文件名
   link.click();
   window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
 };
