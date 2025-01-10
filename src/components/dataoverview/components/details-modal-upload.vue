@@ -65,7 +65,7 @@ import { defineProps, defineEmits, ref, PropType, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useUserStore } from '@/store/modules/user';
 import { storeToRefs } from 'pinia';
-import { authDetails } from '@/api/authentication';
+import { orderDownloadBySource } from '@/api/common';
 import { Message } from '@tele-design/web-vue';
 import Warn from '@/assets/images/home/warn.png';
 import docxicon from '@/assets/images/idinside/docx-icon.png';
@@ -103,7 +103,6 @@ const imgType = (value: string) => {
   }
   return pdficon;
 };
-
 // 使用说明
 const instructionsuse = (
   fileurl: string,
@@ -111,13 +110,28 @@ const instructionsuse = (
   productServerId: string,
   useExplainOriginal: string
 ) => {
-  const link = document.createElement('a');
-  const objectUrl = `/server/web/file/orderDownloadBySource?name=${fileurl}&source=${orderSource}&serverId=${productServerId}`; // 创建一个新的url对象
-  link.href = objectUrl;
-  // const fileName = useExplainOriginal;
-  // link.download = fileName; //  下载的时候自定义的文件名
-  link.click();
-  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+  const params = {
+    name: fileurl,
+    source: orderSource,
+    serverId: productServerId,
+  };
+  orderDownloadBySource(params).then((response: any) => {
+    const contentDisposition = response.headers['content-disposition'];
+    const matches =
+      contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
+    const fileName =
+      contentDisposition && matches && matches.length > 1 ? matches[1] : ''; // 如果没获取到文件名，设置默认文件名
+    const blob = new Blob([response.data], {
+      type: response.headers['content-type'],
+    });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = decodeURIComponent(fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(link.href); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+  });
 };
 
 const preview = (

@@ -54,3 +54,13 @@ export function changePrefixBind(params: Record<string, any>) {
     },
   });
 }
+
+// 通过订单查询获取到文件
+export function orderDownloadBySource(params: Record<string, any>) {
+  return $http.get('/server/web/file/orderDownloadBySource', {
+    params,
+    customFields: {
+      returnRawResponse: true,
+    },
+  });
+}

@@ -427,6 +427,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useUserStore } from '@/store/modules/user';
 import { orderList, orderNum, buyerDeployed } from '@/api/buyer/order';
+import { orderDownloadBySource } from '@/api/common';
 import noSearch from '@/assets/images/noSearch.png';
 import noData from '@/assets/images/noData.png';
 import { Message } from '@tele-design/web-vue';
@@ -787,11 +788,28 @@ const onServiceModalConfirm = () => {
 };
 // 下载插件
 const downloadPlugins = (item: any) => {
-  const link = document.createElement('a');
-  const objectUrl = `/server/web/file/orderDownloadBySource?name=${item?.pluginPackage}&source=${item?.orderSource}&serverId=${item?.productServerId}`; // 创建一个新的url对象
-  link.href = objectUrl;
-  link.click();
-  window.URL.revokeObjectURL(objectUrl); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+  const params = {
+    name: item?.pluginPackage,
+    source: item?.orderSource,
+    serverId: item?.productServerId,
+  };
+  orderDownloadBySource(params).then((response: any) => {
+    const contentDisposition = response.headers['content-disposition'];
+    const matches =
+      contentDisposition && contentDisposition.match(/filename="?([^"]+)"?/);
+    const fileName =
+      contentDisposition && matches && matches.length > 1 ? matches[1] : ''; // 如果没获取到文件名，设置默认文件名
+    const blob = new Blob([response.data], {
+      type: response.headers['content-type'],
+    });
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = decodeURIComponent(fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(link.href); // 为了更好地性能和内存使用状况，应该在适当的时候释放url
+  });
 };
 // 查询
 const getTableData = () => {
