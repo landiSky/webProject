@@ -465,7 +465,7 @@ onMounted(() => {
           width: 190px;
           max-height: 220px;
           padding: 12px 16px;
-          overflow-y: scroll;
+          overflow-y: auto;
           background: #fff;
           border-radius: 2px;
 
