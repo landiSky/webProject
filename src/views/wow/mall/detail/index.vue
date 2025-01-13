@@ -423,17 +423,17 @@
               <div
                 :class="appraiseIndex === 3 ? 'appraise' : ''"
                 @click="appraiseClick(3)"
-                >好评 ({{ evaluateDatail?.totalH ?? 0 }})
+                >好评 ({{ evaluateDatail?.totalH || 0 }})
               </div>
               <div
                 :class="appraiseIndex === 2 ? 'appraise' : ''"
                 @click="appraiseClick(2)"
-                >中评 ({{ evaluateDatail?.totalZ ?? 0 }})</div
+                >中评 ({{ evaluateDatail?.totalZ || 0 }})</div
               >
               <div
                 :class="appraiseIndex === 1 ? 'appraise' : ''"
                 @click="appraiseClick(1)"
-                >差评 ({{ evaluateDatail?.totalC ?? 0 }})</div
+                >差评 ({{ evaluateDatail?.totalC || 0 }})</div
               >
             </div>
             <div class="comment">
@@ -447,7 +447,7 @@
                     <t-image
                       width="52"
                       style="border-radius: 50%"
-                      :src="item?.avatar ?? avatar"
+                      :src="item?.avatar || avatar"
                     />
                   </template>
                   <template #content>
@@ -462,9 +462,9 @@
                         />
                       </div>
                       <div class="textarea">
-                        {{ item?.content ?? '-' }}
+                        {{ item?.content || '-' }}
                       </div>
-                      <div class="time">{{ item?.createTime ?? '-' }}</div>
+                      <div class="time">{{ item?.createTime || '-' }}</div>
                     </div>
                   </template>
                 </t-comment>
