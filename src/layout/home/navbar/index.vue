@@ -322,6 +322,17 @@ watch(
         item.hide = newVal.callSnmsSwitch;
       }
     });
+    // 在标识管理-license管理页面刷新路由，需要手动更新左侧菜单和选中一级菜单
+    const currentPath = router.currentRoute.value.path;
+    if (
+      currentPath === '/license/index' ||
+      currentPath === '/overview/index' ||
+      currentPath === '/enterprise-node/index'
+    ) {
+      useMenuStore().setMenuIndex(2, userInfo.value);
+    } else {
+      useMenuStore().setMenuIndex(1, userInfo.value);
+    }
   },
   { immediate: true, deep: true }
 );

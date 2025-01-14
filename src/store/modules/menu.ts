@@ -15,9 +15,18 @@ export const useMenuStore = defineStore({
     menuIndex: 1,
   }),
   actions: {
+    getDisplayMenuCollection(data: string[]) {
+      let newArray = data;
+      // 判断标识服务开关是否开启
+      if (!useUserStore().configInfo?.identificationSwitch) {
+        // 使用filter方法去除数组中的对象
+        newArray = data.filter((item: any) => item !== 'ROUTE_ENTERPRISE_NODE');
+      }
+      return newArray;
+    },
     genLeftMenu(auths: string[]) {
       try {
-        this.leftMenu = appMenus(auths);
+        this.leftMenu = appMenus(this.getDisplayMenuCollection(auths));
 
         // if (!this.leftMenu?.length) {
         //   return '/403';
@@ -51,7 +60,9 @@ export const useMenuStore = defineStore({
       this.menuIndex = num;
       useUserStore().setUserMenuIndex(num);
       const userMenuList =
-        num === 1 ? useUserStore().userInfoByCompany?.menuCodes : userMenu(num);
+        num === 1
+          ? useUserStore().userInfoByCompany?.menuCodes
+          : this.getDisplayMenuCollection(userMenu(num));
       let menuList = userInfo.isAdmin ? manageMenu(num) : userMenuList;
       if (userInfo.isAdmin && !userInfo.source) {
         menuList = opearationRouteList;
