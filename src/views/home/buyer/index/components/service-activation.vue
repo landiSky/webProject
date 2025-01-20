@@ -24,12 +24,13 @@
         <div class="foot">
           <div>
             <span class="discounted-price orange-yellow">
-              {{ item?.lowPrice }}
+              <!-- {{ item?.lowPrice }} -->
+              价格面议
             </span>
-            <span class="company">
+            <!-- <span class="company">
               <span class="orange-yellow">.00</span>
               起/年
-            </span>
+            </span> -->
           </div>
           <div
             class="foot-bottom bottom-navy-blue"
